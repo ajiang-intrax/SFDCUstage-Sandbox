@@ -1,0 +1,368 @@
+<apex:page id="ayusa_preapp_summary" docType="html-5.0" standardController="Applicant_Info__c"  extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false" >
+  <apex:composition template="IntraxTemplate_Vs1">
+     <apex:define name="body">
+      <div class="wrapper" id="ayusa-student-preapp-summary">
+ <apex:form id="form">
+ 
+      <div class="page-header clearfix">
+<h1 class="page-title">Ayusa Student Application</h1>
+<div class="back-to-main">
+
+                      <apex:outputLink id="BacktoMain1" value="/apex/ayusa_preapp_home?id={!applicantInfo.Id}" rendered="{!IF(applicantInfo.Intrax_Program_Options__c == 'Ayusa High School' && applicantInfo.Type__c == 'Participant' && applicantInfo.Application_Stage__c == 'Working' && applicantInfo.Application_Level__c == 'Basic' && not(IsPartner), true, false)}">Back to Main Page</apex:outputLink>
+                   <apex:outputLink id="BacktoMain2" value="/apex/ayusa_app_home?id={!applicantInfo.Id}" rendered="{!IF(applicantInfo.Intrax_Program_Options__c == 'Ayusa High School' && applicantInfo.Type__c == 'Participant' && NOT(applicantInfo.Application_Stage__c == 'Working') && applicantInfo.Application_Level__c == 'Basic' && not(IsPartner), true, false)}">Back to Main Page</apex:outputLink>
+                  <apex:outputLink id="BacktoMain3" value="/apex/ayusa_preapp_home?id={!applicantInfo.Id}" rendered="{!IF(NOT(applicantInfo.Application_Stage__c == 'In-Review') && NOT(applicantInfo.Application_Stage__c == 'Declined - Ayusa') && NOT(applicantInfo.Application_Stage__c == 'Conditional') && NOT(applicantInfo.Application_Stage__c == 'Accepted') && NOT(applicantInfo.Application_Stage__c == 'Declined - Agent') && applicantInfo.Application_Level__c == 'Basic' && IsPartner, true, false)}">Back to Main Page</apex:outputLink>
+                <apex:outputLink id="BacktoMain4" value="/apex/pr_app_list" rendered="{!IF((applicantInfo.Application_Stage__c == 'In-Review' || applicantInfo.Application_Stage__c == 'Declined - Ayusa' || applicantInfo.Application_Stage__c == 'Conditional' || applicantInfo.Application_Stage__c == 'Declined - Agent' || applicantInfo.Application_Stage__c == 'Accepted') && applicantInfo.Application_Level__c == 'Basic' && IsPartner, true, false)}">Back to Main Page</apex:outputLink> 
+                  </div>
+
+</div>
+          <div class="section-header clearfix">
+             <h2>Summary</h2>
+            <div class="progress-bar">Page 6 <em>of</em> 6</div>
+            </div> 
+          
+       
+        <div class="white-box clearfix">
+            
+         
+            
+              
+              
+             
+           
+              
+                  
+            <div class="panel no-float half">
+            
+                <p>Please review your answers carefully before you submit your Basic Application. Click <strong>View PDF Summary</strong> to print or save your information for your records.</p>
+                <p>If you would like to make changes to your application, click <strong>Back to Main Page</strong> to enter the correct information.</p>
+                <p>Once you have reviewed all of your information, click <strong>Submit Application</strong> to complete the Basic Application.</p>
+            </div>
+              
+              <div class="panel half">
+          
+          
+          
+                <h3 class="data-block-title">Basic Info</h3> 
+              <div class="data-row">
+                <div class="data-label left"> First Name </div>
+                <div class="data-field">
+                  <apex:outputField id="FirstName" value="{!personInfo.First_Name__c}" />
+                </div>
+              </div>
+              
+              <div class="data-row">
+                <div class="data-label left"> Middle Name </div>
+                <div class="data-field">
+                  <apex:outputField id="MiddleName" value="{!personInfo.Middle_Name__c}" />
+                </div>
+              </div>
+              
+              <div class="data-row">
+                <div class="data-label left"> Last Name </div>
+                <div class="data-field">
+                  <apex:outputField id="LastName" value="{!personInfo.Last_Name__c}" />
+                </div>
+              </div>
+              
+            
+              
+              <div class="data-row">
+                <div class="data-label left"> Gender </div>
+                <div class="data-field">
+                  <apex:outputField id="Gender" value="{!personInfo.Gender__c}" />
+                </div>
+                  
+              </div>
+               <div class="data-row">
+                <div class="data-label left">Date of Birth</div>
+                <div class="data-field">
+                  <apex:outputField id="DOB" value="{!personInfo.Date_of_Birth__c}"/>
+                </div>
+              </div>
+              
+             <div class="data-row">
+                <div class="data-label left">Country of Residence</div>
+                <div class="data-field">
+                  <apex:outputField id="Country" value="{!personInfo.Country_of_Residence__c}"/>
+                </div>
+             </div>
+                  
+              <div class="data-row">
+                <div class="data-label left">Country of Citizenship</div>
+                <div class="data-field">
+                  <apex:outputField id="Citizenship" value="{!personInfo.Citizenship__c}"/>
+                </div>
+              </div>
+ 
+              <div class="data-row">
+                <div class="data-label left">Allergies </div>
+                <div class="data-field">
+                    <apex:outputField id="Allergies_Indicated" value="{!applicantInfo.Allergies_Indicated__c}"/>                 
+                </div>
+              </div>
+              
+              <div class="data-row">
+                <div class="data-label left">If yes: </div>
+                <div class="data-field">
+                  <apex:outputField id="Allergies_from_Applicant" value="{!applicantInfo.Allergies_from_Applicant__c}"/>
+                </div>
+              </div>      
+                  
+              <h3 class="data-block-title">Contact Info</h3> 
+               <div class="data-row">
+                <div class="data-label left">Home Phone</div>
+                <div class="data-field">
+                  <apex:outputField id="HomePhone" value="{!applicantInfo.Home_Phone__c}"/>
+                </div>
+              </div> 
+              
+              <div class="data-row">
+                <div class="data-label left">Student Mobile Phone</div>
+                <div class="data-field">
+                  <apex:outputField id="Mobile" value="{!personInfo.Mobile__c}"/>
+                </div>
+              </div>
+ 
+                  
+              <div class="data-row">
+                <div class="data-label left">Email</div>
+                <div class="data-field">
+                  <apex:outputField id="Email" value="{!personInfo.Email__c}" />
+                </div>
+              </div> 
+              <div class="data-row">
+                <div class="data-label left">Street Address 1</div>
+                <div class="data-field">
+                  <apex:outputField id="Street1" value="{!applicantInfo.Home_Street_1__c}" />
+                </div>
+              </div>  
+                <div class="data-row">
+                <div class="data-label left">Street Address 2</div>
+                <div class="data-field">
+                  <apex:outputField id="Street2" value="{!applicantInfo.Home_Street_2__c}"/>
+                </div>
+              </div>
+              <div class="data-row">
+                <div class="data-label left">City</div>
+                <div class="data-field">
+                  <apex:outputField id="City" value="{!applicantInfo.Home_City__c}"/>
+                </div>
+              </div>
+              <div class="data-row">
+                <div class="data-label left">Province/State</div>
+                <div class="data-field">
+                  <apex:outputField id="State" value="{!applicantInfo.Home_State__c}"/>
+                </div>
+              </div>
+              
+              <div class="data-row">
+                <div class="data-label left">Country</div>
+                <div class="data-field">
+                  <apex:outputField id="HomeCountry" value="{!applicantInfo.Home_Country__c}"/>
+                </div>
+              </div>
+                  
+                  <div class="data-row">
+                <div class="data-label left">Postal Code</div>
+                <div class="data-field">
+                  <apex:outputField id="Zip" value="{!applicantInfo.Home_Postal_Code__c}"/>
+                </div>
+              </div>
+              
+                
+              
+              </div>
+            
+             <div class="panel half last">     
+                 
+                 <h3 class="data-block-title">About Your Family</h3> 
+               <div class="data-row">
+                <div class="data-label left">Parent First Name</div>
+                <div class="data-field">
+                  <apex:outputField id="ParentFirstName" value="{!parentInfo.First_Name__c}" />
+                </div>              
+              </div>
+              
+              <div class="data-row">
+                <div class="data-label left"> Parent Last Name</div>
+                <div class="data-field">
+                  <apex:outputField id="ParentLastName" value="{!parentInfo.Last_Name__c}" />
+                </div>
+              </div>
+              
+              <div class="data-row">
+                <div class="data-label left">Gender</div>
+                <div class="data-field">
+                  <apex:outputField id="ParentGender" value="{!parentInfo.Gender__c}" />
+                </div>
+              </div>
+              
+              <div class="data-row">
+                <div class="data-label left">Email</div>
+                <div class="data-field">
+                  <apex:outputField id="ParentEmail" value="{!parentInfo.Email__c}"/>
+                </div>
+              </div>
+              
+              <div class="data-row">
+                <div class="data-label left">Mobile Phone</div>
+                <div class="data-field">
+                  <apex:outputField id="ParentMobile" value="{!parentInfo.Mobile__c}"/>
+                </div>
+              </div>
+              
+              <div class="data-row">
+                <div class="data-label left">Work Phone </div>
+                <div class="data-field">
+                  <apex:outputField id="ParentWorkPhone" value="{!parentInfo.Work_Phone__c}"/>
+                </div>
+              </div>
+             
+             <div class="data-row">
+                <div class="data-label left">Lives with? </div>
+                <div class="data-field">
+                  <apex:outputField id="LivesWith" value="{!applicantInfo.Lives_With__c}"/>
+                </div>
+              </div> 
+            <h3 class="data-block-title">Academic and Language Skills</h3>   
+              
+             <div class="data-row">
+                <div class="data-label left">Expected Graduation Date</div>
+                <div class="data-field">
+                  <apex:outputField id="GraduationDate" value="{!applicantInfo.Graduation_Date__c}" />
+                </div>
+              
+              </div> 
+              <div class="data-row">
+                <div class="data-label left">Academic years completed by program start date</div>
+                <div class="data-field">
+                  <apex:outputField id="AcademicYears" value="{!applicantInfo.Academic_Years_Completed__c}" />
+                </div>
+                 
+              </div> 
+              <div class="data-row">
+                <div class="data-label left">Average Grade In All Classes</div>
+                <div class="data-field">
+                  <apex:outputField id="GPA" value="{!applicantInfo.GPA_Self_Reported__c}" />
+                </div>
+                 
+              </div> 
+              <div class="data-row">
+                <div class="data-label left">Number of Failed Grades</div>
+                <div class="data-field">
+                  <apex:outputField id="LowGrade" value="{!applicantInfo.Low_Grade_Count__c}" />
+                </div>
+                 
+              </div>  
+                <div class="data-row">
+                <div class="data-label left">English Level</div>
+                <div class="data-field">
+                  <apex:outputField id="EngLevel" value="{!applicantInfo.English_Level__c}" />
+                </div>
+                   
+                </div>
+            
+                <div class="data-row">
+                <div class="data-label left">Years of English Study</div>
+                <div class="data-field">
+                  <apex:outputField id="EnglishStudyYears" value="{!applicantInfo.English_Study_Years__c}" />
+                </div>
+                </div>
+                
+           
+              <div class="data-row">
+                <div class="data-label left">Prior Program Participation</div>
+                <div class="data-field">
+                    <apex:outputField id="PriorExchange" value="{!applicantInfo.Prior_Exchange_Experience__c}" />
+                        
+                </div>
+                
+              </div>
+              <div class="data-row">
+                <div class="data-label left">If yes:</div>
+                <div class="data-field">
+                  <apex:outputField id="PriorVisa" value="{!applicantInfo.Prior_Exchange_Visa__c}"/>
+                </div>
+              </div>
+            
+            <h3 class="data-block-title">Your Program Preferences</h3> 
+              
+                           
+              <div class="data-row">
+                <div class="data-label left">Program</div>
+                <div class="data-field">
+                  <apex:outputField id="ProgramDuration" value="{!applicantInfo.Program_Duration__c}" />
+                </div>
+              </div>
+              
+              <div class="data-row"> 
+                <div class="data-label left">Start Date</div>
+                <div class="data-field">
+                  <!--<apex:outputField id="EngStart" value="{!applicantInfo.Engagement_Start__c}" />-->
+                  <apex:outputField id="EngStart" value="{!applicantInfo.Program_Year__c}" />
+                </div>
+            
+              </div>
+           
+              <div class="data-row">
+                <div class="data-label left"> Partner </div>
+                <div class="data-field">
+                  <apex:outputField id="PartnerName" value="{!applicantInfo.Partner_Name__r.Name}" /> &nbsp;
+                </div>
+              </div> 
+            
+           </div>
+           
+             <div class="panel full last">
+              
+             <apex:outputPanel layout="block" styleClass="form-button" rendered="{! NOT(checkPreApp)}">
+                    <apex:commandlink styleClass="submit" action="{!navigator}">  
+                    <apex:param name="nextPage" value="/apex/Ayusa_PT_Preapp_Submitted" />
+                      <apex:param name="SubmitApp" value="PA"/>
+                      <apex:param name="reDirectPage" value="true"/>
+                      <!--<apex:param name="env" value="{!env}"/>-->
+                      <apex:commandButton id="Submit" value="Submit Application"/>
+                      
+                </apex:commandlink>
+                 </apex:outputPanel>
+               
+                <apex:outputPanel styleClass="form-button" layout="block" rendered="{!checkPreApp}">
+                    <apex:outputLink styleClass="no-submit" rendered="{!checkPreApp}">Submit Application</apex:outputLink>
+                 </apex:outputPanel>
+              
+               <div class="form-link">
+                <apex:commandlink styleClass="view-pdf" action="{!navigator}" target="_blank" >
+                 <i class="icon-file"></i>
+                    <apex:param name="nextPage" value="/apex/ayusa_printapp"/>
+                  <apex:param name="reDirectPage" value="true"/>
+                  <apex:param name="role" value="Both" assignTo="{!role}"/>
+                  <apex:commandButton id="ViewPDF" value="View PDF Summary" />
+                </apex:commandlink>
+               </div>
+           
+                 
+                  <div class="form-link">
+                     
+                      <apex:outputLink id="FooterBack1" value="/apex/ayusa_preapp_home?id={!applicantInfo.Id}" rendered="{!IF(applicantInfo.Intrax_Program_Options__c == 'Ayusa High School' && applicantInfo.Type__c == 'Participant' && applicantInfo.Application_Stage__c == 'Working' && applicantInfo.Application_Level__c == 'Basic' && not(IsPartner), true, false)}"><i class="icon-home"></i> <span>Back to Main Page</span></apex:outputLink>
+                   <apex:outputLink id="FooterBack2" value="/apex/ayusa_app_home?id={!applicantInfo.Id}" rendered="{!IF(applicantInfo.Intrax_Program_Options__c == 'Ayusa High School' && applicantInfo.Type__c == 'Participant' && NOT(applicantInfo.Application_Stage__c == 'Working') && applicantInfo.Application_Level__c == 'Basic' && not(IsPartner), true, false)}"><i class="icon-home"></i> <span>Back to Main Page</span></apex:outputLink>
+                  <apex:outputLink id="FooterBack3" value="/apex/ayusa_preapp_home?id={!applicantInfo.Id}" rendered="{!IF(NOT(applicantInfo.Application_Stage__c == 'In-Review') && NOT(applicantInfo.Application_Stage__c == 'Declined - Ayusa') && NOT(applicantInfo.Application_Stage__c == 'Conditional') && NOT(applicantInfo.Application_Stage__c == 'Accepted') && NOT(applicantInfo.Application_Stage__c == 'Declined - Agent') && applicantInfo.Application_Level__c == 'Basic' && IsPartner, true, false)}"><i class="icon-home"></i> <span>Back to Main Page</span></apex:outputLink>
+                <apex:outputLink id="FooterBack4" value="/apex/pr_app_list" rendered="{!IF((applicantInfo.Application_Stage__c == 'In-Review' || applicantInfo.Application_Stage__c == 'Declined - Ayusa' || applicantInfo.Application_Stage__c == 'Conditional' || applicantInfo.Application_Stage__c == 'Declined - Agent' || applicantInfo.Application_Stage__c == 'Accepted') && applicantInfo.Application_Level__c == 'Basic' && IsPartner, true, false)}"><i class="icon-home"></i> <span>Back to Main Page</span></apex:outputLink> 
+                
+                  </div>
+       
+       </div>
+            
+            
+             
+              </div>
+           
+              
+                  
+        
+       
+      
+         </apex:form>
+      </div>
+    </apex:define>
+</apex:composition>
+</apex:page>

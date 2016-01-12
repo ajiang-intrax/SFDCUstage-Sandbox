@@ -1,0 +1,20 @@
+<apex:page docType="html-5.0" standardStylesheets="false" showHeader="false">
+  <apex:composition template="IntraxTemplate_WhiteLabel">
+    <apex:define name="body">
+      <div id="global-header">
+        <div id="global-header-logo">
+          <apex:outputLink value="{!$Site.Prefix}/AppEngine_SiteLoginPage" target="_self"><apex:image url="{!URLFOR($Resource.intrax_themes, '/intrax_themes/images/intrax-logo-white-small.png')}" alt="Intrax" title="Intrax"/>
+          </apex:outputLink>
+        </div>
+      </div>
+        
+      <div class="wrapper" id="ayusa-student-preapp-academic-language-skills">
+        <h1>Intern Company Referral Received</h1>
+        <h2>Thank You</h2>
+        <div class="white-box">
+          <p>Thank you for submitting an Intern Company referral.  Your referral has been received by Intrax and linked to your Intrax Account.</p>
+        </div>
+      </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

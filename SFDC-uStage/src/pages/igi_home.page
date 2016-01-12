@@ -1,0 +1,233 @@
+<apex:page id="Home" docType="html-5.0" title="MyIntrax Home" controller="IGI_PT_Controller" applyBodyTag="false" applyHtmlTag="false" standardStylesheets="false" showHeader="false" action="{!CheckLogin}">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_igi_pt_application />
+      <div class="row">
+        <div class="col-sm-9 center-block center-text">
+          <h1>Hello,&nbsp;
+            <apex:outputText value="{!$User.FirstName}" />
+          </h1>
+          <p class="lead">Keep track of your program related information here... your application, internship placement details, upcoming interviews and how you can reach us should you need help with anything!</p>
+        </div>
+        <!--  end col --> 
+      </div>
+      <!--  end row -->
+      
+     <hr class="margin-t3 margin-b3"/>
+   
+      <div class="row">
+        <div class="col-sm-8">
+        
+            <apex:outputPanel layout="block" rendered="{!applicantInfo.Engagement__r.Status__c == 'Program Ready' && MostRecentTrip != NULL && MostRecentTrip.Arriving_At__c != NULL}">   
+                <c:block_igi_travel_info trip="{!MostRecentTrip}"/> 
+            </apex:outputPanel>
+            
+            <c:block_cart_igi_app PersonInfo="{!personInfo}" ApplicantInfo="{!applicantInfo}" rendered="{!ISBLANK(applicantInfo.Group__c)}"/>
+              <!-- applicantInfo.Engagement__r.Terms_Accepted_Date__c != NULL -->
+              <apex:variable var="appfee1" value="yes" rendered="{!applicantInfo != NULL && appIPO && applicantInfo.Intrax_Region__c == 'United States' && applicantInfo.Application_Level__c == 'Main' && applicantInfo.Application_Stage__c == 'Submitted'}"/>
+              <!--  <apex:variable var="appfee2" value="yes" rendered="{!personInfo != NULL && applicantInfo != NULL && applicantInfo.Engagement__r.Terms_Accepted_Date__c != NULL && personInfo.Country_of_Residence__c == 'United States' && applicantInfo.Country_of_Interest__c != 'United States' && applicantInfo.Application_Level__c == 'Main' && applicantInfo.Application_Stage__c == 'Submitted'}"/> -->
+              <apex:variable var="fullfee1" value="yes" rendered="{!applicantInfo != NULL && appIPO && applicantInfo.Intrax_Region__c == 'United States' && MatchInformation.size > 0}"/>
+              <!--  <apex:variable var="fullfee2" value="yes" rendered="{!personInfo != NULL && applicantInfo != NULL && applicantInfo.Engagement__r.Terms_Accepted_Date__c != NULL && personInfo.Country_of_Residence__c == 'United States' && applicantInfo.Country_of_Interest__c != 'United States' && MatchInformation.size > 0}"/> -->
+         
+         
+          <apex:outputPanel layout="block" rendered="{!applicantInfo != NULL && applicantInfo.Payment_Received__c == NULL && applicantInfo.Partner_Account__c == NULL && appGroup}">
+            <apex:outputPanel layout="block" rendered="{!appfee1 == 'yes'}">
+                <c:block_igi_paypal_appfee PersonInfo="{!personInfo}" ApplicantInfo="{!applicantInfo}"/>
+            </apex:outputPanel>
+          </apex:outputPanel>  
+          
+           
+          <apex:outputPanel layout="block" rendered="{!EnggInformation != NULL && EnggInformation.Payment_Received__c == NULL && EnggInformation.Partner_Account__c == NULL && eggGroup}">
+            <apex:outputPanel layout="block" rendered="{!fullfee1 == 'yes'}">
+            <c:block_igi_paypal_fullfee PersonInfo="{!personInfo}" ApplicantInfo="{!applicantInfo}"/> 
+          </apex:outputPanel>
+          </apex:outputPanel>  
+         
+        <!-- <c:block_igi_group_info controller="{!Controller}" applicantInfo="{!applicantInfo}" mapdocTypesByGroup="{!mapdocTypesByGroup}" otherDocList="{!otherDoclist}"/>-->
+        
+        <apex:outputPanel id="groupInfoBlock" layout="block" rendered="{!NOT(ISBLANK(applicantInfo.Group__c))}">
+	        <apex:form >
+	           	
+	           	<style>
+	        i.stat-icon {
+		        color: #87b64f;
+				font-size: 32px;
+				text-align: right;
+				margin-right: 15px;
+				width: 30px;
+	         }
+	        
+	        </style>
+	           	
+					<h2 class="margin-b4">Your Group Program in&nbsp;<apex:outputText value="{!applicantInfo.Group__r.Location__c}, {!applicantInfo.Group__r.Country__c}" id="destination"/></h2>
+				     
+				     <div class="row">
+				     <div class="col-sm-6"> 
+				     <div class="margin-r margin-b2">
+<apex:image width="100%" url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/gi/badges/countries/')}{!applicantInfo.Group__r.Country__c}.jpg"  />		
+</div>
+				     </div>
+				     <div class="col-sm-6"> 
+				     <div class="margin-b2">
+				     <div class="tcell"><i class="stat-icon fa fa-calendar center-text"></i></div>
+		                        <div class="tcell">
+		                          <label>Program Dates</label><br/>
+		                          <div><apex:outputField value="{!applicantInfo.Group__r.Engagement_Start__c}" id="engStart"/>
+							<em>to</em>&nbsp;<apex:outputField value="{!applicantInfo.Group__r.Engagement_End__c}" id="engEnd"/></div>
+		                        </div>
+				     </div>
+				     <div class="margin-b2">
+				      <div class="tcell"><i class="stat-icon fa fa-home center-text"></i></div>
+		                        <div class="tcell">
+		                          <label>Accommodation Type</label><br/>
+							<div><apex:outputText value="{!applicantInfo.Group__r.Accommodations__c}" id="accommodations"/></div>	
+		                        </div>
+				     </div>
+				     <div class="margin-b2">
+				     <div class="tcell"><i class="stat-icon fa fa-comments-o center-text"></i></div>
+		                        <div class="tcell">
+		                         <label>Orientation Date</label>
+							<div><apex:outputField value="{!applicantInfo.Group__r.Orientation_Date__c}" id="orientationDate"/></div>		
+		                        </div>
+				     </div>
+				     </div>
+				     </div><!--  end row -->
+				     
+				     
+				     <!-- 
+				      <div class="row">
+				       <div class="col-sm-4 margin-b2">
+		                        <div class="tcell"><i class="stat-icon fa fa-calendar center-text"></i></div>
+		                        <div class="tcell">
+		                          <label>Program Dates</label><br/>
+		                          <div><apex:outputField value="{!applicantInfo.Group__r.Engagement_Start__c}" id="engStart"/>
+							<em>to</em>&nbsp;<apex:outputField value="{!applicantInfo.Group__r.Engagement_End__c}" id="engEnd"/></div>
+		                        </div>
+		                        </div>
+		                        
+		                         <div class="col-sm-4 margin-b2">
+		                        <div class="tcell"><i class="stat-icon fa fa-home center-text"></i></div>
+		                        <div class="tcell">
+		                          <label>Accommodation Type</label><br/>
+							<div><apex:outputText value="{!applicantInfo.Group__r.Accommodations__c}" id="accommodations"/></div>	
+		                        </div>
+		                        </div>
+		                        
+		                         <div class="col-sm-4 margin-b2">
+		                        <div class="tcell"><i class="stat-icon fa fa-comments-o center-text"></i></div>
+		                        <div class="tcell">
+		                         <label>Orientation Date</label>
+							<div><apex:outputField value="{!applicantInfo.Group__r.Orientation_Date__c}" id="orientationDate"/></div>		
+		                        </div>
+		                        </div>
+		                      </div>  end row -->
+					
+					<p class="margin-b2 margin-t2"><apex:outputText value="{!applicantInfo.Group__r.Description__c}" id="description"/></p>
+				    
+				    
+				    <div class="row margin-b2">
+				 
+				    <div class="col-sm-6">
+						<label>University Contact</label>
+						<div class="margin-b"><apex:outputText value="{!applicantInfo.Group__r.Group_Contact_Notes__c}" id="contactNotes"/></div>	
+						
+						<label>Site Staff Contact</label>
+							<div><apex:outputText value="{!applicantInfo.Group__r.Site_Staff_Contact__r.FirstName} {!applicantInfo.Group__r.Site_Staff_Contact__r.LastName}"/><br/>
+							<apex:outputText rendered="{NOT(ISBLANK(applicantInfo.Group__r.Site_Staff_Contact__r.Department))}"><em><apex:outputText value="{!applicantInfo.Group__r.Site_Staff_Contact__r.Department}"/></em><br/></apex:outputText>
+							<apex:outputText rendered="{!NOT(ISBLANK(applicantInfo.Group__r.Site_Staff_Contact__r.Email))}"><apex:outputText value="{!applicantInfo.Group__r.Site_Staff_Contact__r.Email}"/><br/></apex:outputText>
+							<apex:outputText rendered="{!NOT(ISBLANK(applicantInfo.Group__r.Site_Staff_Contact__r.MobilePhone))}"><apex.outputText value="{!applicantInfo.Group__r.Site_Staff_Contact__r.MobilePhone}" id="siteStaffContact"/></apex:outputText>
+							</div>	
+					</div>	
+					
+					<div class="col-sm-6">		
+					<label>Program Documents</label><br/>
+					<apex:commandLink action="{!load_by_doctype}" target="_blank" rendered="{!mapdocTypesByGroup['Itinerary']}">
+					          <apex:param name="groupId" value="{!applicantInfo.Group__c}"/>
+					          <apex:param name="dType" value="Itinerary"/>
+					          <apex:outputText value="Itinerary"/> <br/>
+					        </apex:commandLink>
+					        <apex:commandLink action="{!load_by_doctype}" target="_blank" rendered="{!mapdocTypesByGroup['Welcome-Document']}">
+					          <apex:param name="groupId" value="{!applicantInfo.Group__c}"/>
+					          <apex:param name="dType" value="Welcome-Document"/>
+					          <apex:outputText value="Welcome Document"/> <br/>
+					        </apex:commandLink>
+					        <apex:commandLink action="{!load_by_doctype}" target="_blank" rendered="{!mapdocTypesByGroup['Pre-Departure-Orientation-Info']}">
+					          <apex:param name="groupId" value="{!applicantInfo.Group__c}"/>
+					          <apex:param name="dType" value="Pre-Departure-Orientation-Info"/>
+					          <apex:outputText value="Pre-Departure Orientation"/> <br/>
+					        </apex:commandLink>	
+					        <apex:repeat value="{!otherDocList}" var="item">
+					    		<apex:commandLink action="{!load_by_docGuid}" target="_blank">
+						           <apex:param name="docGUID" value="{!item.Document_GUID__c}"/>
+						           <apex:outputText value="{!item.Name}"/> <br/>
+					         	</apex:commandLink>
+					    	</apex:repeat>		
+					</div>
+					
+					
+					</div> <!--  end row -->
+					
+				</apex:form>
+			</apex:outputPanel>
+         
+             <hr class="margin-t3 margin-b3"/>
+            
+           
+            <apex:outputText rendered="{!ResourcePhaseStr != NULL && ResourcePhaseStr == 'Phase1'}">
+            <h2>Start preparing now!</h2>
+            <p class="margin-b3">
+            Be sure to check out the resources we have provided to support your success while you are on your program. You will find the answer to many of your questions here!
+            </p>
+            </apex:outputText>
+             <apex:outputText rendered="{!ResourcePhaseStr != NULL && ResourcePhaseStr == 'Phase2'}">
+             <h2>Application Support Resources</h2>
+            <p class="margin-b3">
+            Visit the resource center to view additional resources that you will find useful as you finalize your information and start interviewing with potential employers.
+            </p>
+            </apex:outputText>
+            <apex:outputText rendered="{!ResourcePhaseStr != NULL && ResourcePhaseStr == 'Phase3'}">
+             <h2>Pre-Departure Resources</h2>
+            <p class="margin-b3">
+           Visit the resource center to find added resources that will help you prepare for the start of your program.
+            </p>
+            </apex:outputText>
+              <apex:outputLink styleClass="centered-xs btn btn-default btn-lg" value="/apex/igi_pt_resources" id="theLink3" >Visit Resource Center</apex:outputLink>
+              <p>&nbsp;</p>
+      
+       
+          
+          
+        </div>
+        <!--  end col --> 
+           <div class="col-sm-4">
+         <c:block_notifications_igi />  
+           
+           </div> <!--  end col --> 
+      </div>
+      <!-- end row -->
+      
+      <apex:outputpanel layout="block" id="modalSubmit" rendered="{!$CurrentPage.parameters.vstate == 'maincomplete'}" >
+        <div class="modal fade vs1" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-body">
+                <div class="h1">Thank you!</div>
+                <p>You have successfully completed your application to become an intern. You will hear from us within 2 to 3 business days to work with you on the next steps.</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Continue</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </apex:outputpanel>
+      <!--  end modal window --> 
+      <script>
+                var j$ = jQuery.noConflict();
+                j$(window).load(function() {
+                  j$('#myModal').modal();
+                });
+                </script> 
+    </apex:define>
+  </apex:composition>
+</apex:page>

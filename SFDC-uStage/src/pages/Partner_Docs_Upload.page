@@ -1,0 +1,214 @@
+<apex:page id="Engagement_Doc_Uploads" title="Documents Uploads | Intrax" standardStylesheets="false" showHeader="false" controller="IntraxPartnerPortalEngineController" action="{!checkLogin}">
+  
+    <apex:composition template="IntraxTemplate_Vs2" >
+      <apex:define name="body">
+      <apex:form id="form" >
+          <div class="row">
+          <apex:outputPanel styleClass="span9" layout="block">
+            <h1>
+                <apex:outputText rendered="{!IF($CurrentPage.parameters.participantId == null, false, true)}" value="{!participant.Name}"/>
+                <apex:outputText rendered="{!IF($CurrentPage.parameters.participantId == null, true, false)}" value="No Individual Participant Selected"/>
+            </h1>
+          </apex:outputPanel>
+        </div>
+        <!-- end row -->
+        <!-- begin row --> 
+        <div class="row">
+          <!-- begin span3 -->
+            <apex:outputPanel styleClass="span3" layout="block">
+            <c:Badge_Participant_Photo photoUrl="{!returnURL}" />
+            <c:Menu_Partner_Participant_Details participant="{!participant}" applicationRecord="{!applicationRecord}" />
+          </apex:outputPanel>
+          <!-- end span3 -->
+          <!-- begin span9 -->
+            <div class="span9">
+            <apex:outputPanel styleClass="block" layout="block">
+              <div class="block-header">
+                <h3>Document Uploads</h3>
+              </div>
+                 <div class="block-body">
+               <div class="btn-group margin-b">
+    <a class="btn btn-green dropdown-toggle" id="Upload" data-toggle="dropdown" href="#">
+    Upload New Document
+    <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu">
+      
+                     <!-- Show Ayusa pictures type Options -->
+                     
+                     <li>
+                     <apex:outputlink rendered="{!IF(participant.Intrax_Program__c == 'Ayusa', true, false)}" value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.participantId}&orgid={!$Organization.Id}&docType=Pre-Departure-Orientation-Agreement&rType={!rType}&retparam={!retParam1}" id="Pre-Departure-Orientation-Agreement-Link" target="_self" >
+                     <span>Pre-Departure Orientation Agreement</span>                       
+                     </apex:outputlink> 
+                     </li> 
+                 
+                     <li>
+                     <apex:outputlink rendered="{!IF(participant.Intrax_Program__c == 'Ayusa', true, false)}" value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.participantId}&orgid={!$Organization.Id}&docType=PT-Double-Placement-Agreement&rType={!rType}&retparam={!retParam2}" id="PT-Double-Placement-Agreement-Link"  target="_self" >
+                     <span>PT Double Placement Agreement</span>                 
+                     </apex:outputlink>   
+                     </li>
+      
+                     <li>
+                     <apex:outputlink rendered="{!IF(participant.Intrax_Program__c == 'Ayusa', true, false)}" value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.participantId}&orgid={!$Organization.Id}&docType=NP-Double-Placement-Agreement&rType={!rType}&retparam={!retParam3}" id="NP-Double-Placement-Agreement-Link" target="_self" >
+                     <span>NP Double Placement Agreement</span>                     
+                     </apex:outputlink>
+                     </li> 
+      
+                     <li>
+                     <apex:outputlink rendered="{!IF(participant.Intrax_Program__c == 'Ayusa', true, false)}" value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.participantId}&orgid={!$Organization.Id}&docType=SNK-Placement-Agreement&rType={!rType}&retparam={!retParam4}" id="SNK-Placement-Agreement-Link" target="_self" >
+                     <span>SNK Placement Agreement</span>                       
+                     </apex:outputlink>
+                     </li>
+                     
+                     <!-- SAA 19-02-2014 Ayusa II-Story 633-- New document type added -->
+                     
+                     <li>
+                     <apex:outputlink rendered="{!IF(participant.Intrax_Program__c == 'Ayusa', true, false)}" value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.participantId}&orgid={!$Organization.Id}&docType=Private-School-Agreement&rType={!rType}&retparam={!retParam10}" id="Private-School-Agreement" target="_self" >
+                     <span>Private School Agreement</span>                      
+                     </apex:outputlink>
+                     </li>
+                     
+                     <li>
+                     <apex:outputlink rendered="{!IF(participant.Intrax_Program__c == 'Ayusa', true, false)}" value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.participantId}&orgid={!$Organization.Id}&docType=Tutoring-Agreement&rType={!rType}&retparam={!retParam11}" id="Tutoring-Agreement" target="_self" >
+                     <span>Tutoring Agreement</span>                        
+                     </apex:outputlink>
+                     </li>
+                     
+         
+                     <!-- Show Internship & Work Travel pictures type Options -->
+                     
+                       <li>
+                     <apex:outputlink rendered="{!IF(participant.Intrax_Program__c == 'Internship' || participant.Intrax_Program__c == 'Work Travel', true, false)}" value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.participantId}&orgid={!$Organization.Id}&docType=Participant-Photo&rType={!rType}&retparam={!retParam5}" id="Participant-Photo" target="_self" >
+                     <span>Participant Photo</span>                      
+                     </apex:outputlink>
+                     </li>
+                     
+                     <li>
+                     <apex:outputlink rendered="{!IF(participant.Intrax_Program__c == 'Internship' || participant.Intrax_Program__c == 'Work Travel', true, false)}" value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.participantId}&orgid={!$Organization.Id}&docType=Participant-Eligibility-Form&rType={!rType}&retparam={!retParam5}" id="Participant-Eligibility-Form" target="_self" >
+                     <span>Participant Eligibility Form</span>                      
+                     </apex:outputlink>
+                     </li>
+        
+                     <li>
+                     <apex:outputlink rendered="{!IF(participant.Intrax_Program__c == 'Internship' || participant.Intrax_Program__c == 'Work Travel', true, false)}" value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.participantId}&orgid={!$Organization.Id}&docType=University-Letter&rType={!rType}&retparam={!retParam6}" id="University-Letter" target="_self" >
+                     <span>University Letter</span>                     
+                     </apex:outputlink>
+                     </li> 
+                      
+     
+                     <li>
+                     <apex:outputlink rendered="{!IF(participant.Intrax_Program__c == 'Internship' || participant.Intrax_Program__c == 'Work Travel', true, false)}" value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.participantId}&orgid={!$Organization.Id}&docType=University-Letter-Translation&rType={!rType}&retparam={!retParam7}" id="University-Letter-Translation" target="_self" >
+                     <span>University Letter Translation</span>                     
+                     </apex:outputlink>
+                     </li>
+
+                     <li>
+                     <apex:outputlink rendered="{!IF(participant.Intrax_Program__c == 'Internship' || participant.Intrax_Program__c == 'Work Travel', true, false)}" value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.participantId}&orgid={!$Organization.Id}&docType=Terms-and-Conditions&rType={!rType}&retparam={!retParam8}" id="Terms-and-Conditions" target="_self" >
+                     <span><apex:outputText value="Terms & Conditions" /></span>                        
+                     </apex:outputlink>
+                     </li> 
+                     
+                     <li>
+                     <apex:outputlink rendered="{!IF(participant.Intrax_Program__c == 'Internship' || participant.Intrax_Program__c == 'Work Travel', true, false)}" value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.participantId}&orgid={!$Organization.Id}&docType=Offer-Document&rType={!rType}&retparam={!retParam9}" id="Offer-Documents" target="_self" >
+                     <span><apex:outputText value="Offer Document" /></span>                        
+                     </apex:outputlink>
+                     </li>
+                     
+                     
+                     <li>
+                     <apex:outputlink rendered="{!IF(participant.Intrax_Program__c == 'Internship' || participant.Intrax_Program__c == 'Work Travel', true, false)}" value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.participantId}&orgid={!$Organization.Id}&docType=Other&rType={!rType}&retparam={!retParam10}" id="Other" target="_self" >
+                     <span><apex:outputText value="Other" /></span>                     
+                     </apex:outputlink>
+                     </li>
+                     
+                      
+       
+    </ul>
+    </div><!-- end btn group -->
+                 
+             <apex:repeat id="Doclist" value="{!DocList}" var="item" rendered="{!if(DocList.Size > 0, true, false)}">
+                 
+                 <div class="row-fluid margin-b">
+                 <div class="asset-row clearfix">
+                 
+                 <div class="span4">
+                 <div class="w-break">
+                  <apex:commandlink styleClass="inline-link" target="_blank" action="{!load}">
+                  <apex:param name="docGuid" id="Document_GUID" value="{!item.Document_GUID__c}"/>
+                  <strong><apex:outputText id="Document_Name" value="{!item.Document_Name__c}"/></strong>      
+                     </apex:commandlink>
+                     <br/>
+                     <apex:outputText id="Desc" value="{!item.Description__c}"/>    
+                  </div>
+                  </div> <!-- end span4 --> 
+                  
+                  <div class="span4">
+                  
+                  <div class="list-field" id="list-field">
+                       <label><strong><apex:outputText id="ReviewStatus" value="Review Status"/></strong></label>
+                       <br/>
+                       <apex:outputField id="Review_Status" value="{!item.Review_Status__c}"/>
+                  </div>
+                  
+                  <!--  <div class="form-link no-margin"> 
+                  <apex:commandlink styleClass="no-padding"  onclick="return ConfirmDelete('Are You Sure ?');"  action="{!deletefile}">
+                  <apex:param name="docGuid"  value="{!item.Document_GUID__c}"/>
+                        <i class="icon-remove"></i>
+                  <apex:commandButton value="Delete" />
+                  </apex:commandlink>
+                  </div>-->
+                  
+                  </div> <!-- end span4 --> 
+                  
+                  <div class="span4">
+                  <div class="form-link no-margin"> 
+                  <apex:commandlink rendered="{!IF(item.Review_Status__c == 'New', true, false)}" styleClass="no-padding"  onclick="return ConfirmDelete('Are You Sure ?');"  action="{!deletefile}">
+                  <apex:param name="docGuid"  value="{!item.Document_GUID__c}"/>
+                        <i class="icon-remove"></i>
+                  <apex:commandButton id="Delete" value="Delete" />
+                  </apex:commandlink>
+                  </div>
+                  </div>  <!-- end span6 --> 
+                  
+                  </div>
+                  </div>  <!-- end row --> 
+              </apex:repeat> 
+               
+              <apex:outputPanel layout="block" rendered="{!IF(DocList.Size > 0 || PartDocList.Size > 0 || VisaSupportLetter.Size > 0 , false, true)}"><span class="no-records">No record(s) to display.</span></apex:outputPanel>  
+                         
+             
+                 
+              
+              <apex:repeat id="PartDocList" value="{!PartDocList}" var="pitem" rendered="{!if(PartDocList.Size > 0, true, false)}">
+               
+               <div class="row-fluid margin-b">
+               
+           
+                        
+              <apex:outputLink value="/apex/WT_Agreement_PDF?envelopeID={!pitem.dsfs__DocuSign_Envelope_ID__c}" target="_blank" rendered="{!IF( pitem.Signing_Document_Name__c=='Work Program Terms & Conditions' , true, false)}" >Signed Terms and Conditions</apex:outputLink> 
+              
+              <apex:outputLink value="/apex/WT_Agreement_PDF?envelopeID={!pitem.dsfs__DocuSign_Envelope_ID__c} " target="_blank" rendered="{!IF( pitem.Signing_Document_Name__c=='Work Travel Job Placement' , true, false)}">Job Placement Agreement</apex:outputLink>
+               
+           
+             </div>
+             
+               
+               </apex:repeat>
+               <apex:outputLink value="/apex/WT_Visa_Support_Letter?Id={!participantId}" target="_blank" rendered="{!IF(VisaSupportLetter.Size > 0 , true, false)}">Visa Support Letterr</apex:outputLink>
+                  
+              </div> <!-- end block body -->
+            </apex:outputPanel>
+             
+                
+                  
+              
+                           
+          </div><!-- end span9 -->
+        
+      
+          </div> <!-- end row -->
+          </apex:form>
+      </apex:define>
+    </apex:composition>
+  
+</apex:page>

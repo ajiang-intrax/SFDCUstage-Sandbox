@@ -1,0 +1,5 @@
+<apex:page StandardController="sAccount__c" extensions="FlowSAcountController">
+  <flow:interview name="sObjectVerification" finishLocation="{!finishPage}">
+  <apex:param name="sAccountID" value="{!Id}"/>
+  </flow:interview>
+</apex:page>

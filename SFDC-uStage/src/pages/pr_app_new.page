@@ -1,0 +1,113 @@
+<apex:page id="pr_app_new_page" applyBodyTag="false" applyHtmlTag="false" standardController="Applicant_Info__c"
+    extensions="AppEngine_Controller" docType="html-5.0"
+    standardStylesheets="false" showHeader="false">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+     
+      <div class="row margin-b2">
+        <div class="col-sm-9 center-text center-block">
+          <h1>Create a New Application</h1>
+          <p class="lead">Apply in behalf of your applicants.  Complete the field below and then proceed to complete the participant application on the pages that follow.</p>
+        </div>
+        <!--  end column --> 
+      </div>
+      <!--  end row -->
+      
+      <div class="row margin-b2">
+        <div class="col-sm-10 col-md-8 col-lg-6 center-block">
+          <apex:form styleClass="form-vertical ws-validate" id="webForm">
+            <apex:pageMessages />
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label class="control-label">First Name</label>
+                  <apex:inputField id="FirstName" styleClass="form-control" value="{!applicantInfo.First_Name__c}"
+                                                required="true" />
+                </div>
+              </div>
+              <!--  end column -->
+              
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label class="control-label">Last Name</label>
+                  <apex:inputField id="LastName" styleClass="form-control" value="{!applicantInfo.Last_Name__c}"
+                                                required="true" />
+                </div>
+              </div>
+              <!--  end column --> 
+              
+            </div>
+            <!--  end row -->
+            
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="form-group">
+                  <label class="control-label">Email</label>
+                  <apex:inputField id="Email" styleClass="form-control" value="{!applicantInfo.Email__c}"
+                                                required="true" />
+                </div>
+              </div>
+              <!--  end column --> 
+            </div>
+            <!--  end row -->
+            
+            <div class="row">
+              <div class="col-sm-12">
+                <!-- 
+                <p class="margin-b4">Please use the dropdown below to select the type of application you would like to start.</p>
+                 -->
+                <div class="btn btn-lg btn-link">
+                  <apex:outputLink id="BackLink" value="/apex/pr_app_list"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                </div>
+                <apex:commandlink rendered="{!IF(DefaultIP == 'Internship' || DefaultIP == 'Work Travel' , true, false)}" styleClass="btn btn-primary btn-lg"  action="{!navigator}" id="createAppButton">
+                    	<apex:param name="nextPage" value="{!IF(DefaultIP == 'Internship', '/apex/igi_pt_app_personal_info', '/apex/participant_preapp_home')}"/>
+                        <apex:param name="reDirectPage" value="true" />
+                        <apex:param name="app" value="{!IF(DefaultIP == 'Internship', 'IGI', 'WT')}" assignTo="{!app}" />
+                        <apex:param name="role" value="Student" assignTo="{!role}" />
+                        <apex:param name="partnerApp" value="true" />
+                    <apex:commandButton value="Create a New Application" onclick="disable_button(this);" />
+                </apex:commandlink>
+                <!-- 
+                <div class="btn-group">
+                <a class="btn btn-lg btn-primary dropdown-toggle" data-toggle="dropdown" href="#">Create a New Application <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                    <li>
+                      <apex:commandlink action="{!navigator}" rendered="{!IF(CONTAINS(PartnerIntraxPrograms, 'Internship'), true, false)}">
+                        <apex:param name="nextPage" value="/apex/igi_pt_app_personal_info" />
+                        <apex:param name="reDirectPage" value="true" />
+                        <apex:param name="app" value="IGI" assignTo="{!app}" />
+                        <apex:param name="role" value="Student" assignTo="{!role}" />
+                        <apex:param name="partnerApp" value="true" />
+                        <apex:commandButton value="Intrax Global Internship Application"
+                                                        onclick="disable_button(this);" />
+                      </apex:commandlink>
+                    </li>
+                    <li>
+                      <apex:commandlink action="{!navigator}" rendered="{!IF(CONTAINS(PartnerIntraxPrograms, 'Work Travel'), true, false)}">
+                        <apex:param name="nextPage"
+                                                        value="/apex/participant_preapp_home" />
+                        <apex:param name="reDirectPage" value="true" />
+                        <apex:param name="app" value="WT" assignTo="{!app}" />
+                        <apex:param name="role" value="Student" assignTo="{!role}" />
+                        <apex:param name="partnerApp" value="true" />
+                        <apex:commandButton value="Work and Travel Application"
+                                                        onclick="disable_button(this);" />
+                      </apex:commandlink>
+                    </li>
+                  </ul>
+                </div>
+                 -->
+                <!-- end btn group --> 
+              </div>
+              <!--  end column --> 
+            </div>
+            <!--  end row --> 
+          </apex:form>
+        </div>
+        <!--  end column --> 
+      </div>
+      <!--  end row --> 
+      
+    </apex:define>
+  </apex:composition>
+</apex:page>

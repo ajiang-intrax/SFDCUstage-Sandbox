@@ -1,0 +1,16 @@
+<apex:page docType="html-5.0" title="In_Person Interview" applyBodyTag="false" applyHtmlTag="false" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="false" showHeader="false" id="apc_ap_main_interview_flow">
+
+  <apex:composition template="intrax_visual_work_flows_vs2">
+    <apex:define name="body">
+      <div id="apc_ap_partner_interview" class="standalone">  
+        <div class="center-text margin-b2"><apex:image styleClass="center-block" url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/logos/medium-logo-aupaircare.png')}"/></div>
+        <h1 class="center-text">In-Person Interview</h1>
+        <apex:messages />
+          <flow:interview buttonLocation="bottom" name="AP_PR_Interview" finishLocation="{!$Page.apc_ap_main_interview}?id={!applicantInfo.Id}">
+			   	<apex:param name="ApplicationId" value="{!applicantInfo.Id}"/>
+			 	<apex:param name="sInterviewersName" value="{!$User.FirstName} {!$User.LastName}"/>
+		  </flow:interview>
+      </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

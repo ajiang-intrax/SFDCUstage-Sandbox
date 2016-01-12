@@ -1,0 +1,30 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardController="Applicant_Info__c"
+	extensions="AppEngine_Controller" action="{!checkLogin}"
+	standardStylesheets="false" showHeader="false"  title="DocuSign Processing" id="apc_ds_close">
+<apex:composition template="intraxtemplate_vs3">
+<apex:define name="body">
+<style>
+#branding-zone, #footer-zone{display:none;}
+#content-zone{background:transparent;}
+</style>
+
+<script>
+j$(document).ready(function() {
+setTimeout('window.close();', 5000);
+});
+</script>
+
+
+
+<div class="row">
+<div id="sys-msg" class="col-md-6 col-lg-5">
+<div id="sys-msg-inner">
+<i class="fa fa-refresh fa-spin"></i>
+<p class="lead">Your agreement is being processed.<br/> You will be re-directed to your application shortly.</p>
+</div>
+</div><!--  end column -->
+</div><!--  end row -->
+</apex:define>
+
+	</apex:composition>  
+</apex:page>

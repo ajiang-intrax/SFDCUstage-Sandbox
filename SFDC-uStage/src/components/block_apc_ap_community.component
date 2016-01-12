@@ -1,0 +1,39 @@
+<apex:component layout="none" id="block_apc_ap_community" allowDML="true">
+  <apex:attribute name="PageController" description="Instance of home_controller class" type="home_controller" required="false" default="" />
+  <style>
+  i.fa.fa-home.margin-r2.margin-l2 {
+    font-size: 80px;
+    color: #8FD5F1;
+}
+  </style>
+  
+  
+  <!-- Begining CASE 1: PT Application Accepted -->
+  <apex:outputpanel layout="block" id="blockCase1" rendered="{!PageController.currentApp.Intrax_Program__c == 'AuPairCare' &&
+(PageController.matchConf.Status__c == 'Confirmed' || PageController.currentApp.Application_Type__c == 'Extension' || 
+PageController.currentApp.Application_Type__c == 'Renewal' ) }">
+    
+    <div class="hp-block">
+          <div class="row">
+  <div class="col-sm-12">
+    <div class="tcell"><i class="fa fa-home margin-r2 margin-l2"></i></div>
+     <div class="tcell">
+<h3 class="margin-b1 margin-t1">Your Host Community</h3>
+          <p class="margin-b2">Learn more about <b>{!PageController.currentUserProf.Area_Profile__r.Name}</b> and meet au pairs that will be close to you during your program.</p>
+          <apex:outputLink styleClass="btn btn-link btn-lg vs2" value="/apex/apc_ap_community?id={!PageController.currentApp.Id}" id="linkprofinfo1"> <span>Your Community</span> </apex:outputLink>
+
+</div>
+  </div>
+  
+    
+  
+</div>      
+    </div>
+    
+    
+    
+    
+    
+    
+  </apex:outputpanel>
+</apex:component>

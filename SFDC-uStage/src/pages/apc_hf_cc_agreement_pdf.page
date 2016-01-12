@@ -1,0 +1,139 @@
+<apex:page id="apc_hf_cc_agreement_pdf" docType="html-5.0" standardController="Match__c"
+    standardStylesheets="false" showHeader="false" renderas="pdf"
+    applyHtmlTag="false" applyBodyTag="false" extensions="apc_docusign_content_helper"
+    >
+<head>
+  <!-- Adding the base styles for PDFs -->
+  <apex:stylesheet value="{!URLFOR($Resource.intrax_themes_vs3, '/intrax_themes_vs3/styles/pdf.css')}"/>
+  <!-- Adding custom styling and overrides -->
+  <style type="text/css" media="print">
+.white { color:white; font-size:1px; }
+@page { size: portrait; margin: 3cm 1cm 2cm 1cm; @top-left {
+ content : element( header);
+ width: 4cm;
+}
+ @bottom-right {
+ content: "AuPairCare Host Family Agreement | Page " counter(page) " of " counter(pages);
+ vertical-align: bottom;
+ line-height: 1;
+ font-weight: lighter;
+ font-size: 8pt;
+ font-family: Dialog, Arial Unicode MS;
+}
+}
+div.master { display: block; position: running(header); }
+#Asection{counter-reset: start 0;}
+#Bsection{counter-reset: start 14;}
+#Csection{counter-reset: start 27;}
+#Dsection{counter-reset: start 43;}
+</style>
+  </head>
+  <body>
+  <div class="master">
+    <apex:image width="4cm"
+                url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/pdf/pdf-logo-aupaircare.gif')}"
+                alt="AuPairCare" title="AuPairCare"/>
+  </div>
+  <div class="content">
+   
+             
+    <form>
+    
+        <h1>Childcare Agreement</h1>
+  <div>
+                    <b>Family Full Name(s):</b> {!Match__c.Position_Name__r.Host_Company_Id__r.Name}<apex:outputText rendered="{!spouseName != ''}" > , {!spouseName}</apex:outputText><br/>
+                    <b>Street Address:</b> {!Match__c.Position_Name__r.Host_Company_Id__r.PersonMailingStreet}<br/>
+                    <b>City:</b> {!Match__c.Position_Name__r.Host_Company_Id__r.PersonMailingCity}<br/>
+                    <b>State:</b> {!Match__c.Position_Name__r.Host_Company_Id__r.PersonMailingState}<br/>
+                    <b>Zip Code:</b> {!Match__c.Position_Name__r.Host_Company_Id__r.PersonMailingPostalCode}<br/>
+                    <b>Au Pair Full Name:</b> {!Match__c.Participant_Id__r.Name}
+             </div>  
+     
+        <p>&nbsp;</p> 
+                    <p><b>This is a mandatory agreement to fulfill the United States Department of State regulation requirement.</b></p>
+                    <ul>
+                        <li>I/We, the host parent(s), understand that the au pair can be responsible for up to forty-five (45) hours per week of childcare, 
+                        for a maximum of ten (10) hours on any given day, over a period of five and one-half (5 ½) days on a given week.  The au pair will 
+                        have at least one (1) full weekend off each month, scheduled in advance.  I/We agree that we will not ask that she/he perform 
+                        childcare services in excess of the maximum specified by the U.S. DOS regulations. I/ We agree to restrict the au pair’s 
+                        responsibilities to childcare and related tasks.  I/We agree to pay the required stipend on a weekly basis.</li>
+                   
+                        <li>I/We, the host parent(s), understand that asking the au pair to work additional hours and/or offering additional 
+                        compensation for additional hours is a violation of the U.S. Department of State guidelines and this agreement. 
+                        Such request may result in program termination.</li>
+                  
+                         <li>I/We, the host parent(s), agree not to place any form of recording device, including but not limited to 
+                        a “nanny cam” in any area of the Host home in which au pair may have a reasonable expectation of privacy, 
+                        such as bedrooms and bathrooms, but that use of any such device shall be limited to common areas where 
+                        au pair provides child care services.</li>
+                    </ul>
+                    
+                    
+            <apex:outputText rendered="{!$CurrentPage.parameters.specialChild=='Yes'}" >
+            
+     
+              
+                    <p><b>Acknowledging Special Needs Experience</b></p>
+                  
+                        <p>Our records indicate you have a child(ren) with special needs (physical or emotional) and that you have recently selected
+                            {!Match__c.Participant_Id__r.Name} as your new au pair. AuPairCare is required to maintain a written confirmation from you that {!Match__c.Participant_Id__r.Name}'s
+                            prior experiences, skills and training are sufficient for your family's childcare needs.
+                            Your signature below is strictly an acknowledgement that {!Match__c.Participant_Id__r.Name} is aware of your child's special physical/emotional
+                            needs and his/her prior experiences, skills and training with special needs children are so identified.</p>
+                   
+              
+          
+            </apex:outputText>    
+            <p>&nbsp;</p>
+            <table>
+      <tr>
+      <td> 
+                <b>Host Parent Signature</b><br /><br /><br /><br />
+                    <apex:outputPanel styleClass="white">JobHF-Signature</apex:outputPanel>
+                    <br /><br/>
+                    ({!Match__c.Position_Name__r.Host_Company_Id__r.Name})
+            </td>
+            <td>  
+                    <b>Date (mm/dd/yyyy)</b><br/><br /><br /><br />
+                    <apex:outputPanel styleClass="white">JobHF-DateSigned</apex:outputPanel>
+                    <br />
+              </td>
+              </tr>
+              </table>
+              
+            
+                    <ul>
+                        <li>I, the au pair, agree to provide childcare services for my host family.  I understand that my hours will not exceed 
+                        forty-five (45) hours per week, for a maximum of ten (10) hours on any given day, over a period of five and one-half (5 ½)
+                         days on a given week, and that I will have at least one (1) full weekend off each month, scheduled in advance. I agree not to
+                          perform duties outside of childcare and related tasks.</li>
+                   
+                        <li>I, the au pair, understand that working additional hours and/or accepting additional compensation for additional hours 
+                        is a violation of the U.S. Department of State guidelines and this agreement. Such behavior may result in program termination.</li>
+                    </ul>  
+                         
+       
+         <p>&nbsp;</p> 
+      <table>
+      <tr>
+      <td>
+                    <b>Au Pair Signature</b><br /><br /><br /><br />
+                    <apex:outputPanel styleClass="white">JobPT-Signature</apex:outputPanel>                    
+                    <br /><br /> 
+                    ({!Match__c.Participant_Id__r.Name})
+            </td>
+            
+            <td>  
+                    <b>Date (mm/dd/yyyy)</b><br /><br/><br /><br />
+                    <apex:outputPanel styleClass="white">JobPT-DateSigned</apex:outputPanel>                    
+                    <br />
+                    </td>
+       </tr>
+        </table>           
+      
+    
+    
+    </form>
+   </div>
+   </body>   
+</apex:page>

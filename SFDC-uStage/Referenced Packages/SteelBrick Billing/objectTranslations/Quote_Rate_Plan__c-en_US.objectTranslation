@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Quote Rate Plan</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Quote Rate Plans</value>
+    </caseValues>
+    <fields>
+        <label><!-- Description --></label>
+        <name>Description__c</name>
+    </fields>
+    <fields>
+        <label><!-- Product Rate Plan --></label>
+        <name>Product_Rate_Plan__c</name>
+        <relationshipLabel><!-- Quote Rate Plan --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Quote Product --></label>
+        <name>Quote_Product__c</name>
+        <relationshipLabel><!-- Quote Rate Plans --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Quote RatePlan Sequence Number --></label>
+        <name>SequenceNumber__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total Price --></label>
+        <name>Total_Price__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total Quote Rate Plans Charges --></label>
+        <name>Total_Quote_Rate_Plans_Charges__c</name>
+    </fields>
+    <layouts>
+        <layout>Quote Rate Plan Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

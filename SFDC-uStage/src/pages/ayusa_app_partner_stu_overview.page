@@ -1,0 +1,183 @@
+<apex:page docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper">
+          <apex:form >        
+              <div class="page-header clearfix">
+ <h1>Ayusa Student Application</h1>
+<div class="back-to-main"><apex:outputLink value="apex/ayusa_app_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+</div>
+              <h2>For Partners Only - Student Overview</h2>
+                
+            <div class="white-box clearfix">
+              
+               <div class="panel two_thirds">
+                   <p>Partners should review and report information from the doctor’s report, English teacher’s recommendation, English test score, student interview and transcripts. If the English teacher recommendation was submitted online those fields will be pre-filled for you.</p>                
+                  <div class="form-row">
+                    <div class="form-label left"> Partner Name<span class="required">*</span> </div>
+                    <div class="form-field">
+                    <apex:outputField value="{!applicantInfo.Partner_Name__r.Name}" rendered="{!NOT(ISBLANK(applicantInfo.Partner_Name__c))}"/> 
+                    </div>
+                  </div> 
+                  
+                  <div class="form-row">
+                    <div class="form-label left">Does the student have allergies?<span class="required">*</span> </div>
+                    <div class="form-field">
+                        <apex:actionRegion >
+                    <apex:selectRadio value="{!applicantInfo.Allergies_Indicated__c}" required="false">
+                        <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                        <apex:selectOption itemValue="No" itemLabel="No"/>
+                         <apex:actionSupport event="onclick" rerender="allergies" status="status"/>
+                    </apex:selectRadio>
+                     </apex:actionRegion>
+                    </div>
+                        <div class="dropt"> <i class="icon-question-sign"></i>
+                        <span>{!$ObjectType.Applicant_Info__c.Fields.Allergies_Indicated__c.inlineHelpText}</span>
+                    </div>
+                  </div>
+                   <apex:pageBlock id="allergies">
+                    <apex:outputPanel layout="block" rendered="{!ApplicantInfo.Allergies_Indicated__c == 'Yes'}"> 
+                <div class="form-row">
+           
+                    <div class="form-label top ">If yes, please select:<span class="required">*</span> </div>
+                    <div class="form-field">
+                   
+                      <apex:inputField value="{!applicantInfo.Allergies_from_Partner__c}" required="false">
+                     
+                      </apex:inputField>
+                    
+                    </div>
+                  
+                </div> 
+                  <div class="form-row">
+                    <div class="form-label top ">If Other, please describe: </div>
+                    <div class="form-field">
+                      <apex:inputField value="{!applicantInfo.Allergies_Other_Partner__c}" required="false"/>
+                    </div>
+                </div> 
+                 </apex:outputPanel>
+                </apex:pageBlock>
+              
+                <div class="form-row">
+                    <div class="form-label left"> Height (cm)<span class="required">*</span> </div>
+                    <div class="form-field">
+                    <apex:inputField value="{!applicantInfo.Height__c}"/> 
+                    </div>
+                    <div class="dropt"> <i class="icon-question-sign"></i>
+                        <span>{!$ObjectType.Applicant_Info__c.Fields.Height__c.inlineHelpText}</span>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-label left"> Weight (kg)<span class="required">*</span> </div>
+                    <div class="form-field">
+                    <apex:inputField value="{!applicantInfo.Weight__c}"/> 
+                    </div>
+                    <div class="dropt"> <i class="icon-question-sign"></i>
+                        <span>{!$ObjectType.Applicant_Info__c.Fields.Weight__c.inlineHelpText}</span>
+                    </div>
+                </div> 
+                
+                <div class="form-row">
+                    <div class="form-label left"> GPA<span class="required">*</span> </div>
+                    <div class="form-field">
+                    <apex:inputField value="{!applicantInfo.GPA__c}" /> 
+                    </div>
+                    <div class="dropt"> <i class="icon-question-sign"></i>
+                        <span>{!$ObjectType.Applicant_Info__c.Fields.GPA__c.inlineHelpText}</span>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-label left"> Reading Comprehension<span class="required">*</span> </div>
+                    <div class="form-field">
+                    <apex:inputField value="{!applicantInfo.Reading_Comprehension__c}" /> 
+                    </div>
+                    <div class="dropt"> <i class="icon-question-sign"></i>
+                        <span>{!$ObjectType.Applicant_Info__c.Fields.Reading_Comprehension__c.inlineHelpText}</span>
+                    </div>
+                </div> 
+                
+                <div class="form-row">
+                    <div class="form-label left"> Writing Skills<span class="required">*</span> </div>
+                    <div class="form-field">
+                    <apex:inputField value="{!applicantInfo.Writing_Skills__c}" /> 
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-label left"> Speaking Skills<span class="required">*</span> </div>
+                    <div class="form-field">
+                    <apex:inputField value="{!applicantInfo.Speaking_Skills__c}"/> 
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-label left"> English Test Type<span class="required">*</span> </div>
+                    <div class="form-field">
+                    <apex:inputField value="{!applicantInfo.English_Test_Type__c}"/> 
+                    </div>
+                    
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-label left"> English Test Score<span class="required">*</span> </div>
+                    <div class="form-field">
+                    <apex:inputField value="{!applicantInfo.English_Test_Score__c}"/> 
+                    </div>
+                    <div class="dropt"> <i class="icon-question-sign"></i>
+                        <span>{!$ObjectType.Applicant_Info__c.Fields.English_Test_Score__c.inlineHelpText}</span>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-label left"> Double Placement Indicated<span class="required">*</span> </div>
+                    <div class="form-field">
+                    <apex:inputField value="{!applicantInfo.Double_Placement_Indicated__c}"/> 
+                    </div>
+                    <div class="dropt"> <i class="icon-question-sign"></i>
+                        <span>{!$ObjectType.Applicant_Info__c.Fields.Double_Placement_Indicated__c.inlineHelpText}</span>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-label left"> Single No Children<span class="required">*</span> </div>
+                    <div class="form-field">
+                    <apex:inputField value="{!applicantInfo.Single_No_Children_Indicated__c}"/> 
+                    </div>
+                </div>
+                 
+                <div class="form-row">
+                    <div class="form-label left"> Recommended Grade<span class="required">*</span> </div>
+                    <div class="form-field">
+                    <apex:inputField value="{!applicantInfo.Recommended_Grade__c}"/> 
+                    </div>
+                    <div class="dropt"> <i class="icon-question-sign"></i>
+                        <span>{!$ObjectType.Applicant_Info__c.Fields.Recommended_Grade__c.inlineHelpText}</span>
+                    </div>
+                </div>
+                <div class="form-link">
+                        <apex:outputLink styleClass="back" value="/apex/ayusa_app_home?id={!applicantInfo.Id}">
+                        <i class="icon-chevron-left"></i>
+                        <span>Back</span>
+                        </apex:outputLink>
+                    </div>
+                <div class="form-row">
+                      <div class="form-button">
+                        <apex:commandlink styleClass="next" action="{!navigator}">
+                          <apex:param name="nextPage" value="/apex/ayusa_app_partner_detailed_report"/>
+                          <apex:param name="docType" value="Partner" assignTo="{!docType}"/>
+                          <apex:param name="reDirectPage" value="true"/>
+                          <apex:commandButton value="Save & Continue" />
+                          <i class="icon-chevron-right"></i>   
+                        </apex:commandlink>
+                      </div>                      
+                </div>
+            </div>
+              
+                </div>
+          </apex:form>
+      </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

@@ -1,0 +1,126 @@
+<apex:page showHeader="true"
+						cache="false"
+						tabStyle="Zoomerang__tab"
+						standardStylesheets="false" 
+						sidebar="false" 
+						controller="ZMG.ZMG_IFrame" 
+						title="Zoomerang Online Surveys for Salesforce"
+						action="{!checkSetupData}">
+<script type="text/javascript">
+var isInIframe;
+
+setIsInIframe();
+setTitle();
+setWindowResize();
+
+function setIsInIframe() {
+	isInIframe = (window != window.parent);
+}
+
+function setWindowResize() {
+	window.onresize = resizeIframe;
+}
+
+function showIFrame() {
+	hideFooter();
+	resizeIframe();
+	document.getElementById('loadingDiv').style.display = 'none';
+	document.getElementById('iframeDiv').style.display = 'block';
+}
+
+function hideFooter() {
+	var divs = document.getElementsByTagName('div');
+	for (var i = 0; i < divs.length; i++) {
+		if (divs[i].className && divs[i].className.indexOf('bPageFooter') > -1) {
+			divs[i].style.display = 'none';
+		}
+	}
+}
+
+function setTitle() {
+	var doc = (isInIframe ? window.document : window.parent.document);
+	doc.title = document.title;
+}
+
+
+var iframe;
+var parentHeight;
+var newHeight;
+
+function resizeIframe() {
+	newHeight = getViewportHeight() - 105;
+	if (!iframe) iframe = document.getElementById('zIframe');
+	iframe.height = newHeight;
+}
+
+function getViewportHeight() {
+	var viewportwidth;
+	var viewportheight;
+ 
+	// the more standards compliant browsers (mozilla/netscape/opera/IE7) use window.innerWidth and window.innerHeight
+	if (typeof window.innerWidth != 'undefined') {
+		viewportwidth = window.innerWidth;
+		viewportheight = window.innerHeight;
+	}
+ 
+	// IE6 in standards compliant mode (i.e. with a valid doctype as the first line in the document)
+	else if (	typeof document.documentElement != 'undefined' && 
+						typeof document.documentElement.clientWidth != 'undefined' && 
+						document.documentElement.clientWidth != 0) {
+		viewportwidth = document.documentElement.clientWidth;
+		viewportheight = document.documentElement.clientHeight;
+ }
+ 
+	// older versions of IE 
+	else {
+		viewportwidth = document.getElementsByTagName('body')[0].clientWidth;
+		viewportheight = document.getElementsByTagName('body')[0].clientHeight;
+	}
+
+	return viewportheight;
+}
+</script>
+
+<style>
+iframe {
+	margin: 0 0 0 0;
+	padding: 0 0 0 0;
+	border: 0px none;
+	overflow: auto;
+}
+.iContainer {
+	margin: 0 0 0 0;
+	padding: 0 0 0 0;
+}
+</style>
+
+<div style="display: block; font-family: Verdana; font-size: 10pt; padding-left: 9px;" id="loadingDiv">
+	<span>Loading Zoomerang Tab</span>&nbsp;
+	<apex:image id="loadingDots" value="{!URLFOR($Resource.ZMG__ZMG_Resources, 'images/dots.gif')}" />
+</div>
+
+<div style="display: none;" id="iframeDiv" class="iContainer">
+
+	<apex:outputPanel rendered="{!useCampaignUrl}" styleClass="iContainer">
+		<iframe id="zIframe" src="{!campaignUrl}&SessionID={!$Api.Session_ID}&ServerURL={!URLENCODE($Api.Partner_Server_Url_160)}" width="100%"
+						frameBorder="0" onload="showIFrame();" onresize="resizeIframe();"></iframe>
+	</apex:outputPanel>
+
+	<apex:outputPanel rendered="{!useSupportUrl}" styleClass="iContainer">
+		<iframe id="zIframe" src="{!supportUrl}" width="100%"
+						frameBorder="0" onload="showIFrame();" onresize="resizeIframe();"></iframe>
+	</apex:outputPanel>
+
+	<apex:outputPanel rendered="{!useWidgetUrl}" styleClass="iContainer">
+		<iframe id="zIframe" src="{!SUBSTITUTE(SUBSTITUTE(widgetUrl, '{1}', URLENCODE($Api.Partner_Server_Url_160)),'{0}',$Api.Session_ID)}" width="100%"
+						frameBorder="0" onload="showIFrame();" onresize="resizeIframe();"></iframe>
+	</apex:outputPanel>
+
+	<apex:outputPanel rendered="{!noRedirect}" styleClass="iContainer">
+		<iframe id="zIframe" src="{!homeUrl}&SessionID={!$Api.Session_ID}&ServerURL={!URLENCODE($Api.Partner_Server_Url_160)}" width="100%"
+						frameBorder="0" onload="showIFrame();" onresize="resizeIframe();"></iframe>
+	</apex:outputPanel>
+
+</div>
+
+</apex:page>

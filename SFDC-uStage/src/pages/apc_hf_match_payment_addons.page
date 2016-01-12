@@ -1,0 +1,244 @@
+<apex:page id="apc_hf_match_payment_addons" docType="html-5.0" applyHtmlTag="false"  applyBodyTag="false" title="Payment Add-ons" standardStylesheets="false" showHeader="false" controller="apc_portal_controller"
+           action="{!inCountrySkipPage}">
+    <apex:composition template="intraxtemplate_vs3">
+        <apex:define name="body">
+            <c:menu_apc_hf_match_checkout />
+            <div class="row">
+                <div class="col-sm-6 center-block">
+                    <apex:form styleClass="form-vertical ws-validate" id="webform">
+                        <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+                        
+                        <apex:outputPanel id="UserAlreadyPaid" rendered="{!userPaidAlready}">
+        	<div class="lead alert alert-warning clearfix">
+                Looks like you have already paid the fee for this match finalization. But your account is not reflected with the match details.
+                Please contact your Area Director or Regional Manager.
+            </div>
+        </apex:outputPanel>
+                        
+                        <apex:outputPanel id="optionalQuestions" rendered="{!userPaidAlready==false}">
+                        
+                        <div class="row">
+                            <div class="col-sm-18">
+                                <div class="h2 margin-b4 center-text">Please Answer the Questions Below</div>
+                                
+                                <!--
+								Infant specialized question will appear when
+								Under-2 experience IS circulated = False, U2 circulated = true, Hf has any infant (less than 2 yrs old)
+								and aupair is not an incountry aupair.
+								-->
+                                <apex:pageBlock rendered="{!IF((
+                                                          ConfMatch.Engagement__r.Infant_Specialized_Circulated__c  == False 
+                                                          && ConfMatch.Engagement__r.Under_2_Circulated__c == true 
+                                                          && ConfMatch.Engagement__r.In_Country__c!=null 
+                                                          && ConfMatch.Engagement__r.In_Country__c == 'No' 
+                                                          && Infant == true),true,false)}" > 
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label class="control-label">Would you like {!ConfMatch.Participant_Id__r.Name} to receive an additional Infant Specialized Training?</label>
+                                                <p>This will cost an additional <b class="highlighted">${!price1}</b></p>
+                                                <apex:actionRegion >
+                                                    <apex:selectRadio styleClass="radio" required="true" value="{!radio}">
+                                                        <apex:selectOption itemValue="Yes" itemlabel="Yes"/>
+                                                        <apex:selectOption itemValue="No" itemlabel="No"/>
+                                                        <apex:actionSupport event="onchange" action="{!checkradio}" reRender="none"> </apex:actionSupport>
+                                                    </apex:selectRadio>
+                                                </apex:actionRegion>
+                                            </div>
+                                        </div>
+                                        <!-- end col --> 
+                                    </div>
+                                    <!-- end row --> 
+                                </apex:pageBlock>
+
+                                <apex:pageBlock id="optionlist" rendered="{!IF(ConfMatch.Engagement__r.In_Country__c!=null && ConfMatch.Engagement__r.In_Country__c == 'No',true,false)}" > 
+                                    <!-- <apex:pageBlock id="optionlist" rendered="true" >-->
+                                    <apex:outputPanel layout="block" id="thePanel">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <apex:outputText rendered="{!displayInputputText}">
+                                                        <label class="control-label">Please select your local airport to calculate your domestic flight cost.</label>
+                                                    </apex:outputText>
+                                                    <apex:actionRegion >
+                                                        <apex:pageBlock id="picklistsection">
+                                                            <div id="typehead-wrapper">
+                                                                <apex:actionRegion >
+                                                                    <apex:inputText onblur="applyActionBlank();" styleClass="typeahead form-control" value="{!selected}" html-placeholder="Select your airport" id="airportscode"  rendered="{!displayInputputText}"> </apex:inputText>
+                                                                </apex:actionRegion>
+                                                                <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="waitMsg"/>
+                                                            </div>
+                                                            <apex:actionFunction name="applyActionBlank" action="{!viewtransfercost}" status="waitMsg" rerender="pb,selectedValue"> </apex:actionFunction>
+                                                            <apex:actionFunction name="applyAction" action="{!viewtransfercost}" status="waitMsg" rerender="pb,selectedValue"> </apex:actionFunction>
+                                                        </apex:pageBlock>
+                                                    </apex:actionRegion>
+                                                    <apex:pageBlock id="pb">
+                                                        <apex:pageMessages id="validationMsg"/>
+                                                        <apex:outputText id="selectedValue" rendered="{!sel}">
+                                                            <p class="margin-t2">Flight from New Jersey to {!selected} will cost <b class="highlighted">${!price}</b></p>
+                                                        </apex:outputText>
+                                                    </apex:pageBlock>
+                                                </div>
+                                                <!-- end form group --> 
+                                            </div>
+                                            <!-- end col --> 
+                                        </div>
+                                        <!-- end row -->
+                                        
+                                        <apex:actionRegion >
+                                            <div>
+                                                <div class="tcell">
+                                                    <apex:inputcheckbox styleClass="checkbox" value="{!chkBx}" label="checkBox">
+                                                        <apex:actionSupport event="onchange" status="waitMsg1" onComplete="activateTypehead();" rerender="thePanel,pb" action="{!click}"/>
+                                                    </apex:inputcheckbox>
+                                                </div>
+                                                <div class="tcell">I will pick my au pair from the AuPairCare academy in New Jersey. No flight arrangement/cost is needed.</div>
+                                            </div>
+                                        </apex:actionRegion>
+                                        <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();"  startStyleClass="feedback-st" startText="Loading. Please wait..." id="waitMsg1"/>
+                                    </apex:outputPanel>
+                                </apex:pageBlock>
+                                <apex:commandlink styleClass="btn btn-primary btn-lg margin-t4" id="nextlink" action="{!navigator}" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                                    <apex:param name="nextPage" value="{'/apex/apc_hf_match_payment_options'}" />
+                                    <apex:param name="reDirectPage" value="true" />
+                                    <apex:commandButton value="Save and Continue" id="continuebutton" />
+                                </apex:commandlink>
+                            </div>
+                        </div>
+                            </apex:outputPanel>
+                    </apex:form>
+                </div>
+                <!-- end col --> 
+            </div>
+            <!-- end row -->
+            
+            <style type="text/css">
+                
+                #typehead-wrapper .empty-message {
+                padding: 15px 10px;
+                text-align: center;
+                width:250px;
+                }
+                #typehead-wrapper .twitter-typeahead{display:block!important;}
+                #typehead-wrapper .tt-dropdown-menu {
+                width: 422px;
+                margin-top: 12px;
+                padding: 8px 16px;
+                background-color: #fff;
+                border: 1px solid #ccc;
+                border: 1px solid rgba(0, 0, 0, 0.2);
+                -webkit-border-radius: 8px;
+                -moz-border-radius: 8px;
+                border-radius: 8px;
+                -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+                -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+                box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+                }
+                #typehead-wrapper .tt-dataset-airports{cursor:pointer; font-family:'miloweb';}
+                
+            </style>
+            <script>
+            function toggleDisabled(_checked) {
+                document.getElementById('chck').hidden = _checked ? true : false;
+            }
+            
+            //@@@@ ARRAY THAT CONTAINS THE AIRPORTS -- in {!airportcode} we are putting Airports__c from USA (variable in the controller)
+            
+            var airports = {!airportscode};
+            
+            //@@@@*****************END OF ARRAY
+            
+            //@@@@ MATCH FUNCTION
+            
+            var substringMatcher = function(strs) {
+                return function findMatches(q, cb) {
+                    var matches, substrRegex;
+                    
+                    // an array that will be populated with substring matches
+                    matches = [];
+                    
+                    // regex used to determine if a string contains the substring `q`
+                    substrRegex = new RegExp(q, 'i');
+                    
+                    // iterate through the pool of strings and for any string that
+                    // contains the substring `q`, add it to the `matches` array
+                    j$.each(strs, function(i, str) {
+                        if (substrRegex.test(str)) {
+                            // the typeahead jQuery plugin expects suggestions to a
+                            // JavaScript object, refer to typeahead docs for more info
+                            
+                            //####TEST CONSOLE.LOG####
+                            
+                            console.log('airport: ' + str.slice( 0, str.indexOf("--") ));
+                            console.log('country: ' + str.slice( str.indexOf("--") + 2, str.length ));
+                            
+                            matches.push({ value: str });
+                            
+                        }
+                    });
+                    
+                    cb(matches);
+                };
+            };
+            
+            //@@@@*********************END
+            
+            
+            //RUNING JQUERY FUNCTION USING TYPEAHEAD.JS AND HANDLEBARS.JS
+            
+            
+            function activateTypehead(){
+                
+                j$('.typeahead').typeahead({
+                    hint: true,
+                    highlight: true,
+                    minLength: 3
+                    
+                }, {
+                    
+                    name: 'airports',
+                    displayKey: 'value',
+                    source: substringMatcher(airports),
+                    templates: {
+                        empty: [
+                            '<div class="empty-message">',
+                            'Unable to find any airport',
+                            '</div>'
+                        ].join('\n'),
+                        suggestion: Handlebars.compile('<p><strong>{{value}}</strong></p>'),
+                        
+                    }
+                    
+                });
+                
+                j$('.tt-dropdown-menu').click(function(){
+                    //alert("The list was clicked." );
+                    applyAction();
+                    
+                });
+                
+                j$('.tt-dropdown-menu').change(function(){
+                    
+                    alert("The list was clicked.");
+                    
+                });
+                
+                j$('.typeahead').val('');
+                
+                
+                j$('.typeahead').css('background', '#fff');
+                
+            }
+            
+            // We use this funtion to re-activate all funtions after the ajax call
+            activateTypehead();
+            
+            </script> 
+        </apex:define>
+    </apex:composition>
+    <!-- handlebars.js -->
+    <apex:includeScript value="{!URLFOR($Resource.module_handlebars, '/module_handlebars/v1.3.0/handlebars.js')}" />
+    
+    <!-- typeahead.js -->
+    <apex:includeScript value="{!URLFOR($Resource.module_typeahead, '/module_typeahead/v0.10.4/typeahead.js')}" />
+</apex:page>

@@ -1,0 +1,101 @@
+<apex:page controller="CommunityApcController" showHeader="true" id="fs_team">
+
+<apex:form id="myForm">
+        <apex:sectionHeader title="Your Team" subtitle="{!user.Name}"/>
+        <apex:pageBlock id="blockTeam">
+
+		<apex:pageBlock id="pgBlockButtons" mode="maindetail">
+            <apex:pageBlockButtons location="top">
+                <apex:commandButton value="New Hire" action="{!newHire}"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+        
+        <apex:pageBlockTable styleClass="table" value="{!ListUserProf}" var="item">
+                    <apex:column headerValue="Name">
+                        <apex:commandLink action="{!redirectUser}" id="linkName">
+                        <apex:param name="uId" value="{!item.User__c}"/>
+                        <apex:outputText value="{!item.Name}"/>
+                    </apex:commandLink>
+                   
+                    </apex:column>
+                    
+                    <apex:column headerValue="Area">
+                        <apex:commandLink action="{!redirectUser}" id="linkArea">
+                        <apex:param name="uId" value="{!item.User__c}"/>
+                        <apex:param name="areaParam" value="true"/>
+                        <apex:outputText value="{!item.Area_Profile__r.Name}"/> 
+                        </apex:commandLink>
+                    </apex:column>
+                  
+                    <apex:column width="20%" headerValue="Contract Status">
+                        <apex:outputLink id="linkSign" rendered="{!IF(item.User__r.FirstName !=null && item.User__r.LastName!=null 
+                                                                    && item.Monthly_Stipend__c !=null
+                                                                    && item.Employment_Term_Length__c !=null, true, false)}"
+                        value="/apex/ds_apc_ad_agreement_gate?uProfileID={!item.id}&utype=RM" target="_blank">
+                        
+                        <apex:outputText rendered="{!IF(MapDocuSign[item.id]=='Created',true,false)}" value="Pending RM Signature"/>
+                        <apex:outputText rendered="{!IF(MapDocuSign[item.id]=='Sent' || MapDocuSign[item.id]=='Delivered',true,false)}" value="Pending AD Signature"/>
+                        <apex:outputText rendered="{!IF(MapDocuSign[item.id]=='Completed',true,false)}" value="Completed"/>
+                        <apex:outputText rendered="{!IF(MapDocuSign[item.id]== ' ',true,false)}" value="Initiate Agreement"/>
+                        
+                        </apex:outputLink>
+                        
+                        <apex:outputText rendered="{!IF(item.User__r.FirstName !=null && item.User__r.LastName!=null 
+                                                                    && item.Monthly_Stipend__c !=null
+                                                                    && item.Employment_Term_Length__c !=null, false, true)}" 
+                        value="The agreement cannot be signed until both the Monthly Stipend and Employment Terms fields are completed"/>
+                        
+                        
+                    </apex:column>
+                    
+                    <apex:column headerValue="Area Director Training">
+                        <apex:pageBlockTable styleClass="table" value="{!item.scorms__r}" var="item1">
+                           
+                            <apex:column width="40%" headerValue="Course Name">
+                                 <apex:outputText value="{!item1.Course_Name__c}"/>
+                            </apex:column>
+                            <apex:column width="20%" headerValue="Status">
+                            
+                                 <apex:outputText rendered="{!IF(item1.Result__c=='',true,false)}" value="{!item1.Complete_Status__c}"/>
+                                 
+                                 <apex:outputText rendered="{!IF(item1.Result__c=='Passed',true,false)}">
+                                 <apex:outputText value="{!item1.Result__c}"/><br/>
+                                 <em><apex:outputText value="{0,date,dd-MM-yyyy}">
+                                 <apex:param value="{!item1.Passed_Date__c}"/>
+                                 </apex:outputText></em>
+                                 </apex:outputText>
+                                 
+                                 <apex:outputText rendered="{!IF(item1.Result__c=='Failed',true,false)}">
+                                 <apex:outputText value="{!item1.Result__c}"/><br/>
+                                  <em><apex:outputText value="{0,date,dd-MM-yyyy}">
+                                  <apex:param value="{!item1.Failed_Date__c}"/>
+                                 </apex:outputText></em>
+                                 </apex:outputText>
+                                 
+                            </apex:column>
+                            
+                             <apex:column width="20%" headerValue="Score">
+                                 <apex:outputField value="{!item1.Score__c}"/>
+                            </apex:column>
+                             <apex:column width="20%" headerValue="# Attempt">
+                                 <apex:outputText value="{!item1.Attempt_Count__c}"/>
+                            </apex:column>
+                            
+                        
+                        
+                        </apex:pageBlockTable>
+                    </apex:column>
+                    <apex:column headerValue="Last Login Date">
+                         <apex:outputText value="{!item.User__r.LastLoginDate}"/>
+                    </apex:column>
+                    
+                    
+                  </apex:pageBlockTable>
+
+    </apex:pageBlock> 
+    <!-- <apex:actionPoller enabled="{!docusignRefresh}" action="{!buildMapDS}" reRender="blockTeam" interval="5"/> -->
+    
+    </apex:form>
+    
+    
+</apex:page>

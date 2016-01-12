@@ -1,0 +1,62 @@
+<apex:component layout="none" id="block_apc_hf_update_profile" allowDML="true">
+  <apex:attribute name="PageController" description="Instance of home_controller class" type="apc_match_controller" required="false" default="" />
+
+  
+
+<!-- <apex:outputPanel layout="block" rendered="{!(Not(CONTAINS(PageController.ApplicantInfoList[0].PageStatus_Complete__c,'004')) || 
+                                       		Not(CONTAINS(PageController.ApplicantInfoList[0].PageStatus_Complete__c,'005')) || 
+                                       		Not(CONTAINS(PageController.ApplicantInfoList[0].PageStatus_Complete__c,'007')) || 
+                                       		Not(CONTAINS(PageController.ApplicantInfoList[0].PageStatus_Complete__c,'044')))
+                                            && PageController.ApplicantInfoList[0].Application_Type__c != 'Extension' }">   -->   
+<apex:outputPanel layout="block" rendered="{!PageController.ApplicantInfoList[0].Position__r.Profile_Complete__c == False && PageController.ApplicantInfoList[0].Application_Type__c != 'Extension' }">	
+  <style>
+       .hp-block  .ix-hf-profile-add-photos{
+       font-size: 90px;
+    line-height: 0;
+    color: #8fc68c;}  
+       </style> 
+       
+	 <div class="hp-block">
+<div class="row">
+
+<div class="col-sm-12">
+  <div class="tcell"><div class="ix-hf-profile-add-photos margin-r2 margin-l1"></div>
+  </div>
+  <div class="tcell">
+  	<h2 class="margin-t1 margin-b1">Tell Au Pairs More About You &amp; Your Family</h2>
+  	<p class="lead">To find the best match for your family, update your profile here.</p>
+  	<apex:outputLink styleClass="btn btn-link btn-lg vs2 margin-b1" value="/apex/apc_hf_app_home?id={!PageController.ApplicantInfoList[0]}">
+  		<span>Complete Family Profile</span>
+  	</apex:outputLink>
+  </div>
+</div>
+
+  
+</div>
+</div>
+ </apex:outputPanel> 
+ 
+ <apex:outputPanel layout="block" rendered="{!PageController.ApplicantInfoList[0].Position__r.Profile_Complete__c == True}">
+
+	 <div class="hp-block">
+<div class="row">
+
+<div class="col-sm-8">
+  <div class="tcell" style="width:140px;"><div class="ix-lovinghome margin-r2 margin-l1"></div>
+  </div>
+  <div class="tcell">
+  	<h2 class="margin-t1 no-margin-b">Your Family Profile</h2>
+  	<p class="lead no-margin margin-b1">Your contact information, family members, hobbies/interests and more.</p>
+  </div>
+</div>
+<div class="col-sm-4">
+<apex:outputLink styleClass="btn btn-link btn-lg vs2 margin-t2" value="/apex/apc_hf_profile?id={!PageController.ApplicantInfoList[0].Position__c}">
+  		<span>View Family Profile</span>
+  	</apex:outputLink>
+</div>
+  
+</div>
+</div>
+ </apex:outputPanel>  
+   
+</apex:component>

@@ -1,0 +1,9 @@
+<apex:component id="Notification_Reminder" controller="Incomplete_Notifications" access="global">
+<apex:attribute id="notID" assignTo="{!notID}" name="notifyID" type="ID" description="Parent Notification ID"/>  
+	<apex:dataTable value="{!NDetails}" var="NotD">
+		<apex:column >
+			<!--  <apex:facet name="header">Notifications</apex:facet> -->
+			{!NotD.Subject__c}
+		</apex:column>
+	</apex:dataTable>
+</apex:component>

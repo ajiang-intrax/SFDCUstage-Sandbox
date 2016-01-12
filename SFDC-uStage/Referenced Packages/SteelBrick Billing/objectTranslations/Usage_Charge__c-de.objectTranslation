@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>false</plural>
+        <value><!-- Usage --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>true</plural>
+        <value><!-- Usage --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>false</plural>
+        <value><!-- Usage --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>true</plural>
+        <value><!-- Usage --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>false</plural>
+        <value><!-- Usage --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>true</plural>
+        <value><!-- Usage --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>false</plural>
+        <value><!-- Usage --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>true</plural>
+        <value><!-- Usage --></value>
+    </caseValues>
+    <fields>
+        <label><!-- End Date --></label>
+        <name>End_Date__c</name>
+    </fields>
+    <fields>
+        <help><!-- The invoice line against which this usage was billed --></help>
+        <label><!-- Invoice Line --></label>
+        <name>Invoice_Line__c</name>
+        <relationshipLabel><!-- Usages --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The invoice against which the usages are billed --></help>
+        <label><!-- Invoice --></label>
+        <name>Invoice__c</name>
+        <relationshipLabel><!-- Usages billed in this Invoice --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Points to the usage charge against the master order where the current usage units are rolled up to. --></help>
+        <label><!-- Master Usage --></label>
+        <name>Master_Usage__c</name>
+        <relationshipLabel><!-- Child Usages --></relationshipLabel>
+    </fields>
+    <fields>
+        <label>Bestellen Preisplan Laden</label>
+        <name>Order_Rate_Plan_Charge__c</name>
+        <relationshipLabel>Verbräuche</relationshipLabel>
+    </fields>
+    <fields>
+        <label>Menge</label>
+        <name>Quantity__c</name>
+    </fields>
+    <fields>
+        <label>Startdatum</label>
+        <name>Start_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Status --></label>
+        <name>Status__c</name>
+        <picklistValues>
+            <masterLabel>Billed</masterLabel>
+            <translation><!-- Billed --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Rolled-Up</masterLabel>
+            <translation><!-- Rolled-Up --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Un-billed</masterLabel>
+            <translation><!-- Un-billed --></translation>
+        </picklistValues>
+    </fields>
+    <gender><!-- Neuter --></gender>
+    <layouts>
+        <layout>Usage Record Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- Usage Name --></nameFieldLabel>
+</CustomObjectTranslation>

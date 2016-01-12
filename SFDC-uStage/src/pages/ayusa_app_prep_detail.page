@@ -1,0 +1,37 @@
+<apex:page docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper">
+          <apex:form >
+        <div class="page-header clearfix">
+ <h1>Ayusa Student Application</h1>
+<div class="back-to-main"><apex:outputLink value="apex/ayusa_app_home?id={!applicantInfo.Id}"></apex:outputLink></div>
+</div>
+          <h2>Program Preparedness - Details</h2>
+
+          <div class="white-box clearfix">
+          	<div class="panel two_thirds">
+          	<div class="form-row">
+          		<div class="form-label left"> 
+                	<apex:outputText value="{!EssayInfo.Label__c}" /><span class="required">*</span>
+                </div>
+                <div class="form-field">
+                  <apex:inputText value="{!EssayNarrative}" required="false"/>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-button">
+                <apex:commandlink styleClass="save" action="{!saveEssayAnswer}">
+                  <apex:param name="EssayId" value="{!EssayInfo.Id}"/>
+                  <apex:commandButton value="Save" /> 
+                </apex:commandlink>
+              </div>
+            </div> 
+                </div>
+                </div>
+     
+       </apex:form>
+          </div>
+    </apex:define>
+    </apex:composition>
+    </apex:page>

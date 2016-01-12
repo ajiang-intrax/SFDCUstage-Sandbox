@@ -1,0 +1,195 @@
+<apex:page id="centers_app_home" docType="html-5.0" standardController="Applicant_Info__c"  extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:includeScript value="{!URLFOR($Resource.MJQuery, 'jquery-ui-1.9.2.custom/js/jquery-1.8.3.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.MJQuery, 'jquery-ui-1.9.2.custom/js/jquery-ui-1.9.2.custom.min.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.MJQuery, 'jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css')}"/>
+    
+     <script type="text/javascript">
+         var j$ = jQuery.noConflict();
+ 
+        j$(document).ready(function(){
+            j$("#nosubmit").click(function() {                 
+                 $( '<div id="dialog" title="{!$Label.T_0026}"><p>{!$Label.T_0329}</p></div>' ).dialog({               
+                  resizable: false,
+                  height:220,width:350,
+                  modal: true,
+                  buttons: {
+                    "{!$Label.T_0213}": function() {
+                      $( this ).dialog( "close" );
+                    }
+                  }
+                });
+            });
+        });
+     </script>   
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper">
+        <apex:form id="form">
+          <div class="page-header clearfix">
+            <h1><apex:outputText value="{!$Label.T_0053}" /></h1>
+          </div>
+          
+          <div class="white-box clearfix">
+            <div class="panel two_thirds">
+                  <apex:pageMessages id="errorMessages" />
+                <p><apex:outputText value="{!$Label.T_0162}" /></p>
+                <p> <apex:outputText value="{!$Label.T_0163}" /></p>
+                <p> <apex:outputText value="{!$Label.T_0164}" /></p>
+              <div class="pane">
+                <div class="app-summary-section">
+                  <div class="app-summary-section-header"><apex:outputText value="{!$Label.T_0230}" /> </div>
+                  <div class="app-summary-section-body">
+                    <div class="app-summary-section-link">
+                      <apex:commandlink id="Personal_Information_Link" action="{!navigator}">
+                        <apex:param name="nextPage" value="/apex/centers_app_my_information"/>
+                        <!-- <apex:param name="role" value="Student" assignTo="{!role}"/>  -->
+                        <apex:param name="reDirectPage" value="true"/>
+                        <!-- <apex:param name="add" value="false" assignTo="{!add}"/> -->
+                        <apex:outputLabel ><apex:outputText value="{!$Label.T_0165}" /></apex:outputLabel>
+                        <apex:outputPanel layout="inline" styleClass="finished" rendered="{! IF(NOT(ISBLANK(personInfo.Gender__c)), true, false)}"><i class="icon-ok"></i></apex:outputPanel>
+                      </apex:commandlink>
+                    </div>
+                    <div class="app-summary-section-link">
+                      <apex:commandlink id="Program_Choices_Link" action="{!navigator}">
+                        <apex:param name="nextPage" value="/apex/centers_app_my_academic_plan"/>
+                        <apex:param name="reDirectPage" value="true"/>
+                        <apex:outputLabel ><apex:outputText value="{!$Label.T_0166}" /></apex:outputLabel>
+                        <apex:outputPanel layout="inline" styleClass="finished" rendered="{! IF(NOT(ISBLANK(applicantInfo.Intrax_Center__c)), true, false)}"><i class="icon-ok"></i></apex:outputPanel>
+                      </apex:commandlink>
+                    </div>
+                    <div class="app-summary-section-link">
+                      <apex:commandlink id="Program_Agreements_Link" action="{!navigator}">
+                        <apex:param name="nextPage" value="/apex/centers_app_my_terms"/>
+                        <apex:param name="reDirectPage" value="true"/>
+                        <apex:outputLabel ><apex:outputText value="{!$Label.T_0167}" /></apex:outputLabel>
+                        <apex:outputPanel layout="inline" styleClass="finished" rendered="{! IF(applicantInfo.Terms_Accepted__c == true, true, false)}"><i class="icon-ok"></i></apex:outputPanel>
+                      </apex:commandlink>
+                    </div>
+                  </div>
+                </div>
+                  
+                  <div class="app-summary-section">
+                  <div class="app-summary-section-header"><apex:outputText value="{!$Label.T_0231}" /></div>
+                  <div class="app-summary-section-body">
+                    <div class="app-summary-section-link">
+                      <apex:commandlink id="Travel_Services_Link" action="{!navigator}">
+                        <apex:param name="nextPage" value="/apex/centers_app_my_travel_services"/>
+                        <apex:param name="reDirectPage" value="true"/>
+                        <apex:outputLabel ><apex:outputText value="{!$Label.T_0168}" /></apex:outputLabel>
+                        <apex:outputPanel layout="inline" styleClass="finished" rendered="{!CheckCtrTravelServices}"><i class="icon-ok"></i></apex:outputPanel>
+                      </apex:commandlink>
+                    </div>
+                    <apex:outputPanel styleClass="app-summary-section-link" >
+                      <apex:commandlink id="Accommodations_Link" action="{!navigator}" rendered="{!checkCtrHomestayAccommodationReqd}">
+                        <apex:param name="nextPage" value="/apex/centers_app_accommodations"/>
+                        <apex:param name="reDirectPage" value="true"/>
+                        <apex:outputLabel ><apex:outputText value="{!$Label.T_0169}" /> </apex:outputLabel>
+                        <apex:outputPanel layout="inline" styleClass="finished" rendered="{! IF(NOT(ISBLANK(applicantInfo.Intrax_Accommodations__c)), true, false)}"><i class="icon-ok"></i></apex:outputPanel>
+                      </apex:commandlink>
+                    </apex:outputPanel>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="pane last">
+              
+                <div class="app-summary-section">
+                  <div class="app-summary-section-header"><apex:outputText value="{!$Label.T_0232}" /></div>
+                  <div class="app-summary-section-body">
+                    <div class="app-summary-section-link">
+                      <apex:commandlink id="Visa_Information_Link" action="{!navigator}" rendered="{!checkCtrVisaInformationReqd}">
+                        <apex:param name="nextPage" value="/apex/centers_app_my_visa_information"/>
+                        <apex:param name="reDirectPage" value="true"/>
+                        <apex:outputLabel ><apex:outputText value="{!$Label.T_0170}" /></apex:outputLabel>
+                        <apex:outputPanel layout="inline" styleClass="finished" rendered="{! IF(NOT(ISBLANK(applicantInfo.Home_Street_1__c)), true, false)}"><i class="icon-ok"></i></apex:outputPanel>
+                      </apex:commandlink>
+                    </div>
+                    <!-- <div class="app-summary-section-link">
+                      <apex:commandlink id="Financial_Link" action="{!navigator}" rendered="{!checkCtrVisaDocumentsReqd}">
+                        <apex:param name="nextPage" value="/apex/centers_app_my_visa_documents"/>
+                        <apex:param name="reDirectPage" value="true"/>
+                        <apex:param name="docType" value="FinancialResponsibility" assignTo="{!docType}" />
+                        <apex:outputLabel >Financial Certification for F-1 Visa</apex:outputLabel>
+                        <apex:outputPanel layout="inline" styleClass="finished" rendered="{!checkCtrFRDocsLoaded}"><i class="icon-ok"></i></apex:outputPanel>
+                      </apex:commandlink> 
+                    </div>
+                     <div class="app-summary-section-link">
+                      <apex:commandlink id="Passport_Upload_Link" action="{!navigator}">
+                        <apex:param name="nextPage" value="/apex/Centers_app_passport_details"/>
+                        <apex:param name="docType" value="Passport" assignTo="{!docType}"/> 
+                        <apex:param name="reDirectPage" value="true"/>
+                        <apex:outputLabel > Passport Upload </apex:outputLabel>
+                        <apex:outputPanel layout="inline" styleClass="finished" rendered="{!checkCtrPassportLoaded}"><i class="icon-ok"></i></apex:outputPanel>
+                      </apex:commandlink>
+                    </div> 
+                     -->
+                    <div class="app-summary-section-link">
+                      <apex:commandlink id="Document_Upload_Link" action="{!navigator}">
+                        <apex:param name="nextPage" value="/apex/centers_app_my_document_uploads"/>
+                        <apex:param name="docType" value="AllDocuments" assignTo="{!docType}" />
+                        <apex:param name="reDirectPage" value="true"/>
+                        <apex:outputLabel > <apex:outputText value="{!$Label.T_0171}" /></apex:outputLabel>
+                        <apex:outputPanel layout="inline" styleClass="finished" rendered="{!(checkCtrFRDocsLoaded && checkCtrPassportLoaded)}"><i class="icon-ok"></i></apex:outputPanel>
+                      </apex:commandlink>
+                    </div> 
+                    
+                    
+                  </div>
+                </div> 
+                
+                <apex:outputPanel styleClass="app-summary-section" layout="block" rendered="{!CheckCentersAPAirportTranfers}">
+                  <div class="app-summary-section-header"><apex:outputText value="{!$Label.T_0233}" /></div>
+                  <div class="app-summary-section-body">
+                    <apex:outputPanel styleClass="app-summary-section-link" >
+                      <apex:commandlink id="Airport_Tranfers_Link" action="{!navigator}" rendered="{!checkCtrAirportTransferReqd}">
+                        <apex:param name="nextPage" value="/apex/centers_app_my_airport_transfer"/>
+                        <apex:param name="reDirectPage" value="true"/>
+                        <apex:outputLabel ><apex:outputText value="{!$Label.T_0172}" /></apex:outputLabel>
+                        <apex:outputPanel layout="inline" styleClass="finished" rendered="{! IF(NOT(ISBLANK(applicantInfo.Arriving_Date__c)), true, false)}"><i class="icon-ok"></i></apex:outputPanel>
+                      </apex:commandlink>
+                    </apex:outputPanel>
+                  </div>
+                </apex:outputPanel>
+                
+                <div class="app-summary-section" style=" width:90%; margin:0 auto; text-align:center;">
+                  <p><strong><apex:outputText value="{!$Label.T_0173}" /></strong></p>
+                                 
+                  <div class="form-button no-float">
+                    <apex:commandlink id="SubmitBtn" styleClass="submit" action="{!navigator}" rendered="{!checkCtrApplicationReadyToSubmit}">
+                      <apex:param name="nextPage" value="/apex/centers_app_submitted"/>
+                      <apex:param name="SubmitApp" value="PA"/>
+                      <apex:param name="env" value="{!env}"/>
+                      <apex:param name="reDirectPage" value="true"/>
+                      <apex:param name="reviewSubmit" value="RS"/>
+                      <apex:commandButton value="{!$Label.T_0068}" />
+                    </apex:commandlink>
+                  </div>
+                 
+                  
+                  <apex:outputPanel styleClass="form-button no-float"  layout="block" rendered="{!NOT(checkCtrApplicationReadyToSubmit)}">
+                    <a id="nosubmit" href="" class="no-submit" style="cursor: pointer;"><apex:outputText value="{!$Label.T_0068}" /></a>
+                  </apex:outputPanel>                                   
+                  
+                  <div class="form-link no-float">
+                    <apex:commandlink id="View_PDF_button" action="{!navigator}" target="_blank" > 
+                        <i class="icon-file"></i>
+                      <apex:param name="nextPage" value="/apex/centers_app_summary"/>
+                      <apex:param name="reDirectPage" value="true"/>
+                       <apex:param name="role" value="Both" assignTo="{!role}"/>
+                      <apex:commandButton value="{!$Label.T_0154}" />
+                    </apex:commandlink>
+                  </div>
+                </div>                
+              </div>
+            </div>
+            <div class="panel one_third last aside">
+                <c:Badge_Centers_Contact />  
+                  
+            </div>
+            
+          </div>
+        </apex:form>
+      </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

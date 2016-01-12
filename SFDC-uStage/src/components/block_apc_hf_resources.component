@@ -1,0 +1,16 @@
+<apex:component layout="none" id="block_apc_hfp_resources" allowDML="true">
+<apex:attribute name="PageController" description="Instance of home_controller class" type="home_controller" required="false" default="" />
+
+          <h2 class="no-margin-t">Family Resources</h2>
+          
+                <!-- <div style="margin-bottom:5px;"><apex:outputLink value="apc_resources_article?cname=hfhandbook" id="linkresinfoHF1" ><b>The Host Family Handbook</b> </apex:outputLink></div> -->
+                <!-- <div style="margin-bottom:5px;"><apex:outputLink value="apc_resources_article?cname=programcosts" id="linkresinfoHF2" ><b>Program Costs</b> </apex:outputLink></div> -->
+                <div style="margin-bottom:5px;"><apex:outputLink value="apc_resources_article?cname=arrivaldates" id="linkresinfoHF3" ><b>Arrival Dates</b> </apex:outputLink></div>
+               <!--  <div style="margin-bottom:5px;"><apex:outputLink value="apc_resources_article?cname=hfculturegrams" id="linkresinfoHF4" ><b>Country Profiles</b> </apex:outputLink></div> -->
+                <div style="margin-bottom:5px;"><apex:outputLink value="apc_resources_article?cname=interviewquestions" id="linkresinfoHF5" ><b>Interview Questions</b> </apex:outputLink></div>
+                <div style="margin-bottom:5px;"><apex:outputLink value="apc_resources_article?cname=hfprogramoptions" id="linkresinfoHF6" ><b>Program Options</b> </apex:outputLink></div>
+           
+           
+             <div class="margin-t2"><apex:outputLink styleClass="btn btn-link btn-lg vs2" value="apc_resources" id="linkresinfoBreak1" > <span>See All Resources</span> </apex:outputLink></div>
+  
+</apex:component>

@@ -1,0 +1,96 @@
+<apex:page id="ayusa_hf_fam_references_new" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+        <div class="wrapper">
+    <apex:form id="form">
+         <div class="page-header clearfix">
+<h1 class="page-title">Ayusa Host Family Application</h1>
+<div class="back-to-main"><apex:outputLink value="apex/ayusa_hf_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+</div>
+        <h2>Add New Family Reference</h2>
+<div class="white-box clearfix">
+    <div class="panel two_thirds">    
+          <apex:Messages styleClass="custom-error-pagelevel"/>
+            <p><em> All fields marked with an asterisk (<span class="required no-padding">*</span>) are required</em></p><br/>
+          
+          <div class="form-row">
+            <div class="form-label left"> First Name<span class="required">*</span></div>
+            <div class="form-field">
+              <apex:inputField id="FirstName" value="{!refererInfo.First_Name__c}" required="TRUE"/>
+            </div>
+          </div>
+              
+          <div class="form-row">
+            <div class="form-label left"> Last Name<span class="required">*</span></div>
+            <div class="form-field">
+              <apex:inputField id="LastName" value="{!refererInfo.Last_Name__c}" required="TRUE"/>
+            </div>
+          </div>
+           <div class="form-row" >
+            <div class="form-label left"> Phone<span class="required">*</span> </div>
+            <div class="form-field">
+              <apex:inputField id="Phone" value="{!refererInfo.Mobile__c}" required="TRUE"/>
+            </div>
+                    <div class="dropt"> <i class="icon-question-sign"></i>
+                   <span>{!$ObjectType.Person_Info__c.Fields.Mobile__c.inlineHelpText}</span>
+                </div> 
+          </div>
+          <div class="form-row" >
+            <div class="form-label left"> Email</div>
+            <div class="form-field">
+              <apex:inputField id="Email" value="{!refererInfo.Email__c}" required="FALSE" styleClass="inform"/>
+            </div>
+          </div>
+          <!--  AYII: story 73
+          <div class="form-row" >
+            <div class="form-label left"> Email<span class="required">*</span> </div>
+            <div class="form-field">
+              <apex:inputField value="{!refererInfo.Email__c}" required="TRUE" styleClass="inform"/>
+            </div>
+           <div class="dropt"> <i class="icon-question-sign"></i>
+                   <span>{!$ObjectType.Person_Info__c.Fields.Email__c.inlineHelpText}</span>
+                </div>  
+          </div>
+          <div class="form-row">
+                    <div class="form-label top">Personal message:<span class="required">*</span> </div>
+                    <p><em>The references you provide will be emailed by Ayusa and asked to fill out an online Reference Form for your family. To encourage them to submit the reference on your family's behalf, please send
+                    them a short note in the box below, letting them know that you've requested them to fill out the form. It should only take the reference 5 minutes to complete, and they will not be placed on any Ayusa
+                    marketing emails as a result of filling in the Reference Form.</em></p>                     
+                    <div class="form-field" >                                               
+                    <apex:inputTextarea id="RefRequestNote" value="{!refererInfo.Reference_Request_Note__c}" required="TRUE" onkeyup="countChar(this, 255, 'RefRequestNoteCount')"/> 
+                    </div>                        
+                    <div class="char-limit"><span class="char-count-label">Characters left:</span>
+                    <span id="RefRequestNoteCount" class="char-count">
+                    {!255-len(refererInfo.Reference_Request_Note__c) }
+                    </span>
+                    </div>                                           
+          </div> 
+          -->  
+           <div class="form-row continue">
+
+           <div class="form-link">
+                <apex:outputLink id="Back" styleClass="back" value="/apex/ayusa_hf_fam_references?id={!applicantInfo.Id}">
+                <i class="icon-chevron-left"></i>
+                <span>Back</span>
+                </apex:outputLink>
+          </div>
+            
+           <div class="form-button submit">
+             <apex:commandlink action="{!navigator}">
+               <apex:param name="nextPage" value="/apex/ayusa_hf_fam_references"/>
+               <apex:param name="reDirectPage" value="true"/>
+               <apex:param name="add" value="false" assignTo="{!add}"/>
+               <apex:param name="role" value="Reference" assignTo="{!role}"/>  
+               <apex:commandButton id="Save" value="Save & Continue"/>
+               <i class="icon-chevron-right"></i>
+             </apex:commandlink>
+           </div>
+         </div> 
+        </div>
+    </div>
+        
+       </apex:form>
+        </div>
+        </apex:define>
+  </apex:composition>
+</apex:page>

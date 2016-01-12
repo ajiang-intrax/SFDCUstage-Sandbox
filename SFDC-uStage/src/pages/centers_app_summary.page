@@ -1,0 +1,730 @@
+<!--  
+*  Description      :   Visualforce page to diaplay centers app summary.
+* 
+*  Created By       :   
+*
+*  Created Date     :   03/18/2013
+*
+*  Version          :   v1.0 - Created 
+-->
+<apex:page id="centers_app_summary" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}"  standardStylesheets="true" showHeader="false" >    
+    <apex:composition template="IntraxTemplate_Vs1">
+        <apex:define name="body">
+            <div class="wrapper" id="Intrax-Centers-Online-Application">
+                <apex:form id="form">
+                
+                    <!-- Page Title -->
+                    <div class="page-header clearfix">
+                        <h1 class="page-title"><apex:outputText value="{!$Label.T_0053}" /></h1>
+                        <div class="back-to-main">
+                            <apex:outputLink value="apex/centers_app_home?id={!applicantInfo.Id}" id="backToMainNotSubmitted" rendered="{!NOT(Applicant_Info__c.Application_Stage__c == 'Submitted')}"><apex:outputText value="{!$Label.T_0075}" /></apex:outputLink>
+                            <apex:outputLink value="apex/your_applications?id={!applicantInfo.Id}" id="backToMainSubmitted" rendered="{!Applicant_Info__c.Application_Stage__c == 'Submitted'}"><apex:outputText value="{!$Label.T_0075}" /></apex:outputLink>
+                        </div>
+                    </div>
+                   
+                   <!-- Section Header -->
+                   <div class="section-header clearfix">
+                       <h2><apex:outputText value="{!$Label.T_0146}" /></h2>
+                   </div> 
+                   
+                   <div class="white-box clearfix">
+                              
+                       <!-- Basic Instructions -->
+                       <div class="panel no-float half">
+                           <p><apex:outputText value="{!$Label.T_0147}" /></p>
+                           <p><apex:outputText value="{!$Label.T_0148}" /></p>
+                       </div>
+              
+                       <!-- Page Panel -->
+                       <div>
+          
+                          <!-- Panel Heading -->
+                          <h3 class="data-block-title"><apex:outputText value="{!$Label.T_0150}" /></h3> 
+                          
+                          <!-- First Name -->
+                          <div class="data-row">
+                              <div class="data-label left"> <apex:outputText value="{!$Label.T_0004}" /> </div>
+                              <div class="data-field">
+                                  <apex:outputField id="First_Name" value="{!personInfo.First_Name__c}" />
+                              </div>
+                          </div>
+                          
+                          <!-- Middle Name -->
+                          <div class="data-row">
+                              <div class="data-label left"> <apex:outputText value="{!$Label.T_0077}" /> </div>
+                              <div class="data-field">
+                                  <apex:outputField id="Middle_Name" value="{!personInfo.Middle_Name__c}" />
+                              </div>
+                          </div>
+                  
+                          <!-- Last Name -->
+                          <div class="data-row">
+                              <div class="data-label left"> <apex:outputText value="{!$Label.T_0005}" /> </div>
+                              <div class="data-field">
+                                  <apex:outputField id="Last_Name" value="{!personInfo.Last_Name__c}" />
+                              </div>
+                          </div>
+                  
+                          <!-- Gender -->   
+                          <div class="data-row">
+                              <div class="data-label left"> <apex:outputText value="{!$Label.T_0079}" /> </div>
+                              <div class="data-field">
+                                  <apex:outputField id="Gender" value="{!personInfo.Gender__c}" />
+                              </div> 
+                          </div>
+                   
+                          <!-- Date of Birth -->    
+                          <div class="data-row">
+                              <div class="data-label left"><apex:outputText value="{!$Label.T_0080}" /></div>
+                              <div class="data-field">
+                                  <apex:outputField id="Date_of_Birth" value="{!personInfo.Date_of_Birth__c}"/>
+                              </div>
+                          </div>
+                          
+                          <!-- Country Of Citizenship -->
+                          <div class="data-row">
+                              <div class="data-label left"><apex:outputText value="{!$Label.T_0082}" /></div>
+                              <div class="data-field">
+                                  <apex:outputField id="Citizenship" value="{!personInfo.Citizenship__c}"/>
+                              </div>
+                          </div>
+                          
+                          <!--  Email -->
+                          <div class="data-row">
+                              <div class="data-label left"><apex:outputText value="{!$Label.T_0006}" /></div>
+                              <div class="data-field">
+                                  <apex:outputField id="Email" value="{!personInfo.Email__c}"/>
+                              </div>
+                          </div>
+                          
+                          <!-- Phone -->
+                          <div class="data-row">
+                              <div class="data-label left"><apex:outputText value="{!$Label.T_0083}" /></div>
+                              <div class="data-field">
+                                  <apex:outputField id="Phone" value="{!personInfo.Phone__c}"/>
+                              </div>
+                          </div>
+                          
+                          <!-- Skype ID -->
+                          <div class="data-row">
+                              <div class="data-label left"><apex:outputText value="{!$Label.T_0084}" /></div>
+                              <div class="data-field">
+                                  <apex:outputField id="Skype_Id" value="{!personInfo.Skype_Id__c}"/>
+                              </div>
+                          </div>
+                        
+                          <!-- Partner Agency Code
+                          <div class="data-row">
+                              <div class="data-label left">Partner Agency Code</div>
+                              <div class="data-field">
+                                  <apex:outputField value="{!applicantInfo.Partner_Intrax_Id__c}"/>
+                              </div>
+                          </div>
+                          -->
+                           
+                          <!-- How Heard -->
+                          <div class="data-row">
+                              <div class="data-label left"><apex:outputText value="{!$Label.T_0085}" /></div>
+                              <div class="data-field">
+                                  <apex:outputField value="{!applicantInfo.How_Heard__c}" />
+                              </div>
+                            </div>           
+                          </div>
+                          
+                          <!-- Partner -->
+                          <div class="data-row">
+                              <div class="data-label left"><apex:outputText value="{!$Label.T_0149}" /></div>
+                              <div class="data-field">
+                                  <apex:outputField id="Partner_Name" value="{!applicantInfo.Partner_Name__r.Name}" rendered="{!applicantInfo.How_Heard__c == 'Agency'}"/>
+                              </div>
+                          </div>
+                         
+                    
+                       <!-- Page Panel -->
+                       <div>     
+                        
+                            <!--  Heading of Panel -->
+                            <h3 class="data-block-title"><apex:outputText value="{!$Label.T_0089}" /></h3> 
+                        
+                            <!-- When would you like to study? -->
+                            <div class="data-row">
+                                <div class="data-label left"><apex:outputText value="{!$Label.T_0091}" /></div>
+                                <div class="data-field">
+                                    <apex:outputField id="Intrax_Center" value="{!applicantInfo.Intrax_Center__c}" />
+                                </div>              
+                            </div>
+                            
+                            <!-- Do you know when you would like to start your program? (Program Start Option)-->
+                            <div class="data-row">
+                                <div class="data-label left"><apex:outputText value="{!$Label.T_0093}" /></div>
+                                <div class="data-field">
+                                    <!-- <apex:outputField id="Program_Start_Opinion" value="{!applicantInfo.Program_Start_Opinion__c}" />
+                                     -->
+                                    <apex:outputText id="Yes_Prog_Label" value="{!$Label.T_0327}" rendered="{!If(applicantInfo.Program_Start_Opinion__c=='Yes',true,false)}"/>
+                                    <apex:outputText id="No_Prog_Label" value="{!$Label.T_0328}" rendered="{!If(applicantInfo.Program_Start_Opinion__c=='No',true,false)}"/>
+                                </div>              
+                            </div>
+                            
+                            <!-- When would you like to start your program? [In Case of Yes] (Engagement Start) -->
+                            <apex:outputPanel layout="block" rendered="{!applicantInfo.Program_Start_Opinion__c == 'Yes'}">
+                              <div class="data-row">
+                                <div class="data-label left"><apex:outputText value="{!$Label.T_0094}" /></div>
+                                <div class="data-field">
+                                   <apex:outputField id="Engagement_Start" value="{!applicantInfo.Engagement_Start__c}" />
+                                </div>
+                              </div>
+                             </apex:outputPanel>            
+                            
+                            <!-- When would you like to start your program? [In Case of NO] (Program Start) -->
+                            <apex:outputPanel layout="block" rendered="{!applicantInfo.Program_Start_Opinion__c == 'No'}">
+                              <div class="data-row">
+                                <div class="data-label left"><apex:outputText value="{!$Label.T_0096}" /></div>
+                                <div class="data-field">
+                                   <apex:outputField id="Program_Start" value="{!applicantInfo.Program_Start__c}" />
+                                </div> 
+                              </div> 
+                            </apex:outputPanel>            
+                            
+                            <!-- Number Of Weeks [In Case of 'Yes'] -->
+                            <!-- <div class="data-row">
+                                <apex:outputPanel layout="block" rendered="{!applicantInfo.Program_Start_Opinion__c == 'Yes'}">
+                                <div class="data-label left">Number Of Weeks</div>
+                                <div class="data-field">
+                                    <apex:outputText value="{!selectedStudyWeeks}" />
+                                </div>             
+                                </apex:outputPanel> 
+                            </div> -->
+                            
+                            <!-- How many weeks would you like to study for? [In Case Of 'No'] (Program Duration)-->
+                            <!-- <div class="data-row">
+                                <apex:outputPanel layout="block" rendered="{!applicantInfo.Program_Start_Opinion__c == 'No'}">
+                                <div class="data-label left">How many weeks would you like to study for?</div>
+                                <div class="data-field">
+                                    <apex:outputField value="{!applicantinfo.Program_Duration__c}" />
+                                </div>    
+                                </apex:outputPanel>          
+                            </div> -->
+                            
+                            <div class="data-row">
+                                <apex:outputPanel layout="block">
+                                <div class="data-label left"><apex:outputText value="{!$Label.T_0097}" /></div>
+                                <div class="data-field">
+                                    <apex:outputField id="Program_Duration" value="{!applicantinfo.Program_Duration__c}" />
+                                </div>    
+                                </apex:outputPanel>          
+                            </div>                           
+            
+                            <!-- What will be your visa category? -->
+                            <div class="data-row">
+                                <div class="data-label left"><apex:outputText value="{!$Label.T_0098}" /></div>
+                                <div class="data-field">
+                                    <apex:outputField id="Visa_Category" value="{!applicantInfo.Visa_Category__c}" />
+                                </div>              
+                            </div>
+                        </div>
+                    
+                        <!-- Page Panel -->
+                        <apex:outputPanel rendered="{!applicantInfo.Program_Selector__c == 'Package'}" >
+                            
+                            <div>       
+                                <!--  Heading of Panel -->
+                                <!--  CT 109 -->
+                                <h3 class="data-block-title"><apex:outputText value="{!$Label.T_0114}" /></h3>
+                                <!--  CT 109 End -->
+                            
+                                <!-- Products -->
+                                <div class="data-row">
+                                    <!--  CT 109 -->
+                                    <apex:repeat value="{!mapApplicantProduct['Unlimited Package']}" var="item">
+                                    <!--  CT 109 End-->
+                                        <div class="data-field">
+                                            <apex:variable var="a" value="{!item.applicantProduct.Product_Description_Label__c}" />
+                                            <apex:outputText id="Description_Academic_Excellence_Label" value="{!$Label[a]}" rendered="{!if((item.selected == true && a!=null),true,false)}"/>
+                                            <apex:outputText id="Description_Academic_Excellence" value="{!item.applicantProduct.Description__c}" rendered="{!if((item.selected == true && a==null),true,false)}"/>
+                                            <BR/>
+                                        </div> 
+                                        
+                                    </apex:repeat>         
+                                </div>
+                                
+                                <!--CT-117-->
+                                <h3 class="data-block-title"><apex:outputText value="{!$Label.T_0116}" /></h3>
+                            
+                                <div class="data-row">
+                                    <apex:repeat value="{!noOfLessonsWrapperList}" var="addMoreItem" >
+                                                        
+                                        <!-- Products -->
+                                        <div class="data-field">
+                                            <!-- <apex:outputText value="{!addMoreItem.applicantProduct.Product_Name__c}: " rendered="{!if(addMoreItem.selected == true,true,false)}"/>
+                                             -->                                            
+                                            <apex:variable var="q" value="{!addMoreItem.applicantProduct.Product_Name_Label__c}" />
+                                            <apex:outputText id="Product_Label" value="{!$Label[q]}" rendered="{!if((addMoreItem.selected == true && q!=null),true,false)}"/>
+                                            <apex:outputText id="Product" value="{!addMoreItem.applicantProduct.Product_Name__c}" rendered="{!if((addMoreItem.selected == true && q==null),true,false)}"/>
+                                            
+                                            
+                                            <apex:outputText value="{!addMoreItem.applicantProduct.Quantity__c} " rendered="{!if(addMoreItem.selected == true,true,false)}"/>
+                                            
+                                            <!-- <apex:outputText value="({!addMoreItem.applicantProduct.Description__c})" rendered="{!if(addMoreItem.selected == true,true,false)}"/>
+                                             -->
+                                            <apex:variable var="p" value="{!addMoreItem.applicantProduct.Product_Description_Label__c}" />
+                                            <apex:outputText id="Description_Label" value="{!$Label[p]}" rendered="{!if((addMoreItem.selected == true && p!=null),true,false)}"/>
+                                            <apex:outputText id="Description" value="{!addMoreItem.applicantProduct.Description__c}" rendered="{!if((addMoreItem.selected == true && p==null),true,false)}"/>
+                                            			
+                                        </div>
+                                    </apex:repeat>
+                                </div>         
+                                <!--CT-117 End-->
+                            
+                            </div>
+                        </apex:outputPanel>
+                        
+                        <!-- Page Panel -->
+                        <apex:outputPanel rendered="{!applicantInfo.Program_Selector__c == 'Custom'}" >
+                        <div >  
+                            <!--  Heading of Panel -->
+                            <h3 class="data-block-title"><apex:outputText value="{!$Label.T_0105}" /></h3>
+                        
+                            <!-- Products -->
+                            <div class="data-row">
+                                <apex:repeat value="{!mapApplicantProduct['Academic Programs']}" var="item">
+                                    <div>
+                                        <!-- CT-117 -->
+                                        <!-- <apex:outputText id="Description_Academic_Programs" value="{!item.applicantProduct.Product_Name__c}" rendered="{!if(item.selected == true,true,false)}"/>
+                                         -->
+                                        
+                                        <apex:variable var="r" value="{!item.applicantProduct.Product_Description_Label__c}" />
+                                        <apex:outputText id="Product_Label" value="{!$Label[r]}" rendered="{!if((item.selected == true && r!=null),true,false)}"/>
+                                        <apex:outputText id="Product" value="{!item.applicantProduct.Description__c}" rendered="{!if((item.selected == true && r==null),true,false)}"/>
+                                         
+                                        <!-- CT-117 End-->
+                                        <apex:outputText id="Academic_Programs_Start_Date" value=": {!item.applicantProduct.Start_Date__c}" rendered="{!if(item.selected == true && item.applicantProduct.Start_Date__c != null,true,false)}"/>
+                                    </div>
+                                </apex:repeat>         
+                            </div>
+                        </div>
+                    
+                        <!-- Page Panel -->
+                        <div>     
+                        <ul>
+                            <!--  Heading of Panel -->
+                            <h3 class="data-block-title"><apex:outputText value="{!$Label.T_0106}" /></h3>
+                        
+                            <!-- Products -->
+                            <div class="data-row">
+                                <apex:repeat value="{!mapApplicantProduct['Professional Certificates']}" var="item">
+                                    <ol>
+                                        <!-- <apex:outputText id="Description_Professional_Certificates" value="{!item.applicantProduct.Description__c}" rendered="{!if(item.selected == true,true,false)}"/>
+                                         -->
+                                        <apex:variable var="s" value="{!item.applicantProduct.Product_Description_Label__c}" />
+                                        <apex:outputText id="Description_Pro_Certificates_Label" value="{!$Label[s]}" rendered="{!if((item.selected == true && s!=null),true,false)}"/>
+                                        <apex:outputText id="Description_Pro_Certificates" value="{!item.applicantProduct.Description__c}" rendered="{!if((item.selected == true && s==null),true,false)}"/>
+                                        
+                                        <apex:outputText id="Professional_Certificates_Start_Date" value=": {!item.applicantProduct.Start_Date__c}" rendered="{!if(item.selected == true && item.applicantProduct.Start_Date__c != null,true,false)}"/>
+                                    </ol>
+                                </apex:repeat>           
+                            </div>
+                            </ul>
+                        </div>
+                    
+                        <!-- Page Panel -->
+                        <div>     
+                        
+                            <!--  Heading of Panel -->
+                            <h3 class="data-block-title"><apex:outputText value="{!$Label.T_0151}" /></h3>
+                        
+                            <!-- Products -->
+                            <div class="data-row">
+                                <apex:repeat value="{!mapApplicantProduct['Intensity']}" var="item">
+                                    <div class="data-field">
+                                        <!-- <apex:outputText id="Description_Intensity" value="{!item.applicantProduct.Description__c}" rendered="{!if(item.selected == true,true,false)}"/>
+                                         -->
+                                        <apex:variable var="t" value="{!item.applicantProduct.Product_Description_Label__c}" />
+                                        <apex:outputText id="Description_Intensity_Label" value="{!$Label[t]}" rendered="{!if((item.selected == true && t!=null),true,false)}"/>
+                                        <apex:outputText id="Description_Intensity" value="{!item.applicantProduct.Description__c}" rendered="{!if((item.selected == true && t==null),true,false)}"/>
+                                        
+                                        <!-- <apex:outputText id="Intensity_Promo_CTA" value=": {!item.applicantProduct.Promo_CTA__c}" rendered="{!if(item.selected == true && item.applicantProduct.Promo_CTA__c != null,true,false)}"/>
+                                         -->
+                                        <apex:variable var="u" value="{!item.applicantProduct.Promo_CTA_Label__c}" />
+                                        <apex:outputText id="Intensity_Promo_CTA_Label" value="{!$Label[u]}" rendered="{!if((item.selected == true && u!=null),true,false)}"/>
+                                        <apex:outputText id="Intensity_Promo_CTA" value="{!item.applicantProduct.Promo_CTA__c}" rendered="{!if((item.selected == true && u==null),true,false)}"/>
+                                        
+                                    </div>
+                                </apex:repeat>         
+                            </div>
+                        </div>
+                    
+                        <!-- Page Panel -->
+                        <div>     
+                        
+                            <!--  Heading of Panel -->
+                            <h3 class="data-block-title"><apex:outputText value="{!$Label.T_0116}" /></h3>
+                        
+                            <!-- Products -->
+                            <div class="data-row">
+                                <apex:repeat value="{!mapApplicantProduct['Self-Directed']}" var="item">
+                                    <div class="data-field">
+                                        <!-- <apex:outputText id="Self_Directed_Product_Name" value="{!item.applicantProduct.Product_Name__c}: " rendered="{!if(item.selected == true,true,false)}"/>
+                                         -->
+                                        <apex:variable var="v" value="{!item.applicantProduct.Product_Name_Label__c}" />
+                                        <apex:outputText id="Self_Directed_Product_Label" value="{!$Label[v]}" rendered="{!if((item.selected == true && v!=null),true,false)}"/>
+                                        <apex:outputText id="Self_Directed_Product" value="{!item.applicantProduct.Product_Name__c}" rendered="{!if((item.selected == true && v==null),true,false)}"/>
+                                        
+                                        <apex:outputText id="Self_Directed_Quantity" value="{!item.applicantProduct.Quantity__c} " rendered="{!if(item.selected == true,true,false)}"/>
+                                        
+                                        <!-- <apex:outputText id="Description_Self_Directed" value="({!item.applicantProduct.Description__c})" rendered="{!if(item.selected == true,true,false)}"/>
+                                    	 -->
+                                    	<apex:variable var="w" value="{!item.applicantProduct.Product_Description_Label__c}" />
+                                        <apex:outputText id="Description_Self__Label" value="{!$Label[w]}" rendered="{!if((item.selected == true && w!=null),true,false)}"/>
+                                        <apex:outputText id="Description_Self" value="{!item.applicantProduct.Description__c}" rendered="{!if((item.selected == true && w==null),true,false)}"/>
+                                        
+                                    </div>
+                                    <BR/>
+                                </apex:repeat>         
+                            </div>
+                        </div>
+                        </apex:outputPanel> 
+                        <div>
+                            <h3 class="data-block-title"><apex:outputText value="{!$Label.T_0152}" /></h3>
+                            <div class="data-row">
+                                <div class="data-field">
+                                    <apex:outputField id="Questions" value="{!applicantInfo.Questions__c}" />
+                                </div>              
+                            </div>
+                        </div>
+                        
+                        <!-- Page Panel -->
+                        <div>     
+                        
+                            <!--  Heading of Panel -->
+                            <h3 class="data-block-title"><apex:outputText value="{!$Label.T_0168}" /></h3>
+                        
+                            
+                            <div class="data-row">
+                                <div class="data-label left"><apex:outputText value="{!$Label.T_0123}" />  </div>
+                                <apex:repeat value="{!mapApplicantProduct['Package Delivery']}" var="item">
+                                    <div class="data-field">
+                                        <!-- <apex:outputText id="Description_Package_Delivery" value="{!item.applicantProduct.Description__c}" rendered="{!if(item.selected == true,true,false)}"/>
+                                         -->
+                                        <apex:variable var="x" value="{!item.applicantProduct.Product_Description_Label__c}" />
+                                        <apex:outputText id="Description_Package_Delivery_Label" value="{!$Label[x]}" rendered="{!if((item.selected == true && x!=null),true,false)}"/>
+                                        <apex:outputText id="Description_Package_Delivery" value="{!item.applicantProduct.Description__c}" rendered="{!if((item.selected == true && x==null),true,false)}"/>
+                                        
+                                    </div>
+                                </apex:repeat>         
+                            </div>
+                            <div class="data-row">
+                                <div class="data-label left"><apex:outputText value="{!$Label.T_0124}" />  </div>
+                                <apex:repeat value="{!mapApplicantProduct['Insurance']}" var="item">
+                                    <div class="data-field">
+                                        <!-- <apex:outputText id="Description_Insurance" value="{!item.applicantProduct.Description__c}" rendered="{!if(item.selected == true,true,false)}"/>
+                                         -->
+                                        <apex:variable var="y" value="{!item.applicantProduct.Product_Description_Label__c}" />
+                                        <apex:outputText id="Description_Insurance_Label" value="{!$Label[y]}" rendered="{!if((item.selected == true && y!=null),true,false)}"/>
+                                        <apex:outputText id="Description_Insurance" value="{!item.applicantProduct.Description__c}" rendered="{!if((item.selected == true && y==null),true,false)}"/>
+                                        
+                                    </div>
+                                </apex:repeat>  
+                            </div>
+                            <div class="data-row">
+                                <div class="data-label left"><apex:outputText value="{!$Label.T_0125}" /> </div>
+                                <div class="data-field">
+                                    <apex:outputText id="Arrival_Transfer" value="{!ArrivalTransfer}" />
+                                </div>              
+                            </div>
+                        </div>
+                        
+                        <div>     
+                        
+                            <!--  Heading of Panel -->
+                            <h3 class="data-block-title"><apex:outputText value="{!$Label.T_0126}" /></h3>
+                        
+                            <div class="data-row">
+                                <div class="data-label left"><apex:outputText value="{!$Label.T_0129}" />  </div>
+                                <div class="data-field">
+                                    <!-- <apex:outputText id="Intrax_Accommodations" value="{!applicantInfo.Intrax_Accommodations__c}" />
+                                    -->                               
+                                    
+                                    <apex:outputText id="Yes_Label" value="{!$Label.T_0327}" rendered="{!If(applicantInfo.Intrax_Accommodations__c=='Yes',true,false)}"/>
+                                    <apex:outputText id="No_Label" value="{!$Label.T_0328}" rendered="{!If(applicantInfo.Intrax_Accommodations__c=='No',true,false)}"/>
+                                     
+                                </div>              
+                            </div>
+                            <apex:outputPanel rendered="{!applicantInfo.Intrax_Accommodations__c == 'Yes' }" >
+                                <div class="data-row">
+                                    <div class="data-label left"><apex:outputText value="{!$Label.T_0132}" />:  </div>
+                                    <div class="data-field">
+                                    <!-- <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                                        <apex:param value="{!applicantInfo.Check_in_Date__c}" />
+                                    </apex:outputText> -->
+                                      <apex:outputField id="Check_in_Date" value="{!applicantInfo.Check_in_Date__c}" />
+                                    </div>              
+                                </div>
+                                <div class="data-row">
+                                    <div class="data-label left"><apex:outputText value="{!$Label.T_0133}" />: </div>
+                                    <div class="data-field">
+                                    <!-- <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                                        <apex:param value="{!applicantInfo.Check_out_Date__c}" /> 
+                                    </apex:outputText> -->
+                                       <apex:outputField id="Check_out_Date" value="{!applicantInfo.Check_out_Date__c}" />
+                                    </div>              
+                                </div>
+                                <!-- <div class="data-row">
+                                    <div class="data-label left">Choose all price ranges that work for you: </div>
+                                    <div class="data-field">
+                                        <apex:outputText id="Accommodation_Price_Range" value="{!applicantInfo.Accommodation_Price_Range__c}" />
+                                    </div>              
+                                </div> -->
+                                
+                                <!-- CT-111-->
+                                <!--  <div class="data-row">
+                                    <div class="data-label left">Accommodation Preference: </div>
+                                    <div class="data-field">
+                                        <apex:outputText id="Accommodtion_Preference" value="{!applicantInfo.Accommodation_Preference__c}" />
+                                    </div>              
+                                </div>-->
+                                
+                                <div >     
+                        
+                                    <!--  Heading of Panel -->
+                                    <h3 class="data-block-title"><apex:outputText value="{!$Label.T_0153}" /></h3>
+                                        
+                                    <div class="data-row">
+                                        <apex:outputText id="Accommodation_Preference" value="{!applicantInfo.Accommodation_Preference__c}" />
+                                    </div>
+                                    
+                                    <!-- Products (IF "Residence Club" selected as option-->
+                                    <div class="data-row">
+                                        <apex:outputPanel rendered="{!IF(applicantInfo.Accommodation_Preference__c == 'Residence Club', true, false)}">
+                                            <apex:repeat value="{!mapApplicantProduct['Accommodation']}" var="item">
+                                                <div>
+                                                    <!-- <apex:outputText id="Description_Academic_Programs" value="{!item.applicantProduct.Description__c}" rendered="{!if(item.selected == true,true,false)}"/>
+                                                     -->
+                                                    <apex:variable var="z" value="{!item.applicantProduct.Product_Description_Label__c}" />
+			                                        <apex:outputText id="Description_Academic_Programs_Label" value="{!$Label[z]}" rendered="{!if((item.selected == true && z!=null),true,false)}"/>
+			                                        <apex:outputText id="Description_Academic_Programs" value="{!item.applicantProduct.Description__c}" rendered="{!if((item.selected == true && z==null),true,false)}"/>
+                                        
+                                                    <!-- story 156 -->
+                                                    <!-- <apex:outputText id="Academic_Programs_Start_Date" value=": {!item.applicantProduct.Start_Date__c}" rendered="{!if(item.selected == true && item.applicantProduct.Start_Date__c != null,true,false)}"/> -->
+                                                    <apex:outputText id="Academic_Programs_Start_Date" value="" rendered="{!if(item.selected == true && item.applicantProduct.Start_Date__c != null,true,false)}" />
+                                                </div>
+                                            </apex:repeat>
+                                        </apex:outputPanel>         
+                                    </div>
+                                </div>
+                                <!-- CT-111 End-->
+                              
+                                <apex:outputPanel rendered="{!CheckCtrHomestay}">
+                                    <div class="data-row">
+                                        <div class="data-label left"><apex:outputText value="{!$Label.T_0138}" /> </div>
+                                        <div class="data-field">
+                                            <!-- <apex:outputText id="Smoker_Student" value="{!applicantInfo.Smoker_Student__c}" />
+                                            -->
+                                            <apex:outputText id="Yes_Smoker_Label" value="{!$Label.T_0327}" rendered="{!If(applicantInfo.Smoker_Student__c=='Yes',true,false)}"/>
+                                    		<apex:outputText id="No_Smoker_Label" value="{!$Label.T_0328}" rendered="{!If(applicantInfo.Smoker_Student__c=='No',true,false)}"/>
+                                    
+                                        </div>              
+                                    </div>  
+                                    <div class="data-row">
+                                        <div class="data-label left"><apex:outputText value="{!$Label.T_0139}" /> </div>
+                                        <div class="data-field">
+                                            <!-- <apex:outputText id="Allergies_from_Applicant" value="{!applicantInfo.Allergies_from_Applicant__c}" />
+                                             -->
+                                            <apex:outputText id="Yes_Allergies_Label" value="{!$Label.T_0327}" rendered="{!If(applicantInfo.Allergies_from_Applicant__c=='Yes',true,false)}"/>
+                                    		<apex:outputText id="No_Allergies_Label" value="{!$Label.T_0328}" rendered="{!If(applicantInfo.Allergies_from_Applicant__c=='No',true,false)}"/>
+                                    
+                                        </div>              
+                                    </div>
+                                    <div class="data-row">
+                                        <div class="data-label left"><apex:outputText value="{!$Label.T_0140}" /> </div>
+                                        <div class="data-field">
+                                            <!-- <apex:outputText id="Health_Needs_Indicated" value="{!applicantInfo.Health_Needs_Indicated__c}" />
+                                             -->
+                                            <apex:outputText id="Yes_Health_Label" value="{!$Label.T_0327}" rendered="{!If(applicantInfo.Health_Needs_Indicated__c=='Yes',true,false)}"/>
+                                    		<apex:outputText id="No_Health_Label" value="{!$Label.T_0328}" rendered="{!If(applicantInfo.Health_Needs_Indicated__c=='No',true,false)}"/>
+                                    
+                                        </div>              
+                                    </div>
+                                    <apex:outputPanel rendered="{!applicantInfo.Health_Needs_Indicated__c == 'Yes'}" >
+                                    <div class="data-row">
+                                        <div class="data-label left"><apex:outputText value="{!$Label.T_0141}" />: </div>
+                                        <div class="data-field">
+                                            <apex:outputText id="Health_Needs_Description" value="{!applicantInfo.Health_Needs_Description__c}" />
+                                        </div>              
+                                    </div>
+                                    </apex:outputPanel>
+                                    
+                                    <div class="data-row">
+                                        <div class="data-label left"><apex:outputText value="{!$Label.T_0142}" /> </div>
+                                        <div class="data-field">
+                                            <!-- <apex:outputText id="Special_Diet_Indicated" value="{!applicantInfo.Special_Diet_Indicated__c}" />
+                                             -->
+                                            <apex:outputText id="Yes_Diet_Label" value="{!$Label.T_0327}" rendered="{!If(applicantInfo.Special_Diet_Indicated__c=='Yes',true,false)}"/>
+                                    		<apex:outputText id="No_Diet_Label" value="{!$Label.T_0328}" rendered="{!If(applicantInfo.Special_Diet_Indicated__c=='No',true,false)}"/>
+                                    
+                                        </div>              
+                                    </div>
+                                    <apex:outputPanel rendered="{!applicantInfo.Special_Diet_Indicated__c == 'Yes'}">
+                                    <div class="data-row">
+                                        <div class="data-label left"><apex:outputText value="{!$Label.T_0141}" />: </div>
+                                        <div class="data-field">
+                                            <apex:outputText id="Special_Diet" value="{!applicantInfo.Special_Diet__c}" />
+                                        </div>              
+                                    </div>
+                                    </apex:outputPanel>
+                                    
+                                </apex:outputPanel>
+                            </apex:outputPanel>
+                            
+                            
+                        </div>
+                        <div>     
+                        
+                            <!--  Heading of Panel -->
+                            <h3 class="data-block-title"><apex:outputText value="{!$Label.T_0140}" /></h3>
+                        
+                            
+                            <div class="data-row">
+                                <div class="data-label left"><apex:outputText value="{!$Label.T_0081}" />:  </div>
+                                <div class="data-field">
+                                    <apex:outputText id="Country_of_Birth" value="{!applicantInfo.Country_of_Birth__c}" />
+                                </div>              
+                            </div>
+                            <div class="data-row">
+                                <div class="data-label left"><apex:outputText value="{!$Label.T_0175}" />:  </div>
+                                <div class="data-field">
+                                    <apex:outputText id="Passport_Number" value="{!applicantInfo.Passport_Number__c}" />
+                                </div>              
+                            </div>
+                           
+                            <h3><apex:outputText value="{!$Label.T_0176}" /></h3>
+                            <div class="data-row">
+                                <div class="data-label left"><apex:outputText value="{!$Label.T_0177}" />:  </div>
+                                <div class="data-field">
+                                    <apex:outputText id="Home_Street_1" value="{!applicantInfo.Home_Street_1__c}" />
+                                </div>              
+                            </div>
+                            <div class="data-row">
+                                <div class="data-label left"><apex:outputText value="{!$Label.T_0178}" />:  </div>
+                                <div class="data-field">
+                                    <apex:outputText id="Home_City" value="{!applicantInfo.Home_City__c}" />
+                                </div>              
+                            </div>
+                            <div class="data-row">
+                                <div class="data-label left"><apex:outputText value="{!$Label.T_0179}" />:  </div>
+                                <div class="data-field">
+                                    <apex:outputText id="Home_Province" value="{!applicantInfo.Home_Province__c}" />
+                                </div>              
+                            </div>
+                            <div class="data-row">
+                                <div class="data-label left"><apex:outputText value="{!$Label.T_0180}" />:  </div>
+                                <div class="data-field">
+                                    <apex:outputText id="Home_Country" value="{!applicantInfo.Home_Country__c}" />
+                                </div>              
+                            </div>
+                            <div class="data-row">
+                                <div class="data-label left"><apex:outputText value="{!$Label.T_0181}" />:  </div>
+                                <div class="data-field">
+                                    <apex:outputText id="Home_Postal_Code" value="{!applicantInfo.Home_Postal_Code__c}" />
+                                </div>              
+                            </div>
+                            
+                            <h3><apex:outputText value="{!$Label.T_0182}" /></h3>
+                            <div class="data-row">
+                                <div class="data-label left"><apex:outputText value="{!$Label.T_0183}" />:  </div>
+                                <div class="data-field">
+                                    <apex:outputText id="Street" value="{!applicantInfo.Street__c}" />
+                                </div>              
+                            </div>
+                            <div class="data-row">
+                                <div class="data-label left"><apex:outputText value="{!$Label.T_0184}" />:  </div>
+                                <div class="data-field">
+                                    <apex:outputText id="City" value="{!applicantInfo.City__c}" />
+                                </div>              
+                            </div>
+                            <div class="data-row">
+                                <div class="data-label left"><apex:outputText value="{!$Label.T_0185}" />:  </div>
+                                <div class="data-field">
+                                    <apex:outputText id="State" value="{!applicantInfo.State__c}" />
+                                </div>              
+                            </div>
+                            <div class="data-row">
+                                <div class="data-label left"><apex:outputText value="{!$Label.T_0186}" />:  </div>
+                                <div class="data-field">
+                                    <apex:outputText id="Country" value="{!applicantInfo.Country__c}" />
+                                </div>              
+                            </div>
+                            <div class="data-row">
+                                <div class="data-label left"><apex:outputText value="{!$Label.T_0187}" />:  </div>
+                                <div class="data-field">
+                                    <apex:outputText id="Postal_Code" value="{!applicantInfo.Postal_Code__c}" />
+                                </div>              
+                            </div>
+                        </div>
+                        
+                        <div>     
+                            <apex:outputPanel rendered="{!CheckCentersAPAirportTranfers}">
+                            <!--  Heading of Panel -->
+                            <h3 class="data-block-title"> <apex:outputText value="{!$Label.T_0155}" /></h3>
+                                <div class="data-row">
+                                    <div class="data-label left"><apex:outputText value="{!$Label.T_0201}" />:  </div>
+                                    <div class="data-field">
+                                        <apex:outputField id="Arriving_Date" value="{!applicantInfo.Arriving_Date__c}" />
+                                    </div>              
+                                </div>
+                                
+                               <div class="form-row">
+                                <div class="form-label left "><apex:outputText value="{!$Label.T_0202}" />: </div>
+                                <div class="form-field">
+                                  <apex:outputField id="Arrival_Time" value="{!applicantInfo.Arrival_Time__c}" />
+                                </div>
+                               </div>
+                            
+                               <div class="form-row">
+                                <div class="form-label left "><apex:outputText value="{!$Label.T_0203}" />: </div>
+                                <div class="form-field">
+                                  <apex:outputField id="Carrier" value="{!applicantInfo.Carrier__c}"/>
+                                </div>
+                               </div>
+                              
+                            
+                               <div class="form-row">
+                                <div class="form-label left "><apex:outputText value="{!$Label.T_0204}" />:</div>
+                                <div class="form-field">
+                                  <apex:outputField id="Carrier_Number" value="{!applicantInfo.Carrier_Number__c}" />
+                                </div>
+                               </div>  
+                               
+                               <div class="form-row">
+                                <div class="form-label left "><apex:outputText value="{!$Label.T_0205}" />: </div>
+                                <div class="form-field">
+                                  <apex:outputField id="Airport" value="{!applicantInfo.Airport__c}" />
+                                </div>
+                               </div>
+                               </apex:outputPanel>
+                        </div>
+                        
+                    
+                        <div class="panel full last">
+                            <div class="form-link">
+                                <apex:outputLink id="backLinkNotSumbmitted" value="/apex/centers_app_home?id={!applicantInfo.Id}" rendered="{!NOT(Applicant_Info__c.Application_Stage__c == 'Submitted')}"><i class="icon-chevron-left"></i> <span><apex:outputText value="{!$Label.T_0086}" /></span></apex:outputLink>
+                                <apex:outputLink id="backLinkSubmitted" value="/apex/your_applications?id={!applicantInfo.Id}" rendered="{!Applicant_Info__c.Application_Stage__c == 'Submitted'}"><i class="icon-chevron-left"></i> <span><apex:outputText value="{!$Label.T_0086}" /></span></apex:outputLink>
+                            </div>
+                            <!-- View PDF Summary Link -->
+                            <div class="form-link">
+                                <apex:commandlink id="View_PDF_Link" styleClass="view-pdf" action="{!navigator}" target="_blank" >
+                                    <i class="icon-file"></i>
+                                    <apex:param name="nextPage" value="/apex/Centers_PrintApp"/>
+                                    <apex:param name="reDirectPage" value="true"/>
+                                    <apex:param name="view" value="Both" assignTo="{!view}"/>
+                                    <apex:param name="role" value="Both" assignTo="{!role}"/>
+                                    <apex:commandButton value="{!$Label.T_0154}" />
+                                </apex:commandlink>
+                            
+                            </div>
+                        </div>
+                    </div>        
+                </apex:form> 
+            </div>
+        </apex:define>
+    </apex:composition>
+</apex:page>

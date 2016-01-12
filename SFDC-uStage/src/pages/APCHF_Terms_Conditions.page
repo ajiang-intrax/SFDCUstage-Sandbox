@@ -1,0 +1,577 @@
+<apex:page docType="html-5.0" standardController="Applicant_Info__c"
+	standardStylesheets="false" showHeader="false" renderas="pdf"
+	applyHtmlTag="false" applyBodyTag="false" extensions="apc_docusign_content_helper"
+>
+  <head>
+  <!-- Adding the base styles for PDFs -->
+  <apex:stylesheet value="{!URLFOR($Resource.intrax_themes_vs3, '/intrax_themes_vs3/styles/pdf.css')}"
+/>
+  <!-- Adding custom styling and overrides -->
+  <style type="text/css" media="print">
+@page { size: portrait; margin: 3cm 1cm 2cm 1cm; @top-left {
+ content : element( header);
+ width: 4cm;
+}
+ @bottom-right {
+ content: "AuPairCare Host Family Agreement | Page " counter(page) " of " counter(pages);
+ vertical-align: bottom;
+ line-height: 1;
+ font-weight: lighter;
+ font-size: 8pt;
+ font-family: Dialog, Arial Unicode MS;
+}
+}
+div.master { display: block; position: running(header); }
+#Asection{counter-reset: start 0;}
+#Bsection{counter-reset: start 14;}
+#Csection{counter-reset: start 27;}
+#Dsection{counter-reset: start 43;}
+#Esection{counter-reset: start 1;}
+#Fsection{counter-reset: start 9;}
+#Gsection{counter-reset: start 10;}
+#Hsection{counter-reset: start 13;}
+#Isection{counter-reset: start 15;}
+#Jsection{counter-reset: start 25;}
+#Ksection{counter-reset: start 26;}
+#Lsection{counter-reset: start 29;}
+#Msection{counter-reset: start 33;}
+#Nsection{counter-reset: start 38;}
+#Osection{counter-reset: start 42;}
+#Psection{counter-reset: start 43;}
+#Qsection{counter-reset: start 46;}
+#Rsection{counter-reset: start 48;}
+#Ssection{counter-reset: start 51;}
+</style>
+  </head>
+  <body>
+  <div class="master">
+    <apex:image width="4cm"
+				url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/pdf/pdf-logo-aupaircare.gif')}"
+				alt="AuPairCare" title="AuPairCare"/>
+  </div>
+  <div class="content">
+    <form>
+      <h1>AuPairCare Host Family Agreement</h1>
+      <h2>General Provisions</h2>
+      <p> This AuPairCare Host Family Agreement (the "Agreement") is entered
+        into between AuPairCare, a California Corporation and <strong>{!Applicant_Info__c.Account__r.FirstName}
+        {!Applicant_Info__c.Account__r.LastName}<apex:outputText rendered="{!spouseName != ''}" > and {!spouseName}</apex:outputText></strong> of <strong>{!Applicant_Info__c.Home_City__c}</strong>,
+        <strong>{!Applicant_Info__c.Home_State__c}</strong>, acting
+        on behalf of and including all members of said persons' household
+        and family (hereinafter, in the aggregate, referred to as "Host").
+        Host family has fully read this Agreement and agrees to the terms
+        and conditions contained herein. <strong>This is an
+        important, detailed and comprehensive Agreement, in light of the
+        very serious nature of the relationship that develops between Host
+        families and their respective au pairs, the very serious safety
+        and other concerns that exist with respect to the well-being of au
+        pairs placed with Host families, and the very serious concerns
+        intrinsic in a live-in situation with the provision of care for
+        young children. Accordingly, Host is hereby advised, instructed,
+        and expected to fully read, acknowledge and agree to each and
+        every provision contained herein. If Host has any concerns or
+        questions whatsoever regarding any provision of this Agreement,
+        those concerns and questions must be raised prior to Host's
+        execution of the Agreement. AuPairCare will deem Host's execution
+        of this Agreement to confirm Host's full understanding and consent
+        to each and every term of this Agreement.</strong> </p>
+      <p>The parties agree as follows:</p>
+     <ol class="reordered" id="Asection">
+        <li>Host will abide by the terms and conditions of this
+          Agreement as long as the Host participates in the AuPairCare
+          program, unless and until this Agreement is replaced or modified
+          by a subsequent written agreement executed by AuPairCare and Host.</li>
+       </ol>
+       <p>&nbsp;</p>
+     
+         <h2>Department of State Requirements</h2>
+         <ol class="reordered" id="Esection"> 
+        <li>Host is hereby advised and acknowledges that all au pairs
+          are participants in a cultural exchange program, and agrees to
+          comply with all of the regulations published by U.S. Department of
+          State in 22 CFR Part 514, as the same may be amended from time to
+          time in the future ("the Regulations"). Said regulations can be found by visiting
+          http://j1visa.state.gov.</li>
+        <li>Host affirms that they are U.S. citizens or legal permanent residents and that 
+		Host lives within one hour’s driving time of the home of the local AuPairCare representative. 
+		In the event Host moves outside of the area covered by AuPairCare, Host will not be eligible to 
+		continue in the program, and the au pair placement will be ended. In this case, 
+		Host will be eligible to receive a refund in accordance with AuPairCare’s 
+		refund policy set forth herein.
+		</li>
+        <li>Host agrees that the au pair will perform childcare services and light 
+        housekeeping related to childcare that shall not exceed forty-five (45) hours per week, 
+        five and one half (5 1/2) days per week, with a maximum of ten (10) hours per day. 
+        Host agrees that the au pair will have one full weekend off per month (Friday evening 
+        to Monday morning). If a dispute arises as to any of these limits or requirements, 
+        AuPairCare shall resolve said dispute, and its decision shall be final.</li>
+        <li>Host will restrict au pair’s responsibilities to childcare and related tasks. 
+        This may include duties such as general supervision, preparing children’s meals, 
+        straightening children’s rooms, doing children’s laundry and being present when 
+        children are sleeping. Host agrees that the au pair’s responsibilities will not 
+        include pet care, heavy housework, yard work, taking care of children of families 
+        other than host family, providing care to incapacitated adults living in the host 
+        home or related to the host family, or other labor related to the household. If a 
+        dispute arises concerning the scope of the au pair’s responsibilities, AuPairCare 
+        shall resolve said dispute, and its decision shall be final.</li>
+        <li>Host is hereby advised and understands that in the event Host has an infant under the 
+        age of two years old, the au pair must have 200 hours of documented experience working with 
+        children under the age of two. Such documented experience shall be verified by AuPairCare prior 
+        to au pair placement. Host agrees to promptly notify AuPairCare in the event a child under the 
+        age of two joins the household at any time during the program. Host understands that any previously 
+        placed au pair shall not be permitted to remain with Host if he/she does not have 200 hours of documented 
+        experience working with children under the age of two.</li>
+        <li>Host agrees that during the first three (3) days of an au pair’s 
+        stay in the home, a parent or another responsible adult shall remain in 
+        the home to facilitate the adjustment of the au pair into the family, household and community.</li>
+        <li>Host agrees that in the event there is a baby less than three months old living in the home, a 
+        parent or other responsible adult shall be present in the home <strong>at all times </strong>, and the au pair shall 
+        not be the sole caregiver for that child <strong> at any time </strong>. </li>
+        <li>Host shall promptly notify AuPairCare in writing in the event another individual, 
+        including but not limited to other children, joins the household; there is a change 
+        in marital status, location, contact information or other significant event that may 
+        occur during the program. For purposes of this Agreement, a “significant event” is any 
+        change in the household that may impact an au pair’s well-being and/or living situation.  
+        If Host wishes to have a parent removed from the AuPairCare account, we must receive this 
+        request in writing from both host parents. A host parent’s name cannot be removed unless both
+         host parents are in agreement. In the event that a parent is removed from the account, please 
+         note that account information will not be granted to the removed party. Only the host parent 
+         remaining on the account and residing in the home with the au pair will be privy to confidential account information.</li>
+       </ol>
+       <p>&nbsp;</p>
+        <h2>J-1 Visa</h2>
+         <ol class="reordered" id="Fsection"> 
+        <li>Host is hereby advised and acknowledges that the decision to 
+        grant an au pair a J-1 visa is at the sole discretion of the U.S. 
+        Embassy or Consulate in the au pair's country of residence. Host understands that 
+        there is always a risk that an au pair will not be granted a J-1 visa to participate 
+        in the AuPairCare program. Host further understands that AuPairCare does not provide any 
+        compensation, including but not limited to compensation for alternative child care costs, in the 
+        event of a visa denial, other than a program fee refund, excluding the initial application fee, 
+        in the event Host chooses not to select another au pair.</li>
+       </ol>
+       <p>&nbsp;</p>
+        <h2>Au Pair Selection and Placement</h2>
+         <ol class="reordered" id="Gsection"> 
+        <li>Host is hereby advised and acknowledges that AuPairCare’s function is to locate and 
+        present au pair candidates who meet AuPairCare selection criteria, but that final selection 
+        of an au pair is the sole responsibility of Host. Host understands and agrees that while the 
+        screening process does include a questionnaire pertaining to the au pair’s reported health, 
+        AuPairCare cannot independently verify the accuracy of the representations made therein, and 
+        is not responsible for any representations made by au pairs and/or their physicians with respect 
+        to an au pair’s health or physical condition.<strong> Host understands and agrees that AuPairCare does not 
+        guarantee that any particular au pair will be compatible in Host’s home, or meet Host’s expectations. </strong></li>
+        <li>Host is hereby advised and agrees that AuPairCare does not guarantee childcare coverage at any time, including but 
+        not limited to situations involving arrival delays, visa delays, au pair cancellations, visa denials, illness, 
+        pregnancy, flight cancellations or delays, adverse weather conditions, and/or inability or unwillingness by an au 
+        pair to fulfill her/his duties. Host hereby releases AuPairCare, its subsidiaries, officers, employees and/or agents 
+        from any and all claims for financial, incidental or consequential damages, including but not limited to costs of 
+        alternative or interim childcare, loss of income, travel costs, emotional or psychological injury, or other loss or 
+        damage of any kind which may arise from the unavailability of an au pair’s services for any reason whatsoever.</li>
+        <li>Host is hereby advised, acknowledges and agrees that AuPairCare shall not be liable 
+        for and does not guarantee acceptable performance by the au pair. Host agrees that the 
+        au pair is not an employee, agent or independent contractor of AuPairCare, and that AuPairCare 
+        does not exercise dominion or control over the actions of the au pair. AuPairCare is not responsible 
+        for any act or omission on the part of the au pair.</li>
+        </ol>
+       <p>&nbsp;</p>
+        <h2>Program Continuance</h2>
+         <ol class="reordered" id="Hsection"> 
+        <li>Host is hereby advised and acknowledges that AuPairCare has the exclusive right to determine suitability of 
+        Host to participate in the program. Host agrees that in determining suitability, AuPairCare may make inquiries to third 
+        parties about Host and Host’s family members, and any other individuals residing at or frequently staying at Host’s residence. 
+        Host represents that all information set forth in the Host Family Application is true and complete. </li>
+        <li>Host agrees that AuPairCare may immediately terminate Host’s participation in the program and remove the au pair 
+        from Host’s home, if a) AuPairCare determines, at its sole discretion, that the au pair is in an unsuitable environment, 
+        or is being treated in an inappropriate manner by Host; or b) Host fails to comply with any terms of this Agreement, 
+        including, but not limited to, failure to pay the full program fee or any other stipend or payment required hereunder; 
+        or c) Host fails to comply with any of the Regulations; or d) AuPairCare determines, at its sole discretion, that the 
+        Host is not cooperative with AuPairCare's staff or services. In the case of any such termination, Host shall not be 
+        eligible for a program fee refund or credit.</li>
+        
+        </ol>
+       <p>&nbsp;</p>
+          <h2>Financial, Educational and Hosting Obligation</h2>
+         <ol class="reordered" id="Isection"> 
+        <li>Host agrees to provide au pair with room and board in the form of meals.  Host shall provide a suitable private bedroom 
+        in Host’s home that meets all local and state building codes.</li>
+        <li>Host agrees to pay a stipend to the au pair in accordance with the Department of State Regulations and those 
+        of the AuPairCare program. The Department of State has set the current minimum weekly stipend amount at $195.75 as of July 23, 2009. 
+        Said stipend shall be paid on the same mutually agreed upon day each week, and cannot be withheld for any reason, including but not 
+        limited to outstanding bills of any nature, auto accidents or lost time due to illness. The au pair is entitled to start receiving the 
+        stipend after one full week in the Host’s home. Stipend amount is subject to change during the program year if directed by the 
+        Department of State.</li>
+        
+         <li>Host is hereby advised and acknowledges that in 1994, the U.S. Department of Labor determined that the au pair 
+         stipend constitutes "wages" because an employer-employee relationship exists between the au pair and the Host. 
+         Au pair wages are essentially in the nature of household employment, and au pairs are required to file U.S. individual 
+         tax returns. Host understands that Host is responsible for complying with any Federal or state labor and/or income tax 
+         laws that may apply to Host. Host understands that AuPairCare is not responsible for providing, and will not provide, 
+         any specific guidance in tax matters, but that said matters are strictly the responsibility of Host and the au pair.</li>
+        
+         <li>Host is hereby advised and acknowledges that due to the fact that an employee-employer relationship 
+         exists between the Host and au pair, Host is responsible for determining whether Workers’ Compensation 
+         insurance, or any other insurance requirements, is mandatory under federal, state and/or local laws. 
+         Host is advised and understands that AuPairCare is not responsible for providing guidance as to such 
+         insurance matters, but that the failure to comply with applicable laws in this regard can potentially 
+         have severe consequences to Host. Host agrees to release and waive any claims it may have against 
+         AuPairCare either directly, or indirectly, as the consequence of failing to provide insurance for an 
+         au pair as set forth herein. Host further agrees to indemnify and hold harmless AuPairCare, its 
+         subsidiaries, officers, employees and/or agents for any liability or expense, including court costs 
+         and legal fees incurred, by AuPairCare, in the event of any dispute regarding coverage addressed 
+         herein, whether Host acted directly or indirectly, and whether Host acted intentionally or unintentionally.</li>
+         
+          <li>Host agrees to provide the au pair with two weeks (10-days) paid vacation, to be taken at mutually 
+          agreed upon times. Vacation days shall accrue on the basis of one day per month from the beginning of 
+          the au pair’s third month in the U.S. During an au pair's extension program, Host will provide 9 and 
+          12-month extending au pairs with two calendar weeks (10-days) of paid vacation, to be taken at mutually 
+          agreed upon times. 6-month extension au pairs will receive one calendar week (5-days) of paid vacation. 
+          Vacation days shall accrue on the basis of one day per month from the beginning of the au pair’s thirteenth 
+          month in the U.S. If any disputes arise concerning vacation issues, AuPairCare shall resolve said dispute, 
+          and its decision shall be final.</li>
+         
+          <li>Host will provide au pairs with adequate time to attend courses of study at an accredited U.S. 
+          post-secondary institution (for a minimum of six (6) credit hours or its equivalent), to provide 
+          adequate transportation to and from the place of instruction, and to pay tuition up to a maximum 
+          of $500 per au pair per year. Extending au pairs are required to repeat the educational component 
+          of the program during the extension time as follows: The educational component for 
+          a 6-month extension is not less than three (3) semester hours of academic credit or its equivalent. 
+          The host family contributes up to $250 toward the educational component. The educational component 
+          for a 9 and 12-month extension is not less than six (6) semester hours of academic credit or its equivalent. 
+          The host family contributes up to $500 toward the educational component.  Education amount is subject to 
+          change during the program year if directed by the Department of State.</li>
+          
+           <li>Host will facilitate attendance and provide the au pair time off and transportation to AuPairCare’s 
+           monthly gatherings. Host agrees to respond to the inquiries of AuPairCare staff, agents and employees; 
+           and Host agrees to attend at least one Family Day event sponsored by AuPairCare per year.</li>
+           
+             <li>Host acknowledges and agrees that AuPairCare shall not be responsible for any personal bills incurred 
+             by the au pair or Host, such as (without limitation) telephone bills, automobile expenses, travel expenses, 
+             and/or health expenses. Accordingly, Host agrees not to seek payment or assistance in recovering any such 
+             expenses or costs from AuPairCare.</li>
+         
+         
+         
+           <li>Host is hereby advised and understands that if they travel with the au pair outside of their 
+           local community of placement and a problem arises, Host will be responsible for making 
+           arrangements at their expense to promptly return the au pair to that community. 
+           Host understands that travel with the au pair within the U.S. or outside of the U.S. should be limited to 30 days.  </li>
+         
+         
+           <li>Host agrees to assist AuPairCare in ensuring that the au pair leaves the United States 
+           at the conclusion of his/her program. </li>
+         
+       
+         
+        </ol>
+       <p>&nbsp;</p>
+        <h2>Au Pair Medical Insurance</h2>
+      <ol class="reordered" id="Jsection">
+        <li>Host is hereby advised and understands that au pairs are provided with travel 
+        and accident insurance by a third-party insurance company, and that such coverage 
+        does contain limitations and exclusions. Host agrees to familiarize themselves with 
+        the scope of said coverage and the limitations and exclusions contained therein. 
+        Said information can be accessed on AuPairCare’s website, www.aupaircare.com. 
+        Host is advised and agrees that any disputes pertaining to coverage issues are 
+        strictly between the au pair and the third-party insurance company, and 
+        Host agrees that AuPairCare will not assist in any disputes in coverage that may arise.</li>
+              
+        </ol>
+       
+         <p>&nbsp;</p>  
+        <h2>Driving Responsibility</h2>
+      <ol class="reordered" id="Ksection">
+        <li>Host understands that there will be a transition period for the au pair to learn the 
+        specific driving rules and regulations in Host state of residence and it is the 
+        Host’s responsibility to help the au pair become acclimated to the vehicle, roads 
+        and car safety rules.  Driving practice with the au pair is encouraged.</li>
+        
+         <li>Host is hereby advised and understands they are responsible for determining whether 
+         the au pair will be able to legally drive in their state of residence. 
+         As driving laws vary from state to state, it is the responsibility of the Host to 
+         determine driving eligibility prior to the au pair’s arrival. If the au pair is to 
+         drive while placed with Host, it is the Host’s responsibility to ensure that the au 
+         pair has in fact met all requirements for driving legally in their state of residence.</li>
+        
+         <li>Host will provide automobile insurance with a minimum of $10,000 in medical coverage to 
+         cover the au pair if she or he is expected or permitted to drive the family car(s). 
+         Host is hereby advised and understands that the automobile insurance provided by the 
+         Host is the primary insurance coverage when au pair or passengers need medical attention as a 
+         result of a car accident and those benefits will be exhausted before the travel and accident 
+         insurance provided by the program takes effect.  Host agrees that the au pair will not be 
+         responsible for payment of any automobile insurance deductibles that exceed $250 per accident. 
+         Host further agrees that Host will not hold AuPairCare liable for any damage or loss resulting 
+         from the au pair’s use of a vehicle. Host acknowledges that it is the Host's responsibility to 
+         conform to any and all state or local laws regarding the au pair's use of Host's automobile, 
+         including obtaining a local driver's license, if required.</li>
+              
+        </ol>  
+       <p>&nbsp;</p>
+          <h2>Program Fees</h2>
+      <ol class="reordered" id="Lsection">
+        <li>AuPairCare program fees are provided on the Company website and are subject to change without notice.  
+        Host is hereby advised and understands that program fees are used to cover au pair recruitment and 
+        screening, the majority of international airfare, orientation and training, medical insurance costs, 
+        placement and supervision of local field staff representatives. Host also understands that the au 
+        pair may pay an insurance surcharge, airfare surcharge, application fees and/or other administrative 
+        costs in his or her home country to participate in the program.</li>
+        
+         <li>An “in-country” au pair is an au pair who has 
+         already been working in this capacity in the United 
+         States at the time he or she may be placed with Host. 
+         It can also include an extension au pair who is in-country and decides to extend his 
+         or her program with another family. Host is hereby advised and acknowledges that if Host 
+         elects to host an “in-country” au pair, regardless of program length or type, Host is 
+         required to pay applicable in-country fees and comply with the outlined amounts of education 
+         stipend and vacation time owed.</li>
+        
+         <li>Host agrees to abide by the payment terms outlined in the current AuPairCare program materials. 
+         Host agrees to pay AuPairCare the full program fee plus any applicable domestic or international 
+         surcharges or other fees established by AuPairCare related to providing Host with an au pair. 
+         Host agrees to pay AuPairCare a <strong>$35 fee </strong>for any late payments, returned checks, credit card charge-backs, 
+         or declined credit cards. Host understands that fees are subject to change without prior notification.</li>
+              
+              
+               <li>Host agrees that it has adequate financial resources to satisfy all obligations as an AuPairCare Host Family.  
+               In order to illustrate adequate financial resources, Host Family must meet all AuPairCare payment deadlines. 
+               Host understands that late payments resulting in a delinquent account may result in the removal of the au pair from the home.</li>
+              
+        </ol>  
+       
+       <p>&nbsp;</p>
+       
+          <h2>Placement Changes</h2>
+      <ol class="reordered" id="Msection">
+        <li>Placement change is defined as a match that ends prior to its original program end date.</li>
+        
+         <li>Host is hereby advised and understands that AuPairCare requires an <strong> initial adjustment period of   60 days </strong>
+         following the au pair’s arrival before any placement change is considered; however, any decision regarding au 
+         pair removal is at AuPairCare’s sole discretion.</li>
+        
+         <li>In the event of a placement change, the Host shall permit the 
+         departing au pair to continue to live with Host for a period not 
+         to exceed fourteen (14) days. During such interim period, the Host 
+         in its discretion may request the departing au pair either to provide, 
+         or to refrain from providing, any childcare services. If the au pair performs 
+         any childcare services during the interim period, Host will pay the au pair his or her 
+         regular stipend. Should AuPairCare determine that it is in the best interests of all 
+         parties to remove the au pair prior to the end of the 14 day-period, Host agrees to 
+         pay a<strong> $35/day </strong> housing stipend for the duration of the period.   Host understands and authorizes 
+         that AuPairCare will charge the credit card on file for the housing stipend.</li>
+              
+              
+               <li>In the event of accident or serious illness or medical condition (including pregnancy) that, 
+               in the judgment of AuPairCare, prevents the au pair from continuing her/his duties, 
+               she/he will end the program early and return home.</li>
+               
+                  <li>. Host agrees that any decision regarding an au pair’s program status, dismissal, or ability to rematch 
+                  will be made at the sole discretion of AuPairCare, and said decisions shall be considered final.</li>
+              
+        </ol>  
+       <p>&nbsp;</p>
+        <h2>Program Fee Credit &amp; Refund Policy</h2>
+      <ol class="reordered" id="Nsection">
+        <li>HOST IS HEREBY ADVISED THAT THE MAJORITY OF AUPAIRCARE’S OPERATIONAL COSTS ARE 
+        INCURRED IN THE PROCESS OF RECRUITMENT, INTERVIEWING, ORIENTATION/TRAINING, 
+        AND PLACEMENT OF AU PAIRS AND ARE THEREFORE NONREFUNDABLE. AUPAIRCARE’S CREDIT 
+        AND REFUND POLICY IS FINAL. HOST HAS READ AND AGREES TO THE FOLLOWING POLICY:</li>
+        
+         <li>Unused service time is calculated by days.  Au pair program time begins the day the au pair arrives in the U.S.</li>
+        
+         <li>Nonrefundable fees include:  Application, Academy Travel Service, International Air Surcharge, 
+         SEVIS Fee, and Infant Specialized Fee, Extension Department of State Fee.</li>
+              
+              
+               <li>If Host is on the installment plan and has a balance of fees due, or if any other fees are
+                due to AuPairCare, this balance due will be subtracted from the total credit or refund amount due.
+		Unused credits expire 12-months from the end date of the last placement and are non-transferable.
+		</li>
+             
+        </ol>  
+       
+    <p>&nbsp;</p>
+     
+      <h2>Credit Policy</h2>
+      <ol class="reordered" id="Osection">
+          <li>In the event there is a placement change, the Host will reapply to the 
+          program, match with a new au pair, be assessed new programs fees and receive a program credit if applicable.
+          <p>&nbsp;</p>
+          <div class="nested-list lower-latin">
+          
+          <table>
+            <tr>
+              <th>Au Pair Placement Type</th>
+              <th>Within First Six Months of Placement</th>
+              <th>After Six Months of Placement</th>
+            </tr>
+            <tr>
+              <th>12 Month Au Pair </th>
+              <td>Unused paid program fees less non-refundable fees PLUS $300 placement change discount</td>
+              <td>$500/unused month</td>
+            </tr>
+            <tr>
+              <th>In-Country Au Pair &lt; 12 months</th>
+              <td>$500/unused month </td>
+              <td>$500/unused month </td>
+            </tr>
+            <tr>
+              <th>Extension Au Pair with original host</th>
+              <td>$500/unused month</td>
+              <td>$500/unused month</td>
+            </tr>
+            <tr>
+              <th>Au Pair match directly following a placement change</th>
+              <td>$500/unused month</td>
+              <td>$500/unused month</td>
+            </tr>
+          
+          </table>
+          <p>&nbsp;</p>
+          </div>
+         
+         
+        </li>
+        
+      </ol>
+      
+      <p>&nbsp;</p>
+      
+       <h2>Credit Policy</h2>
+      <ol class="reordered" id="Psection">
+          <li>In the event there is a change in au pair placement and the Host does not wish to continue in 
+          the program, Host must submit a refund request to AuPairCare in writing to billing@aupaircare.com. 
+          A refund, if owed, will be processed within ten (10) days after receipt of the request by AuPairCare. 
+          Refunds are issued based on the payment method used at the time of purchase.  AuPairCare will refund 
+          the most recent credit card on file for all credit card refunds. Refund opportunities expire 12-months 
+          from the end date of the last placement.
+          <p>&nbsp;</p>
+          <div class="nested-list lower-latin">
+          
+          <table>
+            <tr>
+              <th></th>
+              <th>Prior to Start of Placement </th>
+              <th>Within First Six Months of Placement</th>
+              <th>After Six Months of Placement</th>
+            </tr>
+            <tr>
+              <th>12 Month Au Pair </th>
+              <td>Unused paid program fees less non-refundable fees PLUS $300 placement change discount</td>
+              <td>$450/unused month</td>
+              <td>No Refund</td>
+            </tr>
+            
+          </table>
+          <p>&nbsp;</p>
+          </div>
+         </li>
+        
+         <li>Host understands that in the event the au pair does not elect 
+         to use the return air ticket provided by AuPairCare for any reason, 
+         no refund, credit, or travel voucher will be provided. Host understands 
+         that if they allow the au pair to end her/his program early, no refund or credit will be provided for unused service.
+        </li>
+           <li>Host understands that monies paid by Host to the au pair such as weekly stipends, educational allowance, 
+           personal loans, etc. are not the responsibility of AuPairCare, and Host agrees not to seek reimbursement from 
+           AuPairCare for said monies. 
+        </li>
+        
+      </ol>
+      <p>&nbsp;</p>
+        <h2>Extension Program</h2>
+     <ol class="reordered" id="Qsection">
+        <li>Host is hereby advised and understands that host families and au pairs wishing to participate on the Extension 
+        Program must submit their application on or before AuPairCare’s published deadline date and AuPairCare does not 
+        guarantee that the Department of State will approve any extension request.</li>
+      
+        <li>Host is hereby advised and understands that au pairs participating on the extension program will 
+        receive an updated DS-2019 form that reflects the 6, 9, or 12-month program extension. 
+        Although au pairs will have a valid DS-2019 form, the J-1 visa in his/her passport may 
+        have expired during the first 12-months of stay in the U.S. AuPairCare discourages au 
+        pair travel outside of the U.S. after the J-1 visa expires as au pairs may not be allowed 
+        re-entry to the U.S. Any travel outside the U.S. is at the au pair’s own risk, and AuPairCare 
+        cannot assist the au pair or Host in resolving any visa concerns they may encounter.</li>
+      
+       </ol>
+      <p>&nbsp;</p>
+      <h2>Other Terms and Conditions</h2>
+     <ol class="reordered" id="Rsection">
+        <li>Host understands and agrees that the use of any recording
+          device, including but not limited to a "nanny cam", shall be
+          limited to the purpose of evaluating an au pair's performance with
+          the child(ren) in the au pair's care, and shall not be used in any
+          areas of Host's home in which an au pair has a reasonable
+          expectation of privacy, including but not limited to bathrooms and
+          bedrooms. Rather, the use of such devices shall be limited to
+          common areas of the home, in which the au pair provides child
+          care.</li>
+        <li>Host understands that although AuPairCare will make its best, reasonable and diligent efforts at 
+        locating, screening and training all au pairs, childcare, and in particular the care of infants under 
+        the age of one year old, this is an inherently risky business. </li>
+        <li>Host family agrees to assume the risks involved in the childcare provided by the au pair, 
+        and hereby irrevocably, unconditionally, and fully waives, releases and forever discharges AuPairCare, 
+        its subsidiaries, officers, employees, and/or agents from any and all claims related to personal and/or 
+        property damage, injury, loss, delay or expense incurred by Host or any Host family member, guest, 
+        employee or agent, due to: (i) events beyond AuPairCare’s reasonable control, including without 
+        limitation acts of God, acts of war or governmental restrictions, and, in the absence of gross 
+        negligence or willful misconduct by AuPairCare, (ii) any events and/or acts directly or indirectly 
+        caused by any intentional or negligent acts or omissions at any time by any au pair and/or Host. 
+        In this respect, Host acknowledges that the au pair is not an employee or agent of AuPairCare and 
+        actions or omissions of the au pair are not to be attributed in any way to AuPairCare. Host fully 
+        agrees to assume all such childcare risks and agrees to indemnify and hold harmless AuPairCare, 
+        its subsidiaries, officers, employees and/or agents for any liability or expense, including court 
+        costs and legal fees incurred, that Host has in any way caused or contributed to, whether directly 
+        or indirectly, and whether intentionally or unintentionally.</li>
+       
+      </ol>
+      <p>&nbsp;</p>
+       <h2>Dispute Resolution</h2>
+     <ol class="reordered" id="Ssection">
+        <li>IN THE EVENT OF ANY DISPUTE BETWEEN THE PARTIES ARISING OUT OF OR 
+        RELATING IN ANY WAY TO THE PERFORMANCE, ENFORCEMENT OR INTERPRETATION OF 
+        THIS AGREEMENT, SUCH DISPUTE SHALL BE DETERMINED BY BINDING ARBITRATION 
+        BEFORE THE AMERICAN ARBITRATION ASSOCIATION, ALTERNATIVE DISPUTE RESOLUTION 
+        SERVICES (ADR SERVICES), OR JUDICIAL ARBITRATION AND MEDIATION SERVICES (JAMS) 
+        IN SAN FRANCISCO, CALIFORNIA, UPON THE PETITION OF EITHER PARTY. </li>
+        
+      </ol>
+      
+      
+      
+     
+      <p>In such proceeding, the parties may utilize subpoenas and have discovery as provided in 
+      California Code of Civil Procedure Sections 1282.6, 1283 and 1283.05. The decision of the 
+      arbitrator shall be final and binding and may be enforced in any court of competent jurisdiction 
+      on the petition of either party. Host agrees that California is a fair and reasonable venue for 
+      resolution of any such dispute and it submits to jurisdiction of the Courts of the State of California 
+      because, among other reasons, this agreement was negotiated in large part in California, and AuPairCare is domiciled in California.</p>
+      
+      <p>Any violation of this agreement may result in termination from the program.</p>
+      
+      
+      <div class="box callout">
+        <p>My (our) signature(s) below indicates acceptance of the
+          terms of this Agreement, and is legally binding. No alteration of
+          the terms of this Agreement will be valid unless approved by
+          AuPairCare in writing. We do not rely on any promises, statements
+          or representations that are not expressly stated in this
+          Agreement. We have retained a copy of this Agreement for our
+          files.</p>
+        <table class="noborder">
+          <tr>
+            <th>Host Name</th>
+            <th>Host Signature</th>
+            <th>Signature Date</th>
+          </tr>
+          <tr>
+            <td>{!Applicant_Info__c.Account__r.FirstName}
+              {!Applicant_Info__c.Account__r.LastName}</td>
+            <td style="padding-top: 20pt;"><span style="color: #fff;">TC-Signature</span></td>
+            <td><span style="color: #fff;">TC-DateSigned</span></td>
+          </tr>
+        </table>
+      </div>
+    </form>
+  </div>
+  </body>
+</apex:page>

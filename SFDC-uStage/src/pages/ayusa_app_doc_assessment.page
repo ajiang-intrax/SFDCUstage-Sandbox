@@ -1,0 +1,92 @@
+<apex:page id="ayusa_app_doc_assessment" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller"  action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+       
+      <div class="wrapper">
+          <apex:form id="form">
+             <div class="page-header clearfix">
+ <h1>Ayusa Student Application</h1>
+<div class="back-to-main"><apex:outputLink id="BacktoMain" value="apex/ayusa_app_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+</div>
+              <h2>Doctor's Report</h2>
+                        
+            <div class="white-box clearfix">
+                 <a class="page-help" title="Help for this Page (New Window)" onclick="return openPopup('./Help_ayusa_app_doc_assessment')" >
+<span>Help For This Page</span><i class="icon-info-sign"></i></a> 
+
+               <div class="panel two_thirds">
+                   
+                    <ul class="no-bullets no-indent">
+                    <li><i class="icon-print green inline"></i><apex:outputLink target="_blank" value="http://resources.intraxinc.com/all/documents/portals/ayu/pt/doctors-assessment-form.pdf">Download doctor's report template</apex:outputLink> and &nbsp;<apex:outputLink target="_blank" value="http://resources.intraxinc.com/all/documents/portals/ayu/pt/immunization-chart.pdf">Immunization chart</apex:outputLink>, print it and ask your doctor to fill it out.</li>  
+                   
+                   
+                    <li><i class="icon-file green inline" ></i>Scan the document and convert it to JPG,PNG or PDF format. File size should not exceed 2MB. </li>
+                   <li>
+                    <i class="icon-upload green inline"></i> 
+                       <apex:outputLink value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType=Doctor&retparam={!retParam}" id="theLink" target="_self" disabled="{!disableFileUpload}"><span>Upload doctor's report</span></apex:outputLink>
+                     </li>
+                     <li>
+                      <i class="icon-upload green inline"></i>
+                       <apex:outputLink value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType=Immunization-Chart&retparam={!retParam}" id="theLinkI" target="_self" disabled="{!disableFileUpload}"><span>Upload immunization chart</span></apex:outputLink>
+                      <!--  
+                        You can use this link again to upload more reports
+                        --> 
+                        </li>  
+                    </ul>
+                   <p>Please refer to &nbsp;<apex:outputLink target="_blank" value="http://resources.intraxinc.com/all/documents/portals/ayu/pt/immunization-guidelines.pdf">Immunization Chart Guidelines</apex:outputLink> for more details on our immunization requirements.</p>
+                   <div class="form-row">
+                        <apex:outputLabel rendered="{!IF((DocList.Size > 0 && docType == 'Health'), false, true)}"><span class="no-records">No record(s) to display.</span></apex:outputLabel>
+                   </div>
+              
+                <apex:pageBlock id="PageBlock" rendered="{!if(DocList.Size > 0, true, false)}" >
+                <apex:pageBlockTable id="PageBlockTable" styleClass="pageblocktable" value="{!DocList}" var="item">
+                <apex:column headerValue="Document Name">
+                    <apex:outputText id="DocName" value="{!item.Document_Name__c}"/>
+                </apex:column>
+                <apex:column headerValue="Description">
+                    <apex:outputText id="Desc" value="{!item.Description__c}"/>
+                </apex:column>
+                                            
+                <apex:column >
+                    <apex:commandlink styleClass="inline-link" action="{!load}" target="_blank">
+                        <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                        <apex:commandButton id="View" value="View" />
+                    </apex:commandlink>
+                    <apex:outputText value=" | " />
+                    <apex:commandlink styleClass="inline-link" action="{!deletefile}"  onclick="return ConfirmDelete('Are You Sure ?');">
+                        <apex:param name="docGuid"  value="{!item.Document_GUID__c}"/>
+                        
+                        <apex:commandButton id="Delete" value="Delete" />
+                    </apex:commandlink>
+                </apex:column>
+                </apex:pageBlockTable>
+                </apex:pageBlock>
+                <apex:outputText value="{!disableFileUploadText}"
+                          rendered="{!disableFileUpload}"/>
+                  
+                <div class="form-row">
+                                
+                    <div class="form-link">
+                        <apex:outputLink id="Back" styleClass="back" value="/apex/ayusa_app_health_overview?id={!applicantInfo.Id}">
+                        <i class="icon-chevron-left"></i>
+                        <span>Back</span>
+                        </apex:outputLink>
+                    </div>
+                    
+                      <div class="form-button">
+                        <apex:commandlink id="Continue" styleClass="next" action="{!navigator}">
+                          <apex:param name="nextPage" value="/apex/ayusa_app_home"/>
+                          <apex:param name="reDirectPage" value="false"/>
+                          <apex:commandButton value="Continue" />
+                            <i class="icon-chevron-right"></i> 
+                        </apex:commandlink>
+                      </div>
+                </div>
+            </div>
+                </div>
+    
+          </apex:form>
+      </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

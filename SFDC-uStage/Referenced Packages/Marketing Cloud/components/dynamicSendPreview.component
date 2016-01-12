@@ -1,0 +1,641 @@
+<apex:component controller="et4ae5.dSPControl">
+	<apex:stylesheet value="{!URLFOR($Resource.et4ae5__fuelUX, 'fuelux-3.5.0/dist/css/fuelux.min.css')}"/>
+	<style>
+       	#popupcontentCM 
+        {
+	        position: fixed;
+	        top: 10%;
+	        left: 10%;
+	        width: 80%;
+	        height: 80%;
+	        overflow: auto;
+	        border: 3px solid #585858;
+	        background-color: white; //
+	        border: 1px solid #333;
+	        z-index: 100;
+	        padding: 5px;
+	        line-height: 20px;
+	    }
+	    #opaqueCM
+	    {
+	        position: fixed;
+	        top: 0px;
+	        left: 0px;
+	        width: 100%;
+	        height: 100%;
+	        z-index: 99;
+	        background-color: gray;
+	        filter: alpha(opacity=80);
+	        opacity: 0.8;
+	        -moz-opacity: 0.8;
+	        -khtml-opacity: 0.8
+	    }
+	    * html #opaqueCM 
+	    {
+	        position: absolute;
+	    }
+	    #exitPreview
+	    {
+	    	float:right;
+	    	font-size: 24px;
+	    	padding: 5px;
+	    	cursor: pointer;
+	    	cursor: hand;
+	    }
+	    .previewBox
+	   	{
+	   		width:100%;
+	   		min-height:480px;
+	   		display: table;
+	   		margin-left: auto;
+	   		margin-right: auto;
+	   		border: 1px solid #333;
+	   		background-color: white;
+	   	}
+	   	.togglePills
+	   	{
+	   		text-align:right;
+	   	}
+		label 
+		{ 
+		    padding:0.4em 2em 0.4em 0; 
+		}
+		.toggle-btn-grp 
+		{ 
+		    margin:3px 0;
+		    display:inline-block; 
+		}
+		.toggle-btn 
+		{ 
+		    text-align:centre; 
+		    margin:5px 2px;
+		    padding:0.4em 3em; 
+		    color:#000; 
+		    background-color:#FFF; 
+		    border-radius:10px; 
+		    display:inline-block; 
+		    border:solid 1px #CCC; 
+		    cursor:pointer;
+		}
+		.toggle-btn-grp.joint-toggle .toggle-btn 
+		{ 
+		    margin:5px 0; 
+		    padding:0.4em 2em; 
+		    border-radius:0;
+		    border-right-color:white;
+		}
+		.toggle-btn-grp.joint-toggle .toggle-btn:first-child 
+		{ 
+		    margin-right:-4px;
+		    margin-left:2px; 
+		    border-radius: 10px 0px 0px 10px; 
+		}
+		.toggle-btn-grp.joint-toggle .toggle-btn:last-child 
+		{ 
+		    margin-right:2px;  
+		    border-radius: 0px 10px 10px 0px;
+		    border-right:solid 1px #CCC;
+		}
+		.toggle-btn:hover { 
+		    border:solid 1px #a0d5dc !important; 
+		    background:#f1fdfe;
+		}
+		.toggle-btn.success {
+			color:white; 
+		    background:#0892d0;
+		    border:solid 1px #0892d0 !important; 
+		}
+		.visuallyhidden { 
+		    border: 0; 
+		    clip: rect(0 0 0 0); 
+		    height: 1px; 
+		    margin: -1px; 
+		    overflow: hidden; 
+		    padding: 0; 
+		    position: absolute; 
+		    width: 1px; 
+		}
+		.visuallyhidden.focusable:active, .visuallyhidden.focusable:focus { 
+		    clip: auto; 
+		    height: auto; 
+		    margin: 0; 
+		    overflow: visible; 
+		    position: static; 
+		    width: auto; 
+		}
+		.helpText {
+			z-index: 150;
+		}
+	</style>
+	<apex:attribute name="send" description="The Email Send. Used to display lookups in the component UI." type="et4ae5__SendDefinition__c" assignTo="{!emailSend}"/>
+	<!-- Page Markup -->
+	    <apex:outputPanel id="popupCM" rendered="true" style="display:none;">
+	        <div id="opaqueCM" onclick=""/>
+	        <div id="popupcontentCM">
+	        	<span id="exitPreview">&#10006;</span>	
+	        	<apex:pageBlock >
+	        		<div class="alert alert-et">
+						<img src="/img/msg_icons/error24.png" style="vertical-align: bottom; padding-right: 5px;"/>
+						<span class="errorText"></span>
+					</div>
+		         	<div class="header fuelux" style="background-color:white;">
+		         		<div class="loader" data-initialize="loader" id="myLoader" style="position:absolute;top:50%;left:50%;background-color:white;"></div>	
+						<div style="display:inline-block;">
+		         		<img height="45" src="{!URLFOR( $Resource.ExactTargetImages, 'email.png' )}" />
+		         			<span style="font-size:36px;color:#4f4f4f;font-weight:bold;margin:0 0 15px 0;vertical-align:super;padding:10px;">{!$Label.previewEm}</span>
+		         		</div>            		
+		         	</div>
+		         	<apex:pageBlock mode="edit">
+		         		<div id="objectPicklist">	         	
+				          	<apex:pageBlockSection columns="1">	
+				          		<apex:pageBlockSectionItem helptext="{!$Label.RecipientSourceHelpText}">
+				          			<apex:outputLabel value="{!$Label.RecipientSource}"/>
+					          		<select name="sObjects" id="sObjectsSelection">
+					                	<option value="None">{!$Label.slctChoose}</option>
+					                	<option value="Contact">{!$Label.contacts}</option>
+					                	<option value="Lead">{!$Label.leads}</option>
+						            </select>
+				          		</apex:pageBlockSectionItem>
+			          		</apex:pageBlockSection>
+		          		</div>
+		          		<div id="contactSingleLookup" style="display:none;">
+			          		<apex:pageBlockSection columns="1">	
+				          		<apex:pageBlockSectionItem helptext="{!$Label.SingleContactHelpText}">
+				          			<apex:outputLabel value="{!$Label.sbscriber}" for="contactSelection" />
+				          			<apex:inputField value="{!emailSend.et4ae5__Contact__c}" id="contactSelection" />
+				          		</apex:pageBlockSectionItem>
+			          		</apex:pageBlockSection>
+		          		</div>
+		          		<div id="leadSingleLookup" style="display:none;">
+			          		<apex:pageBlockSection columns="1">	
+				          		<apex:pageBlockSectionItem helptext="{!$Label.SingleLeadHelpText}">
+				          			<apex:outputLabel value="{!$Label.sbscriber}" for="leadSelection" />
+				          			<apex:inputField value="{!emailSend.et4ae5__Lead__c}" id="leadSelection" />			          		
+				          		</apex:pageBlockSectionItem>
+			          		</apex:pageBlockSection>
+		          		</div>
+		          		<div id="singleSubscriber">
+			          		<apex:pageBlockSection columns="1">				          					          				          	
+		        				<apex:pageBlockSectionItem helptext="{!$Label.SingleSubscriberHelpText}">
+			         				<apex:outputLabel value="{!$Label.sbscriber}"/>
+		         					<apex:outputText id="subscriberValue"/>
+			         			</apex:pageBlockSectionItem>
+		         			</apex:pageBlockSection>
+	         			</div>
+	         			<apex:pageBlockSection columns="1">
+		         			<apex:pageBlockSectionItem helptext="{!$Label.SubjectHelpText}">
+		         				<apex:outputLabel value="{!$Label.subject}"/>
+		         				<apex:outputText id="subjectValue"/>
+		         			</apex:pageBlockSectionItem>
+		         			<apex:pageBlockSectionItem helptext="{!$Label.PreheaderHelpText}">
+		         				<apex:outputLabel value="{!$Label.prhdr}"/>
+		         				<apex:outputText id="preheaderValue"/>
+		         			</apex:pageBlockSectionItem>
+			          	</apex:pageBlockSection>
+			          	<div class="togglePills">
+				          	<div class="toggle-btn-grp joint-toggle">
+							    <label class="toggle-btn selDefDyn" title="{!$Label.DynamicStaticPreviewHelpText}">
+								    <input type="radio" name="group0" onclick="showHTML();" checked="checked" />
+								    {!$Label.dynamic}
+							    </label>
+						    	<label class="toggle-btn nonDefSt" title="{!$Label.DynamicStaticPreviewHelpText}">
+							    	<input type="radio" name="group0" onclick="showStaticHTML();"/>
+							    	{!$Label.static}
+						    	</label>
+							</div>
+							<div class="toggle-btn-grp joint-toggle">
+							    <label class="toggle-btn selDef" title="{!$Label.DesktopMobileHelpText}">
+								    <input type="radio" name="group1" onclick="mobToWeb();"/>
+								    {!$Label.Web}
+							    </label>
+						    	<label class="toggle-btn nonDef" title="{!$Label.DesktopMobileHelpText}">
+							    	<input type="radio" name="group1" onclick="webToMob();"/>
+							    	{!$Label.mobile}
+						    	</label>
+							</div>
+							<div class="toggle-btn-grp joint-toggle">
+							    <label class="toggle-btn selDef" title="{!$Label.HTMLTextHelpText}">
+								    <input type="radio" name="group2" onclick="showHTMLPreview();"/>
+								    {!$Label.html}
+							    </label>
+						    	<label class="toggle-btn nonDef" title="{!$Label.HTMLTextHelpText}">
+							    	<input type="radio" name="group2" onclick="showTextPreview();"/>
+							    	{!$Label.txtOnly}
+						    	</label>
+							</div>
+						</div>
+						<iframe class="previewBox" id="PreviewWindow" scrolling="auto"></iframe>
+		         	</apex:pageBlock>		            		
+	        	</apex:pageBlock>
+	        </div>
+	    </apex:outputPanel>
+<apex:includeScript value="{!URLFOR($Resource.et4ae5__jQueryUI, 'jquery-ui-1.9.2.custom/js/jquery-1.8.3.js')}" />
+<apex:includeScript value="{!URLFOR($Resource.et4ae5__bootstrap, 'dist/js/bootstrap.min.js')}" />
+<apex:includeScript value="{!URLFOR($Resource.et4ae5__fuelUX, 'fuelux-3.5.0/dist/js/fuelux.min.js')}" /> <!-- fuelUX must be loaded AFTER JQUERY AND BOOTSTRAP -->
+<apex:includeScript value="/soap/ajax/31.0/connection.js"/>
+<script type="text/javascript">
+	var j$ = jQuery.noConflict();
+	
+	/* previewInfoMap is used to cache all the preview information for multiple subscribers. */
+	var previewInfoMap;
+	
+	/* Global variables that most functions refer to. Should be set during load
+	   except for subscriberId and subscriberName which are both optional.
+	   Though required if one or the other is provided. */
+	var subscriberId;
+	var subscriberName;
+	var emailId;
+	var BU;
+	var BUChanged;
+    var objectName = "";
+   	var hiddenFieldIdIdentifier = "";
+  	var contactLeadId = "";
+  	var iframe;
+	
+	Visualforce.remoting.timeout = 120000;
+	
+	/* Hide the component upon load */
+	j$(document).ready(function ()
+    {
+		iframe = document.getElementById('PreviewWindow');				
+		
+		j$("[id*=popupCM]").hide();
+		
+		/*Hide Event Handler */
+		j$("#opaqueCM").click(function () {
+					if(!subscriberName)
+					{
+						reset();
+					}
+					j$("[id*=popupCM]").hide();
+				});
+		j$("#exitPreview").click(function () {
+					if(!subscriberName)
+					{
+						reset();
+					}
+					j$("[id*=popupCM]").hide();
+				});
+		
+		/* Toggle event handlers*/
+		j$(".toggle-btn:not('.noscript') input[type=radio]").addClass("visuallyhidden");
+		j$(".toggle-btn:not('.noscript') input[type=radio]").click(function() {
+			    if( j$(this).attr("name") ) 
+			    {
+			        j$(this).parent().addClass("success").siblings().removeClass("success")
+			    } 
+			    else 
+			    {
+			        j$(this).parent().toggleClass("success");
+			    }
+			});
+	      
+	      // sObject dropdown
+	      j$("select[name='sObjects']").change(function(){
+		       // Set the object name
+		       objectName = j$(this).val();
+		       
+		       reset();
+		       resetToggles();
+		       var lookupSection = getLookupSection(objectName);
+		       j$(lookupSection).show();
+	       
+	       		addChangeEventListenerToObject(objectName);
+       		});
+    })
+    
+    /* The hook between a page and the component. Call this function
+       to show the component and begin the preview workflow. */
+	function showPreview(email, buRecordId, subId, subName)
+	{
+		// Clear the iframe upon fuction execution
+		iframe.contentWindow.document.open();
+		try {
+			iframe.contentWindow.document.body.innerHTML = "";
+		}
+		catch(exception) {//Do Nothing. If an exception happens here, it means it is the iframe is already cleared
+		}		
+		
+		if(subId)
+			subscriberId = subId;
+		if(subName)
+			subscriberName = subName;
+		//If the email variables are different, then it means we are previewing a new (or first) email
+		if(email != emailId)
+		{
+			emailId = email;
+			j$(".previewBox").html("");
+			previewInfoMap = new Object();		
+		}
+		
+		BUChanged = BU != undefined && BU != buRecordId;
+		BU = buRecordId;
+		
+		if((!subscriberId && subscriberName) || (subscriberId && !subscriberName))
+		{
+			if(!subscriberName)
+				showErrorMessage("subscriberName must be defined when using the subscriberId attribute");
+			else
+				showErrorMessage("subscriberId must be defined when using the subscriberName attribute");
+		}
+		else if (subscriberId && subscriberName)
+		{
+			j$("[id*=subscriberValue]").text(subscriberName);
+			j$("#objectPicklist").hide();
+			showHTML();
+		}
+		else
+		{
+			j$("#myLoader").hide();
+			j$(".alert.alert-et").hide();
+			j$(".togglePills").hide();
+			j$("#singleSubscriber").hide();
+			j$("#sObjectsSelection").val("None");
+			iframe.contentWindow.document.open();
+			try {
+				iframe.contentWindow.document.body.innerHTML = "";
+			}
+			catch(exception) {//Do Nothing. If an exception happens here, it means it is the iframe is already cleared
+			}	
+		}
+		
+		resetToggles();	
+		j$("[id*=popupCM]").show();
+	}
+	
+	/* Used to get info. The map structure is: (subscriber Id, Preview Information) */
+	function getPreviewInfo(k)
+	{
+		return previewInfoMap[k];
+	}
+	
+	/* Resize the preview window to a mobile width. */
+	function webToMob()
+	{
+		j$(".previewBox").animate({width: "450px"}, 1000);
+		// Disable the static button
+		j$("input[name='group0']").prop("disabled",true);
+	}
+	
+	/* Resize the preview window to a web width. */
+	function mobToWeb()
+	{
+		j$(".previewBox").animate({width: "100%"}, 1000);
+		// Enable the static button
+		j$("input[name='group0']").prop("disabled",false);
+		
+	}
+	
+	/* Call to the server to retrieve preview info. Then based on the type passed,
+	   it sets the preview box to the appropriate preview (text or HTML). */
+	function requestPreviewInfo(previewType)
+	{
+		if(subscriberId && emailId)
+		{
+			j$("#myLoader").show();
+			Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.dSPControl.getDynamicPreviewHTML}',subscriberId,emailId,BU,
+			function(result, event){
+				//decode the results and parse json
+				var json = JSON.parse(j$("<div/>").html(result).text());
+				if(json.errorMessage)
+				{
+					showErrorMessage(json.errorMessage);
+				}
+				else if(!event.status)
+				{
+					showErrorMessage(event.message);
+				}
+				else
+				{
+					previewInfoMap[subscriberId] = json;
+					if(previewType == "HTML")
+					{
+						iframe.contentWindow.document.open();
+						try {
+							iframe.contentWindow.document.body.innerHTML = "";
+						}
+						catch(exception) {//Do Nothing. If an exception happens here, it means it is the iframe is already cleared
+						}							
+						iframe.contentWindow.document.write(getPreviewInfo(subscriberId).HTML);
+					}
+					else if(previewType == "Text")
+					{	
+						iframe.contentWindow.document.open();
+						try {
+							iframe.contentWindow.document.body.innerHTML = "";
+						}
+						catch(exception) {//Do Nothing. If an exception happens here, it means it is the iframe is already cleared
+						}			
+						iframe.contentWindow.document.write("<pre>" + getPreviewInfo(subscriberId).Text + "</pre>");
+					}
+					
+					j$("[id*=subjectValue]").text(getPreviewInfo(subscriberId).SubjectLine);
+					j$("[id*=preheaderValue]").text(getPreviewInfo(subscriberId).Preheader);
+				}
+				
+				j$("#myLoader").hide();
+				});
+		}
+	}
+	
+	/* Call to the server to retrieve static preview info. */
+	function requestStaticPreview()
+	{
+		if(emailId)
+		{
+			j$("#myLoader").show();
+			Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.dSPControl.getImageString}',emailId,BU,
+			Math.round(j$(".previewBox").width()),Math.round(j$(".previewBox").height()),
+			function(result, event){
+				var json = JSON.parse(j$("<div/>").html(result).text());
+				if (json.errorMessage)
+				{
+					showErrorMessage(json.errorMessage);
+				}
+				else if(!event.status)
+				{
+					showErrorMessage(event.message);
+				}
+				else
+				{
+					var img = j$("<img>");
+					img.attr("src","data:image/png;base64,"+json.encodedString);
+					previewInfoMap[subscriberId].StaticPreview = img;
+					iframe.contentWindow.document.open();
+					try {
+						iframe.contentWindow.document.body.innerHTML = "";
+					}
+					catch(exception) {//Do Nothing. If an exception happens here, it means it is the iframe is already cleared
+					}		
+					iframe.contentWindow.document.write('<html><body><img src="' + img.attr("src") + '" /></body></html>');
+					mobToWeb();
+				}
+				j$("#myLoader").hide();
+				});
+		}
+	}
+	
+	/* OnClick function when clicking the static toggle. Disables group 1 and group 2 toggles. */
+	function showStaticHTML()
+	{
+		//Static Preview can only be seen in Web width and HTML format
+		j$("input[name='group1']").prop("disabled",true);
+		j$("input[name='group2']").prop("disabled",true);
+		j$("input[name='group1']").first().prop("checked","checked");
+		j$("input[name='group2']").first().prop("checked","checked");
+		j$(".toggle-btn.selDef").addClass("success");
+		j$(".toggle-btn.nonDef").removeClass("success");
+		j$(".alert.alert-et").hide();
+		if(!getPreviewInfo(subscriberId).StaticPreview || BUChanged)
+		{
+			requestStaticPreview();
+		}
+		else
+		{
+			iframe.contentWindow.document.open();
+			try {
+				iframe.contentWindow.document.body.innerHTML = "";
+			}
+			catch(exception) {//Do Nothing. If an exception happens here, it means it is the iframe is already cleared
+			}		
+			iframe.contentWindow.document.write('<html><body><img src="' + getPreviewInfo(subscriberId).StaticPreview.attr("src") + '" /></body></html>');
+			mobToWeb();
+			j$("#myLoader").hide();
+		}
+	}
+	
+	/* OnClick function when clicking dynamic toggle. Reenables group 1 and group 2 toggles. */
+	function showHTML()
+	{
+		//This runs after static has disabled the buttons. We re-enable here
+		j$("input[name='group1']").prop("disabled",false);
+		j$("input[name='group2']").prop("disabled",false);
+		resetToggles();
+		showHTMLPreview();
+	}
+	
+	/* OnClick function when switching from Text to HTML. */
+	function showHTMLPreview()
+	{
+		
+		j$(".alert.alert-et").hide();
+		if(!getPreviewInfo(subscriberId) || BUChanged)
+		{
+			requestPreviewInfo("HTML");
+		}
+		else
+		{
+			iframe.contentWindow.document.open();
+			try {
+				iframe.contentWindow.document.body.innerHTML = "";
+			}
+			catch(exception) {//Do Nothing. If an exception happens here, it means it is the iframe is already cleared
+			}		
+			iframe.contentWindow.document.write(getPreviewInfo(subscriberId).HTML);
+			j$("[id*=subjectValue]").text(getPreviewInfo(subscriberId).SubjectLine);
+			j$("[id*=preheaderValue]").text(getPreviewInfo(subscriberId).Preheader);
+			j$("#myLoader").hide();
+		}
+	}
+	
+	/* OnClick function when switching from HTML to Text */
+	function showTextPreview()
+	{
+		if(!getPreviewInfo(subscriberId) || BUChanged)
+		{
+			requestPreviewInfo("Text");
+		}
+		else
+		{
+			iframe.contentWindow.document.open();
+			try {
+				iframe.contentWindow.document.body.innerHTML = "";
+			}
+			catch(exception) {//Do Nothing. If an exception happens here, it means it is the iframe is already cleared
+			}	
+			iframe.contentWindow.document.write("<pre>" + getPreviewInfo(subscriberId).Text + "</pre>");
+		}
+	}
+	
+	/* Resets the toggles to their starting position */
+	function resetToggles()
+	{
+		j$(".toggle-btn.selDef").addClass("success");
+		j$(".toggle-btn.selDefDyn").addClass("success");
+		j$(".toggle-btn.nonDef").removeClass("success");
+		j$(".toggle-btn.nonDefSt").removeClass("success");
+	}
+	
+	/* Displays the error message to the user if there is one */
+	function showErrorMessage(theMessage)
+	{
+		j$(".alert.alert-et").show();
+		j$(".alert.alert-et > .errorText").text(theMessage);
+	}
+	
+	function changeSubscriber(id)
+	{
+		//Pills are automatically hidden when not a single send. We show them here.
+		j$(".togglePills").show();
+		subscriberId = id;
+		showHTML();
+	}
+	
+	function reset() {
+	   j$(".previewBox").html("");
+       j$("[id*=subjectValue]").text("");
+       j$("[id*=preheaderValue]").text("");
+       j$(".togglePills").hide();
+       subscriberId = "";
+       mobToWeb();
+       j$("#sObjectsSelection option").each(function() {
+			   // return true is the equilavent of continue and will skip the current record.
+			   if (j$(this).val() == "None")
+			   	return true;
+			   
+			   var lookupSectionToHide = getLookupSection(j$(this).val());
+			   j$(lookupSectionToHide).hide();
+			   
+			   var inputField = getInputFieldIdentifier(j$(this).val());				    
+			   j$(inputField).val("");				    
+			   var value = "";
+			   if (objectName == "Contact")
+			   	value = "003";
+			else if (objectName == "Lead")
+				value = "00Q";
+			
+			j$("[id*=" + objectName.toLowerCase() + "Selection_lktp]").val(value);
+		});
+	}
+            
+	function getLookupSection(p_ObjectName) {
+		return "#" + p_ObjectName.toLowerCase() + "SingleLookup";
+	}
+	
+	function getHiddenFieldIdIdentifier(p_ObjectName) {
+		return p_ObjectName.toLowerCase() + "Selection_lkid";
+	}
+	
+	function getInputFieldIdentifier(p_ObjectName) {
+		return "[id*=" + p_ObjectName.toLowerCase() + "Selection]";
+	}
+	
+	function addChangeEventListenerToObject(p_ObjectName) {
+		j$(getInputFieldIdentifier(p_ObjectName)).change(function(){
+				hiddenFieldIdIdentifier = getHiddenFieldIdIdentifier(objectName);
+				// Once a value is selected using the lookup, there is a brief delay as the system javascript updates the input hidden fields.
+				// This setTimeout method allows us to workaround the system javscript delay. This function is need even though the setTimeout duration is 0 milliseconds. 
+				setTimeout(function() {
+					contactLeadId = getContactLeadId(hiddenFieldIdIdentifier);
+					// Implementation - Add null check prior to proceeding.
+					changeSubscriber(contactLeadId);
+				}, 0);
+			});
+	}
+      
+	function getContactLeadId(p_hiddenFieldIdIdentifier) {          
+	    var identifier = "[id*=" + p_hiddenFieldIdIdentifier + "]";
+	    return j$(identifier).val();
+	}	
+</script>
+</apex:component>

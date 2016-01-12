@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Order</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Orders</value>
+    </caseValues>
+    <fields>
+        <label><!-- Account --></label>
+        <name>Account__c</name>
+        <relationshipLabel><!-- Orders --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Billing Contact --></label>
+        <name>Billing_Contact__c</name>
+        <relationshipLabel><!-- Orders (Billing Contact) --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Charges without a Charge Date --></label>
+        <name>Charges_without_a_Charge_Date__c</name>
+    </fields>
+    <fields>
+        <help><!-- This is the contracted Monthly Recurring Revenue
+Calculated as  TCV / Terms(Months) --></help>
+        <label><!-- Contracted MRR --></label>
+        <name>Contracted_MRR__c</name>
+    </fields>
+    <fields>
+        <label><!-- Create Invoice Automatically? --></label>
+        <name>Create_Invoice_Automatically__c</name>
+    </fields>
+    <fields>
+        <label><!-- Currency --></label>
+        <name>CurrencyL__c</name>
+        <relationshipLabel><!-- Orders --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Currency Symbol --></label>
+        <name>Currency_Symbol__c</name>
+    </fields>
+    <fields>
+        <label><!-- Discount Code --></label>
+        <name>Discount_Code__c</name>
+    </fields>
+    <fields>
+        <label><!-- Discount Percent --></label>
+        <name>Discount_Percent__c</name>
+    </fields>
+    <fields>
+        <help><!-- Discount offered on this order --></help>
+        <label><!-- Discount Value --></label>
+        <name>Discount_Value__c</name>
+    </fields>
+    <fields>
+        <help><!-- If you are a multi currency org, this field will hold the exchange rate between the Order Currency and your Corporate Currency. 
+Value in Corporate Currency = Value in Order Currency x Exchange Rate Applied --></help>
+        <label><!-- Exchange Rate Applied --></label>
+        <name>Exchange_Rate_Applied__c</name>
+    </fields>
+    <fields>
+        <help><!-- Relate to the master order when you have multiple accounts who are subscribed to the same usage based service and you wish to roll up the usages from child orders to master order. All those aggregated units are calculated based on pricing on master order. --></help>
+        <label><!-- Master Order --></label>
+        <name>Master_Order__c</name>
+        <relationshipLabel><!-- Child Orders --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Minimum Next Charge Date For Product --></label>
+        <name>Minimum_Next_Charge_Date_For_Product__c</name>
+    </fields>
+    <fields>
+        <help><!-- Subtotal - Discount Value --></help>
+        <label><!-- Net Total --></label>
+        <name>Net_Total__c</name>
+    </fields>
+    <fields>
+        <help><!-- Leave this blank for &quot;Evergreen Subscriptions&quot; i.e., those that don&apos;t expire --></help>
+        <label><!-- Terms (Months) --></label>
+        <name>Number_Of_Terms__c</name>
+    </fields>
+    <fields>
+        <help><!-- Select the partner who places the order on behalf of the client --></help>
+        <label><!-- Partner --></label>
+        <name>Partner__c</name>
+        <relationshipLabel><!-- Orders (Partner) --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Payment Terms --></label>
+        <name>Payment_Terms__c</name>
+        <picklistValues>
+            <masterLabel>Due On Receipt</masterLabel>
+            <translation><!-- Due On Receipt --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Net 30</masterLabel>
+            <translation><!-- Net 30 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Net 45</masterLabel>
+            <translation><!-- Net 45 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Net 60</masterLabel>
+            <translation><!-- Net 60 --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Some calendar months don&apos;t have the 30th or the 31st day. If you select 31 as the day for invoicing and the current month has only 30 days,30 will be used instead.
+If this field is not filled, the value will be taken from the corresponding Account field. --></help>
+        <label><!-- Preferred Billing Day of the month --></label>
+        <name>Preferred_Billing_Day__c</name>
+        <picklistValues>
+            <masterLabel>1</masterLabel>
+            <translation><!-- 1 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>10</masterLabel>
+            <translation><!-- 10 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>11</masterLabel>
+            <translation><!-- 11 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>12</masterLabel>
+            <translation><!-- 12 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>13</masterLabel>
+            <translation><!-- 13 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>14</masterLabel>
+            <translation><!-- 14 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>15</masterLabel>
+            <translation><!-- 15 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>16</masterLabel>
+            <translation><!-- 16 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>17</masterLabel>
+            <translation><!-- 17 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>18</masterLabel>
+            <translation><!-- 18 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>19</masterLabel>
+            <translation><!-- 19 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>2</masterLabel>
+            <translation><!-- 2 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>20</masterLabel>
+            <translation><!-- 20 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>21</masterLabel>
+            <translation><!-- 21 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>22</masterLabel>
+            <translation><!-- 22 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>23</masterLabel>
+            <translation><!-- 23 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>24</masterLabel>
+            <translation><!-- 24 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>25</masterLabel>
+            <translation><!-- 25 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>26</masterLabel>
+            <translation><!-- 26 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>27</masterLabel>
+            <translation><!-- 27 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>28</masterLabel>
+            <translation><!-- 28 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>3</masterLabel>
+            <translation><!-- 3 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>4</masterLabel>
+            <translation><!-- 4 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>5</masterLabel>
+            <translation><!-- 5 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>6</masterLabel>
+            <translation><!-- 6 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>7</masterLabel>
+            <translation><!-- 7 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>8</masterLabel>
+            <translation><!-- 8 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>9</masterLabel>
+            <translation><!-- 9 --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Corresponding Quote --></label>
+        <name>Quote__c</name>
+        <relationshipLabel><!-- Orders created from this Quote --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Recalculate --></label>
+        <name>Recalculate__c</name>
+    </fields>
+    <fields>
+        <help><!-- The service starts on this date. Can also be used to record the order delivery date. --></help>
+        <label><!-- Service Start Date / Delivery Date --></label>
+        <name>Service_Activation_Date__c</name>
+    </fields>
+    <fields>
+        <help><!-- The service/subscription for this order ends on this date. --></help>
+        <label><!-- Service End Date --></label>
+        <name>Service_End_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Primary(Shipping) Contact --></label>
+        <name>Shipping_Contact__c</name>
+        <relationshipLabel><!-- Orders (Shipping Contact) --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Order Date --></label>
+        <name>Start_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Status --></label>
+        <name>Status__c</name>
+        <picklistValues>
+            <masterLabel>Cancelled</masterLabel>
+            <translation><!-- Cancelled --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Completed</masterLabel>
+            <translation><!-- Completed --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Delivered</masterLabel>
+            <translation><!-- Delivered --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>In Progress</masterLabel>
+            <translation><!-- In Progress --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Quantity * Unit Price --></help>
+        <label><!-- Subtotal --></label>
+        <name>Sub_Total__c</name>
+    </fields>
+    <fields>
+        <label><!-- Tax --></label>
+        <name>Tax__c</name>
+    </fields>
+    <fields>
+        <help><!-- This is the Monthly Recurring Revenue calculated on a schedule. This considers the recurring charges that are active today based on the Service Activation Date and Service End Date at the line level. Plz refer the help doc on how to schedule this. --></help>
+        <label><!-- Today&apos;s MRR --></label>
+        <name>Todays_MRR__c</name>
+    </fields>
+    <fields>
+        <help><!-- This is the Monthly Recurring Revenue + Tax calculated on a schedule. This considers the recurring charges that are active today based on the Service Activation Date and Service End Date at the line level. Plz refer the help doc on how to schedule this. --></help>
+        <label><!-- Today&apos;s MRR with Tax --></label>
+        <name>Todays_MRR_with_Tax__c</name>
+    </fields>
+    <fields>
+        <help><!-- (Grand Total - Total Cost) 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    x  100
+          Grand Total --></help>
+        <label><!-- Total Profit Percent --></label>
+        <name>TotalProfitPercent__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total Contract Value --></label>
+        <name>Total_Contract_Value__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total Cost Price --></label>
+        <name>Total_Cost__c</name>
+    </fields>
+    <fields>
+        <label><!-- Obsolete Total Profit Percent --></label>
+        <name>Total_Profit_Percent__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total Profit (Excl Tax/VAT) --></label>
+        <name>Total_Profit__c</name>
+    </fields>
+    <fields>
+        <help><!-- Subtotal - Discount + VAT + Tax --></help>
+        <label><!-- Grand Total --></label>
+        <name>Total__c</name>
+    </fields>
+    <fields>
+        <label><!-- VAT --></label>
+        <name>VAT__c</name>
+    </fields>
+    <layouts>
+        <layout>Job Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Order Value --></label>
+            <section>Order Value</section>
+        </sections>
+        <sections>
+            <label><!-- Products --></label>
+            <section>Products</section>
+        </sections>
+        <sections>
+            <label><!-- Subscription Details --></label>
+            <section>Subscription Details</section>
+        </sections>
+    </layouts>
+    <startsWith>Vowel</startsWith>
+    <webLinks>
+        <label><!-- Ad_hoc_Invoice --></label>
+        <name>Ad_hoc_Invoice</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Dispatch_Products_Manual --></label>
+        <name>Dispatch_Products_Manual</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Dispatch_Products_Scan --></label>
+        <name>Dispatch_Products_Scan</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Generate_Invoice --></label>
+        <name>Generate_Invoice</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Generate_Proforma_Invoice --></label>
+        <name>Generate_Proforma_Invoice</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Mid_Term_Adjustment --></label>
+        <name>Mid_Term_Adjustment</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Update_Order_Status --></label>
+        <name>Update_Order_Status</name>
+    </webLinks>
+</CustomObjectTranslation>

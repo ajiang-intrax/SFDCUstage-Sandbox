@@ -1,0 +1,275 @@
+<apex:component layout="none" id="block_apc_ap_ext_renew" allowDML="true">
+  <apex:attribute name="PageController" description="Instance of home_controller class" type="home_controller" required="false" default="" />
+  
+  <!-- Begining CASE 1: PT Application Accepted -->
+  <apex:outputpanel layout="block" id="blockCase1" rendered="{!PageController.currentApp.Intrax_Program__c == 'AuPairCare' && 
+PageController.currentApp.Application_Type__c == 'Original' && PageController.currentApp.Application_Stage__c == 'Accepted' &&
+PageController.currentApp.Extension_Au_Pair_Agreed__c == null}">
+    
+    
+      <apex:outputpanel layout="block" id="blockYesExt" rendered="{!PageController.AllowExtendMap[PageController.currentApp.id] == true}" >
+          <div class="hp-block orange-border padding-6 ">
+              <h2 class="margin-b1">Would You Like to Stay Longer with the {!PageController.applicantHF.Account__r.LastName} Family?</h2>
+              <p class="lead">Your current program will end on
+                  <apex:outputText value=" {0,date,MM'/'dd'/'yyyy} ">
+                      <apex:param value="{!PageController.OrigConfMatch.End_Date__c}" />
+                  </apex:outputText>, but you are eligible to apply for an extension for 6, 9, or 12 months! Please talk to your host family and ask them if they would like to apply for an extension with you. Once they apply you will also be asked to complete a short application to complete the process. Quick and simple!</p>
+              
+              <p class="lead">Your deadline to extend is  <apex:outputText value=" {0,date,MMMM}">
+                  <apex:param name="month" value="{!PageController.OrigConfMatch.End_Date__c - 40}"/>
+                  </apex:outputText>&nbsp;
+                  <apex:outputText value="{!Day(PageController.OrigConfMatch.End_Date__c - 40)}"></apex:outputText>,&nbsp;
+                  <apex:outputText value="{!Year(PageController.OrigConfMatch.End_Date__c - 40)}"></apex:outputText></p>
+              <hr class="margin-b2"/>
+              <p class="no-margin"><strong>Important:</strong> A complete extension application includes the host family application, au pair application and proof of education. All three pieces are required before a host family can finalize their application and pay. All application components and payment must be submitted before our published deadlines for consideration by the Department of State.</p>
+          </div>   
+      </apex:outputpanel>
+    
+    
+    <apex:outputpanel layout="block" id="blockrewallow" rendered="{!PageController.AllowRenewMap[PageController.currentApp.id] == true}">
+          <div class="hp-block padding-6 ">
+          <h2 class="margin-b1">Extend With a New Family</h2>
+          <p class="lead">You may choose to match with a new family once your time with the {!PageController.applicantHF.Account__r.LastName} family
+            is completed.</p>
+          <apex:outputLink styleClass="btn btn-link vs2 btn-lg" id="apc_hf_app_clone_link" value="/apex/apc_ap_app_clone?id={!PageController.currentApp.Id}&AppType=Renewal"> <span>Extend With a New Family</span></apex:outputLink>
+    </div>
+    </apex:outputpanel>
+    
+    
+  </apex:outputpanel>
+  <!-- END Case 1 --> 
+  
+
+  <!-- Begining CASE 1B: PT Application Accepted / HF Extended but working -->
+  <apex:outputpanel layout="block" id="blockCase1B" rendered="{!PageController.currentApp.Intrax_Program__c == 'AuPairCare' && 
+PageController.currentApp.Application_Type__c == 'Extension' 
+&& PageController.currentApp.Application_Stage__c == 'Working'
+&& PageController.currentApp.Extension_Au_Pair_Agreed__c == null
+&& PageController.applicantHF.Application_Stage__c == 'Working'
+&& PageController.applicantHF.Application_Type__c == 'Extension'}">
+   <div class="hp-block padding-6 orange-border">
+        
+        <h2 class="margin-b1">Would You Like to Stay Longer with the {!PageController.applicantHF.Account__r.LastName} Family?</h2>
+        <p class="lead">Your current program will end on
+          <apex:outputText value=" {0,date,MM'/'dd'/'yyyy} ">
+            <apex:param value="{!PageController.OrigConfMatch.End_Date__c}" />
+          </apex:outputText>, but you are eligible to apply for an extension for 6, 9, or 12 months! Please talk to your host family and ask them if they would like to apply for an extension with you. Once they apply you will also be asked to complete a short application to complete the process. Quick and simple!</p>
+
+<p class="lead">Your deadline to extend is  <apex:outputText value=" {0,date,MMMM}">
+                    <apex:param name="month" value="{!PageController.OrigConfMatch.End_Date__c - 40}"/>
+                    </apex:outputText>&nbsp;
+                    <apex:outputText value="{!Day(PageController.OrigConfMatch.End_Date__c - 40)}"></apex:outputText>,&nbsp;
+                    <apex:outputText value="{!Year(PageController.OrigConfMatch.End_Date__c - 40)}"></apex:outputText></p>
+
+<hr class="margin-b2"/>
+        <p><strong>Important:</strong> A complete extension application includes the host family application, au pair application and proof of education. All three pieces are required before a host family can finalize their application and pay. All application components and payment must be submitted before our published deadlines for consideration by the Department of State.</p>
+
+  </div><!-- end hp block -->  
+  
+  
+   <div class="hp-block padding-6"> 
+        <h2 class="margin-b1">Extend With a New Family</h2>
+        <p class="lead">You may choose to match with a new family once your time with the {!PageController.applicantHF.Account__r.LastName} family
+            is completed. Your deadline to extend is  <apex:outputText value=" {0,date,MMMM}">
+                    <apex:param name="month" value="{!PageController.OrigConfMatch.End_Date__c - 40}"/>
+                    </apex:outputText>&nbsp;
+                    <apex:outputText value="{!Day(PageController.OrigConfMatch.End_Date__c - 40)}"></apex:outputText>,&nbsp;
+                    <apex:outputText value="{!Year(PageController.OrigConfMatch.End_Date__c - 40)}"></apex:outputText></p>
+        <apex:outputLink styleClass="btn btn-link vs2 btn-lg" id="apc_hf_app_clone_link1" value="/apex/apc_ap_app_clone?id={!PageController.currentApp.Id}&AppType=newFamily"> <span>Extend With a New Family</span> </apex:outputLink>
+  </div>
+
+  </apex:outputpanel>
+  <!-- END Case 1B --> 
+  
+  
+  <!-- Begining CASE 2: PT ready to Extend -->
+  <apex:outputpanel layout="block" id="blockCase2" rendered="{!PageController.currentApp.Intrax_Program__c == 'AuPairCare' && 
+PageController.currentApp.Application_Type__c == 'Extension' 
+&& PageController.currentApp.Application_Stage__c == 'Working'
+&& PageController.currentApp.Extension_Au_Pair_Agreed__c == null
+&& PageController.applicantHF.Application_Stage__c == 'Accepted'}">
+<div class="hp-block padding-6 orange-border">
+        <h2 class="margin-b1">The {!PageController.applicantHF.Account__r.LastName} Family Wants to Extend With You!</h2>
+        <p class="lead">Your current program will end on
+          <apex:outputText value=" {0,date,MM'/'dd'/'yyyy}">
+            <apex:param value="{!PageController.OrigConfMatch.End_Date__c}" />
+          </apex:outputText>
+          and the {!PageController.applicantHF.Account__r.LastName} Family would like you to stay for another <strong>{!PageController.currentApp.Extension_Length__c} months</strong>.
+          Fill out a brief application below if you want to extend with your host family until
+          <apex:outputText value=" {0,date,MM'/'dd'/'yyyy}">
+            <apex:param value="{!PageController.matchConf.End_Date__c}" />
+          </apex:outputText>
+        </p>
+
+<p class="lead">Your deadline to extend is  <apex:outputText value=" {0,date,MMMM}">
+                    <apex:param name="month" value="{!PageController.OrigConfMatch.End_Date__c - 40}"/>
+                    </apex:outputText>&nbsp;
+                    <apex:outputText value="{!Day(PageController.OrigConfMatch.End_Date__c - 40)}"></apex:outputText>,&nbsp;
+                    <apex:outputText value="{!Year(PageController.OrigConfMatch.End_Date__c - 40)}"></apex:outputText></p>
+<hr class="margin-b2"/>
+    <p><strong>Important:</strong> A complete extension application includes the host family application, au pair application and proof of education. All three pieces are required before a host family can finalize their application and pay. All application components and payment must be submitted before our published deadlines for consideration by the Department of State.</p>
+<hr class="margin-b2 margin-t3"/>
+
+     <!--
+    <apex:outputpanel layout="block" id="lenBlock">
+     <div class="row">
+        <div class="col-md-3">
+          <div class="form-group">
+            <label class="control-label">Extension Duration</label>
+            <apex:selectRadio disabled="{!PageController.disControlLen}" styleClass="radio" value="{!PageController.currentApp.Extension_Length__c}" id="extensionl" layout="lineDirection" required="true">
+              <apex:selectOption itemValue="6" itemLabel="6 months"/>
+              <apex:selectOption itemValue="9" itemLabel="9 months"/>
+              <apex:selectOption itemValue="12" itemLabel="12 months"/>
+            </apex:selectRadio>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <apex:outputpanel layout="block" id="itself" rendered="{!PageController.disControlLen==true}">
+            <apex:commandLink id="changelink" action="{!PageController.changeDisableLen}" rerender="lenBlock"> Change </apex:commandLink>
+          </apex:outputpanel>
+        </div> 
+      </div>
+        <apex:outputpanel layout="block" id="itself2" rendered="{!PageController.disControlLen==false}">
+            <p class="alert alert-info"> If you request a different extension length your family will be contacted by AuPairCare to confirm the change. </p>
+        </apex:outputpanel> 
+    </apex:outputpanel>
+    -->
+
+     
+          <apex:commandlink styleClass="btn btn-primary btn-lg margin-r3" action="{!PageController.confirmPtExtension}" id="nextlink">
+            <apex:param name="nextPage" value="/apex/apc_ap_main_education_proof?docType=Proof-of-Education"/>
+            <apex:param name="reDirectPage" value="true" />
+            <apex:param name="conf" value="true" />
+            <apex:commandButton value="Extend with Current Family" id="extendbut" />
+          </apex:commandlink>
+       
+      
+          <apex:outputLink id="linkrenew4" styleClass="btn btn-lg btn-default" value="/apex/apc_ap_app_clone?id={!PageController.currentApp.Id}&AppType=noExtend">Reject Extension</apex:outputLink>
+       
+  </div><!-- end hp block --> 
+   
+<div class="hp-block padding-6"> 
+        <h2 class="margin-b1">Extend With a New Family</h2>
+        <p class="lead">You may choose to match with a new family once your time with the {!PageController.applicantHF.Account__r.LastName} family
+            is completed. Your deadline to extend is  <apex:outputText value=" {0,date,MMMM}">
+                    <apex:param name="month" value="{!PageController.OrigConfMatch.End_Date__c - 40}"/>
+                    </apex:outputText>&nbsp;
+                    <apex:outputText value="{!Day(PageController.OrigConfMatch.End_Date__c - 40)}"></apex:outputText>,&nbsp;
+                    <apex:outputText value="{!Year(PageController.OrigConfMatch.End_Date__c - 40)}"></apex:outputText></p>    
+        <apex:outputLink styleClass="btn btn-link vs2 btn-lg" id="linkrenew" value="/apex/apc_ap_app_clone?id={!PageController.currentApp.Id}&AppType=newFamily"><span>Extend With a New Family</span></apex:outputLink>
+  
+</div><!-- end hp block -->  
+      
+  </apex:outputpanel>
+  <!-- END Case 2 --> 
+  
+  
+<!-- Begining CASE 1C: PT Application Accepted / PT Dont want to extend -->
+  <apex:outputpanel layout="block" id="blockCase1C" rendered="{!PageController.currentApp.Intrax_Program__c == 'AuPairCare' && 
+PageController.currentApp.Application_Type__c == 'Original' 
+&& PageController.currentApp.Application_Stage__c == 'Accepted'
+&& PageController.currentApp.Extension_Au_Pair_Agreed__c == 'No'}">
+    <apex:outputpanel layout="block" id="blockrewallow2" rendered="{!PageController.AllowRenewMap[PageController.currentApp.id] == true}">
+          <h2 class="margin-b1">Extend With a New Family</h2>
+          <p class="lead">You may choose to match with a new family once your time with the {!PageController.applicantHF.Account__r.LastName} family
+            is completed. Your deadline to extend is  <apex:outputText value=" {0,date,MMMM}">
+                    <apex:param name="month" value="{!PageController.OrigConfMatch.End_Date__c - 40}"/>
+                    </apex:outputText>&nbsp;
+                    <apex:outputText value="{!Day(PageController.OrigConfMatch.End_Date__c - 40)}"></apex:outputText>,&nbsp;
+                    <apex:outputText value="{!Year(PageController.OrigConfMatch.End_Date__c - 40)}"></apex:outputText></p>
+          <apex:outputLink styleClass="btn btn-link vs2 btn-lg" id="apc_hf_app_clone_linkC" value="/apex/apc_ap_app_clone?id={!PageController.currentApp.Id}&AppType=Renewal"> <span>Extend With a New Family</span> </apex:outputLink>
+    </apex:outputpanel>
+  </apex:outputpanel>
+  <!-- END Case 1C -->   
+  
+  
+  
+  <!-- Begining CASE 3: PT Extended Working -->
+  <apex:outputpanel layout="block" id="blockCase3" rendered="{!PageController.currentApp.Intrax_Program__c == 'AuPairCare' && 
+PageController.currentApp.Application_Type__c == 'Extension' 
+&& PageController.currentApp.Application_Stage__c == 'Working'
+&& PageController.currentApp.Extension_Au_Pair_Agreed__c == 'Yes'
+&& PageController.applicantHF.Application_Stage__c == 'Accepted'}">
+  <div class="hp-block orange-border padding-6">   
+        <h2 class="margin-b1">Your Are Almost There! Complete Your Application</h2>
+        <p class="lead">Looks like you have a few more pages left.</p>
+        <apex:outputLink styleClass="btn btn-default btn-lg" value="/apex/apc_ap_main_education_proof?id={!PageController.currentApp.Id}&docType=Proof-of-Education">Finish Your Extension Application</apex:outputLink>
+        <div class="margin-t2"><b class="sm">Changed your mind?</b></div>
+        <div>Please let us know if you no longer wish to extend with your current family</div>
+        <apex:outputLink id="linkrenew3" value="/apex/apc_ap_app_clone?id={!PageController.currentApp.Id}&AppType=Cancel"><span>Cancel Extension Application</span> </apex:outputLink>
+
+</div><!-- end hp block -->
+  </apex:outputpanel>
+  <!-- END Case 3 --> 
+  
+  
+  
+  <!-- Begining CASE 4: Application HF Submitted Extension // PT accepted -->
+  <apex:outputpanel layout="block" id="blockCase4" rendered="{!PageController.currentApp.Intrax_Program__c == 'AuPairCare' && 
+PageController.currentApp.Application_Type__c == 'Extension' 
+&& PageController.currentApp.Application_Stage__c == 'Submitted'
+&& PageController.currentApp.Extension_Au_Pair_Agreed__c == 'Yes'
+&& PageController.applicantHF.Application_Stage__c == 'Accepted'}">
+ <div class="hp-block orange-border padding-6"> 
+        <h2 class="margin-b1">Thank You For Submitting Your Extension Application</h2> 
+        <p>Your host family needs to finalize your extension by  <apex:outputText value=" {0,date,MMMM}">
+                    <apex:param name="month" value="{!PageController.OrigConfMatch.End_Date__c - 40}"/>
+                    </apex:outputText>&nbsp;
+                    <apex:outputText value="{!Day(PageController.OrigConfMatch.End_Date__c - 40)}"></apex:outputText>,&nbsp;
+                    <apex:outputText value="{!Year(PageController.OrigConfMatch.End_Date__c - 40)}"></apex:outputText></p>
+        <p><strong>Important:</strong> A complete extension application includes the host family application, au pair application and proof of education. All three pieces are required before a host family can finalize their application and pay. All application components and payment must be submitted before our published deadlines for consideration by the Department of State.</p>
+  </div><!-- end hp block -->
+  </apex:outputpanel>
+  <!-- END Case 4 --> 
+  
+  
+  
+  
+  
+  
+  
+  
+  <!-- Begining CASE 5: PT Renewal Working -->
+  <apex:outputpanel layout="block" id="blockCase5" rendered="{!PageController.currentApp.Intrax_Program__c == 'AuPairCare' && 
+PageController.currentApp.Application_Type__c == 'Renewal' 
+&& PageController.currentApp.Application_Stage__c == 'Working'}">
+  <div class="hp-block orange-border padding-6"> 
+        <h2 class="margin-b1">Almost Done! Complete Your Extension Application</h2>
+        <p class="lead">Looks like you have a few more pages left.</p>
+        <apex:outputLink styleClass="btn btn-link vs2 btn-lg" value="/apex/apc_ap_main_education_proof?id={!PageController.currentApp.Id}&docType=Proof-of-Education"><span>Complete Extension Application</span> </apex:outputLink>
+
+        <div class="margin-t2"><b class="sm">Changed your mind?</b></div>
+        <div>Please let us know if you no longer wish to apply for a new family.</div>
+        <div><apex:outputLink id="linkrenew5" value="/apex/apc_ap_app_clone?id={!PageController.currentApp.Id}&AppType=Cancel"><b class="sm">Cancel Extension Application</b></apex:outputLink></div>
+  </div><!-- end hp block -->  
+  </apex:outputpanel>
+  <!-- END Case 5 --> 
+  
+  
+  
+  <!-- Begining CASE 6: Application PT Submitted Renewal -->
+  <apex:outputpanel layout="block" id="blockCase6" rendered="{!PageController.currentApp.Intrax_Program__c == 'AuPairCare' && 
+PageController.currentApp.Application_Type__c == 'Renewal' 
+&& PageController.currentApp.Application_Stage__c == 'Submitted'}">
+   
+   <div class="hp-block orange-border padding-6"> 
+        <h2 class="margin-b1">Thank You For Submitting Your Extension Application</h2>
+        <p class="lead">Your application is being processed. You will receive confirmation upon approval from the Department of State.</p>
+
+        <div class="margin-t2"><b class="sm">Changed your mind?</b></div>
+        <div>Please contact us know if you no longer wish to extend with your current family.</div>
+        
+        <!--
+             We cannot use this snippet because it uses lastmodifieddate. If an internal user modifies the app this date would change
+               <label>Application Submitted on</label><br/>
+              <apex:outputText value=" {0,date,MM'/'dd'/'yyyy}">
+                <apex:param value="{!PageController.currentApp.LastModifiedDate}" />
+              </apex:outputText>
+               --> 
+        
+   </div><!-- end hp block -->
+   
+  </apex:outputpanel>  
+  <!-- END Case 6 --> 
+  
+</apex:component>

@@ -1,0 +1,154 @@
+<apex:page docType="html-5.0" title="Main Media" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" id="igi_pt_app_media" standardStylesheets="false" showHeader="false">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+     <c:block_header_igi_pt_application userAgentCheck="{!userAgentCheck}"/>
+      <div class="row">
+        <div class="col-md-7 col-md-push-3">
+          <c:block_app_completion_igi applicantInfo="{!applicantInfo}" isIGIMainReady="{!CheckMainIGIApp}"/>
+          <!--  <c:block_breadcrumb_igi_app ApplicantInfo="{!ApplicantInfo}"/> -->
+          <h1>Photo Uploads</h1>
+          <p class="lead">Please upload a photo of yourself here.</p>
+          
+          <apex:form id="webform" styleClass="form-vertical ws-validate" >
+          <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+         
+          <apex:pageBlock id="media">
+          
+          
+             <div id="uploadlist">        
+             <div class="panel panel-default">
+              <div class="panel-body">
+                  <div class="docupload-top">
+               
+			           <apex:commandlink styleClass="btn btn-link btn-lg" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit">
+					  	<apex:commandButton value="" id="continuebutton"/>
+					  	  <i class="fa fa-plus-circle"></i>
+	                  			<span>Upload Photo</span>
+					  </apex:commandlink>
+					   
+			  </div> <!--  end docupload top -->
+			  
+			  <div class="docupload-bttm">
+			  <apex:outputPanel layout="block" styleClass="margin-t collapse in" rendered="{!IF(DocList.Size > 0, true, false)}">
+                        <apex:pageBlock id="Block_ListExperience">
+                          <div class="table-responsive">
+                            <apex:pageBlockTable styleClass="table" value="{!DocList}" var="item">
+                              <apex:column headerValue="File Name">
+                              <apex:commandLink action="{!load}" rerender="" target="_blank">
+                                    <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                    <apex:outputText value="{!item.Document_Name__c}"/>
+                               </apex:commandLink>
+                               </apex:column>
+                              <apex:column headerValue="Remove" >
+                                <div class="btn-toolbar no-margin">
+                                  <apex:commandLink action="{!iWantMyJSValues}" styleClass="btn-lg" oncomplete="confDelete();" immediate="true" rerender=""> <i class="fa fa-trash-o"></i>
+                                    <apex:param name="docGuid" value="{!item.Document_GUID__c}" assignTo="{!docGuid}"/>
+                                  </apex:commandLink>
+                                </div>
+                              </apex:column>
+                            </apex:pageBlockTable>
+                          </div> <!--  end table responsive -->
+                        </apex:pageBlock>
+                      </apex:outputPanel> 
+			  </div> <!--  end docupload bttm -->
+			  
+			  </div> <!--  end panel body -->  
+               
+                    
+                      
+                     
+            </div> <!--  end photo panel --> 
+             </div> <!--  end upload list --> 
+                      <apex:outputText value="{!disableFileUploadText}" rendered="{!disableFileUpload}"/>
+ 
+                </apex:pageBlock> <!--  end media doc upload -->
+                
+                           <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+							  <div class="modal-dialog modal-sm">
+							    <div class="modal-content"> 
+							     <div class="modal-body">
+							     <p>Are you sure you want to remove this file?</p>
+							     </div>
+							      <div class="modal-footer">
+							        <apex:commandLink styleClass="btn btn-primary" action="{!deletefile}" immediate="true">       
+							        <apex:param name="igiMediaParam" value="true" assignTo="{!igiMediaParam}" />
+							        <apex:commandButton value="Yes" id="yesbutton"/>
+							        </apex:commandLink>
+							        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+							      </div>
+							    </div>
+							  </div>
+							</div>  <!--  end modal -->
+
+				<div class="modal fade modal-widget" id="myModalUpload" tabindex="-1" role="dialog" aria-hidden="true">
+					  <div class="modal-dialog">
+					    <div class="modal-content"> 
+					     <div class="modal-header">
+					        <h4 class="modal-title">Upload Photos</h4>
+					      </div>
+					     <div class="modal-body">
+					     <!-- UNCOMMENT THIS -- I needed to make the height param larger to see the link as the styles are not sync'ed
+					     <iframe width="100%" height="400" frameborder="0" scrolling="no" src="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType={!$CurrentPage.parameters.docType}&refUrl={!refUrl}&retparam={!retParam}"></iframe>
+					     -->
+					     <iframe width="100%" height="450" frameborder="0" scrolling="no" src="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType={!$CurrentPage.parameters.docType}&retparam={!retParam}"></iframe>
+					     </div>
+					    </div>
+					  </div>
+				</div>  <!--  end modal -->
+          
+              <div class="row">
+                <div class="form-group margin-t4">
+                  <!--  <apex:outputLink styleClass="btn btn-link btn-lg"  value="/apex/igi_pt_app_contact_info?id={!applicantInfo.Id}" id="backlink2"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                  -->
+                  
+                  <apex:commandlink styleClass="btn btn-primary btn-lg margin-r"  action="{!navigator}" id="nextlink2" onComplete="rerunjs();hwsize();" reRender="webform" status="onsubmit">
+                     <apex:param name="nextPage" value="/apex/igi_pt_app_home" />
+                    <apex:param name="reDirectPage" value="true" />
+                    <apex:param name="pageId" value="060"/>
+                    <apex:commandButton value="Save & Continue" id="continuebutton2"/>
+                  </apex:commandlink>
+                  
+                   <apex:commandlink styleClass="btn btn-link btn-lg" rendered="{!NOT(CONTAINS(applicantInfo.PageStatus_Complete__c,'060'))}"
+                					action="{!setPageIdStarted}" id="skipLink" reRender="webform" status="onsubmit">
+                	<apex:param name="pageId" value="060"/>
+                	<apex:commandButton value="" id="skipButton"/>        
+                		<span>Skip this page</span>             
+                  </apex:commandlink>
+                </div> 
+              </div>
+
+			
+        </apex:form>
+        <apex:form >
+          	<c:block_app_coedit_authorization ApplicantInfo="{!applicantInfo}" pageController="{!AEC}" rendered="{!applicantInfo.Apply_on_Behalf_of_PT__c && applicantInfo.Application_Stage__c == 'Working'}"/>
+          </apex:form>
+        </div>
+        <!-- end column  -->
+        
+        <div class="col-md-3 col-md-pull-7">
+         <c:menu_igi_pt_app ApplicantInfo="{!applicantInfo}" personInfo="{!personInfo}" returnURL="{!returnURL}" />
+        </div>
+        <!-- end column  --> 
+      </div>
+      <!-- end row --> 
+       <script>
+var j$ = jQuery.noConflict();
+
+function confDelete(){
+j$('#myModal').modal();
+} 
+  
+function popModal(){
+var auxerr= j$('.custom-error-pagelevel').attr('role');
+//alert(auxerr);
+	if(auxerr=="alert"){
+	}else{
+		j$('#myModalUpload').modal();
+	}
+} 
+    
+</script>          
+        
+    </apex:define>
+  </apex:composition>
+</apex:page>

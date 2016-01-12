@@ -1,0 +1,54 @@
+<apex:page title="Match Confirm | Intrax" standardStylesheets="false" showHeader="false" id="partner_match_confirm">
+  
+    <apex:composition template="IntraxTemplate_Vs2" >
+      <apex:define name="body">
+      <apex:form >
+        <!-- begin row -->
+          <div class="row">
+          <apex:outputPanel styleClass="span9" layout="block">
+          <!--
+            <h1>
+            Create New Match
+            </h1>  
+          -->
+          </apex:outputPanel>
+        </div>
+        <!-- end row -->
+        <!-- begin row --> 
+        <div class="row">
+          
+          <!-- end span3 -->
+          <!-- begin span9 -->
+            <div class="span12">
+            <apex:outputPanel styleClass="block" layout="block">
+            
+              <div class="block-body">
+                <apex:outputPanel id="myPanel" layout="block">
+                    
+                    
+                    <apex:pageMessages />
+                    <apex:pageBlock id="pb" >
+                        <p>Thank you for having created a successful match.</p>
+                       
+                <apex:outputPanel styleClass="form-row" layout="block">
+                  <div class="form-link">
+                    <apex:outputLink value="/apex/Participants"><i class="icon-chevron-left"></i> <span>Go Back to Participants list</span></apex:outputLink>
+                  </div> 
+                 
+                </apex:outputPanel>  
+             </apex:pageBlock>
+            
+            </apex:outputPanel>
+                
+                
+              </div>
+            </apex:outputPanel>
+          </div>
+          <!-- end span9 -->
+        </div>
+        <!-- end row -->
+        </apex:form>
+      </apex:define>
+    </apex:composition>
+  
+</apex:page>

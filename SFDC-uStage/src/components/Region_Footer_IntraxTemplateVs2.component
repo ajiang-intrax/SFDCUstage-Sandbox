@@ -1,0 +1,37 @@
+<!--  
+Component: Region_FooterIntraxTemplateVs2
+
+Description: Inner component for Intrax Partner Portal Header Template Footer.
+
+-->
+<apex:component layout="none">
+    
+    <!-- Footer Portion -->
+	<div id="footer-zone">
+		
+		<!-- Footer Inner Portion -->
+		<div id="footer-zone-inner" class="container">
+		
+			<div class="row"> 
+				
+				<div class="span12">  
+					
+					<div class="pull-right clearfix ">     
+
+						<apex:outputLink styleClass="footer-logo" value="http://www.intraxinc.com" target="_self">
+							<apex:image url="{!URLFOR($Resource.intrax_themes, '/intrax_themes/images/footer-intrax.png')}" alt="Intrax" title="Intrax"/>
+						</apex:outputLink>
+						
+						<apex:outputLink styleClass="footer-logo" value="http://www.aupaircare.com" target="_self">
+							<apex:image url="{!URLFOR($Resource.intrax_themes, '/intrax_themes/images/footer-aupaircare.png')}" alt="AuPairCare" title="AuPairCare"/>
+						</apex:outputLink>
+						<apex:outputLink styleClass="footer-logo" value="http://www.ayusa.org" target="_self">
+							<apex:image url="{!URLFOR($Resource.intrax_themes, '/intrax_themes/images/footer-ayusa.png')}" alt="Ayusa" title="Ayusa"/>
+						</apex:outputLink>    
+						   
+					</div>
+				</div>
+			</div>    
+    	</div>   
+	</div>    
+</apex:component>

@@ -1,0 +1,252 @@
+<apex:page standardController="invoiceit_s__Job__c" extensions="invoiceit_s.CreateJobController" tabStyle="invoiceit_s__Job__c"> 
+    <style type="text/css">
+        .custPopup{
+            background-color: white;
+            border-width: 2px;
+            border-style: solid;
+            z-index: 9999;
+            left: 50%;
+            padding:10px;
+            position: absolute;
+            /* These are the 3 css properties you will need to change so the popup 
+            displays in the center of the screen. First set the width. Then set 
+            margin-left to negative half of what the width is. You can add 
+            the height property for a fixed size pop up if you want.*/
+            width: 770px;
+            margin-left: -380px;
+            top:75px;
+        }
+        .popupBackground{
+            background-color:black;
+            opacity: 0.20;
+            filter: alpha(opacity = 20);
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 9998;
+        }
+    </style>
+    
+    <script>
+        function confirmCancel() {
+            if (confirm("{!$Label.CancellingthiswoulddiscardthechangesPleaseconfirm}")) 
+            {
+                return true;
+            }
+            return false;
+        }
+        function addProduct(id,name){
+            addProduct(id,name);
+            var searchstring = document.getElementById("searchstring");
+            searchstring.value = ""
+        }
+        function noenter(ev)
+        {
+            if (window.event && window.event.keyCode == 13 || ev.which == 13)
+            {
+                var ele=document.getElementById(cl);
+                ele.click();
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        $j = jQuery.noConflict();
+        $j(document).ready(function() {
+            $j("#dialog").dialog({  autoOpen: false, modal: true, position: 'center', width: 190, 
+                                   height:70, dialogClass: "ui-dialog-no-titlebar ui-dialog-no-padding", resizable: true});
+        });
+        /*Function to show the modal dialog for jquery*/
+        function showDialog(){
+            $j("#dialog").dialog("open");
+            $j('#dialog').dialog('option', 'position', 'center');
+            return false;
+        }
+        /*Function to hide the modal dialog for jquery*/
+        function closeDialog(){
+            $j("#dialog").dialog("close");
+            return false;
+        }
+    </script>
+    <apex:sectionHeader title="{!$Label.Step2of3}" subtitle="{!job.Name}" />
+    <apex:form >
+       <apex:actionStatus id="status" onstart="return showDialog()" onstop="return closeDialog()"/>
+       <apex:actionFunction name="addProduct" action="{!getRatePlansForProduct}" rerender="productSelect,ratePlanSelect,jobrateplancharges" status="status">
+           <apex:param name="productId" value="" />
+           <apex:param name="productName" value="" />
+       </apex:actionFunction>
+       
+       <apex:pageMessages />
+        <apex:pageBlock title="" mode="edit">
+            <apex:pageBlockButtons >
+               <apex:commandButton action="{!step1}" value="{!$Label.ButtonPrevious}" />
+               <apex:commandButton action="{!step3}" value="{!$Label.ButtonNext}" />
+               <apex:commandButton action="{!cancel}" value="{!$Label.ButtonCancel}" onclick="return confirmCancel()" immediate="true" />
+            </apex:pageBlockButtons>
+            <apex:panelGrid columns="3">
+                <apex:outputLabel value="{!$Label.Search_Products}" />
+                <apex:inputText value="{!searchstring}" id="searchString">
+                    <c:autoComplete objectname="{!objectname}" searchfields="{!searchfields}" displayfields="{!displayfields}" orderfield="{!orderfield}" autocomplete_textbox="{!$Component.searchstring}" 
+                                    products_Filters="{!sFilterCriteria}" products_Limit="{!sProductsLimit}"/>
+                </apex:inputText>
+                <img src="/s.gif" alt="Help" class="helpIcon" title="{!$Label.SearchProductsHelpText}"/>
+            </apex:panelGrid>
+            <apex:pageBlockSection id="ratePlanSelect">
+                <apex:pageBlockTable value="{!listProductRatePlans}" var="rateplan" rendered="{!isMultipleRatePlans}" style="overflow:auto;height:100px; width:1000px;">
+                    <apex:column >
+                        <apex:commandLink styleClass="btn" style="padding:2px 5px 2px 5px; text-decoration:none;"
+                                value="{!$Label.ButtonSelect}" action="{!getRatePlanChargesForRatePlan}"
+                                rerender="jobrateplancharges,jobClass,ratePlanSelect" status="status">
+                            <apex:param name="ratePlanId" value="{!rateplan.Id}" />
+                        </apex:commandLink>   
+                    </apex:column>  
+                    <apex:column value="{!rateplan.Name}" />
+                    <apex:column value="{!rateplan.invoiceit_s__Description__c}" />
+                </apex:pageBlockTable>
+           </apex:pageBlockSection>
+        </apex:pageBlock>
+        <apex:pageBlock title="{!$Label.OrderStep2_PB_SelectedProducts}" id="jobrateplancharges">
+            <apex:pageMessages id="messages" />
+            <table cellspacing="0" cellpadding="0" border="0" class="list">
+                <thead class="rich-table-thead">
+                    <tr class="headerRow">
+                       <th colspan="1" scope="col" class="headerRow">
+                          <div>
+                          </div>
+                        </th>
+                        <apex:repeat value="{!$ObjectType.invoiceit_s__Job_Product__c.FieldSets.invoiceit_s__ProductFieldsInStep2}" var="fieldAPI">
+                            <th colspan="1" scope="col" class="headerRow">
+                                <div>
+                                    {!fieldAPI.Label}
+                                </div>
+                            </th> 
+                        </apex:repeat>
+                        <th colspan="1" scope="col" class="headerRow">
+                          <div>
+                          {!$Label.Quantity}
+                          </div>
+                        </th>                        
+                        <apex:variable value="{!3}" var="rowNum"/>
+                        <apex:repeat value="{!$ObjectType.invoiceit_s__Job_Rate_Plan_Charge__c.FieldSets.invoiceit_s__Order_wizard_Step_2}" var="fieldAPI">
+                            <th colspan="1" scope="col" class="headerRow">
+                                <div>
+                                    {!fieldAPI.Label}
+                                </div>
+                            </th>
+                          <apex:variable var="rowNum" value="{!rowNum + 1}"/>   
+                        </apex:repeat>
+                    </tr>
+                </thead>
+                <tbody>
+                    <apex:repeat value="{!jobClass.jobProducts}" var="jobproduct">
+                        <apex:repeat value="{!jobproduct.jobRatePlans}" var="jobrateplan">
+                            <apex:repeat value="{!jobrateplan.jobRatePlanCharges}" var="jobrateplancharge">
+                                <tr onfocus="if (window.hiOn){hiOn(this);}" onblur="if (window.hiOff){hiOff(this);}" onmouseout="if (window.hiOff){hiOff(this);}" onmouseover="if (window.hiOn){hiOn(this);}" class="dataRow even odd first">
+                                    <td colspan="1" class="dataCell">
+                                       <apex:commandLink styleClass="btn" style="padding:2px 5px 2px 5px; text-decoration:none;"
+                                           value="{!$Label.ButtonRemove}" action="{!removeCharges}" rerender="jobrateplancharges" status="status" rendered="{!jobrateplancharge.jobrateplancharge.invoiceit_s__Sequence_No__c <= 1}">
+                                        <apex:param name="jobRatePlanId" value="{!jobrateplan.jobrateplan.id}" />
+                                        <apex:param name="jobrateplancounter" value="{!jobrateplan.jobRatePlanCounter}" />
+                                        </apex:commandLink>
+                                    </td>  
+                                    <apex:repeat value="{!$ObjectType.invoiceit_s__Job_Product__c.FieldSets.invoiceit_s__ProductFieldsInStep2}" var="fieldAPI">
+                                        <td colspan="1" class="dataCell">
+                                            <apex:inputField value="{!jobproduct.jobproduct[fieldAPI]}" rendered="{!jobrateplancharge.jobrateplancharge.invoiceit_s__Sequence_No__c <= 1}"/>
+                                        </td>
+                                    </apex:repeat>
+                                    <td colspan="1" class="dataCell">
+                                        <apex:inputField value="{!jobrateplancharge.jobrateplancharge.invoiceit_s__Quantity__c}" required="true" style="width:70px">
+                                            <apex:param value="{0,number,0}" />
+                                        </apex:inputField>
+                                    </td>
+                                    <apex:repeat value="{!$ObjectType.invoiceit_s__Job_Rate_Plan_Charge__c.FieldSets.invoiceit_s__Order_wizard_Step_2}" var="fieldAPI">
+                                        <td colspan="1" class="dataCell">
+                                            <apex:inputField value="{!jobrateplancharge.jobrateplancharge[fieldAPI]}" rendered="{!((fieldAPI == 'invoiceit_s__Unit_Price__c' && jobrateplancharge.jobrateplancharge.invoiceit_s__Is_Product_Editable__c == true && jobrateplancharge.jobrateplancharge.invoiceit_s__Price_Format__c != 'Percentage Pricing') || (fieldAPI == 'invoiceit_s__Percentage_of_other_Charges__c' && jobrateplancharge.jobrateplancharge.invoiceit_s__Is_Product_Editable__c == true && jobrateplancharge.jobrateplancharge.invoiceit_s__Price_Format__c == 'Percentage Pricing') || (fieldAPI == 'Name') || (fieldAPI == 'invoiceit_s__Committed_Quantity__c' && jobrateplancharge.jobrateplancharge.invoiceit_s__Price_Type__c == 'Usage') || (fieldAPI == 'invoiceit_s__Min_Customer_Spend__c' && jobrateplancharge.jobrateplancharge.invoiceit_s__Price_Type__c == 'Usage') || (fieldAPI == 'invoiceit_s__Max_Customer_Spend__c' && jobrateplancharge.jobrateplancharge.invoiceit_s__Price_Type__c == 'Usage') || (fieldAPI == 'invoiceit_s__Cost_Price__c' && jobrateplancharge.jobrateplancharge.invoiceit_s__Is_Product_Editable__c == true && jobrateplancharge.jobrateplancharge.invoiceit_s__Price_Format__c != 'Percentage Pricing') || (!BEGINS(fieldAPI,'invoiceit_s__')))}"/>                                            
+                                            <apex:outputField value="{!jobrateplancharge.jobrateplancharge[fieldAPI]}" rendered="{!(!((fieldAPI == 'invoiceit_s__Unit_Price__c' && jobrateplancharge.jobrateplancharge.invoiceit_s__Is_Product_Editable__c == true && jobrateplancharge.jobrateplancharge.invoiceit_s__Price_Format__c != 'Percentage Pricing') || (fieldAPI == 'invoiceit_s__Percentage_of_other_Charges__c' && jobrateplancharge.jobrateplancharge.invoiceit_s__Is_Product_Editable__c == true && jobrateplancharge.jobrateplancharge.invoiceit_s__Price_Format__c == 'Percentage Pricing') || (fieldAPI == 'Name') || (fieldAPI == 'invoiceit_s__Committed_Quantity__c' && jobrateplancharge.jobrateplancharge.invoiceit_s__Price_Type__c == 'Usage') || (fieldAPI == 'invoiceit_s__Min_Customer_Spend__c' && jobrateplancharge.jobrateplancharge.invoiceit_s__Price_Type__c == 'Usage') || (fieldAPI == 'invoiceit_s__Max_Customer_Spend__c' && jobrateplancharge.jobrateplancharge.invoiceit_s__Price_Type__c == 'Usage') || (fieldAPI == 'invoiceit_s__Cost_Price__c' && jobrateplancharge.jobrateplancharge.invoiceit_s__Is_Product_Editable__c == true && jobrateplancharge.jobrateplancharge.invoiceit_s__Price_Format__c != 'Percentage Pricing') || (!BEGINS(fieldAPI,'invoiceit_s__'))))}"/>
+                                            
+                                            <apex:commandButton value="{!$Label.ButtonViewTier}" action="{!showPopup}" style="float:right;" reRender="tstpopup" rendered="{!fieldAPI == 'invoiceit_s__Unit_Price__c' && (jobrateplancharge.jobrateplancharge.invoiceit_s__Price_Format__c == 'Tiered Pricing' || jobrateplancharge.jobrateplancharge.invoiceit_s__Price_Format__c == 'Volume Pricing')}">            
+                                               <apex:param value="{!jobrateplancharge.jobRatePlanChargeCounter}"  name="jobRatePlanChargeCounterForTier"/>
+                                            </apex:commandButton>
+                                        </td>
+                                    </apex:repeat>
+                                </tr>  
+                            </apex:repeat>
+                        </apex:repeat>
+                    </apex:repeat>
+                  </tbody>
+            </table>
+         </apex:pageBlock> 
+         
+      <!-- this is for pop up -->
+      <apex:outputPanel id="tstpopup">
+        <apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!displayPopUp}"/> 
+        <apex:outputPanel styleClass="custPopup" layout="block" rendered="{!displayPopUp}">
+        <apex:commandButton style="Float:Right" action="{!saveAndClosePopup}" rerender="tstpopup" image="{!URLFOR($Resource.invoiceit_s__InvoiceIt, '/images/Close_Box_Red.png')}"/>
+        <apex:pageBlock >
+           <apex:pagemessages id="pm"/>
+           <apex:pageblockSection title="{!$Label.Tiers}" >
+              <apex:repeat value="{!jobClass.jobProducts}" var="jobproduct" id="start">
+                  <apex:repeat value="{!jobproduct.jobRatePlans}" var="jobrateplan">
+                      <apex:repeat value="{!jobrateplan.jobRatePlanCharges}" var="jobrateplancharge">
+                        <apex:outputPanel rendered="{!TEXT(jobrateplancharge.jobRatePlanChargeCounter) == jobRatePlanChargeCounterForTier}">
+                            <center>
+                                <!--
+                                    Modified By     : Anil Pinto
+                                    Modified Date   : 13 June 2013
+                                    JIRA Task       : INVOICEIT-61
+                                    Comments        : This new method saveAndClosePopup created as a validations required while saving the tiers
+                                -->
+                                <apex:commandButton value="{!$Label.ButtonSaveAndClose}" action="{!saveAndClosePopup}" rerender="tstpopup" rendered="{!jobrateplancharge.jobrateplancharge.invoiceit_s__Is_Product_Editable__c}"/>
+                                <apex:commandButton action="{!newTier}" value="Add" reRender="tstpopup" rendered="{!jobrateplancharge.jobrateplancharge.invoiceit_s__Is_Product_Editable__c}"/>
+                                <apex:commandButton value="Close" action="{!closePopup}" rerender="tstpopup" rendered="{!!jobrateplancharge.jobrateplancharge.invoiceit_s__Is_Product_Editable__c}"/>
+                            </center><br/>   
+                          
+                            <apex:pageBlockTable value="{!jobrateplancharge.jobRatePlanChargeTiers}" var="jobTiers">
+                                <apex:column headerValue="{!$Label.StartUnit}">
+                                    <apex:inputField value="{!jobTiers.jobRatePlanChargeTier.invoiceit_s__Start_Unit__c}" required="true" rendered="{!jobrateplancharge.jobrateplancharge.invoiceit_s__Is_Product_Editable__c}"/> 
+                                    <apex:outputField value="{!jobTiers.jobRatePlanChargeTier.invoiceit_s__Start_Unit__c}" rendered="{!!jobrateplancharge.jobrateplancharge.invoiceit_s__Is_Product_Editable__c}"/>
+                                </apex:column>    
+                                
+                                <apex:column headerValue="{!$Label.EndUnit}">
+                                    <apex:inputField value="{!jobTiers.jobRatePlanChargeTier.invoiceit_s__End_Unit__c}" rendered="{!jobrateplancharge.jobrateplancharge.invoiceit_s__Is_Product_Editable__c}"/>
+                                    <apex:outputField value="{!jobTiers.jobRatePlanChargeTier.invoiceit_s__End_Unit__c}" rendered="{!!jobrateplancharge.jobrateplancharge.invoiceit_s__Is_Product_Editable__c}"/>
+                                </apex:column> 
+                                
+                                <apex:column headerValue="{!$Label.UnitPrice}">
+                                    <apex:inputField value="{!jobTiers.jobRatePlanChargeTier.invoiceit_s__Unit_Price__c}" required="true" rendered="{!jobrateplancharge.jobrateplancharge.invoiceit_s__Is_Product_Editable__c}"/>
+                                    <apex:outputField value="{!jobTiers.jobRatePlanChargeTier.invoiceit_s__Unit_Price__c}" rendered="{!!jobrateplancharge.jobrateplancharge.invoiceit_s__Is_Product_Editable__c}"/>
+                                </apex:column> 
+                                
+                                <apex:column headerValue="{!$Label.UnitCostPrice}">    
+                                    <apex:inputField value="{!jobTiers.jobRatePlanChargeTier.invoiceit_s__Unit_Cost_Price__c}" rendered="{!jobrateplancharge.jobrateplancharge.invoiceit_s__Is_Product_Editable__c}"/>
+                                    <apex:outputField value="{!jobTiers.jobRatePlanChargeTier.invoiceit_s__Unit_Cost_Price__c}" rendered="{!!jobrateplancharge.jobrateplancharge.invoiceit_s__Is_Product_Editable__c}"/>
+                                </apex:column>     
+                                
+                                <apex:column rendered="{!jobrateplancharge.jobrateplancharge.invoiceit_s__Is_Product_Editable__c}">    
+                                    <apex:commandButton value="{!$Label.ButtonRemove}" action="{!removeTier}" immediate="true"  reRender="tstpopup">            
+                                       <apex:param value="{!jobTiers.jobRatePlanChargeTier.Id}"     name="jobTierIdToDelete"/>
+                                       <apex:param value="{!jobTiers.jobRatePlanChargeTierCounter}" name="jobTierCountertoDelete"/>
+                                       <apex:param value="{!jobrateplancharge.jobRatePlanChargeCounter}" name="jobRatePlanChargeCounterForTier"/>
+                                    </apex:commandButton>
+                                </apex:column>     
+                            </apex:pageBlockTable>
+                        </apex:outputPanel>
+                    </apex:repeat>
+                </apex:repeat>
+              </apex:repeat>
+           </apex:pageblockSection>              
+        </apex:pageBlock>                         
+        </apex:outputPanel>
+     </apex:outputPanel>
+    <!-- End Of popUp --> 
+    
+     <!-- This div holds the image that is opened as a popup during processing -->
+    <div id="dialog">
+        <apex:image value="{!URLFOR($Resource.invoiceit_s__jQuery,'/css/smoothness/images/please_wait.gif')}"/>
+    </div>
+    </apex:form>
+</apex:page>

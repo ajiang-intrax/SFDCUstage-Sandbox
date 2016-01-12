@@ -1,0 +1,370 @@
+<!-- <apex:page applyHTMLTag="false" applyBodyTag="false" standardStylesheets="false" standardcontroller="GeoMatch__c" extensions="googleGeoController" action="{!loadGeoMatrix1xn}" showHeader="false" sidebar="false">-->
+<apex:page standardcontroller="GeoMatch__c" extensions="googleGeoController" action="{!loadGeoMatrix1xn}">
+  <head>
+  <style type="text/css">
+html, body, #map-canvas {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+.cmdBtn{
+   color:white !important;
+   background:#343d36 !important;
+}
+.popover {
+	padding: 5px;
+	font-size: 12px;
+}
+.popover .popover-type-ad {
+	font-size: 15px;
+	font-weight: bold;
+	margin-bottom: 10px;
+	color: #6F6395;
+}
+.popover .popover-type-family {
+	font-size: 15px;
+	font-weight: bold;
+	margin-bottom: 10px;
+	color: #EB5451;
+}
+.popover-title {
+	font-size: 15px;
+	font-weight: bold;
+	margin-bottom: 5px;
+}
+.popover-address {
+	margin-bottom: 5px;
+}
+.popover-miles {
+	font-style: italic;
+}
+.popover-time {
+	font-style: italic;
+}
+.popover-address {
+	margin-bottom: 5px;
+}
+.map-container {
+	position: relative;
+}
+.match-container {
+	position: absolute;
+	background: #fff;
+	top: 0;
+	left: 80px;
+	font-size: 12px;
+	width: 325px;
+	box-shadow: 0 5px 8px rgba(0,0,0,0.2);
+}
+.match-list {
+	display: none;
+	padding:0;
+	background: #fff;
+	margin-bottom: 10px;
+}
+a.match-close {
+	display: block;
+	background: #efefef;
+	padding: 10px 20px;
+	cursor: pointer;
+}
+.activelist {
+	display: block;
+}
+.match-current {
+	background: #efefef;
+	margin-bottom: 20px;
+    padding: 20px 0;
+}
+.match-other {
+  background: #fff;
+  overflow-y: scroll;
+  max-height: 300px;
+}
+.match-item {
+	margin-bottom: 15px;
+	border-bottom: #ccc solid 1px;
+	padding:0 20px 15px 20px;
+}
+.match-title.current{  padding-left: 20px;
+  
+   font-size:18px; margin-bottom:10px;}
+.match-title {
+	font-size: 15px;
+	font-weight: bold;
+	margin-bottom: 20px;
+	padding:0 20px;
+}
+.match-item-title {
+font-size: 12px;
+font-weight: bold;
+margin-bottom: 5px;
+}
+.match-item-computation {
+	margin-bottom: 5px;
+}
+.match-item-distance {
+	font-style: italic;
+}
+.match-item-time {
+	font-style: italic;
+}
+a.match-item-link {
+	color: #428bca;
+	text-decoration: none;
+	font-weight: bold;
+	display: block;
+}
+a.match-item-link:visited,  a.match-item-link:link,  a.match-item-link:hover {
+	color: #428bca;
+	text-decoration: none;
+}
+.backlink {
+	padding: 20px 0;
+	display: block;
+}
+</style>
+  <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDhHJveUM7lfcyYvhdzrMnWN_pEvbjnQ24">
+    </script>
+  <script type="text/javascript">
+      function initialize() {
+        var mapOptions = {
+          center: { lat: {!fromGeo.GeoAddress__Latitude__s}, lng: {!fromGeo.GeoAddress__Longitude__s}},
+          zoom: 13
+        };
+          
+        var map = new google.maps.Map(document.getElementById('map-canvas'),
+            mapOptions);
+          
+          <apex:outputText rendered="{!zipCode.Boundaries__c != null}">
+	        	var boundaryObj = JSON.parse('{!zipCode.Boundaries__c}');
+	            map.data.addGeoJson(boundaryObj);
+          </apex:outputText>
+          	
+         <apex:outputText rendered="{!fromGeo.Account__c!=null}">
+         var contentString = '<div class="popover"><div class="popover-type-family">Host Family</div><div class="popover-title">{!JSINHTMLENCODE(fromGeo.Applicant_Info__r.Name)}{!JSINHTMLENCODE(fromGeo.Account__r.Name)}{!JSINHTMLENCODE(fromGeo.Lead__r.Name)}</div><div class="popover-address">{!JSINHTMLENCODE(fromGeo.Applicant_Info__r.Home_Street_1__c)}{!JSINHTMLENCODE(fromGeo.Account__r.PersonMailingStreet)}{!JSINHTMLENCODE(fromGeo.Lead__r.Street)}<br/>{!JSINHTMLENCODE(fromGeo.Applicant_Info__r.Home_City__c)}{!JSINHTMLENCODE(fromGeo.Account__r.PersonMailingCity)}{!JSINHTMLENCODE(fromGeo.Lead__r.City)}<br/>{!JSINHTMLENCODE(fromGeo.Applicant_Info__r.Home_State__c)}{!JSINHTMLENCODE(fromGeo.Account__r.PersonMailingState)}{!JSINHTMLENCODE(fromGeo.Lead__r.State)}, {!JSINHTMLENCODE(fromGeo.Applicant_Info__r.Home_Postal_Code__c)}{!JSINHTMLENCODE(fromGeo.Account__r.PersonMailingPostalCode)}{!JSINHTMLENCODE(fromGeo.Lead__r.PostalCode)}</div></div>';
+         var image = {url: 'https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/documents/portals/maps/pins/pink-hf.png',size: new google.maps.Size(44, 53),
+    origin: new google.maps.Point(0,0),anchor: new google.maps.Point(0,32)};
+    	 </apex:outputText>
+    	 <apex:outputText rendered="{!fromGeo.Contact__c!=null}">
+    	 var contentString = '<div class="popover"><div class="popover-type-family">Area Director</div><div class="popover-title">{!JSINHTMLENCODE(fromGeo.Applicant_Info__r.Name)}{!JSINHTMLENCODE(fromGeo.Account__r.Name)}{!JSINHTMLENCODE(fromGeo.Contact__r.Name)}{!JSINHTMLENCODE(fromGeo.Lead__r.Name)}</div><div class="popover-address">{!JSINHTMLENCODE(fromGeo.Applicant_Info__r.Home_Street_1__c)}{!JSINHTMLENCODE(fromGeo.Account__r.PersonMailingStreet)}{!JSINHTMLENCODE(fromGeo.Contact__r.MailingStreet)}{!JSINHTMLENCODE(fromGeo.Lead__r.Street)}<br/>{!JSINHTMLENCODE(fromGeo.Applicant_Info__r.Home_City__c)}{!JSINHTMLENCODE(fromGeo.Account__r.PersonMailingCity)}{!JSINHTMLENCODE(fromGeo.Contact__r.MailingCity)}{!JSINHTMLENCODE(fromGeo.Lead__r.City)}<br/>{!JSINHTMLENCODE(fromGeo.Applicant_Info__r.Home_State__c)}{!JSINHTMLENCODE(fromGeo.Account__r.PersonMailingState)}{!JSINHTMLENCODE(fromGeo.Contact__r.MailingState)}{!JSINHTMLENCODE(fromGeo.Lead__r.State)}, {!JSINHTMLENCODE(fromGeo.Applicant_Info__r.Home_Postal_Code__c)}{!JSINHTMLENCODE(fromGeo.Account__r.PersonMailingPostalCode)}{!JSINHTMLENCODE(fromGeo.Contact__r.MailingPostalCode)}{!JSINHTMLENCODE(fromGeo.Lead__r.PostalCode)}</div></div>';
+	    	 <apex:outputText rendered="{!zipCode.Boundaries__c == null}">
+	         	var image = {url: 'https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/documents/portals/maps/pins/orange-ad.png',size: new google.maps.Size(44, 53),
+	    origin: new google.maps.Point(0,0),anchor: new google.maps.Point(0,32)};          
+	    	 </apex:outputText>
+	    	 
+	    	 <apex:outputText rendered="{!zipCode.Boundaries__c != null}">
+	         	var image = {url: 'https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/documents/portals/maps/pins/orange-ad.png',size: new google.maps.Size(44, 53),
+	    origin: new google.maps.Point(0,0),anchor: new google.maps.Point(0,32)};
+	    	 </apex:outputText>
+    	 </apex:outputText>
+    
+          var myLatlng = new google.maps.LatLng({!fromGeo.GeoAddress__Latitude__s},{!fromGeo.GeoAddress__Longitude__s});
+          
+          var familymarker = new google.maps.Marker({position: myLatlng,map: map,icon: image,title: '{!fromGeo.contact__r.Name}{!fromGeo.Applicant_Info__r.Name}',zIndex: 1});
+          
+          familymarker['infofocus'] = new google.maps.InfoWindow({content: contentString});
+         
+google.maps.event.addListener(familymarker, 'click', function() {this['infofocus'].open(map,this);});
+				  
+	  
+          <apex:repeat value="{!odGroup}" var="mates">
+	          <apex:repeat value="{!odGroup[mates]}" var="mate">
+	          
+				<apex:outputText rendered="{!((mate.toGeo.Account__c!=null) || ((mate.toGeo.contact__c!=null) && (mate.pairingStatus=='Compatible' || mate.pairingStatus=='Compatible-Spawned')))}">
+					<apex:outputText rendered="{!mate.toGeo.contact__c!=null && geoMatch.HF_Ownership_Set__c==false}">
+			        var contentString = '<div class="popover"><div class="popover-type-ad">Area Director</div><div class="popover-title">{!JSINHTMLENCODE(mate.toGeo.contact__r.Name)}</div><div class="popover-address">{!JSINHTMLENCODE(adAddresses[mate.toGeo.Id]['mailingStreet'])}<br/>{!JSINHTMLENCODE(adAddresses[mate.toGeo.Id]['mailingCity'])}<br/>{!JSINHTMLENCODE(adAddresses[mate.toGeo.Id]['mailingState'])}, {!JSINHTMLENCODE(adAddresses[mate.toGeo.Id]['mailingPostalCode'])}</div><!-- <div class="popover-miles">{!CEILING(mate.distanceInKms)} kms away</div><div class="popover-time">{!CEILING(mate.durationInMins)} minutes away</div> --></div>';
+					  
+          			var image = {url: 'https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/documents/portals/maps/pins/blue-ad.png',size: new google.maps.Size(44, 53),
+	    origin: new google.maps.Point(0,0),anchor: new google.maps.Point(0,32)};
+          //change the image to orange-ad if ad is the assignedAD. mate.toGeo.Contact__r.Name == geomatch.toGeoLocate__r.contact__r.Name
+                  <apex:outputText rendered="{!mate.toGeo.Contact__r.Name==geoMatch.ToiGeoLocate__r.Contact__r.Name}" >
+                          var image = {url: 'https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/documents/portals/maps/pins/orange-ad.png',size: new google.maps.Size(44, 53),
+                  origin: new google.maps.Point(0,0),anchor: new google.maps.Point(0,32)};
+          			</apex:outputText>
+          
+	    			</apex:outputText>
+	    			
+	    			<apex:outputText rendered="{!mate.toGeo.account__c!=null && geoMatch.HF_Ownership_Set__c==false}">
+	    			var contentString = '<div class="popover"><div class="popover-type-ad">Host Family</div><div class="popover-title">{!JSINHTMLENCODE(mate.toGeo.Account__r.Name)}</div><div class="popover-address">{!JSINHTMLENCODE(adAddresses[mate.toGeo.Id]['mailingStreet'])}<br/>{!JSINHTMLENCODE(adAddresses[mate.toGeo.Id]['mailingCity'])}<br/>{!JSINHTMLENCODE(adAddresses[mate.toGeo.Id]['mailingState'])}, {!JSINHTMLENCODE(adAddresses[mate.toGeo.Id]['mailingPostalCode'])}</div><!-- <div class="popover-miles">{!CEILING(mate.distanceInKms)} kms away</div><div class="popover-time">{!CEILING(mate.durationInMins)} minutes away</div> --></div>';
+					  var image = {url: 'https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/documents/portals/maps/pins/pink-hf.png',size: new google.maps.Size(44, 53),
+	    origin: new google.maps.Point(0,0),anchor: new google.maps.Point(0,32)};
+	    			</apex:outputText>
+	    			
+	    			<apex:outputText rendered="{!geoMatch.HF_Ownership_Set__c==false}">
+	              	var myLatlng = new google.maps.LatLng({!mate.destLatAddress},{!mate.destLongAddress});
+	          		var admarker = new google.maps.Marker({position: myLatlng,map: map,icon: image,title: '{!mate.toGeo.contact__r.Name}{!mate.toGeo.Applicant_Info__r.Name}',zIndex: 1});
+	          		admarker['infowindow'] = new google.maps.InfoWindow({content: contentString});
+	          		google.maps.event.addListener(admarker, 'click', function() {this['infowindow'].open(map,this);});
+					</apex:outputText>
+          	   </apex:outputText>
+          	  </apex:repeat>
+          </apex:repeat>
+          
+          <apex:outputText rendered="{!geoMatch.HF_Ownership_Set__c==TRUE}">
+  			
+			    var contentString = '<div class="popover"><div class="popover-type-ad">Area Director</div><div class="popover-title">{!JSINHTMLENCODE(geoMatch.ToiGeoLocate__r.Contact__r.Name)}</div><div class="popover-address">{!JSINHTMLENCODE(adAddresses[geoMatch.ToiGeoLocate__r.Id]['mailingStreet'])}<br/>{!JSINHTMLENCODE(adAddresses[geoMatch.ToiGeoLocate__r.Id]['mailingCity'])}<br/>{!JSINHTMLENCODE(adAddresses[geoMatch.ToiGeoLocate__r.Id]['mailingState'])}, {!JSINHTMLENCODE(adAddresses[geoMatch.ToiGeoLocate__r.Id]['mailingPostalCode'])}</div><!-- <div class="popover-miles">{!CEILING(mate.distanceInKms)} kms away</div><div class="popover-time">{!CEILING(mate.durationInMins)} minutes away</div> --></div>';
+				var image = {url: 'https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/documents/portals/maps/pins/orange-ad.png',size: new google.maps.Size(44, 53),
+	    origin: new google.maps.Point(0,0),anchor: new google.maps.Point(0,32)};
+	    		
+            	var myLatlng = new google.maps.LatLng({!geoMatch.ToGeoAddress__latitude__s},{!geoMatch.ToGeoAddress__longitude__s});
+        		var admarker = new google.maps.Marker({position: myLatlng,map: map,icon: image,title: '{!geoMatch.ToiGeoLocate__r.Contact__r.Name}',zIndex: 1});
+        		admarker['infowindow'] = new google.maps.InfoWindow({content: contentString});
+        		google.maps.event.addListener(admarker, 'click', function() {this['infowindow'].open(map,this);});
+		</apex:outputText>
+					
+          
+          <apex:outputText rendered="{!zipCode.Boundaries__c != null}">
+	          //Get ZipCode Image, Lat Long and Marker
+	          var image = {url: 'https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/documents/portals/maps/pins/zipicon.png',size: new google.maps.Size(44, 53),
+	    origin: new google.maps.Point(0,0),anchor: new google.maps.Point(0,32)};
+	          var zipLatlng = new google.maps.LatLng({!iGeoForZip.GeoAddress__Latitude__s},{!iGeoForZip.GeoAddress__Longitude__s});
+	          var zipmarker = new google.maps.Marker({position: zipLatlng,map: map,title: 'Some Title',zIndex: 1});
+	          zipmarker['infofocus'] = new google.maps.InfoWindow({content: '{!zipCode.Zip_Code__c}'});
+	          google.maps.event.addListener(zipmarker, 'click', function() {this['infofocus'].open(map,this);});
+	      </apex:outputText>
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+  </head>
+  <body>
+  
+  <apex:form >
+    <div id="backLink">
+    <apex:commandLink styleClass="backlink" action="{!justGoBackToMatch}"> <b>Go Back</b> </apex:commandLink>
+    </div>    
+    <!-- 
+    <apex:commandButton value=" See Potential Assignments " styleClass="cmdBtn" action="{!reAssignHF}" reRender="none">
+    	<apex:param name="sType" value="reAssignHF" assignTo="{!sType}"/>
+    </apex:commandButton>
+     -->
+    <div class="map-container">
+      <div id="map-canvas" style="width: 100%; min-height: 600px"></div>
+      <div class="match-container">
+        <div class="match-list activelist">
+          <div class="match-current">
+            
+            <apex:outputText rendered="{!geoMatch.ToiGeoLocate__r.Contact__c==null}">
+            	<div class="match-title current">{!fromGeo.Applicant_Info__r.Name}{!fromGeo.Account__r.Name}{!fromGeo.Lead__r.Name}{!fromGeo.Contact__r.Name}</div>
+            
+            </apex:outputText>
+            <apex:outputText rendered="{!geoMatch.ToiGeoLocate__r.Contact__c!=null}">
+            	<div class="match-title current">{!geoMatch.FromiGeoLocate__r.Account__r.Name}</div>
+            	
+            </apex:outputText>
+            
+           
+             <div class="match-item" style="padding-bottom:0; margin-bottom:0; border:none;">
+             		<apex:outputText rendered="{!geoMatch.ToiGeoLocate__r.Contact__c!=null}">
+                    	<div class="match-item-title">Assigned to AD {!geoMatch.ToiGeoLocate__r.Contact__r.Name}</div>
+                    </apex:outputText>
+                    <div class="match-item-computation">
+                      <apex:repeat value="{!odGroup}" var="mates">
+			          <apex:repeat value="{!odGroup[mates]}" var="mate">
+						<apex:outputText rendered="{!geoMatch.ToiGeoLocate__c = mate.toGeo.Id}">
+	                      <div class="match-item-distance">Distance {!CEILING(mate.distanceInKms/1.609344)} miles</div>
+	                      <div class="match-item-time">Driving time {!CEILING(mate.durationInMins)} minutes</div>
+	                     </apex:outputText>
+	                    </apex:repeat>
+	                    </apex:repeat>
+                    </div>  
+                    <!-- showing this button only during visualization of HF-Ad assignment.  the same page comes from map visualizer in split page, prevented there (during reassignments) -->                  
+                    <apex:commandButton value=" See Potential Assignments " rendered="{!($CurrentPage.parameters.goBackTo==null && $CurrentPage.parameters.originalGeoMatchId==null)}" styleClass="cmdBtn" action="{!reAssignHF}" reRender="none">
+				     <apex:param name="sType" value="reAssignHF" assignTo="{!sType}"/>
+				  </apex:commandButton>
+                  </div>                  
+          </div>
+          <!--  end current assignments -->
+          <!-- display this block of computed results only if its an intermediate geomatch(prematch/rematch), not when the geomatch is Matched already -->
+          <apex:outputPanel layout="block" rendered="{!geoMatch.HF_Ownership_Set__c == false}">
+          <div class="match-other">
+          <apex:repeat value="{!odGroup}" var="mates">
+	          <apex:outputText rendered="{!uniMatch == false && geoMatch.ToiGeoLocate__r.Contact__c!=null}">
+	            <div class="match-title">Area Directors Nearby</div>
+	          </apex:outputText>
+	          <apex:outputText rendered="{!uniMatch == false && geoMatch.ToiGeoLocate__r.Contact__c==null}">
+	            <div class="match-title">Preview Reassignment<br/>
+	            
+	           <apex:outputText value="ADs " rendered="{!$CurrentPage.parameters.stype!=null}"/>
+	           <apex:outputText value="HFs " rendered="{!$CurrentPage.parameters.stype==null}"/>
+	           Within 1-Hr Driving Distance: {!compatiblePair}<br/>
+	           
+	           <apex:outputText value="ADs " rendered="{!$CurrentPage.parameters.stype!=null}"/>
+	           <apex:outputText value="HFs " rendered="{!$CurrentPage.parameters.stype==null}"/>
+	           Beyond 1-Hr Driving Distance: {!incompatiblePair}</div>
+	          </apex:outputText>
+	      </apex:repeat>
+            <apex:repeat value="{!odGroup}" var="mates">
+              <apex:repeat value="{!odGroup[mates]}" var="mate" rows="1">
+                <apex:outputText rendered="{!(mate.pairingStatus=='Compatible' || mate.pairingStatus=='Compatible-Spawned') && uniMatch == false}">
+                 
+                    <apex:outputText rendered="{!geoMatch.ToiGeoLocate__c = mate.toGeo.Id}">
+                     <div class="match-current"> {!mate.toGeo.Applicant_Info__r.Name}
+                      Assigned to AD {!mate.toGeo.contact__r.Name} 
+                       </div>
+                       </apex:outputText>
+                 
+                  <!--  end match item --> 
+                </apex:outputText>
+              </apex:repeat>
+              <apex:repeat value="{!odGroup[mates]}" var="mate">
+                <apex:outputText rendered="{!(mate.pairingStatus=='Compatible' || mate.pairingStatus=='InCompatible' || mate.pairingStatus=='Compatible-Spawned') && geoMatch.ToiGeoLocate__c != mate.toGeo.Id}">
+                  <div class="match-item">
+                    <div class="match-item-title"><apex:outputText rendered="{!mate.toGeo.contact__c!=null}">AD</apex:outputText> {!mate.toGeo.contact__r.Name}{!mate.toGeo.account__r.Name}</div>
+                    <div class="match-item-computation">
+                      <div class="match-item-distance">Distance {!CEILING(mate.distanceInKms/1.609344)} miles</div>
+                      <div class="match-item-time">Driving time {!CEILING(mate.durationInMins)} minutes</div>
+                    </div>
+                    <apex:commandLink styleClass="match-item-link" action="{!associateAdWithHF}" rendered="{!geoMatch.ToiGeoLocate__c != mate.toGeo.Id && mate.toGeo.contact__c!=null}"> Change assignment to this person
+                      <apex:param name="toGeo" value="{!mate.toGeo.Id}" assignTo="{!matchedToGeoLocateId}"/>
+                    </apex:commandLink>
+                  </div>
+                  <!--  end match item --> 
+                </apex:outputText>
+              </apex:repeat>
+            </apex:repeat>
+          </div>
+          <!--  match other --> 
+          </apex:outputPanel>
+          
+        </div>
+        <!--  match list --> 
+       </div>
+      <!--  match container --> 
+    </div>
+    <!--  map container --> 
+    
+  </apex:form>
+  <script>
+    var j$ = jQuery.noConflict();
+    
+    function SetHeight() {
+        var winH = j$(document).height();
+        var winA = j$('#globalHeaderBar').height();
+        var winB = j$('#AppBodyHeader').height();
+        var winC = j$('#backLink').height(); 
+        var winD = j$('.bPageFooter').height(); 
+        var winT = winH - winA - winB - winC - 50;
+        j$('#map-canvas').css('height', winT);
+    }
+    
+    j$(function () {
+        // on change resize
+        j$(window).resize(function () {
+            SetHeight();
+        });
+        SetHeight();
+    });
+    
+    SetHeight();
+    
+    j$(document).ready(function () {
+        j$('.match-close').click(function () {
+            j$('.match-list').toggle();
+        });
+    });
+    
+    </script>
+  </body>
+</apex:page>

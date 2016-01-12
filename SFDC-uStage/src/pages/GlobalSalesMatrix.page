@@ -1,0 +1,307 @@
+<apex:page id="GlobalSalesMatrix" standardController="LeadRouting__c" extensions="GlobalSalesMatrixController" sidebar="false" tabStyle="GSM__tab">
+	<apex:form id="formPage"> 
+		<script>
+		    function changeToOnClass(ele){
+		    	ele.className='helpButtonOn';
+		    }
+		    function changeToOffClass(ele){
+		    	ele.className='helpButton';
+		    }
+    	</script>
+    	<style>
+    		.lnk {color: SteelBlue!important; font-weight: bold; text-decoration :none;}
+    		.whitespace{white-space:nowrap;}
+    	</style>
+		<apex:sectionHeader title="Global Sales Matrix" />
+		<apex:outputPanel >
+        </apex:outputPanel>
+        <apex:outputPanel id="thePageBlock" >
+        <apex:pageMessage severity="info" summary="GSM period is not yet started. Records will be read-only." strength="1" rendered="{!NOT(isGSMActive)}"/>
+			<apex:pageBlock title="Filter Criteria" mode="edit" rendered="{!filterBlock}">			
+				<apex:pageBlockButtons location="Bottom">
+	                <apex:commandButton action="{!filterRecord}" value="Filter" status="filterLoading" rerender="filterBlock, newCreation, dateSummary, summaryView"/>
+	                <apex:commandButton action="{!newRecord}" value="New" status="filterLoading" rerender="thePageBlock, filterBlock, newCreation, dateSummary, summaryView" rendered="{!isGSMActive}"/>
+	                <apex:commandButton value="Summary" action="{!summaryDateSelection}" status="filterLoading" rerender="filterBlock, newCreation, dateSummary, summaryView, thePageBlock" />
+	                <apex:actionStatus id="filterLoading" >
+	                	<apex:facet name="start" >
+	                  		<img src="/img/loading.gif" />                    
+	                	</apex:facet>
+	       			 </apex:actionStatus>	       			 
+	            </apex:pageBlockButtons>	
+	           	<apex:pageBlockSection columns="2">  
+	           		<apex:pageBlockSectionItem >
+	           			<apex:outputLabel >Country of Origin</apex:outputLabel>
+	                   	<apex:inputField value="{!objLeadRouting.Country_of_Origin__c}"/>
+	                </apex:pageBlockSectionItem>
+	                <apex:pageBlockSectionItem >
+	                	<apex:outputLabel >Lead Type</apex:outputLabel>
+	                   	<apex:inputField value="{!objLeadRouting.Lead_Type__c}"/>
+	                </apex:pageBlockSectionItem>
+	                <apex:pageBlockSectionItem >
+	                	<apex:outputLabel >Country of Interest</apex:outputLabel>
+	                	<apex:inputField value="{!objLeadRouting.Country_of_Interest__c}"/>
+	                </apex:pageBlockSectionItem>
+	                <apex:pageBlockSectionItem >
+	                	<apex:outputLabel >Program</apex:outputLabel>
+	                	<apex:inputField value="{!objLeadRouting.Program__c}"/>
+		            </apex:pageBlockSectionItem> 
+		            <apex:pageBlockSectionItem >
+		            </apex:pageBlockSectionItem>
+		            <apex:pageBlockSectionItem >
+		            <apex:outputLabel >Queue</apex:outputLabel>
+	                	<apex:inputField value="{!objLeadRouting.Queue__c}"/>
+		            </apex:pageBlockSectionItem>  
+	           	</apex:pageBlockSection>               	
+			</apex:pageBlock>		
+		</apex:outputPanel>
+		<apex:outputPanel id="filterBlock">			 
+			<apex:pageBlock title="Filter Results" rendered="{!isFiltered}">  	
+			<apex:pageMessage severity="info" summary="No records to display." strength="1" rendered="{!IF(AND(lstLeadRoutingSelectdRecord == null, lstLeadRoutingSelectdRecord.size != 0), true, false)}" />	
+			<apex:pageMessage severity="info" summary="No records to display." strength="1" rendered="{!lstLeadRoutingSelectdRecord.size == 0}" />
+			<apex:pageMessage severity="confirm" summary="Lead Routing records updated." strength="1" rendered="{!updateLeadRecord}" />	
+			<apex:pageMessage severity="info" summary="No changes to update." strength="1" rendered="{!noUpdateRecord}" />
+			<apex:pageMessage severity="confirm" summary="Lead Routing record deleted." strength="1" rendered="{!deleteLeadRecord}" />			
+			<apex:pageMessages />	
+				<apex:pageBlockButtons rendered="{!IF(AND(lstLeadRoutingSelectdRecord != null, lstLeadRoutingSelectdRecord.size != 0), true, false)}">					 					
+					<apex:commandButton action="{!updateRecord}" status="updateLoading" value="Save" rerender="filterBlock" rendered="{!AND(lstLeadRoutingSelectdRecord.size != 0, isGSMActive)}"/>
+					<apex:actionStatus id="updateLoading" >
+	                	<apex:facet name="start" >
+	                  		<img src="/img/loading.gif" />                    
+	                	</apex:facet>
+	       			 </apex:actionStatus>		       			 	
+				</apex:pageBlockButtons>
+				<apex:panelGrid columns="7" rendered="{!IF(AND(lstLeadRoutingSelectdRecord != null, lstLeadRoutingSelectdRecord.size != 0), true, false)}">						
+					<apex:commandButton status="pageNationTopPanel" reRender="filterBlock" value="First" action="{!firstPage}" disabled="{!!hasPrevious}" title="First Page"/>
+					<apex:commandButton status="pageNationTopPanel" reRender="filterBlock" value="Previous" action="{!previousPage}" disabled="{!!hasPrevious}" title="Previous Page"/>
+					<apex:commandButton status="pageNationTopPanel" reRender="filterBlock" value="Next" action="{!nextPage}" disabled="{!!hasNext}" title="Next Page"/>
+					<apex:commandButton status="pageNationTopPanel" reRender="filterBlock" value="Last" action="{!lastPage}" disabled="{!!hasNext}" title="Last Page"/>
+					<apex:outputText >{!(pageNumber * pageSize)+1-pageSize}-{!IF((pageNumber * pageSize)>recordCount, recordCount,(pageNumber * pageSize))} of {!recordCount}</apex:outputText>
+					<apex:outputPanel style="text-align: right;">
+						<apex:actionStatus id="pageNationTopPanel" >
+		                	<apex:facet name="start" >
+		                  		<img src="/img/loading.gif" />                    
+		                	</apex:facet>
+	       			 	</apex:actionStatus>                    	
+                	</apex:outputPanel>   
+                	<apex:OutputText value="Save the record before you navigate to next page." style="color: Green!important; font-weight: bold; text-decoration :none;" rendered="{!isGSMActive}"/>             	
+				</apex:panelGrid>
+				<apex:pageBlockTable value="{!lstLeadRoutingSelectdRecord}" var="leadRoutingItem" rendered="{!IF(AND(lstLeadRoutingSelectdRecord != null, lstLeadRoutingSelectdRecord.size != 0), true, false)}"> 
+					<apex:inputHidden value="{!leadRoutingItem.Name}"/>					
+					<apex:column style="color:lightcyan">
+						<apex:facet name="header">In-Review
+							<span class="helpButton" onmouseover="changeToOnClass(this)" onmouseout="changeToOffClass(this)">
+		                    	<img src="/s.gif" alt="" class="helpOrb" title="(✔): Submitted for Approval and cannot be edited. Changes will not be reflected unless Approved. "/>
+		                    </span>
+		               	</apex:facet>	      
+						<apex:outputField value="{!leadRoutingItem.isApprove_Reject__c}"/>
+					</apex:column>
+					<apex:column headerValue="Country of Origin"> 
+						<apex:inputField value="{!leadRoutingItem.Country_of_Origin__c}" rendered="{!IF(AND(leadRoutingItem.isApprove_Reject__c == false, leadRoutingItem.Flag__c == false, isGSMActive), true, false)}" />
+                		<apex:inputField value="{!leadRoutingItem.Country_of_Origin__c}" style="border-style: solid; border-color: red;" rendered="{!IF(AND(leadRoutingItem.isApprove_Reject__c == false, leadRoutingItem.Flag__c == true, isGSMActive), true, false)}" />
+                		<apex:outputField value="{!leadRoutingItem.Country_of_Origin__c}" rendered="{!OR(leadRoutingItem.isApprove_Reject__c == true, NOT(isGSMActive))}" />
+					</apex:column>
+					<apex:column headerValue="Country of Interest" >
+						<apex:inputField value="{!leadRoutingItem.Country_of_Interest__c}" rendered="{!IF(AND(leadRoutingItem.isApprove_Reject__c == false, leadRoutingItem.Flag__c == false, isGSMActive), true, false)}"/>
+                		<apex:inputField value="{!leadRoutingItem.Country_of_Interest__c}" style="border-style: solid; border-color: red;" rendered="{!IF(AND(leadRoutingItem.isApprove_Reject__c == false, leadRoutingItem.Flag__c == true, isGSMActive), true, false)}"/> 
+                		<apex:outputField value="{!leadRoutingItem.Country_of_Interest__c}" rendered="{!OR(leadRoutingItem.isApprove_Reject__c == true, NOT(isGSMActive))}"/>
+					</apex:column>
+					<apex:column headerValue="Program"> 
+					<apex:inputField value="{!leadRoutingItem.Program__c}" rendered="{!IF(AND(leadRoutingItem.isApprove_Reject__c == false, leadRoutingItem.Flag__c == false, isGSMActive), true, false)}"/>
+                		<apex:inputField value="{!leadRoutingItem.Program__c}" style="border-style: solid; border-color: red;" rendered="{!IF(AND(leadRoutingItem.isApprove_Reject__c == false, leadRoutingItem.Flag__c == true, isGSMActive), true, false)}"/>
+                		<apex:outputField value="{!leadRoutingItem.Program__c}" rendered="{!OR(leadRoutingItem.isApprove_Reject__c == true, NOT(isGSMActive))}"/>
+					</apex:column>					
+					<apex:column headerValue="Lead Type">
+					<apex:inputField value="{!leadRoutingItem.Lead_Type__c}" rendered="{!IF(AND(leadRoutingItem.isApprove_Reject__c == false, leadRoutingItem.Flag__c == false, isGSMActive), true, false)}"/>
+                		<apex:inputField value="{!leadRoutingItem.Lead_Type__c}" style="border-style: solid; border-color: red;" rendered="{!IF(AND(leadRoutingItem.isApprove_Reject__c == false, leadRoutingItem.Flag__c == true, isGSMActive), true, false)}"/>
+                		<apex:outputField value="{!leadRoutingItem.Lead_Type__c}" rendered="{!OR(leadRoutingItem.isApprove_Reject__c == true, NOT(isGSMActive))}"/>
+					</apex:column>
+					<apex:column headerValue="Queue">
+                		<apex:inputField value="{!leadRoutingItem.Queue__c}" rendered="{!AND(leadRoutingItem.isApprove_Reject__c == false, isGSMActive)}"/>
+                		<apex:outputField value="{!leadRoutingItem.Queue__c}" rendered="{!OR(leadRoutingItem.isApprove_Reject__c == true, NOT(isGSMActive))}"/>
+					</apex:column>					
+					<apex:column headerValue="Action" styleclass="whitespace" rendered="{!isGSMActive}">
+						<apex:commandLink status="onDeleteStatus" value="Del" action="{!deleteRecord}" styleClass="lnk" rerender="filterBlock" rendered="{!leadRoutingItem.isApprove_Reject__c == false}">
+							<apex:param name="idToDelete" value="{!leadRoutingItem.Id}" assignTo="{!deletedRecordId}" />	
+						</apex:commandLink>		
+						<apex:actionStatus id="onDeleteStatus" >
+		                	<apex:facet name="start" >
+		                  		<img src="/img/loading.gif" />                 
+		                	</apex:facet>
+	       			 	</apex:actionStatus>
+						<apex:outputText value="Del" rendered="{!leadRoutingItem.isApprove_Reject__c}" style="color: #EEE3E3"/>
+					</apex:column>
+				</apex:pageBlockTable>
+				<apex:panelGrid columns="7" rendered="{!IF(AND(lstLeadRoutingSelectdRecord != null, lstLeadRoutingSelectdRecord.size != 0), true, false)}">						
+					<apex:commandButton status="pageNation" reRender="filterBlock" value="First" action="{!firstPage}" disabled="{!!hasPrevious}" title="First Page"/>
+					<apex:commandButton status="pageNation" reRender="filterBlock" value="Previous" action="{!previousPage}" disabled="{!!hasPrevious}" title="Previous Page"/>
+					<apex:commandButton status="pageNation" reRender="filterBlock" value="Next" action="{!nextPage}" disabled="{!!hasNext}" title="Next Page"/>
+					<apex:commandButton status="pageNation" reRender="filterBlock" value="Last" action="{!lastPage}" disabled="{!!hasNext}" title="Last Page"/>
+					<apex:outputText >{!(pageNumber * pageSize)+1-pageSize}-{!IF((pageNumber * pageSize)>recordCount, recordCount,(pageNumber * pageSize))} of {!recordCount}</apex:outputText>
+					<apex:outputPanel style="text-align: right;">
+						<apex:actionStatus id="pageNation" >
+		                	<apex:facet name="start" >
+		                  		<img src="/img/loading.gif" />                    
+		                	</apex:facet>
+	       			 	</apex:actionStatus>                    	
+                	</apex:outputPanel>   
+                	<apex:OutputText value="Save the record before you navigate to next page." style="color: Green!important; font-weight: bold; text-decoration :none;" rendered="{!isGSMActive}"/>             	
+				</apex:panelGrid>
+			</apex:pageBlock>
+		</apex:outputPanel>
+		<apex:outputPanel id="newCreation">		
+			<apex:pageBlock title="New Lead Routing" mode="edit" rendered="{!isCreate}" >			
+			<apex:pageMessage severity="confirm" strength="1" summary="New Lead Routing created." rendered="{!newLeadRecord}" />
+			<apex:pageMessages />
+				<apex:pageBlockButtons location="Bottom">
+	                <apex:commandButton action="{!createRecord}" status="newLoading" value="Save" rerender="newCreation"/>
+	                <apex:actionStatus id="newLoading" >
+	                	<apex:facet name="start" >
+	                  		<img src="/img/loading.gif" />                    
+	                	</apex:facet>
+       			 	</apex:actionStatus>
+	            </apex:pageBlockButtons>
+	            <apex:pageBlockSection columns="2">
+	            	<apex:pageBlockSectionItem >            	
+	            		<apex:outputLabel >Country of Origin</apex:outputLabel>
+	            		<apex:inputField value="{!newLeadRouting.Country_of_Origin__c}" />
+	            	</apex:pageBlockSectionItem>   
+	            	<apex:pageBlockSectionItem >
+	            		<apex:outputLabel >Lead Type</apex:outputLabel>
+	            		<apex:inputField value="{!newLeadRouting.Lead_Type__c}"/>
+	            	</apex:pageBlockSectionItem> 
+	            	<apex:pageBlockSectionItem >
+	            		<apex:outputLabel >Country of Interest</apex:outputLabel>
+	            		<apex:inputField value="{!newLeadRouting.Country_of_Interest__c}"/>
+	            	</apex:pageBlockSectionItem>  
+	            	<apex:pageBlockSectionItem >
+	            		<apex:outputLabel >Program</apex:outputLabel>
+	            		<apex:inputField value="{!newLeadRouting.Program__c}" />
+	            	</apex:pageBlockSectionItem>
+	            	<apex:pageBlockSectionItem >
+	            	</apex:pageBlockSectionItem>	            	
+	            	<apex:pageBlockSectionItem >
+	            		<apex:outputLabel >Queue</apex:outputLabel>
+	            		<apex:inputField value="{!newLeadRouting.Queue__c}" />
+	            	</apex:pageBlockSectionItem> 	            	
+	            	<apex:pageBlockSectionItem >
+	            	</apex:pageBlockSectionItem>
+	            </apex:pageBlockSection>
+			</apex:pageBlock>
+		</apex:outputPanel>
+		<apex:outputPanel id="dateSummary">
+			<apex:pageBlock title="Summary Report - Filter" mode="edit" rendered="{!summaryDate}">
+			<apex:pageMessages />
+				<apex:pageBlockButtons location="Bottom">
+	                <apex:commandButton action="{!submitDate}" status="summaryLoading" value="Submit" rerender="dateSummary, summaryView"/>
+	                <apex:commandButton action="{!backGSM}" status="summaryLoading" value="Back" rerender="thePageBlock, filterBlock, newCreation, dateSummary, summaryView"/>
+	                <apex:actionStatus id="summaryLoading" >
+                	<apex:facet name="start" >
+                  		<img src="/img/loading.gif" />                    
+                	</apex:facet>
+       			 </apex:actionStatus>
+	            </apex:pageBlockButtons>
+	            <apex:pageBlockSection columns="2">
+	            	<apex:pageBlockSectionItem id="sectionItem">
+	            		<apex:outputLabel >Start Date</apex:outputLabel>
+	            		<apex:inputField value="{!objLeadRouting.StartDate__c}" />	            		
+	            	</apex:pageBlockSectionItem>
+	            	<apex:pageBlockSectionItem >
+	            		<apex:outputLabel >End Date</apex:outputLabel>
+	            		<apex:inputField value="{!objLeadRouting.EndDate__c}" />
+	            	</apex:pageBlockSectionItem>
+	            </apex:pageBlockSection>
+			</apex:pageBlock>
+		</apex:outputPanel>
+		<apex:outputPanel id="summaryView">
+			<apex:pageBlock title="Report Summary" mode="detail" rendered="{!summaryReport}">
+			<apex:pageMessage severity="info" summary="No records to display." strength="1" rendered="{!summaryRecord.size == 0}"/>
+				<apex:pageBlockButtons location="Bottom" rendered="{!summaryRecord.size != 0}">
+					<apex:commandButton action="{!excelGenerate}" value="Generate Excel"/> 
+				</apex:pageBlockButtons>
+				<apex:pageBlockTable value="{!summaryRecord}" var="summaryItem" styleclass="whitespace" rendered="{!summaryRecord.size != 0}"> 				
+					<apex:inputHidden value="{!summaryItem.Id}" />		
+					<apex:column >
+					<apex:facet name="header">New
+							<span class="helpButton" onmouseover="changeToOnClass(this)" onmouseout="changeToOffClass(this)">
+		                    	<img src="/s.gif" alt="" class="helpOrb" title="(✔): This indicates New Rule. Rejection will delete the Rule.  (Del): This indicates Record Deletion. Approved will be deleted."/>		                    	                    	
+		                    </span>
+		            </apex:facet>
+						<apex:outputField value="{!summaryItem.NewRule__c}" rendered="{!summaryItem.isDelete__c == false}"/>
+						<apex:outputText value="Del" style="color: Black!important; font-weight: bold; text-decoration :none;" rendered="{!summaryItem.isDelete__c}"/>
+					</apex:column>		
+					<apex:column headerValue="Name" styleclass="whitespace"> 
+						<apex:outputField value="{!summaryItem.Name}" rendered="{!isUserApprover == false}"/>
+						<apex:outputField value="{!summaryItem.Name_Link__c}" rendered="{!isUserApprover}"/>
+					</apex:column>
+					<apex:column headerValue="Country of Origin" styleclass="whitespace"> 
+                		<apex:outputField value="{!summaryItem.Country_of_Origin__c}"/>
+					</apex:column>
+					<apex:column headerValue="Proposed" styleclass="whitespace" style="background-color:lightcyan">
+						<apex:outputField value="{!summaryItem.ProposedCountryofOrigin__c}"/>
+					</apex:column>
+					<apex:column headerValue="Country of Interest" styleclass="whitespace">
+                		<apex:outputField value="{!summaryItem.Country_of_Interest__c}"/>
+					</apex:column>
+					<apex:column headerValue="Proposed" styleClass="whitespace" style="background-color:lightcyan">
+						<apex:outputField value="{!summaryItem.ProposedCountryofInterest__c}"/>
+					</apex:column>
+					<apex:column headerValue="Program" styleclass="whitespace"> 
+                		<apex:outputField value="{!summaryItem.Program__c}"/>
+					</apex:column>					
+					<apex:column headerValue="Proposed" styleclass="whitespace" style="background-color:lightcyan">
+						<apex:outputField value="{!summaryItem.ProposedProgram__c}"/>
+					</apex:column>
+					<apex:column headerValue="Lead Type" styleclass="whitespace">
+                		<apex:outputField value="{!summaryItem.Lead_Type__c}"/>
+					</apex:column>
+					<apex:column headerValue="Proposed" styleclass="whitespace" style="background-color:lightcyan">
+						<apex:outputField value="{!summaryItem.ProposedLeadType__c}"/>
+					</apex:column>
+					<apex:column headerValue="Queue" styleclass="whitespace">
+                		<apex:outputField value="{!summaryItem.Queue__c}"/>
+					</apex:column>
+					<apex:column headerValue="Proposed" styleclass="whitespace" style="background-color:lightcyan">
+						<apex:outputField value="{!summaryItem.ProposedQueue__c}"/>
+					</apex:column>
+					<apex:column headerValue="Priority">
+						<apex:outputField value="{!summaryItem.Priority__c}"/>
+					</apex:column>
+					<apex:column headerValue="Proposed" styleclass="whitespace" style="background-color:lightcyan">
+						<apex:outputField value="{!summaryItem.ProposedPriority__c}"/>
+					</apex:column>
+					<apex:column headerValue="Routing Group" styleclass="whitespace">
+						<apex:outputField value="{!summaryItem.Routing_Group__c}"/>
+					</apex:column>
+					<apex:column headerValue="Intrax Program">		
+						<apex:outputField value="{!summaryItem.Intrax_Program__c}"/>
+					</apex:column>	
+					<apex:column headerValue="Proposed" styleclass="whitespace" style="background-color:lightcyan">
+						<apex:outputField value="{!summaryItem.ProposedIntraxProgram__c}"/>
+					</apex:column>
+					<apex:column headerValue="Intrax Program Option">
+						<apex:outputField value="{!summaryItem.Intrax_Program_Option__c}"/>
+					</apex:column>
+					<apex:column headerValue="Proposed" styleclass="whitespace" style="background-color:lightcyan">
+						<apex:outputField value="{!summaryItem.ProposedIntraxProgramOption__c}"/>
+					</apex:column>
+					<apex:column headerValue="Submitted By" styleclass="whitespace">
+						<apex:outputText value="{!summaryItem.SubmittedBy__c}"/>
+					</apex:column>
+					<apex:column headerValue="Approve?" rendered="{!isUserApprover}">
+						<apex:commandLink value="Yes" status="approvalStatus" action="{!appprovalAction}" styleClass="lnk" rerender="summaryView">
+							<apex:param name="idToApprove" value="{!summaryItem.Id}" assignTo="{!approvedRecordId}" />
+						</apex:commandLink><B> | </B>
+						<apex:commandLink value="No" status="approvalStatus" action="{!appprovalAction}" styleClass="lnk" rerender="summaryView">
+							<apex:param name="idToReject" value="{!summaryItem.Id}" assignTo="{!rejectedRecordId}" />
+						</apex:commandLink>
+						<apex:actionStatus id="approvalStatus" >
+		                	<apex:facet name="start" >
+		                  		<img src="/img/loading.gif" />                 
+		                	</apex:facet>
+	       			 	</apex:actionStatus>
+					</apex:column>					
+				</apex:pageBlockTable>
+			</apex:pageBlock>
+		</apex:outputPanel>
+	</apex:form>
+</apex:page>

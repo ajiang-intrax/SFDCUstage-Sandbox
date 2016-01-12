@@ -1,0 +1,124 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardStylesheets="false" showHeader="false"  title="DISC Assessment" id="apc_ap_disc" controller="DISCHelper">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_apc_ap_application />
+      
+      <c:menu_apc_pt_checkout />
+       <div class="row">
+        <div class="col-md-8 center-block">
+          
+          <apex:outputPanel id="exceptionmessage">
+          <apex:outputPanel layout="block" rendered="{!DISCRecord.Point_System_Result__c =='Retake'}">
+          <p class="alert alert-danger">Sorry, something went wrong. We will look into it and let you know when you can take the assessment again.</p>
+          </apex:outputPanel>
+          </apex:outputPanel>
+          
+          <apex:outputPanel id="resultmessage">
+          	<apex:outputPanel layout="block" rendered="{!DISCRecord.Point_System_Result__c ==NULL || DISCRecord.Point_System_Result__c == ''}">
+          		<apex:outputText rendered="{!DISCResultMessage == 'Fail'}">
+          			<p class="alert alert-danger">Looks like you have not taken the personality assessment yet. Please complete the assessment first.</p>
+          		</apex:outputText>
+          	</apex:outputPanel>
+          </apex:outputPanel>
+            
+            <apex:outputPanel layout="block" id="discContDetails">
+            	
+            	 <!-- 
+            	<apex:outputPanel layout="block" rendered="{!DISCRecord.Point_System_Result__c ==NULL || DISCRecord.Point_System_Result__c == ''}">
+            	-->
+            	
+            	<div class="margin-b4">
+            	<h1 class="center-text">Personality Assessment</h1> 
+            	<p class="lead">Learn more about your personality type by completing this short assessment called DISC. 
+            	Host Families will also see these results to learn about you and how you might fit within their family. 
+            	This is not a test and there no wrong answer! You should be relaxed and have fun learning about yourself.</p>
+            	</div>
+            	
+            	<p><b>Here are some tips for completing the assessment:</b></p>
+            	<ul>
+            		<li>Take the questionnaire in one sitting.</li>
+            		<li>It only takes about 15 minutes.</li>
+					<li>Do not take the test on a mobile phone or tablet</li>
+					<li>Take the test in a comfortable and quiet environment</li>
+					<li>There are no right or wrong answers; your first instinctive response is likely the most accurate</li>
+				</ul>
+               <!-- 
+               </apex:outputPanel>
+               -->
+               
+              <!--  
+               <apex:outputPanel layout="block" rendered="{!DISCRecord.Point_System_Result__c !=NULL && DISCRecord.Point_System_Result__c != '' && DISCRecord.Point_System_Result__c != 'Retake'}">
+	            <p class="lead">Congratulations you have passed the personality assessment on <b>{!DISCRecord.Test_Completion_DateTime__c}</b></p>
+	            <apex:outputLink styleClass="btn btn-link" id="resultURL" value="{!DISCRecord.Report_URL__c}" target="__blank">
+	            <i class="fa fa-file-pdf-o"></i> <span>View your personality assessment result</span>
+	            </apex:outputLink>
+	            </apex:outputPanel>
+	           -->
+	            
+            </apex:outputPanel>
+            
+          <apex:form styleClass="form-vertical" >
+          <apex:pageblock id="discbuttons">
+            
+            <div class="margin-t6">
+              
+              <apex:outputPanel layout="block" styleClass="inline-block" style="vertical-align:top;" rendered="{!DISCRecord.Point_System_Result__c ==NULL || DISCRecord.Point_System_Result__c == ''}">
+              		<p>&nbsp;</p>
+              		<p>
+	                <apex:commandlink styleClass="btn btn-link btn-xl vs2 margin-r4" action="{!RegisterDISCUser}"  target="__blank">
+	                 <apex:param name="id" value="{!appdetails.ID}"  />
+	                 <i class="fa fa-edit"></i> <span>Start Assessment</span>
+	                </apex:commandlink>
+	                </p>
+	                
+	        </apex:outputPanel>
+              
+              <apex:outputPanel layout="block" styleClass="inline-block" rendered="{!DISCRecord.Point_System_Result__c ==NULL || DISCRecord.Point_System_Result__c == ''}">
+              		<p><em>Already finished the assessment?</em></p>
+              		<p>
+	                <apex:commandlink styleClass="btn btn-link btn-xl vs2 margin-r4" action="{!FetchDISCResult}" reRender="resultmessage, discbuttons, discContDetails, exceptionmessage" >
+	                 <apex:param name="id" value="{!appdetails.ID}"  />
+	                 <i class="fa fa-chevron-right"></i> <span>Continue to Next Step</span>
+	                </apex:commandlink>
+	                </p>
+	         </apex:outputPanel>
+              
+            </div>
+             </apex:pageblock>
+          </apex:form>
+        </div>
+        <!-- end column -->
+        
+        
+        <!--  end column --> 
+      </div>
+      <!-- end row --> 
+      
+      <apex:outputpanel layout="block" id="modalSubmit" rendered="{!$CurrentPage.parameters.vstate == 'checkout'}" >
+          <div class="modal fade vs1" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-body">
+                <div class="h1">What's Next?</div>
+<p>Please take a short personality test and review &amp; sign AuPairCare program agreements to finalize your application.</p>
+
+              </div>
+              <div class="modal-footer">
+                  
+                <button type="button" class="btn btn-default" data-dismiss="modal">Continue</button>
+                                
+              </div>
+            </div>
+          </div>
+        </div> 
+        </apex:outputpanel> <!--  end modal window -->
+				<script>
+				var j$ = jQuery.noConflict();
+				j$(window).load(function() {
+				  j$('#myModal').modal();
+				});
+				</script>   
+      
+    </apex:define>
+  </apex:composition>
+</apex:page>

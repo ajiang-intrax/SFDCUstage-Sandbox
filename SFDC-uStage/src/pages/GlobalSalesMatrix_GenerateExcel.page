@@ -1,0 +1,79 @@
+<apex:page standardController="LeadRouting__c" extensions="GlobalSalesMatrixController" standardStylesheets="false" showHeader="false" sidebar="false" contentType="application/vnd.ms-excell#LeadRouting-ReportSummary.xls" cache="true" readOnly="true">
+	<apex:form >
+		<style>
+			.headerColour{
+	            color: Blue !important; 
+	        }
+        </style>
+		<apex:pageBlock title="Report Summary:">
+			<apex:pageBlockTable value="{!summaryRecord}" var="summaryItem" border="1"> 				
+				<!-- <apex:inputHidden value="{!summaryItem.Id}" /> -->
+				<apex:column headerValue="REQUEST TYPE"> 
+					<apex:outputText value="New" rendered="{!IF(AND(summaryItem.isDelete__c == false, summaryItem.NewRule__c == true), true, false)}"/>
+					<apex:outputText value="Update" rendered="{!IF(AND(summaryItem.isDelete__c == false, summaryItem.NewRule__c == false), true, false)}"/>
+					<apex:outputText value="Delete" rendered="{!summaryItem.isDelete__c}"/>					
+				</apex:column>
+				<apex:column headerValue="ID"> 
+					<apex:outputText value="{!summaryItem.Id}" />
+				</apex:column>
+				<apex:column headerValue="NAME" > 
+					<apex:outputText value="{!summaryItem.Name}" />
+				</apex:column>
+				<apex:column headerValue="COUNTRY OF ORIGIN"> 
+               		<apex:outputText value="{!summaryItem.Country_of_Origin__c}"/>
+				</apex:column>
+				<apex:column headerValue="PROPOSED COUNTRY OF ORIGIN" style="background-color:lightcyan">
+						<apex:outputText value="{!summaryItem.ProposedCountryofOrigin__c}"/>
+				</apex:column>
+				<apex:column headerValue="COUNTRY OF INTEREST" >
+               		<apex:outputText value="{!summaryItem.Country_of_Interest__c}"/>
+				</apex:column>
+				<apex:column headerValue="PROPOSED COUNTRY OF INTEREST" style="background-color:lightcyan">
+						<apex:outputText value="{!summaryItem.ProposedCountryofInterest__c}"/>
+				</apex:column>
+				<apex:column headerValue="PROGRAM"> 
+               		<apex:outputText value="{!summaryItem.Program__c}"/>
+				</apex:column>					
+				<apex:column headerValue="PROPOSED PROGRAM" style="background-color:lightcyan">
+						<apex:outputText value="{!summaryItem.ProposedProgram__c}"/>
+				</apex:column>
+				<apex:column headerValue="LEAD TYPE">
+               		<apex:outputText value="{!summaryItem.Lead_Type__c}"/>
+				</apex:column>
+				<apex:column headerValue="PROPOSED LEAD TYPE" style="background-color:lightcyan">
+						<apex:outputText value="{!summaryItem.ProposedLeadType__c}"/>
+				</apex:column>
+				<apex:column headerValue="QUEUE">
+               		<apex:outputText value="{!summaryItem.Queue__c}"/>
+				</apex:column>
+				<apex:column headerValue="PROPOSED QUEUE" style="background-color:lightcyan">
+						<apex:outputText value="{!summaryItem.ProposedQueue__c}"/>
+				</apex:column>
+				<apex:column headerValue="PRIORITY">
+					<apex:outputText value="{!summaryItem.Priority__c}" />
+				</apex:column>
+				<apex:column headerValue="PROPOSED PRIORITY" style="background-color:lightcyan">
+					<apex:outputText value="{!summaryItem.ProposedPriority__c}" />
+				</apex:column>
+				<apex:column headerValue="ROUTING GROUP">
+					<apex:outputText value="{!summaryItem.Routing_Group__c}"/>
+				</apex:column>
+				<apex:column headerValue="INTRAX PROGRAM">		
+					<apex:outputText value="{!summaryItem.Intrax_Program__c}"/>
+				</apex:column>			
+				<apex:column headerValue="PROPOSED INTRAX PROGRAM" styleclass="whitespace" style="background-color:lightcyan">
+						<apex:outputField value="{!summaryItem.ProposedIntraxProgram__c}"/>
+				</apex:column>
+				<apex:column headerValue="INTRAX PROGRAM OPTION">
+					<apex:outputText value="{!summaryItem.Intrax_Program_Option__c}"/>
+				</apex:column>
+				<apex:column headerValue="PROPOSED INTRAX PROGRAM OPTION" styleclass="whitespace" style="background-color:lightcyan">
+						<apex:outputField value="{!summaryItem.ProposedIntraxProgramOption__c}"/>
+				</apex:column>				
+				<apex:column headerValue="SUBMITTED BY">
+					<apex:outputText value="{!summaryItem.SubmittedBy__c}"/>
+				</apex:column>
+			</apex:pageBlockTable>
+		</apex:pageBlock>
+	</apex:form>
+</apex:page>

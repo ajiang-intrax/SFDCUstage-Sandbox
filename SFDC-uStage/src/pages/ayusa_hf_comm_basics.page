@@ -1,0 +1,220 @@
+<apex:page id="ayusa_hf_comm_basics" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+  
+    <apex:define name="body">
+      <div class="wrapper">
+          <apex:form id="form">
+          <div class="page-header clearfix">
+<h1 class="page-title">Ayusa Host Family Application</h1>
+<div class="back-to-main"><apex:outputLink value="apex/ayusa_hf_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+</div>
+
+          <h2>Your Community</h2>
+          <div class="white-box clearfix">
+          <div class="panel two_thirds">
+          
+          <apex:Messages styleClass="custom-error-pagelevel"/>
+            <p><em> All fields marked with an asterisk (<span class="required no-padding">*</span>) are required</em></p><br/>
+              
+              
+              <div class="form-row">
+                <div class="form-label left">Please select the type of community you live in:<span class="required">*</span> </div>
+                <div class="form-field">
+                  <apex:inputField id="CommunityType" value="{!applicantInfo.Community_Type__c}" required="TRUE"/> 
+                </div>
+              </div>
+                  
+              <div class="form-row">
+                <div class="form-label left">Population of Community</div>
+                <div class="form-field">
+                  <apex:inputField id="CommunityPopulation" value="{!applicantInfo.Community_Population__c}" required="FALSE"/>
+                </div>
+              </div>
+                  
+              <div class="form-row">
+                <div class="form-label left ">Nearest Major City<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="NearestCity" value="{!applicantInfo.Nearest_City__c}" required="TRUE"/>
+                </div>
+              </div>
+                  
+              <div class="form-row">
+                <div class="form-label left ">Nearest Airport<span class="required">*</span></div>
+                <div class="form-field">
+                <div id="custom-templates">
+                  <!-- <apex:inputField id="Airport" value="{!applicantInfo.Airport__c}" required="TRUE"/>  -->
+                  <apex:inputField styleClass="typeahead form-control" value="{!applicantInfo.Airport__c}" html-placeholder="Select your airport" required="TRUE" id="airportsUsa" />
+            <!--  <apex:inputField styleClass="typeahead form-control" value="{!applicantInfo.Extension_Departure_Airport__c}" html-placeholder="Select your airport" required="TRUE" id="airportsUsa" /> -->
+				</div>	
+                </div>
+              </div>
+                 
+              <div class="form-row">
+                <div class="form-label left">City/Town Website</div>
+                <div class="form-field">
+                  <apex:inputField id="CommunityWeb" value="{!applicantInfo.Community_Website__c}" required="FALSE"/>
+                </div>
+              </div>
+                  
+              <div class="form-row">
+                <div class="form-label top ">Briefly describe your neighborhood and community<span class="required">*</span></div>
+                <div class="form-field">
+                  <!-- <apex:inputField value="{!applicantInfo.Community_Description__c}" required="TRUE"/> -->
+                <apex:inputTextarea id="commDesc" value="{!applicantInfo.Community_Description__c}" required="TRUE" onkeyup="countChar(this, 255, 'commDescCount')"/> 
+                </div>
+                <div class="char-limit"><span class="char-count-label">Characters left:</span>
+                <span id="commDescCount" class="char-count">
+                {!255-len(applicantInfo.Community_Description__c) }
+                </span>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-label top ">What points of interest are near your area?<span class="required">*</span></div>
+                <div class="form-field">
+                  <!--  <apex:inputField value="{!applicantInfo.Points_of_Interest__c}" required="TRUE"/>-->
+                  <apex:inputTextarea id="pointInter" value="{!applicantInfo.Points_of_Interest__c}" required="TRUE" onkeyup="countChar(this, 255, 'pointInterCount')"/> 
+                </div>
+                <div class="char-limit"><span class="char-count-label">Characters left:</span>
+                <span id="pointInterCount" class="char-count">
+                {!255-len(applicantInfo.Points_of_Interest__c) }
+                </span>             
+                </div>
+                       <div class="dropt"> <i class="icon-question-sign"></i>
+                   <span>{!$ObjectType.Applicant_Info__c.Fields.Points_of_Interest__c.inlineHelpText}</span>
+                </div> 
+                  
+              </div>
+                          
+            <div class="form-row">
+                                  
+              <div class="form-link">
+                    <apex:outputLink id="Back" styleClass="back" value="/apex/ayusa_hf_home?id={!applicantInfo.Id}">
+                    <i class="icon-chevron-left"></i>
+                    <span>Back</span>
+                    </apex:outputLink>
+              </div>
+                      
+              <div class="form-button">
+                <apex:commandlink styleClass="next" action="{!navigator}">
+                  <apex:param name="nextPage" value="/apex/ayusa_hf_school_basics"/>
+                  <apex:param name="reDirectPage" value="true"/>
+                  <apex:param name="role" value="Parent"/>
+                  <apex:commandButton id="Save" value="Save & Continue" />
+                    <i class="icon-chevron-right"></i> 
+                </apex:commandlink> 
+              </div>
+            </div>
+            
+          
+         </div>
+       </div>
+               </apex:form>
+     </div>
+    </apex:define>
+  </apex:composition>
+  
+  <!-- handlebars.js -->
+	<apex:includeScript value="{!URLFOR($Resource.module_handlebars, '/module_handlebars/v1.3.0/handlebars.js')}" />
+
+	<!-- typeahead.js -->
+	<apex:includeScript value="{!URLFOR($Resource.module_typeahead, '/module_typeahead/v0.10.4/typeahead.js')}" />
+  
+    <style>
+#custom-templates .empty-message {
+	padding: 5px 10px;
+	text-align: center;
+}
+
+.tt-dropdown-menu {
+	width: 422px;
+	margin-top: 12px;
+	padding: 8px 0;
+	background-color: #fff;
+	border: 1px solid #ccc;
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+	-webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+	-moz-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+	box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+}
+</style>
+    
+    
+  <script>
+
+
+//@@@@ MY ARRAY THAT CONTAINS THE AIRPORTS -- in {!AirportsUSA} we are putting Airports__c from USA (variable in the controller)
+
+var airports = {!AirportsUSA};
+
+//@@@@*****************END OF MY ARRAY
+
+//@@@@ MY MATCH FUNCTION
+
+var substringMatcher = function(strs) {
+return function findMatches(q, cb) {
+var matches, substrRegex;
+ 
+// an array that will be populated with substring matches
+matches = [];
+ 
+// regex used to determine if a string contains the substring `q`
+substrRegex = new RegExp(q, 'i');
+ 
+// iterate through the pool of strings and for any string that
+// contains the substring `q`, add it to the `matches` array
+j$.each(strs, function(i, str) {
+if (substrRegex.test(str)) {
+// the typeahead jQuery plugin expects suggestions to a
+// JavaScript object, refer to typeahead docs for more info
+
+
+//####TEST CONSOLE.LOG####
+/*
+console.log('airport: ' + str.slice( 0, str.indexOf("--") ));
+console.log('country: ' + str.slice( str.indexOf("--") + 2, str.length ));
+*/
+
+			 
+matches.push({ value: str });
+
+}
+});
+ 
+cb(matches);
+};
+};
+
+//@@@@*********************END
+
+
+//@@@@ RUNING MY JQUERY FUNCTION USING TYPEAHEAD.JS AND HANDLEBARS.JS
+
+j$('#custom-templates .typeahead').typeahead({
+  hint: true,
+  highlight: true,
+  minLength: 3
+}, {
+  
+  name: 'airports',
+  displayKey: 'value',
+  source: substringMatcher(airports),
+  templates: {
+    empty: [
+      '<div class="empty-message">',
+      'Unable to find any airport',
+      '</div>'
+    ].join('\n'),
+    suggestion: Handlebars.compile('<p><strong>{{value}}</strong></p>'),
+    
+  }
+  
+});
+
+//@@@@*********************END
+
+</script>  
+</apex:page>

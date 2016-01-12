@@ -1,0 +1,13 @@
+<apex:page showHeader="false" id="SiteTemplate">
+   <apex:stylesheet value="{!$Resource.Tomodachi_Styles}"/>
+  <apex:insert name="header">
+    <c:AppEngine_SiteHeader />
+    
+  </apex:insert>
+  <apex:insert name="body"/>
+  <apex:insert name="footer">
+    
+    <c:AppEngine_SiteFooter />
+    <site:googleAnalyticsTracking />
+  </apex:insert>
+</apex:page>

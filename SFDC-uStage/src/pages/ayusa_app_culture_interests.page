@@ -1,0 +1,237 @@
+<apex:page id="ayusa_app_culture_interests" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper">
+   
+       
+          <apex:form id="form">
+          <div class="page-header clearfix">
+ <h1>Ayusa Student Application</h1>
+<div class="back-to-main"><apex:outputLink id="BacktoMain" value="apex/ayusa_app_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+</div>
+          <h2>Interests and Culture</h2>
+          <div class="white-box clearfix">       
+        <div class="panel two_thirds">
+        
+            <apex:Messages styleClass="custom-error-pagelevel"/>
+            <p><em> All fields marked with an asterisk (<span class="required no-padding">*</span>) are required</em></p><br/>
+            
+          <h3 class="data-block-title">Interests</h3>  
+           <div class="form-row">
+                <div class="form-label top">Check the box that most accurately represents your personality on the scale provided from 1 to 5.<span class="required">*</span></div>
+                
+                <div class="scale-question clearfix">
+                    <apex:selectRadio id="Personality" value="{!applicantInfo.Personality_Structure__c}" required="TRUE">
+                        <div class="form-label left-scale-label"> Adaptable/flexible</div>
+                        <apex:selectOption itemValue="1" itemLabel="1"/>
+                        <apex:selectOption itemValue="2" itemLabel="2"/>
+                        <apex:selectOption itemValue="3" itemLabel="3"/>
+                        <apex:selectOption itemValue="4" itemLabel="4"/>
+                        <apex:selectOption itemValue="5" itemLabel="5"/>
+                    </apex:selectRadio>
+                        <span> Appreciates routines</span>
+                    </div>
+               <div class="scale-question clearfix">
+                    <apex:selectRadio id="Maturity" value="{!applicantInfo.Personality_Maturity__c}" required="TRUE">
+                        <div class="form-label left-scale-label"> Mature</div>
+                        <apex:selectOption itemValue="1" itemLabel="1"/>
+                        <apex:selectOption itemValue="2" itemLabel="2"/>
+                        <apex:selectOption itemValue="3" itemLabel="3"/>
+                        <apex:selectOption itemValue="4" itemLabel="4"/>
+                        <apex:selectOption itemValue="5" itemLabel="5"/>
+                    </apex:selectRadio>
+               <span> Young for his/her age</span> 
+                        </div>
+               <div class="scale-question clearfix">
+                    <apex:selectRadio id="Independence" value="{!applicantInfo.Personality_Independence__c}" required="TRUE">
+                        <div class="form-label left-scale-label"> Independent</div>
+                        <apex:selectOption itemValue="1" itemLabel="1"/>
+                        <apex:selectOption itemValue="2" itemLabel="2"/>
+                        <apex:selectOption itemValue="3" itemLabel="3"/>
+                        <apex:selectOption itemValue="4" itemLabel="4"/>
+                        <apex:selectOption itemValue="5" itemLabel="5"/>
+                    </apex:selectRadio>
+<span> Needs guidance</span>
+                            </div>
+               <div class="scale-question clearfix">
+                    <apex:selectRadio id="Opinionatedness" value="{!applicantInfo.Personality_Opinionatedness__c}" required="TRUE">
+                        <div class="form-label left-scale-label"> Open-minded</div>
+                        <apex:selectOption itemValue="1" itemLabel="1"/>
+                        <apex:selectOption itemValue="2" itemLabel="2"/>
+                        <apex:selectOption itemValue="3" itemLabel="3"/>
+                        <apex:selectOption itemValue="4" itemLabel="4"/>
+                        <apex:selectOption itemValue="5" itemLabel="5"/>
+                    </apex:selectRadio>
+                   <span> Has strong opinions</span>
+                    </div>
+               <div class="scale-question clearfix">
+                    <apex:selectRadio id="Funniness" value="{!applicantInfo.Personality_Funniness__c}" required="TRUE">
+                        <div class="form-label left-scale-label"> Sense of humor</div>
+                        <apex:selectOption itemValue="1" itemLabel="1"/>
+                        <apex:selectOption itemValue="2" itemLabel="2"/>
+                        <apex:selectOption itemValue="3" itemLabel="3"/>
+                        <apex:selectOption itemValue="4" itemLabel="4"/>
+                        <apex:selectOption itemValue="5" itemLabel="5"/>
+                    </apex:selectRadio>
+                     <span> Serious</span>
+                    </div>
+               <div class="scale-question clearfix">
+                    <apex:selectRadio id="Expressiveness" value="{!applicantInfo.Personality_Expressiveness__c}" required="TRUE">
+                        <div class="form-label left-scale-label"> Sociable</div>
+                        <apex:selectOption itemValue="1" itemLabel="1"/>
+                        <apex:selectOption itemValue="2" itemLabel="2"/>
+                        <apex:selectOption itemValue="3" itemLabel="3"/>
+                        <apex:selectOption itemValue="4" itemLabel="4"/>
+                        <apex:selectOption itemValue="5" itemLabel="5"/>
+                    </apex:selectRadio>
+               <span>Reserved</span>
+                    </div>
+               <div class="scale-question clearfix">                    
+                    
+                    <apex:selectRadio value="{!applicantInfo.Personality_Energy_Level__c}" id="personality-indicated" required="TRUE">
+                        <div class="form-label left-scale-label"> Active</div>
+                        <apex:selectOption itemValue="1" itemLabel="1"/>
+                        <apex:selectOption itemValue="2" itemLabel="2"/>
+                        <apex:selectOption itemValue="3" itemLabel="3"/>
+                        <apex:selectOption itemValue="4" itemLabel="4"/>
+                        <apex:selectOption itemValue="5" itemLabel="5"/>                     
+                    </apex:selectRadio>
+                     <span> Low-key</span>
+                </div>
+                 <apex:message for="personality-indicated" styleClass="custom-error-radio"/>
+           </div>
+                            
+           <div class="form-row">
+                <div class="form-label top "> Move the top three interests or hobbies you enjoy from the Available to the Chosen box<span class="required">*</span> </div>
+                <div class="form-field">
+                    <apex:inputField id="TOPInterests" value="{!applicantInfo.Interests_Top__c}" required="TRUE"/> 
+                </div>
+           </div>
+           
+           <div class="form-row">
+                <div class="form-label top "> Move other interests or hobbies you enjoy from the Available to the Chosen box<span class="required">*</span></div>
+                <div class="form-field">
+                    <apex:inputField id="Interests" value="{!applicantInfo.Interests__c}" required="TRUE"/> 
+                </div>
+           </div>
+           
+            <h3 class="data-block-title">Culture</h3>
+           <div class="form-row">
+                <div class="form-label left "> Have you ever travelled outside your country?<span class="required">*</span></div>
+                <div class="form-field">
+                    <apex:actionRegion >
+                    <apex:selectRadio value="{!applicantInfo.International_Travel__c}" id="travelled-indicated" required="TRUE">
+                        <apex:selectOption itemValue="Yes" itemLabel="Yes" />
+                        <apex:selectOption itemValue="No" itemLabel="No" />
+                        <apex:actionSupport event="onclick" rerender="thePageBlock" status="status"/>
+                    </apex:selectRadio>
+                    <apex:message for="travelled-indicated" styleClass="custom-error-radio"/>
+                    </apex:actionRegion>
+                </div>
+                
+           </div>
+        <apex:pageBlock id="thePageBlock">
+                    <apex:outputPanel layout="block" rendered="{!ApplicantInfo.International_Travel__c == 'Yes'}">
+           <div class="form-row" >
+                <div class="form-label top ">If yes, please tell us where.<span class="required">*</span></div>
+                <div class="form-field">
+                    <!-- <apex:inputField value="{!applicantInfo.International_Travel_Description__c}" required="TRUE"/> --> 
+                <apex:inputTextarea id="interNatioDesc" value="{!applicantInfo.International_Travel_Description__c}" required="TRUE" onkeyup="countChar(this, 255, 'interNatioDescCount')"/> 
+                  </div>
+                  <div class="char-limit"><span class="char-count-label">Characters left:</span>
+                  <span id="interNatioDescCount" class="char-count">
+                  {!255-len(applicantInfo.International_Travel_Description__c) }
+                  </span>
+                  </div> 
+           </div>
+            </apex:outputPanel>
+                   </apex:pageBlock>             
+                        
+    <div class="form-row">
+                <div class="form-label left">Please indicate the languages you speak and the number of years you have spoken them.<span class="required">*</span> </div>
+              <div class="dropt"> <i class="icon-question-sign"></i>
+                   <span>Please list native language, followed by English and number of years, and other languages with number of years.  Example:  Japanese, native; English, 7 years; Chinese, 3 years</span>
+                   </div>
+              </div>
+              
+            <div class="form-row">
+                <div class="form-label left">Language 1<span class="required">*</span></div>
+                <div class="form-field multiple">
+                    <apex:inputField id="Language_spoken1" value="{!applicantInfo.Language_spoken_1__c}" required="TRUE"/> 
+                </div>
+                <div class="form-field multiple last">
+                    <apex:inputField id="Language_spoken_yrs1" style="min-width:80px; width:80px;" value="{!applicantInfo.Language_spoken_years_1__c}" required="FALSE"/> 
+                </div>
+           </div>
+ 
+           <div class="form-row">
+                <div class="form-label left ">Language 2<span class="required">*</span></div>
+                <div class="form-field multiple">
+                    <apex:inputField id="Language_spoken2" value="{!applicantInfo.Language_spoken_2__c}" required="TRUE"/> 
+                </div>
+                <div class="form-field multiple last">
+                    <apex:inputField id="Language_spoken_yrs2" style="min-width:80px; width:80px;" value="{!applicantInfo.Language_spoken_years_2__c}" required="FALSE"/> 
+                </div>
+           </div> 
+
+           <div class="form-row">
+                <div class="form-label left">Language 3</div>
+                <div class="form-field multiple">
+                    <apex:inputField id="Language_spoken3" value="{!applicantInfo.Language_spoken_3__c}" required="FALSE"/> 
+                </div>
+                <div class="form-field multiple last">
+                    <apex:inputField id="Language_spoken_yrs3" style="min-width:80px; width:80px;" value="{!applicantInfo.Language_spoken_years_3__c}" required="FALSE"/> 
+                </div>
+           </div>  
+           
+        
+           <div class="form-row">
+                <div class="form-label left"> What is your religion?<span class="required">*</span></div>
+                <div class="form-field">
+                    <apex:inputField id="Religion" value="{!applicantInfo.Religion__c}" required="TRUE"/>
+                </div>
+               <div class="dropt"> <i class="icon-question-sign"></i>
+                   <span>{!$ObjectType.Applicant_Info__c.Fields.Religion__c.inlineHelpText}</span>
+                   </div>
+           </div>
+           
+           <div class="form-row">
+                <div class="form-label left "> If you do participate in religious activities, please indicate how frequently.<span class="required">*</span></div>
+                <div class="form-field">
+                    <apex:inputField id="Religious_Activity_Home" value="{!applicantInfo.Religious_Activity_Home__c}" required="TRUE"/>
+                </div>
+           </div>
+           
+           <div class="form-row">
+                <div class="form-label left "> How actively would you like to take part in religious activities with your host family?<span class="required">*</span> </div>
+                <div class="form-field">
+                    <apex:inputField id="Religious_Activity_on_Program" value="{!applicantInfo.Religious_Activity_on_Program__c}" required="TRUE"/>
+                </div>
+           </div>
+                <div class="form-row">
+                 
+                    <div class="form-link">
+                        <apex:outputLink id="Back" styleClass="back" value="/apex/ayusa_app_profile_contact_info?id={!applicantInfo.Id}">
+                        <i class="icon-chevron-left"></i>
+                        <span>Back</span>
+                        </apex:outputLink>
+                    </div>
+              
+                  <div class="form-button">
+                    <apex:commandlink styleClass="next" action="{!navigator}">
+                      <apex:param name="nextPage" value="/apex/ayusa_app_household_basics"/>
+                      <apex:param name="reDirectPage" value="false"/>
+                      <apex:commandButton id="Save" value="Save & Continue" />
+                        <i class="icon-chevron-right"></i> 
+                    </apex:commandlink>
+                  </div>
+                      
+                    </div>
+                </div>
+              </div>
+          
+         </apex:form>
+       </div>
+     </apex:define>
+   </apex:composition>
+</apex:page>

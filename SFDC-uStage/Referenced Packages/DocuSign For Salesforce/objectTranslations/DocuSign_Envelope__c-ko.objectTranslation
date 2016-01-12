@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- DocuSign Envelope --></value>
+    </caseValues>
+    <fields>
+        <label>봉투 완료됨 Chatter 텍스트</label>
+        <name>ChatterEnvCompletedText__c</name>
+    </fields>
+    <fields>
+        <label>봉투 완료됨 Chatter</label>
+        <name>ChatterEnvCompleted__c</name>
+    </fields>
+    <fields>
+        <label>봉투 거부됨 Chatter 텍스트</label>
+        <name>ChatterEnvDeclinedText__c</name>
+    </fields>
+    <fields>
+        <label>봉투 거부됨 Chatter</label>
+        <name>ChatterEnvDeclined__c</name>
+    </fields>
+    <fields>
+        <label>봉투 배달됨 Chatter 텍스트</label>
+        <name>ChatterEnvDeliveredText__c</name>
+    </fields>
+    <fields>
+        <label>봉투 배달됨 Chatter</label>
+        <name>ChatterEnvDelivered__c</name>
+    </fields>
+    <fields>
+        <label>봉투 발송됨 Chatter 텍스트</label>
+        <name>ChatterEnvSentText__c</name>
+    </fields>
+    <fields>
+        <label>봉투 발송됨 Chatter</label>
+        <name>ChatterEnvSent__c</name>
+    </fields>
+    <fields>
+        <label>봉투 무효화됨 Chatter 텍스트</label>
+        <name>ChatterEnvVoidedText__c</name>
+    </fields>
+    <fields>
+        <label>봉투 무효화됨 Chatter</label>
+        <name>ChatterEnvVoided__c</name>
+    </fields>
+    <fields>
+        <label><!-- Recipient Completed Chatter Text --></label>
+        <name>ChatterRecipCompletedText__c</name>
+    </fields>
+    <fields>
+        <label><!-- Recipient Completed Chatter --></label>
+        <name>ChatterRecipCompleted__c</name>
+    </fields>
+    <fields>
+        <label>수신인이 거부함 Chatter 텍스트</label>
+        <name>ChatterRecipDeclinedText__c</name>
+    </fields>
+    <fields>
+        <label>수신인이 거부함 Chatter</label>
+        <name>ChatterRecipDeclined__c</name>
+    </fields>
+    <fields>
+        <label>수신인에게 배달됨 Chatter 텍스트</label>
+        <name>ChatterRecipDeliveredText__c</name>
+    </fields>
+    <fields>
+        <label>수신인에게 배달됨 Chatter</label>
+        <name>ChatterRecipDelivered__c</name>
+    </fields>
+    <fields>
+        <label>수신인에게 발송됨 Chatter 텍스트</label>
+        <name>ChatterRecipSentText__c</name>
+    </fields>
+    <fields>
+        <label>수신인에게 발송됨 Chatter</label>
+        <name>ChatterRecipSent__c</name>
+    </fields>
+    <fields>
+        <label>수신인이 서명함 Chatter 텍스트</label>
+        <name>ChatterRecipSignedText__c</name>
+    </fields>
+    <fields>
+        <label>수신인이 서명함 Chatter</label>
+        <name>ChatterRecipSigned__c</name>
+    </fields>
+    <fields>
+        <help><!-- Check to show chatter during DocuSign signature workflow. --></help>
+        <label>Chatter 상태 업데이트 사용</label>
+        <name>ChatterUpdatesEnabled__c</name>
+    </fields>
+    <fields>
+        <help><!-- Select a Contact from Salesforce to be a DocuSign Recipient/Signer.  Only Contacts with valid email addresses can be used as DocuSign Recipients. --></help>
+        <label>eSign 문서 연락처</label>
+        <name>Contact2eSignDoc01__c</name>
+        <relationshipLabel>DocuSign 봉투01</relationshipLabel>
+    </fields>
+    <fields>
+        <label>사용자 지정 필드 1 이름</label>
+        <name>Custom_Field_1_Name__c</name>
+    </fields>
+    <fields>
+        <label>사용자 지정 필드 1 값</label>
+        <name>Custom_Field_1_Value__c</name>
+    </fields>
+    <fields>
+        <help><!-- Custom Field to pass data via Envelope --></help>
+        <label>사용자 지정 필드 1</label>
+        <name>Custom_Field_1__c</name>
+    </fields>
+    <fields>
+        <label>사용자 지정 필드 2 이름</label>
+        <name>Custom_Field_2_Name__c</name>
+    </fields>
+    <fields>
+        <label>사용자 지정 필드 2 값</label>
+        <name>Custom_Field_2_Value__c</name>
+    </fields>
+    <fields>
+        <help><!-- Custom Field to pass data via Envelope --></help>
+        <label>사용자 지정 필드 2</label>
+        <name>Custom_Field_2__c</name>
+    </fields>
+    <fields>
+        <label>사용자 지정 필드 3 이름</label>
+        <name>Custom_Field_3_Name__c</name>
+    </fields>
+    <fields>
+        <label>사용자 지정 필드 3 값</label>
+        <name>Custom_Field_3_Value__c</name>
+    </fields>
+    <fields>
+        <help><!-- Custom Field to pass data via Envelope --></help>
+        <label>사용자 지정 필드 3</label>
+        <name>Custom_Field_3__c</name>
+    </fields>
+    <fields>
+        <help><!-- Indicate how many days prior to expiration you want an email message to alert recipients that a deadline approaches for completion. This is sent only to recipients who have not yet completed the transaction. --></help>
+        <label>N일 전에 만료 경고</label>
+        <name>Day_Prior_to_Warn_of_expiration__c</name>
+    </fields>
+    <fields>
+        <help><!-- Indicate the number of days until this transaction is expired. --></help>
+        <label>N 일 후에 봉투 완료/무효화</label>
+        <name>Days_before_Envelope_is_Expired_Voided__c</name>
+    </fields>
+    <fields>
+        <help><!-- Edit this Email Message Text (up to 2,000 characters) and it will appear in the notification to sign for your DocuSign Recipient. --></help>
+        <label>DocuSign 이메일 메시지</label>
+        <name>DocuSign_Email_Message__c</name>
+    </fields>
+    <fields>
+        <help><!-- Change this default Email Subject text and it will appear as the Subject Line in the notification to Sign for your DocuSign Recipients. --></help>
+        <label>DocuSign 이메일 제목</label>
+        <name>DocuSign_Email_Subject__c</name>
+    </fields>
+    <fields>
+        <help><!-- DocuSign Envelope ID --></help>
+        <label>DocuSign 봉투 ID</label>
+        <name>DocuSign_Envelope_ID__c</name>
+    </fields>
+    <fields>
+        <help><!-- DocuSign Envelope Sent --></help>
+        <label>DocuSign 봉투 발송</label>
+        <name>DocuSign_Envelope_Sent__c</name>
+    </fields>
+    <fields>
+        <help><!-- Document ID --></help>
+        <label>DocumentID</label>
+        <name>DocumentID__c</name>
+    </fields>
+    <fields>
+        <help><!-- This is a list of PDF Documents located in your Organization&apos;s Salesforce &quot;Documents Tab&quot;.  In order to send with DocuSign you must add a PDF to any of the folders within your Documents Tab in Salesforce.  To Send with other Formats click &quot;Learn More&apos;. --></help>
+        <label>문서 이름</label>
+        <name>Document_Name__c</name>
+    </fields>
+    <fields>
+        <help><!-- At times, you may need to encourage your recipients to complete an envelope more rapidly. After an envelope expires, DocuSign for Salesforce voids the envelope and sends a notification to both sender and recipient. --></help>
+        <label>봉투 만료/무효화</label>
+        <name>Expire_Void_Envelope__c</name>
+    </fields>
+    <fields>
+        <help><!-- I agree to Terms --></help>
+        <label>약관에 동의합니다.</label>
+        <name>I_agree_to_Terms__c</name>
+    </fields>
+    <fields>
+        <help><!-- Click this checkbox if you would like to be added as an additional Recipient/Signer on this document.  If you leave this unchecked you will receive notification that the Contact has DocuSigned but will not be able to Sign it yourself. --></help>
+        <label>서명도 하겠습니다.</label>
+        <name>I_will_Sign__c</name>
+    </fields>
+    <fields>
+        <help><!-- Quick Lead to eSign Document --></help>
+        <label>eSign 문서로 이동</label>
+        <name>Lead2eSignDoc01__c</name>
+        <relationshipLabel>DocuSign 봉투</relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Indicate how many days should pass before the first reminder is sent --></help>
+        <label>N일 내에 미리 알림 발송</label>
+        <name>Reminder_Interval__c</name>
+    </fields>
+    <fields>
+        <help><!-- Indicate how often (in days) the reminder should repeat until the transaction is complete. --></help>
+        <label>완료할 때까지 N일마다 반복</label>
+        <name>Reminder_Repeat_Interval_in_Days__c</name>
+    </fields>
+    <fields>
+        <help><!-- Check this box to have an email reminder sent to recipients of the envelope who have not yet completed their task. --></help>
+        <label>서명인에게 이메일로 미리 알림</label>
+        <name>Send_Reminder__c</name>
+    </fields>
+    <fields>
+        <help><!-- This is the name of the Salesforce User who created this DocuSign transaction. --></help>
+        <label>발송인</label>
+        <name>Sender__c</name>
+    </fields>
+    <fields>
+        <label>Source_Object_Parent</label>
+        <name>Source_Object_Parent__c</name>
+    </fields>
+    <fields>
+        <help><!-- Source Object --></help>
+        <label>원본 개체</label>
+        <name>Source_Object__c</name>
+    </fields>
+    <layouts>
+        <layout>DocuSign Envelope Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- DocuSign Envelope --></nameFieldLabel>
+    <webLinks>
+        <label><!-- Learn_More --></label>
+        <name>Learn_More</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Resend_This_Envelope --></label>
+        <name>Resend_This_Envelope</name>
+    </webLinks>
+</CustomObjectTranslation>

@@ -1,0 +1,17 @@
+<apex:page id="apc_hf_match_payment_confirm_interim" docType="html-5.0" applyHtmlTag="false" applyBodyTag="false" 
+           title="Payment Confirmation" standardStylesheets="false" showHeader="false" 
+           controller="apc_portal_controller" action="{!paymentController.updateRecords1}">
+<apex:composition template="intraxtemplate_vs3">
+<apex:define name="body">
+
+<apex:outputPanel layout="block" id="outputpanelOriginal" rendered="{!ApplicantInfo.Application_Type__c != 'Rematch'}">
+      <div class="row">
+        <div class="col-md-6">
+          <h1>Your payment was successful. Thank you!
+              Please wait while we update your account with the match and payment details.</h1>
+         </div>	
+          </div> <!--  end row -->
+   </apex:outputPanel>
+</apex:define>
+</apex:composition>
+</apex:page>

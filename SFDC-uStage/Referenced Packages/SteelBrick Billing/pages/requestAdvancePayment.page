@@ -1,0 +1,48 @@
+<apex:page standardController="Account" extensions="invoiceit_s.ControllerRequestAdvancePayment" tabStyle="Account" cache="false">
+ <div class="bPageTitle">
+        <apex:sectionHeader title="Payment" subtitle="Advanced Payment"/>
+        <div class="ptBreadcrumb">&nbsp;«&nbsp;
+            <a href="/{!Account.Id}">Back to : {!Account.Name}</a>
+        </div>
+    </div>
+ 
+ <apex:form >  
+   <apex:pageBlock title="Create Advance Payment" id="pb">
+         <apex:pageBlockButtons location="top" >
+                <apex:commandButton value="Send Email" action="{!sendEmailForRequestPayment}" reRender="messege,pb" disabled="{!isContactSelected }"/>
+                <apex:commandButton value="Cancel" action="{!Cancel}" />
+             </apex:pageBlockButtons>
+         <apex:pageBlockSection columns="1" title="Credit Card Payments" collapsible="false">
+         <apex:pageMessages id="messege"></apex:pageMessages>          
+            <apex:outputField value="{!Account.Name}" rendered="{!!isContactSelected }"/> 
+            <apex:inputField value="{!Account.invoiceit_s__Advance_Requested_Amount__c}" rendered="{!!isContactSelected }" required="true"/>                                       
+        <apex:pageBlockTable value="{!listOfRequestAdvancePayment}" var="requestAdvancePayment"  rendered="{!!isContactSelected }">
+                <apex:column headerValue="Select">
+                    <apex:inputCheckbox value="{!requestAdvancePayment.isChecked}"  disabled="{!isContactSelected }"/>
+                </apex:column>
+                <apex:column headerValue="Contact Name">
+                    <apex:outputField value="{!requestAdvancePayment.Contact.Name}" />
+                </apex:column>
+                <apex:column headerValue="Email">
+                    <apex:outputField value="{!requestAdvancePayment.Contact.Email}" />
+                </apex:column>
+        </apex:pageBlockTable> 
+       </apex:pageBlockSection>
+        <!--
+        <apex:pageBlockSection title="For Manual Payments" collapsible="false" columns="1"><br/>
+          <apex:outputLink value="/apex/createPayment" styleClass="btn" style="padding:2px 5px 2px 5px; text-decoration:none;">
+             Cash
+             <apex:param name="accName" value="{!Account.Name}"/>
+             <apex:param name="PaymentType" value="Cash"/>
+        </apex:outputLink> <br/>
+        
+        <apex:outputLink value="/apex/createPayment" styleClass="btn" style="padding:2px 5px 2px 5px; text-decoration:none;">
+           Cheque
+           <apex:param name="accName" value="{!Account.Name}"/>
+           <apex:param name="PaymentType" value="Cheque"/>
+         </apex:outputLink>
+        </apex:pageBlockSection>
+        -->                   
+   </apex:pageBlock>
+ </apex:form>
+</apex:page>

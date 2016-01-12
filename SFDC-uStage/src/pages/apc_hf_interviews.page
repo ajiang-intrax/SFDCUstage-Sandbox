@@ -1,0 +1,893 @@
+<apex:page id="apc_hf_interviews" docType="html-5.0" applyHtmlTag="false" applyBodyTag="false" action="{!CheckExpDate}" title="Your Interviews" standardStylesheets="false" showHeader="false" controller="apc_match_controller">
+    <apex:composition template="intraxtemplate_vs3">
+        <apex:define name="body">
+            <style>
+                .list-view.form-vertical .control-label {
+                margin-bottom: 0;
+                }
+                .list-view.form-vertical .form-group {
+                margin-bottom: 10px;
+                }
+                .list-view.vs1 .item .item-image {
+                position: relative;
+                width: 100%;
+                background: #dcdcdc;
+                text-align: center;
+                }
+                .item-image-male, .item-image-female {
+                min-height: 160px;
+                }
+                .item-image-male, .item-image-female {
+                min-height: 160px;
+                }
+                .list-view .item-image-real {
+                width:100%;
+                //max-height: 160px;
+                }
+                .phot-pre-img {
+                /* display: block; */
+                height: 160px;
+                }
+            </style>
+            <apex:form id="webform">
+                <apex:variable value="{!0}" var="addIndex" id="rowCounterF" />
+                
+                <!-- Jose B-02819: NON Requested or Confirmed status -->
+                <apex:outputPanel layout="block" rendered="{!If(MatchConf.size == 0 || (MatchConf.size > 0 && MatchConf[0].Status__c !='Confirmed'),true,false)}">
+                    
+                    <h1 class="no-margin-t center-text">Your Interviews</h1>
+                    
+                    <!-- JOSE B-03139 Display Match Request Deadline messages in HF and PT portals (Match Deadlines - B) -->
+                    <div class="row">
+                    <div class="col-sm-10 center-block center-text">
+                    <c:block_portal_msg_early_match APCArrivalDates="{!APCArrivalDates}"/>
+                    </div>
+                    </div>
+                     <!-- END JOSE B-03139 -->
+                     <!-- JOSE B-03139 Display Match Request Deadline messages in HF and PT portals (Match Deadlines - B) -->
+                    <div class="row">
+                    <div class="col-sm-10 center-block center-text">
+                    <apex:outputPanel layout="block" rendered="{!MatchConfOld != null && MatchConfOld.SIZE > 0 && MatchConfOld[0].End_Date__c - 90 >= TOday()}">
+				    <c:block_portal_msg_match_deadline PreviousMatch="{!MatchConfOld}"/>
+				    </apex:outputPanel>
+                    </div>
+                    </div>
+                     <!-- END JOSE B-03139 -->
+                    
+                    <apex:outputPanel layout="block" rendered="{!If(ActiveInterview.size > 0 && ConfMatch.size == 0,true,false)}">
+                        <div class="row">
+                            <div class="col-sm-10 center-block center-text">
+                                <div class="alert alert-warning "><b class="sm">Interviewing au pairs? Call 800.428.7247 and dial 0 to get connected for FREE! Monday-Friday. 5am-5:30pm PST.</b></div>
+                            </div>
+                            <!-- end col --> 
+                        </div>
+                        <!-- end row -->
+                    </apex:outputPanel>
+                    
+                    
+                    <!-- Match Not found Panel-->
+                    <apex:outputPanel layout="block" id="NoInterview" rendered="{!If(ActiveInterview.size==0 && InActivelst.size == 0 && ConfMatch.size==0,true,false)}">
+                        <div class="row">
+                            <div class="col-sm-10 center-block">
+                                <div class="box gray lead center-text">You do not have any interviews yet
+                                    <apex:outputLink id="Reqtmtch2" value="/apc_hf_search_au_pairs"> <b>Search au pairs ></b> </apex:outputLink>
+                                </div>
+                            </div>
+                            <!-- end col --> 
+                        </div>
+                        <!-- end row -->
+                    </apex:outputPanel>
+                    <!-- End of Match Not found Panel--> 
+                    
+                    <!-- Current/Past Match Panel-->
+                    <apex:outputPanel layout="block" id="viewInterview" rendered="{!ConfMatch.size == 0}">
+                        
+                        <apex:outputPanel layout="block" id="activeList" rendered="{!activeInterview.size > 0}">
+                            <apex:pageBlock id="pb">
+                                
+                                <div class="row">
+                                    <div class="col-sm-10 center-block">
+                                        <h2 class="margin-b4">Current Interviews</h2> 
+                                    </div>
+                                </div><!-- end row --> 
+                                
+                                <div class="row">
+                                    <div class="col-sm-10 center-block">
+                                        <div class="list-view form-vertical">
+                                            <apex:repeat id="repeatActiveInterview" value="{!activeInterview}" var="mseletionlst">
+                                                
+                                                <div class="row">
+                                                    <div class="col-sm-3 center-text">
+                                                        <apex:outputText rendered="{!mseletionlst.Engagement__c != null}">
+                                                            <apex:outputLink value="/apex/apc_hf_au_pair_profile?id={!mseletionlst.Engagement__r.id}" id="linkprofinfo1"> 
+                                                                <!--<apex:image styleClass="item-image-male" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/male-profile-med.png')}"/>-->
+                                                                <apex:image styleClass="phot-pre-img" value="{!returnURLmap[mseletionlst.Engagement__c]}" rendered="{!returnURLMap[mseletionlst.Engagement__c] != 'no-picture'}"/>
+                                                                <apex:image styleClass="item-image-female" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/female-profile-med.png')}"  rendered="{!returnURLMap[mseletionlst.Engagement__c] == 'no-picture' && (mseletionlst.Engagement__r.Gender__c == 'Female' || mseletionlst.Engagement__r.Gender__c == null )}"/>
+                                                                <apex:image styleClass="item-image-male" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/male-profile-med.png')}" rendered="{!returnURLMap[mseletionlst.Engagement__c] == 'no-picture' && mseletionlst.Engagement__r.Gender__c == 'Male'}"/>
+                                                            </apex:outputLink>
+                                                        </apex:outputText>
+                                                        
+                                                        <div>
+                                                            <apex:commandlink styleClass="btn btn-primary btn-lg  margin-t2 margin-b1" id="Reqmatch" action="/apc_hf_match_request?id={!mseletionlst.id}&engid={!mseletionlst.Engagement__r.id}" 
+                                                                              rendered="{!CONTAINS(ApplicantInfoList[0].PageStatus_Complete__c,'045') &&
+                                                                                        CONTAINS(ApplicantInfoList[0].PageStatus_Complete__c,'009') && 
+                                                                                        ApplicantInfoList[0].Terms_Accepted__c==true
+                                                                                        && mseletionlst.Engagement__r.Placement_Status__c != 'Pending' && 
+                                                                                        mseletionlst.Engagement__r.Placement_Status__c != 'Confirmed'}">
+                                                                <apex:commandButton value="Request Match" id="Reqbtn"  />
+                                                            </apex:commandlink>
+                                                            
+                                                            <apex:commandlink styleClass="btn btn-primary btn-lg  margin-t2 margin-b1" id="Reqmatch2" onComplete="rerunjs();callstepsmodal();" 
+                                                                              rendered="{!(Not(CONTAINS(ApplicantInfoList[0].PageStatus_Complete__c,'045')) || 
+                                                                                        Not(CONTAINS(ApplicantInfoList[0].PageStatus_Complete__c,'009')) || 
+                                                                                        ApplicantInfoList[0].Terms_Accepted__c==False) && ApplicantInfoList[0].Application_Type__c == 'Original'
+                                                                                        && mseletionlst.Engagement__r.Placement_Status__c != 'Pending' && 
+                                                                                        mseletionlst.Engagement__r.Placement_Status__c != 'Confirmed'}">
+                                                                <apex:commandButton value="Request Match" id="Incomp" />
+                                                                <apex:param Name="requestId" value="{!mseletionlst.id}" assignTo="{!requestId}"/>
+                                                                <apex:param Name="enggId" value="{!mseletionlst.Engagement__r.id}" assignTo="{!SelcEngIds}"/>
+                                                            </apex:commandlink>
+                                                            
+                                                            <!-- Request Button For Renewal-Rematch -->
+                                                            <apex:commandlink styleClass="btn btn-primary btn-lg  margin-t2 margin-b1" id="Reqmatchren" action="/apc_hf_match_request?id={!mseletionlst.id}&engid={!mseletionlst.Engagement__r.id}" 
+                                                                              rendered="{!ApplicantInfoList[0].Application_Type__c != 'Original'}">
+                                                                <apex:commandButton value="Request Match" id="ReqbtnRen"  />
+                                                            </apex:commandlink>
+                                                            
+                                                        </div>
+                                                        
+                                                        <div>
+                                                            <apex:commandlink id="cancel" action="{!checkInterviews}" onComplete="rerunjs();callmodal();" reRender="webform" >
+                                                                <apex:commandButton value="Cancel Interview" id="continueButton"/>
+                                                                <apex:param Name="requestId" value="{!mseletionlst.id}" assignTo="{!requestid}"/>
+                                                            </apex:commandlink>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                    <!--  end col -->
+                                                    
+                                                    <div class="col-sm-9">
+                                                        <h3 class="no-margin-t">{!mseletionlst.Engagement__r.Account_Id__r.Name}</h3>
+                                                        <div class="row">
+                                                            <div class="col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label class="control-label">Skype</label>
+                                                                    <apex:outputText value="{!mseletionlst.Engagement__r.Account_Id__r.Skype_ID__pc}"/>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label class="control-label">Email</label>
+                                                                    <apex:outputText value="{!mseletionlst.Engagement__r.Account_Id__r.PersonEmail}"/>
+                                                                </div>
+                                                            </div>
+                                                           <!--  <div class="col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label class="control-label">Phone Country Code</label>
+                                                                    <apex:outputText value="{!SelectionCountryCode[mseletionlst.Id]}"/> 
+                                                                </div>
+                                                            </div> -->
+                                                            <div class="col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label class="control-label">Phone</label>
+                                                                   <apex:outputText value="{!SelectionCountryCode[mseletionlst.Id] + ' ' + mseletionlst.Engagement__r.Account_Id__r.PersonHomePhone}"/> 
+                                                                 
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- end row -->
+                                                        
+                                                        <div class="row">
+                                                            <div class="col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label class="control-label">City</label>
+                                                                    <apex:outputText value="{!mseletionlst.Engagement__r.Account_Id__r.BillingCity}"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label class="control-label">Country</label>
+                                                                    <apex:outputText value="{!mseletionlst.Engagement__r.Account_Id__r.BillingCountry}"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label class="control-label">Current Time for Au Pair</label>
+                                                                    
+                                                                    <!--  <apex:outputText value="{0,date,yyyy.MM.dd G 'at' HH:mm:ss z}"> -->
+                                                                    <apex:outputText value="{0,date, MMMM d, yyyy h:mm a}">
+                                                                        <apex:param value="{!ptTimeZone[mseletionlst.Engagement__r.Account_Id__r.PersonEmail]}" />
+                                                                        <!-- <apex:param value="{!NOW()+offset}" />-->
+                                                                    </apex:outputText> 
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- end row -->
+                                                        
+                                                        <div class="row">
+                                                            <div class="col-sm-12">
+                                                                <label class="control-label">Best Time to Contact</label>
+                                                                <apex:outputText value="{!mseletionlst.Engagement__r.Interview_Availability__c}"/>
+                                                                <br/>
+                                                            </div>
+                                                            <!-- end col --> 
+                                                        </div>
+                                                        <!-- end row -->
+                                                        
+                                                        <div class="row margin-t2">
+                                                            <div class="col-sm-12">
+                                                                <!--<label class="control-label">You have {!hoursnew[mseletionlst.id]} hours left for this interview</label>-->
+                                                                <label>Interview Expires On
+                                                                    <apex:outputText value="{0,date, MMMM d, yyyy h:mm a}" >
+                                                                        <apex:param value="{!mseletionlst.Interview_End_Date__c+offset}"/>
+                                                                    </apex:outputText>
+                                                                </label>
+                                                            </div>
+                                                            <!-- end col --> 
+                                                        </div>
+                                                        <!-- end row --> 
+                                                    </div>
+                                                    <!-- end col --> 
+                                                </div>
+                                                <!-- end row -->
+                                                <hr class="margin-b3 "/>
+                                                <apex:variable var="addIndex" value="{!addIndex + 1}" />
+                                            </apex:repeat>
+                                        </div>
+                                    </div>
+                                    <!-- end col --> 
+                                </div>
+                                <!-- end row -->
+                            </apex:pageBlock>
+                        </apex:outputPanel>
+                        
+                        <apex:outputPanel layout="block" id="inactiveListpanel" rendered="{!PastSelections.size > 0}">
+                            <apex:pageBlock id="pastInterviewblk">
+                                <div class="row">
+                                    <div class="col-sm-10 center-block">
+                                        <div class="list-view form-vertical">
+                                            <h2 class="margin-b4">Past Interviews</h2>
+                                            <apex:repeat id="repeatInActiveInterview" value="{!PastSelections}" var="mseletionlst">
+                                                <div class="row margin-b3">
+                                                    <div class="col-sm-3 center-text">
+                                                        <apex:outputText rendered="{!mseletionlst.se.Engagement__c != null}">
+                                                            <apex:outputLink value="/apex/apc_hf_au_pair_profile?id={!mseletionlst.se.Engagement__r.id}"  id="linkprofinfo1">
+                                                                <apex:image styleClass="phot-pre-img" value="{!returnURLmap[mseletionlst.se.Engagement__c]}" rendered="{!returnURLMap[mseletionlst.se.Engagement__c] != 'no-picture'}"/>
+                                                                <apex:image styleClass="item-image-female" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/female-profile-med.png')}"  rendered="{!returnURLMap[mseletionlst.se.Engagement__c] == 'no-picture' && (mseletionlst.se.Engagement__r.Gender__c == 'Female' || mseletionlst.se.Engagement__r.Gender__c == null)}"/>
+                                                                <apex:image styleClass="item-image-male" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/male-profile-med.png')}" rendered="{!returnURLMap[mseletionlst.se.Engagement__c] == 'no-picture' && mseletionlst.se.Engagement__r.Gender__c == 'Male'}"/>
+                                                            </apex:outputLink>
+                                                        </apex:outputText>
+                                                        
+                                                        <div>
+                                                            <apex:commandlink styleClass="btn btn-primary btn-lg  margin-t2 margin-b1" id="PastReqmatch" action="/apc_hf_match_request?id={!mseletionlst.se.id}&engid={!mseletionlst.se.Engagement__r.id}" 
+                                                                              rendered="{!CONTAINS(ApplicantInfoList[0].PageStatus_Complete__c,'045') && CONTAINS(ApplicantInfoList[0].PageStatus_Complete__c,'009') && 
+                                                                                        ApplicantInfoList[0].Terms_Accepted__c==true && mseletionlst.se.Engagement__r.Placement_Status__c != 'Pending' && 
+                                                                                        mseletionlst.se.Engagement__r.Placement_Status__c != 'Confirmed'}">
+                                                                <apex:commandButton value="Request Match" id="Reqbtn"  />
+                                                            </apex:commandlink>
+                                                            
+                                                            <apex:commandlink styleClass="btn btn-primary btn-lg  margin-t2 margin-b1" id="PastReqmatch2" onComplete="rerunjs();callstepsmodal();" rendered="{!(Not(CONTAINS(ApplicantInfoList[0].PageStatus_Complete__c,'045')) || 
+                                                                                                                                                                                                             Not(CONTAINS(ApplicantInfoList[0].PageStatus_Complete__c,'009')) || 
+                                                                                                                                                                                                             ApplicantInfoList[0].Terms_Accepted__c==False) && mseletionlst.se.Engagement__r.Placement_Status__c != 'Pending' && 
+                                                                                        																													mseletionlst.se.Engagement__r.Placement_Status__c != 'Confirmed'}">
+                                                                <apex:commandButton value="Request Match" id="PastIncomp" />
+                                                                <apex:param Name="requestId" value="{!mseletionlst.se.id}" assignTo="{!requestid}"/>
+                                                                <apex:param Name="enggId" value="{!mseletionlst.se.Engagement__r.id}" assignTo="{!SelcEngIds}"/>
+                                                            </apex:commandlink>
+                                                           
+                                                            <apex:pageBlock id="Req-Match2" rendered="{!OR(mseletionlst.se.Engagement__r.Placement_Status__c == 'Pending', mseletionlst.se.Engagement__r.Placement_Status__c == 'Confirmed')}">
+											                	<div class="margin-t2"><b class="sm"><apex:outputText value="This au pair is currently unavailable for a match request." /></b></div>
+											                </apex:pageBlock>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                    
+                                                    <div class="col-sm-9">
+                                                        <h3 class="no-margin-t">{!mseletionlst.se.Engagement__r.Account_Id__r.Name}</h3>
+                                                        <div class="row">
+                                                            <div class="col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label class="control-label">Skype</label>
+                                                                    <apex:outputText value="{!mseletionlst.se.Engagement__r.Account_Id__r.Skype_ID__pc}"/></div>
+                                                            </div>
+                                                            
+                                                            <div class="col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label class="control-label">Email</label>
+                                                                    <apex:outputText value="{!mseletionlst.se.Engagement__r.Account_Id__r.PersonEmail}"/>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label class="control-label">Phone</label>
+                                                                    <apex:outputText value="{!SelectionCountryCode[mseletionlst.se.Id] + ' ' + mseletionlst.se.Engagement__r.Account_Id__r.PersonHomePhone}"/></div>
+                                                            </div>
+                                                        </div><!-- end row -->
+                                                        
+                                                        <div class="row">
+                                                            
+                                                            <div class="col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label class="control-label">City</label>
+                                                                    <apex:outputText value="{!mseletionlst.se.Engagement__r.Account_Id__r.billingCity}"/>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label class="control-label">Country</label>
+                                                                    <apex:outputText value="{!mseletionlst.se.Engagement__r.Account_Id__r.billingCountry}"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label class="control-label">Current Time for Au Pair</label>
+                                                                   <!--  <apex:outputText value="{0,date,yyyy.MM.dd G 'at' HH:mm:ss z}"> -->
+                                                                     <apex:outputText value="{0,date, MMMM d, yyyy h:mm a}">
+                                                                        <apex:param value="{!ptTimeZone[mseletionlst.se.Engagement__r.Account_Id__r.PersonEmail]}" />
+                                                                         <!--<apex:param value="{!NOW()+offset}" /> -->
+                                                                    </apex:outputText>
+                                                                </div>
+                                                            </div>  
+                                                        </div><!-- end row -->
+                                                        
+                                                        <div class="row"> 
+                                                            <div class="col-sm-12">
+                                                                <label class="control-label">Best Time to Contact</label>
+                                                                <apex:outputText value="{!mseletionlst.se.Engagement__r.Interview_Availability__c}"/>
+                                                            </div>
+                                                            
+                                                        </div><!-- end row -->
+                                                        
+                                                    </div><!-- end col -->
+                                                </div><!-- end row -->
+                                                <hr class="margin-b3"/>
+                                            </apex:repeat>
+                                        </div>
+                                    </div>
+                                    <!-- end col --> 
+                                </div>
+                                <!-- end row -->
+                            </apex:pageBlock>
+                            
+                            <div class="sort-container vs1 margin-t4 form-vertical">
+                                <div class="sort vs1 paginate pull-right">
+                                    <apex:pageblock id="selectedPageBlock2">
+                                        <apex:commandLink status="pleasewait01" reRender="pastInterviewblk,selectedPageBlock2" rendered="{!hasPrevious}" action="{!con.previous}" title="Next Page">
+                                            <apex:commandButton disabled="{!con.hasPrevious}"/>
+                                            <i class="fa fa-chevron-left"></i> 
+                                        </apex:commandLink>
+                                        {!pageNumber} of {!totalPages}
+                                        <apex:commandLink status="pleasewait01" reRender="pastInterviewblk,selectedPageBlock2" rendered="{!hasNext}" action="{!con.next}" title="Last Page">
+                                            <apex:commandButton disabled="{!con.hasNext}"/>
+                                            <i class="fa fa-chevron-right"></i> 
+                                        </apex:commandLink>
+                                        
+                                    </apex:pageblock>
+                                </div>
+                            </div>
+                            
+                        </apex:outputPanel>
+                        <!-- Other Family Confirmed Matches --> 
+                        <!-- <div class="col-sm-10 center-block">
+<div class="list-view form-vertical"> 
+<apex:outputPanel rendered="{!otherConfMatch.size>0}">
+<h2>Match with another Family </h2>
+<apex:pageblock id="Otherfamily">
+<apex:repeat id="repeatotherfamily" value="{!otherConfMatch}" var="othermatchlst">
+<div class="col-md-3 hidden-print">
+<div class="row margin-t2 margin-b4">
+<div class="item-image">
+<apex:outputText rendered="{!othermatchlst.Engagement__c != null}">
+<apex:outputLink value="/apex/apc_hf_au_pair_profile?id={!othermatchlst.Engagement__r.id}" id="linkprofinfo1">
+<apex:image styleClass="phot-pre-img"  value="{!returnURLmap[othermatchlst.Engagement__c]}" rendered="{!returnURLMap[othermatchlst.Engagement__c] != 'no-picture'}"/>
+<apex:image styleClass="item-image-male" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/male-profile-med.png')}"  rendered="{!returnURLMap[othermatchlst.Engagement__c] == 'no-picture' && (othermatchlst.Engagement__r.Gender__c == 'Male' || othermatchlst.Engagement__r.Gender__c == null)}"/>
+<apex:image styleClass="item-image-female" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/female-profile-med.png')}" rendered="{!returnURLMap[othermatchlst.Engagement__c] == 'no-picture' && othermatchlst.Engagement__r.Gender__c == 'Female'}"/>
+</apex:outputLink>
+</apex:outputText>
+</div>
+</div>  
+</div>
+</apex:repeat> 
+</apex:pageblock>
+</apex:outputPanel>
+</div>  
+</div> -->
+                        <!-- end Of Other Family Confirmed Matches --> 
+                        
+                    </apex:outputPanel>
+                    <!-- End of Current/Past Match Panel--> 
+                    
+                    <!-- Match Requested Panel-->
+                    <apex:outputPanel layout="block" rendered="{!If(ConfMatch.size > 0 && ApplicantInfoList[0].Application_Type__c!='Extension' ,true,false)}">
+                        <apex:outputPanel layout="block" rendered="{!If(ConfMatch.size> 0 && ConfMatch[0].Status__c=='Requested' && ConfMatch[0].Offer_Status__c=='Offered',true,false)}">
+                            <div class="row">
+                                <div class="col-sm-8 col-lg-6 center-block">
+                                    <h2>You Have Requested a Match</h2>
+                                </div><!-- end col -->
+                            </div><!-- end row -->
+                        </apex:outputPanel>
+                        <div class="row">
+                            <div class="col-sm-8 col-lg-6 center-block">
+                                <apex:outputPanel layout="block" rendered="{!If(ConfMatch.size> 0 &&  ConfMatch[0].Status__c=='Requested' && ConfMatch[0].Offer_Status__c=='Accepted',true,false)}">
+                                    <h2>Your Match Request Is Accepted!</h2>
+                                </apex:outputPanel>
+                                
+                                <apex:outputPanel layout="block" rendered="{!If(ConfMatch[0].Status__c=='Requested' && ConfMatch[0].Offer_Status__c=='Declined',true,false)}">
+                                    <h2>Match Request Rejected</h2>
+                                </apex:outputPanel>
+                            </div><!-- end col -->
+                        </div><!-- end row -->
+                        <apex:outputPanel layout="block" rendered="{!If(ConfMatch.size> 0,true,false)}">
+                            <div class="row">
+                                <div class="col-sm-10 col-lg-6  center-block box gray">
+                                    <div class="tcell">
+                                        <apex:outputLink styleClass="margin-r2" value="/apex/apc_hf_au_pair_profile?id={!ConfMatch[0].Engagement__r.id}" id="linkprofinfo2"> 
+                                            <apex:image styleClass="phot-pre-img" value="{!returnURLmap[ConfMatch[0].Engagement__c]}" rendered="{!returnURLMap[ConfMatch[0].Engagement__c] != 'no-picture'}"/>
+                                            <apex:image styleClass="item-image-female" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/female-profile-med.png')}"  rendered="{!returnURLMap[ConfMatch[0].Engagement__c] == 'no-picture' && (ConfMatch[0].Engagement__r.Gender__c == 'Female' || ConfMatch[0].Engagement__r.Gender__c == null)}"/>
+                                            <apex:image styleClass="item-image-male" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/male-profile-med.png')}" rendered="{!returnURLMap[ConfMatch[0].Engagement__c] == 'no-picture' && ConfMatch[0].Engagement__r.Gender__c == 'Male'}"/>
+                                        </apex:outputLink>
+                                    </div>
+                                    <div class="tcell">
+                                        <h3 class="no-margin-t">{!ConfMatch[0].Participant_Id__r.Name}</h3>
+                                        <div class="margin-b2">
+                                            <label class="control-label">Proposed Arrival Date</label>
+                                            <span>
+                                                <apex:outputText value="{0,date,MM'/'dd'/'yyyy}" >
+                                                    <apex:param value="{!ConfMatch[0].Arrival_Date__c}"/>
+                                                </apex:outputText>
+                                            </span> 
+                                        </div>
+                                        <apex:outputPanel rendered="{!If(ConfMatch.size> 0 && ConfMatch[0].Status__c=='Requested' && ConfMatch[0].Offer_Status__c=='Offered',true,false)}">
+                                            <!--<p> {!ConfMatch[0].Participant_Id__r.Name} has {!MatchRequestExpiration} hours to respond to this request </p>-->
+                                            <p> {!ConfMatch[0].Participant_Id__r.Name} has until 
+                                                <apex:outputText value="{0,date, MMMM d, yyyy h:mm a}">
+                                                    <apex:param value="{!ConfMatch[0].request_Expiration__c+offset}"/> 
+                                                </apex:outputText>
+                                                to respond to this request</p>
+                                        </apex:outputPanel> 
+                                        
+                                        <apex:outputText rendered="{!If(ConfMatch.size> 0 && ConfMatch[0].Status__c=='Requested' && ConfMatch[0].Offer_Status__c=='Accepted',true,false)}">
+                                            
+                                            <apex:outputText rendered="{!(Not(CONTAINS(ApplicantInfoList[0].PageStatus_Complete__c,'045')) || 
+                                                                       Not(CONTAINS(ApplicantInfoList[0].PageStatus_Complete__c,'009')) || 
+                                                                       ApplicantInfoList[0].Terms_Accepted__c==False) && ApplicantInfoList[0].Application_Type__c=='Orignal' }">
+                                                <div data-toggle="tooltip" title="You need to complete the remaining steps below before you can finalize your match">
+                                                    <button class="btn btn-default btn-lg disabled">Finalize Match </button>      
+                                                </div>
+                                            </apex:outputText> 
+                                        </apex:outputText>
+                                        
+                                        <apex:outputText styleClass="center-text margin-t2" rendered="{!If((CONTAINS(ApplicantInfoList[0].PageStatus_Complete__c,'045') &&
+                                                                                                      CONTAINS(ApplicantInfoList[0].PageStatus_Complete__c,'009')) && 
+                                                                                                      ApplicantInfoList[0].Terms_Accepted__c==true && ConfMatch[0].Offer_Status__c=='Accepted' && ConfMatch[0].Status__c=='Requested' && ApplicantInfoList[0].Application_Type__c=='Original',true,false)}">
+                                            <apex:outputLink id="finalize" styleClass="btn btn-primary btn-lg" value="/apex/apc_hf_match_agreement?id={!ApplicantInfoList[0].id}&mid={!ConfMatch[0].id}&uType=HostFamily" >
+                                                <apex:outputText >Finalize Match</apex:outputText>
+                                            </apex:outputLink>
+                                        </apex:outputText>
+                                        
+                                        <apex:outputText styleClass="center-text margin-t2" rendered="{!ApplicantInfoList[0].Terms_Accepted__c==true && ConfMatch[0].Offer_Status__c=='Accepted' && (ApplicantInfoList[0].Application_Type__c=='Renewal' || ApplicantInfoList[0].Application_Type__c=='Rematch')}">
+                                            <apex:outputLink id="finalizeRen" styleClass="btn btn-primary btn-lg" value="/apex/apc_hf_match_agreement?id={!ApplicantInfoList[0].id}&mid={!ConfMatch[0].id}&uType=HostFamily" >
+                                                <apex:outputText >Finalize Match</apex:outputText>
+                                            </apex:outputLink>
+                                        </apex:outputText>
+                                        
+                                        <apex:outputText styleClass="center-text margin-t2" rendered="{!ApplicantInfoList[0].Terms_Accepted__c==true && ConfMatch[0].Offer_Status__c=='Accepted' && ApplicantInfoList[0].Application_Type__c=='Extension'}">
+                                            <apex:outputLink id="finalizeExt" styleClass="btn btn-primary btn-lg" value="/apex/apc_hf_match_payment_options" >
+                                                <apex:outputText >Finalize Match</apex:outputText>
+                                            </apex:outputLink>
+                                        </apex:outputText>
+                                        
+                                    </div>
+                                </div><!-- end col -->
+                            </div><!-- end row -->
+                        </apex:outputPanel>
+                        
+                        
+                        <apex:outputPanel layout="block" rendered="{!(Not(CONTAINS(ApplicantInfoList[0].PageStatus_Complete__c,'045')) || 
+                                                                   Not(CONTAINS(ApplicantInfoList[0].PageStatus_Complete__c,'009')) || 
+                                                                   ApplicantInfoList[0].Terms_Accepted__c==False) && ApplicantInfoList[0].Application_Type__c=='Original' }">
+                            <div class="row margin-t2">
+                                <div class="col-sm-10 col-lg-6  center-block">
+                                    <h2>Before You Can Match</h2>
+                                    <p class="lead">Please complete the following steps before we can finalize your match with this au pair.</p>
+                                    <ul>
+                                        <apex:outputText rendered="{!ApplicantInfoList[0].Terms_Accepted__c==False}">
+                                            <li>Please view and sign
+                                                <apex:outputLink value="/apc_hf_app_agreements?id={!ApplicantInfoList[0]}"> <b>program terms and conditions.</b> </apex:outputLink>
+                                            </li>
+                                        </apex:outputText>
+                                        <apex:outputText rendered="{!Not(CONTAINS(ApplicantInfoList[0].PageStatus_Complete__c,'009'))}">
+                                            <li> We have not been able to contact your family reference.
+                                                <apex:outputLink value="/apc_hf_app_references?id={!ApplicantInfoList[0]}"> <b> Please provide another reference.</b> </apex:outputLink>
+                                            </li>
+                                        </apex:outputText>
+                                        <apex:outputText rendered="{!Not(CONTAINS(ApplicantInfoList[0].PageStatus_Complete__c,'045'))}">
+                                            <li>Looks like your in-home interview has not taken place. Please &nbsp;<apex:outputLink value="/apc_hf_app_interview_status?id={!ApplicantInfoList[0]}"><b>contact your area director</b></apex:outputLink> to expedite this process.</li>
+                                        </apex:outputText>
+                                    </ul>
+                                </div><!-- end col -->
+                            </div><!-- end row -->
+                        </apex:outputPanel>
+                        
+                        
+                    </apex:outputPanel>
+                    <!-- End of Match Requested Panel  -->
+                    
+                    <!-- End of Match not Requested OR Confirmed Panel  -->
+                </apex:outputPanel>
+                
+                
+                <!-- Jose B-02819: NON Requested or Confirmed status -->
+                <apex:outputPanel layout="block" rendered="{!If(MatchConf.size > 0 && MatchConf[0].Status__c =='Confirmed',true,false)}">
+                    <div class="row margin-b2">
+                        <div class="col-sm-8 center-block">
+                            <h1 class="center-text">Your Interviews</h1>
+                        </div><!--end column-->
+                    </div><!-- end row -->
+                    
+                    <div class="row">
+                        <div class="col-sm-8 center-block">
+                            <div class="box gray">
+                                <p class="lead">You cannot schedule any interviews at this time due to one of the following reasons:</p>
+                                <ul>
+                                    <li>Your application is pending</li>
+                                    <li>Your application must be renewed</li>
+                                    <li>You have requested a match</li>
+                                    <li>You are currently matched</li>
+                                    <li>You have an au pair on courtesy hold</li>
+                                </ul>
+                            </div>
+                        </div><!--end column-->
+                    </div><!-- end row -->
+                    
+                </apex:outputPanel>
+                
+                <apex:outputpanel styleClass="form-vertical" layout="block" id="modalCancelPanel">
+                 
+                 
+                 
+                 
+                 
+                    <div class="modal fade vs1" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false" data-toggle="modal">
+                        <div class="modal-dialog" >
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-sm-12 center-text">
+                                            <div class="margin-b2">
+                                                <apex:outputText rendered="{!NOt(matchSelection.Engagement__c == '')}">
+                                                    <apex:image styleClass="phot-pre-img" value="{!returnURLmap[matchSelection.Engagement__c]}" rendered="{!returnURLMap[matchSelection.Engagement__c] != 'no-picture'}"/>
+                                                    <apex:image styleClass="item-image-female" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/female-profile-med.png')}"  rendered="{!returnURLMap[matchSelection.Engagement__c] == 'no-picture' && (matchSelection.Engagement__r.Gender__c == 'Female' || matchSelection.Engagement__r.Gender__c == null)}"/>
+                                                    <apex:image styleClass="item-image-male" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/male-profile-med.png')}" rendered="{!returnURLMap[matchSelection.Engagement__c] == 'no-picture' && matchSelection.Engagement__r.Gender__c == 'Male'}"/>
+                                                </apex:outputText>
+                                            </div>
+                                            <h1 class="no-margin">Cancel Your Interview</h1>
+                                            <h3 class="no-margin"><em>with</em> {!matchSelection.Engagement__r.Account_Id__r.Name}</h3>
+                                            <hr/>
+                                        </div><!-- end col -->
+                                    </div><!-- end row -->
+                                    
+                                   
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="margin-b1">
+                                                    <apex:commandlink action="{!CancelInterview}"><b>I am still considering this au pair but we are not ready to match </b></apex:commandlink>
+                                                </div>
+                                                 <div class="margin-b1">
+                                                    <a data-dismiss="modal" data-toggle="modal" data-target="#CancelInterview2"><b>I am no longer interested in this au pair</b></a>
+                                                </div>
+                                            </div><!-- end col -->
+                                        </div><!-- end row -->
+                                   
+                                    
+                                    
+                                </div><!-- end modal body -->
+                            </div><!-- end modal content -->
+                        </div><!-- end modal dialog -->
+                    </div>  <!-- end Cancel Modal Window--> 
+                    
+                    
+                    
+                   <div class="modal vs1" id="CancelInterview2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false" data-toggle="modal">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-sm-12 center-text">
+                                            <div class="margin-b2">
+                                                <apex:outputText rendered="{!NOt(matchSelection.Engagement__c == '')}">
+                                                    <apex:image styleClass="phot-pre-img" value="{!returnURLmap[matchSelection.Engagement__c]}" rendered="{!returnURLMap[matchSelection.Engagement__c] != 'no-picture'}"/>
+                                                    <apex:image styleClass="item-image-female" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/female-profile-med.png')}"  rendered="{!returnURLMap[matchSelection.Engagement__c] == 'no-picture' && (matchSelection.Engagement__r.Gender__c == 'Female' || matchSelection.Engagement__r.Gender__c == null)}"/>
+                                                    <apex:image styleClass="item-image-male" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/male-profile-med.png')}" rendered="{!returnURLMap[matchSelection.Engagement__c] == 'no-picture' && matchSelection.Engagement__r.Gender__c == 'Male'}"/>
+                                                </apex:outputText>
+                                            </div>
+                                            <h1 class="no-margin">Cancel Your Interview</h1>
+                                            <h3 class="no-margin"><em>with</em> {!matchSelection.Engagement__r.Account_Id__r.Name}</h3>
+                                            <hr/>
+                                        </div><!-- end col -->
+                                    </div><!-- end row -->
+                                    
+                                    
+                                    <apex:pageBlock id="notInteresteBlock">
+                                      
+                                           <!--   <div class="h3">No longer interested in {!matchSelection.Engagement__r.Account_Id__r.FirstName}?</div>-->
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <div class="form-group margin-b2">
+                                                        <label class="control-label">Please tell us why you are no longer interested</label>
+                                                        <apex:inputField styleClass="form-control" value="{!matchSelection.Interview_Feedback_Options__c}" id="febckoption" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <div class="form-group margin-b2">
+                                                        <label class="control-label">Feedback <span class="info">(Optional)</span></label>
+                                                        <apex:inputTextarea styleClass="form-control" id="fedbk" value="{!matchSelection.Interview_Feedback__c}"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <apex:commandLink id="closemodel" styleClass="btn btn-primary btn-lg margin-r2" html-data-dismiss="modal" action="{!CancelInterview}" oncomplete="closeModalEdit;">
+                                                        <apex:commandButton value="Submit" id="selectbutton" />
+                                                    </apex:commandLink>
+                                                    <button type="button" styleClass="btn btn-default btn-lg" data-dismiss="modal"><span>Go Back</span></button>
+                                                </div><!-- end col -->
+                                            </div><!-- end row -->
+                                      
+                                    </apex:pageBlock>
+                                    
+                                </div><!-- end modal body -->
+                            </div><!-- end modal content -->
+                        </div><!-- end modal dialog -->
+                    </div>  <!-- end Cancel Modal Window--> 
+                  
+                    
+                    
+                    
+                    
+                    
+                    
+                </apex:outputpanel><!-- end Cancel Modal Panel-->
+                
+                
+                
+                
+                  <apex:outputpanel styleClass="form-vertical" layout="block" id="modalExpirePanel">
+                    <div class="modal fade vs1" id="myModalExp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false" data-toggle="modal">
+                        <div class="modal-dialog" >
+                            <div class="modal-content">
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-sm-12 center-text">
+                                                <div class="margin-b2">
+                                                    <apex:outputText rendered="{!NOt(expirInterview.Engagement__c == '')}">
+                                                        <apex:image styleClass="phot-pre-img " value="{!returnURLmap[expirInterview.Engagement__c]}" rendered="{!returnURLMap[expirInterview.Engagement__c] != 'no-picture'}"/>
+                                                        <apex:image styleClass="item-image-female " value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/female-profile-med.png')}"  rendered="{!returnURLMap[expirInterview.Engagement__c] == 'no-picture' && (expirInterview.Engagement__r.Gender__c == 'Female' || expirInterview.Engagement__r.Gender__c == null)}"/>
+                                                        <apex:image styleClass="item-image-male " value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/male-profile-med.png')}" rendered="{!returnURLMap[expirInterview.Engagement__c] == 'no-picture' && expirInterview.Engagement__r.Gender__c == 'Male'}"/>
+                                                    </apex:outputText>           
+                                                </div>
+                                                <h1 class="no-margin">Interview Feedback</h1>
+                                                <h3 class="no-margin-t"><em>for</em> {!expirInterview.Engagement__r.Account_Id__r.Name}</h3>
+                                                <hr/>
+                                            </div><!-- end col -->
+                                        </div><!-- end row -->
+                                        
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="margin-b1">
+                                                    <apex:commandlink action="{!extendRequest}"> <b>I am still interviewing and would like another {!InterviewExtension} hours to decide.</b>
+                                                        <apex:param name="ssid" value="{!expirInterview.id}"/>
+                                                    </apex:commandlink>
+                                                </div> 
+                                                <div class="margin-b1">
+                                                    <div>
+                                                        <apex:commandlink action="/apc_hf_match_request?id={!expirInterview.id}&engid={!expirInterview.Engagement__r.id}">
+                                                            <b>I would like request a match with this au pair.</b> 
+                                                        </apex:commandlink>
+                                                    </div>
+                                                </div>
+                                                <div class="margin-b1">
+                                                    <apex:commandlink action="{!CancelInterview}"><b>I am still considering this au pair but we are not ready to match </b></apex:commandlink>
+                                                </div>
+                                                <div class="margin-b2">
+                                                    <a  data-toggle="modal" data-target="#myModalExp2"><b>I am no longer interested in this au pair</b></a>
+                                                </div>
+                                                
+                                            </div><!-- end col -->
+                                        </div><!-- end row -->
+                                   </div>
+                            </div>
+                        </div>
+                    </div>
+                                    
+                                    
+                                    
+                                    
+                        <div class="modal fade vs1" id="myModalExp2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false" data-toggle="modal">
+                        <div class="modal-dialog" >
+                            <div class="modal-content">
+                                    <div class="modal-body">
+                                       <div class="row">
+                                            <div class="col-sm-12 center-text">
+                                                <div class="margin-b2">
+                                                    <apex:outputText rendered="{!NOt(expirInterview.Engagement__c == '')}">
+                                                        <apex:image styleClass="phot-pre-img " value="{!returnURLmap[expirInterview.Engagement__c]}" rendered="{!returnURLMap[expirInterview.Engagement__c] != 'no-picture'}"/>
+                                                        <apex:image styleClass="item-image-female " value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/female-profile-med.png')}"  rendered="{!returnURLMap[expirInterview.Engagement__c] == 'no-picture' && (expirInterview.Engagement__r.Gender__c == 'Female' || expirInterview.Engagement__r.Gender__c == null)}"/>
+                                                        <apex:image styleClass="item-image-male " value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/male-profile-med.png')}" rendered="{!returnURLMap[expirInterview.Engagement__c] == 'no-picture' && expirInterview.Engagement__r.Gender__c == 'Male'}"/>
+                                                    </apex:outputText>           
+                                                </div>
+                                                <h1 class="no-margin">Interview Feedback</h1>
+                                                <h3 class="no-margin-t"><em>for</em> {!expirInterview.Engagement__r.Account_Id__r.Name}</h3>
+                                                <hr/>
+                                            </div><!-- end col -->
+                                        </div><!-- end row -->
+                                       
+                                       
+                                        <apex:pageBlock id="notInteresteBlock2">
+                                                
+                                              <!--  <div class="h3">No longer interested in {!expirInterview.Engagement__r.Account_Id__r.FirstName}?</div>-->
+                                              
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <div class="form-group margin-b2">
+                                                            <label class="control-label">Please tell us why you are no longer interested</label>
+                                                            <apex:inputField styleClass="form-control" value="{!expirInterview.Interview_Feedback_Options__c}" id="febckoption" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <div class="form-group margin-b2">
+                                                            <label class="control-label">Feedback <span class="optional">(Optional)</span></label>
+                                                            <apex:inputTextarea styleClass="form-control" id="fedbk" value="{!expirInterview.Interview_Feedback__c}"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <apex:commandLink id="submit" styleClass="btn btn-lg btn-primary margin-r1" html-data-dismiss="modal" action="{!CancelInterview}" oncomplete="closeModalEdit;">
+                                                            <apex:commandButton value="Submit" id="submitbtn" />
+                                                        </apex:commandLink>
+                                                        <a data-dismiss="modal" class="btn btn-lg btn-default">Go Back</a>
+                                                    </div>
+                                                </div>
+                                                
+                                        </apex:pageBlock>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end Expire Modal Window--> 
+                    
+                    
+                </apex:outputpanel>
+                <!-- end Expire Modal Panel-->
+                
+                
+                
+                
+                
+                
+                
+                
+                <apex:outputpanel styleClass="form-vertical" layout="block" id="modalStepsPanel">
+                    <div class="modal fade vs1" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false" data-toggle="modal">
+                        <div class="modal-dialog" >
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-sm-10 center-block">
+                                            <h1 class="center-text">Before We Start</h1>
+                                            
+                                            <p class="lead center-text">Please complete the following steps before we can finalize your match with an au pair</p>
+                                            <hr class="margin-b3 margin-t3"/>
+                                            <ul>
+                                                <apex:outputPanel rendered="{!ApplicantInfoList[0].Terms_Accepted__c==False}">
+                                                    <li>
+                                                        Please view and sign
+                                                        <apex:outputLink value="/apc_hf_app_agreements?id={!ApplicantInfoList[0]}"> <b>program terms and conditions.</b></apex:outputLink>
+                                                    </li>
+                                                </apex:outputPanel>
+                                                <apex:outputPanel rendered="{!Not(CONTAINS(ApplicantInfoList[0].PageStatus_Complete__c,'009'))}">
+                                                    <li>
+                                                        We have not been able to contact your family reference.
+                                                        <apex:outputLink value="/apc_hf_app_references?id={!ApplicantInfoList[0]}"> <b> Please provide new ones.</b> <br/>
+                                                        </apex:outputLink>
+                                                    </li>
+                                                </apex:outputPanel>
+                                                <apex:outputPanel rendered="{!Not(CONTAINS(ApplicantInfoList[0].PageStatus_Complete__c,'045'))}">
+                                                    <li>Looks like your in-home interview has not taken place. Please &nbsp;<apex:outputLink value="/apc_hf_app_interview_status?id={!ApplicantInfoList[0]}"><b>contact your area director</b></apex:outputLink> to expedite this process.</li>
+                                                    <apex:outputPanel layout="block" rendered="{!userProfAD.User_Name__c != null}">
+                                                        <div class="center-block left-text">
+                                                            <div>
+                                                                <label>{!userProfAD.User_Name__c}</label>
+                                                            </div>
+                                                            <div>
+                                                                <em>Your Area Director </em>
+                                                            </div>
+                                                            <div>
+                                                                <label>{!userProfAD.User_Email__c}</label>
+                                                            </div>
+                                                            <div>
+                                                                {!userProfAD.User_Phone__c}
+                                                            </div> 
+                                                        </div> 
+                                                    </apex:outputPanel>
+                                                </apex:outputPanel>
+                                            </ul> 
+                                            <hr class="margin-b3 margin-t3"/>
+                                            <div class="center-text">
+                                                <apex:commandLink id="Okcontin" styleClass="btn btn-primary btn-lg margin-r2" html-data-dismiss="modal" action="/apc_hf_match_request?id={!requestid}&engid={!SelcEngIds}" oncomplete="closeModalEdit;">
+                                                    <apex:commandButton value="OK,Continue to Match Request"/>
+                                                    <!--<apex:param Name="requestId" value="{!sid}" assignTo="{!requestid}"/>-->
+                                                </apex:commandLink>
+                                                <apex:commandLink styleClass="btn btn-link btn-lg" html-data-dismiss="modal" oncomplete="closeModalEdit;" reRender="webform,viewInterview">
+                                                    <span>Go back</span>
+                                                </apex:commandLink>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end Of Steps Modal Window--> 
+                </apex:outputpanel>
+                <!-- end Of  Steps Modal Panel-->
+                
+              
+                
+            </apex:form>
+            <script>
+            var j$ = jQuery.noConflict();
+            
+            //var auxerr;
+            <apex:outputText rendered="{!expireflag}">
+                //if(auxerr=="false"){
+                //}else{
+                var j$ = jQuery.noConflict();
+            j$(window).load(function() {
+                j$('#myModalExp').modal();
+            });
+            //}
+            </apex:outputText>
+            function closeModalEdit(){
+                var auxerr= j$('.custom-error-pagelevel').attr('role');
+                //alert(auxerr);
+                if(auxerr=="alert"){
+                }else{
+                    j$('#myModal').modal('hide');
+                }
+            } 
+            
+            function callmodal(){
+                var auxerr= j$('.custom-error-pagelevel').attr('role');
+                //alert(auxerr);
+                if(auxerr=="alert"){
+                }else{
+                    j$('#myModal').modal();
+                }
+            }
+            
+            function callstepsmodal(){
+                var auxerr= j$('.custom-error-pagelevel').attr('role');
+                //alert(auxerr);
+                if(auxerr=="alert"){
+                }else{
+                    j$('#myModal2').modal();
+                }
+            }
+            
+            </script>
+        </apex:define>
+    </apex:composition>
+</apex:page>

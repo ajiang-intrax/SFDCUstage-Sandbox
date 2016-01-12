@@ -1,0 +1,101 @@
+<apex:page controller="googleGeoHelper">
+<apex:stylesheet value="{!URLFOR($Resource.intrax_themes_standard_community, '/intrax_themes_standard_community/custom.css')}" />
+<apex:pageBlock >
+	<div class="h3"><apex:outputText value="Areas"/></div>
+	<!-- areaDetailWrapperMap or wrapperList -->
+	<apex:pageBlockTable value="{!paginatedAreaIds}" var="wrap" id="AreaTable">
+		<apex:facet name="header">Areas:
+
+			<apex:form >
+			<b>SEARCH FILTERS:</b>&nbsp;&nbsp;
+			
+				<apex:outputpanel id="searcher">
+			      	<apex:outputText value="Areas:"/>&nbsp;
+			      	<apex:selectList styleClass="form-control" value="{!areas}" multiselect="false" size="1" >
+				        <apex:selectOptions value="{!areaValues}"/>
+				    </apex:selectList>
+				    &nbsp;
+				    <apex:outputText value="Area Directors:"/>&nbsp;
+				    <apex:selectList styleClass="form-control" value="{!areadirectors}" multiselect="false" size="1" >
+				        <apex:selectOptions value="{!areadirectorValues}"/>
+				    </apex:selectList>
+			    </apex:outputpanel>
+			    &nbsp;
+			    <apex:outputPanel id="SearchAction">
+			        <apex:commandbutton id="Filter" value="Filter" action="{!filterResults}" rerender="AreaTable">
+			        	<apex:Param name="resetareas" value="Resetting" assignTo="{!resetareas}"/>
+			        </apex:commandbutton>
+			        <apex:commandbutton id="Reset" value="Reset" action="{!filterResults}" rerender="AreaTable">
+			        	<apex:Param name="searchZipCode" value="" assignTo="{!searchZipCode}"/>
+			        	<apex:Param name="recordsPerPage" value="5" assignTo="{!recordsPerPage}"/>
+			        	<!--<apex:Param name="countGreaterThan" value="0" assignTo="{!countGreaterThan}"/>-->
+			        	<apex:Param name="resetareas" value="Blank" assignTo="{!resetareas}"/>
+			        	<apex:Param name="areadirectors" value="None" assignTo="{!areadirectors}"/>
+			        	<apex:Param name="startRow" value="1" assignTo="{!startRow}"/>
+	        			<apex:Param name="endRow" value="{!recordsPerPage}" assignTo="{!endRow}"/>
+			        </apex:commandbutton>
+			    </apex:outputPanel>
+			</apex:form>			
+		
+		</apex:facet>
+		<apex:column headerValue="Name of Area">
+			<apex:outputLink value="googleAreaVisualizer?id={!wrap}&type=areaVisualizer">{!areaDetailWrapperMap[wrap]['AreaName']}</apex:outputLink>
+		</apex:column>
+		<apex:column value="{!areaDetailWrapperMap[wrap].ADName}" headerValue="Area Director"/>
+		<apex:column value="{!areaDetailWrapperMap[wrap].noOfHFs}" headerValue="Number of HFs"/>
+		<apex:column value="{!areaDetailWrapperMap[wrap].noOfZips}" headerValue="Number of Zipcodes"/>
+		<apex:column value="{!areaDetailWrapperMap[wrap].RM}" headerValue="Regional Manager"/>
+		<apex:facet name="footer">
+			<apex:form >
+                <apex:outputPanel id="countStats">
+                    Total Areas: {!allAreaIds.size}, Showing ({!startRow} - 
+                    <apex:outputText rendered="{!if(endRow<=wrapperList.size,true,false)}" value="{!endRow})"/>
+                    <apex:outputText rendered="{!if(endRow>wrapperList.size,true,false)}" value="{!wrapperList.size})"/>
+                </apex:outputPanel>                
+				Records per page:&nbsp; <apex:inputText id="recPerPage" value="{!recordsPerPage}"/>
+			    &nbsp;
+			    <apex:outputPanel id="resetRecordsPerPage">
+			        <apex:commandbutton id="resetRecPerPage" value="Update" action="{!resetAndFilter}" rerender="AreaTable,paginationButtonBlock,countBlock">
+			        	<apex:Param name="resetareas" value="Resetting" assignTo="{!resetareas}"/>
+			        	<apex:Param name="startRow" value="1" assignTo="{!startRow}"/>
+			        </apex:commandbutton>
+			    </apex:outputPanel>
+			</apex:form>
+		</apex:facet>		
+	</apex:pageBlockTable>	
+
+	<apex:form id="paginationButtonBlock">
+		<apex:outputpanel id="reversePager" rendered="{!if(wrapperList.size>recordsPerPage && startRow>=recordsPerPage,true,false)}">
+			<apex:commandbutton id="PreviousSet" value="Previous" action="{!filterResults}" rerender="AreaTable,countBlock,paginationButtonBlock">
+	        	<apex:Param name="startRow" value="{!startRow-recordsPerPage}" assignTo="{!startRow}"/>
+	        	<apex:Param name="endRow" value="{!endRow-recordsPerPage}" assignTo="{!endRow}"/>
+	        	<apex:variable var="count" value="{!1}"/>
+	        </apex:commandbutton>
+		</apex:outputpanel>		
+		<apex:outputpanel id="forwardPager" rendered="{!if(wrapperList.size>recordsPerPage && endRow<wrapperList.size,true,false)}">
+			<apex:commandbutton id="NextSet" value="Next" action="{!filterResults}" rerender="AreaTable,countBlock,paginationButtonBlock">
+	        	<apex:Param name="startRow" value="{!startRow+recordsPerPage}" assignTo="{!startRow}"/>
+	        	<apex:Param name="endRow" value="{!endRow+recordsPerPage}" assignTo="{!endRow}"/>
+	        	<apex:variable var="count" value="{!1}"/>
+	        </apex:commandbutton>
+		</apex:outputpanel>
+		
+		<apex:outputpanel id="pageNumberBlock">
+		<b>Pages:</b>&nbsp;
+			<apex:variable var="recCount" value="{!1}"/>
+			<apex:variable var="pageCount" value="{!1}"/>
+			<apex:repeat value="{!paginationBlockArea}" var="aPage">
+				<apex:outputText value="{!aPage.pageNum}" rendered="{!if(startRow==aPage.startRow,true,false)}"/>
+				<apex:commandLink action="{!filterResults}" rendered="{!if(startRow!=aPage.startRow,true,false)}" rerender="AreaTable,countBlock,paginationButtonBlock">
+					{!aPage.pageNum}
+					<apex:Param name="startRow" value="{!aPage.startRow}" assignTo="{!startRow}"/>
+		        	<apex:Param name="endRow" value="{!aPage.endRow}" assignTo="{!endRow}"/>
+				</apex:commandLink>
+				&nbsp;&nbsp;
+			</apex:repeat>
+		</apex:outputpanel>
+	</apex:form>	
+	
+</apex:pageBlock>
+
+</apex:page>

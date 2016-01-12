@@ -1,0 +1,973 @@
+<apex:page controller="apc_portal_controller" docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardStylesheets="false" showHeader="false" title="View Au Pairs" id="view_aupairs">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+    
+    <apex:includeScript value="{!URLFOR($Resource.module_videoJs, '/videojs/video.min.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.module_videoJs, '/videojs/video-js.css')}"/>
+    <script src="//www.google.com/jsapi"></script>
+
+      <apex:form >
+      <div id="profile-list" class="vs1">
+      <!-- Jose B-02819: NON Requested or Confirmed Match status
+            Updated by D-01860 - New condition:
+            - the family has at least one match record AND 
+            - Match status is either Confirmed  OR (status is requested AND offer is not declined)
+      <apex:outputPanel layout="block" rendered="{!If(MatchConf.size == 0 || (MatchConf.size > 0 && (MatchConf[0].Status__c !='Requested' && MatchConf[0].Status__c !='Confirmed')),true,false)}">       
+      -->
+      <!--D-02016 show if rematchapp exists for match break case-->
+            
+      <apex:outputPanel layout="block" rendered="{!(mySearch.myApp.Application_Type__c == 'Original' ||  ReMatchAppExists) && ((AllMatches.size>0 && AllMatches[0].Status__c=='Withdrawn') || AllMatches.size==0)}">
+      <apex:outputPanel layout="block">
+      <apex:actionFunction name="applyFilter" action="{!mySearch.applyFilter}" status="pleasewait01" rerender="resultsBlock, appliedFiltersBlock, selectedPageBlock, selectedPageBlock2, searchFilters" onComplete="multiselect(); selectpicker();">                                
+            <apex:param name="f_object" value="" assignTo="{!mySearch.f_object}"/>
+            <apex:param name="f_field" value="" assignTo="{!mySearch.f_field}"/>
+            <apex:param name="f_label" value="" assignTo="{!mySearch.f_label}"/>
+        </apex:actionFunction>
+        <apex:actionFunction name="applySavedSearch" action="{!mySearch.applySavedSearch}" status="pleasewait01" rerender="resultsBlock, appliedFiltersBlock, selectedPageBlock, selectedPageBlock2, searchFilters" onComplete="multiselect(); selectpicker();"/>
+     
+      <div class="row">
+        <div class="col-md-3">
+        <div class="row">
+      <div class="col-sm-10">
+      <h3 class="inline-block no-margin">Search Filters</h3>
+          <apex:commandLink styleClass="pull-right" action="{!mySearch.clearAllFiltersCommand}" status="pleasewait01" rerender="searchFilters, resultsBlock, appliedFiltersBlock, selectedPageBlock, selectedPageBlock2" onComplete="multiselect(); selectpicker();"> 
+            <b class="sm">Reset All</b> 
+          </apex:commandLink>
+         
+          <apex:pageBlock id="searchFilters">
+            <div class="row">
+              <div class="col-md-12">
+             
+                <div class="form-vertical filter-list vs1">
+                
+                    <hr class="margin-b1"/>
+                    
+                    <div class="save-suggest-filters">    
+                    <div>
+                        <!-- <apex:commandLink action="{!mySearch.showOnlyFavorite}" id="showOnlyFavorite" rendered="{!NOT(ISNULL(mySearch.NationalitySelected)) && mySearch.NationalitySelected.size > 0}" rerender="resultsBlock, appliedFiltersBlock, searchFilters, selectedPageBlock, selectedPageBlock2">
+                            Show Saved Au Pairs
+                        </apex:commandLink>-->
+                        <apex:commandLink styleClass="btn btn-link btn-lg gray no-padding margin-t1 margin-b1" action="{!mySearch.showOnlyFavorite}" id="showOnlyFavorite" status="pleasewait01" rerender="resultsBlock, appliedFiltersBlock, searchFilters, selectedPageBlock, selectedPageBlock2" onComplete="multiselect(); selectpicker();" rendered="{!NOT(mySearch.onlyFavoriteSelected == 'true')}">
+                            <apex:param name="showOnlyFavorite" value="true" assignTo="{!mySearch.onlyFavoriteSelected}"/>
+                            <i style="width:30px;" class="fa fa-heart-o"></i> <span>Show My Favorites</span>
+                        </apex:commandLink>
+                        <apex:commandLink styleClass="btn btn-link btn-lg gray no-padding margin-t1 margin-b1" action="{!mySearch.showOnlyFavorite}" id="notOnlyFavorite" status="pleasewait01" rerender="resultsBlock, appliedFiltersBlock, searchFilters, selectedPageBlock, selectedPageBlock2" onComplete="multiselect(); selectpicker();" rendered="{!mySearch.onlyFavoriteSelected == 'true'}">
+                            <apex:param name="showOnlyFavorite" value="false" assignTo="{!mySearch.onlyFavoriteSelected}"/>
+                            <i style="width:30px;" class="fa fa-heart selected"></i> <span>Hide My Favorites</span>
+                        </apex:commandLink>
+                        <!--<apex:inputCheckBox styleClass="checkbox" value="{!mySearch.FavoriteSelected}" id="FavoriteFilter" onchange="applyFilter();"/>Include only my favorite records-->                       
+                    </div>
+                    <div>
+                        <apex:commandLink styleClass="btn btn-link btn-lg gray no-padding margin-t1 margin-b1" action="{!mySearch.showOnlySuggested}" id="showOnlySuggested" status="pleasewait01" rerender="resultsBlock, appliedFiltersBlock, searchFilters, selectedPageBlock, selectedPageBlock2" onComplete="multiselect(); selectpicker();" rendered="{!NOT(mySearch.onlySuggestedSelected == 'true')}">
+                            <apex:param name="showOnlySuggested" value="true" assignTo="{!mySearch.onlySuggestedSelected}"/>
+                            <i style="width:30px;" class="fa fa-bookmark-o"></i> <span>Show Suggested Au Pairs</span>
+                        </apex:commandLink> 
+                        <apex:commandLink styleClass="btn btn-link btn-lg gray no-padding margin-t1 margin-b1" action="{!mySearch.showOnlySuggested}" id="notOnlySuggested" status="pleasewait01" rerender="resultsBlock, appliedFiltersBlock, searchFilters, selectedPageBlock, selectedPageBlock2" onComplete="multiselect(); selectpicker();" rendered="{!mySearch.onlySuggestedSelected == 'true'}">
+                            <apex:param name="showOnlySuggested" value="false" assignTo="{!mySearch.onlySuggestedSelected}"/>
+                            <i style="width:30px;" class="fa fa-bookmark selected"></i> <span>Hide Suggested Au Pairs</span>
+                        </apex:commandLink> 
+                    </div>
+                    </div>
+                    <div class="filter vs2 margin-t1">
+                        <label>Your Saved Searches</label>
+                       <apex:selectList id="savedSearchList" value="{!mySearch.savedSearchSelected}" onchange="applySavedSearch()" size="1" multiselect="false" html-data-size="5" styleClass="selectpicker">
+                            <apex:selectOption itemValue="" itemLabel="-- Select --"/>
+                            <apex:selectOptions value="{!mySearch.savedSearchNames}"/>
+                        </apex:selectList> 
+                             
+                     </div>   
+                    <hr class="margin-t1"/>
+                  <div class="filter vs2">
+                    <label>Preferred Arrival</label>
+                    <apex:selectList id="USArrivalFilter" value="{!mySearch.ArrivalSelected}" onchange="applyFilter('Engagement__c', 'Earliest_Match_Date__c', 'Preferred Arrival')" styleClass="selectpicker filter-arrivaldate" size="1" multiselect="false" html-data-size="5">
+                        <apex:selectOption itemValue="Any" itemLabel="Any"/>
+                        <apex:selectOptions value="{!mySearch.ArrivalDates}"/>
+                    </apex:selectList>
+                  </div>
+                  <!--  end filter -->
+                  <div class="filter vs2">
+                    <label>Nationality 
+                        <apex:actionRegion >                            
+                            <apex:commandLink styleClass="reset-link" value="(Reset)" action="{!mySearch.removeFilter}" status="pleasewait01" onComplete="multiselect(); selectpicker();" rendered="{!NOT(ISNULL(mySearch.NationalitySelected)) && mySearch.NationalitySelected.size > 0}" rerender="resultsBlock, appliedFiltersBlock, searchFilters, selectedPageBlock, selectedPageBlock2">
+                                <apex:param name="f_object" value="Engagement__c" assignTo="{!mySearch.f_object}"/>
+                                <apex:param name="f_label" value="Nationality" assignTo="{!mySearch.f_label}"/> 
+                                <apex:param name="f_value" value="Any" assignTo="{!mySearch.f_value}"/>                         
+                            </apex:commandLink>
+                        </apex:actionRegion>
+                    </label>
+                    <apex:selectList id="Nationality" value="{!mySearch.nationalitySelected}" onchange="applyFilter('Engagement__c', 'Nationality__c', 'Nationality')" styleClass="form-control multiselect" html-multiple="multiple" multiselect="true">
+                        <apex:selectOptions value="{!mySearch.NationalityOptions}"/>
+                    </apex:selectList>
+                  </div>
+                 
+                  <div class="filter vs2">
+                    <label>Language 
+                        <i class="infobtn fa fa-question-circle" data-content="All of our au pairs speak conversational English. You can filter by additional languages below." data-placement="auto top" data-toggle="popover" data-original-title="" title=""></i> 
+                        <apex:actionRegion >                            
+                            <apex:commandLink styleClass="reset-link" value="(Reset)" action="{!mySearch.removeFilter}" status="pleasewait01" onComplete="multiselect(); selectpicker();" rendered="{!NOT(ISNULL(mySearch.languageSelected)) && mySearch.languageSelected.size > 0}" rerender="resultsBlock, appliedFiltersBlock, searchFilters, selectedPageBlock, selectedPageBlock2">
+                                <apex:param name="f_object" value="Engagement__c" assignTo="{!mySearch.f_object}"/>
+                                <apex:param name="f_label" value="Language Spoken" assignTo="{!mySearch.f_label}"/> 
+                                <apex:param name="f_value" value="Any" assignTo="{!mySearch.f_value}"/>                         
+                            </apex:commandLink>
+                        </apex:actionRegion>
+                    </label>
+                    <apex:selectList value="{!mySearch.languageSelected}" id="LanguageFilter" onchange="applyFilter('Engagement__c','Language_1__c', 'Language Spoken')" styleClass="form-control multiselect" html-multiple="multiple" multiselect="true">
+                        <apex:selectOptions value="{!mySearch.LanguageOptions}" />                              
+                    </apex:selectList>                     
+                  </div>
+                  
+                  <div id="exp-with-children" class="filter vs2">
+                    <label>Experience with Ages 
+                        <apex:actionRegion >                            
+                            <apex:commandLink styleClass="reset-link" value="(Reset)" action="{!mySearch.removeFilter}" status="pleasewait01" onComplete="multiselect(); selectpicker();" rendered="{!NOT(ISNULL(mySearch.ExperienceSelected)) && mySearch.ExperienceSelected.size > 0}" rerender="resultsBlock, appliedFiltersBlock, searchFilters, selectedPageBlock, selectedPageBlock2">
+                                <apex:param name="f_object" value="Experience__c" assignTo="{!mySearch.f_object}"/>
+                                <apex:param name="f_label" value="Experience with Ages" assignTo="{!mySearch.f_label}"/>    
+                                <apex:param name="f_value" value="Any" assignTo="{!mySearch.f_value}"/>                         
+                            </apex:commandLink>
+                        </apex:actionRegion>
+                    </label>
+                    <apex:selectList value="{!mySearch.ExperienceSelected}" id="ExperienceFilter" onchange="applyFilter('Experience__c', 'Children_Ages__c', 'Experience with Ages')" styleClass="form-control multiselect" html-multiple="multiple" multiselect="true">
+                        <apex:selectOptions value="{!mySearch.ExperienceOptions}" />                                
+                    </apex:selectList>  
+                     
+                  </div>
+                  
+                  
+                  <div class="filter vs2 margin-b1">
+                        <apex:inputCheckBox styleClass="checkbox" value="{!mySearch.DrivingLicenseSelected}" id="driversLicenseFilter" onchange="applyFilter('Engagement__c', 'Drivers_Licence_Indicated__c', 'Drivers Only');"/>Drivers Only <i class=" infobtn fa fa-question-circle" data-placement="auto right" data-toggle="popover" data-content="There is a transition period for the au pair to learn the specific driving rules and regulations in your state and it is the host family's responsibility to help the au pair become acclimated to the vehicle, roads and car safety rules. Driving practice with the au pair is encouraged."></i>
+                    
+                  </div>
+                  <div class="filter vs2">
+                        <apex:inputCheckBox styleClass="checkbox" value="{!mySearch.SwimmersSelected}" id="SwimmersFilter" onchange="applyFilter('Engagement__c', 'Swimming_Indicated__c', 'Swimmers Only')"/>Swimmers Only
+                  </div>
+                                   
+                  <div class="filter vs2">
+                    <label>Au Pair's Current Location</label>
+                    <apex:selectList value="{!mySearch.currentLocationSelected}" id="currentLocationFilter" onchange="applyFilter('Engagement__c', 'In_Country__c', 'Au Pair\'s Current Location')" styleClass="selectpicker" multiselect="false" size="1">
+                        <apex:selectOption html-data-id="anyoption" itemLabel="Any" itemValue="Any"/>
+                        <apex:selectOption html-data-id="alreadyCountryOption" itemLabel="Already in the country" itemValue="Already in the country"/>
+                        <apex:selectOption html-data-id="alreadyCountryOption" itemLabel="Overseas" itemValue="Overseas"/>
+                        <!-- <apex:selectOptions value="{!mySearch.experienceTypeOptions}" />   -->                         
+                    </apex:selectList> 
+                </div>
+                  
+                    <div class="filter vs2">
+                        <label>Au Pair's Training</label>
+                        <apex:selectList value="{!mySearch.trainingSelected}" id="trainingFilter" onchange="applyFilter('Engagement__c', 'Infant_Specialized_Circulated__c', 'Au Pair\'s Training')" styleClass="selectpicker" multiselect="false">
+                            <apex:selectOption html-data-id="anyoption" itemValue="Any" itemLabel="Any"/>
+                            <apex:selectOption itemValue="Standard Training" itemLabel="Standard Training"/>
+                            <apex:selectOption itemValue="Infant Specialized" itemLabel="Infant Specialized"/>                                                      
+                        </apex:selectList>                      
+                    </div>
+                  
+                    <div class="filter vs2" id="ap-min-age">
+                        <label>Au Pair's Minimum Age</label>
+                        <apex:selectList value="{!mySearch.ageSelected}" id="AgeFilter" onchange="applyFilter('Engagement__c', 'Age_At_Program_Start__c', 'Minimum Age')" styleClass="selectpicker" multiselect="false">
+                            <apex:selectOption itemValue="Any" itemLabel="Any"/>
+                            <apex:selectOptions value="{!mySearch.ageOptions}" />                           
+                        </apex:selectList>
+                    </div>
+                    <!-- DGC: Commented out as per B-03414
+                    <div class="filter vs2">
+                        <label>Hobbies and Interests 
+                            <apex:actionRegion >                            
+                                <apex:commandLink styleClass="reset-link" value="(Reset)" action="{!mySearch.removeFilter}" status="pleasewait01" onComplete="multiselect(); selectpicker();" rendered="{!NOT(ISNULL(mySearch.hobbiesSelected)) && mySearch.hobbiesSelected.size > 0}" rerender="resultsBlock, appliedFiltersBlock, searchFilters, selectedPageBlock, selectedPageBlock2">
+                                    <apex:param name="f_object" value="Engagement__c" assignTo="{!mySearch.f_object}"/>
+                                    <apex:param name="f_label" value="Hobbies and Interests" assignTo="{!mySearch.f_label}"/>   
+                                    <apex:param name="f_value" value="Any" assignTo="{!mySearch.f_value}"/>                         
+                                </apex:commandLink>
+                            </apex:actionRegion>
+                        </label>
+                        <apex:selectList value="{!mySearch.hobbiesSelected}" id="HobbiesFilter" onchange="applyFilter('Engagement__c','Interest_Sports__c', 'Hobbies and Interests')" styleClass="form-control multiselect" html-multiple="multiple" multiselect="true">
+                            <apex:selectOptions value="{!mySearch.hobbiesOptions}" />                           
+                        </apex:selectList>
+                    </div>
+                  	-->
+                    <div class="filter vs2">
+                        <label>Diet 
+                            <apex:actionRegion >                            
+                                <apex:commandLink styleClass="reset-link" value="(Reset)" action="{!mySearch.removeFilter}" status="pleasewait01" onComplete="multiselect(); selectpicker();" rendered="{!NOT(ISNULL(mySearch.dietSelected)) && mySearch.dietSelected.size > 0}" rerender="resultsBlock, appliedFiltersBlock, searchFilters, selectedPageBlock, selectedPageBlock2">
+                                    <apex:param name="f_object" value="Engagement__c" assignTo="{!mySearch.f_object}"/>
+                                    <apex:param name="f_label" value="Special Diet" assignTo="{!mySearch.f_label}"/>    
+                                    <apex:param name="f_value" value="Any" assignTo="{!mySearch.f_value}"/>                         
+                                </apex:commandLink>
+                            </apex:actionRegion>
+                        </label>
+                        <apex:selectList value="{!mySearch.DietSelected}" id="DietFilter" onchange="applyFilter('Engagement__c','Special_Diet__c', 'Special Diet')" styleClass="form-control multiselect" html-multiple="multiple" multiselect="true">
+                            <apex:selectOptions value="{!mySearch.DietOptions}" />                          
+                        </apex:selectList>
+                    </div>                  
+                  
+                    <div class="filter vs2">
+                        <label>Gender</label>
+                        <apex:selectList value="{!mySearch.genderSelected}" id="genderFilter" onchange="applyFilter('Engagement__c', 'Gender__c', 'Gender')" styleClass="selectpicker" multiselect="false">
+                            <apex:selectOption itemValue="Any" itemLabel="Any"/>
+                            <apex:selectOption itemValue="Male" itemLabel="Male"/>
+                            <apex:selectOption itemValue="Female" itemLabel="Female"/>                      
+                        </apex:selectList>
+                    </div>
+                                    
+                    <div class="filter vs2">
+                        <div class="tcell">
+                            <apex:inputCheckBox styleClass="checkbox" value="{!mySearch.DismissedSelected}" id="DismissedFilter" onchange="applyFilter();"/>
+                        </div>  
+                        <div class="tcell">
+                            Display previously removed au pairs
+                        </div>
+                    </div>
+                  
+                </div>
+                <!--  end form vertical --> 
+              </div>
+              <!--  end column --> 
+            </div>
+            <!--  end row --> 
+          </apex:pageBlock>
+        </div>
+      </div>
+      </div><!--  end row -->
+        
+          
+        <div class="col-md-9">
+          <h1 class="no-margin-t">Available Au Pairs</h1>    
+                  
+    <!-- Commented out as per B-03221
+    <div class="alert alert-warning"><b class="sm">Interviewing au pairs? Call 800.428.7247 and dial 0 to get connected for FREE! Monday-Friday. 5am-5:30pm PST.</b></div>
+    
+    <div class="alert alert-warning"><b class="sm">Interviewing au pairs? Call 800.428.7247 and dial 0 to get connected for FREE! Monday-Friday. 5am-5:30pm PST.</b></div>
+    
+    <!-- JOSE B-03139 Display Match Request Deadline messages in HF and PT portals (Match Deadlines - B)     
+    <c:block_portal_msg_early_match APCArrivalDates="{!mySearch.APCArrivalDates}"/>
+    
+    <apex:outputPanel layout="block" rendered="{!MatchConfOld != null && MatchConfOld.SIZE > 0 }">
+    <c:block_portal_msg_match_deadline PreviousMatch="{!MatchConfOld}"/>
+    </apex:outputPanel>
+    
+    <!-- END JOSE B-03139 
+    -->              
+          <apex:pageBlock id="appliedFiltersBlock">                 
+                    <apex:outputPanel layout="block" rendered="{!NOT(mySearch.isMyFiltersEmpty)}">
+                    <div class="applied-filter-wrapper clearfix margin-t2 margin-b2">
+                        <apex:repeat value="{!mySearch.myfilters}" var="filter_obj">                                            
+                            <apex:repeat value="{!mySearch.myfilters[filter_obj]}"  var="filter_values">
+                                <div class="applied-filter-category">
+                                    {!filter_values}
+                                </div>                  
+                                <apex:repeat value="{!mySearch.myfilters[filter_obj][filter_values]}" var="filter">
+                                    <div class="applied-filter">
+                                        <apex:commandLink action="{!mySearch.removeFilter}"  status="pleasewait01" onComplete="multiselect(); selectpicker();" rerender="resultsBlock, appliedFiltersBlock, searchFilters, selectedPageBlock, selectedPageBlock2">
+                                            <apex:param name="f_object" value="{!filter_obj}" assignTo="{!mySearch.f_object}"/>
+                                            <apex:param name="f_label" value="{!filter_values}" assignTo="{!mySearch.f_label}"/>    
+                                            <apex:param name="f_value" value="{!filter}" assignTo="{!mySearch.f_value}"/>                                                                                                   
+                                            <i class="fa fa-times-circle"></i>
+                                        </apex:commandLink>
+                                        <span>
+                                            <apex:outputText value="{!IF(filter == 'true', 'Yes', 'No')}" rendered="{!OR(filter == 'true', filter == 'false')}"/>
+                                            <apex:outputText value="{!filter}" rendered="{!NOT(OR(filter == 'true', filter == 'false'))}"/>
+                                        </span>
+                                    </div>
+                                </apex:repeat>
+                            </apex:repeat>                                      
+                        </apex:repeat>
+                        
+                       
+                         <span id="savePanel1">  
+                            <apex:outputPanel layout=" block" rendered="{!NOT(mySearch.isAlreadySavedSearch)}" >             
+                                <a class="" href="" onclick="showPanel('savePanel2');">
+                                    <b class="sm nowrap">Save This Search</b>
+                                </a>
+                            </apex:outputPanel>
+                         </span>    
+                                              
+                       
+                          <div class="vmiddle inline-block">
+                            <div class="input-group mxwidth-200" id="savePanel2" style="display: none">
+                              
+                              <apex:inputText html-placeholder="Name Your Search" styleClass="form-control" id="searchName" value="{!mySearch.saveSearchName}"/>
+                             
+                             <span class="input-group-btn">
+                              <apex:commandLink styleClass="btn btn-default" action="{!mySearch.saveSearch}" onclick="showPanel('savePanel1');" onComplete="multiselect(); selectpicker();" rerender="saveQueryBlock, searchFilters, appliedFiltersBlock" status="pleasewait01">
+                                <apex:commandButton value=""/>
+                                Save
+                                </apex:commandLink>
+                              </span>
+                        </div><!--  end input group -->
+                        </div>
+                     
+                            </div>
+                    </apex:outputPanel>
+           
+          </apex:pageBlock>
+          <apex:actionStatus startStyleClass="feedback-st vs2"  id="pleasewait01">
+            <apex:facet name="start">
+              <i class="fa fa-refresh fa-spin"></i>
+              <div>Loading. Please wait...</div>
+            </apex:facet>
+          </apex:actionStatus>          
+          <apex:pageBlock id="resultsBlock">
+            <apex:outputPanel styleClass="gray box" layout="block" rendered="{!mySearch.wrappers.SIZE == 0}"> 
+                We're sorry, no one matched your specific search criteria. 
+                Though there are no au pairs that meet your search criteria at the moment, we add new au pairs every day! 
+                Call now and speak with us about your childcare needs or try searching again. </apex:outputPanel>
+               
+            <apex:outputPanel layout="block" rendered="{!mySearch.wrappers.SIZE > 0}">
+
+              
+              <div class="sort-container vs1 margin-b2 form-vertical clearfix">
+               
+               <apex:outputPanel layout="block" styleClass="sort vs1 margin-t1" rendered="{!mySearch.wrappers.SIZE > 0}">
+                <label>Showing {!(mySearch.results.pageNumber * mySearch.pageSize)+1-mySearch.pageSize}-{!IF((mySearch.results.pageNumber * mySearch.pageSize) > mySearch.totalRecords, mySearch.totalRecords,(mySearch.results.pageNumber * mySearch.pageSize))} of {!mySearch.totalRecords} results</label>
+              </apex:outputPanel>
+
+                <div class="sort vs1 paginate pull-right">
+                    <apex:pageblock id="selectedPageBlock">
+                      <apex:commandLink status="pleasewait01" reRender="resultsBlock, selectedPageBlock, selectedPageBlock2, appliedFiltersBlock"  action="{!mySearch.previousPage}" title="Next Page">
+                        <apex:commandButton disabled="{!!mySearch.results.hasPrevious}"/>
+                        <i class="fa fa-chevron-left"></i> 
+                     </apex:commandLink>
+                             <apex:SelectList value="{!mySearch.pageNumberSelected}" StyleClass="form-control" size="1">
+                              <apex:selectOptions value="{!mySearch.pageNumbers}"/>
+                              <apex:actionSupport event="onchange" action="{!mySearch.setPageNumber}" rerender="selectedPageBlock, selectedPageBlock2, resultsBlock, appliedFiltersBlock" status="pleasewait01"/>
+                            </apex:SelectList>
+                      of {!mySearch.totalPages}
+                      <apex:commandLink status="pleasewait01" reRender="resultsBlock, selectedPageBlock, selectedPageBlock2, appliedFiltersBlock"  action="{!mySearch.nextPage}" title="Last Page">
+                        <apex:commandButton disabled="{!mySearch.results.hasNext}"/>
+                        <i class="fa fa-chevron-right"></i> </apex:commandLink>
+                    </apex:pageblock>
+                  </div>
+                 <div class="sort vs1 pull-right">
+                    Sort By&nbsp;
+                  <apex:selectList value="{!mySearch.sortingSelected}" onchange="{applyFilter();}" StyleClass="form-control" size="1">
+                    <apex:selectOptions value="{!mySearch.sortingOptions}"/>
+                  </apex:selectList>
+                
+                </div>
+              </div>
+              <!--  end list control --> 
+              
+              <!-- <apex:actionStatus startStyleClass="feedback-st" startText="Loading. Please wait..." id="pleasewait01"/>-->
+              
+                
+              <apex:pageBlock id="compareBlock">
+              
+                <apex:outputPanel layout="block" >
+                  <div class="row compare-container vs1">
+                    <div class="col-sm-12">
+                      <apex:outputPanel styleClass="compare-msg margin-r2" layout="block" rendered="{!mySearch.searchList.size < 2}"><i class="fa fa-arrow-down"></i> Select au pairs to compare...</apex:outputPanel>
+                    
+                      <apex:commandlink styleClass="compare-trigger margin-r2" status="onsubmit" oncomplete="popModalCompare();" rendered="{!mySearch.searchList.size > 1}"> <span>Compare Au Pairs</span> </apex:commandlink>
+                      <apex:repeat value="{!mySearch.searchList}" var="comp">
+                        <div class="compare-item">
+                          <!-- <apex:image value="{!mySearch.returnURLMap[comp.eng.Id]}" /> -->
+                            <!-- <apex:image value="{!mySearch.returnURLMap[comp.eng.Id]}" rendered="{!mySearch.returnURLMap[comp.eng.Id] != 'no-picture'}"/>
+                            <apex:image value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/male-profile-med.png')}"  rendered="{!mySearch.returnURLMap[comp.eng.Id] == 'no-picture' && (comp.eng.Gender__c == 'Male'||comp.eng.Gender__c==null)}"/>
+                            <apex:image value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/female-profile-med.png')}"  rendered="{!mySearch.returnURLMap[comp.eng.Id] == 'no-picture' && comp.eng.Gender__c == 'Female'}"/>
+                          -->
+                          <apex:image value="{!mySearch.returnIPUURLmap[comp.eng.Id]}" rendered="{!mySearch.returnIPUURLmap[comp.eng.Id] != 'no-picture'}"/>
+                            <apex:image value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/male-profile-med.png')}"  rendered="{!mySearch.returnIPUURLmap[comp.eng.Id] == 'no-picture' && (comp.eng.Gender__c == 'Male'||comp.eng.Gender__c==null)}"/>
+                            <apex:image value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/female-profile-med.png')}"  rendered="{!mySearch.returnIPUURLmap[comp.eng.Id] == 'no-picture' && comp.eng.Gender__c == 'Female'}"/>
+                          
+                          <apex:commandLink styleClass="closebtn" action="{!mySearch.removeElementFromWrapper}" rerender="compareBlock, modalblock, resultsBlock" status="pleasewait01">
+                            <apex:param name="recordId" value="{!comp.eng.Id}"/>
+                            <span class="fa-stack fa-lg "> <i class="fa fa-circle fa-stack-2x"></i> <i class="fa fa-times fa-stack-1x fa-inverse"></i> </span> </apex:commandLink>
+                        </div>
+                      </apex:repeat>
+                    </div>
+                    <!--  end col --> 
+                  </div>
+                  <!--  end row --> 
+                </apex:outputPanel>
+              </apex:pageBlock>
+              
+              <div id="view-au-pairs" class="form-vertical">
+                <apex:actionFunction name="getParticipantPhotoList" action="{!mySearch.getParticipantPhotoList}" rerender=""/>
+                <!-- <apex:actionStatus startStyleClass="feedback-st vs2"  id="pleasewait01">
+                  <apex:facet name="start">
+                    <i class="fa fa-refresh fa-spin"></i>
+                    <div>Loading. Please wait...</div>
+                  </apex:facet>
+                </apex:actionStatus>-->
+                <apex:repeat value="{!mySearch.wrappers}" var="pt">
+
+                  <div class="item">
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <apex:actionRegion >
+                          <apex:inputcheckbox styleClass="checkbox compare-checkbox" value="{!pt.checked}">
+                            <apex:actionSupport event="onchange" action="{!mySearch.buildWrapper}" rerender="compareBlock, modalblock" status="pleasewait01">
+                              <apex:param name="recordId" value="{!pt.eng.Id}"/>                              
+                            </apex:actionSupport>
+                          </apex:inputcheckbox>
+                        </apex:actionRegion>
+                        <apex:outputPanel layout="block" styleClass="suggested-profile" rendered="{!mySearch.isSuggestedId[pt.eng.Id] == true}"><span data-toggle="tooltip" title="This au pair has been suggested based on your application preferences.">SUGGESTED</span></apex:outputPanel>
+                     
+                        <div class="item-image">
+                                                  
+                              <apex:outputLink id="saveVisit1" value="/apex/apc_hf_au_pair_profile?Id={!pt.eng.Id}">
+                                <apex:image styleClass="item-image-real" value="{!mySearch.returnIPUURLmap[pt.eng.Id]}" rendered="{!mySearch.returnIPUURLmap[pt.eng.Id] != 'no-picture'}"/>
+                                <apex:image styleClass="item-image-male" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/male-profile-med.png')}"  rendered="{!mySearch.returnIPUURLmap[pt.eng.Id] == 'no-picture' && (pt.eng.Gender__c == 'Male' || pt.eng.Gender__c == null)}"/>
+                                <apex:image styleClass="item-image-female" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/female-profile-med.png')}"  rendered="{!mySearch.returnIPUURLmap[pt.eng.Id] == 'no-picture' && pt.eng.Gender__c == 'Female'}"/>
+                              </apex:outputLink>
+                              <!--                    
+                              <apex:commandLink action="{!MySearch.saveVisit}" id="saveVisit1">   
+                                <apex:param name="recordId" value="{!pt.eng.Id}"/>                       
+                                <apex:image styleClass="item-image-real" value="{!mySearch.returnURLMap[pt.eng.Id]}" rendered="{!mySearch.returnURLMap[pt.eng.Id] != 'no-picture'}"/>
+                                <apex:image styleClass="item-image-male" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/male-profile-med.png')}"  rendered="{!mySearch.returnURLMap[pt.eng.Id] == 'no-picture' && (pt.eng.Gender__c == 'Male' || pt.eng.Gender__c == null)}"/>
+                                <apex:image styleClass="item-image-female" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/female-profile-med.png')}"  rendered="{!mySearch.returnURLMap[pt.eng.Id] == 'no-picture' && pt.eng.Gender__c == 'Female'}"/>
+                              </apex:commandLink>
+                            -->
+
+                          <div class="media-actions">
+                          <apex:actionRegion >
+	                          <apex:commandLink value="" action="{!mySearch.getParticipantPhotoList}" rerender="appPhotosBlock2" rendered="{!mySearch.numFotosId[pt.eng.Id]>0}">
+	                              <apex:param name="pt_id" value="{!pt.eng.Id}"/>                              
+	                                <i class="fa fa-camera"></i> 
+	                          </apex:commandLink>
+	                      </apex:actionRegion>
+	                      <apex:actionRegion >
+	                          <apex:commandLink value="" action="{!mySearch.retrieveVideo}" rerender="apVideoTrigger" oncomplete="openvideo();" rendered="{!mySearch.numVideosId[pt.eng.Id]>0}">
+	                              <apex:param name="pt_id" value="{!pt.eng.Id}"/>
+	                              <i class="fa fa-video-camera"></i> 
+	                          </apex:commandLink>
+	                      </apex:actionRegion>
+                          </div>
+                        </div>
+                        <!--  end item image --> 
+                        
+                           
+                      </div>
+                      <div class="col-sm-9">
+                        <div class="item-header">
+                          <div class="row">
+                            <div class="col-sm-6 col-md-8">
+                              <div class="item-title">       
+                                                    
+                                <apex:variable var="nickname" value="'{!pt.eng.Account_Id__r.Nick_Name__pc}'"/>
+            					<apex:outputLink id="saveVisit" value="/apex/apc_hf_au_pair_profile?Id={!pt.eng.Id}">
+                          			{!pt.eng.Account_Id__r.FirstName} <apex:outputText value=" {!nickname}" rendered="{!NOT(ISBLANK(pt.eng.Account_Id__r.Nick_Name__pc))}"/>
+                          		</apex:outputLink>
+            					<!-- 
+                               <apex:commandLink action="{!MySearch.saveVisit}" id="saveVisit" > 
+                                    <apex:param name="recordId" value="{!pt.eng.Id}"/>
+                                    {!pt.eng.Account_Id__r.FirstName} <apex:outputText value=" {!nickname}" rendered="{!NOT(ISBLANK(pt.eng.Account_Id__r.Nick_Name__pc))}"/>
+                               </apex:commandLink>
+                                -->
+                              </div>
+                            
+                            </div>
+                            <div class="col-sm-6 col-md-4">
+                              <div class="match-actions pull-right">
+                              <apex:actionStatus startStyleClass="feedback-st" startStyle="position:absolute; margin:0 0 0 -5px;; z-index:100;" startText="Loading. Please wait..." id="matchactionupdate"/>
+                                <apex:pageBlock id="icons-block">
+                                
+                                    <apex:outputText rendered="{!mySearch.isVisitedId[pt.eng.Id]}">
+                                        <span class="viewed">Viewed</span>
+                                    </apex:outputText>
+                                  <apex:commandLink status="matchactionupdate" action="{!MySearch.saveAsFavorite}" id="saveAsFavorite" rerender="icons-block" rendered="{!NOT(mySearch.isFavoriteId[pt.eng.Id])}">
+                                    <apex:param name="recordId" value="{!pt.eng.Id}"/>
+                                    <i data-toggle="tooltip" title="Add to Favorites" class="fa fa-heart" ></i> 
+                                    </apex:commandLink>
+                                    
+                                  <apex:commandLink status="matchactionupdate" action="{!MySearch.removeAsFavorite}" id="removeAsFavorite" rerender="icons-block" rendered="{!mySearch.isFavoriteId[pt.eng.Id]}">
+                                    <apex:param name="recordId" value="{!pt.eng.Id}"/>
+                                    <i data-toggle="tooltip" title="Remove from Favorites" class="fa fa-heart selected" ></i> 
+                                    </apex:commandLink>
+                                    
+                                  <apex:commandLink status="pleasewait01" action="{!MySearch.saveAsDismissed}" id="saveAsDismissed" rerender="resultsBlock" rendered="{!NOT(mySearch.isDismissedId[pt.eng.Id])}" onComplete="applyFilter();">
+                                    <apex:param name="recordId" value="{!pt.eng.Id}"/>
+                                    <i data-toggle="tooltip" title="Remove Au Pair" class="fa fa-times-circle" ></i> 
+                                    </apex:commandLink>
+                                    
+                                  <apex:commandLink status="pleasewait01" action="{!MySearch.removeAsDismissed}" id="removeAsDismissed" rerender="resultsBlock" rendered="{!mySearch.isDismissedId[pt.eng.Id]}">
+                                    <apex:param name="recordId" value="{!pt.eng.Id}"/>
+                                    <i data-toggle="tooltip" title="Undo Remove" class="fa fa-times-circle selected" ></i> 
+                                    </apex:commandLink>
+                                    
+                                </apex:pageBlock>
+                              </div>
+                            </div>
+                            <!--  end column --> 
+                          </div>
+                          <!--  end row --> 
+                        </div>
+                        <!--  end item header -->
+                        
+                        <div class="item-body">
+                        
+                        <div> 
+                            <!--  <apex:outputText rendered="{!pt.eng.In_Country__c == 'Yes' && mySearch.isExitInterviewId[pt.eng.Id]}"> -->
+                            <apex:outputText rendered="{!pt.eng.Engagement_Type__c == 'Rematch'}">
+                                 <div class="item-subtitle">
+                                    <span class="item-subtitle-ic" data-placement="auto right" data-toggle="popover" data-content="In-country au pairs are already in the United States and available for placement. In-country au pair availability is dependent upon factors such as the au pair's current location, childcare qualifications and the end date of her most recent placement. The fees for in-country au pairs are calculated by months in placement and due in full upon matching.">In-Country Au Pair</span> 
+                                </div>
+                                </apex:outputText>
+                                
+                                <!--  <apex:outputText rendered="{!AND(pt.eng.In_Country__c == 'Yes', mySearch.applicationTypeMap[pt.eng.Id] == 'Renewal')}"> -->
+                                <apex:outputText rendered="{!pt.eng.Engagement_Type__c == 'Renewal'}">
+                                  <div class="item-subtitle">
+                                <span  data-placement="auto right" data-toggle="popover" data-content="Extension au pairs have completed their first placement with a family in the United States and have opted to extend their stay with a new family another 6, 9 or 12 months. Their availability is dependent upon the last working day in their current placement. The fee for an extension au pair au pairs are calculated by months in placement and due in full upon matching." class="item-subtitle-ext">Extension Au Pair</span> 
+                               </div>
+                                </apex:outputText>
+                                
+                              <!--  <apex:outputText rendered="{!AND(pt.eng.Infant_Specialized_Circulated__c == true, pt.eng.In_Country__c == 'No')}"> -->
+                              <apex:outputText rendered="{!pt.eng.Infant_Specialized_Circulated__c == true}">
+                                  
+                                  <div class="item-subtitle">
+                                <span class="item-subtitle-is" data-placement="auto right" data-toggle="popover">Infant Specialized Au Pair</span> 
+                                <div class="popover-html">
+                                AuPairCare's unique Infant Specialized program provides host families with a specially trained au pair with a focus on infant care giving and development.  This five day infant orientation and training program is designed for au pairs caring for infants from 0-12 months and includes certification in Infant CPR and First Aid, baby massage and sign language.  <em><b>There is an additional $950 charge at the time of matching with an Infant Specialized au pair, this designation cannot be removed.</b></em> Contact your matching expert or <a href="http://www.aupaircare.com/stories/infant-specialized-au-pairs" target="_blank">click here</a> to learn more about this unique program."
+                                </div>
+                                </div>
+                               </apex:outputText>
+                                
+                                <apex:outputText rendered="{!pt.eng.Special_Needs_Indicated__c == 'Yes' && (pt.eng.Special_Needs_Circulated__c == 'Circulate SN' || pt.eng.Special_Needs_Circulated__c == 'Circulate Both')}">
+                                  <div class="item-subtitle">
+                                <span class="item-subtitle-sn" data-placement="auto right" data-toggle="popover" data-content="Special Needs au pairs have indicated both experience and willingness to care for children with Special Needs under the childcare experience portion of their application. Per Department of State Exchange Visitor Regulation 62.31.e.4 AuPairCare will only place a Special Needs designated au pair in homes when a family indicates there is a child needing specialized care." >Special Needs Au Pair</span> 
+                                
+                                </div>
+                                </apex:outputText>
+                                </div>
+                        
+                        
+                           <div class="row margin-b1 margin-t2">
+                           <div class="col-sm-4">
+                              <apex:pageBlock rendered="{!pt.eng.In_Country__c == 'No'}">
+                                     <div><label class="padding-r05">Arrives By</label></div>
+                                     <apex:outputfield rendered="{! AND(pt.eng.Earliest_Match_Date__c != null, pt.eng.Earliest_Match_Date__c >= mySearch.firstAvailableArrivalDate)}" value="{!pt.eng.Earliest_Match_Date__c}"/>
+                                     <apex:outputText rendered="{! AND(pt.eng.Earliest_Match_Date__c != null, pt.eng.Earliest_Match_Date__c < mySearch.firstAvailableArrivalDate)}"  value="{0,date,M/d/yyyy}">
+                                               <apex:param value="{!mySearch.firstAvailableArrivalDate}" />
+                                     </apex:outputText> 
+                               </apex:pageBlock>
+                                                                                              
+                               <apex:pageBlock rendered="{!AND(pt.eng.In_Country__c == 'Yes', pt.eng.Earliest_Match_Date__c != pt.eng.Latest_Match_Date__c, pt.eng.Latest_Match_Date__c != null)}">
+                                     <div><label class="padding-r05">Available Between</label></div>
+                                    <apex:outputfield value="{!pt.eng.Earliest_Match_Date__c}"/>&nbsp;and&nbsp; 
+                                    <apex:outputfield value="{!pt.eng.Latest_Match_Date__c}"/>
+                               </apex:pageBlock>
+                               <apex:pageBlock rendered="{!AND(pt.eng.In_Country__c == 'Yes', OR(pt.eng.Earliest_Match_Date__c == pt.eng.Latest_Match_Date__c, pt.eng.Latest_Match_Date__c == null))}">
+                                     <div><label class="padding-r05">First Available</label></div>
+                                    <apex:outputfield value="{!pt.eng.Earliest_Match_Date__c}"/>
+                               </apex:pageBlock>                               
+                            </div><!--  end col -->
+                            <div class="col-sm-3">
+                                 <div><label class="padding-r05">Childcare Hours</label></div>
+                                <apex:outputField value="{!pt.eng.Childcare_Total_Hours__c}"/>    
+                            </div><!--  end col -->
+                             <div class="col-sm-5">
+                                 <div><label class="padding-r05">Swimming</label></div>
+                                <apex:outputText rendered="{!pt.eng.Swimming_Level__c == null}">No</apex:outputText>
+                                <apex:outputField value="{!pt.eng.Swimming_Level__c}"/>
+                            </div>
+                           </div>
+                          <!--  end row -->
+                          <div class="row margin-b2">
+                            <div class="col-sm-4">
+                                <div><label class="padding-r05">Nationality</label></div>
+                                <apex:outputField value="{!pt.eng.Nationality__c}"/>
+                            </div>
+                            
+                            <apex:outputPanel layout="block" rendered="{!pt.eng.Account_Id__r.Age__pc != null}">
+                                <div class="col-sm-3">
+                                    <div><label class="padding-r05">Age</label></div>
+                                    <apex:outputText value="{!pt.eng.Account_Id__r.Age__pc}"/>
+                                </div>
+                            </apex:outputPanel>
+                            <div class="col-sm-5">
+                                <div><label class="padding-r05">Driving</label></div>
+                                    <div><apex:outputField value="{!pt.eng.Driving_Frequency__c}"/> </div>
+                            </div><!--  end col -->
+                          </div>
+                          <!--  end row -->
+                          
+                          <div class="row">                          
+                                <div class="col-sm-7 col-md-9">
+                                <apex:pageBlock rendered="{! mySearch.highlightsEmpty[pt.eng.Id] }">
+                                    <div class="highlights">
+                                        <label>Highlights:</label>
+                                       
+                                        <apex:repeat id="repeatHLIghts"  value="{!mySearch.Highlights[pt.eng.Id]}" var="item">                  
+                                            <apex:outputText rendered="{!item == 'Previous Au Pair'}">
+                                            <span class="highlight">{!item}</span>
+                                            </apex:outputText>
+                                            <apex:outputText rendered="{!item == 'Advanced Education'}">
+                                                <span class="highlight">{!item}</span>
+                                            </apex:outputText>
+                                            <apex:outputText rendered="{!item == 'Older Sibling'}">
+                                                <span class="highlight">{!item}</span>
+                                            </apex:outputText>
+                                            <apex:outputText rendered="{!item == 'Lifeguard'}">
+                                                <span class="highlight">{!item}</span>
+                                            </apex:outputText>
+                                            <apex:outputText rendered="{!item == 'Nursing experience'}">
+                                                <span class="highlight">{!item}</span>
+                                            </apex:outputText>
+                                            <apex:outputText rendered="{!item == 'Trained in First Aid'}">
+                                                <span class="highlight">{!item}</span>
+                                            </apex:outputText>
+                                            <apex:outputText rendered="{!item == 'Teacher or Tutor'}">
+                                                <span class="highlight">{!item}</span>
+                                            </apex:outputText>
+                                            <apex:outputText rendered="{!item == 'Large Family'}">
+                                                <span class="highlight">{!item}</span>
+                                            </apex:outputText>
+                                            <apex:outputText rendered="{!item == 'Multiples Experience'}">
+                                                <span class="highlight">{!item}</span>
+                                            </apex:outputText>
+                                            <apex:outputText rendered="{!item == 'Athletic'}">
+                                                <span class="highlight">{!item}</span>
+                                            </apex:outputText>
+                                            <apex:outputText rendered="{!item == 'Multi-lingual'}">
+                                                <span class="highlight">{!item}</span>
+                                            </apex:outputText>
+                                            <apex:outputText rendered="{!item == 'Musical'}">
+                                                <span class="highlight">{!item}</span>
+                                            </apex:outputText>
+                                            <apex:outputText rendered="{!item == 'Lived Independently'}">
+                                                <span class="highlight">{!item}</span>
+                                            </apex:outputText>
+                                            <apex:outputText rendered="{!item == 'Cooking skills'}">
+                                                <span class="highlight">{!item}</span>
+                                            </apex:outputText>
+                                            <apex:outputText rendered="{!item == 'Traveler'}">
+                                                <span class="highlight">{!item}</span>
+                                            </apex:outputText>
+                                        
+                                        </apex:repeat>                                      
+                                    </div>
+                                </apex:pageBlock>
+                                </div>
+                                <div class="col-sm-5 col-md-3">
+                                  <apex:outputLink id="saveVisit3" value="/apex/apc_hf_au_pair_profile?Id={!pt.eng.Id}">
+                                		<b class="sm">> View Full Profile</b>
+                                	</apex:outputLink>
+                                  <!-- 
+                                  	<apex:commandLink action="{!MySearch.saveVisit}" id="saveVisit3" > 
+                                    	<apex:param name="recordId" value="{!pt.eng.Id}"/>
+                                    	<b class="sm">> View Full Profile</b>
+                               		</apex:commandLink>
+                               	   -->
+                                </div>                         
+                          </div>
+                          <!--  end row --> 
+                        </div>
+                        <!--  end item body --> 
+                        
+                      </div>
+                      <!--  end column --> 
+                    </div>
+                    <!--  end row -->      
+                  </div>
+                  <!--  end item -->
+                 
+                </apex:repeat>
+                
+           
+                
+                
+                <!-- <apex:actionStatus startStyleClass="feedback-st" startText="Loading. Please wait..." id="pleasewait01"/>-->
+                <div class="sort-container vs1 margin-t4 form-vertical">
+                  <div class="sort vs1"> Display&nbsp;
+                    <apex:selectList styleClass="form-control" value="{!mySearch.pageSize}" multiselect="false" size="1">
+                      <apex:selectOptions value="{!mySearch.pageSizeOptions}"/>
+                      <apex:actionSupport event="onchange" action="{!mySearch.setPageSize}" rerender="selectedPageBlock, selectedPageBlock2, resultsBlock, appliedFiltersBlock" status="pleasewait01"/>
+                    </apex:selectList>
+                    &nbsp;per page </div>
+                  <div class="sort vs1 paginate pull-right">
+                    <apex:pageblock id="selectedPageBlock2">
+                      <apex:commandLink status="pleasewait01" reRender="resultsBlock, selectedPageBlock, selectedPageBlock2, appliedFiltersBlock"  action="{!mySearch.previousPage}" title="Next Page">
+                        <apex:commandButton disabled="{!!mySearch.results.hasPrevious}"/>
+                        <i class="fa fa-chevron-left"></i> 
+                     </apex:commandLink>
+                            <apex:SelectList value="{!mySearch.pageNumberSelected2}" StyleClass="form-control short" size="1">
+                              <apex:selectOptions value="{!mySearch.pageNumbers}"/>
+                              <apex:actionSupport event="onchange" action="{!mySearch.setPageNumber2}" rerender="selectedPageBlock, selectedPageBlock2, resultsBlock, appliedFiltersBlock" status="pleasewait01"/>
+                            </apex:SelectList>
+                      of {!mySearch.totalPages}
+                      <apex:commandLink status="pleasewait01" reRender="resultsBlock, selectedPageBlock, selectedPageBlock2, appliedFiltersBlock"  action="{!mySearch.nextPage}" title="Last Page">
+                        <apex:commandButton disabled="{!mySearch.results.hasNext}"/>
+                        <i class="fa fa-chevron-right"></i> </apex:commandLink>
+                    </apex:pageblock>
+                  </div>
+                </div>
+                <!--  end list control --> 
+                
+              </div>
+              <!--  end list view --> 
+            </apex:outputPanel>
+          </apex:pageBlock>
+          <apex:outputPanel layout="block" id="modalblock">
+            <div class="modal vs1 fade modal-widget" id="myModalCompare" tabindex="-1" role="dialog" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-lg">
+                <div class="modal-content">
+                  <div class="modal-body">
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <apex:pageblock >
+                          <apex:pageBlockTable styleClass="table vs4" value="{!mySearch.searchList}" var="comp">
+                            <apex:column headerValue="">
+                              <!-- <apex:image style="width: 60px;" value="{!mySearch.returnURLMap[comp.eng.Id]}"/> -->
+                                <apex:image style="width: 60px;" value="{!mySearch.returnURLMap[comp.eng.Id]}" rendered="{!mySearch.returnURLMap[comp.eng.Id] != 'no-picture'}"/>
+                                <apex:image style="width: 60px;" styleClass="item-image-male" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/male-profile-med.png')}"  rendered="{!OR(ISBLANK(comp.eng.Gender__c), mySearch.returnURLMap[comp.eng.Id] == 'no-picture' && comp.eng.Gender__c == 'Male')}"/>
+                                <apex:image style="width: 60px;" styleClass="item-image-female" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/female-profile-med.png')}"  rendered="{!mySearch.returnURLMap[comp.eng.Id] == 'no-picture' && comp.eng.Gender__c == 'Female'}"/>
+                                
+                                <!-- <apex:image style="width: 60px;" value="{!mySearch.returnIPUURLmap[comp.eng.Id]}" rendered="{!mySearch.returnIPUURLmap[comp.eng.Id] != 'no-picture'}"/>
+                                <apex:image style="width: 60px;" styleClass="item-image-male" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/male-profile-med.png')}"  rendered="{!OR(ISBLANK(comp.eng.Gender__c), mySearch.returnIPUURLmap[comp.eng.Id] == 'no-picture' && comp.eng.Gender__c == 'Male')}"/>
+                                <apex:image style="width: 60px;" styleClass="item-image-female" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/female-profile-med.png')}"  rendered="{!mySearch.returnIPUURLmap[comp.eng.Id] == 'no-picture' && comp.eng.Gender__c == 'Female'}"/>
+                          -->
+                            </apex:column>
+                            <apex:column headerValue="">
+                              <apex:outputText value="{!comp.eng.Account_Id__r.FirstName}"/>
+                            </apex:column>
+                            <apex:column headerValue="Available by">
+                              <apex:outputfield value="{!comp.eng.Actual_Arrival__c}"/>
+                            </apex:column>
+                            <apex:column headerValue="Country">
+                              <apex:outputField value="{!comp.eng.Nationality__c}"/>
+                            </apex:column>
+                            <apex:column headerValue="Childcare Hours">                           
+                              <apex:outputField value="{!comp.eng.Childcare_Total_Hours__c}"/>                            
+                            </apex:column>
+                            <apex:column headerValue="Age">
+                              <apex:outputText value="{!comp.eng.Age_At_Program_Start__c}"/>
+                            </apex:column>
+                            <apex:column headerValue="Driving"> 
+                                 <apex:outputText value="{!comp.eng.Driving_Frequency__c}"/>                                 
+                            </apex:column>
+                            <apex:column headerValue="Swimming">
+                              <apex:outputField value="{!comp.eng.Swimming_Level__c}"/>
+                            </apex:column>
+                          </apex:pageBlockTable>
+                        </apex:pageblock>
+                        <apex:commandlink styleClass="btn btn-default pull-right" action="{!mySearch.removeWrapper}" onclick="popModalCompareClose();" rerender="compareBlock, modalblock, resultsBlock" status="pleasewait01"> <span>Close Comparison</span> </apex:commandlink>
+                      </div>
+                      <!--  end col --> 
+                    </div>
+                    <!--  end row --> 
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--  end modal --> 
+          </apex:outputPanel>
+          
+
+<apex:pageBlock id="appPhotosBlock2">
+         <script>
+  var j$ = jQuery.noConflict();
+   
+   j$.magnificPopup.open({
+    items: [
+    <apex:repeat value="{!mySearch.pt_photos}" var="item">
+      {
+        src: '{!item}',
+        title: '{! JSINHTMLENCODE(mySearch.pt_photos[item])}'
+      },
+    </apex:repeat>
+    ],
+    gallery: {
+      enabled: true
+    },
+    type: 'image' 
+});
+
+
+</script>
+</apex:pageBlock>
+ 
+<apex:outputPanel layout="block" id="apVideoTrigger">
+ <script>
+ var j$ = jQuery.noConflict();
+
+/*
+videojs('#videoPt');
+j$(document).on('hidden.bs.modal', '#apvideo', function (event) {
+   videojs('#videoPt').dispose();
+});
+
+j$.magnificPopup.open({
+src:'.apVideo',
+type: 'inline',
+gallery: {
+      enabled: true
+    } 
+});
+*/
+</script>
+
+<apex:outputPanel styleClass="apVideo" layout="block" id="apVideoContainer">
+    
+    <!--  end modal window -->
+          <apex:outputPanel layout="block" id="modalvideo">
+            <div class="modal transparent fade vs1" id="apvideo" tabindex="-1" role="dialog" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                    <apex:commandLink rerender="fliqz-block" styleClass="closebtn" onComplete="popModalVideoClose();"> 
+                        <span class="fa-stack fa-lg "> 
+                            <i class="fa fa-circle fa-stack-2x"></i> 
+                            <i class="fa fa-times fa-stack-1x fa-inverse"></i> 
+                        </span> 
+                    </apex:commandLink>
+                  <div class="modal-body">
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <div class="embed-responsive embed-responsive-16by9"> 
+                            <!-- 
+                            <iframe width="530" height="510" src="http://permalink.fliqz.com/aspx/permalink.aspx?at=1b72b52d58824ca494e50878f87994b7&a=1577acdfaa364151b30f9ed0e2920107" scrolling="no"  frameborder="0" />  
+                            -->  
+                               <apex:outputPanel layout="block" rendered="{!mySearch.MapVideoSize>0}">
+                                    
+                                    
+                                    <apex:repeat id="AlbumPicKeyThumb"  value="{!mySearch.MapPTVideoThumb}" var="keyURLThumb">                                      
+                                            <apex:repeat id="AlbumPicKey"  value="{!mySearch.MapPTVideoThumb[keyURLThumb]}" var="keyURLVideo">
+                                                <apex:outputPanel layout="block" rendered="{!keyURLThumb != 'fliqz-video'}">
+                                                <apex:repeat id="AlbumPic"  value="{!mySearch.MapPTVideoThumb[keyURLThumb][keyURLVideo]}" var="item">
+                                                    
+                                                    <video id="videoPt" class="embed-responsive-item video-js vjs-default-skin " controls="true" height="300px" width="100%" preload="auto" poster="{!keyURLThumb}" data-setup='{"example_option":true}'>
+                                                        <source src="{!keyURLVideo}" type='rtmp/mp4' />
+                                                        <!--<source src="rtmp://your.streaming.provider.net/cfx/st/&mp4:path/to/video.mp4" type='rtmp/mp4' /> -->
+                                                        <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that 
+                                                        <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+                                                        </p>
+                                                   </video>
+                                               </apex:repeat>
+                                               </apex:outputPanel>
+                                               <apex:outputPanel layout="block" rendered="{!keyURLThumb == 'fliqz-video'}" id="fliqz-block">
+                                                    <iframe width="530" height="510" src="{!keyURLVideo}" scrolling="no"  frameborder="0" />
+                                               </apex:outputPanel>
+                                           </apex:repeat>
+                                        
+                                        
+                                   </apex:repeat>
+                                   
+                                   
+                                   </apex:outputPanel>
+                                    
+                          
+                          <apex:outputPanel layout="block" rendered="{!mySearch.MapVideoSize == 0}">
+                            <p>This au pair doesn't have a video yet.</p>
+                          </apex:outputPanel>
+                        </div>
+                      </div>
+                      <!--  end column --> 
+                    </div>
+                    <!--  end row --> 
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--  end modal window --> 
+            </apex:outputPanel>
+    <!-- 
+    <apex:outputPanel layout="block" rendered="{!mySearch.MapVideoSize>0}">
+        <div  class="embed-responsive embed-responsive-16by9">
+            <apex:repeat id="AlbumPicKeyThumb"  value="{!mySearch.MapPTVideoThumb}" var="keyURLThumb">
+                <apex:repeat id="AlbumPicKey"  value="{!mySearch.MapPTVideoThumb[keyURLThumb]}" var="keyURLVideo">
+                    <apex:repeat id="AlbumPic"  value="{!mySearch.MapPTVideoThumb[keyURLThumb][keyURLVideo]}" var="item">
+                        <video id="videoPt" class="embed-responsive-item video-js vjs-default-skin " controls="controls" height="300px" width="100%" preload="auto" poster="{!keyURLThumb}" data-setup='{"example_option":true}'>
+                            <source src="{!keyURLVideo}" type='rtmp/mp4' />
+                            <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a> </p>
+                        </video>
+                    </apex:repeat>
+                </apex:repeat>
+            </apex:repeat>
+        </div> 
+    </apex:outputPanel>
+     -->   
+</apex:outputPanel>
+
+
+</apex:outputPanel>
+ 
+        
+        </div>
+        <!--  end column --> 
+      </div>
+      <!--  end row -->
+      
+      </apex:outputPanel>
+     </apex:outputPanel>
+      <!-- Jose B-02819: Requested or Confirmed Match status 
+       Updated by D-01860 - New condition:
+            - the family has at least one match record AND 
+            - Match status is either Confirmed  OR (status is requested AND offer is not declined)
+      -->
+	  
+      <apex:outputPanel layout="block" rendered="{!NOT((mySearch.myApp.Application_Type__c == 'Original' ||  ReMatchAppExists) && ((AllMatches.size>0 && AllMatches[0].Status__c=='Withdrawn') || AllMatches.size==0))}">
+        <div class="row margin-b2">
+        <div class="col-sm-8 center-block">
+        <h1 class="center-text"> Search Au Pairs </h1>
+        </div><!--end column-->
+        </div><!--end row-->
+         
+        <div class="row">
+        <div class="col-sm-8 center-block">
+        <div class="box gray">
+        <p class="lead">You cannot search au pairs at this time due to one of the following reasons:</p>
+        <ul>
+        <li>Your application is pending</li>
+        <li>Your application must be renewed</li>
+        <li>You have requested a match</li>
+        <li>You are currently matched</li>
+        <li>You have an au pair on courtesy hold</li>
+        </ul>
+        </div>
+        </div><!--end column-->
+        </div><!--end row-->
+      </apex:outputPanel>
+      
+      </div>
+      </apex:form>
+<script>
+var j$ = jQuery.noConflict();
+function popModalCompare(){
+    j$('#myModalCompare').modal();
+}
+function popModalCompareClose(){
+    j$('#myModalCompare').modal('hide');
+}
+
+function popModalVideoClose(){
+    j$('#apvideo').modal('hide');
+}
+
+function openvideo(){
+    j$('#apvideo').modal({backdrop:'static',keyboard:false});
+    videojs('#videoPt');
+}
+
+function stopFlashVideo(){
+    var clone = j$("#apvideo").clone(true);
+    j$("#apvideo").remove();
+    j$("#video").html(clone);
+}
+
+j$(document).on('hidden.bs.modal', '#apvideo', function (event) {
+   videojs('#videoPt').dispose();
+});
+
+var j$ = jQuery.noConflict();
+function loadresults() {
+j$(document).ready(function() {
+var winL = j$('#view-au-pairs').height();
+j$('.feedback-st.vs2').css('height', winL);
+});
+};
+loadresults();
+</script>  
+  <script type="text/javascript">
+     function showPanel(panel) { 
+         if(panel == 'savePanel2'){
+             document.getElementById('savePanel1').style.display = 'none';
+             document.getElementById('savePanel2').style.display = 'table';
+         }
+         if(panel == 'savePanel1'){
+             document.getElementById('savePanel1').style.display = 'inline';
+             document.getElementById('savePanel2').style.display = 'none';
+         }         
+         
+     }
+ </script>
+          
+    </apex:define>
+  </apex:composition>
+</apex:page>

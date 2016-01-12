@@ -1,0 +1,572 @@
+<apex:page standardController="Match__c" extensions="IGI_HC_Controller" docType="html-5.0" standardStylesheets="false" showHeader="false" action="{!checkLogin}">
+  
+    <apex:composition template="IntraxTemplate_Vs2">
+      <apex:define name="body">
+      <apex:form >
+        <script>
+            j$(function(){
+
+            j$(".hide-next").click(function(){
+            j$(this).parent().next(".block-body").toggleClass('hide');
+
+            });
+
+            });
+            
+function CalcTZ1(InputDate)
+{
+    var IntDate = document.getElementById(InputDate).value; 
+    afCalculate1(IntDate);   
+}
+function CalcTZ2(InputDate)
+{
+    var IntDate = document.getElementById(InputDate).value;   
+    afCalculate2(IntDate);
+}
+function CalcTZ3(InputDate)
+{
+    var IntDate = document.getElementById(InputDate).value;    
+    afCalculate3(IntDate); 
+}
+</script>
+        
+        <h1>
+          <apex:outputLabel rendered="{!IF($CurrentPage.parameters.mId == null, false, true)}" value="{!matchInfo.Participant_Id__r.FirstName} {!matchInfo.Participant_Id__r.LastName}"/>
+          <apex:outputLabel rendered="{!IF($CurrentPage.parameters.mId == null, true, false)}" value="No Individual Participant Selected"/>
+        </h1>
+        <div class="row-fluid">
+          <apex:outputPanel styleClass="span3" layout="block">
+            <c:Badge_Participant_Photo photoUrl="{!returnUrl}" rendered="{!IF(returnURL == '',false,true)}"/>
+            <apex:outputPanel styleClass="ph-thumb default md" layout="block" rendered="{!IF(returnURL == '',true,false)}"> <i class="icon-camera"></i> </apex:outputPanel>
+            <div class="form-link no-float">
+               <apex:commandLink action="{!load}" styleClass="center" rerender="" target="_blank" rendered="{!(NOT(ISBLANK(MatchResume)) && (engagementInfo.Intrax_Program__c =='Internship'))}" immediate="true">
+                <apex:param name="docGuid" value="{!MatchResume}"/>
+                <i class="icon-file"></i> <span>View Resume </span>
+                </apex:commandLink>
+                <apex:outputText styleClass="center" rendered="{!((MatchResume==null || MatchResume=='') && engagementInfo.Intrax_Program__c =='Internship')}">                           
+                       <i class="icon-file"></i> <span>No Resume</span><br/><br/>
+                   </apex:outputText>
+            </div>
+          </apex:outputPanel>
+          <div class="span9">
+            <apex:outputPanel id="myPanel" layout="block">
+           <apex:Messages styleClass="custom-error-pagelevel" rendered="{!customMessage = false}"/>
+            <apex:Messages styleClass="custom-error-pagelevel" rendered="{!customMessage = true}"/>
+           
+             
+              <apex:outputPanel rendered="{!IF(ISBLANK(matchInfo.Id), true, false)}" layout="block">
+                <apex:outputLabel ><span class="no-records">No record(s) to display.</span></apex:outputLabel>
+              </apex:outputPanel>
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!IF(NOT(ISBLANK(matchInfo.Id)) && (matchInfo.Status__c=='Applied') && activeUser.User_Interests__c == 'Looking for an intern', true, false)}" layout="block" styleClass="block">
+              <div class="block-header">
+                <h3>Propose an Interview</h3>
+              </div>
+              <div class="block-body">
+                <p>This candidate is interested in the position. Would you like to propose an interview? Please consider the candidate's location while choosing interview times.</p>
+                 <p>  Time Zone &nbsp;
+                  <apex:outputField value="{!ActuserTZ.timezonesidkey}"/>
+                  </p>
+                  <div class="form-row">
+                  <div class="form-label left ">Interview Date/Time Choice 1: </div>
+                  <div class="form-field datepicker wtime" locale="{!activeuser.localeSidKey}">
+                    <apex:inputField styleClass="form-control" value="{!matchInfo.Interview_Request_HC1__c}"  id="NInterview1" />
+                      
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-label left ">Interview Date/Time Choice 2:</div>
+                  <div class="form-field datepicker wtime" locale="{!activeuser.localeSidKey}">
+                    <apex:inputField styleClass="form-control"  value="{!matchInfo.Interview_Request_HC2__c}" id="NInterview2" />
+                      
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-label left">Interview Date/Time Choice 3: </div>
+                  <div class="form-field datepicker wtime" locale="{!activeuser.localeSidKey}">
+                    <apex:inputField styleClass="form-control"  value="{!matchInfo.Interview_Request_HC3__c}"  id="NInterview3" />
+                     
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-label top">Please leave a comment:</div>
+                  <div class="form-field">
+                    <apex:inputTextArea value="{!matchInfo.Interview_Request_Note__c}" />
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-button no-float">
+                    <apex:commandlink action="{!validator}" >
+                      <apex:param name="nextPage" value="/apex/C_Matches"/>
+                      <apex:param name="mId" value="{!matchInfo.Id}" assignTo="{!mId}" />
+                      <apex:param name="SaveMatch" value="true"/>
+                      <apex:commandButton value="Schedule Interview"/>
+                    </apex:commandlink>
+                  </div>
+                </div>
+              </div>
+            </apex:outputPanel>
+            
+          <apex:outputPanel rendered="{!IF(NOT(ISBLANK(matchInfo.Id)) && matchInfo.Status__c=='Requested' && (matchInfo.Interview_Status__c='Company No Show' ||  matchInfo.Interview_Status__c='Participant No Show') && activeUser.User_Interests__c == 'Looking for an intern', true, false)}" layout="block" styleClass="block">
+              <div class="block-header">
+                <h3>Propose an Interview</h3>
+              </div>
+              <div class="block-body">
+                <p>This candidate is interested in the position. Would you like to propose an interview? Please consider the candidate's location while choosing interview times.</p>
+                 <p>  Time Zone &nbsp;
+                  <apex:outputField value="{!ActuserTZ.timezonesidkey}"/>
+                  </p>
+                  <div class="form-row">
+                  <div class="form-label left ">Interview Date/Time Choice 1: </div>
+                  <div class="form-field datepicker wtime" locale="{!activeuser.localeSidKey}">
+                    <apex:inputField styleClass="form-control" value="{!matchInfo.Interview_Request_HC1__c}"  id="NInterview9" />
+                      
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-label left ">Interview Date/Time Choice 2:</div>
+                  <div class="form-field datepicker wtime" locale="{!activeuser.localeSidKey}">
+                    <apex:inputField styleClass="form-control"  value="{!matchInfo.Interview_Request_HC2__c}"  id="NInterview10" />
+                       
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-label left">Interview Date/Time Choice 3: </div>
+                  <div class="form-field datepicker wtime" locale="{!activeuser.localeSidKey}">
+                    <apex:inputField styleClass="form-control"  value="{!matchInfo.Interview_Request_HC3__c}"  id="NInterview11" />
+                      
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-label top">Please leave a comment:</div>
+                  <div class="form-field">
+                    <apex:inputTextArea value="{!matchInfo.Interview_Request_Note__c}" />
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-button no-float">
+                    <apex:commandlink action="{!navigator}" >
+                      <apex:param name="nextPage" value="/apex/C_Matches"/>
+                      <apex:param name="mId" value="{!matchInfo.Id}" assignTo="{!mId}" />
+                      <apex:param name="SaveMatch" value="true"/>
+                      <apex:commandButton value="Send New Proposal"/>
+                    </apex:commandlink>
+                  </div>
+                </div>
+              </div>
+            </apex:outputPanel>
+            
+            
+            
+            
+            <apex:outputPanel rendered="{!IF(NOT(ISBLANK(matchInfo.Id)) && matchInfo.Status__c=='Requested' && matchInfo.Interview_Status__c=='Scheduled' && activeUser.User_Interests__c == 'Looking for an intern', true, false)}" layout="block" styleClass="block">
+              <div class="block-header"><h3>Interview Confirmed</h3></div>
+               
+                   
+                
+                <div class="block-body">
+                    <p>  Time Zone &nbsp;
+                  <apex:outputField value="{!ActuserTZ.timezonesidkey}"/>
+                     
+                 </p>
+                <div class="form-row">
+                  <div class="form-label left ">Interview Time: </div>
+                  <div class="form-field">
+                    <apex:outputField value="{!matchInfo.Interview_Date__c}"/> 
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-label left ">Candidate's Email: </div>
+                  <div class="form-field">
+                    <apex:outputField value="{!matchInfo.Participant_Id__r.PersonEmail}"/>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-label left ">Candidate's Skype: </div>
+                  <div class="form-field">
+                    <apex:outputField value="{!matchInfo.Participant_Id__r.Skype_ID__pc}"/>
+                  </div>
+                </div>
+                 <div class="form-row">
+                  <div class="form-label left ">Candidate's Home Phone: </div>
+                  <div class="form-field">
+                    <apex:outputField value="{!matchInfo.Participant_Id__r.PersonHomePhone}"/>
+                  </div>
+                </div>
+                <p>Please indicate whether the interview took place: </p>
+                
+                 <p>
+                    <apex:commandlink styleClass="inline-link" action="{!navigator}">
+                      <apex:param name="mId" value="{!matchInfo.Id}" assignTo="{!mId}" />
+                        <apex:param name="nextPage" value="/apex/igi_hc_match_details"/>
+                      <apex:param name="Comp" value="true" assignTo="{!True}" />
+                     Interview completed successfully
+                    </apex:commandlink>
+                    </p>
+                    
+                    <p>
+                    <apex:commandlink styleClass="inline-link" action="{!navigator}">
+                      <apex:param name="mId" value="{!matchInfo.Id}" assignTo="{!mId}" />
+                        <apex:param name="nextPage" value="/apex/igi_hc_match_details"/>
+                      <apex:param name="CompNoShow" value="true" assignTo="{!CompNoShow}" />
+                      I couldn't make it
+                    </apex:commandlink>
+                    </p>
+                    
+                    <p>
+                    <apex:commandlink styleClass="inline-link" action="{!navigator}">
+                      <apex:param name="mId" value="{!matchInfo.Id}" assignTo="{!mId}" />
+                        <apex:param name="nextPage" value="/apex/igi_hc_match_details"/>
+                      <apex:param name="PartNoShow" value="true" assignTo="{!PartNoShow}" />
+                      Participant didn't make it
+                    </apex:commandlink>
+                    </p>
+                
+                </div>
+                </apex:outputPanel>
+                
+               <apex:outputPanel rendered="{!IF(NOT(ISBLANK(matchInfo.Id)) && matchInfo.Status__c=='Requested' && matchInfo.Interview_Status__c=='Completed' && ISBLANK(matchInfo.Offer_Status__c) && activeUser.User_Interests__c == 'Looking for an intern', true, false)}" layout="block" styleClass="block">
+                  <div class="block-header"><h3>What would you like to do?</h3></div>
+                  <div class="block-body">
+                  
+                   <div class="form-link">
+                    <apex:commandlink action="{!offerIGIPosition}">
+                      <apex:param name="mId" value="{!matchInfo.Id}" assignTo="{!mId}" />
+                      <apex:param name="fpage" value="{!fpage}" assignTo="{!fpage}" />
+                      <i class="icon-thumbs-up-alt"></i>
+                      <span>Offer Position</span>
+                    </apex:commandlink>
+                  </div>
+                  
+               
+                  <div class="form-link">
+                    <apex:commandlink action="{!rejectCandidate}">
+                      <apex:param name="mId" value="{!matchInfo.Id}" assignTo="{!mId}" />
+                      <apex:param name="fpage" value="{!fpage}" assignTo="{!fpage}" />
+                      <i class="icon-thumbs-down-alt"></i>
+                      <span>Reject Candidate</span>
+                    </apex:commandlink>
+                  </div>
+               
+                  </div>              
+            </apex:outputpanel>
+            
+            
+          
+            
+             <apex:outputPanel rendered="{!IF(NOT(ISBLANK(matchInfo.Id)) && matchInfo.Interview_Status__c=='Cancelled' && activeUser.User_Interests__c == 'Looking for an intern', true, false)}" layout="block" styleClass="block">
+              <div class="block-header"><h3>Previous Interview Was Cancelled</h3></div>
+              <div class="block-body">
+                <div class="form-row">
+                  <div class="form-label left">Interview Date/Time Choice 1: </div>
+                  <div class="form-field datepicker wtime" locale="{!activeuser.localeSidKey}">
+                    <apex:inputField styleClass="form-control" html-placeholder="Interview Request Date1" value="{!matchInfo.Interview_Request_HC1__c}" id="CanInterview1" onChange="CalcTZ1('{!$Component.Interview1}');" />
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-label left">Interview Date/Time Choice 2:</div>
+                  <div class="form-field datepicker wtime" locale="{!activeuser.localeSidKey}">
+                    <apex:inputField styleClass="form-control" html-placeholder="Interview Request Date2" value="{!matchInfo.Interview_Request_HC2__c}" id="CanInterview2" onChange="CalcTZ1('{!$Component.Interview1}');" />
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-label left">Interview Date/Time Choice 3: </div>
+                  <div class="form-field datepicker wtime" locale="{!activeuser.localeSidKey}">
+                    <apex:inputField styleClass="form-control" html-placeholder="Interview Request Date3" value="{!matchInfo.Interview_Request_HC3__c}" id="CanInterview3" onChange="CalcTZ1('{!$Component.Interview1}');" />
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-label top">Please leave a comment:</div>
+                  <div class="form-field">
+                    <apex:inputTextArea value="{!matchInfo.Interview_Request_Note__c}" />
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-button no-float">
+                    <apex:commandlink action="{!navigator}" >
+                      <apex:param name="nextPage" value="/apex/C_Matches"/>
+                      <apex:param name="mId" value="{!matchInfo.Id}" assignTo="{!mId}" />
+                      <apex:param name="SaveMatch" value="true"/>
+                      <apex:commandButton value="Schedule Interview"/>
+                    </apex:commandlink>
+                  </div>
+                </div>
+              </div>
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!IF(NOT(ISBLANK(matchInfo.Id))  && matchInfo.Status__c=='Requested' && matchInfo.Interview_Status__c=='Initiated' && activeUser.User_Interests__c == 'Looking for an intern', true, false)}" layout="block" styleClass="block">
+              <div class="block-header">
+                <h3>Interview Proposal Sent</h3>
+              </div>
+              <div class="block-body">
+                 <p>  Time Zone &nbsp;
+                  <apex:outputField value="{!ActuserTZ.timezonesidkey}"/>
+                     
+                 </p>
+                <div class="form-row">
+                  <div class="form-label left short">Choice 1:</div>
+                  <div class="form-field datepicker wtime" locale="{!activeuser.localeSidKey}">
+                    <apex:outputField styleClass="form-control" html-placeholder="Interview Request Date1" value="{!matchInfo.Interview_Request_HC1__c}" id="ROInterview1" />
+                    
+                 </div>
+                  <!--<div class="form-field datepicker wtime" locale="{!participantuser.localeSidKey}">
+                    <apex:outputField styleClass="form-control" html-placeholder="Interview Request Date1" value="{!matchInfo.Interview_Request_HC1__c}" id="PROInterview1" />
+                  </div>-->
+                </div>
+                <div class="form-row">
+                  <div class="form-label left short">Choice 2:</div>
+                  <div class="form-field datepicker wtime" locale="{!activeuser.localeSidKey}">
+                    <apex:outputField styleClass="form-control" html-placeholder="Interview Request Date2" value="{!matchInfo.Interview_Request_HC2__c}"  id="ROInterview2" />
+                 
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-label left short">Choice 3: </div>
+                  <div class="form-field datepicker wtime" locale="{!activeuser.localeSidKey}">
+                    <apex:outputField styleClass="form-control" html-placeholder="Interview Request Date3" value="{!matchInfo.Interview_Request_HC3__c}" id="ROInterview3" />
+                    
+                   </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-label top">Interview Request Note:</div>
+                  <div class="form-field">
+                    <apex:outputfield value="{!matchInfo.Interview_Request_Note__c}" />
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-button no-margin no-float">
+                    <apex:commandlink action="{!navigator}"> 
+                      <apex:param name="nextPage" value="/apex/c_matches"/>
+                      <apex:param name="canc" value="true" assignTo="{!canc}" />
+                      <apex:param name="mId" value="{!matchInfo.Id}" assignTo="{!mId}" />
+                        <apex:commandButton value="Cancel/Reschedule Interview"/> 
+                        </apex:commandlink>
+                  </div>
+                </div>
+              </div>
+            </apex:outputpanel>
+
+            <apex:outputPanel rendered="{!IF(NOT(ISBLANK(matchInfo.Id)) && activeUser.User_Interests__c == 'Looking for an intern', true, false)}" layout="block" styleClass="block">
+              <div class="block-header">
+                <h3>
+                 Notes About the Candidate 
+                </h3>
+              </div>
+              <div class="block-body">
+                <p>
+                  <apex:outputText value="{!matchInfo.Participant_Id__r.FirstName} {!matchInfo.Participant_Id__r.LastName}"/>
+                  is applying for the
+                  <apex:outputText value="{!matchInfo.Position_Name__r.Title__c}"/>
+                  position.</p>
+                <div class="container-fluid">
+                  <div class="row">
+                    <div class="span8">
+                      <div class="form-row">
+                        <div class="form-field" >
+                          <apex:inputField value="{!matchInfo.Interviewer_Notes__c}"/>
+                        </div>
+                      </div>
+                      <!-- end form row -->
+                      
+                      <div class="form-row">
+                        <div class="form-button">
+                          <apex:commandlink action="{!update_matchInfo}"  >
+                            <apex:param name="mId" value="{!matchInfo.Id}" assignTo="{!mId}"/>
+                            <apex:commandButton value="Save Notes" status="waitMsg" rerender="pb"/>
+                          </apex:commandlink>
+                        </div>
+                       
+                        <apex:outputPanel rendered="{!matchInfo.Interview_Status__c!='Completed'}" layout="block">
+                        <div class="form-button">
+                          <apex:commandlink action="{!navigator}" >
+                            <apex:param name="nextPage" value="/apex/c_matches"/>
+                            <apex:param name="mId" value="{!matchInfo.Id}" assignTo="{!mId}" />
+                            <apex:param name="removeMatch" value="true" assignTo="{!removeMatch}"/>
+                            <apex:commandButton value="Remove Candidate"/>
+                          </apex:commandlink>
+                        </div>
+                        </apex:outputPanel>
+                        
+                        
+                      </div>
+                      <!--  end form row --> 
+                    </div>
+                    <div class="span4">
+                      <div class="form-row">
+                        <p><strong>Rate this Candidate</strong><br/>
+                          <em>Your rating will be visible to you only.</em> </p>
+                        <c:block_rating />
+                      </div>
+                      <!-- end form row --> 
+                    </div>
+                  </div>
+                  <!--  end row --> 
+                </div>
+                <!--  end container-fluid -->
+                <p>&nbsp;</p>
+              </div>
+            </apex:outputPanel>
+            
+            
+            <apex:outputPanel rendered="{!IF(ISBLANK(matchInfo.Id), false, true)}" layout="block" styleClass="block">
+              <div class="block-header">
+                <h3>Biographical Details</h3>
+                <a class="btn btn-mini float-r hide-next" style="display:block;">Show/Hide</a></div>
+              <div class="block-body">
+                <div class="list-view container-fluid">
+                  <div class="row-fluid">
+                    <div class="span6">
+                      <div class="list-field">
+                        <label><strong>
+                          <apex:outputText value="First Name"/>
+                          </strong></label>
+                        <apex:outputField value="{!matchInfo.Participant_Id__r.FirstName}"/>
+                        &nbsp; </div>
+                      <div class="list-field">
+                        <label><strong>
+                          <apex:outputText value="Middle Name"/>
+                          </strong></label>
+                        <apex:outputField value="{!matchInfo.Participant_Id__r.Middle_Name__pc}"/>
+                        &nbsp; </div>
+                      <div class="list-field">
+                        <label><strong>
+                          <apex:outputText value="Last Name"/>
+                          </strong></label>
+                        <apex:outputField value="{!matchInfo.Participant_Id__r.LastName}"/>
+                        &nbsp; </div>
+                      <apex:outputPanel rendered="{! IF(NOT(ISBLANK(matchInfo.Participant_Id__r.Nick_Name__pc)), true, false)}">
+                        <div class="list-field">
+                          <label><strong>
+                            <apex:outputText value="Nickname"/>
+                            </strong></label>
+                          <apex:outputField value="{!matchInfo.Participant_Id__r.Nick_Name__pc}"/>
+                          &nbsp; </div>
+                      </apex:outputPanel>
+                    </div>
+                    <!-- end span -->
+                    
+                    <div class="span6">
+                      <div class="list-field">
+                        <label><strong>
+                          <apex:outputText value="Gender"/>
+                          </strong></label>
+                        <apex:outputField value="{!matchInfo.Participant_Id__r.Gender__pc}"/>
+                        &nbsp; </div>
+                      <div class="list-field">
+                        <label><strong>
+                          <apex:outputText value="Birth Date"/>
+                          </strong></label>
+                        <apex:outputField value="{!matchInfo.Participant_Id__r.PersonBirthDate}"/>
+                        &nbsp; </div>
+                      <div class="list-field">
+                        <label><strong>
+                          <apex:outputText value="Age"/>
+                          </strong></label>
+                        <apex:outputField value="{!matchInfo.Participant_Id__r.Age__pc}"/>
+                        &nbsp; </div>
+                      <div class="list-field">
+                        <label><strong>
+                          <apex:outputText value="Country of Citizenship"/>
+                          </strong></label>
+                        <apex:outputField value="{!matchInfo.Participant_Id__r.Citizenship__pc}"/>
+                        &nbsp; </div>
+                    </div>
+                    <!-- end span --> 
+                  </div>
+                  <!-- end row --> 
+                </div>
+                <!-- end list view --> 
+              </div>
+              <!-- end block body -->
+              <div class="block-header"><h3>Education</h3></div>  
+				                   <div class="block-body"> 
+				                   <div class="list-view container-fluid">
+				                    <div class="row-fluid">
+				                      <div class="span4">
+				                      	
+					                    <div class="list-field">
+					                       <label><strong><apex:outputText value="College or University Name"/></strong></label>
+					                       <apex:outputField value="{!engagementInfo.School_Name__c}"/>&nbsp;
+					                    </div>
+					                    <div class="list-field">
+					                       <label><strong><apex:outputText value="Education Program Type "/></strong></label>
+					                       <apex:outputField value="{!engagementInfo.Education_Program_Type__c}"/>&nbsp;
+					                    </div>
+				                        <div class="list-field">
+					                       <label><strong><apex:outputText value="Field of Study"/></strong></label>
+					                       <apex:outputField value="{!engagementInfo.Major__c}"/>&nbsp;
+					                    </div>
+					                    <div class="list-field">
+					                       <label><strong><apex:outputText value="Graduation Date"/></strong></label>
+					                       <apex:outputField value="{!engagementInfo.Graduation_Date__c}"/>&nbsp;
+					                    </div>
+					                  </div> <!-- end span -->
+				                      
+				                     
+				                      <!-- end span -->
+				                     </div>
+				                    </div>
+				                   </div>
+				                   
+              
+              <div class="block-header">
+                <h3>Language Skills</h3>
+                <a style="display:block;" class="btn btn-mini float-r hide-next">Show/Hide</a> </div>
+              <div class="block-body">
+                <div class="list-view container-fluid">
+                  <div class="row-fluid">
+                    <div class="span6">
+                      <div class="list-field">
+                        <label><strong>
+                          <apex:outputText value="Native Language"/>
+                          </strong></label>
+                        <apex:outputField value="{!engagementInfo.Language_1__c}"/>
+                        &nbsp; </div>
+                      <div class="list-field">
+                        <label><strong>
+                          <apex:outputText value="Additional Language"/>
+                          </strong></label>
+                        <apex:outputField value="{!engagementInfo.Language_2__c}"/>
+                        &nbsp; </div>
+                      <div class="list-field">
+                        <label><strong>
+                          <apex:outputText value="Additional Language Level"/>
+                          </strong></label>
+                        <apex:outputField value="{!engagementInfo.Language_2_Proficiency__c}"/>
+                        &nbsp; </div>
+                    </div>
+                    <!-- end span -->
+                    <div class="span6">
+                      <div class="list-field">
+                        <label><strong>
+                          <apex:outputText value="Additional Language"/>
+                          </strong></label>
+                        <apex:outputField value="{!engagementInfo.Language_3__c}"/>
+                        &nbsp; </div>
+                      <div class="list-field">
+                        <label><strong>
+                          <apex:outputText value="Additional Language Level"/>
+                          </strong></label>
+                        <apex:outputField value="{!engagementInfo.Language_3_Proficiency__c}"/>
+                        &nbsp; </div>
+                    </div>
+                    <!-- end span --> 
+                  </div>
+                  <!-- end row --> 
+                </div>
+                <!-- end list view --> 
+              </div>
+              
+              
+              
+              <!-- end block body --> 
+              
+              
+            </apex:outputPanel>
+          </div>
+          <!-- end span9 --> 
+        </div>
+        </apex:form>
+      </apex:define>
+    </apex:composition>
+  
+</apex:page>

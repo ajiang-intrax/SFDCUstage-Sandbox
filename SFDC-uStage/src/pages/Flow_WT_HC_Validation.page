@@ -1,0 +1,5 @@
+<apex:page StandardController="Opportunity" extensions="WT_HC_ValidationController" sidebar="false" standardStylesheets="true">
+  <flow:interview name="WT_HC_Validation" finishLocation="{!FinishPage}">
+  <apex:param name="OpportunityId" value="{!Id}"/>
+  </flow:interview>
+</apex:page>

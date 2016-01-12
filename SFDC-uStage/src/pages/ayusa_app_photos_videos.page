@@ -1,0 +1,40 @@
+<apex:page docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+<div class="wrapper">
+          <apex:form >
+        <div class="page-header clearfix">
+ <h1>Ayusa Student Application</h1>
+<div class="back-to-main"><apex:outputLink value="apex/ayusa_app_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+</div>
+              <h2>Photos of You</h2>
+              <div class="white-box clearfix">
+             <div class="panel two_thirds">    
+ <div class="form-row continue">
+                            
+            <div class="form-button">
+      			<apex:commandlink styleClass="back" action="{!navigator}">
+                    <i class="icon-chevron-left"></i> 
+         		<apex:param name="nextPage" value="/apex/ayusa_app_fam_other"/>
+         		<apex:param name="reDirectPage" value="false"/>
+         		<apex:commandButton value="Back" />
+      			</apex:commandlink>
+    		</div>
+              <div class="form-button">
+                <apex:commandlink styleClass="next" action="{!navigator}">
+                  <apex:param name="nextPage" value="/apex/ayusa_app_new_home"/>
+                  <apex:param name="reDirectPage" value="false"/>
+                  <apex:commandButton value="Continue" />
+                  <i class="icon-chevron-right"></i>   
+                </apex:commandlink>
+              </div>
+            </div>   
+                  </div>
+                  </div>
+              
+              </apex:form>
+          </div>
+       
+    </apex:define>
+  </apex:composition>
+</apex:page>

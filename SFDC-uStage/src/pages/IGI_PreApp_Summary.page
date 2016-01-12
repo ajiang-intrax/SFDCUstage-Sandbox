@@ -1,0 +1,739 @@
+<apex:page id="IGI_PreApp_Summary" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}"  standardStylesheets="true" showHeader="false" >    
+	<apex:composition template="IntraxTemplate_Vs1">
+        <apex:define name="body">
+            <div class="wrapper" id="IGI_PreApp_Summary">
+                <apex:form id="form" >
+                
+                    <!-- Page Title -->
+                    <div class="page-header clearfix">
+                        <h1 class="page-title">Intrax Global Internship Application</h1>
+                        <div class="back-to-main">
+                        	<apex:outputLink styleClass="no-padding" rendered="{! Applicant_Info__c.Application_Level__c == 'Basic' && ApplicantInfo.Application_Stage__c == 'Working' && NOT(isPartner)}" value="apex/IGI_PreApp_Home?id={!applicantInfo.Id}"><span>Back to Main Page</span></apex:outputLink>
+                        	<apex:outputLink styleClass="no-padding" rendered="{! NOT(Applicant_Info__c.Application_Level__c == 'Basic' && ApplicantInfo.Application_Stage__c == 'Working') && NOT(isPartner)}" value="apex/your_applications"><span>Back to Main Page</span></apex:outputLink>
+                        	<apex:outputLink styleClass="no-padding" rendered="{! Applicant_Info__c.Application_Level__c == 'Basic' && ApplicantInfo.Application_Stage__c == 'Working' && isPartner}" value="apex/IGI_PreApp_Home?id={!applicantInfo.Id}"><span>Back to Main Page</span></apex:outputLink>
+                        	<apex:outputLink styleClass="no-padding" rendered="{! Applicant_Info__c.Application_Level__c == 'Main' && ApplicantInfo.Application_Stage__c == 'Working' && isPartner}" value="/apex/IGI_PreApp_Home?id={!applicantInfo.Id}"><span>Back to Main Page</span></apex:outputLink>
+		                    <apex:outputLink styleClass="no-padding" rendered="{! Applicant_Info__c.Application_Level__c == 'Main' && $CurrentPage.parameters.BackURL == 'PT'  && NOT(ApplicantInfo.Application_Stage__c == 'Working') && isPartner}" value="/apex/pr_pt_profile?participantId={!participantId}"><span>Back to Main Page</span></apex:outputLink>
+		                    <apex:outputLink styleClass="no-padding" rendered="{! Applicant_Info__c.Application_Level__c == 'Main' && $CurrentPage.parameters.BackURL == 'AP'  && NOT(ApplicantInfo.Application_Stage__c == 'Working') && isPartner}" value="/apex/pr_app_list"><span>Back to Main Page</span></apex:outputLink>
+		                    <apex:outputLink styleClass="no-padding" rendered="{! Applicant_Info__c.Application_Level__c == 'Main' && NOT($CurrentPage.parameters.BackURL == 'PT' || $CurrentPage.parameters.BackURL == 'AP') && NOT(ApplicantInfo.Application_Stage__c == 'Working') && isPartner}" value="/apex/pr_app_list"><span>Back to Main Page</span></apex:outputLink>
+	                        
+                        	<!--
+                        	<apex:outputLink styleClass="no-padding" rendered="{! NOT(Applicant_Info__c.Application_Level__c == 'Basic' && ApplicantInfo.Application_Stage__c == 'Working') && isPartner}" value="apex/applicantsInfo"><span>Back to Main Page</span></apex:outputLink>
+                            <apex:outputLink styleClass="no-padding" rendered="{! NOT(Applicant_Info__c.Application_Level__c == 'Main') && applicantInfo.Type__c == 'Participant' && not(IsPartner)}" value="apex/your_applications?id={!applicantInfo.Id}"><span>Back to Main Page</span></apex:outputLink>
+                            <apex:outputLink styleClass="no-padding" rendered="{! NOT(Applicant_Info__c.Application_Level__c == 'Main') && IsPartner }" value="apex/IGI_Preapp_Home?id={!applicantInfo.Id}"><span>Back to Main Page</span></apex:outputLink>
+                            <apex:outputLink styleClass="no-padding" rendered="{! Applicant_Info__c.Application_Level__c == 'Main'}" value="apex/your_applications?id={!applicantInfo.Id}"><span>Back to Main Page</span></apex:outputLink>
+                            -->
+                        </div>
+                   </div>
+                   
+                   <!-- Section Header -->
+                   <div class="section-header clearfix">
+                       <h2>Summary</h2>
+                   </div> 
+                   
+                   <div class="white-box clearfix">
+                              
+                       <!-- Basic Instructions -->
+                       <div class="panel no-float half">
+                           <p>Please review your answers carefully before you submit your Basic Application. 
+                               Click <strong>View PDF Summary</strong> to print or save your information for your records.</p>
+                           <p>Once you have reviewed all of your information, click <strong>Submit Application</strong> to 
+                               complete the Basic Application.</p>
+                       </div>
+              
+                  	   <!-- Page Panel -->
+                  	   <div>
+          
+	          			  <!-- Panel Heading -->
+	                      <h3 class="data-block-title">Program Selection</h3> 
+	                      
+	                      <!-- What Program are you applying for? -->
+	                      <div class="data-row">
+	                          <div class="data-label left"> What program are you applying for? </div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Intrax_Program_Options" value="{!applicantInfo.Intrax_Program_Options__c}" />
+	                          </div>
+	                      </div>
+	                      </div>
+	                      
+	                      <!-- Page Panel -->
+                  	   <div>
+          
+	          			  <!-- Panel Heading -->
+	                      <h3 class="data-block-title">Program Preferences</h3> 
+	                      
+	                      <!-- Other Company -->
+	                      <apex:outputPanel rendered="{! applicantInfo.Intrax_Program_Options__c == 'Business Internship' || applicantInfo.Intrax_Program_Options__c == 'Hospitality Internship' }">
+	                      <div class="data-row">
+	                          <div class="data-label left">Have you already secured an internship offer from a company?</div>
+	                          <div class="data-field">
+	                              <apex:outputText id="ServiceLevelYes" value="Yes" rendered="{!applicantInfo.Service_Level__c == 'Independent'}" />
+	                              <apex:outputText id="ServiceLevelNo" value="No" rendered="{!applicantInfo.Service_Level__c == 'Premium'}" />
+	                          </div>
+	                      </div>
+	                      </apex:outputPanel>
+	                      
+	                      <!-- Engagement Start -->
+	                      <div class="data-row">
+	                          <div class="data-label left"> Earliest Start Date </div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Engagement_Start" value="{!applicantInfo.Engagement_Start__c}" />
+	                          </div>
+	                      </div>
+	              
+	                      <!-- Engagement End -->
+	                      <div class="data-row">
+	                          <div class="data-label left"> Latest End Date </div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Engagement_End" value="{!applicantInfo.Engagement_End__c}" />
+	                          </div>
+	                      </div>
+	              
+	              		  <!-- Requested Duration -->	
+	                      <div class="data-row">
+	                          <div class="data-label left"> Requested Duration </div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Program_Duration" value="{!applicantInfo.Program_Duration__c}" />
+	                          </div> 
+	                      </div>
+	               
+	               		  <!-- Do you have Flexible Dates? -->	
+	                      <div class="data-row">
+	                          <div class="data-label left">Do you have Flexible Dates?</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Flexible_Dates" value="{!applicantInfo.Flexible_Dates__c}"/>
+	                          </div>
+	                      </div>
+	                      
+	                      <!-- What is your desired destination country? -->
+	                      <div class="data-row">
+	                          <div class="data-label left">What is your desired destination country?</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Country_of_Interest" value="{!applicantInfo.Country_of_Interest__c}"/>
+	                          </div>
+	                      </div>
+	                      
+	                      	                      
+	                      <!-- Desired location notes -->
+	                      <div class="data-row">
+	                          <div class="data-label left">Desired location notes</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Location_of_Interest" value="{!applicantInfo.Location_of_Interest__c}"/>
+	                          </div>
+	                      </div>
+	                      
+	                      
+	                      <apex:pageBlock rendered="{!applicantInfo.Intrax_Program_Options__c == 'ProWorld Internship'}" >
+	                      <div class="data-row">
+	                          <div class="data-label left">Select project(s) of interest</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Projects_of_Interest" value="{!applicantInfo.Projects_of_Interest__c}"/>
+	                          </div>
+	                      </div>
+	                      </apex:pageBlock>
+	                      
+	                      <apex:pageBlock rendered="{!applicantInfo.Intrax_Program_Options__c == 'WEST' || applicantInfo.Intrax_Program_Options__c == 'Business Internship'}" >
+	                      <div class="data-row">
+	                          <div class="data-label left">Select Functional Area(s)</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Functional_Areas" value="{!applicantInfo.Functional_Areas__c}"/>
+	                          </div>
+	                      </div>
+	                      </apex:pageBlock>
+	                      
+	                      <apex:pageBlock rendered="{!applicantInfo.Intrax_Program_Options__c == 'Hospitality Internship'}" >
+	                      <div class="data-row">
+	                          <div class="data-label left">Select Position Type(s)</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Position_Types" value="{!applicantInfo.Position_Types__c}"/>
+	                          </div>
+	                      </div>
+	                      </apex:pageBlock>
+	                      
+	                       <!-- Location 1st Choice -->
+	                      <apex:outputPanel rendered="{! applicantInfo.Intrax_Program_Options__c == 'WEST'}" >
+	                      <div class="data-row">
+	                          <div class="data-label left">Location 1st Choice</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Location_Preference_1" value="{!applicantInfo.Location_Preference_1__c}"/>
+	                          </div>
+	                      </div>
+	                      
+	                      <!-- Location 2nd Choice -->
+	                      <div class="data-row">
+	                          <div class="data-label left">Location 2nd Choice</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Location_Preference_2" value="{!applicantInfo.Location_Preference_2__c}"/>
+	                          </div>
+	                      </div>
+	                      
+	                      <!-- Location 3st Choice -->
+	                      <div class="data-row">
+	                          <div class="data-label left">Location 3st Choice</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Location_Preference_3" value="{!applicantInfo.Location_Preference_3__c}"/>
+	                          </div>
+	                      </div>
+	                      </apex:outputPanel>
+	                      
+	                      <!-- Program Preferences Comments -->
+	                      <div class="data-row">
+	                          <div class="data-label left">Program Preferences Comments</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Program_Preference_Comment"  value="{!applicantInfo.Program_Preference_Comment__c}"/>
+	                          </div>
+	                      </div>
+	                      </div>
+	                      
+	                      <!-- Page Panel -->
+                  	   <div>
+          
+	          			  <!-- Panel Heading -->
+	                      <h3 class="data-block-title">Biographical Details</h3> 
+	                      
+	                      <!-- Last Name -->
+	                      <div class="data-row">
+	                          <div class="data-label left"> First Name </div>
+	                          <div class="data-field">
+	                              <apex:outputField id="First_Name" value="{!personInfo.First_Name__c}" />
+	                          </div>
+	                      </div>
+	                      
+	                      <!-- First Name -->
+	                      <div class="data-row">
+	                          <div class="data-label left"> Middle Name </div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Middle_Name" value="{!personInfo.Middle_Name__c}" />
+	                          </div>
+	                      </div>
+	                         
+	                      <!-- Middle Name -->
+	                      <div class="data-row">
+	                          <div class="data-label left"> Last Name </div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Last_Name" value="{!personInfo.Last_Name__c}" />
+	                          </div>
+	                      </div>
+	              
+	              
+	              		  <!-- Gender -->	
+	                      <div class="data-row">
+	                          <div class="data-label left"> Gender </div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Gender" value="{!personInfo.Gender__c}" />
+	                          </div> 
+	                      </div>
+	               
+	               		  <!-- Birth Date -->	
+	                      <div class="data-row">
+	                          <div class="data-label left">Birth Date</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Date_of_Birth" value="{!personInfo.Date_of_Birth__c}"/>
+	                          </div>
+	                      </div>
+	                      
+	                      <!-- Country Of Citizenship -->
+	                      <div class="data-row">
+	                          <div class="data-label left">Country of Citizenship</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Citizenship" value="{!personInfo.Citizenship__c}"/>
+	                          </div>
+	                      </div>
+	                      
+	                      	                      
+	                      <!-- City of Birth -->
+	                      <div class="data-row">
+	                          <div class="data-label left">City of Birth</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Birth_City" value="{!personInfo.Birth_City__c}"/>
+	                          </div>
+	                      </div>
+	                      
+	                      <!-- Country of Birth -->
+	                      <div class="data-row">
+	                          <div class="data-label left">Country of Birth</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Birth_Country" value="{!personInfo.Birth_Country__c}"/>
+	                          </div>
+	                      </div>
+	                      
+	                       <!-- Country of Legal Residence -->
+	                      <div class="data-row">
+	                          <div class="data-label left">Country of Legal Residence</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Country_of_Residence" value="{!personInfo.Country_of_Residence__c}"/>
+	                          </div>
+	                      </div>
+	                      </div>  
+	                      
+	                                          
+                    
+                       <!-- Page Panel -->
+                       <div>     
+                 		
+                 	    	<!--  Heading of Panel -->
+                 			<h3 class="data-block-title">Contact Details</h3> 
+               			
+               				 <!-- Address 1 -->
+	                      <div class="data-row">
+	                          <div class="data-label left"> Address 1 </div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Home_Street_1" value="{!applicantInfo.Home_Street_1__c}" />
+	                          </div>
+	                      </div>
+	                         
+	                     <!-- Address 2 -->
+	                      <div class="data-row">
+	                          <div class="data-label left"> Address 2 </div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Home_Street_2" value="{!applicantInfo.Home_Street_2__c}" />
+	                          </div>
+	                      </div>
+	              
+	                      <!-- City -->
+	                      <div class="data-row">
+	                          <div class="data-label left"> City </div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Home_City" value="{!applicantInfo.Home_City__c}" />
+	                          </div>
+	                      </div>
+	              
+	              		  <!-- State/Provience -->	
+	                      <div class="data-row">
+	                          <div class="data-label left"> State/Provience </div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Home_State" value="{!applicantInfo.Home_State__c}" />
+	                          </div> 
+	                      </div>
+	               
+	               		   <!-- Postal Code -->	
+	                      <div class="data-row">
+	                          <div class="data-label left">Postal Code</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Home_Postal_Code" value="{!applicantInfo.Home_Postal_Code__c}"/>
+	                          </div>
+	                      </div>
+	                      
+	                      <!-- Country -->
+	                      <div class="data-row">
+	                          <div class="data-label left">Country</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Home_Country" value="{!applicantInfo.Home_Country__c}"/>
+	                          </div>
+	                      </div>
+	                      
+	                      <!-- Time Zone-->
+	                      <div class="data-row">
+	                          <div class="data-label left">Time Zone</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="TimeZoneSidKey" value="{!user.TimeZoneSidKey}"/>
+	                          </div>
+	                      </div>
+	                      
+	                      	                      
+	                     <!-- Phone -->
+	                      <div class="data-row">
+	                          <div class="data-label left">Phone</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Phone" value="{!personInfo.Phone__c}"/>
+	                          </div>
+	                      </div>
+	                      
+	                     <!-- Mobile Phone -->
+	                      <div class="data-row">
+	                          <div class="data-label left">Mobile Phone</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Mobile" value="{!personInfo.Mobile__c}"/>
+	                          </div>
+	                      </div>
+	                      
+	                       <!-- Email Address -->
+	                      <div class="data-row">
+	                          <div class="data-label left">Email Address</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Email" value="{!personInfo.Email__c}"/>
+	                          </div>
+	                      </div>
+	                      
+	                      <!-- Skype Id -->
+	                      <div class="data-row">
+	                          <div class="data-label left">Skype Id</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Skype_Id" value="{!personInfo.Skype_Id__c}"/>
+	                          </div>
+	                      </div>
+             			</div>
+             			
+             			<!-- Page Panel -->
+                       <div>     
+                 		
+                 	    	<!--  Heading of Panel -->
+                 			<h3 class="data-block-title">Emergency Contacts</h3> 
+                 			
+				            <apex:outputLabel rendered="{!IF(EmergencyInfoList.Size > 0, false, true)}"><span class="no-records">No emergency contacts indicated.</span><br/></apex:outputLabel>
+				          <apex:repeat value="{!EmergencyInfoList}" var="item" >
+						      <div class="data-row">
+						        <div class="data-label left">Emergency Contact Name</div>
+						        <div class="data-field">
+						          <apex:outputText id="Full_Name" value="{!item.First_Name__c} {!item.Middle_Name__c} {!item.Last_Name__c}"/>
+						        </div>
+						      </div>
+						      
+						      <div class="data-row">
+						        <div class="data-label left">Relationship</div>
+						        <div class="form-field">
+						          <apex:outputText id="Role" value="{!item.Role__c}" rendered="{! IF(NOT(item.Role__c == 'Other'), true, false)}"/>
+						          <apex:outputfield id="Role_Other" value="{!item.Role_Other__c}" rendered="{! IF(NOT(item.Role__c == 'Other'), false, true)}"/>
+						        </div>
+						      </div>
+						      
+						      <div class="data-row">
+						        <div class="data-label left">Email</div>
+						        <div class="form-field">
+						          <apex:outputText id="Item_Email" value="{!item.Email__c}"/>
+						        </div>
+						      </div>
+					    </apex:repeat>
+               				
+             		   </div>
+             		
+             			<!-- Page Panel -->
+             			  <div>
+             			      	
+                 			<!--  Heading of Panel -->
+                 			<h3 class="data-block-title">Education Details</h3>
+              			
+	              			<!-- Current Educational Status -->	
+	                      <div class="data-row">
+	                          <div class="data-label left"> Current Educational Status </div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Primary_Activity" value="{!applicantInfo.Primary_Activity__c}" />
+	                          </div> 
+	                      </div>
+	               
+	               		  <!-- College or University Name -->
+	                      <div class="data-row">
+	                          <div class="data-label left">College or University Name</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="School_Name" value="{!applicantInfo.School_Name__c}"/>
+	                          </div>
+	                      </div>
+	                      
+	                       <!-- Field of Study -->
+	                      <div class="data-row">
+	                          <div class="data-label left">Field of Study</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Major" value="{!applicantInfo.Major__c}"/>
+	                          </div>
+	                      </div>
+	                      
+	                      	                      
+	                     <!-- Approximate Graduation Date -->
+	                      <div class="data-row">
+	                          <div class="data-label left">Approximate Graduation Date</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Graduation_Date" value="{!applicantInfo.Graduation_Date__c}"/>
+	                          </div>
+	                      </div>
+	                      </div>
+	                     	              			
+                    	                 		
+                 		<!--  Heading of Panel -->                 			
+                 			
+                 		<div >  
+                 			                			
+                 			<h3 class="data-block-title">Language Skills</h3>              			
+	              			              			
+               				<!-- Primary Language -->
+	                      <div class="data-row">
+	                          <div class="data-label left"> Primary Language </div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Language_1" value="{!applicantInfo.Language_1__c}" />
+	                          </div>
+	                      </div>
+	                         
+	                     <!-- Primary language Level -->
+	                      <div class="data-row">
+	                          <div class="data-label left"> Primary language Level </div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Language_1_Proficiency" value="{!applicantInfo.Language_1_Proficiency__c}" />
+	                          </div>
+	                      </div>
+	              
+	                      <!-- Secondary language -->
+	                      <div class="data-row">
+	                          <div class="data-label left"> Secondary language </div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Language_2" value="{!applicantInfo.Language_2__c}" />
+	                          </div>
+	                      </div>
+	              
+	              		  <!-- Secondary language level -->	
+	                      <div class="data-row">
+	                          <div class="data-label left"> Secondary language level </div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Language_2_Proficiency" value="{!applicantInfo.Language_2_Proficiency__c}" />
+	                          </div> 
+	                      </div>
+	               
+	               		   <!-- Tertiary language -->	
+	                      <div class="data-row">
+	                          <div class="data-label left">Tertiary language</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Language_3" value="{!applicantInfo.Language_3__c}"/>
+	                          </div>
+	                      </div>
+	                      
+	                      <!-- Tertiary language level -->
+	                      <div class="data-row">
+	                          <div class="data-label left">Tertiary language level</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Language_3_Proficiency" value="{!applicantInfo.Language_3_Proficiency__c}"/>
+	                          </div>
+	                      </div>
+	                      
+	                      	                      
+	                     <!-- Other languages -->
+	                      <div class="data-row">
+	                          <div class="data-label left">Other languages</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Other_Languages" value="{!applicantInfo.Other_Languages__c}"/>
+	                          </div>
+	                      </div>
+	                   
+	                   
+	                   <div>     
+                 		
+                 	    	<!--  Heading of Panel -->
+                 			<h3 class="data-block-title">Experience Details</h3> 
+                 			
+				            <apex:outputLabel rendered="{!IF(EmergencyInfoList.Size > 0, false, true)}"><span class="no-records">No Experience indicated.</span></apex:outputLabel>
+				          <apex:repeat value="{!listExperience}" var="item" >
+						      <div class="data-row">
+						        <div class="data-label left">Employer Name</div>
+						        <div class="data-field">
+						          <apex:outputText id="Employer_Name" value="{!item.Employer_Name__c}"/>
+						        </div>
+						      </div>
+						      
+						      <div class="data-row">
+						        <div class="data-label left">City</div>
+						        <div class="form-field">
+						          <apex:outputText id="City" value="{!item.City__c}"/>
+						        </div>
+						      </div>
+						      
+						      <div class="data-row">
+						        <div class="data-label left">Country</div>
+						        <div class="form-field">
+						          <apex:outputText id="Country" value="{!item.Country__c}"/>
+						        </div>
+						      </div>
+						      
+						      <div class="data-row">
+						        <div class="data-label left">Start Date</div>
+						        <div class="form-field">
+						          <apex:outputField id="Start_Date" value="{!item.Start_Date__c}"/>
+						        </div>
+						      </div>
+						      
+						      <div class="data-row">
+						        <div class="data-label left">End Date</div>
+						        <div class="form-field">
+						          <apex:outputField id="End_Date" value="{!item.End_Date__c}"/>
+						        </div>
+						      </div>
+						      
+						      <div class="data-row">
+						        <div class="data-label left">Position Title</div>
+						        <div class="form-field">
+						          <apex:outputText id="Position_Title" value="{!item.Position_Title__c}"/>
+						        </div>
+						      </div>
+						      <div class="data-row">
+						        <div class="data-label left">Position Description</div>
+						        <div class="form-field">
+						          <apex:outputText id="Position_Description" value="{!item.Position_Description__c}"/>
+						        </div>
+						      </div>
+						      
+					    </apex:repeat>
+               				
+             		   </div>   
+	                    
+	                      
+	                    <!-- Page Panel -->
+	                    <apex:outputPanel rendered="{! applicantInfo.Service_Level__c == 'Independent' && NOT(applicantInfo.Intrax_Program_Options__c == 'ProWorld Internship')}">
+                       <div>     
+                 		
+                 	    	<!--  Heading of Panel -->
+                 			<h3 class="data-block-title">Placement Information</h3> 
+               			
+               				 <!-- Company Name -->
+	                      <div class="data-row">
+	                          <div class="data-label left"> Company Name </div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Company_Name" value="{!positionInfo.Company_Name__c}" />
+	                          </div>
+	                      </div>
+	                         
+	                     <!-- Company Address -->
+	                      <div class="data-row">
+	                          <div class="data-label left">Company Address</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Company_Street_1" value="{!positionInfo.Company_Street_1__c}" />
+	                          </div>
+	                      </div>
+	              
+	                      <!-- Address 2 -->
+	                      <div class="data-row">
+	                          <div class="data-label left"> Address 2</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Company_Street_2" value="{!positionInfo.Company_Street_2__c}" />
+	                          </div>
+	                      </div>
+	              
+	              		  <!-- City -->	
+	                      <div class="data-row">
+	                          <div class="data-label left"> City </div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Company_City" value="{!positionInfo.Company_City__c}" />
+	                          </div> 
+	                      </div>
+	               
+	               		   <!-- State -->	
+	                      <div class="data-row">
+	                          <div class="data-label left">State</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Company_State"  value="{!positionInfo.Company_State__c}"/>
+	                          </div>
+	                      </div>
+	                      
+	                      <!-- Postal Code -->
+	                      <div class="data-row">
+	                          <div class="data-label left">Postal Code</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Company_Postal_Code" value="{!positionInfo.Company_Postal_Code__c}"/>
+	                          </div>
+	                      </div>
+	                      
+	                      	                      
+	                     <!-- Country -->
+	                      <div class="data-row">
+	                          <div class="data-label left">Country</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Company_Country" value="{!positionInfo.Company_Country__c}"/>
+	                          </div>
+	                      </div>
+	                      
+	                     <!-- Company Web Site -->
+	                      <div class="data-row">
+	                          <div class="data-label left">Company Web Site</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Company_Website"  value="{!positionInfo.Company_Website__c}"/>
+	                          </div>
+	                      </div>
+	                      
+	                       <!-- Host Company Description -->
+	                      <div class="data-row">
+	                          <div class="data-label left">Host Company Description</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Company_Description"  value="{!positionInfo.Company_Description__c}"/>
+	                          </div>
+	                      </div>
+	                      
+	                      <!-- Company Phone Number -->
+	                      <div class="data-row">
+	                          <div class="data-label left">Company Phone Number</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Company_Phone"  value="{!positionInfo.Company_Phone__c}"/>
+	                          </div>
+	                      </div>
+             			</div>
+             			
+             			<!-- Supervisor's First Name -->	
+	                      <div class="data-row">
+	                          <div class="data-label left">Supervisor's First Name</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Supervisor_First_Name"  value="{!positionInfo.Supervisor_First_Name__c}"/>
+	                          </div>
+	                      </div>
+	                      <div class="data-row">
+	                          <div class="data-label left">Supervisor's Last Name</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Supervisor_Last_Name"  value="{!positionInfo.Supervisor_Last_Name__c}"/>
+	                          </div>
+	                      </div>
+	                      
+	                      <!-- Supervisor's Email -->
+	                      <div class="data-row">
+	                          <div class="data-label left">Supervisor's Email</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Supervisor_Email"  value="{!positionInfo.Supervisor_Email__c}"/>
+	                          </div>
+	                      </div>
+	                      
+	                      	                      
+	                     <!-- Supervisor Phone -->
+	                      <div class="data-row">
+	                          <div class="data-label left">Supervisor Phone</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Supervisor_Phone" value="{!positionInfo.Supervisor_Phone__c}"/>
+	                          </div>
+	                      </div>
+	                      
+	                     <!-- Brief Description of Internship Position -->
+	                      <div class="data-row">
+	                          <div class="data-label left">Brief Description of Internship Position</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Position_Description" value="{!positionInfo.Position_Description__c}"/>
+	                          </div>
+	                      </div>
+	                      
+	                       <!-- Position Title -->
+	                      <div class="data-row">
+	                          <div class="data-label left">Position Title</div>
+	                          <div class="data-field">
+	                              <apex:outputField id="Position_Title" value="{!positionInfo.Position_Title__c}"/>
+	                          </div>
+	                      </div>
+	                      </apex:outputPanel>
+	                                     
+	                       	              			
+           				</div>
+           				
+           				
+                    	<div class="panel full last">
+                    		<div class="form-link">
+                    			<apex:outputLink styleClass="no-padding" rendered="{! Applicant_Info__c.Application_Level__c == 'Basic' && ApplicantInfo.Application_Stage__c == 'Working' && NOT(isPartner)}" value="apex/IGI_PreApp_Home?id={!applicantInfo.Id}"><i class="icon-chevron-left"></i> <span>Back</span></apex:outputLink>
+	                        	<apex:outputLink styleClass="no-padding" rendered="{! NOT(Applicant_Info__c.Application_Level__c == 'Basic' && ApplicantInfo.Application_Stage__c == 'Working') && NOT(isPartner)}" value="apex/your_applications"><i class="icon-chevron-left"></i> <span>Back</span></apex:outputLink>
+	                        	<apex:outputLink styleClass="no-padding" rendered="{! Applicant_Info__c.Application_Level__c == 'Basic' && ApplicantInfo.Application_Stage__c == 'Working' && isPartner}" value="apex/IGI_PreApp_Home?id={!applicantInfo.Id}"><i class="icon-chevron-left"></i> <span>Back</span></apex:outputLink>
+	                        	<apex:outputLink styleClass="no-padding" rendered="{! Applicant_Info__c.Application_Level__c == 'Main' && ApplicantInfo.Application_Stage__c == 'Working' && isPartner}" value="/apex/IGI_PreApp_Home?id={!applicantInfo.Id}"><i class="icon-chevron-left"></i> <span>Back</span></apex:outputLink>
+			                    <apex:outputLink styleClass="no-padding" rendered="{! Applicant_Info__c.Application_Level__c == 'Main' && $CurrentPage.parameters.BackURL == 'PT'  && NOT(ApplicantInfo.Application_Stage__c == 'Working') && isPartner}" value="/apex/pr_pt_profile?participantId={!participantId}"><i class="icon-chevron-left"></i> <span>Back</span></apex:outputLink>
+			                    <apex:outputLink styleClass="no-padding" rendered="{! Applicant_Info__c.Application_Level__c == 'Main' && $CurrentPage.parameters.BackURL == 'AP'  && NOT(ApplicantInfo.Application_Stage__c == 'Working') && isPartner}" value="/apex/pr_app_list"><i class="icon-chevron-left"></i> <span>Back</span></apex:outputLink>
+			                    <apex:outputLink styleClass="no-padding" rendered="{! Applicant_Info__c.Application_Level__c == 'Main' && NOT($CurrentPage.parameters.BackURL == 'PT' || $CurrentPage.parameters.BackURL == 'AP') && NOT(ApplicantInfo.Application_Stage__c == 'Working') && isPartner}" value="/apex/pr_app_list"><i class="icon-chevron-left"></i> <span>Back</span></apex:outputLink>
+	                        
+                    			<!--  
+				            	<apex:outputLink value="apex/your_applications?id={!applicantInfo.Id}" rendered="{! NOT(Applicant_Info__c.Application_Level__c == 'Main')  && applicantInfo.Type__c == 'Participant' && not(IsPartner)}" ><i class="icon-chevron-left"></i> <span>Back</span></apex:outputLink>
+				            	<apex:outputLink value="apex/IGI_PreApp_Home?id={!applicantInfo.Id}" rendered="{! NOT(Applicant_Info__c.Application_Level__c == 'Main') && IsPartner}" ><i class="icon-chevron-left"></i> <span>Back</span></apex:outputLink>
+				            	<apex:outputLink value="apex/IGI_PreApp_Home?id={!applicantInfo.Id}" rendered="{! Applicant_Info__c.Application_Level__c == 'Main'}" ><i class="icon-chevron-left"></i> <span>Back</span></apex:outputLink>
+				           		-->
+				            </div>
+                    		<!-- View PDF Summary Link -->
+	                    	<div class="form-link">
+	               				<apex:commandlink id="ViewPDFSummaryLink" styleClass="view-pdf" action="{!navigator}" target="_blank" >
+		                 			<i class="icon-file"></i>
+		                   			<apex:param name="nextPage" value="/apex/IGI_PreApp_View_PDF_Summary"/>
+				                    <apex:param name="reDirectPage" value="true"/>
+				                    <apex:param name="role" value="Both" assignTo="{!role}"/>
+				                    <apex:param name="view" value="Both" assignTo="{!view}"/>
+				                    <apex:commandButton value="View PDF Summary" />
+	                			</apex:commandlink>
+	               			
+	               			</div>
+                		</div>
+                	</div>        
+                </apex:form> 
+            </div>
+        </apex:define>
+    </apex:composition>
+</apex:page>

@@ -1,0 +1,20 @@
+<apex:page showHeader="false" standardStylesheets="false" title="Bandwidth Limit Exceeded">
+<apex:composition template="IntraxTemplate_Vs1">
+
+    <apex:define name="body">
+    <div class="wrapper">    
+        <h1>Limit Exceeded</h1>
+        <div class="white-box">   
+   
+
+      <apex:outputText value="Sorry for the inconvenience.">
+      <!--  <apex:outputText escape="false" value=" {!$Label.site.get_in_touch}">-->
+      <p>Please<a href="mailto:info@intraxinc.com">info@intraxinc.com</a>if you need to get in touch.</p>
+      <apex:param value="mailto:{!$Site.AdminEmailAddress}"/>
+      <apex:param value="email us"/>
+    </apex:outputText>
+        </div>
+        </div>
+        </apex:define> 
+  </apex:composition> 
+</apex:page>

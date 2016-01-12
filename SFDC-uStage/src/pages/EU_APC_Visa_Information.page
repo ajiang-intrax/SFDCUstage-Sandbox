@@ -1,0 +1,141 @@
+<apex:page standardController="Opportunity" showHeader="FALSE" renderas="pdf" >
+  
+<head>
+<style type="text/css">
+html, body {
+
+            margin:0; 
+
+            padding:0;
+
+            font-family: sans serif, Arial Unicode MS;
+            
+            font-size: 14px;
+
+            }       
+p, ol, ul{margin-bottom:1em;}
+img{border:0;}
+#wrapper { 
+  margin-left: 20px;
+  padding-top: 30px;
+}
+</style>
+</head>
+<apex:pageBlock >
+    <div id="wrapper">
+    <br/><br/><br/><br/>
+    <apex:outputfield value="{!Opportunity.Account.Name}"/> <br/>
+    <apex:outputField value="{!Opportunity.Account.PersonMailingStreet}"/>  <br/>
+    <apex:outputField value="{!Opportunity.Account.PersonMailingPostalCode}"/>&nbsp;<apex:outputField value="{!Opportunity.Account.PersonMailingCity}"/>  <br/>
+    <apex:outputField value="{!Opportunity.Account.PersonMailingCountry}"/> <br/>
+    <br/><br/><br/><br/><br/>
+    
+    <p>{!Day(TODAY())}.{!Month(TODAY())}.{!YEAR(TODAY())}</p>
+<apex:outputPanel rendered="{!Opportunity.Intrax_Region__c = 'Europe' && Opportunity.Intrax_Market__c != 'Germany' && Opportunity.Intrax_Market__c != 'France' && Opportunity.Intrax_Market__c != 'Spain'}">
+
+<p> Dear {!Opportunity.Account.FirstName}, </p>
+
+<p>Please find enclosed your visa documents. You will need to apply for a non-immigrant J1-Visa. Please check the US Embassy website for the current non-refundable fee for a J1 Visa. You may also call us. <br/> </p>
+
+<p>You can find all necessary information regarding the application process and payment in the visa-assistance form that I have enclosed in this envelope. <strong>Please read through
+this form very carefully as it contains very important information! </strong>  </p>
+
+<p> Enclosed in the envelope are also the following: <br/>
+      1. Your DS 2019 form which documents your participation in the programme and the legal stay as an au pair. Please be sure to sign the first page! <br/>
+      2. The detailed proof of payment for the SEVIS fee. Do not loose this proof of payment!
+ </p>
+
+<p>Please fill out carefully all documents that you need for your visa application and take them to the visa interview together with your valid passport, the proof of payment for the visa application
+fee and your visa appointment letter. Some time after the interview you will receive your passport with the visa stamp and the DS-2019 signed by the embassy via the special courier agency used by the
+embassy. You will have to present both your passport and the DS-2019 form when you enter the USA. </p>
+
+<p>Please let me know if you have any questions. </p>
+
+<p>Best Wishes,
+<br/><br/>
+       <p> {!Opportunity.owner.Name}<br/>
+        AuPairCare</p>
+</p>
+
+</apex:outputPanel>
+
+<apex:outputPanel rendered="{!Opportunity.Intrax_Market__c = 'France'}">
+
+<p> Bonjour {!Opportunity.Account.FirstName}, </p>
+
+<p>Je te prie de trouver ci-joint les documents officiels nécessaires à la demande de ton visa au pair J1.  </p>
+<ul>
+<li>Ton DS 2019 qui justifie ta participation légale au programme au pair. S'il te plaît, n'oublie pas de signer la première page!</li>
+</ul>
+
+<p> Tu devras faire une demande de J1-Visa non-immigrant, visiteur d’échange en ligne. Merci de vérifier le montant des frais de demande de visa directement sur le site de l’ambassade des Etats-Unis. Les frais ne sont pas remboursables.</p>
+
+<p> Tu trouveras toutes les informations nécessaires concernant la liste des documents à réunir et le paiement des frais de visa dans notre fiche d’aide en ligne. Merci de lire cette fiche très soigneusement, car elle contient les réponses adéquates au programme au pair.</p>
+
+<p> Merci de remplir soigneusement tous les documents nécessaires à la demande de visa J1 et de les apporter à ton rendez-vous visa avec un passeport valide et la preuve du paiement des frais de visa. Quelque temps après l'entrevue, tu recevras ton passeport avec le cachet du visa et ton DS-2019 signé par l'ambassade. Tu devras présenter à la fois ton passeport et le formulaire
+DS-2019 lorsque tu entras aux États-Unis.</p>
+
+<p> Si tu as des questions, n’hésite pas à me contacter. </p>
+
+<p>Bonne journée,</p>
+<br/>
+       <p> {!Opportunity.owner.Name}<br/>
+        AuPairCare</p>
+</apex:outputPanel>
+
+    <apex:outputPanel rendered="{!Opportunity.Intrax_Market__c = 'Spain'}">
+        <p> Hola {!Opportunity.Account.FirstName}, </p>
+
+        <p>En este sobre encontrarás tus documentos para el visado. Tendrás que solicitar un visado J1 para no-inmigrantes. Por favor infórmate en la página de la Embajada sobre las tasas de solicitud de visado J1.</p>
+        
+        <p>Encontrarás toda la información necesaria en relación al proceso de solicitud y al pago en el documento de ayuda online que encontrarás en nuestra web. ¡Por favor lee este formulario muy atentamente ya que contiene información muy importante!</p>
+
+        <p>En este sobre encontrarás:<br/>
+        <ul>
+        <li>
+        Tu formulario DS 2019 que documenta tu participación en el programa y la estancia legal como au pair. ¡Por favor asegúrate de firmar la primera página!
+        </li>
+        </ul>
+        </p>
+
+        <p>Por favor rellena cuidadosamente todos los documentos que necesitas para la solicitud de visado y llévalos a la entrevista para el visado junto con tu pasaporte válido, la prueba de pago de las tasas de solicitud de visado y tu carta de la cita para el visado. Unos días después de la entrevista recibirás, a través de una agencia de mensajería, tu pasaporte con el sello de visado y el formulario DS-2019 firmado por la embajada. Tendrás que  presentar ambos, tu pasaporte y el formulario DS-2019, cuando entres en Estados Unidos.</p>
+
+        <p>Por favor avísame si tienes cualquier pregunta.</p>
+
+        <p>Un cordial saludo,</p>
+        <br/>
+               <p> {!Opportunity.owner.Name}<br/>
+        AuPairCare</p>
+        
+     </apex:outputPanel>
+    
+    <apex:outputPanel rendered="{!Opportunity.Intrax_Market__c = 'Germany'}">
+<p>Hallo {!Opportunity.Account.FirstName},</p>
+
+<p>anbei findest du deine Visumsunterlagen.</p> 
+
+<p>Per E-Mail hast du von uns bereits Informationen zur Terminvereinbarung in der Botschaft bekommen. Solltest du diesen noch nicht haben, hole es bitte umgehend nach. Eine Verzögerung der Bearbeitung der Visumunterlagen kann im schlimmsten Fall dazu führen, dass du das Visum nicht rechtzeitig zur Ausreise erhältst.</p> 
+
+<p>Als Anlage erhältst du:<br/>
+<ol>
+<li>Brief („Attention: US Immigration Officer“), den du dem Beamten bei der Einreise in die USA (noch nicht im Konsulat) auf Verlangen vorzeigen musst.</li>
+<li>das sogenannte DS-2019 Formular als Dokument für die Programmteilnahme und den legalen Au pair-Aufenthalt. Bitte vergiss nicht auf der ersten Seite zu unterschreiben!</li>
+<li>deine offizielle Platzierungsbestätigung</li>
+</ol></p>
+
+<p>Bitte nimm diese Dokumente sowie eine formlose Erklärung darüber, dass du nach dem Au pair Jahr die USA wieder verlassen wirst, zu dem Interview in dem für dich zuständigen US-Konsulat mit. Sobald du deinen Pass mit Visumstempel sowie das vom Konsulat unterschriebene DS-2019 Formular zurückerhalten hast (Zeitraum variiert sehr stark), gib mir bitte noch einmal Bescheid. Beides musst du bei der Einreise in die USA vorlegen.</p>
+
+<p>Solltest du noch Fragen haben, melde dich bitte bei mir.</p>
+
+ <p>Mit freundlichen Grüßen,</p>
+
+  <p> {!$User.CompanyName}</p>
+    <p>{!$User.FirstName} {!$User.LastName}<br/>
+        {!$User.Email} - {!$User.Phone}</p>
+</apex:outputPanel>
+
+
+ </div>
+
+</apex:pageBlock>
+</apex:page>

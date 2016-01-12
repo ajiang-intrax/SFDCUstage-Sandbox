@@ -1,0 +1,42 @@
+<apex:component controller="SiteLoginController" id="loginComponent">
+  <apex:form id="loginForm" forceSSL="true">
+      <div class="form-row error"><apex:pageMessages id="error"/></div>
+    
+      <div class="form-row"> <div class="form-label left big" style="width:80px;"><apex:outputLabel value="{!$Label.site.username}" for="username"/></div>
+          <div class="form-field"><apex:inputText id="username" value="{!username}"/></div></div>
+        
+      <div class="form-row"><div class="form-label float big left" style="width:80px;"><apex:outputLabel value="{!$Label.site.password}" for="password"/></div>
+          <div class="form-field"><apex:inputSecret id="password" value="{!password}"/></div></div>
+       
+
+			<div class="form-row">
+            <div class="form-button login">
+           
+            <apex:commandlink action="{!login}" >                         
+            <apex:param name="nextPage" value="/PostLoginRedirection"/>
+            <apex:param name="reDirectPage" value="false"/>  
+            <apex:commandButton value="Login" />
+            </apex:commandlink> 
+           </div>
+           </div>
+       
+       
+        <!--  <div class="form-row">
+            <div class="form-button login">
+           <apex:commandlink action="{!login}" >                         
+            <apex:param name="nextPage" value="/LoginRedirection"/>
+            <apex:param name="reDirectPage" value="false"/>  
+            <apex:commandButton value="Login" />
+            </apex:commandlink> 
+           </div></div>-->
+      
+      
+          <div class="form-row"><apex:outputLink value="{!$Site.Prefix}/AppEngine_ForgotPassword?{!appendSet}" target="_self"> {!$Label.site.forgot_your_password_q}</apex:outputLink>
+          |&nbsp;  <apex:outputLink value="{!$Site.Prefix}/AppEngine_SiteRegister?{!appendSet}" rendered="{!$Site.RegistrationEnabled}" target="_self">{!$Label.site.new_user_q}
+          <apex:param name="startUrl" value="{!$CurrentPage.parameters.startUrl}"/>
+              </apex:outputLink></div>
+              
+    
+
+  </apex:form>
+</apex:component>

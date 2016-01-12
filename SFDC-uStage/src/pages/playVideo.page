@@ -1,0 +1,22 @@
+<apex:page docType="html-5.0" title="Swimming Experience" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="false" showHeader="false">
+<apex:composition template="intraxtemplate_vs3">
+<apex:define name="body">
+<apex:outputPanel id="streamingVideo">
+            <apex:pageBlock >
+            <!--<apex:outputText value="{!videotagfront}{!rtmpUrlVideo}{!videotagback}" escape="true"/>-->
+                <link href="//vjs.zencdn.net/4.6/video-js.css" rel="stylesheet"/>
+                <script src="//vjs.zencdn.net/4.6/video.js"></script>
+                <script src="https://jwpsrv.com/library/IwvHHhupEeSbkiIACyaB8g.js"></script>
+                <video id="streamingVideo" class="video-js vjs-default-skin" controls="true" preload="auto" width="640" height="264" poster="http://video-js.zencoder.com/oceans-clip.png" data-setup='{"example_option":true}'>
+                    <!--<source src="rtmp://s1m8chsul2n26m.cloudfront.net/cfx/st/&mp4:small.mp4?Expires=1410387600&Signature=d5Fd~EENfju3zfNKQHm6Sf64x3DH3EAFq6kTKvPi5xyvYy54DPVZAIZ0vpX4kz4hmXfr0lHkXc0uOSXn89RhON5y0ASZI2LqH0zpeuxnRLu3aZw4myMkNJSf~Zu9oB-LcTnW5YKW5f6Ygp5mVYslxHAlJ9SZIn7tMHSPZskVZgCLmBZ7hZEage9WfThZsCvJHyFP~-YgpejzOv~ka4gt3ceJKx1JGvASu2-ck7EJPwch2JNnjt4s3EQ2OdEUOK5h5pT7nw0gld67HPdFlnQ-dLaHA~ZZo0P7-WHMHxDv7zZwNUh7VSIEi8C3NnwjnO3CeA7cL3jC3HtShb7wIZYiWA__&Key-Pair-Id=APKAJQ3RQ6O7JUKMAREQ" type='rtmp/mp4' />-->
+                    <apex:outputText value="{!videotagfront}{!rtmpUrlVideo}{!videotagback}" escape="false"/>
+                    <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that 
+                        <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+                    </p>
+                </video>
+                
+            </apex:pageBlock>
+            </apex:outputPanel>
+            </apex:define>
+            </apex:composition>
+</apex:page>

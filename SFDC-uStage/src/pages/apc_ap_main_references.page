@@ -1,0 +1,276 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" title="Experience" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="false" showHeader="false" id="apc_ap_main_references">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_apc_ap_application />
+     <div id="app-page" class="row">
+        <div id="app-focus" class="col-md-8 col-md-push-3">
+          <c:block_app_completion ApplicantInfo="{!applicantInfo}" userProfileName="{!userProfileName}"  />
+          
+          <!-- Jose-Adding Tips for Partners  (Profile "OCPM Agent Portal")
+          <apex:outputPanel rendered="{!userProfileName == 'OCPM Agent Portal' && applicantInfo.Application_Level__c == 'Main'}" layout="block" id="blockTip">
+	          <div class="lead alert alert-warning clearfix">
+	          <b>Tip</b>&nbsp;&nbsp;
+	          Please confirm each reference provided is not a family relative of the au pair.
+	          </div>
+          </apex:outputPanel>
+          -->
+          
+          <h1>Personal Reference</h1>
+          <p class="lead">Please provide one non-relative personal reference. A personal reference, also known as a character reference, is someone that knows you and can vouch for your character and abilities.</p>
+          <p class="alert alert-info"><b>Your personal reference cannot be a family member or relative.</b></p>
+          <apex:form styleClass="form-vertical ws-validate" id="webform">
+            <apex:outputPanel layout="block" id="referencebox">
+                <apex:repeat id="refertable"  value="{!personInfoReferList}" var="item">
+                  <apex:outputPanel layout="block" id="panelblock" rendered="{!reference.Reference_Requested__c == false}">
+                    <div class="row">
+                    <div class="col-sm-6">
+                      <div class="form-group">
+                        <label class="control-label">First Name</label>
+                          <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!item.First_Name__c}" required="TRUE" />
+                        </div>
+                        </div>
+                         <div class="col-sm-6">  
+                      <div class="form-group">
+                        <label class="control-label">Last Name</label>
+                          <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!item.Last_Name__c}" required="TRUE" />
+                        </div>
+                        </div>
+                        </div><!-- end row -->
+                    
+                      <div class="row">
+                                
+                                <div class="col-sm-12">
+                                  <div class="form-group">
+                                    <label class="control-label">Email</label>
+                                    <apex:inputField styleClass="form-control" value="{!item.Email__c}" required="TRUE" id="employemail" />
+                                  </div>
+                                </div>
+                                
+                                <!-- 
+                                <div class="col-sm-6">
+                                  <div class="form-group">
+                                    <label class="control-label">Reference's Language
+                                    <i class="infobtn fa fa-question-circle" data-toggle="popover" 
+                                    data-content="Your employer will see your reference request in the language you choose."></i>
+                                    </label>
+		                              <apex:selectList styleClass="form-control" value="{!item.Reference_Language__c}" multiselect="false" required="TRUE" id="refLang" size="1">
+				                          <apex:selectOption itemValue="" itemLabel="--Select Reference Language--"/>
+				                          <apex:selectOption itemValue="en_US" itemLabel="English"/>
+				                          <apex:selectOption itemValue="es_SP" itemLabel="Spanish"/>
+				                          <apex:selectOption itemValue="pt_BR" itemLabel="Portuguese"/>
+				                      </apex:selectList>
+		                            </div>
+	                             </div>
+	                            -->
+	                           </div>
+                      
+                       <div class="row">   
+                       <div class="col-sm-12"> 
+                      <div class="form-group">
+                        <label class="control-label">Note to Reference <span class="info">(Optional)</span></label>
+                          <apex:inputTextarea styleClass="form-control" id="textReference"
+															value="{!item.Reference_Request_Note__c}"
+															required="FALSE"
+															onkeyup="countChar(this, 255, 'textReference')"
+															onfocus="countChar(this, 255, 'textReference')" />
+                          <div class="char-limit bb"> <span class="char-count-label">Characters left:</span> <span
+																id="textReference" class="char-count"> {!255-len(item.Reference_Request_Note__c)}</span> </div>
+                          <apex:message for="textReference" styleClass="custom-error-text" id="errormesOffen" />
+                        </div>
+                        </div>
+                        </div><!-- end row -->
+                        
+                </apex:outputPanel> <!-- end outPutPANEL Reference Request == False -->
+                
+                <apex:outputPanel layout="block" id="panelblock1" rendered="{!reference.Reference_Requested__c == true}">
+                
+                    <apex:outputPanel styleClass="margin-b4" layout="block" id="panRequestedNonComplete1" rendered="{!reference.Status__c != 'Complete' && reference.Status__c != 'Confirmed'}">
+                      	<p>A request for reference was sent to <strong>{!reference.Name}</strong> at <strong>{!reference.Email__c}</strong> on 
+                      	<strong>
+                      	<apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+    					<apex:param value="{!reference.CreatedDate}" /> 
+						</apex:outputText>  
+                      	</strong>
+                      	</p>
+                      	
+                      	<apex:commandLink action="{!iWantMyJSValues}" oncomplete="confDelete();" rerender="">
+                      	Cancel Reference
+                      	<apex:param name="ReferenceId" value="{!reference.id}" assignTo="{!referenceId}"/>
+                      	<!-- <apex:param name="PersonId" value="{!item.id}" assignTo="{!personId}"/> -->
+                        </apex:commandLink>
+                   </apex:outputPanel>
+                   
+                   <apex:outputPanel layout="block" id="panRequestedComplete" rendered="{!reference.Status__c == 'Complete' || reference.Status__c == 'Confirmed'}">
+		                <p>We received a reference from <strong>{!reference.Name}</strong> at <strong>{!reference.Email__c}</strong>.
+		                </p>
+		          </apex:outputPanel> 
+                    
+                  <apex:outputPanel layout="block" id="panRequestedNonComplete" rendered="{!reference.Status__c != 'Complete' && reference.Status__c != 'Confirmed'}">
+                    
+                    <div class="row">
+                    <div class="col-sm-6">
+                      <div class="form-group">
+                        <label class="control-label">First Name</label>
+                          <div data-toggle="tooltip" data-placement="top" title="You need to cancel the existing reference request to edit this field.">
+                          <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!item.First_Name__c}" required="TRUE" id="fname1" />
+                          <script>document.getElementById('{!$Component.fname1}').disabled = true; </script>
+                          </div>
+                        </div>
+                        </div>
+                         <div class="col-sm-6">  
+                      <div class="form-group">
+                        <label class="control-label">Last Name</label>
+                          <div data-toggle="tooltip" data-placement="top" title="You need to cancel the existing reference request to edit this field.">
+                          <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!item.Last_Name__c}" required="TRUE" id="lname1"/>
+                          <script>document.getElementById('{!$Component.lname1}').disabled = true; </script>
+                          </div>
+                        </div>
+                        </div>
+                        </div><!-- end row -->
+                    
+                      <div class="row">
+                                
+                        <div class="col-sm-12">
+							<div class="form-group">
+	                        <label class="control-label">Email</label>
+	                        <div data-toggle="tooltip" data-placement="top" title="You need to cancel the existing reference request to edit this field.">
+	                        <apex:inputField styleClass="form-control" value="{!item.Email__c}" required="TRUE" id="ref1email2" />
+	                        <script>document.getElementById('{!$Component.ref1email2}').disabled = true; </script>
+	                        </div>
+	                        </div>
+                        </div>
+                        
+                        <!-- 
+                        <div class="col-sm-6">
+	                        <div class="form-group">
+	                        <label class="control-label">Reference's Language
+	                        <i class="infobtn fa fa-question-circle" data-toggle="popover" 
+	                        data-content="Your employer will see your reference request in the language you choose."></i>
+	                        </label>
+			                <div data-toggle="tooltip" data-placement="top" title="You need to cancel the existing reference request to edit this field.">
+			                <apex:selectList styleClass="form-control" value="{!item.Reference_Language__c}" multiselect="false" required="TRUE" id="refLang1" size="1">
+					        <apex:selectOption itemValue="" itemLabel="--Select Reference Language--"/>
+					        <apex:selectOption itemValue="en_US" itemLabel="English"/>
+					        <apex:selectOption itemValue="es_SP" itemLabel="Spanish"/>
+					        <apex:selectOption itemValue="pt_BR" itemLabel="Portuguese"/>
+					        </apex:selectList>
+					        <script>document.getElementById('{!$Component.refLang1}').disabled = true; </script>
+					        </div>
+			                </div>
+	                    </div>
+	                     -->
+                        
+                        </div>
+                  
+                      
+                      <div class="row">  
+                      <div class="col-sm-12">   
+                      
+                        </div>
+                        </div><!-- end row -->
+                      
+                       <div class="row">   
+                       <div class="col-sm-12"> 
+                       <div class="form-group">
+                        <label class="control-label">Note to Reference <span class="info">(Optional)</span></label>
+                        <div data-toggle="tooltip" data-placement="top" title="You need to cancel the existing reference request to edit this field.">
+                        <apex:inputTextarea disabled="true" styleClass="form-control" id="textReference1"
+															value="{!item.Reference_Request_Note__c}"
+															required="FALSE"
+															onkeyup="countChar(this, 255, 'textReference11')"
+															onfocus="countChar(this, 255, 'textReference11')" />
+                         </div>
+                         <div class="char-limit bb"> <span class="char-count-label">Characters left:</span> <span
+																id="textReference11" class="char-count"> {!255-len(item.Reference_Request_Note__c)}</span> </div>
+                          <apex:message for="textReference1" styleClass="custom-error-text" id="errormesOffen1" />
+                        </div>
+                        </div>
+                        </div><!-- end row -->
+                    </apex:outputPanel>
+                </apex:outputPanel> <!-- end outPutPANEL Reference Request == TRUE -->
+                
+                </apex:repeat>
+            </apex:outputPanel>
+            
+            <div class="row">
+              <div class="col-sm-12 margin-t3">
+                
+                <apex:outputText rendered="{!applicantInfo.Application_Type__c=='Original' && applicantInfo.Application_Level__c=='Main'}">
+				<apex:outputLink styleClass="btn btn-link btn-lg" rendered="{!applicantInfo.Application_Type__c=='Original'}" value="/apex/apc_ap_basic_program_preferences?id={!applicantInfo.Id}" id="backlink6"><i class="fa fa-chevron-left"></i><span>Back</span></apex:outputLink>
+				 
+				 <apex:commandlink styleClass="btn btn-primary btn-lg"
+					action="{!navigator}" id="nextlink3" onComplete="rerunjs();"
+					reRender="webform" status="onsubmit">
+					<apex:param name="nextPage" value="/apex/apc_ap_main_visa_info" />
+					<apex:param name="reDirectPage" value="true" />
+					<apex:param name="savePersonRef" value="true" />
+					<apex:param name="pageId" value="025" />
+					<apex:param name="docType" value="Passport" assignTo="{!docType}"/>
+					<apex:commandButton value="Save & Continue" id="continuebutton3" />
+				</apex:commandlink>
+				</apex:outputText>
+              </div>
+            </div>
+          
+          <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                  <div class="modal-body">
+                    <p>Are you sure you want to cancel this reference?</p>
+                  </div>
+                  <div class="modal-footer">
+                    <apex:commandLink styleClass="btn btn-primary" action="{!deletePersonReferenceAPC}" style="text-decoration: none;" immediate="true">
+                      <apex:commandButton value="Yes" id="yesbutton"/>
+                    </apex:commandLink>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--  end modal window --> 
+          
+          </apex:form>
+        </div>
+        <!-- end column  -->
+        
+        <div id="app-side" class="col-md-3 col-md-pull-8">
+          <c:menu_side_apc_ap_basic ApplicantInfo="{!applicantInfo}" />
+        </div>
+      </div>
+      <!-- end row --> 
+
+<script>
+
+j$(document).ready(function () {
+    j$( 'input:checkbox' ).each(function() {
+		var aux = j$(this).is(':checked');
+		if (aux == true){
+			j$(this).next().text(" Reference requested");
+			j$(this).parent().parent().next().show();
+		}else{
+			j$(this).next().text(" Request a Reference");
+			j$(this).parent().parent().next().hide();
+		}
+	});
+});
+
+j$('.refbox').click(function(){
+var aux = j$(this).is(':checked') ;
+
+	if (aux == true){
+		j$(this).next().text(" Reference requested");
+	    j$(this).parent().parent().next().show();
+	    
+	}else{
+	  	j$(this).next().text(" Request a Reference");
+    	j$(this).parent().parent().next().hide();
+	}
+});
+
+function confDelete(){
+	j$('#myModal').modal();
+} 
+</script> 
+    </apex:define>
+  </apex:composition>
+</apex:page>

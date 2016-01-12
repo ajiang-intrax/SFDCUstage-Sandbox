@@ -1,0 +1,36 @@
+<apex:component >
+<apex:attribute name="theWidget" type="ZMG.ZMG_Widget_Renderer" required="true" description="the widget to be rendered" />
+
+<style>
+body {
+	background-color: #{!theWidget.widget.Background_Color__c};
+}
+</style>
+
+<apex:outputPanel layout="block" id="mainWidgetArea">
+
+	<div id="surveyTitle">
+		<a class="survey" title="Edit & Review" href="{!theWidget.editUrl}" target="_top"><apex:outputText value="{!theWidget.surveyTitle}" /></a>
+		<br/>
+		<a class="survey" target="_top" style="font-size: 12px; font-weight: bold;" title="Analyze Results" href="{!theWidget.resultsUrl}">Question Responses</a>
+	</div>
+
+	<div style="margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px; background-color: transparent;">
+		<script type="text/javascript"
+		src="{!theWidget.widget.Script_Tag_URL__c}&SessionID={!$Api.Session_ID}&ServerURL={!URLENCODE($Api.Partner_Server_Url_160)}&applicationid=3e3617b7-4a18-4e6a-83e7-dc23ae77cc36"
+		></script>
+	</div>
+
+	<br />
+	<br />
+	<br />
+	<br />
+	<br />
+	<br />
+
+ 	<c:ZMG_PoweredBy rendered="{!(theWidget.widget.ZMG__Widget_Type__c == 'Survey Specific')}"
+ 	 theWidget="{!theWidget}" />
+
+</apex:outputPanel>
+
+</apex:component>

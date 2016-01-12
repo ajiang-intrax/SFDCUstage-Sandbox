@@ -1,0 +1,254 @@
+<apex:page id="apc_resources" docType="html-5.0" applyHtmlTag="false" applyBodyTag="false" title="Family Resources" standardStylesheets="false" showHeader="false" controller="apc_resource_controller" action="{!showResources}">
+<apex:composition template="intraxtemplate_vs3">
+<apex:define name="body">
+<style>
+.res-article .res-article-title,
+.res-article .res-article-summary{color:#202020;}
+</style>
+<apex:form styleClass="form-vertical" id="Form">
+<div id="top"></div>
+
+
+<div class="row">
+<div class="col-sm-8 center-block ">
+<apex:outputPanel layout="block" rendered="{!IF(UserTye != NULL && UserTye == 'Host', true, false)}" > 
+<h1 class="no-margin-t center-text">Family Resources</h1>
+</apex:outputPanel>
+<apex:outputPanel layout="block" rendered="{!IF(UserTye != NULL && UserTye == 'Participant', true, false)}" > 
+<h1 class="no-margin-t center-text">Au Pair Resources</h1>    
+</apex:outputPanel>
+</div>
+</div><!--  end row -->
+
+
+
+<div class="row margin-b2">
+<div class="col-md-4 center-block ">
+     <div class="input-group margin-b2">
+ 	<apex:actionFunction name="callAction" action="{!showResources}" status="waitMsg" reRender="pb, pb2, pb3"/>	
+    <apex:inputText style="height:50px;" html-placeholder="Type a keyword or a question" styleClass="form-control" id="KeySearch" value="{!KeySearch}" onkeydown="return runScript(event);" />
+    <apex:commandLink styleClass="input-group-addon" action="{!showResources}" rerender="pb, pb2, pb3" status="waitMsg" id="GoButton"> <b>Search</b> </apex:commandLink>
+</div>
+<apex:actionStatus id="waitMsg" startStyleClass="alert alert-info">
+  <apex:facet name="start" > <i class="fa fa-refresh fa-spin"></i> <strong>Please Wait.....</strong> </apex:facet>  
+</apex:actionStatus>
+</div>
+</div><!--  end row -->
+
+
+<apex:outputPanel rendered="{!IF(UserTye != NULL && UserTye == 'Participant', true, false)}"  layout="block">
+
+<div class="row">
+<div class="col-sm-8">
+<apex:outputPanel layout="block" rendered="{!IF(allCategories.Size > 0 && allResource.Size > 0, false, true)}" >  
+    	<div class="box gray lead center-text">There are currently no featured articles to display. Please check back later.</div>
+    </apex:outputPanel>
+<apex:pageBlock id="pb">
+
+<apex:outputPanel layout="block" rendered="{!IF(KeySearch != NULL && KeySearch != '' && allCategories.Size > 0 && allResource.Size > 0, true, false)}">
+<p class="lead">Showing Search Results for <b>"{!KeySearch}"</b></p>
+</apex:outputPanel>
+
+<apex:outputPanel layout="block" rendered="{!IF(allCategories.Size > 0 && allResource.Size > 0, true, false)}" >  
+        <apex:repeat value="{!allCategories}" var="Category">
+           
+            <apex:outputPanel styleClass="margin-b2" layout="block" rendered="{!IF(CategoryAvailableMap[Category] == 'Available' , true, false)}">
+                        
+                        <div class="panel panel-default">
+                        <div class="panel-heading"><h3 class="no-margin">{!Category}</h3></div>
+                        <div class="panel-body">
+                            <apex:repeat value="{!CategoryResourceMap[Category]}" var="itemRes">
+                             <div class="res-article padding-2">
+                             <div class="tcell hidden-xs">
+                            <i class="fa fa-file-text-o margin-r2 data-label"></i>
+                            </div>
+                            <div class="tcell">
+                             <h4 class="res-article-title no-margin"><a href="apc_resources_article?cid={!itemRes.Id}">{!itemRes.Subject__c}</a></h4>
+                             <div class="lead no-margin">
+                             <div><apex:outputtext escape="false" value="{!itemRes.Short_Summary__c}" /></div>
+                            </div>
+                             </div>
+                            </div>
+                            </apex:repeat>
+                            </div><!-- end panel body -->
+                            </div><!-- end panel -->
+                            
+                        <apex:outputText rendered="{!IF(CategoryResCnt[Category] > 10 , true, false)}">
+                        	<a href="apc_resources_category?cat={!Category}&kSearch={!KeySearch}"><b>See All In {!Category} Category</b></a>
+                        </apex:outputText>
+                       
+                        </apex:outputPanel>
+        </apex:repeat>
+    </apex:outputPanel> 
+    </apex:pageBlock>
+   </div><!--  end col -->
+    
+   
+    <div class="col-sm-4">
+
+    <!-- Quick Link Block (Start) -->
+    <apex:outputPanel layout="block" rendered="{!IF(allQuickLinkLst != NULL && allQuickLinkLst.Size > 0, true, false)}" > 
+    	<div class="panel panel-default">
+    	<div class="panel-heading"><h3 class="no-margin">Useful Links</h3></div>
+    	<div class="panel-body padding-4">
+    	<apex:repeat value="{!allQuickLinkLst}" var="itemQuick">
+    		<div class="margin-b1"><a href="apc_resources_article?cid={!itemQuick.Id}"><b>{!itemQuick.Subject__c}</b></a></div>
+    		
+    	</apex:repeat>
+    	</div><!-- end panel body -->
+    	</div><!--  end panel -->
+    </apex:outputPanel> 
+     </div><!-- end col -->
+      </div><!-- end row -->
+     
+</apex:outputPanel>
+<!-- end AP resources -->
+
+<apex:outputPanel rendered="{!IF(UserTye != NULL && UserTye == 'Host', true, false)}" layout="block">
+
+<div class="row">
+<div class="col-sm-8 center-block">
+<apex:outputPanel layout="block" rendered="{!IF(allCategories.Size > 0 && allResource.Size > 0, false, true)}" >  
+    	<div class="box gray lead center-text">There are currently no featured articles to display. Please check back later.</div>
+    </apex:outputPanel>
+<apex:pageBlock id="pb2">
+
+<apex:outputPanel layout="block" rendered="{!IF(KeySearch != NULL && KeySearch != '' && allCategories.Size > 0 && allResource.Size > 0, true, false)}">
+<p class="lead">Showing Search Results for <b>"{!KeySearch}"</b></p>
+</apex:outputPanel>
+
+<apex:outputPanel layout="block" rendered="{!IF(allCategories.Size > 0 && allResource.Size > 0, true, false)}" >  
+        <apex:repeat value="{!allCategories}" var="Category">
+           
+            <apex:outputPanel styleClass="margin-b2" layout="block" rendered="{!IF(CategoryAvailableMap[Category] == 'Available' , true, false)}">
+                        
+                        <div class="panel panel-default">
+                        <div class="panel-heading"><h3 class="no-margin">{!Category}</h3></div>
+                        <div class="panel-body">
+                            <apex:repeat value="{!CategoryResourceMap[Category]}" var="itemRes">
+                             <div class="res-article padding-2">
+                             <div class="tcell hidden-xs">
+                            <i class="fa fa-file-text-o margin-r2 data-label"></i>
+                            </div>
+                            <div class="tcell">
+                             <h4 class="res-article-title no-margin"><a href="apc_resources_article?cid={!itemRes.Id}">{!itemRes.Subject__c}</a></h4>
+                             <div class="lead no-margin">
+                             <div><apex:outputtext escape="false" value="{!itemRes.Short_Summary__c}" /></div>
+                            </div>
+                             </div>
+                            </div>
+                            </apex:repeat>
+                            </div><!-- end panel body -->
+                            </div><!-- end panel -->
+                            
+                        <apex:outputText rendered="{!IF(CategoryResCnt[Category] > 10 , true, false)}">
+                        	<a href="apc_resources_category?cat={!Category}&kSearch={!KeySearch}"><b>See All In {!Category} Category</b></a>
+                        </apex:outputText>
+                       
+                        </apex:outputPanel>
+        </apex:repeat>
+    </apex:outputPanel> 
+    </apex:pageBlock>
+   </div><!--  end col -->
+   
+      </div><!-- end row -->
+      
+      
+      <!--  end HF resources -->
+   </apex:outputPanel> 
+
+
+
+
+<apex:outputPanel rendered="{!IF(UserTye != NULL && UserTye == 'Partner', true, false)}"  layout="block">
+
+<div class="row">
+<div class="col-sm-8">
+<apex:outputPanel layout="block" rendered="{!IF(allCategories.Size > 0 && allResource.Size > 0, false, true)}" >  
+    	<div class="box gray lead center-text">There are currently no featured articles to display. Please check back later.</div>
+    </apex:outputPanel>
+<apex:pageBlock id="pb3">
+
+<apex:outputPanel layout="block" rendered="{!IF(KeySearch != NULL && KeySearch != '' && allCategories.Size > 0 && allResource.Size > 0, true, false)}">
+<p class="lead">Showing Search Results for <b>"{!KeySearch}"</b></p>
+</apex:outputPanel>
+
+<apex:outputPanel layout="block" rendered="{!IF(allCategories.Size > 0 && allResource.Size > 0, true, false)}" >  
+        <apex:repeat value="{!allCategories}" var="Category">
+           
+            <apex:outputPanel styleClass="margin-b2" layout="block" rendered="{!IF(CategoryAvailableMap[Category] == 'Available' , true, false)}">
+                        
+                        <div class="panel panel-default">
+                        <div class="panel-heading"><h3 class="no-margin">{!Category}</h3></div>
+                        <div class="panel-body">
+                            <apex:repeat value="{!CategoryResourceMap[Category]}" var="itemRes">
+                             <div class="res-article padding-2">
+                             <div class="tcell hidden-xs">
+                            <i class="fa fa-file-text-o margin-r2 data-label"></i>
+                            </div>
+                            <div class="tcell">
+                             <h4 class="res-article-title no-margin"><a href="apc_resources_article?cid={!itemRes.Id}">{!itemRes.Subject__c}</a></h4>
+                             <div class="lead no-margin">
+                             <div><apex:outputtext escape="false" value="{!itemRes.Short_Summary__c}" /></div>
+                            </div>
+                             </div>
+                            </div>
+                            </apex:repeat>
+                            </div><!-- end panel body -->
+                            </div><!-- end panel -->
+                            
+                        <apex:outputText rendered="{!IF(CategoryResCnt[Category] > 10 , true, false)}">
+                        	<a href="apc_resources_category?cat={!Category}&kSearch={!KeySearch}"><b>See All In {!Category} Category</b></a>
+                        </apex:outputText>
+                       
+                        </apex:outputPanel>
+        </apex:repeat>
+    </apex:outputPanel> 
+    </apex:pageBlock>
+   </div><!--  end col -->
+    
+   
+    <div class="col-sm-4">
+
+    <!-- Quick Link Block (Start) -->
+    <apex:outputPanel layout="block" rendered="{!IF(allQuickLinkLst != NULL && allQuickLinkLst.Size > 0, true, false)}" > 
+    	<div class="panel panel-default">
+    	<div class="panel-heading"><h3 class="no-margin">Useful Links</h3></div>
+    	<div class="panel-body padding-4">
+    	<apex:repeat value="{!allQuickLinkLst}" var="itemQuick">
+    		<div class="margin-b1"><a href="apc_resources_article?cid={!itemQuick.Id}"><b>{!itemQuick.Subject__c}</b></a></div>
+    		
+    	</apex:repeat>
+    	</div><!-- end panel body -->
+    	</div><!--  end panel -->
+    </apex:outputPanel> 
+     </div><!-- end col -->
+      </div><!-- end row -->
+     
+</apex:outputPanel>
+<!-- end AP resources -->
+
+
+<script>
+	    
+	        function runScript(obj){
+	            
+	            //alert(obj.keyCode);
+	            if(obj.keyCode == 13){
+	                callAction();   // call action function
+	                return false;
+	            }
+	            //else if((obj.keyCode > 34 && obj.keyCode < 40) || (obj.keyCode > 95 && obj.keyCode < 106) || (obj.keyCode > 47 && obj.keyCode < 58) || obj.keyCode == 8 || obj.keyCode == 46 ){
+	                //return true;
+	            //}
+	            else{
+	                return true;
+	            }
+	        }
+	    </script>
+
+</apex:form>
+
+</apex:define>
+</apex:composition>
+</apex:page>

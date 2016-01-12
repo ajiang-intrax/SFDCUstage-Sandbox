@@ -1,0 +1,151 @@
+<apex:page controller="googleGeoHelper">
+<apex:stylesheet value="{!URLFOR($Resource.intrax_themes_standard_community, '/intrax_themes_standard_community/custom.css')}" />
+<script>
+function getRMConfirmation(newZipCodeValue,ADName){
+    if (newZipCodeValue == 0){
+        return confirm('This action will create all the new Zip Codes with the associated ADs/ chosen Areas. Confirm?');
+    }
+    else{
+        return confirm('This action will create the new zip '+newZipCodeValue+' to the AD '+ADName+' and chosen Area. Confirm?');
+    }
+        
+}
+</script>
+<apex:pageBlock >
+    <apex:outputText value="" rendered="{!noADZips.size>0}">
+    <div class="h3"><apex:outputText value="Unassigned Zipcodes" /></div>
+    <apex:form >   
+    <!--<apex:dataTable value="{!allZipWithADInfo}" var="z">
+        <apex:column value="{!z.Zip_Code__c}" />
+    </apex:dataTable>    -->
+    <apex:pageBlockTable value="{!noADZips}" var="newZipWrapper" id="ZipTable1" rendered="{!noADZips.size>0}">
+        <apex:column value="{!newZipWrapper.newZipCode}" headerValue="Name"/>
+        <apex:column value="{!newZipWrapper.associatedAD.Name}" headerValue="Area Director"/>
+        <apex:column value="{!newZipWrapper.HFCount}" headerValue="Number of HFs"/>
+        <apex:column headerValue="Associated Areas">
+                <apex:selectList styleClass="form-control" value="{!newZipWrapper.areas}" multiselect="false" size="1" >
+                    <apex:selectOptions value="{!newZipWrapper.areaValues}"/>
+                </apex:selectList>
+        </apex:column>
+        <apex:column headerValue="Actions">
+        <!-- onclick="return getRMConfirmation({!newZipWrapper.newZipCode},'{!newZipWrapper.associatedAD.Name}');" 
+        onclick="if(!confirm('Are you sure?')){return};" -->
+                <apex:commandButton rendered="{!newZipWrapper.associatedAD.Name!=null}" action="{!createNewZipForAreaAssociation}" reRender="none" value="Assign to Area" onclick="if(!getRMConfirmation({!newZipWrapper.newZipCode},'{!newZipWrapper.associatedAD.Name}')){return};">
+                    <apex:Param name="newZipCodeValue" value="{!newZipWrapper.newZipCode}" assignTo="{!newZipCodeValue}"/>
+                </apex:commandButton>
+        </apex:column>
+    </apex:pageBlockTable>
+    
+</apex:form>
+    <br/><br/>
+    </apex:outputText>
+    <div class="h3"><apex:outputText value="Assigned Zipcodes"/></div>
+    <apex:variable var="count" value="{!startRow}"/>
+    <!--<apex:pageBlockTable value="{!allZipWithADInfo}" var="aZip" id="ZipTable">-->
+    <apex:pageBlockTable value="{!allZipWrapper}" var="aZip" id="ZipTable">
+        <apex:facet name="header">
+
+            <apex:form >
+            <b>SEARCH FILTERS:</b>&nbsp;&nbsp;
+            
+                <apex:outputpanel id="searcher">
+                    <apex:outputText value="ZipCode:"/>&nbsp;
+                    <apex:inputText value="{!searchZipCode}" id="searchZip"/>
+                    
+                    <!--<apex:outputText value="    Having count >"/>
+                    <apex:inputText value="{!countGreaterThan}" id="countGreaterThan"/>-->
+                    &nbsp;
+                    <apex:outputText value="Areas:"/>&nbsp;
+                    <apex:selectList styleClass="form-control" value="{!areas}" multiselect="false" size="1" >
+                        <apex:selectOptions value="{!areaValues}"/>
+                    </apex:selectList>
+                    &nbsp;
+                    <apex:outputText value="Area Directors:"/>&nbsp;
+                    <apex:selectList styleClass="form-control" value="{!areadirectors}" multiselect="false" size="1" >
+                        <apex:selectOptions value="{!areadirectorValues}"/>
+                    </apex:selectList>
+                </apex:outputpanel>             
+                &nbsp;
+                <apex:outputPanel id="SearchAction">
+                    <apex:commandbutton id="Filter" value="Filter" action="{!filterResults}" rerender="ZipTable,paginationButtonBlock,countBlock">
+                        <apex:Param name="resetareas" value="Resetting" assignTo="{!resetareas}"/>
+                        <apex:Param name="startRow" value="1" assignTo="{!startRow}"/>
+                        <apex:Param name="endRow" value="{!recordsPerPage}" assignTo="{!endRow}"/>
+                    </apex:commandbutton>
+                    <apex:commandbutton id="Reset" value="Reset" action="{!filterResults}" rerender="ZipTable,paginationButtonBlock,countBlock">
+                        <apex:Param name="searchZipCode" value="" assignTo="{!searchZipCode}"/>
+                        <apex:Param name="recordsPerPage" value="5" assignTo="{!recordsPerPage}"/>
+                        <!--<apex:Param name="countGreaterThan" value="0" assignTo="{!countGreaterThan}"/>-->
+                        <apex:Param name="resetareas" value="Blank" assignTo="{!resetareas}"/>
+                        <apex:Param name="areadirectors" value="None" assignTo="{!areadirectors}"/>
+                        <apex:Param name="startRow" value="1" assignTo="{!startRow}"/>
+                        <apex:Param name="endRow" value="{!recordsPerPage}" assignTo="{!endRow}"/>
+                    </apex:commandbutton>
+                </apex:outputPanel>
+                
+            </apex:form>    
+        </apex:facet>
+        
+        <apex:column headerValue="Name" >
+        <apex:outputLink value="googlezipvisualizer?id={!aZip.theZip.id}">{!aZip.theZip.Zip_Code__c}</apex:outputLink>
+        </apex:column>
+        <apex:column value="{!aZip.theZip.Area__r.Area_Director__r.Contact.Name}" headerValue="Area Director" />
+        <apex:column value="{!aZip.theZip.Area__r.Name}" headerValue="Name of Area"  />
+        <apex:column value="{!zipCodeToHF[aZip.theZip.Zip_Code__c]}" headerValue="Number of HFs" />
+        <apex:column value="{!aZip.theZip.Area__r.Area_Director__r.ManagerId}" headerValue="Regional Manager"  />
+        <apex:column rendered="{!count <= endRow}" ><apex:variable var="count" value="{!count + 1}"/> </apex:column>
+        
+        <apex:facet name="footer">
+            <apex:form >
+                <apex:outputPanel id="countStats">
+                    Total Zips: {!allZipWithADInfo.size}, Showing ({!startRow} - 
+                    <apex:outputText rendered="{!if(endRow<=allZipWithADInfo.size,true,false)}" value="{!endRow})"/>
+                    <apex:outputText rendered="{!if(endRow>allZipWithADInfo.size,true,false)}" value="{!allZipWithADInfo.size})"/>
+                </apex:outputPanel>                
+                Records per page:&nbsp;<apex:inputText id="recPerPage" value="{!recordsPerPage}"/>
+                &nbsp;
+                <apex:outputPanel id="resetRecordsPerPage">
+                    <apex:commandbutton id="resetRecPerPage" value="Update" action="{!resetAndFilter}" rerender="ZipTable,paginationButtonBlock,countBlock">
+                        <apex:Param name="resetareas" value="Resetting" assignTo="{!resetareas}"/>
+                        <apex:Param name="startRow" value="1" assignTo="{!startRow}"/>
+                    </apex:commandbutton>
+                </apex:outputPanel>
+            </apex:form>
+        </apex:facet>
+    </apex:pageBlockTable>  
+
+    <apex:form id="paginationButtonBlock">
+        <apex:outputpanel id="reversePager" rendered="{!if(allZipWithADInfo.size>recordsPerPage && startRow>=recordsPerPage,true,false)}">
+            <apex:commandbutton id="PreviousSet" value="Previous" action="{!filterResults}" rerender="ZipTable,countBlock,paginationButtonBlock">
+                <apex:Param name="startRow" value="{!startRow-recordsPerPage}" assignTo="{!startRow}"/>
+                <apex:Param name="endRow" value="{!endRow-recordsPerPage}" assignTo="{!endRow}"/>
+                <apex:variable var="count" value="{!1}"/>
+            </apex:commandbutton>
+        </apex:outputpanel>     
+        <apex:outputpanel id="forwardPager" rendered="{!if(allZipWithADInfo.size>recordsPerPage && endRow<allZipWithADInfo.size,true,false)}">
+            <apex:commandbutton id="NextSet" value="Next" action="{!filterResults}" rerender="ZipTable,countBlock,paginationButtonBlock">
+                <apex:Param name="startRow" value="{!startRow+recordsPerPage}" assignTo="{!startRow}"/>
+                <apex:Param name="endRow" value="{!endRow+recordsPerPage}" assignTo="{!endRow}"/>
+                <apex:variable var="count" value="{!1}"/>
+            </apex:commandbutton>
+        </apex:outputpanel>
+        
+        <apex:outputpanel id="pageNumberBlock">
+        <b>Pages:</b>&nbsp;
+            <apex:variable var="recCount" value="{!1}"/>
+            <apex:variable var="pageCount" value="{!1}"/>
+            <apex:repeat value="{!paginationBlock}" var="aPage">
+                <apex:outputText value="{!aPage.pageNum}" rendered="{!if(startRow==aPage.startRow,true,false)}"/>
+                <apex:commandLink action="{!filterResults}" rendered="{!if(startRow!=aPage.startRow,true,false)}" rerender="ZipTable,countBlock,paginationButtonBlock">
+                    {!aPage.pageNum}
+                    <apex:Param name="startRow" value="{!aPage.startRow}" assignTo="{!startRow}"/>
+                    <apex:Param name="endRow" value="{!aPage.endRow}" assignTo="{!endRow}"/>
+                </apex:commandLink>
+                &nbsp;&nbsp;
+            </apex:repeat>
+        </apex:outputpanel>
+    </apex:form>
+    <!-- <apex:outputText value="Total Zips: {!allZipWithADInfo.size} Pages={!noOfPages} Count: {!count} StartRow: {!startRow} Endrow: {!endRow} Recordsperpage: {!recordsPerPage}" id="countBlock"/>-->
+
+</apex:pageBlock>
+</apex:page>

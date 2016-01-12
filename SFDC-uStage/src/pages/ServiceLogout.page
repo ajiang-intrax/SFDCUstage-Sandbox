@@ -1,0 +1,13 @@
+<apex:page showHeader="false" sidebar="false" id="servicelogout" controller="ServiceLogoutController" action="{!contactToDelete}"> 
+<apex:includeScript value="{!URLFOR($Resource.module_jquery, '/module_jquery/scripts/jquery-1.8.0.min.js')}" />
+<apex:iframe src="{!$Site.Prefix}/secur/logout.jsp" height="1" width="1" /> 
+<script>
+    function redirectToLogin(){
+	    window.parent.location = "{!$Site.Prefix}/AppEngine_SiteRegister?uIn=IGIG";
+    }   
+    
+    $( document ).ready(function() {
+    	setTimeout("redirectToLogin()", 3000);
+	});
+</script>
+</apex:page>

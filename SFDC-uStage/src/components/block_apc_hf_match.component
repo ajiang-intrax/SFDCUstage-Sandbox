@@ -1,0 +1,266 @@
+<apex:component layout="none" id="block_apc_hf_match" allowDML="true">
+    <apex:attribute name="PageController" description="Instance of home_controller class" type="apc_match_controller" required="false" default="" />
+    <style>
+.list-view.form-vertical .control-label {
+    margin-bottom: 0;
+}
+.list-view.form-vertical .form-group {
+    margin-bottom: 10px;
+}
+.list-view.vs1 .item .item-image {
+    position: relative;
+    width: 100%;
+    background: #dcdcdc;
+    text-align: center;
+}
+.item-image-male, .item-image-female {
+    min-height: 160px;
+}
+.item-image-male, .item-image-female {
+    min-height: 160px;
+}
+.list-view .item-image-real {
+    width:100%;
+    //max-height: 160px;
+}
+.phot-pre-img {
+  /* display: block; */
+  height: 160px;
+}
+
+.green-border{border:#aed96a solid 6px;}
+</style>
+    
+    <!--  //-------------Match Flow---------------//  -->
+    <apex:outputPanel styleClass="margin-t4" layout="block" rendered="{!PageController.ConfMatch.size > 0 && PageController.ApplicantInfoList[0].Application_Type__c!='Extension'}">
+        
+        <div class="row margin-b2">
+            
+            <div class="col-sm-8 center-block center-text">
+               
+                <apex:outputPanel layout="block" rendered="{!If( PageController.ConfMatch[0].Status__c=='Requested' && PageController.ConfMatch[0].Offer_Status__c=='Offered',true,false)}">
+                    <h2>You Have Requested a Match</h2>
+                </apex:outputPanel>
+                
+                <apex:outputPanel layout="block" rendered="{!If(PageController.ConfMatch[0].Status__c=='Requested' && PageController.ConfMatch[0].Offer_Status__c=='Declined',true,false)}">
+                    <h2>Match Request Rejected</h2>
+                </apex:outputPanel>
+                
+                <apex:outputPanel layout="block" rendered="{!If(PageController.ConfMatch[0].Status__c=='Requested' && PageController.ConfMatch[0].Offer_Status__c=='Accepted',true,false)}">
+                    <h2>Your Match Request Is Accepted!</h2>
+                    <p class="lead">Please finalize your match no later than <strong>
+                        <apex:outputText value="{0,date, MMMM d, yyyy h:mm a}" >
+                            <apex:param value="{!PageController.ConfMatch[0].request_Expiration__c}"/>
+                        </apex:outputText>
+                        </strong>. After that date your request will expire and au pair will no longer be available to you.</p>
+                </apex:outputPanel>
+                
+                <apex:outputPanel layout="block" rendered="{!If(PageController.ConfMatch[0].Status__c=='Confirmed' && PageController.ConfMatch[0].Offer_Status__c=='Accepted' && PageController.ConfMatch[0].Engagement__r.Arrival_Trip_URL__c == null,true,false)}">
+                    <h2>Congratulations, you have an au pair!</h2>
+                    <p class="lead">You will be able to view her flight itinerary here once her domestic flight details from New Jersey to your city is available.</p>
+                </apex:outputPanel>
+                
+                <apex:outputPanel layout="block" rendered="{!If(PageController.ConfMatch[0].Engagement__r.status__c = 'Program Ready' && PageController.ConfMatch[0].Engagement__r.In_Country__c = 'No' && PageController.ConfMatch[0].Status__c=='Confirmed' && PageController.ConfMatch[0].Offer_Status__c=='Accepted' && PageController.ConfMatch[0].Engagement__r.Arrival_Trip_URL__c != null && PageController.ConfMatch[0].Engagement__r.Arrival_PNR_Number__c != null ,true,false)}">
+                    <h2>Your Au Pair's Arrival</h2>
+                    <p class="lead">Your au pair's <apex:outputLink value="{!PageController.ConfMatch[0].Engagement__r.Arrival_Trip_URL__c}"><b> flight itinerary</b> </apex:outputLink> is now available. Please make sure to check it often to be informed of any changes to the flight schedule.</p>
+                </apex:outputPanel>
+                
+                
+                <div class="margin-b4">
+                    <div class="tcell">
+                        <div class="margin-r2">
+                            <apex:outputLink styleClass="margin-r2" value="/apex/apc_hf_au_pair_profile?id={!PageController.ConfMatch[0].Engagement__c}" id="linkprofinfo2">
+                                <apex:image styleClass="phot-pre-img" value="{!PageController.returnURLmap[PageController.ConfMatch[0].Engagement__c]}" rendered="{!PageController.returnURLMap[PageController.ConfMatch[0].Engagement__c] != 'no-picture'}"/>
+                                <apex:image styleClass="item-image-female" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/female-profile-med.png')}"  rendered="{!PageController.returnURLMap[PageController.ConfMatch[0].Engagement__c] == 'no-picture' && ( PageController.ConfMatch[0].Engagement__r.Gender__c == 'Female' || PageController.ConfMatch[0].Engagement__r.Gender__c == null)}"/>
+                                <apex:image styleClass="item-image-male" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/male-profile-med.png')}" rendered="{!PageController.returnURLMap[PageController.ConfMatch[0].Engagement__c] == 'no-picture' && PageController.ConfMatch[0].Engagement__r.Gender__c == 'Male'}"/>
+                            </apex:outputLink>
+                        </div>
+                    </div><!-- end tcell -->
+                    
+                    <div class="tcell">
+                        
+                        
+                            <h3 class="no-margin-t">{!PageController.ConfMatch[0].Engagement__r.Account_Id__r.Name}</h3>
+                        
+                        
+                        <apex:outputPanel layout="block" rendered="{!PageController.activeInterview.size <= 2 && PageController.activeInterview.size != 0 && PageController.ConfMatch.size ==0}" id="matchexpireid">
+                            <div class="margin-b2">
+                                <label>Interview Expires On</label><br/>
+                                <apex:outputText value="{0,date, MMMM d, yyyy h:mm a}" > "Checking condition"
+                                    <apex:param value="{!PageController.ConfMatch[0].End_date__c+PageController.offset}"/>
+                                </apex:outputText>
+                            </div>
+                        </apex:outputPanel>
+                        
+                        <apex:outputLink rendered="{!PageController.activeInterview.size <= 2 && PageController.activeInterview.size != 0 && PageController.ConfMatch.size ==0}" value="/apex/apc_hf_interviews?id={!PageController.matchSelection.Engagement__c}"><b>See Details</b> </apex:outputLink>
+                        <apex:outputlink rendered="{!If(PageController.ConfMatch.size > 0 && PageController.ConfMatch[0].Status__c=='Requested' && PageController.ConfMatch[0].Offer_Status__c=='Declined',true,false)}" id="rejectlnk"> <strong>Remove Profile</strong> </apex:outputlink>
+                        
+                        <apex:outputPanel layout="block" rendered="{!If(PageController.ConfMatch.size > 0 && PageController.ConfMatch[0].Status__c=='Requested' && PageController.ConfMatch[0].Offer_Status__c=='Offered',true,false)}" id="responseid">
+                            <div>
+                                <label>Au Pair's Response Required By </label><br/>
+                                <apex:outputText value="{0,date, MMMM d, yyyy h:mm a}" >
+                                    <apex:param value="{!PageController.ConfMatch[0].Arrival_Date__c+PageController.offset}"/>
+                                </apex:outputText>
+                            </div>
+                        </apex:outputPanel>
+                        
+                        <apex:outputPanel styleClass="margin-b2" layout="block" rendered="{!If(PageController.ConfMatch.size > 0 && (PageController.ConfMatch[0].Status__c=='Requested'|| PageController.ConfMatch[0].Status__c=='Confirmed') && PageController.ConfMatch[0].Offer_Status__c=='Accepted',true,false)}" id="planarrive">
+                            <label>Planned Arrival to U.S. </label><br/>
+                            <apex:outputText value="{0,date,MM'/'dd'/'yyyy}" >
+                                <apex:param value="{!PageController.ConfMatch[0].Arrival_Date__c}"/>
+                            </apex:outputText>
+                        </apex:outputPanel>
+                        
+                    </div><!--  end tcell -->
+                </div>
+                
+               <apex:outputPanel layout="block"  rendered="{!If((CONTAINS(PageController.ApplicantInfoList[0].PageStatus_Complete__c,'045') &&
+                                                            CONTAINS(PageController.ApplicantInfoList[0].PageStatus_Complete__c,'009')) && 
+                                                            PageController.ApplicantInfoList[0].Terms_Accepted__c==true && PageController.ConfMatch[0].Offer_Status__c=='Accepted' && PageController.ConfMatch[0].Status__c=='Requested' && PageController.ApplicantInfoList[0].Application_Type__c=='Original',true,false)}" >
+                    <apex:outputLink id="finalize" styleClass="btn btn-primary btn-lg" value="/apex/apc_hf_match_agreement?id={!PageController.ApplicantInfoList[0].id}&mid={!PageController.ConfMatch[0].id}&uType=HostFamily" >
+                        <apex:outputText >Finalize Match</apex:outputText>
+                    </apex:outputLink>
+                </apex:outputPanel>
+               
+                          <apex:outputText styleClass="center-text margin-t2" rendered="{!PageController.ApplicantInfoList[0].Terms_Accepted__c==true && PageController.ConfMatch[0].Offer_Status__c=='Accepted' && PageController.ConfMatch[0].Status__c=='Requested' && (PageController.ApplicantInfoList[0].Application_Type__c=='Renewal' || PageController.ApplicantInfoList[0].Application_Type__c=='Rematch')}">
+                                      <apex:outputLink id="finalizeRen" styleClass="btn btn-primary btn-lg" value="/apex/apc_hf_match_agreement?id={!PageController.ApplicantInfoList[0].id}&mid={!PageController.ConfMatch[0].id}&uType=HostFamily" >
+                                          <apex:outputText >Finalize Match</apex:outputText>
+                                      </apex:outputLink>
+                                  </apex:outputText>
+                                   
+            <apex:outputText styleClass="center-text margin-t2" rendered="{!PageController.ApplicantInfoList[0].Terms_Accepted__c==true && PageController.ConfMatch[0].Offer_Status__c=='Accepted' && PageController.ConfMatch[0].Status__c=='Requested' && PageController.ApplicantInfoList[0].Application_Type__c=='Extension'}">
+                                           <apex:outputLink id="finalizeExt" styleClass="btn btn-primary btn-lg" value="/apex/apc_hf_match_payment_options" >
+                                               <apex:outputText >Finalize Match</apex:outputText>
+                                           </apex:outputLink>
+                                       </apex:outputText>
+                
+                <apex:outputPanel layout="block" rendered="{!If(PageController.ConfMatch[0].Engagement__r.status__c = 'Program Ready' && PageController.ConfMatch[0].Engagement__r.In_Country__c = 'No' && PageController.ConfMatch[0].Status__c=='Confirmed' && PageController.ConfMatch[0].Offer_Status__c=='Accepted' && PageController.ConfMatch[0].Engagement__r.Arrival_Trip_URL__c != null && PageController.ConfMatch[0].Engagement__r.Arrival_PNR_Number__c != null,true,false)}">
+                    <apex:outputLink id="itenaryLink" styleClass="btn btn-primary btn-lg" value="{!PageController.ConfMatch[0].Engagement__r.Arrival_Trip_URL__c}" target="_blank">
+                        <apex:outputText >View Travel Itinerary</apex:outputText>
+                    </apex:outputLink>
+                </apex:outputPanel>
+            </div>
+        </div>   
+        <!--Before You Can Match Panel -->
+        <apex:outputPanel layout="block" rendered="{!(Not(CONTAINS(PageController.ApplicantInfoList[0].PageStatus_Complete__c,'045')) || 
+                                                   Not(CONTAINS(PageController.ApplicantInfoList[0].PageStatus_Complete__c,'009')) || 
+                                                   PageController.ApplicantInfoList[0].Terms_Accepted__c==False) && PageController.ApplicantInfoList[0].Application_Type__c=='Original'}">
+            <div class="margin-t2">
+                
+                <h2>Before You Can Match</h2>
+                <p class="lead">Please complete the following steps before we can finalize your match with this au pair.</p>
+                <ul class="margin-b2">
+                    <apex:outputText rendered="{!PageController.ApplicantInfoList[0].Terms_Accepted__c==False}">
+                        <li>Please view and sign
+                            <apex:outputLink value="/apc_hf_app_agreements?id={!PageController.ApplicantInfoList[0]}"> <b>program terms and conditions.</b> </apex:outputLink>
+                        </li>
+                    </apex:outputText>
+                    <apex:outputText rendered="{!Not(CONTAINS(PageController.ApplicantInfoList[0].PageStatus_Complete__c,'009'))}">
+                        <li> We have not been able to contact your family reference.<br/>
+                            <b> Please contact your area director to provide another reference.</b>
+                        </li>
+                    </apex:outputText>
+                    <apex:outputText rendered="{!Not(CONTAINS(PageController.ApplicantInfoList[0].PageStatus_Complete__c,'045'))}">
+                        <li>Looks like your in-home interview has not taken place. Please <Span><apex:outputLink value="/apc_hf_app_references?id={!PageController.ApplicantInfoList[0]}"><b>contact your area director</b></apex:outputLink></Span> to expedite this process.</li>
+                    </apex:outputText>
+                </ul>
+            </div>
+        </apex:outputPanel>
+        
+        
+        <hr class="margin-b2 margin-t2"/>
+    </apex:outputPanel>
+    
+    <!--  //-------------Interview Flow---------------//  -->
+    <apex:outputPanel layout="block" rendered="{!PageController.ActiveInterview.size > 0 && PageController.ConfMatch.size ==0}"> 
+      
+      <div class="hp-block green-border padding-l6 padding-r6 padding-t4 padding-b4">
+      <div class="row">
+      <div class="col-sm-12">
+      <h2 class="no-margin-t">Your Interviews</h2>
+       <p class="lead">Ready to interview au pairs?  Skype is a great way to connect or, call us at 800-428-7247 (dial 0) to be connected by phone for <b>free</b>!  In your Family Resources you will find documents to help you, such as our <a href="apc_resources_article?cname=ptinterviewguide" target="_blank"><b>Interview Guide</b></a> and <a href="apc_resources_article?cname=callingoverseas" target="_blank"><b>International Calling Information</b></a>. 
+       </p>
+      <apex:variable value="{!0}" var="IntCount" id="IntCountid" />
+        
+        <apex:outputPanel layout="block" rendered="{!PageController.ConfMatch.size ==0}" id="expireid">
+            <div class="margin-t2 table-responsive">
+             <table class="table no-margin">
+
+             <tbody>
+             
+             
+             
+                 
+                   
+                    <apex:repeat value="{!PageController.activeInterview}" var="comp" rendered="{!PageController.ConfMatch.size == 0 && PageController.activeInterview.size>0}">
+                        
+                     
+                      
+                        <apex:outputtext rendered="{!IntCount < 3}" id="loop">
+                          <tr>  
+                             <td class="vtop" style="width:100px;">
+                               <apex:outputLink value="/apex/apc_hf_au_pair_profile?id={!comp.Engagement__c}" id="linkprofinfo1">
+                                    <apex:image style="width:80px; height:80px;" value="{!PageController.returnURLmap[comp.Engagement__c]}" rendered="{!PageController.returnURLMap[comp.Engagement__c] != 'no-picture'}"/>
+                                    <apex:image style="width:80px; height:80px;" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/female-profile-med.png')}"  rendered="{!PageController.returnURLMap[comp.Engagement__c] == 'no-picture' && ( comp.Engagement__r.Gender__c == null || comp.Engagement__r.Gender__c == 'Female')}"/>
+                                    <apex:image style="width:80px; height:80px;" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/male-profile-med.png')}" rendered="{!PageController.returnURLMap[comp.Engagement__c] == 'no-picture' && comp.Engagement__r.Gender__c == 'Male'}"/>
+                                </apex:outputLink>
+                             </td>
+                             
+                             
+                            <td class="vtop">
+                              
+                                <h4 class="no-margin-b">{!comp.Engagement__r.Account_Id__r.FirstName}</h4>
+                                
+                             
+                                
+                             
+                            </td>
+                             <td class="vtop">
+                                <label>Interview Expires On</label>
+                                    <div>
+                                        <apex:outputText value="{0,date, MMMM d, yyyy h:mm a}" >
+                                            <apex:param value="{!comp.Interview_End_Date__c+PageController.offset}"/>
+                                        </apex:outputText>
+                                    </div>
+                                
+                             </td>
+                            
+                            </tr> 
+                        </apex:outputtext>     
+                           
+                                  
+                        <apex:variable var="IntCount" value="{!IntCount + 1}" />
+                    </apex:repeat>
+                    </tbody>
+             
+             
+             
+             </table>
+            
+            </div>
+            
+            <apex:outputPanel layout="block" rendered="{!PageController.ActiveInterview.size > 3}">
+            <div class="row margin-b4">
+                <div class="col-sm-8 center-block center-text">
+                    <apex:outputLink styleClass="btn btn-link btn-lg vs2" value="/apex/apc_hf_interviews" id="linkViewInterview"> <span>View All Interviews</span> </apex:outputLink>
+                </div>
+            </div>
+            </apex:outputPanel>
+            
+            
+        </apex:outputPanel>  
+      </div>
+      
+      </div> 
+      </div>
+      
+        
+        
+       
+        
+
+        
+    </apex:outputPanel>
+    
+    
+</apex:component>

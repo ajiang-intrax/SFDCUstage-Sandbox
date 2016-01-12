@@ -1,0 +1,33 @@
+<apex:page id="Help_ayusa_app_doc_assessment" docType="html-5.0" standardStylesheets="true" showHeader="false">
+
+    <apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/reset.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/fonts.css')}"/> 
+    <apex:stylesheet value="{!URLFOR($Resource.module_colorbox, '/module-colorbox/css/colorbox.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/vs1.css')}"/> 
+    <apex:outputText value="<" escape="false"/>!--[if IE]<apex:outputText value=">" escape="false"/>
+    <link rel="stylesheet" href="/intraxappengine/resource/intrax_themes/intrax_themes/styles/ie.css"/>  
+    <apex:outputText value="<" escape="false"/>![endif]--<apex:outputText value=">" escape="false"/>      
+     
+    <apex:outputText value="<" escape="false"/>!--[if lt IE 8]<apex:outputText value=">" escape="false"/>      
+    <link rel="stylesheet" href="/intraxappengine/resource/intrax_themes/intrax_themes/styles/ie-7.css"/>
+    <apex:outputText value="<" escape="false"/>![endif]--<apex:outputText value=">" escape="false"/>
+    
+    <apex:define name="body">
+      <div class="wrapper">
+        <apex:form >
+        <h2>Doctor&#8217;s Report Help</h2>
+        <div class="white-box">
+            <p>The doctor completing the Doctor&#8217;s Report must not be a relative of the student.</p>
+            <p>All questions must be answered, and contain as much detail as possible, including:</p>
+            <ul>
+                  <li>Health Statement</li>
+                  <li>Health Basics</li>
+                  <li>Allergy Details</li>
+                  <li>Immunization Record: This information must be complete; if not, indicate when student will be completing immunizations.</li>
+                  <li>Physician Agreement / Conclusion: Physician must sign </li>
+           </ul>        
+        </div>
+    </apex:form>
+    </div>
+    </apex:define>
+</apex:page>

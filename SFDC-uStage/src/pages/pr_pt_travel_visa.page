@@ -1,0 +1,331 @@
+<apex:page applyBodyTag="false" applyHtmlTag="false" title="Participant's Travel and Visa | Intrax" standardStylesheets="false" showHeader="false" controller="IntraxPartnerPortalEngineController" action="{!checkLogin}">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+    
+      <apex:form styleClass="form-vertical ws-validate">
+        
+        <div class="row margin-b2">
+          <div class="col-sm-9 center-text center-block">
+                    <c:block_pr_pt_profile_thumb photoUrl="{!returnUrl}" gender="{!participant.Account_Id__r.Gender__pc}"/> 
+            <h1>
+              <apex:outputText rendered="{!IF($CurrentPage.parameters.participantId == null, false, true)}" value="{!participant.Name}"/>
+              <apex:outputText rendered="{!IF($CurrentPage.parameters.participantId == null, true, false)}" value="No Individual Participant Selected"/>
+            </h1>
+          </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+
+        <div class="row">
+          <div class="col-sm-12">
+          <div class="center-text">
+          <c:menu_pr_pt participant="{!participant}" applicationRecord="{!applicationRecord}" />
+</div>
+          </div><!--  end column --> 
+        </div><!--  end row -->
+        <hr class="margin-b4"/>
+        <div class="row margin-b2">
+          <div class="col-sm-9 center-text center-block">
+            <h2>Travel and Visa Information</h2>
+          </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+        
+        <apex:outputPanel id="buttonPanel" layout="block">
+         <apex:outputPanel layout="block" rendered="{!IF((participant.Intrax_Program__c == 'Work Travel' || participant.Intrax_Program__c == 'Internship'),false,true )}">
+        
+      <!--   <apex:outputPanel layout="block" rendered="{!IF(CONTAINS(participant.Intrax_Program__c, 'Work Travel'),false,true )}">
+       -->  
+          <apex:outputPanel layout="block" rendered="{!IF((ISBLANK(match.Start_Date__c) || ISBLANK(match.End_Date__c)), false, true)}">
+            <!-- <apex:outputPanel layout="block" rendered="{!IF(listTrips.size > 0, true,false)}">  -->
+              <div class="row margin-b2">
+                <div class="col-sm-9 center-text center-block">
+                  <apex:outputText rendered="{!IF(ISBLANK(match.Start_Date__c), false, true)}"> 
+                  <label>Match Start Date:</label>&nbsp;
+                    <apex:outputField value="{!match.Start_Date__c}"/>
+                  </apex:outputText>
+                  <apex:outputText rendered="{!IF(ISBLANK(match.End_Date__c), false, true)}"> &nbsp;| 
+                  <label>Match End Date:</label>&nbsp;
+                    <apex:outputField value="{!match.End_Date__c}"/>
+                  </apex:outputText>
+                </div>
+                <!--  end column --> 
+              </div>
+              <!--  end row --> 
+            <!--  </apex:outputPanel> -->
+          </apex:outputPanel>
+           </apex:outputPanel>
+          <apex:outputPanel layout="block" rendered="{!IF(CONTAINS(participant.Intrax_Program__c, 'AuPairCare'),false,true )}"> 
+          <div class="row margin-b4">
+            <div class="col-sm-9 center-text center-block">
+              <apex:commandLink styleClass="btn btn-link vs2 btn-lg" action="{!addTravelInfo}" reRender="myPanel, validationMsg, buttonPanel, myPanel1, myPanel2" status="waitMsg" rendered="{!IF(showTravelForm == false && participant.Intrax_Program__c == 'Ayusa', true, false)}"><i class="fa fa-plane"></i> <span>Add Travel Info</span></apex:commandLink>
+              <apex:commandLink styleClass="btn btn-link vs2 btn-lg" action="{!addTravelInfo}" reRender="myPanel, validationMsg, buttonPanel, myPanel1, myPanel2" status="waitMsg" rendered="{!IF(showTravelForm == false && participant.Intrax_Program__c == 'Work Travel' && participant.Status__c == 'Program Ready' && ShowTripInfoType == '', true, false)}"><i class="fa fa-plane"></i> <span>Add Arrival Travel Info</span></apex:commandLink>
+              <apex:commandLink styleClass="btn btn-link vs2 btn-lg" action="{!addTravelInfo}" reRender="myPanel, validationMsg, buttonPanel, myPanel1, myPanel2" status="waitMsg" rendered="{!IF(showTravelForm == false && participant.Intrax_Program__c == 'Work Travel' && participant.Status__c == 'On Program' && ShowTripInfoType == '', true, false)}"><i class="fa fa-plane"></i> <span>Add Departure Travel Info</span></apex:commandLink>
+            </div>
+            <!--  end column --> 
+          </div>
+          <!--  end row -->
+          </apex:outputPanel> 
+          
+        </apex:outputPanel>
+        
+        
+        <apex:actionStatus id="waitMsg">
+          <apex:facet name="start" >
+            <p class="alert alert-info"> <i class="fa fa-refresh fa-spin"></i> <strong>Please Wait.....</strong> </p>
+          </apex:facet>
+        </apex:actionStatus>
+        
+       <apex:outputPanel layout="block" rendered="{!IF(CONTAINS(participant.Intrax_Program__c, 'AuPairCare'),false,true )}"> 
+        <apex:outputPanel id="myPanel" layout="block">
+          <apex:outputPanel layout="block" rendered="{!IF(showTravelForm == true, true, false)}">
+            <apex:pageBlock id="pb">
+              <apex:pageMessages id="validationMsg"/>
+              <div class="row margin-b2">
+            <div class="col-sm-7 center-block margin-t4">
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label class="control-label">Airline</label>
+                    <apex:inputField styleClass="form-control" value="{!trip.Carrier__c}"/>
+                  </div>
+                </div>
+                <!--  end column -->
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label class="control-label">Flight Number</label>
+                    <apex:inputField styleClass="form-control" value="{!trip.Carrier_Number__c}"/>
+                  </div>
+                </div>
+                <!--  end column --> 
+              </div>
+              <!--  end row -->
+              
+              <div class="row">
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label class="control-label">Departure Airport Code</label>
+                    <apex:inputField styleClass="form-control" value="{!trip.Departing_From__c}"/>
+                  </div>
+                </div>
+                <!--  end column -->
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label class="control-label">Departure City</label>
+                    <apex:inputField styleClass="form-control" value="{!trip.Departing_City__c}"/>
+                  </div>
+                </div>
+                <!--  end column -->
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label class="control-label">Departure Date</label>
+                    <div class="datepicker wtime" locale="en_US">
+                      <apex:inputText styleClass="form-control" value="{!trip.Departure_Date_Time__c}"  />
+                    </div>
+                  </div>
+                </div>
+                <!--  end column --> 
+              </div>
+              <!--  end row -->
+              
+              <div class="row">
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label class="control-label">Arrival Airport Code</label>
+                    <apex:inputField styleClass="form-control" value="{!trip.Arriving_At__c}"/>
+                  </div>
+                </div>
+                <!--  end column -->
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label class="control-label">Arrival City</label>
+                    <apex:inputField styleClass="form-control" value="{!trip.Arriving_City__c}"/>
+                  </div>
+                </div>
+                <!--  end column -->
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label class="control-label">Arrival Date</label>
+                    <div class="datepicker wtime" locale="en_US">
+                      <apex:inputText styleClass="form-control" value="{!trip.Arrival_Date_Time__c}"  />
+                    </div>
+                  </div>
+                </div>
+                <!--  end column --> 
+              </div>
+              <!--  end row -->
+              
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="form-group lookup">
+                    <label class="control-label">Match</label>
+                    <apex:inputField styleClass="form-control" value="{!trip.Match__c}"/>
+                  </div>
+                </div>
+                <!--  end column --> 
+              </div>
+              <!--  end row -->
+              
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="form-group">
+                    <label class="control-label">Notes</label>
+                    <apex:inputField styleClass="form-control" value="{!trip.Description__c}"/>
+                  </div>
+                </div>
+                <!--  end column --> 
+              </div>
+              <!--  end row -->
+              
+              <div class="row margin-t2">
+                <div class="col-sm-12">
+                  <apex:outputLink value="/apex/pr_pt_travel_visa" styleClass="btn btn-lg btn-link margin-r"><i class="fa fa-chevron-left"></i> <span>Cancel</span></apex:outputLink>
+                  <apex:commandLink styleClass="btn btn-primary btn-lg" action="{!saveInfoOfTrip}" reRender="myPanel, validationMsg, buttonPanel, myPanel1, myPanel2" status="waitMsg"> Save Travel Info </apex:commandLink>
+                </div>
+                <!--  end column --> 
+              </div>
+              <!--  end row --> 
+               </div>
+            <!--  end column --> 
+          </div>
+          <!--  end row --> 
+            </apex:pageBlock>
+          </apex:outputPanel>
+        </apex:outputPanel>
+        
+        <apex:outputPanel layout="block" id="myPanel2">
+          <apex:outputPanel rendered="{!IF(listTrips.Size == 0 && showTravelForm == false, true, false)}" layout="block">
+            <div class="box gray h3 center-text">No record(s) to display.</div>
+          </apex:outputPanel>
+        </apex:outputPanel>
+        <apex:outputPanel id="myPanel1" layout="block">
+          <apex:pageBlock id="pb1" rendered="{!IF(showTravelForm == false, true, false)}">
+            <apex:outputPanel layout="block" rendered="{!IF(listTrips.Size > 0, true, false)}">
+              <div class="table-responsive vs3">
+                <apex:pageBlockTable styleClass="table vs3" value="{!listTrips}" var="item">
+                  <apex:column style="min-width:250px;" headerValue="Name">
+                    <apex:outputText value="{!item.Name}"/><br/>
+                     <apex:outputLink styleClass="margin-r1" value="/apex/pr_pt_travel_visa_details?tripId={!item.id}&isView=false&participantId={!item.Engagement__c}">Edit</apex:outputLink>
+                    <apex:commandLink value="Delete" action="{!deleteTrip}" immediate="true" onclick="return ConfirmDelete('Are You Sure ?');">
+                      <apex:param name="tripIdForDelete" value="{!item.id}" assignTo="{!tripIdForDelete}"/>
+                    </apex:commandLink>
+                  </apex:column>
+                  <apex:column headerValue="Airline">
+                    <apex:outputText value="{!item.Carrier__c}"/>
+                  </apex:column>
+                  <apex:column headerValue="Flight Number">
+                    <apex:outputField value="{!item.Carrier_Number__c}"/>
+                  </apex:column>
+                  <apex:column styleClass="nowrap" headerValue="Departure">
+                     <apex:outputText rendered="{!IF(ISBLANK(item.Departure_Date_Time__c), false, true)}" >
+                    <apex:outputField value="{!item.Departure_Date_Time__c}"/><br/>
+                    </apex:outputText>
+                     <apex:outputText rendered="{!IF(ISBLANK(item.Departing_City__c), false, true)}" >
+                    <apex:outputField value="{!item.Departing_City__c}"/><br/>
+                    </apex:outputText>
+                    <apex:outputPanel layout="block" styleClass="margin-t1" rendered="{!IF(ISBLANK(item.Departing_From__c), false, true)}" >
+                    <label>Airport</label><br/>
+                    <apex:outputField value="{!item.Departing_From__c}"/>
+                    </apex:outputPanel>
+                  </apex:column>
+                  <apex:column styleClass="nowrap" headerValue="Arrival">
+                   <apex:outputText rendered="{!IF(ISBLANK(item.Arrival_Date_Time__c), false, true)}" >
+                    <apex:outputField value="{!item.Arrival_Date_Time__c}"/><br/>
+                    </apex:outputText>
+                     <apex:outputText rendered="{!IF(ISBLANK(item.Arriving_City__c), false, true)}" >
+                    <apex:outputField value="{!item.Arriving_City__c}"/><br/>
+                    </apex:outputText>
+                    <apex:outputPanel layout="block" styleClass="margin-t1" rendered="{!IF(ISBLANK(item.Arriving_At__c), false, true)}" >
+                    <label>Airport</label><br/>
+                    <apex:outputField value="{!item.Arriving_At__c}"/>
+                    </apex:outputPanel>
+                  </apex:column>
+                  <apex:column rendered="{!IF((CONTAINS(participant.Intrax_Program__c, 'Work Travel') || CONTAINS(participant.Intrax_Program__c,'Internship')),false,true)}" headerValue="Departure from Host Community"> 
+                    <!--   this column should be rendered="{!IF(item.Engagement__r.Intrax_Program__c == 'Ayusa',true,false)}" -->
+                    <apex:outputtext value="Yes" rendered="{!item.Departure_from_Host_Community__c==true}"/>
+                    <apex:outputtext value="No" rendered="{!item.Departure_from_Host_Community__c==false}"/>
+                  </apex:column>
+                  <apex:column rendered="{!IF((CONTAINS(participant.Intrax_Program__c, 'Work Travel') || CONTAINS(participant.Intrax_Program__c,'Internship')),false,true)}" headerValue="Arrival to Host Community"> 
+                    <!--   this column should be rendered="{!IF(item.Engagement__r.Intrax_Program__c == 'Ayusa',true,false)}" -->
+                    <apex:outputtext value="Yes" rendered="{!item.Arrival_to_Host_Community__c==true}"/>
+                    <apex:outputtext value="No" rendered="{!item.Arrival_to_Host_Community__c==false}"/>
+                  </apex:column>
+                  <apex:column rendered="{!IF((CONTAINS(participant.Intrax_Program__c, 'Work Travel') || CONTAINS(participant.Intrax_Program__c,'Internship')),false,true)}" headerValue="Record Locator"> 
+                    <!--   this column should be rendered="{!IF(item.Engagement__r.Intrax_Program__c == 'Ayusa',true,false)}" -->
+                    <apex:outputtext value="{!item.Record_Locator__c}" />
+                  </apex:column>
+                  <apex:column rendered="{!IF((CONTAINS(participant.Intrax_Program__c, 'Work Travel') || CONTAINS(participant.Intrax_Program__c,'Internship')),false,true)}" headerValue="Arrival to Host Country"> 
+                    <!--   this column should be rendered="{!IF(item.Engagement__r.Intrax_Program__c == 'Ayusa',true,false)}" -->
+                    <apex:outputtext value="Yes" rendered="{!item.Arrival_to_Host_Country__c==true}"/>
+                    <apex:outputtext value="No" rendered="{!item.Arrival_to_Host_Country__c==false}"/>
+                  </apex:column>
+                  <apex:column rendered="{!IF((CONTAINS(participant.Intrax_Program__c, 'Work Travel') || CONTAINS(participant.Intrax_Program__c,'Internship')),false,true)}" headerValue="Arrival to Host Community Date"> 
+                    <!--   rendered="{!IF(trip.Engagement__r.Intrax_Program__c == 'Work Travel' && trip.Arrival_to_Host_Community__c == true, true,false)}" -->
+                    <apex:outputField value="{!item.Arrival_to_Host_Community_Date__c}"/>
+                  </apex:column>
+                  <apex:column rendered="{!IF((CONTAINS(participant.Intrax_Program__c, 'Work Travel') || CONTAINS(participant.Intrax_Program__c,'Internship')),false,true)}" headerValue="Ground Transportation Type"> 
+                    <!--   rendered="{!IF(trip.Engagement__r.Intrax_Program__c == 'Work Travel' && trip.Arrival_to_Host_Community__c == true, true,false)}" -->
+                    <apex:outputField value="{!item.Ground_Transporation_Type__c}"/>
+                  </apex:column>
+                  <apex:column rendered="{!IF((CONTAINS(participant.Intrax_Program__c, 'Work Travel') || CONTAINS(participant.Intrax_Program__c,'Internship')),false,true)}" headerValue="Final Trip Destination"> 
+                    <!-- rendered="{!IF(trip.Engagement__r.Intrax_Program__c == 'Work Travel' && trip.Arrival_to_Host_Community__c == true, true,false)}"  -->
+                    <apex:outputField html-placeholder="Street 1, Street 2, City, State, Postal Code" value="{!item.Description__c}"/>
+                  </apex:column>
+                  <apex:column rendered="{!IF((CONTAINS(participant.Intrax_Program__c, 'Work Travel') || CONTAINS(participant.Intrax_Program__c,'Internship')),false,true)}" style="min-width:200px;" headerValue="Description"> 
+                    <!-- rendered="{!IF(trip.Engagement__r.Intrax_Program__c == 'Ayusa', true,false)}" -->
+                    <apex:outputField value="{!item.Description__c}"/>
+                  </apex:column>
+                </apex:pageBlockTable>
+              </div>
+            </apex:outputPanel>
+          </apex:pageBlock>
+        </apex:outputPanel>
+        </apex:outputPanel><!-- END don't show this block to AuPairCare -->
+        
+        <apex:outputPanel layout="block" rendered="{!IF(CONTAINS(participant.Intrax_Program__c, 'AuPairCare'),true,false )}"> 
+        <div class="row margin-b2">
+                <div class="col-sm-6 center-text center-block">
+                <div class="form-group">
+                  <label>Arrival Itinerary</label>&nbsp;
+                  <apex:outputPanel layout="block" rendered="{!participant.Arrival_Trip_URL__c == null}"> 
+                  <apex:outputText value="Arrival itinerary not yet available"/>
+                  </apex:outputPanel>
+                  <apex:outputPanel layout="block" rendered="{!participant.Arrival_Trip_URL__c != null}"> 
+                  <a class="btn btn-link btn-lg vs2" href="{!participant.Arrival_Trip_URL__c}" id="linkTripURLArrival" target="_blank">View Arrival Itinerary</a>
+                  </apex:outputPanel>  
+                
+                </div>
+                </div>
+                <!--  end column --> 
+                
+                <div class="col-sm-6 center-text center-block">
+                <div class="form-group">
+                  <label>Departure Itinerary</label>&nbsp;
+                  <apex:outputPanel layout="block" rendered="{!participant.Departure_Trip_URL__c == null}"> 
+                  <apex:outputText value="Departure itinerary not yet available"/>
+                  </apex:outputPanel>
+                  <apex:outputPanel layout="block" rendered="{!participant.Departure_Trip_URL__c != null}"> 
+                  <a class="btn btn-link btn-lg vs2" href="{!participant.Departure_Trip_URL__c}" id="linkTripURLDeparture" target="_blank">View Departure Itinerary</a>
+                  </apex:outputPanel>  
+                </div>
+                </div>
+                <!--  end column -->
+                
+                <div class="col-sm-6 center-text center-block">
+                <div class="form-group">                  
+                  <apex:outputText rendered="{!IF(ISBLANK(participant.SEVIS_ID__c), false, true)}"> 
+                  <label>DS2019 Number:</label>&nbsp;
+                    <apex:outputField value="{!participant.SEVIS_ID__c}"/>
+                  </apex:outputText>
+                </div>
+                </div>
+            
+              </div>
+              <!--  end row --> 
+        </apex:outputPanel>
+        
+      </apex:form>
+    </apex:define>
+  </apex:composition>
+</apex:page>

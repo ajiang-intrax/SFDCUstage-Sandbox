@@ -1,0 +1,73 @@
+<apex:page docType="HTML-5.0"   apiVersion="29.0" showHeader="false" standardStylesheets="false" controller="theme_controller" id="SiteTemplate">
+<apex:variable var="prportal" value="pr-portal" rendered="{!$Site.SiteId == '0DMa0000000TOEA'}" />    
+<apex:variable var="hcportal" value="hc-portal" rendered="{!$Site.SiteId == '0DMa0000000TO2E'}" />
+<apex:variable var="ptportal" value="pt-portal" rendered="{!$Site.SiteId == '0DM30000000TNbh'}" />
+<apex:variable var="community" value="customer-community" rendered="{!$Site.Name == 'AuPairCare'}" />
+    <!--[if lte IE 7]> <html class="no-js oldbrowser" lang="en"> <![endif]-->   
+    <!--[if gt IE 7]><!-->  <html class="no-js"> <!--<![endif]-->
+    <head>
+    <c:template_region_head_vs3 />
+     <!-- Google Tracking -->
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38466569-1']);
+    _gaq.push(['_trackPageview']);
+    
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+    </head>
+    <body class="{!prportal} {!hcportal} {!ptportal} {!community}">
+
+<apex:outputText rendered="{!$Site.Name == 'AuPairCare'}">
+<!-- 
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-W83MR4"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-W83MR4');</script>
+ -->
+</apex:outputText>
+
+        <p class="noscript" style="display:none;"><strong>Warning:</strong> You do not have Javascript enabled. Please enable it for a better browsing experience.</p> 
+       
+        <div class="row-offcanvas row-offcanvas-left">
+            <apex:outputText rendered="{!(NOT(ISPICKVAL($User.UserType,'Guest')) && NOT(ISPICKVAL($User.UserType,'Standard')))}"> 
+            <div class="hero-area">
+           
+          <c:template_region_hero_vs3 />
+          <apex:outputText rendered="{!$Site.Name == 'AuPairCare' && user.User_Interests__c == 'Hosting an au pair'}">
+             <c:template_region_nav_apc_hf_vs3 />
+             </apex:outputText>  
+             
+             
+            <apex:outputText rendered="{!$Site.Name == 'AuPairCare' && user.User_Interests__c == 'Becoming an au pair'}"> 
+            <c:template_region_nav_apc_ap_vs3 />
+             </apex:outputText>  
+             
+             <apex:outputText rendered="{!user.User_Interests__c != 'Hosting an au pair' && user.User_Interests__c != 'Becoming an au pair'}">
+             <c:template_region_branding_vs3 />
+             <c:template_region_menu_vs3 user="{!user}" isMatchingStage="{!isMatchingStage}" appendset="{!appendset}" engagementId="{!engagementId}"/> 
+             </apex:outputText>
+             
+             
+            </div>
+             </apex:outputText>
+            <div id="header-zone"></div>
+            <div id="content-zone">
+                <div id="content-zone-inner" class="container">     
+                    <apex:insert name="body"/>
+                </div>
+            </div>
+            <c:template_region_footer_vs3 />          
+        </div>  <!--  end offcanvas wrapper -->       
+        <c:template_region_body_vs3 />       
+    </body> 
+</html>  
+</apex:page>

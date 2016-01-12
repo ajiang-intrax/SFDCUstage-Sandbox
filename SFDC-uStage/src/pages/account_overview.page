@@ -1,0 +1,118 @@
+<apex:page docType="html-5.0" id="portalUserProfilePage"
+	controller="MyProfilePageController" standardStylesheets="false"
+	showHeader="false" title="Account Overview">
+	<apex:composition template="intraxtemplate_vs3">
+		<apex:define name="body">
+
+
+			<div class="row">
+
+				<div class="col-md-7 col-md-push-3">
+					<apex:pageBlock id="viewUserDetail">
+						
+							<h1><apex:outputText value="{!$Label.T_0347}" /></h1>
+							<p class="lead"><apex:outputText value="{!$Label.T_0033}" /></p>
+							<apex:form styleClass="form-horizontal ws-validate">
+							<apex:Messages />
+							
+							<div class="form-group">
+								<label class="control-label col-sm-3 "><apex:outputText value="{!$Label.T_0433}" /></label>
+								<div class="col-sm-4">
+									<span class="form-control-static"><apex:outputText id="detailintrax" value="{!intraxId}" /></span>
+									<apex:outputText value="--" rendered="{!IF(ISBLANK(intraxId), true, false)}" />
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="control-label col-sm-3 "><apex:outputText value="{!$Label.T_0004}" /></label>
+								<div class="col-sm-4">
+									<span class="form-control-static"><apex:outputField id="detailfirstName" value="{!user.firstName}" /></span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-3 "><apex:outputText value="{!$Label.T_0005}" /></label>
+								<div class="col-sm-4">
+									<span class="form-control-static"><apex:outputField id="detaillastName" value="{!user.lastName}" /></span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-3 "><apex:outputText value="{!$Label.T_0006}" /></label>
+								<div class="col-sm-4">
+									<span class="form-control-static"><apex:outputField id="detailemail" value="{!user.email}" /></span>
+								</div>
+							</div>
+							
+							<apex:outputPanel layout="block" rendered="{!NOT(user.User_Interests__c == 'Hosting an au pair' || user.User_Interests__c == 'Becoming an au pair')}">
+							<div class="form-group">
+								<label class="control-label col-sm-3 ">Date Format</label>
+								<div class="col-sm-4">
+									<span class="form-control-static">
+									<apex:outputText rendered="{!user.localesidkey == 'en_US'}">MM/DD/YYYY</apex:outputText>
+									<apex:outputText rendered="{!user.localesidkey == 'en_GB'}">DD/MM/YYYY</apex:outputText>
+									</span>
+								</div>
+							</div>
+							</apex:outputPanel>
+							
+						<!--  <apex:outputPanel layout="block" rendered="{!NOT(user.User_Interests__c == 'Hosting an au pair' || user.User_Interests__c == 'Becoming an au pair')}">
+							<div class="form-group">
+								<label class="control-label col-sm-3 "><apex:outputText value="{!$Label.T_0208}" /></label>
+								<div class="col-sm-4">
+									<span class="form-control-static"><apex:outputField id="detaillanguage" value="{!user.languagelocalekey}" /></span>
+								</div>
+							</div>
+							</apex:outputPanel> -->
+							
+							<div class="form-group">
+								<label class="control-label col-sm-3 "><apex:outputText value="{!$Label.T_0012}" /></label>
+								<div class="col-sm-4">
+									<span class="form-control-static">
+									<apex:outputField id="detailtimezone" value="{!user.timezonesidkey}" /></span>
+								</div>
+							</div>
+							
+							<apex:outputPanel layout="block" rendered="{!IF(user.User_Interests__c == 'Finding an internship' && Application != NULL,  true, false)}">
+							<div class="form-group">
+								<div class="col-sm-12 margin-t">
+								<apex:commandLink id="edit1" styleClass="btn btn-primary btn-lg"
+									action="{!edit}">
+									<apex:commandButton value="{!$Label.T_0051}" />
+								</apex:commandLink>
+									&nbsp;&nbsp;&nbsp;
+									<apex:commandLink id="backToApp" styleClass="btn btn-primary btn-lg"
+										action="{!backToApp}">
+										<apex:commandButton value="Back to My Application" />
+									</apex:commandLink>
+								</div>
+							</div>
+							</apex:outputPanel>
+							
+							
+							<apex:outputPanel layout="block" rendered="{!IF(user.User_Interests__c == 'Finding an internship' && Application != NULL, false, true)}">
+							<div class="form-group">
+								<div class="col-sm-12 margin-t">
+								<apex:commandLink id="edit" styleClass="btn btn-primary btn-lg"
+									action="{!edit}">
+									<apex:commandButton value="{!$Label.T_0051}" />
+								</apex:commandLink>
+								</div>
+							</div>
+							</apex:outputPanel>
+							
+						</apex:form>
+
+					</apex:pageBlock>
+				</div>
+				<!--  end column -->
+
+				<div class="col-md-3 col-md-pull-7">
+					<c:menu_side_account_settings />
+				</div>
+				<!--  end column -->
+
+			</div>
+			<!--  end row -->
+
+		</apex:define>
+	</apex:composition>
+</apex:page>

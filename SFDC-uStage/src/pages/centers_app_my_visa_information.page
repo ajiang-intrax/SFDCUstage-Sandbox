@@ -1,0 +1,163 @@
+<!--  
+*  Description		: 	Visualforce page helpful in displaying and holding Visa related Information with it.
+* 
+*  Created By    	:	
+*
+*  Created Date  	: 	03/18/2013
+*
+*  Version       	: 	v1.0 - Created 
+-->
+<apex:page id="centers_app_my_visa_information" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+	<apex:composition template="IntraxTemplate_Vs1">
+		<apex:define name="body">
+			<div class="wrapper" id="centers_preapp_my_visa_information">
+
+				<apex:form id="form" >
+						
+					<div class="page-header clearfix">
+						<h1 class="page-title"><apex:outputText value="{!$Label.T_0053}" /></h1>
+						<div class="back-to-main">
+							<apex:outputLink value="apex/centers_app_home?id={!applicantInfo.Id}"><apex:outputText value="{!$Label.T_0075}" /></apex:outputLink>
+						</div>
+					</div>
+
+					<div class="section-header clearfix">
+						<h2><apex:outputText value="{!$Label.T_0174}" /></h2>
+					</div> 
+					
+					<div class="white-box clearfix">
+						
+						<div class="panel two_thirds">
+
+							<apex:Messages id="errorMessages" styleClass="custom-error-pagelevel"/>
+							<p><em> <apex:outputText value="{!$Label.T_0003}" /></em></p><br/>
+
+							<!-- 
+							<div class="form-row">
+								<div class="form-label left ">Country of Birth<span class="required">*</span></div>
+								<div class="form-field">
+									<apex:inputField id="Country_of_Birth" value="{!personInfo.Birth_Country__c}" required="True"/>
+								</div>
+							</div>
+							-->
+							
+							<!--  CT-110-->
+							<!-- Passport Number -->
+							<div class="form-row">
+								<div class="form-label left "><apex:outputText value="{!$Label.T_0175}" /></div>
+								<div class="form-field">
+									<apex:inputField id="Passport_Number" value="{!applicantInfo.Passport_Number__c}"/>
+								</div>
+							</div>
+							<!-- CT-110 End -->
+
+							<h3><apex:outputText value="{!$Label.T_0176}" /></h3> 
+							
+							<div class="form-row">
+								<div class="form-label left "><apex:outputText value="{!$Label.T_0177}" /><span class="required">*</span></div>
+								<div class="form-field">
+									<apex:inputField id="Home_Street_1" value="{!applicantInfo.Home_Street_1__c}" required="true"/>
+								</div>
+							</div>
+							
+							<div class="form-row">
+								<div class="form-label left "><apex:outputText value="{!$Label.T_0178}" /><span class="required">*</span></div>
+								<div class="form-field">
+									<apex:inputField id="Home_City" value="{!applicantInfo.Home_City__c}" required="true"/>
+								</div>
+							</div>
+
+							<div class="form-row">
+								<div class="form-label left "><apex:outputText value="{!$Label.T_0179}" /><span class="required">*</span></div>
+								<div class="form-field">
+									<apex:inputField id="Home_Province" value="{!applicantInfo.Home_Province__c}" required="true"/>
+								</div>
+							</div>
+
+							<div class="form-row">
+								<div class="form-label left "><apex:outputText value="{!$Label.T_0180}" /><span class="required">*</span></div>
+								<div class="form-field">
+									<apex:inputField id="Home_Country" value="{!applicantInfo.Home_Country__c}" required="true"/>
+								</div>
+							</div>
+
+							<div class="form-row">
+								<div class="form-label left "><apex:outputText value="{!$Label.T_0181}" /><span class="required">*</span></div>
+								<div class="form-field">
+									<apex:inputField id="Home_Postal_Code" value="{!applicantInfo.Home_Postal_Code__c}" required="true"/>
+								</div>
+							</div>
+
+							<h3><apex:outputText value="{!$Label.T_0182}" /></h3> 
+
+							<div class="form-row">
+								<div class="form-label left"><apex:outputText value="{!$Label.T_0183}" /></div>
+								<div class="form-field">
+									<apex:inputField id="Street" value="{!applicantInfo.Street__c}" required="False"/>
+								</div>
+							</div>
+
+							<div class="form-row">
+								<div class="form-label left "><apex:outputText value="{!$Label.T_0184}" /></div>
+								<div class="form-field">
+									<apex:inputField id="City" value="{!applicantInfo.City__c}" required="False"/>
+								</div>
+							</div>
+
+							<div class="form-row">
+								<div class="form-label left "><apex:outputText value="{!$Label.T_0185}" /></div>
+								<div class="form-field">
+									<apex:inputField id="State" value="{!applicantInfo.State__c}" required="False"/>
+								</div>
+							</div>
+
+							<div class="form-row">
+								<div class="form-label left "><apex:outputText value="{!$Label.T_0186}" /></div>
+								<div class="form-field">
+									<apex:inputField id="Country" value="{!applicantInfo.Country__c}" required="false"/>
+								</div>
+							</div>
+
+							<div class="form-row">
+								<div class="form-label left "><apex:outputText value="{!$Label.T_0187}" /></div>
+								<div class="form-field">
+									<apex:inputField id="Postal_Code" value="{!applicantInfo.Postal_Code__c}" required="False"/>
+								</div>
+							</div>
+
+							<div class="form-row">
+						
+								<div class="form-link">
+								
+									<apex:outputLink id="backLink" value="/apex/centers_app_home?id={!applicantInfo.Id}">
+										<i class="icon-chevron-left"></i> 
+										<span><apex:outputText value="{!$Label.T_0086}" /></span>
+									</apex:outputLink>
+								</div>  
+
+								<div class="form-button">
+									<apex:commandlink id="SaveContinue" styleClass="next" action="{!navigator}">
+										<!-- <apex:param name="nextPage" value="/apex/centers_app_my_visa_documents"/>
+										<apex:param name="docType" value="FinancialResponsibility" assignTo="{!docType}"/>
+										 -->
+										<apex:param name="nextPage" value="/apex/centers_app_my_document_uploads"/>
+										<apex:param name="docType" value="AllDocuments" assignTo="{!docType}"/>
+										<apex:param name="reDirectPage" value="true"/> 
+										<apex:commandButton value="{!$Label.T_0087}" />
+										<i class="icon-chevron-right"></i>
+									</apex:commandlink>
+								</div>    
+
+							</div>
+						</div>
+					
+						<div class="panel one_third last aside">
+							<c:Badge_Centers_Contact />     
+						</div>
+
+					</div>
+				</apex:form>    
+			</div>
+		</apex:define>
+	</apex:composition>
+</apex:page>

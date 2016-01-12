@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Invoice__c.Total_Invoice_Value__c</field>
+    </columns>
+    <description>Cashflow projection based on invoices that are pending payment</description>
+    <filter>
+        <criteriaItems>
+            <column>Invoice__c.Invoice_Status__c</column>
+            <operator>notEqual</operator>
+            <value>Cancelled</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Invoice__c.Due_Date__c</column>
+            <operator>greaterOrEqual</operator>
+            <value>TODAY</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Month</dateGranularity>
+        <field>Invoice__c.Due_Date__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Cashflow Projection</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>AccountCustomEntity$Invoice__c</reportType>
+    <scope>organization</scope>
+    <showDetails>false</showDetails>
+    <sortColumn>Invoice__c.Total_Invoice_Value__c</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>Invoice__c.Due_Date__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

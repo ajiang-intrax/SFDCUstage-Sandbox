@@ -1,0 +1,91 @@
+<apex:page standardcontroller="Applicant_Info__c" showHeader="false" sidebar="false" standardStylesheets="true" extensions="DocuSign_AYU_HF">
+   <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+        <div class="wrapper">    
+        <apex:pageMessages id="msg"></apex:pageMessages>
+  
+        <script>
+        function btnClicked(elem) {
+            elem.style.display = 'none';
+            document.getElementById('loadingImage').style.display = 'block';
+            document.getElementById('backbtn').style.display = 'none';
+            document.getElementById('BackToMain').style.display = 'none';
+        }
+        
+        function btnComplete() {
+           document.getElementById('loadingImage').style.display = 'none';
+           document.getElementById('doneImage').style.display = 'block';
+           document.getElementById('Contbtn').style.display = 'block';
+           document.getElementById('backbtn').style.display = 'none';
+        }
+        </script>
+         
+        <apex:form >
+            <div class="page-header clearfix">
+                <h1 class="page-title">Ayusa Host Family Application</h1>
+                <div id="BackToMain" class="back-to-main"><apex:outputLink value="apex/ayusa_hf_home?id={!applicantInfoId}">Back to Main Page</apex:outputLink></div> 
+            </div>
+            <h2>Program Agreements</h2>     
+                <div class="white-box clearfix">
+                    <div class="panel two_thirds">
+                    <p>Click the button below to receive your Program Agreements and Background Check authorization by email.  One email will be delivered for each household member age 18 and older.  These emails will be sent from our secure electronic signature service, DocuSign.</p>
+                    <p>Clicking below will also submit your application.  Please note that you will no longer be able to edit your application once it is submitted.</p> 
+                    
+                    <p>For more information on DocuSign, click here:    <apex:outputLink target="_blank" value="http://www.docusign.com/support/docusign/faq" > http://www.docusign.com/support/docusign/faq </apex:outputLink>  </p>   
+                        
+                        <!-- Panel Going to be render on the basis of the Error -->
+                        <apex:outputPanel id="myPanel">
+                            
+                            <apex:outputPanel >
+                                <div style="display: none;" class="feedback" id="loadingImage"><i class="icon-spinner icon-spin icon-2x"></i> <span>Documents are being sent</span></div>
+                            </apex:outputPanel>
+                             
+                            <apex:outputPanel rendered="{!showBlockOnPage}" id="myButtonPanel">
+                                <div style="display: none;" class="feedback" id="doneImage"><i class="icon-ok icon-2x"></i> <span>Documents are sent, please check your email</span></div> 
+                            </apex:outputPanel>
+                            
+                        </apex:outputPanel>
+                        <div class="form-row">
+                        
+                        
+                        <div class="form-button">
+                            <apex:commandlink styleClass="next" action="{!send}" onclick="btnClicked(this);" oncomplete="btnComplete();" reRender="msg, myPanel, myBackButton">
+                                <apex:commandButton value="Send Documents and Submit Application"/>
+                            </apex:commandlink>
+                        </div> 
+                                            
+                        <!--  OLD VERSION. DO NOT ELIMINATE YET
+                        <apex:commandButton styleClass="next" id="btnSend" value="Initiate Docusign Send" action="{!send}" onclick="btnClicked(this);" oncomplete="btnComplete();"/>
+                        -->
+                        </div>
+                        
+                        
+                        <div class="form-row">
+                            
+                            <apex:outputPanel id="myBackButton">
+                                <div id="backbtn" class="form-link">
+                                    <apex:outputLink styleClass="back" value="/apex/ayusa_hf_prog_agree?docType=HostAgreements&id={!$CurrentPage.parameters.Id}">
+                                    <i class="icon-chevron-left"></i>
+                                    <span>Back</span>
+                                    </apex:outputLink>
+                                </div>
+                            </apex:outputPanel>
+                            
+                             <div class="form-button" id="Contbtn" style="display:none;">
+                                 <apex:outputlink styleClass="next" value="/apex/ayusa_hf_eSubmitted">
+                                     <span>Continue</span>&nbsp;
+                                     <i class="icon-chevron-right"></i>  
+                                 </apex:outputlink>
+                             </div> 
+                           
+                          
+                        </div>
+                    </div>
+                </div>
+                
+        </apex:form>
+        
+        </div>
+    </apex:define>
+    </apex:composition>
+</apex:page>

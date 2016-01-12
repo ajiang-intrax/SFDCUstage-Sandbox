@@ -1,0 +1,70 @@
+<apex:page id="centers_preapp_my_terms" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+   <apex:composition template="IntraxTemplate_Vs1">
+   <apex:define name="body">
+      <div class="wrapper" id="centers_preapp_welcome_to_intrax">
+ 		<apex:form id="form" >
+		<apex:actionFunction name="callingBackMethod" action="{!backNavigator}" />
+          <div class="page-header clearfix">
+             <h1 class="page-title"><apex:outputText value="{!$Label.T_0053}" /></h1>
+             <div class="back-to-main"><apex:outputLink id="backToMain" value="apex/centers_preapp_home?id={!applicantInfo.Id}"><apex:outputText value="{!$Label.T_0075}" /></apex:outputLink></div>
+          </div>
+          <div class="section-header clearfix">
+             <h2><apex:outputText value="{!$Label.T_0059}" /></h2>
+      </div> 
+              
+  
+      <div class="white-box clearfix">   
+              
+               <div class="panel two_thirds">
+                   <apex:Messages id="errorMessages" styleClass="custom-error-pagelevel"/>
+            	   <p><em> <apex:outputText value="{!$Label.T_0003}" /></em></p><br/>	
+            	   		   		
+                   <h3><apex:outputText value="{!$Label.T_0119}" /></h3>
+                
+                   <div class="form-row">
+                    <div class="form-field">
+                     <apex:inputField id="Terms_Accepted" value="{!applicantInfo.Terms_Accepted__c}" required="TRUE"/>
+                    </div>
+                    <p><apex:outputText value="{!$Label.T_0120}"/>&nbsp;<apex:outputLink value="http://www.intraxinc.com/assets/myintrax/centers/Intrax-Terms-Conditions.pdf" target="_blank"><apex:outputText value="{!$Label.T_0211}" /></apex:outputLink><span class="required">*</span></p>
+                   
+                   </div>
+                    
+                   <div class="form-row">
+                    <div class="form-field">
+                        <apex:inputField id="Deposit_Fee_Accepted" value="{!applicantInfo.Deposit_Fee_Accepted__c}" required="TRUE"/>  
+                    </div>
+                    <p><apex:outputText value="{!$Label.T_0121}" /><span class="required">*</span></p>
+                   </div> 
+ 
+             <div class="form-row">
+              
+              <div class="form-link">
+              	<apex:outputLink id="backLink" value="/apex/centers_preapp_my_academic_plan?id={!applicantInfo.Id}"><i class="icon-chevron-left"></i> <span><apex:outputText value="{!$Label.T_0086}" /></span></apex:outputLink>
+              </div>   
+                          
+              <div class="form-button">
+                <apex:commandlink id="SaveContinue" styleClass="next" action="{!validateMyTermsPage}"> 
+                    <apex:commandButton value="{!$Label.T_0087}" />
+                    <i class="icon-chevron-right"></i>
+                </apex:commandlink>
+              </div>   
+            </div> 
+              </div>
+           <div class="panel one_third last aside">
+          <c:Badge_Centers_Contact />     
+          </div>   
+          </div>
+   
+          </apex:form>
+      
+     </div>
+    </apex:define>
+  </apex:composition>
+  
+<Script>
+function backFunction() {
+    callingBackMethod();
+} 
+</script>
+
+</apex:page>

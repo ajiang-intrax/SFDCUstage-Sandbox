@@ -1,0 +1,58 @@
+<apex:page docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+   <apex:composition template="IntraxTemplate_Vs1">
+   <apex:define name="body">
+      <div class="wrapper" id="centers_preapp_welcome_to_intrax">
+              
+          <apex:form >
+   <div class="page-header clearfix">
+             <h1 class="page-title">Intrax Language Centers Application</h1>
+             <div class="back-to-main"><apex:outputLink value="apex/centers_preapp_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+          </div>
+         <div class="section-header clearfix">
+             <h2>Welcome to Intrax!</h2>
+          <div class="progress-bar">Page 4 <em>of</em> 4</div>
+      </div> 
+             
+      <div class="white-box clearfix">   
+               <div class="panel two_thirds">
+                          <apex:pageMessages />
+                   <p>Great! We have received your application!</p> 
+                    <p>We will contact you within 1 business day for your travel plans so we can make sure your course, accommodations and travel services 
+                    are available. We will then send your quote.</p>  
+                    <p>You can also tell us your travel plans now, so we can send your quote more quickly!</p>
+
+   
+             <div class="form-row">
+              
+              <div class="form-link">
+                <apex:commandlink action="{!navigator}" immediate="true">
+                    <apex:param name="nextPage" value="/apex/centers_preapp_my_terms"/> 
+                    <apex:param name="reDirectPage" value="true"/> 
+                    <i class="icon-chevron-left"></i>
+                    <apex:commandButton value="Back" immediate="true"/>
+                </apex:commandlink>
+              </div>
+                          
+              <div class="form-button">
+                <apex:commandlink styleClass="next" action="{!navigator}">
+                  <apex:param name="nextPage" value="/apex/centers_preapp_home"/>
+                  <apex:param name="reDirectPage" value="true"/> 
+                    <apex:commandButton value="Save & Continue" />
+                    <i class="icon-chevron-right"></i>
+                </apex:commandlink>
+              </div>    
+            </div>  
+              </div>
+          <div class="panel one_third last aside">
+          <c:Badge_Centers_Contact />     
+          </div>
+          </div>
+   
+          </apex:form>
+      
+     </div>
+    </apex:define>
+  </apex:composition>
+ 
+
+</apex:page>

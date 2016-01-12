@@ -1,0 +1,56 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" title="Health Information Release" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="false" showHeader="false" id="apc_ap_main_health_info">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_apc_ap_application />
+      <div id="app-page" class="row">
+        <div id="app-focus" class="col-md-8 col-md-push-3">
+          <c:block_app_completion ApplicantInfo="{!applicantInfo}" userProfileName="{!userProfileName}"  />
+          <h1>Medical Information Release</h1>
+          <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+          <apex:form styleClass="form-vertical ws-validate" id="webform">
+            <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+            <p class="lead">Please review and agree to the terms regarding your well-being on the program.</p>
+            <div class="well">
+              <ul>
+                <li>If my medical condition changes (including pregnancy), between the time of signing this document,
+                  and my departure to the USA, I understand that I am required to notify AuPairCare and resubmit another Physician Verified Medical
+                  History document prior to departure.</li>
+                <li>I hereby give my full consent to be medically treated or to undergo medical treatment
+                  which is determined by a doctor and may be necessary during my stay abroad.</li>
+                <li>I accept full responsibility for any medical expenses which are not covered by my insurance policy,
+                  and understand that pre-existing medical conditions will not be covered.</li>
+                <li>I give consent to release the medical information supplied in this application to my potential host family.</li>
+              </ul>
+            </div>
+            <div class="col-sm-12">
+              <div class="form-group">
+                <apex:inputField styleClass="no-margin" value="{!personInfo.Medical_Health_Agreement__c}" id="agreementcheck" />
+                <label class="control-label inline-block">&nbsp;I agree to all of the terms mentioned above.</label> </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12 margin-t">
+                <apex:outputLink styleClass="btn btn-link btn-lg" value="/apex/apc_ap_basic_health_info?id={!applicantInfo.Id}" id="backlink"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                <apex:commandlink styleClass="btn btn-primary btn-lg" action="{!navigator}" id="nextlink" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                  <apex:param name="nextPage" value="/apex/apc_ap_main_physician_form" />
+                  <apex:param name="reDirectPage" value="true" />
+                  <apex:param name="docType" value="Doctor" assignTo="{!docType}"/>
+                  <apex:param name="pageId" value="028"/>
+                  <apex:commandButton value="Save & Continue" id="continuebutton"/>
+                </apex:commandlink>
+              </div>
+            </div>
+          </apex:form>
+        </div>
+        <!-- end column  -->
+        
+        <div id="app-side" class="col-md-3 col-md-pull-8">
+          <c:menu_side_apc_ap_basic ApplicantInfo="{!applicantInfo}" />
+        </div>
+        <!-- end column --> 
+        
+      </div>
+      <!-- end row --> 
+      
+    </apex:define>
+  </apex:composition>
+</apex:page>

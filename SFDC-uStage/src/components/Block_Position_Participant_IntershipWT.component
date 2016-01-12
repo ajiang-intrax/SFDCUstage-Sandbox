@@ -1,0 +1,665 @@
+<apex:component layout="none" id="DefaultPartnerMatchInfo" controller="ParticipantPortalController" >
+             
+              	  <!-- Beginning Header 3 / Position Detail-->
+                 
+                  			<apex:outputPanel rendered="{!IF(ISBLANK(positionInfo.Id), false, true)}" layout="block" styleClass="block"> 
+                  			<div class="block-header"><h3>Match Information <apex:outputText rendered="{!IF(match.Position_Name__r.Name == null, false, true)}" value=" - {!match.Position_Name__r.Name}"/></h3></div>
+				                 <div class="block-body">
+				                  <div class="list-view container-fluid">
+				                    <div class="row-fluid">
+				                      <div class="span6">
+				                        <div class="list-field">
+				                          <label><strong>
+				                            <apex:outputText value="Participant Name"/>
+				                            </strong></label>
+				                          <apex:outputField value="{!match.Engagement__r.Name}"/>
+				                          &nbsp; </div>
+				                        <div class="list-field">
+				                          <label><strong>
+				                            <apex:outputText value="Consider Other Position"/>
+				                            </strong></label>
+				                          <apex:outputText value="Yes" rendered="{!match.Consider_Other_Positions__c = true}"/>
+				                          <apex:outputText value="No" rendered="{!match.Consider_Other_Positions__c = false}"/>
+				                          &nbsp; </div>
+				                          <div class="list-field">
+				                          <label><strong>
+				                            <apex:outputText value="Match Date"/>
+				                            </strong></label>
+				                          <apex:outputField value="{!match.Match_Date__c}"/>
+				                          &nbsp; </div>
+				                          <div class="list-field">
+				                          <label><strong>
+				                            <apex:outputText value="Start Date"/>
+				                            </strong></label>
+				                          <apex:outputField value="{!match.Start_Date__c}"/>
+				                          &nbsp; </div>
+				                          <div class="list-field">
+				                          <label><strong>
+				                            <apex:outputText value="End Date"/>
+				                            </strong></label>
+				                          <apex:outputField value="{!match.End_Date__c}"/>
+				                          &nbsp; </div>
+				                          				                        
+				                      </div> <!-- end span -->
+				                      <div class="span6">
+				                        <div class="list-field">
+				                          <label><strong>
+				                            <apex:outputText value="Match Stage"/>
+				                            </strong></label>
+				                          <apex:outputField value="{!match.Status__c}"/>
+				                          &nbsp; </div>
+				                        <div class="list-field">
+				                          <label><strong>
+				                            <apex:outputText value="Interview Status"/>
+				                            </strong></label>
+				                          <apex:outputField value="{!match.Interview_Status__c}"/>
+				                          &nbsp; </div>
+				                          <div class="list-field">
+				                          <label><strong>
+				                            <apex:outputText value="Interview Date"/>
+				                            </strong></label>
+				                          <apex:outputField value="{!match.Interview_Date__c}"/>
+				                          &nbsp; </div>
+				                          <div class="list-field">
+				                          <label><strong>
+				                            <apex:outputText value="Offer Status"/>
+				                            </strong></label>
+				                          <apex:outputField value="{!match.Offer_Status__c}"/>
+				                          &nbsp; </div>
+				                        
+				                        
+				                      </div> <!-- end span -->
+				                       </div><!-- end row -->
+				                      </div><!-- end list view -->  
+				                    </div> <!-- end block body -->
+                 
+                 
+                 
+                     <div class="block-header"><h3>Position Overview</h3> <a class="btn btn-mini float-r hide-next" style="display:block;">Show/Hide</a></div>
+                 <div class="block-body">
+								<div class="list-view">
+								
+									<div class="row-fluid">
+										<div class="span6">
+										<div class="list-field">
+											<label><apex:outputText value="Host Company Description" />
+											</label>
+											<apex:outputField value="{!positionInfo.Host_Company_Id__r.Description}" />&nbsp;
+										</div>
+										<div class="list-field">	
+											<label><apex:outputText value="Position Code" />
+											</label>
+											<apex:outputField value="{!positionInfo.Code__c}" />&nbsp;
+										</div>
+										</div>
+									</div>	
+									
+									<div class="row-fluid">
+										<div class="span6">	
+											<div class="list-field">
+												<label><apex:outputText value="City" />
+												</label>
+												<apex:outputField value="{!positionInfo.City__c}" />
+												&nbsp;
+											</div>
+											<div class="list-field">
+												<label><apex:outputText value="Gender Preference" />
+												</label>
+												<apex:outputField value="{!positionInfo.Gender_Preference__c}" />
+												&nbsp;
+											</div>
+										
+										</div>
+										<!-- end span -->
+
+										<div class="span6">
+											
+											<div class="list-field">
+												<label> <apex:outputText value="State" />
+												</label>
+												<apex:outputField value="{!positionInfo.State__c}" />
+												&nbsp;
+											</div>
+											
+											<div class="list-field">
+												<label> <apex:outputText value="English Level" />
+												</label>
+												<apex:outputField value="{!positionInfo.Language_1_Proficiency__c}" />
+												&nbsp;
+											</div>
+
+										</div>
+										<!-- end span -->
+
+									</div>
+									<!-- end row -->
+									<div class="row-fluid">
+										<div class="span12">
+											<div class="list-field">
+												<label><apex:outputText value="Minimum Age" /></label>
+												<apex:outputField value="{!positionInfo.Minimum_Age__c}" />
+												&nbsp;
+											</div>
+
+										</div>
+										<!-- end span -->
+
+									</div>
+									<!-- end row -->
+
+									<div class="row-fluid">
+										<div class="span6">
+											<div class="list-field">
+												<label><apex:outputText value="Earliest Start Date" /></label>
+												<apex:outputField value="{!positionInfo.Engagement_Start__c}" />
+												&nbsp;
+											</div>
+											<div class="list-field">
+												<label><apex:outputText value="Earliest End Date" /></label>
+												<apex:outputField value="{!positionInfo.Engagement_Earliest_End__c}" />
+												&nbsp;
+											</div>
+
+										</div>
+										<!-- end span -->
+
+										<div class="span6">
+											<div class="list-field">
+												<label><apex:outputText value="Latest Start Date" /></label>
+												<apex:outputField value="{!positionInfo.Engagement_Latest_Start__c}" />
+												&nbsp;
+											</div>
+											<div class="list-field">
+												<label><apex:outputText value="Latest End Date" /></label>
+												<apex:outputField value="{!positionInfo.Engagement_End__c}" />
+												&nbsp;
+											</div>
+
+										</div>
+										<!-- end span -->
+
+									</div>
+									<!-- end row -->
+
+								</div>
+                    	</div>
+                <!-- End Header 3 --> 
+                
+             
+                    
+                 <!-- Beginning Header 3 / Employer Information -->
+                 
+                <!-- end block body -->
+							<div class="block-header">
+								<h3>Position Details</h3>
+								<a style="display: block;"
+									class="btn btn-mini float-r hide-next">Show/Hide</a>
+							</div>
+							<div class="block-body">
+								<div class="list-view container-fluid">
+									<div class="row-fluid">
+										<div class="span12">
+											<div class="list-field">
+												<label> <apex:outputText value="Average Hrs/Wk" />
+												</label>
+												<apex:outputField value="{!positionInfo.Employment_Hrs_Wk__c}" />
+												&nbsp;
+											</div>
+											<div class="list-field">
+												<label> <apex:outputText value="Typical Schedule" />
+												</label>
+												<apex:outputField value="{!positionInfo.Typical_Schedule__c}" />
+												&nbsp;
+											</div>
+											<div class="list-field">
+												<label> <apex:outputText value="Position Description" />
+												</label>
+												<apex:outputField value="{!positionInfo.Description__c}" />
+												&nbsp;
+											</div>											
+											<div class="list-field">
+												<label> <apex:outputText value="Required Duties" />
+												</label>
+												<apex:outputField value="{!positionInfo.Required_Duties__c}" />
+												&nbsp;
+											</div>
+											<div class="list-field">
+												<label> <apex:outputText value="Skills Required" />
+												</label>
+												<apex:outputField value="{!positionInfo.Skills_Required__c}" />
+												&nbsp;
+											</div>
+											<div class="list-field">
+												<label> <apex:outputText value="Supplies Required" />
+												</label>
+												<apex:outputField value="{!positionInfo.Supplies_Required__c}" />
+												&nbsp;
+											</div>
+											<div class="list-field">
+												<label> <apex:outputText value="Supplies Cost" />
+												</label>
+												<apex:outputField value="{!positionInfo.Supplies_Cost__c}" />
+												&nbsp;
+											</div>
+											<div class="list-field">
+												<label> <apex:outputText value="Company Policies" />
+												</label>
+												<apex:outputField value="{!positionInfo.Host_Company_Id__r.Company_Policies__c}" />
+												&nbsp;
+											</div>
+											<div class="list-field">
+												<label> <apex:outputText value="Interview Required?" />
+												</label>
+												<apex:outputText value="Yes" rendered="{!positionInfo.Requires_Interview__c == true}"/>
+        										<apex:outputText value="No" rendered="{!positionInfo.Requires_Interview__c == false}"/>												
+												&nbsp;
+											</div>
+											<div class="list-field">
+												<label> <apex:outputText value="Additional Information" />
+												</label>
+												<apex:outputField value="{!positionInfo.Special_Notes__c}" />
+												&nbsp;
+											</div>
+										</div>
+										<!-- end span -->
+									</div>
+
+									<div class="row-fluid">
+										<div class="span6">
+											<div class="list-field">
+												<label> <apex:outputText value="Pay Rate" />
+												</label>
+												<apex:outputField value="{!positionInfo.Pay_Rate__c}" />
+												&nbsp;
+											</div>
+											<div class="list-field">
+												<label> <apex:outputText value="Overtime Available?" />
+												</label>
+												<apex:outputText value="Yes" rendered="{!positionInfo.Overtime_Available__c == true}"/>
+        										<apex:outputText value="No" rendered="{!positionInfo.Overtime_Available__c == false}"/>			
+												&nbsp;
+											</div>
+											<div class="list-field">
+												<label> <apex:outputText value="Pay Notes" />
+												</label>
+												<apex:outputField value="{!positionInfo.Pay_Notes__c}" />
+												&nbsp;
+											</div>
+											<div class="list-field">
+												<label> <apex:outputText value="Days Before Start of Work" />
+												</label>
+												<apex:outputField value="{!positionInfo.Days_Before_Work__c}" />
+												&nbsp;
+											</div>
+											<div class="list-field">
+												<label> <apex:outputText value="Accepts Couples?" />
+												</label>
+												<apex:outputText value="Yes" rendered="{!positionInfo.Accepts_Couples__c == true}"/>
+        										<apex:outputText value="No" rendered="{!positionInfo.Accepts_Couples__c == false}"/>												
+												&nbsp;
+											</div>
+
+										</div>
+										<!-- end span -->
+										<div class="span6">
+											<div class="list-field">
+												<label> <apex:outputText value="Tipped Position?" />
+												</label>
+												<apex:outputField value="{!positionInfo.Tipped_Position__c}" />
+												&nbsp;
+											</div>
+											<div class="list-field">
+												<label> <apex:outputText value="Overtime Rate" />
+												</label>
+												<apex:outputField value="{!positionInfo.Overtime_Rate__c}" />
+												&nbsp;
+											</div>
+											<div class="list-field">
+												<label> <apex:outputText value="Pay Frequency?" />
+												</label>
+												<apex:outputField value="{!positionInfo.Pay_Frequency__c}" />
+												&nbsp;
+											</div>
+											<div class="list-field">
+												<label> <apex:outputText value="Second Job Allowed?" />
+												</label>
+												<apex:outputField value="{!positionInfo.Second_Job_Allowed__c}" />
+												&nbsp;
+											</div>
+											<div class="list-field">
+												<label> <apex:outputText value="Accepts Groups?" />
+												</label>
+												<apex:outputText value="Yes" rendered="{!positionInfo.Accepts_Groups__c == true}"/>
+        										<apex:outputText value="No" rendered="{!positionInfo.Accepts_Groups__c == false}"/>	
+												&nbsp;
+											</div>
+
+										</div>
+										<!-- end span -->
+
+									</div>
+									<!-- end row -->
+
+									<div class="row-fluid">
+										<div class="span12">
+											<div class="list-field">
+												<label> <apex:outputText value="Company Provided Housing?" />
+												</label>
+												<apex:outputField value="{!positionInfo.Company_Provided_Housing__c}" />
+												&nbsp;
+											</div>
+
+
+										</div>
+										<!-- end span -->
+
+									</div>
+									<!-- end row -->
+
+								</div>
+								<!-- end list view -->
+							</div>
+                    
+                <!-- End Header 3 -->    
+                
+                  <!-- Beginning Header 3 / Compensation -->
+                 
+                <div class="block-header">
+								<h3>Arrival Information</h3>
+								<a style="display: block;"
+									class="btn btn-mini float-r hide-next">Show/Hide</a>
+							</div>
+							<div class="block-body">
+								<div class="list-view container-fluid">
+									<div class="row-fluid">
+										<div class="span12">
+											<div class="list-field">
+												<label> <apex:outputText value="Recommended Airport" />
+												</label>
+												<apex:outputField value="{!positionInfo.Host_Company_Id__r.Recommended_Airport__c}" />
+												&nbsp;
+											</div>
+											<div class="list-field">
+												<label> <apex:outputText value="Nearest Bus Station" />
+												</label>
+												<apex:outputField value="{!positionInfo.Host_Company_Id__r.Nearest_Bus_Station__c}" />
+												&nbsp;
+											</div>
+											<div class="list-field">
+												<label> <apex:outputText value="Nearest Train Station" />
+												</label>
+												<apex:outputField value="{!positionInfo.Host_Company_Id__r.Nearest_Train_Station__c}" />
+												&nbsp;
+											</div>
+											<div class="list-field">
+												<label> <apex:outputText value="Transportation to Company" />
+												</label>
+												<apex:outputField value="{!positionInfo.Host_Company_Id__r.Transportation_to_Company__c}" />
+												&nbsp;
+											</div>
+											<div class="list-field">
+												<label> <apex:outputText value="Reporting Instructions" />
+												</label>
+												<apex:outputField value="{!positionInfo.Host_Company_Id__r.Reporting_Instructions__c}" />
+												&nbsp;
+											</div>
+											<div class="list-field">
+												<label> <apex:outputText value="Travel Instructions" />
+												</label>
+												<apex:outputField value="{!positionInfo.Host_Company_Id__r.Travel_Instructions__c}" />
+												&nbsp;
+											</div>
+											<div class="list-field">
+												<label> <apex:outputText value="Nearest Social Security Office" />
+												</label>
+												<apex:outputField value="{!positionInfo.Host_Company_Id__r.Nearest_Work_Authorization_Office__c}" />
+												&nbsp;
+											</div>
+											<div class="list-field">
+												<label> <apex:outputText value="Social Security Instructions" />
+												</label>
+												<apex:outputField value="{!positionInfo.Host_Company_Id__r.Work_Authorization_Instructions__c}" />
+												&nbsp;
+											</div>
+
+
+										</div>
+										<!-- end span -->
+									</div>
+
+								</div>
+								<!-- end list view -->
+							</div>
+							<!-- end block body -->
+                    
+                <!-- End Header 3 -->  
+                
+                 <!-- Beginning Header 3 / Schedule -->
+                 
+               <div class="block-header">
+								<h3>Area Information</h3>
+								<a style="display: block;"
+									class="btn btn-mini float-r hide-next">Show/Hide</a>
+							</div>
+							<div class="block-body">
+								<div class="list-view container-fluid">
+									<div class="row-fluid">
+										<div class="span12">
+											<div class="list-field">
+												<label> <apex:outputText value="Area Information" />
+												</label>
+												<apex:outputField value="{!positionInfo.Host_Company_Id__r.Area_Information__c}" />
+												&nbsp;
+											</div>
+											<div class="list-field">
+												<label> <apex:outputText value="Cultural Opportunities" />
+												</label>
+												<apex:outputField value="{!positionInfo.Host_Company_Id__r.Cultural_Opportunities__c}" />
+												&nbsp;
+											</div>
+											<div class="list-field">
+												<label> <apex:outputText value="Website" />
+												</label>
+												<apex:outputField value="{!positionInfo.Host_Company_Id__r.Website}" />
+												&nbsp;
+											</div>
+											<div class="list-field">
+												<label> <apex:outputText value="Additional Website Info" />
+												</label>
+												<apex:outputField value="{!positionInfo.Host_Company_Id__r.Websites_Additional__c}" />
+												&nbsp;
+											</div>
+
+										</div>
+										<!-- end span -->
+									</div>
+
+								</div>
+								<!-- end list view -->
+
+							</div>
+							<!-- end block body -->
+                    
+                <!-- End Header 3 --> 
+                
+                <!-- Beginning Header 3 / Other Job Requirements --> 
+                 
+               <div class="block-header">
+								<h3>Accommodation Options</h3>
+								<a style="display: block;"
+									class="btn btn-mini float-r hide-next">Show/Hide</a>
+							</div>
+							<div class="block-body">
+								<div class="list-view container-fluid">
+									<div class="row-fluid">
+										<div class="span12">
+											<apex:outputPanel rendered="{!IF(accOptionInfoList.Size == 0, true, false)}"
+												layout="block" styleClass="block">
+												<div class="block-body">No record(s) to display.</div>
+											</apex:outputPanel>
+											
+											<apex:repeat id="accOptionInfoList" value="{!accOptionInfoList}" var="item" rendered="{!IF(accOptionInfoList.Size == 0, false, true)}">
+												<div class="row-fluid">
+												<div data-toggle="collapse"  data-target="#{!item.Id}" class="list-view-header collapsed span12">
+												<div class="title pull-left">
+															
+													<apex:outputField value="{!item.Name}" />
+																
+												</div>  <!--  end title -->
+												<div class="controls pull-right clearfix"> 
+												<div class="arrows margin-r">
+												<span class="arrow-up"><i class="icon-caret-up"></i></span>
+												<span class="arrow-down"><i class="icon-caret-down"></i></span>
+												</div>
+												</div>
+
+												</div> <!--  end controls -->
+												
+												<div class="span12 collapse {!item}" id="{!item}">
+													
+													<apex:outputPanel styleClass="row-fluid" rendered="{!IF(item.Accommodation_Site__c != null, true, false)}">
+														<div class="span6">
+														    <label> <apex:outputText value="Address" />
+															</label>
+															<apex:outputText value="{!item.Accommodation_Site__r.Business_Name__c}" />
+															&nbsp; <br />
+															<apex:outputText value="{!item.Accommodation_Site__r.Street__c} {!item.Accommodation_Site__r.Street_2__c}" />
+															&nbsp;<br />
+															<apex:outputText value="{!item.Accommodation_Site__r.City__c}, {!item.Accommodation_Site__r.State__c}" />
+															&nbsp;<br />
+															<apex:outputText value="{!item.Accommodation_Site__r.Postal_Code__c} - {!item.Accommodation_Site__r.Country__c}" />
+															&nbsp;<br />
+															<apex:outputlink rendered="{!IF(NOT(ISBLANK(item.Accommodation_Site__r.Street__c)) && NOT(ISBLANK(item.Accommodation_Site__r.City__c)) && NOT(ISBLANK(item.Accommodation_Site__r.State__c)), true, false)}" value="http://maps.google.com/maps?f=q&hl=en&q={!item.Accommodation_Site__r.Street__c}+{!item.Accommodation_Site__r.City__c}+{!item.Accommodation_Site__r.State__c}&om=1" target="_blank"> View in Google Maps  </apex:outputlink>
+															&nbsp;
+														</div>
+													</apex:outputPanel>
+													
+													<apex:outputPanel styleClass="row-fluid" rendered="{!IF(item.Accommodation_Site__c != null, true, false)}">
+														<div class="span6">
+														    <label> <apex:outputText value="Type" />
+															</label>
+															<apex:outputText value="{!item.Accommodation_Site__r.Type__c}" />
+															&nbsp; <br />
+														</div>
+													</apex:outputPanel>
+													
+													<div class="row-fluid">
+														<div class="span6">
+														    <label> <apex:outputText value="Company Arranged" />
+															</label>
+															<apex:outputText value="Yes"  rendered="{!item.Host_Arranged__c == true}" />
+															<apex:outputText value="No"  rendered="{!item.Host_Arranged__c == false}" />
+															&nbsp; <br />
+														</div>
+														<div class="span6">
+														    <label> <apex:outputText value="Company Recommended" />
+															</label>
+															<apex:outputText value="Yes"  rendered="{!item.Host_Recommended__c == true}" />
+															<apex:outputText value="No"  rendered="{!item.Host_Recommended__c == false}" />
+															&nbsp; <br />
+														</div>
+													</div>
+													<div class="row-fluid">
+														<div class="span6">
+														    <label> <apex:outputText value="Description" />
+															</label>
+															<apex:outputText value="{!item.Description__c}" />
+															&nbsp; <br />
+															<label> <apex:outputText value="Estimated Weekly Cost" />
+															</label>
+															<apex:outputText value="{!item.Estimated_Cost__c}" />
+															&nbsp; <br />
+														</div>
+													</div>
+													<div class="row-fluid">
+														<div class="span6">
+														    <label> <apex:outputText value="Additional Weekly Costs" />
+															</label>
+															<apex:outputText value="{!item.Additional_Costs__c}" />
+															&nbsp; <br />
+															<label> <apex:outputText value="Commute Options" />
+															</label>
+															<apex:outputText value="{!item.Commute_Options__c}" />
+															&nbsp; <br />
+															<label> <apex:outputText value="Company Provides Transportation" />
+															</label>
+															<apex:outputText value="Yes"  rendered="{!item.Transportation_Provided__c == true}" />
+															<apex:outputText value="No"  rendered="{!item.Transportation_Provided__c == false}" />
+															&nbsp; <br />
+														</div>
+														<div class="span6">
+														    <label> <apex:outputText value="Additional Costs Description" />
+															</label>
+															<apex:outputText value="{!item.Additional_Costs_Description__c}" />
+															&nbsp; <br />
+															<label> <apex:outputText value="Commute Cost" />
+															</label>
+															<apex:outputText value="{!item.Commute_Cost__c}" />
+															&nbsp; <br />
+															<label> <apex:outputText value="Estimated Distance to Company" />
+															</label>
+															<apex:outputText value="{!item.Estimated_Distance__c}" />
+															&nbsp; <br />
+														</div>
+													</div>
+													<div class="row-fluid">
+														<div class="span6">
+														    <label> <apex:outputText value="Gender Restriction" />
+															</label>
+															<apex:outputText value="{!item.Gender_Restriction__c}" />
+															&nbsp; <br />
+														</div>
+													</div>
+													<apex:outputPanel styleClass="row-fluid" rendered="{!IF(item.Accommodation_Site__c != null, true, false)}">
+														<div class="span6">
+															<label> <apex:outputText value="Features" />
+															</label>
+															<apex:outputText value="{!item.Accommodation_Site__r.Features__c}" />
+															&nbsp; <br />
+															<label> <apex:outputText value="Features Description" />
+															</label>
+															<apex:outputText value="{!item.Accommodation_Site__r.Features_Description__c}" />
+															&nbsp; <br />
+															<label> <apex:outputText value="Additional Information" />
+															</label>
+															<apex:outputText value="{!item.Accommodation_Site__r.Additional_Information__c}" />
+															&nbsp; <br />
+														</div>
+													</apex:outputPanel>
+													
+												</div>
+												</div>
+											</apex:repeat>
+											
+										</div>
+									</div>
+									
+								</div>
+									
+							</div>
+							<!-- end block body -->
+                    
+                <!-- End Header 3 --> 
+                
+                <div class="block-body">
+                
+                <apex:outputPanel id="buttonPanel" layout="block">
+			           <apex:outputPanel styleClass="form-link">
+			               <apex:outputLink value="/apex/Participant_Matches">
+			                <i class="icon-chevron-left"></i> <span>Back To Matches</span>
+			                </apex:outputLink>
+			           </apex:outputPanel>
+			           <div class="form-link">
+							<apex:outputLink target="_blank" value="/apex/PT_Position_details_pdf?matchID={!match.ID}"><i class="icon-file"></i> View PDF Summary</apex:outputLink>
+					   </div>
+			    </apex:outputPanel>
+			    
+			    </div>
+			    
+			    
+                
+                
+                   
+          </apex:outputPanel>
+          
+       </apex:component>

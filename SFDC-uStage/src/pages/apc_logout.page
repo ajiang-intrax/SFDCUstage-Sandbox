@@ -1,0 +1,28 @@
+<apex:page showHeader="false" sidebar="false" controller="TemplateController"  >
+
+<apex:iframe src="{!$Site.Prefix}/secur/logout.jsp" height="1" width="1" />
+
+<script>
+ 
+function redirectToLogin(){
+    
+    if("{!user.User_Interests__c}" == 'Hosting an au pair'){ 
+        
+        window.parent.location="{!$Site.Prefix}/AppEngine_SiteLoginPage?uIn=APCHF&";
+    
+    }
+    else if("{!user.User_Interests__c}" == 'Becoming an au pair'){ 
+        
+        window.parent.location="{!$Site.Prefix}/AppEngine_SiteLoginPage?uIn=APCPT&";
+    
+    }else{
+    
+    	window.parent.location="{!$Site.Prefix}/AppEngine_SiteLoginPage";
+    }
+}
+ 
+setTimeout("redirectToLogin()", 1000);
+ 
+</script>
+
+</apex:page>

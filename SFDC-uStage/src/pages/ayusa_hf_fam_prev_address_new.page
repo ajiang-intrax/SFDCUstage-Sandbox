@@ -1,0 +1,86 @@
+<apex:page id="ayusa_hf_fam_prev_address_new" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller"  action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper">
+          <apex:form id="form" >
+         <div class="page-header clearfix">
+<h1 class="page-title">Ayusa Host Family Application</h1>
+<div class="back-to-main"><apex:outputLink value="apex/ayusa_hf_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+</div>
+          <h2>Add an Address</h2>
+          <div class="white-box clearfix">
+          <div class="panel two_thirds">
+          
+            <apex:Messages styleClass="custom-error-pagelevel"/>
+            <p><em> All fields marked with an asterisk (<span class="required no-padding">*</span>) are required</em></p><br/>
+          
+              <div class="form-row" >
+                <div class="form-label left"> Occupancy Start<span class="required">*</span> </div>
+                <div class="form-field">
+                  <apex:inputField id="StartDate" value="{!locationInfo.Occupancy_Start__c}" required="TRUE"/>
+                </div>
+              </div>
+              
+              <div class="form-row" >
+                <div class="form-label left"> Occupancy End<span class="required">*</span> </div>
+                <div class="form-field">
+                  <apex:inputField id="EndDate" value="{!locationInfo.Occupancy_End__c}" required="TRUE"/>
+                </div>
+              </div>
+              
+              <div class="form-row" >
+                <div class="form-label left"> Street <span class="required">*</span> </div>
+                <div class="form-field">
+                  <apex:inputField id="Street" value="{!locationInfo.Street__c}" required="TRUE"/>
+                </div>
+              </div>
+                            
+              <div class="form-row" >
+                <div class="form-label left"> City <span class="required">*</span> </div>
+                <div class="form-field">
+                  <apex:inputField id="City" value="{!locationInfo.City__c}" required="TRUE"/>
+                </div>
+              </div>
+              
+              
+              <div class="form-row" >
+                <div class="form-label left"> State / Province<span class="required">*</span> </div>
+                <div class="form-field">
+                  <apex:inputField id="State" value="{!locationInfo.State__c}" required="TRUE"/>
+                </div>
+              </div>
+              
+              <div class="form-row" >
+                <div class="form-label left"> Postal Code or ZIP Code <span class="required">*</span> </div>
+                <div class="form-field">
+                  <apex:inputField id="PostalCode" value="{!locationInfo.Postal_Code__c}" required="TRUE"/>
+                </div>
+              </div>
+                            
+                <div class="form-row">
+                
+                    <div class="form-link">
+                            <apex:outputLink id="Back" styleClass="back" value="/apex/ayusa_hf_fam_prev_address?id={!applicantInfo.Id}">
+                            <i class="icon-chevron-left"></i>
+                            <span>Back</span>
+                            </apex:outputLink>
+                      </div>
+                
+                      <div class="form-button">
+                        <apex:commandlink id="Save" styleClass="save" action="{!navigator}">
+                          <apex:param name="nextPage" value="/apex/ayusa_hf_fam_prev_address"/>
+                          <apex:param name="reDirectPage" value="true"/>
+                       
+                          <apex:commandButton id="SaveContinue" value="Save & Continue"/>
+                          <i class="icon-chevron-right"></i>
+                          </apex:commandlink>
+                      </div>    
+                    </div>  
+                </div>
+          
+         </div>
+       </apex:form>
+     </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

@@ -1,0 +1,31 @@
+<apex:page controller="DocuSign_Controller" action="{!MethodJobFinal}" docType="html-5.0" standardStylesheets="false" showHeader="false">
+  
+    <apex:composition template="IntraxTemplate_Vs2" >
+      <apex:define name="body">
+      <apex:form >
+        <h1> Offer New Position </h1>
+        <div class="row-fluid"> 
+          
+          <div class="span12">
+            <div class="block">
+              <div class="block-body">
+               <p>{!msgDisplay}</p> 
+               <apex:outputPanel styleClass="form-row" layout="block">
+                  <div class="form-link">
+                    <apex:outputLink value="/apex/C_Matches"><i class="icon-chevron-left"></i> <span>Back To Candidate</span></apex:outputLink>
+                  </div> 
+                   <div class="form-link">
+                    <apex:outputLink value="/apex/Hiring_Event"><i class="icon-chevron-left"></i> <span>Back To Hiring Events</span></apex:outputLink>
+                  </div> 
+                  
+                </apex:outputPanel> 
+  
+              </div>
+            </div>  
+          </div>
+        </div>
+        </apex:form> 
+      </apex:define>
+    </apex:composition>
+  
+</apex:page>

@@ -1,0 +1,48 @@
+<apex:page sidebar="false" showHeader="false">
+	<!-- <link rel="stylesheet" type="text/css" media="all"
+        href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css"/>
+    <script type="text/javascript" 
+        src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js">
+    </script>
+
+    <script type="text/javascript" 
+        src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js">
+    </script>
+     -->
+    <apex:includeScript value="{!URLFOR($Resource.JQueryFiles, 'jquery-1.3.2.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.JQueryFiles, 'jquery-ui-1.7.2.custom.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.JQueryFiles, 'jquery.bgiframe.min.js')}"/>
+    <!-- <apex:stylesheet value="{!URLFOR($Resource.JQueryFiles,'css/ui.all.css')}"/> -->
+    <link rel="stylesheet" type="text/css" media="all"
+        href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css"/>
+     <script>
+        $(function() {
+           $("#siteLaunch").dialog({
+                   autoOpen: false,
+                   modal: true,
+                   bgiframe:true,
+                   height: 400,
+                   width: 900,
+                   resizable:false,
+                   close: function() {
+                        $( this ).dialog( "close" );return false;
+                    }
+               });
+        });
+        
+        function openSiteWindow() {
+            
+            $("#siteLaunch").dialog('open');
+            return false;
+        }
+     </script>
+     <br/><br/><br/><br/><br/><br/><br/>
+     <center>
+     	<apex:outputLink value="javascript:void(0)" onclick="return openSiteWindow(); return false;" styleClass="btnSharing" style="cursor:hand;text-decoration: none;padding:7px;font-size:12px">Enter to IntraX Site</apex:outputLink>
+	 </center>
+	 	<div id="siteLaunch" >
+           <!-- <apex:include pageName="Intrax_SiteLoginPage" /> -->
+          	
+           <iframe id="siteFrame"  src="{!$Site.Prefix}/AppEngine_SiteLoginPage" height="100%" width="100%" frameborder="0"/>
+        </div>
+</apex:page>

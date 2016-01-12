@@ -1,0 +1,19 @@
+<apex:page showHeader="true" id="admin_resources_article" controller="apc_resource_controller" action="{!showResourceDetails}">
+<apex:composition template="intraxtemplate_vs3">
+<apex:define name="body">
+
+
+<div class="row">
+<div class="col-sm-8 center-block ">
+<h1 class="no-margin-t">Family Resources</h1>
+
+<apex:outputPanel styleClass="span8" layout="block" >
+	<b>Subject: &nbsp;&nbsp;</b>{!ResourceDetail.Subject__c}<br /><br />
+	<b>Body</b><br />
+	<apex:outputtext escape="false" value="{!ResourceDetail.Body__c}" />
+</apex:outputPanel>
+</div><!-- end col -->
+</div><!-- end row -->
+</apex:define>
+</apex:composition>
+</apex:page>

@@ -1,0 +1,178 @@
+<apex:page id="ayusa_hf_fam_household_details" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}"  standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper">
+          <apex:form id="form" >
+          <div class="page-header clearfix">
+<h1 class="page-title">Ayusa Host Family Application</h1>
+<div class="back-to-main"><apex:outputLink id="BacktoMain" value="apex/ayusa_hf_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+</div>
+          <h2>About Your Household - Continued</h2>
+          <div class="white-box clearfix">
+          <div class="panel two_thirds">     
+              <div class="form-row">
+                <div class="form-label left">Primary Language Spoken In Home<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="PrimaryLanguage" value="{!applicantInfo.Primary_Language__c}" required="TRUE"/>
+                </div>
+              </div>
+                  
+              <div class="form-row">
+                <div class="form-label left">Do any family members smoke?<span class="required">*</span></div>
+                <div class="form-field">
+                    <apex:selectRadio value="{!applicantInfo.Smoker_in_Family__c}" id="smoker-indicated" required="true">
+                        <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                        <apex:selectOption itemValue="No" itemLabel="No"/>
+                    </apex:selectRadio>
+                    <apex:message for="smoker-indicated" styleClass="custom-error-radio"/>  
+                </div>                
+              </div>
+                  
+              <div class="form-row">
+                <div class="form-label left">Do you have pets at home?<span class="required">*</span></div>
+                <div class="form-field">
+                    <apex:actionRegion >
+                    <apex:selectRadio value="{!applicantInfo.Pets__c}" id="pets-indicated" required="true">
+                        <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                        <apex:selectOption itemValue="No" itemLabel="No"/>
+                        <apex:actionSupport event="onclick" rerender="have-pets" status="status"/>
+                    </apex:selectRadio>
+                    </apex:actionRegion>
+                    <apex:message for="pets-indicated" styleClass="custom-error-radio"/> 
+                </div>
+                
+              </div>
+              
+             <apex:pageBlock id="have-pets"> 
+                   <apex:outputPanel layout="block" rendered="{!ApplicantInfo.Pets__c == 'Yes'}"> 
+              <div class="form-row">
+                <div class="form-label left">If yes, how many pets:<span class="required">*</span> </div>
+                <div class="form-field">
+                  <apex:inputField id="PetsDesc" value="{!applicantInfo.Pets_Description__c}" required="true"/>
+                </div>
+                <div class="dropt"> <i class="icon-question-sign"></i>  
+                   <span>{!$ObjectType.Applicant_Info__c.Fields.Pets_Description__c.inlineHelpText}</span>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-label top">If yes, what type of pets:<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="PetType" value="{!applicantInfo.Pet_Types__c}" required="TRUE"/>
+                </div>
+              </div>
+                        </apex:outputPanel> 
+                 </apex:pageBlock> 
+                  
+              <div class="form-row">
+                <div class="form-label left">Does anyone in the family follow any dietary restrictions?<span class="required">*</span></div>
+                <div class="form-field">
+                     <apex:actionRegion >
+                    <apex:selectRadio value="{!applicantInfo.Special_Diet_Indicated__c}" id="diet-indicated" required="true">
+                        <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                        <apex:selectOption itemValue="No" itemLabel="No"/>
+                        <apex:actionSupport event="onclick" rerender="diet-yes" status="status"/>
+                    </apex:selectRadio>
+                    </apex:actionRegion>
+                    <apex:message for="diet-indicated" styleClass="custom-error-radio"/> 
+                </div>                
+              </div>
+              
+             <apex:pageBlock id="diet-yes">
+                   <apex:outputPanel layout="block" rendered="{!ApplicantInfo.Special_Diet_Indicated__c == 'Yes'}"> 
+              <div class="form-row">
+                <div class="form-label left">If yes, what type of special dietary restriction is followed in your home?<span class="required">*</span> </div>
+                <div class="form-field">
+                      <apex:actionRegion >
+                 <apex:inputField id="SpecialDiet" value="{!applicantInfo.Special_Diet__c}" required="true"/>
+                    <apex:actionSupport event="onchange" rerender="diet-other" status="status"/>
+                    </apex:actionRegion>
+                </div>
+              </div> 
+                  
+              <div class="form-row">
+                <div class="form-label left">If Other, please describe:</div>
+                <div class="form-field">
+                  <!-- <apex:inputTextArea value="{!applicantInfo.Special_Diet_Description__c}" required="false"/> -->
+                  <apex:inputTextarea id="specDietDesc" value="{!applicantInfo.Special_Diet_Description__c}" required="FALSE" onkeyup="countChar(this, 128, 'specDietDescCount')"/> 
+                  </div>
+                  <div class="char-limit"><span class="char-count-label">Characters left:</span>
+                  <span id="specDietDescCount" class="char-count">
+                  {!128-len(applicantInfo.Special_Diet_Description__c) }
+                  </span>
+                  </div>
+              </div>
+                 </apex:outputPanel>
+               </apex:pageBlock>
+              
+              <div class="form-row">
+                <div class="form-label left">Do you expect the student to follow any special diet?<span class="required">*</span></div>
+                <div class="form-field">
+                      <apex:actionRegion >
+                    <apex:selectRadio value="{!applicantInfo.Special_Diet_Expectations__c}" id="diet-expectations" required="true">
+                        <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                        <apex:selectOption itemValue="No" itemLabel="No"/>
+                        <apex:actionSupport event="onclick" rerender="special-diet" status="status"/>
+                    </apex:selectRadio>
+                    </apex:actionRegion>
+                    <apex:message for="diet-expectations" styleClass="custom-error-radio"/> 
+                </div>                
+              </div>
+              
+             <apex:pageBlock id="special-diet"> 
+                   <apex:outputPanel layout="block" rendered="{!ApplicantInfo.Special_Diet_Expectations__c == 'Yes'}">
+              <div class="form-row">
+                <div class="form-label left">If yes, please describe:<span class="required">*</span> </div>
+                <div class="form-field">
+                  <apex:inputField id="SpecialDietDesc" value="{!applicantInfo.Special_Diet_Expectation_Description__c}" required="true"/>
+                </div>
+              </div>
+                   </apex:outputPanel> 
+              </apex:pageBlock> 
+              
+              <div class="form-row">
+              
+              <div class="form-label top">Please describe activities each family member participates in:<span class="required">*</span> </div>
+                <div class="form-field">
+                  <!--  <apex:inputField value="{!applicantInfo.Family_Activities__c}" required="TRUE"/> --> 
+                <!--<apex:inputTextarea id="familyAct" value="{!applicantInfo.Family_Activities__c}" required="TRUE" onkeyup="countChar(this, 500, 'familyActCount')"/> -->
+                <apex:inputField id="familyAct" value="{!applicantInfo.Family_Activities__c}" required="TRUE" onkeyup="countChar(this, 500, 'familyActCount')"/>
+                  </div>
+                  <div class="char-limit"><span class="char-count-label">Characters left:</span>
+                  <span id="familyActCount" class="char-count">
+                  {!500-len(applicantInfo.Family_Activities__c) }
+                  </span>
+                  </div>
+                <div class="dropt"> <i class="icon-question-sign"></i>
+                   <span>{!$ObjectType.Applicant_Info__c.Fields.Family_Activities__c.inlineHelpText}</span>
+                </div> 
+              </div>
+                
+            <div class="form-row">
+                                  
+              <div class="form-link">
+                    <apex:outputLink id="Back" styleClass="back" value="/apex/ayusa_hf_fam_household_basics?id={!applicantInfo.Id}">
+                    <i class="icon-chevron-left"></i>
+                    <span>Back</span>
+                    </apex:outputLink>
+              </div>
+              
+              <div class="form-button">
+                <apex:commandlink styleClass="next" action="{!navigator}">
+                  <apex:param name="nextPage" value="/apex/ayusa_hf_fam_references"/>
+                  <apex:param name="reDirectPage" value="true"/>
+                
+                  <apex:commandButton id="SaveContinue" value="Save & Continue" />
+                    <i class="icon-chevron-right"></i> 
+                </apex:commandlink> 
+              </div>
+            </div>
+            
+           
+         </div>
+       </div>
+              </apex:form>
+     </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

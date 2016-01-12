@@ -1,0 +1,100 @@
+<apex:page standardController="invoiceit_s__Quote__c" extensions="invoiceit_s.ControllerInsertOptionalExtra">
+    <script>
+        function confirmCancel() {
+            var isCancel = confirm("{!$Label.CancellingthiswoulddiscardthechangesPleaseconfirm}");
+            if (isCancel) return true;
+            return false;
+        }
+        function addProduct(id,name){
+            addProduct(id,name);
+            var searchstring = document.getElementById("searchstring");
+            searchstring.value = ""
+        }
+        function noenter(ev)
+        {
+            if (window.event && window.event.keyCode == 13 || ev.which == 13)
+            {
+                var ele=document.getElementById(cl);
+                ele.click();
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }  
+    $j = jQuery.noConflict();
+    $j(document).ready(function() {
+        $j("#dialog").dialog({  autoOpen: false, modal: true, position: 'center', width: 190, 
+                               height:70, dialogClass: "ui-dialog-no-titlebar ui-dialog-no-padding", resizable: true});
+    });
+    /*Function to show the modal dialog for jquery*/
+    function showDialog(){
+        $j("#dialog").dialog("open");
+        $j('#dialog').dialog('option', 'position', 'center');
+        return false;
+    }
+    /*Function to hide the modal dialog for jquery*/
+    function closeDialog(){
+        $j("#dialog").dialog("close");
+        return false;
+    }
+    </script>
+   <apex:sectionHeader title="{!$Label.Addoptionalextrasfor}" subtitle="{!invoiceit_s__Quote__c.Name}" /> 
+   <apex:form >
+     <apex:actionStatus id="status" onstart="return showDialog()" onstop="return closeDialog()" />
+     <apex:actionFunction name="addProduct" action="{!getRatePlansForProduct}" rerender="productSelect,ratePlanSelect" status="status">
+        <apex:param name="productId" value="" />
+        <apex:param name="productName" value="" />
+     </apex:actionFunction>
+     <br/><br/>
+     <apex:outputLabel value="{!$Label.Search_Products}" />
+    <apex:outputLabel value="{!invoiceit_s__Quote__c.invoiceit_s__CurrencyL__c}" rendered="false"/>
+     <apex:inputText value="{!searchstring}" id="searchString">
+        <c:autoComplete objectname="{!objectname}" searchfields="{!searchfields}" displayfields="{!displayfields}" orderfield="{!orderfield}" autocomplete_textbox="{!$Component.searchstring}" products_Limit="{!sProductsLimit}"/>
+     </apex:inputText>
+     <img src="/s.gif" alt="Help" class="helpIcon" title="{!$Label.SearchProductsHelpText}"/>
+     <br/><br/>
+    <apex:pageBlock title="{!$Label.QuoteStep2_PB_SelectedProducts}" id="productSelect">
+    <apex:messages id="message"/>
+    <apex:pageBlockSection id="ratePlanSelect">
+        <apex:pageBlockTable value="{!listProductRatePlans}" var="rateplan" rendered="{!isMultipleRatePlans}" style="overflow:auto;height:100px; width:1000px;">
+            <apex:column >
+                <apex:commandLink styleClass="btn" style="padding:2px 5px 2px 5px; text-decoration:none;"
+                        value="Select" action="{!getRatePlanChargesForRatePlan}"
+                        rerender="productSelect" status="status">
+                    <apex:param name="ratePlanId" value="{!rateplan.Id}" />
+                </apex:commandLink>   
+            </apex:column>  
+            <apex:column value="{!rateplan.Name}" />
+            <apex:column value="{!rateplan.invoiceit_s__Description__c}" />
+        </apex:pageBlockTable>
+      </apex:pageBlockSection>
+      
+      <apex:pageBlockSection >
+        <apex:pageBlockTable value="{!listSelectedProductRatePlanCharges}" var="rateplanCharge" style="overflow:auto;height:100px; width:1000px;" rendered="{!isRatePlanChargesExists == true}">
+            <apex:column >
+                <apex:commandLink styleClass="btn" style="padding:2px 5px 2px 5px; text-decoration:none;"
+                        value="Remove" action="{!removeCharges}"
+                        rerender="productSelect" status="status">
+                    <apex:param name="ratePlanChargeId" value="{!rateplanCharge.Id}" />
+                </apex:commandLink>   
+            </apex:column> 
+            <apex:repeat value="{!$ObjectType.invoiceit_s__Product_Rate_Plan_Charge__c.FieldSets.invoiceit_s__Optional_Extra_Fields}" var="fieldAPI">
+                <apex:column headerValue="{!fieldAPI.Label}">
+                	<apex:inputField value="{!rateplanCharge[fieldAPI]}" rendered="{!fieldAPI == 'invoiceit_s__Default_Quantity__c'}"/>
+                    <apex:outputField value="{!rateplanCharge[fieldAPI]}" rendered="{!fieldAPI != 'invoiceit_s__Default_Quantity__c'}"/> 
+                </apex:column>
+            </apex:repeat>
+        </apex:pageBlockTable>
+     </apex:pageBlockSection>     
+     </apex:pageBlock>
+     
+     <apex:commandButton value="{!$Label.InsertOptionalExtras}" action="{!insertOptionalExtras}"/>
+     <apex:commandButton value="{!$Label.ButtonCancel}" action="{!cancel}" onclick="return confirmCancel()" immediate="true" />
+     <!-- This div holds the image that is opened as a popup during processing -->
+     <div id="dialog">
+        <apex:image value="{!URLFOR($Resource.invoiceit_s__jQuery,'/css/smoothness/images/please_wait.gif')}" />
+     </div>
+  </apex:form>
+</apex:page>

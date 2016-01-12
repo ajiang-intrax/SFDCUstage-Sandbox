@@ -1,0 +1,128 @@
+<apex:page id="ayusa_hf_prog_agree" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+        <div class="wrapper">    
+          <apex:form id="form">     
+              <div class="page-header clearfix">
+<h1 class="page-title">Ayusa Host Family Application</h1>
+<div class="back-to-main"><apex:outputLink id="BacktoMain" value="apex/ayusa_hf_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+</div>
+              <h2>Program Agreements</h2>     
+            <div class="white-box clearfix">
+              <div class="panel two_thirds">
+                
+              <apex:outputPanel rendered="{!NOT(checkHFAppNoAgree)}"> 
+              <p> We are sorry, but you must complete all other required sections of the application before you can sign the Program Agreement and submit your application. </p>
+              <p> Ayusa requires that all family members listed in the application sign the Ayusa Program Agreement. Additionally, adult members of the family and other household members must authorize Ayusa to run a criminal background check. </p>
+              <p> Once you have completed all the required sections in the Application, please return to this section to sign your program agreement and authorize your background check.</p>
+              <p> See our&nbsp;<apex:outputLink target="_blank" value="http://www.intraxinc.com/assets/myintrax/ayusa/Background_Check_FAQs.pdf" >frequently asked questions</apex:outputLink> about background checks.</p>
+              </apex:outputPanel>
+              
+              <apex:outputPanel rendered="{!checkHFAppNoAgree}" > 
+                <p>All members of the household age 18 and older who live in the home full or part time or who stay frequently must sign the Host Family Application form and complete a Background Check form.
+                    See our&nbsp;<apex:outputLink target="_blank" value="http://www.intraxinc.com/assets/myintrax/ayusa/Background_Check_FAQs.pdf" >frequently asked questions</apex:outputLink> about background checks.
+                </p>
+             
+                    
+                 
+                  <h2>Choose one of the options below:</h2>
+                  
+                   <div class="content-group">
+                  <div class="content-group-title">Option 1: Sign Agreement Online</div>
+                  <div class="content-group-body">  
+                <!--<apex:form > -->
+                      <div class="form-link no-float">
+                        <apex:outputLink id="SignOnline" value="/apex/SendNow?id={!applicantInfo.Id}" rendered="{!NOT(CheckHFAgreementsDSSent || CheckHFAgreementsDS)}"><i class="icon-file"></i> <span>Send me the agreements to sign online</span> </apex:outputLink>
+                      </div>
+                      <apex:outputText value="You requested to sign your Program Agreement Online. Please check your inbox for email(s) from Ayusa and follow the instructions to sign electronically."  rendered="{!CheckHFAgreementsDSSent || CheckHFAgreementsDS}"/>
+                    <!--</apex:form> -->
+                  </div>
+                 </div>
+                  
+                  <div class="content-group">
+                  <div class="content-group-title">Option 2: Print, Sign and Upload Agreement</div>
+                  <div class="content-group-body">  
+               <ol>
+                   <p><strong>1- Download the following documents.</strong></p>
+                   <p class="no-margin"><em>Each member of the family or resident of the home 18 years and older must sign and provide their social security number.</em></p>
+                   <p><apex:outputLink target="_blank" value="http://www.intraxinc.com/assets/myintrax/ayusa/HF_program_signature.pdf">Ayusa Program Signature document</apex:outputLink><br/>  
+                       <apex:outputLink target="_blank" value="http://www.intraxinc.com/assets/myintrax/ayusa/Background_Check_Form.pdf">Ayusa Background Check Authorization form</apex:outputLink>
+                   </p>
+                  <p><strong>2- Print and sign the documents.</strong></p>
+                   <p><strong>3- Scan the documents and convert them to JPG, PNG or PDF format.</strong> <br/> <em>File size should not exceed 2MB.</em></p>
+                  <p><strong>4- Upload the documents using the links below:</strong></p>  
+                      
+                   <p><apex:outputLink value="{!fileUploadUrl}pid=ayusa-hf&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType=HFAgreements&retparam={!retParam}" id="theLink" target="_self" disabled="{!disableFileUpload}"><span>Upload Program Agreement documents</span></apex:outputLink><br/>  
+                   <apex:outputLink value="{!fileUploadUrl}pid=ayusa-hf&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType=BackgroundCheck&retparam={!retParam}" id="otherLink" target="_self" disabled="{!disableFileUpload}"><span>Upload Background Check Authorization forms</span></apex:outputLink> (once per person)
+                       </p>  
+                      </ol>  
+                      
+                      <apex:pageBlock rendered="{!if(DocList.Size > 0, true, false)}">
+                    <apex:pageBlockTable styleClass="pageblocktable" value="{!DocList}" var="item">
+                        <apex:column headerValue="File Name">
+                            <apex:outputText id="DocName" value="{!item.Document_Name__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="Description">
+                            <apex:outputText id="Desc" value="{!item.Description__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="Type">
+                            <apex:outputText id="Agreement" value="Agreements" rendered="{!item.Document_Type__c == 'HFAgreements'}"/>
+                            <apex:outputText id="BGC" value="Background Check" rendered="{!item.Document_Type__c == 'BackgroundCheck'}"/>
+                        </apex:column>
+                                                    
+                        <apex:column >
+                            <apex:commandlink styleClass="inline-link" action="{!load}" target="_blank">
+                                <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                <apex:commandButton id="View" value="View" />
+                            </apex:commandlink>
+                            <apex:outputText value=" | " />
+                            <apex:commandlink styleClass="inline-link" action="{!deletefile}"  onclick="return ConfirmDelete('Are You Sure ?');">
+                                <apex:param name="docGuid"  value="{!item.Document_GUID__c}"/>
+                            <apex:commandButton id="Delete" value="Delete" />
+                            </apex:commandlink>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                  </apex:pageBlock>
+                      
+                  </div>
+                 </div>
+             </apex:outputPanel>
+                    
+                <div class="form-row">
+                                      
+                  <div class="form-link">
+                        <apex:outputLink id="Back1" styleClass="back" value="/apex/ayusa_hf_host_pref?id={!applicantInfo.Id}" rendered="{!checkHFAppNoAgree}">
+                        <i class="icon-chevron-left"></i>
+                        <span>Back</span>
+                        </apex:outputLink>
+                        <apex:outputLink id="Back2" styleClass="back" value="/apex/ayusa_hf_home?id={!applicantInfo.Id}" rendered="{!NOT(checkHFAppNoAgree)}">
+                        <i class="icon-chevron-left"></i>
+                        <span>Back</span>
+                        </apex:outputLink>
+                  </div>
+                  
+                  <div class="form-button">
+                    <apex:commandlink styleClass="next" action="{!navigator}">
+                      <apex:param name="nextPage" value="/apex/ayusa_hf_home"/>
+                      <apex:param name="reDirectPage" value="false"/>
+                      <apex:commandButton id="Continue" value="Continue" />
+                        <i class="icon-chevron-right"></i> 
+                    </apex:commandlink>
+                  </div>
+                </div>    
+               </div>
+               
+               <div class="panel one_third last aside">  
+                <div class="badge">
+                <div class="badge-content">
+                <a href="https://www.youtube.com/embed/GKwNdqmPl6g" title="Program Agreements" class="youtube cboxElement"><img src="{!URLFOR($Resource.ayusa_help_videos,'ayusa-help-videos/prog_agree.jpg')}"/></a>
+                </div>
+                </div> 
+              </div>
+               
+            </div>
+          </apex:form>
+      </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

@@ -1,0 +1,165 @@
+<apex:page standardController="Assessment__c"  sidebar="true" extensions="AssessmentPage" >
+// hack to overide SFDC's default for white text on headings when using apex: detail tag
+<style>
+.apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader {
+    color: #27282e }
+</style>
+<!--    
+    <apex:sectionHeader title=" Assessment" subtitle="{!Assessment__c.name}" rendered="{!IF(Assessment__c.RecordType.Name != 'AY PT Orientation' && Assessment__c.RecordType.Name != 'AY Home Visit' && Assessment__c.RecordType.Name != 'AY HF Interview' && Assessment__c.RecordType.Name != 'AY HF Validation',true,false)}"/> 
+    <apex:pageBlock title=" Assessment Detail" id="thePageBlock" mode="view" rendered="{!IF(Assessment__c.RecordType.Name == 'AY HF Contact' || Assessment__c.RecordType.Name == 'AY PT Contact' || Assessment__c.RecordType.Name == 'AY SC Contact',true,false)}">
+        <apex:pageMessages /> 
+        <apex:actionRegion > 
+            
+            
+            <!-- Generate Cancel and Edit button
+            <apex:form >
+                
+                
+                <div class="top">
+                                        
+                    <apex:commandButton value="Edit" action="{!URLFOR($Action.Assessment__c.Edit, assessment__c.Id)}" rendered="{!IF(Assessment__c.RecordType.Name != 'AY PT Orientation' && Assessment__c.RecordType.Name != 'AY Home Visit' && Assessment__c.RecordType.Name != 'AY HF Interview' && Assessment__c.RecordType.Name != 'AY HF Validation',true,false)}"/>
+                    <apex:commandButton value="Cancel" action="{!cancel}" rendered="{!IF(Assessment__c.RecordType.Name != 'AY PT Orientation' && Assessment__c.RecordType.Name != 'AY Home Visit' && Assessment__c.RecordType.Name != 'AY HF Interview' && Assessment__c.RecordType.Name != 'AY HF Validation',true,false)}"  />
+                    
+                   <!-- <div onclick="window.history.back();" class="btn" style="padding: 4px;">Cancel</div> 
+                </div>
+               
+                
+            </apex:form>
+            
+            <!-- General INFO for Assessment // Header and Footer for AY HF Contact & AY HF Contact  
+            <apex:pageBlockSection collapsible="false" rendered="{!IF(Assessment__c.RecordType.Name == 'AY HF Contact' || Assessment__c.RecordType.Name == 'AY PT Contact' || Assessment__c.RecordType.Name == 'AY SC Contact', true, false)}" >
+                <apex:outputField value="{!ass.OwnerId}"/>  
+                <apex:outputField value="{!ass.Name}"  rendered="{!IF(Assessment__c.RecordType.Name == 'AY HF Contact' || Assessment__c.RecordType.Name == 'AY PT Contact' || Assessment__c.RecordType.Name == 'AY SC Contact',true,false)}"/>
+                <apex:outputField value="{!ass.Time_Period__c}"  rendered="{!IF(Assessment__c.RecordType.Name == 'AY HF Contact'|| Assessment__c.RecordType.Name == 'AY PT Contact' || Assessment__c.RecordType.Name == 'AY SC Contact',true,false)}"/ >
+                    <apex:outputField value="{!ass.Resident_Change_Indicated__c}" rendered="{!Assessment__c.RecordType.Name == 'AY HF Contact'}"/>
+                    <apex:outputField value="{!ass.Resident_Change_Description__c}" rendered="{!Assessment__c.RecordType.Name == 'AY HF Contact'}"/>  
+                    <apex:outputField value="{!ass.Contact_Type__c}" rendered="{!IF(Assessment__c.RecordType.Name == 'AY HF Contact' || Assessment__c.RecordType.Name == 'AY PT Contact' || Assessment__c.RecordType.Name == 'AY SC Contact',true,false)}"/>
+                    <apex:outputField value="{!ass.Additional_Support_Description__c}" rendered="{!Assessment__c.RecordType.Name == 'AY SC Contact'}"/>
+                    <apex:outputField value="{!ass.Comments__c}" rendered="{!IF(Assessment__c.RecordType.Name == 'AY HF Contact' || Assessment__c.RecordType.Name == 'AY PT Contact' || Assessment__c.RecordType.Name == 'AY SC Contact',true,false)}"/>
+                    <apex:outputField value="{!ass.Overall_Assessment__c}" rendered="{!IF(Assessment__c.RecordType.Name == 'AY HF Contact' || Assessment__c.RecordType.Name == 'AY PT Contact' || Assessment__c.RecordType.Name == 'AY SC Contact',true,false)}"/> 
+                       <apex:outputField value="{!ass.Status__c}" rendered="{!IF(Assessment__c.RecordType.Name == 'AY HF Contact' || Assessment__c.RecordType.Name == 'AY PT Contact' || Assessment__c.RecordType.Name == 'AY SC Contact',true,false)}"/>
+                         <apex:outputField value="{!ass.Confirmed_Date__c}" rendered="{!IF(Assessment__c.RecordType.Name == 'AY HF Contact' || Assessment__c.RecordType.Name == 'AY PT Contact' || Assessment__c.RecordType.Name == 'AY SC Contact',true,false)}"/> 
+                </apex:pageBlockSection> 
+                
+                                <!-- Star code for AY HF Validation 
+                <apex:pageBlockSection columns="2" rendered="{!Assessment__c.RecordType.Name == 'AY HF Validation'}"> 
+                    <apex:outputField value="{!ass.Position_Name__c}"/>
+                    <apex:outputField value="{!ass.Match_Name__c}" />
+                    <apex:outputField value="{!ass.Assessment_Date__c}"/>
+                    <apex:outputField value="{!ass.Resident_Adults__c}"/>
+                    <apex:outputField value="{!ass.Resident_Participants__c}"/>
+                    <apex:outputField value="{!ass.Resident_Total__c}"/>
+                    <apex:outputField value="{!ass.Cleanliness__c}"/>
+                    <apex:outputField value="{!ass.Cleanliness_Description__c}"/>
+                    <apex:outputfield value="{!ass.Safety_Hazards__c}"/>
+                    <apex:outputField value="{!ass.Safety_Hazards_Description__c}"/>
+                    <apex:outputField value="{!ass.Bed_Type__c}"/>
+                    <apex:outputField value="{!ass.Storage_Area__c}"/>
+                    <apex:outputField value="{!ass.Study_Area__c}"/>
+                    <apex:outputField value="{!ass.Bedroom_Sharing__c}"/>
+                    <apex:outputField value="{!ass.Bedroom_Privacy__c}"/>
+                    <apex:outputField value="{!ass.Overall_Assessment__c}"/>                 
+                    <apex:outputField value="{!ass.Comments__c}"/>
+                </apex:pageBlockSection>
+                <!-- //End code for AY HF Validation 
+                
+                
+                <!-- Star code for AY HF/PT/SC Contact 
+                
+                <apex:pageBlockSection > 
+                    <apex:repeat value="{!$ObjectType.Assessment__c.FieldSets[assessmentField]}" var="field" rendered="{!IF(Assessment__c.RecordType.Name == 'AY HF Contact' || Assessment__c.RecordType.Name == 'AY PT Contact' || Assessment__c.RecordType.Name == 'AY SC Contact',true,false)}"> 
+                        <apex:outputField value="{!ass[field]}" rendered="{!IF(Assessment__c.RecordType.Name == 'AY HF Contact' || Assessment__c.RecordType.Name == 'AY PT Contact' || Assessment__c.RecordType.Name == 'AY SC Contact',true,false)}"/> 
+                    </apex:repeat> 
+                </apex:pageBlockSection> 
+                
+                <!-- End code for AY HF/PT/SC Contact 
+                
+                
+                <!-- Star code for AY HF Interview 
+                <apex:pageBlockSection title="Pre-Interview Questions" collapsible="true" rendered="{!Assessment__c.RecordType.Name == 'AY HF Interview'}" > 
+                    <apex:outputField value="{!ass.Expectations_for_Year__c}"/>
+                    <apex:outputField value="{!ass.Expectation_Of_Participant__c}"/>
+                    <apex:outputField value="{!ass.PT_Expense_Expectations__c}"/>
+                    <apex:outputField value="{!ass.Youth_Experience_Description__c}"/>
+                    <apex:outputField value="{!ass.Nearby_Support_Description__c}"/>
+                    <apex:outputField value="{!ass.Resident_Change_Description__c}"/>
+                    <apex:outputField value="{!ass.Resident_Illness_Description__c}"/>
+                    <apex:outputField value="{!ass.Average_Week_Description__c}"/>
+                    <apex:outputField value="{!ass.PT_Responsibilities_Expectations__c}"/> 
+                    <apex:outputField value="{!ass.Student_Safety_Approach__c}"/>
+                    <apex:outputField value="{!ass.Student_Safety_Approach__c}"/>
+                    <apex:outputField value="{!ass.Community_Dangerous_Areas__c}"/>
+                    <apex:outputField value="{!position.Engagement_Start__c}"/>
+                </apex:pageBlockSection>
+                
+                <apex:pageBlockSection title="HF Interview Questions(to be completed by Ayusa Staff)" columns="2" rendered="{!Assessment__c.RecordType.Name == 'AY HF Interview'}">
+                    <apex:outputField value="{!ass.Host_Motivation__c}"/>
+                    <apex:outputField value="{!ass.Host_Benefit_Description__c}"/>
+                    <apex:outputField value="{!ass.Home_Description__c}"/>
+                    <apex:outputField value="{!ass.Access_To_Utilities__c}"/>
+                    <apex:outputField value="{!ass.Comments__c}"/>
+                </apex:pageBlockSection>
+                
+                <!-- //End code for AY HF Interview 
+                
+                <!-- Star code for AY PT Orientation 
+                <apex:pageBlockSection title="Arrival and School Information" collapsible="true" rendered="{!Assessment__c.RecordType.Name == 'AY PT Orientation'}" >
+                    <apex:outputField value="{!ass.Welcomers__c}"/> 
+                    <apex:outputField value="{!engagement.Class_1__c}"/>
+                    <apex:outputField value="{!engagement.Class_2__c}"/>
+                    <apex:outputField value="{!engagement.Class_3__c}"/>
+                    <apex:outputField value="{!engagement.Class_4__c}"/>
+                    <apex:outputField value="{!engagement.Class_5__c}"/>
+                    <apex:outputField value="{!engagement.Class_6__c}"/>
+                    <apex:outputField value="{!engagement.Class_7__c}"/>
+                    <apex:outputField value="{!engagement.Class_8__c}"/> 
+                    <apex:outputField value="{!engagement.Grade_Level__c}"/>
+                </apex:pageBlockSection>
+                
+                <apex:pageBlockSection title="Student Arrival Orientation Information(to be completed by Ayusa Staff)" columns="2" rendered="{!Assessment__c.RecordType.Name == 'AY PT Orientation'}">
+                    <apex:outputField value="{!ass.OwnerId}"/>  
+                    <apex:outputField value="{!engagement.Orientation_Date__c}"/>
+                    <apex:outputField value="{!ass.Assessment_Location__c}"/> 
+                    <apex:outputField value="{!ass.Initial_Experience_Positive__c}"/>
+                    <apex:outputField value="{!ass.Initial_Language_Level__c}"/>
+                    <apex:outputField value="{!ass.Communication_Style_Positive__c}"/>
+                    <apex:outputField value="{!ass.Comments__c}"/>
+                </apex:pageBlockSection>
+                
+                <!-- //End code for AY PT Orientation 
+                
+                <!-- Star code for AY Home Visit 
+                <apex:pageBlockSection title="Living Conditions" collapsible="true" rendered="{!Assessment__c.RecordType.Name == 'AY Home Visit'}" >
+                    <apex:outputField value="{!ass.Bedroom_Type__c}"/>
+                    <apex:outputField value="{!ass.Cleanliness_Description__c}"/>   
+                </apex:pageBlockSection>
+                
+                <apex:pageBlockSection title="Family School Activities" columns="2" rendered="{!Assessment__c.RecordType.Name == 'AY Home Visit'}">
+                    <apex:outputField value="{!ass.Family_Activities__c}"/>
+                    <apex:outputField value="{!ass.School_Activities__c}"/> 
+                </apex:pageBlockSection>
+                
+                <apex:pageBlockSection title="Rules and Responsabilities" collapsible="true" columns="2" rendered="{!Assessment__c.RecordType.Name == 'AY Home Visit'}" >
+                    <apex:outputField value="{!ass.Host_Rules__c}"/>
+                    <apex:outputField value="{!ass.PT_Responsibilities__c}"/>   
+                </apex:pageBlockSection>
+                
+                <apex:pageBlockSection title="Communication and Comments" columns="2" rendered="{!Assessment__c.RecordType.Name == 'AY Home Visit'}"> 
+                    <apex:outputField value="{!ass.Challenges__c}"/>
+                    <apex:outputField value="{!ass.Communication_Style_Positive__c}"/>
+                    <apex:outputField value="{!ass.Comments__c}"/>  
+                </apex:pageBlockSection>
+                
+                //End code for AY Home Visit 
+                
+            </apex:actionRegion>        
+        </apex:pageBlock> 
+        <apex:pageBlock id="thePageBlock1" mode="view" rendered="{!IF(Assessment__c.RecordType.Name == 'AY PT Orientation' || Assessment__c.RecordType.Name == 'AY Home Visit' || Assessment__c.RecordType.Name == 'AY HF Interview' || Assessment__c.RecordType.Name == 'AY HF Validation',true,false)}">
+        <apex:form >
+         <div class="form-row"> 
+        <apex:detail />
+        </div>
+        </apex:form>
+         </apex:pageBlock>
+        <apex:relatedList list="OpenActivities" /> -->
+    </apex:page>

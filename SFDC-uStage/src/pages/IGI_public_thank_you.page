@@ -1,0 +1,30 @@
+<apex:page id="IGI_public_thank_you" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" standardStylesheets="false" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+    <apex:form id="form">
+      <div class="wrapper">
+        <h1>Thank You</h1>
+        <div class="white-box">
+            <p>Thank You for auditing this application.</p>
+          
+      
+		      <div class="form-row">                                                                                      
+		        <div class="form-button">
+		        	<!--  
+		        	<apex:commandlink id="FinishLink" styleClass="next" action="{!navigator}">
+		        	<apex:param name="nextPage" value="/apex/pr_app_list"/>
+		         	<apex:param name="reDirectPage" value="true"/>
+		         	<apex:commandButton value="Finish" />
+		         	<i class="icon-chevron-right"></i> 
+		         	</apex:commandlink>
+		         	 -->
+		         	 <apex:outputLink id="FinishLink" styleClass="next" value="/apex/pr_app_list">Finish</apex:outputLink>
+		         </div>    
+		      </div>
+		   </div>
+      </div>         
+      
+    </apex:form>
+    </apex:define>
+  </apex:composition>
+</apex:page>

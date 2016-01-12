@@ -1,0 +1,401 @@
+<apex:page id="page" applyBodyTag="false" applyHtmlTag="false" title="Participants | Intrax" standardStylesheets="false" showHeader="false" controller="IntraxPartnerPortalEngineController" action="{!checkLoginWithParticipantSearch}">
+<apex:composition template="intraxtemplate_vs3">
+<apex:define name="body">
+<style>
+#content-zone .container { width: 100%; padding: 40px 40px 60px; }
+</style>
+<apex:form styleClass="form-vertical" id="Form">
+
+<div class="row margin-b4">
+  <div class="col-md-10 col-lg-8 center-text center-block">
+    <h1>
+      <apex:outputText value="{!DefaultIP}" />
+      <apex:outputText value=" Participants" />
+    </h1>
+    <p class="lead">Monitor match progress, assessments, travel details and other program related information for participants who have accepted applications. </p>
+  </div>
+  <!--  end column --> 
+</div>
+<!--  end row -->
+	
+	<apex:outputText >
+    	<div class="row margin-b2">
+             <div class="col-sm-12">
+              <p class="text-center"> 
+                    Total Number of Records: <b><apex:outputText id="TotalRecords" value="{!totalCount}" /></b>
+               </p>
+             </div><!--  end column -->
+         </div><!--  end row -->                                                       
+	</apex:outputText>
+							
+
+<apex:actionStatus id="waitMsg" startStyleClass="alert alert-info">
+  <apex:facet name="start" > <i class="fa fa-refresh fa-spin"></i> <strong>Please Wait.....</strong> </apex:facet>  
+</apex:actionStatus>
+
+<div class="visible-xs">
+<a id="mobilefilters" class="btn btn-default btn-block btn-lg margin-b2">Manage Filters</a>
+</div>
+
+<div class="row">
+  <div class="col-sm-12">
+  <apex:outputPanel layout="block" >
+     <div id="searchfilters" class="box gray hidden-xs" style="padding-bottom:0;">
+     <h2 class="visible-xs center-text">Manage Filters</h2>
+      <div class="form-group filter vs1" style="vertical-align:top; max-width:200px;">
+        <label class="control-label">Participant Name</label>
+        <div class="input-group">
+          <!-- <apex:inputfield styleClass="form-control" id="PName" value="{!participant.Name}"/> -->
+          <apex:inputText styleClass="form-control" id="PName" value="{!EngName}"/>
+          <apex:commandLink styleClass="input-group-addon" action="{!doSearchForParticipant}" rerender="pb" status="waitMsg" id="GoButton"> Search </apex:commandLink>
+        </div>
+      </div>
+      <apex:outputPanel rendered="{!IF((DefaultIP=='Ayusa'),True,False)}">
+        <div class="form-group filter vs1">
+          <label class="control-label">Program Duration</label>
+          <apex:selectList styleClass="selectpicker" id="programDurationSelected" value="{!programDurationSelected}" multiselect="false" size="1"  >
+            <apex:selectOption itemValue="" itemLabel="--None-- "/>
+            <apex:selectOptions id="programDuration" value="{!programDuration}"/>
+            <apex:actionSupport event="onchange" rerender="AyusaFilters,IGIWTFilters,WTFilters" status="waitMsg" onComplete="doSearch();return false;"/>
+          </apex:selectList>
+        </div>
+      </apex:outputPanel>
+      <apex:outputPanel rendered="{!IF((DefaultIP=='Work Travel'|| DefaultIP=='Global Internships'),True,False)}">        
+        <div class="form-group filter vs1">
+          <label class="control-label">Season</label>
+          <apex:selectList styleClass="selectpicker" id="ProgramSeasonFilter" value="{!ProgramSeasonSelected}" multiselect="false" size="1" onchange="doSearch();return false;">
+            <apex:selectOption itemValue="" itemLabel="--None--"/>
+            <apex:selectOptions id="ProgramSeasonVal" value="{!ProgramSeason}"/>
+          </apex:selectList>
+        </div>
+       </apex:outputPanel>
+       <apex:outputPanel rendered="{!IF((DefaultIP=='Work Travel' || DefaultIP=='Global Internships' ),True,False)}">
+        <div class="form-group filter vs1">
+          <label class="control-label">Service Level</label>
+          <apex:selectList styleClass="selectpicker" id="ProgramSvLvlFilter" value="{!ProgramSvLvlSelected}" multiselect="false" size="1" onchange="doSearch();return false;">
+            <apex:selectOption itemValue="" itemLabel="--None--"/>
+            <apex:selectOptions id="ProgramSvLvlVal" value="{!ProgramSvLvl}"/>
+          </apex:selectList>
+        </div>
+      </apex:outputPanel>
+      <apex:outputPanel rendered="{!IF((DefaultIP=='Ayusa' || DefaultIP=='Work Travel' || DefaultIP=='Global Internships'),True,False)}">
+        <div class="form-group filter vs1">
+          <label class="control-label">Program Year</label>
+          <apex:selectList styleClass="selectpicker" id="ProgramYearFilter1" value="{!ProgramYearSelected}" multiselect="false" size="1" onchange="doSearch();return false;">
+            <apex:selectOption itemValue="" itemLabel="--None--"/>
+            <apex:selectOptions id="ProgramYearVal1" value="{!ProgramYear}"/>
+          </apex:selectList>
+        </div>
+      </apex:outputPanel>
+      <!-- 
+      <apex:outputPanel rendered="{!IF((DefaultIP=='Ayusa' || DefaultIP=='AuPairCare' || DefaultIP=='English Academy' || DefaultIP=='Work Travel' || DefaultIP=='Global Internships'),True,False)}">
+        <div class="form-group filter vs1">
+          <label class="control-label">Status</label>
+          <apex:actionRegion id="SelectRegion">
+            <apex:selectList styleClass="selectpicker" id="StatusSelected" value="{!StatusSelected}" multiselect="false" size="1" >
+              <apex:selectOption itemValue="" itemLabel="--None-- "/>
+              <apex:selectOptions id="Status" value="{!Status}"/>
+              <apex:actionSupport event="onchange" rerender="AyusaFilters" status="waitMsg" onComplete="doSearch();return false;"/>
+            </apex:selectList>
+          </apex:actionRegion>
+        </div>
+      </apex:outputPanel>
+       -->
+      <apex:outputPanel rendered="{!IF((DefaultIP=='Ayusa' || DefaultIP=='AuPairCare' || DefaultIP=='English Academy' || DefaultIP=='Work Travel' || DefaultIP=='Global Internships'),True,False)}">
+        <div class="form-group filter vs1">
+          <label class="control-label">Engagement Status</label>
+          <apex:actionRegion >
+            <apex:selectList styleClass="selectpicker" id="EngagementStatusSelected" value="{!EngagementStatusSelected}" multiselect="false" size="1" >
+              <apex:selectOption itemValue="" itemLabel="--None-- "/>
+              <apex:selectOptions id="EngagementStatus" value="{!EngagementStatus}"/>
+              <apex:actionSupport event="onchange" rerender="AyusaFilters" status="waitMsg" onComplete="doSearch();return false;"/>
+            </apex:selectList>
+          </apex:actionRegion>
+        </div>
+       </apex:outputPanel>
+       <apex:outputPanel rendered="{!IF((DefaultIP=='Ayusa' || DefaultIP=='AuPairCare' || DefaultIP=='English Academy'),True,False)}">
+        <div class="form-group filter vs1">
+          <label class="control-label">Placement Status</label>
+          <apex:actionRegion >
+            <apex:selectList styleClass="selectpicker" id="PlacementStatusSelected" value="{!PlacementStatusSelected}" multiselect="false" size="1" >
+              <apex:selectOption itemValue="" itemLabel="--None-- "/>
+              <apex:selectOptions id="PlacementStatus" value="{!PlacementStatus}"/>
+              <apex:actionSupport event="onchange" rerender="AyusaFilters" status="waitMsg" onComplete="doSearch();return false;"/>
+            </apex:selectList>
+          </apex:actionRegion>
+        </div>
+       </apex:outputPanel>
+       
+       <apex:outputPanel rendered="{!IF((DefaultIP=='AuPairCare' && PartnerAccounts!=null && PartnerAccounts.size>0),True,False)}">
+        <div class="form-group filter vs1">
+          <label class="control-label">Partner Accounts</label>
+          <apex:actionRegion >
+            <apex:selectList styleClass="selectpicker" id="PartPartnerAccountSelected" value="{!PartPartnerAccSelected}" multiselect="false" size="1" >
+              <apex:selectOption itemValue="" itemLabel="All"/>
+              <apex:selectOption itemValue="Own" itemLabel="Own"/>
+              <apex:selectOptions id="PartPartnerAccounts" value="{!PartnerAccounts}"/>
+              <apex:actionSupport event="onchange" rerender="AyusaFilters" status="waitMsg" onComplete="doSearch();return false;"/>
+            </apex:selectList>
+          </apex:actionRegion>
+        </div>
+       </apex:outputPanel>
+       
+       <apex:outputPanel rendered="{!IF(DefaultIP=='AuPairCare',True,False)}">
+	      <div class="form-group filter vs1">
+	        <label class="control-label">View</label>
+	        <apex:selectList styleClass="selectpicker" id="ViewFilter" value="{!viewSelected}" multiselect="false" size="1" onchange="doView();return false;">
+		      <apex:selectOption itemValue="" itemLabel="Default"/>
+	          <apex:selectOptions id="viewVal" value="{!ViewsEng}"/>
+	        </apex:selectList>
+	      </div>
+       </apex:outputPanel>
+       
+       <apex:outputPanel rendered="{!IF((DefaultIP=='Ayusa'),True,False)}">
+        <div class="form-group filter vs1">
+          <label class="control-label">Pending PDO?</label>
+          <apex:selectList styleClass="selectpicker" id="PendingPDOSelected" value="{!PendingPDOSelected}" size="1" onchange="doSearch();return false;">
+            <apex:selectOption itemValue="" itemLabel="--None-- "/>
+            <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+            <apex:selectOption itemValue="No" itemLabel="No"/>
+          </apex:selectList>
+        </div>
+       </apex:outputPanel>
+       <apex:outputPanel rendered="{!IF((DefaultIP=='Ayusa'),True,False)}">
+        <div class="form-group filter vs1">
+          <label class="control-label">Arrival Trip Needed?</label>
+          <apex:selectList styleClass="selectpicker" id="ApprivalTripNeeded" value="{!ApprivalTripNeeded}" size="1" onchange="doSearch();return false;">
+            <apex:selectOption itemValue="" itemLabel="--None-- "/>
+            <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+            <apex:selectOption itemValue="No" itemLabel="No"/>
+          </apex:selectList>
+        </div>
+       </apex:outputPanel>
+       <apex:outputPanel rendered="{!IF((DefaultIP=='Ayusa'),True,False)}">
+        <div class="form-group filter vs1">
+          <label class="control-label">Departure Trip Needed?</label>
+          <apex:selectList styleClass="selectpicker" id="DepartureTripNeeded" value="{!DepartureTripNeeded}" size="1" onchange="doSearch();return false;">
+            <apex:selectOption itemValue="" itemLabel="--None-- "/>
+            <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+            <apex:selectOption itemValue="No" itemLabel="No"/>
+          </apex:selectList>
+        </div>
+       </apex:outputPanel>
+       <apex:outputPanel rendered="{!IF((DefaultIP=='Ayusa'),True,False)}">
+        <div class="form-group filter vs1">
+          <label class="control-label">Double Placement</label>
+          <apex:selectList styleClass="selectpicker" id="DoublePlacementSelected" value="{!DoublePlacementSelected}" size="1" onchange="doSearch();return false;">
+            <apex:selectOption itemValue="" itemLabel="--None-- "/>
+            <apex:selectOption itemValue="true" itemLabel="Yes"/>
+            <apex:selectOption itemValue="false" itemLabel="No"/>
+          </apex:selectList>
+        </div>
+       </apex:outputPanel>
+       <apex:outputPanel rendered="{!IF((DefaultIP=='Ayusa'),True,False)}">
+        <div class="form-group filter vs1">
+          <label class="control-label">Single No Children</label>
+          <apex:selectList styleClass="selectpicker" id="SingleNoChildrenSelected" value="{!SingleNoChildrenSelected}" size="1" onchange="doSearch();return false;">
+            <apex:selectOption itemValue="" itemLabel="--None-- "/>
+            <apex:selectOption itemValue="true" itemLabel="Yes"/>
+            <apex:selectOption itemValue="false" itemLabel="No"/>
+          </apex:selectList>
+        </div>
+       </apex:outputPanel>
+       <apex:outputPanel rendered="{!IF((DefaultIP=='Ayusa'),True,False)}">
+        <div class="form-group filter vs1">
+          <label class="control-label">PreProgram Indicated</label>
+          <apex:selectList styleClass="selectpicker" id="PreProgramTripIndicated" value="{!PreProgramTripIndicated}" size="1" onchange="doSearch();return false;">
+            <apex:selectOption itemValue="" itemLabel="--None-- "/>
+            <apex:selectOption itemValue="true" itemLabel="Yes"/>
+            <apex:selectOption itemValue="false" itemLabel="No"/>
+          </apex:selectList>
+        </div>
+       </apex:outputPanel>
+       <apex:outputPanel rendered="{!IF((DefaultIP=='Ayusa'),True,False)}">        
+        <div class="form-group filter vs1">
+          <label class="control-label">Region</label>
+          <apex:selectList styleClass="selectpicker" id="IntraxRegionFilter" value="{!IntraxRegionSelected}" multiselect="false" size="1" onchange="doSearch();return false;">
+            <apex:selectOption itemValue="" itemLabel="--None--"/>
+            <apex:selectOptions id="IntraxRegionSelectedVal" value="{!IntraxRegion}"/>
+          </apex:selectList>
+        </div>
+       </apex:outputPanel>     
+    </div>
+    </apex:outputPanel>
+  </div>
+  <!--  end column --> 
+</div>
+<!--  end row -->
+
+<apex:actionFunction name="doView" action="{!doActionForViewListEng}" status="waitMsg" reRender="pb, validationMsg, TotalRecords"/>
+<apex:actionFunction name="callAction" action="{!pageNavigationForParticipant}" status="waitMsg" reRender="pb, validationMsg, TotalRecords"/>
+<apex:actionFunction name="doSearch" action="{!doSearchOnTheBasisOfPageSizeForParticipant}" status="waitMsg" reRender="pb, validationMsg, TotalRecords"/>
+
+<apex:pageBlock id="pb">
+  <apex:pageMessages id="validationMsg"/>
+  <apex:outputText rendered="{!IF(totalCount == 0, true, false)}" >
+   <div id="ZeroResult" class="row">
+      <div class="col-sm-12">
+        <div class="box gray h3 center-text">No record(s) to display.</div>
+      </div>
+      <!--  end column --> 
+    </div>
+    <!--  end row --> 
+  </apex:outputText>
+  <apex:outputPanel layout="block" rendered="{!IF(totalCount > 0, true, false)}">
+  <div class="table-responsive vs3">
+  <apex:pageBlockTable styleClass="table vs3" id="ParticipantList" value="{!listParticipantAndMatch}" var="item">  	  
+    <apex:column >
+       	<apex:facet name="header">       	
+         <apex:commandLink action="{!doSearchForParticipant}" status="waitMsg" reRender="pb, validationMsg, TotalRecords">
+           <apex:param value="Name" name="column" assignTo="{!sortExpression}" ></apex:param>           
+           Participant Name <apex:outputText rendered="{!(sortExpression=='Name' && sortDirection=='DESC')}"> <i class="fa fa-caret-down"></i> </apex:outputText>
+           <apex:outputText rendered="{!(sortExpression=='Name' && sortDirection=='ASC')}"> <i class="fa fa-caret-up"></i> </apex:outputText>
+           </apex:commandLink>
+        </apex:facet>
+        <apex:outputLink value="/apex/pr_pt_profile?participantId={!item.engagementRecord.id}&isInputType=false">
+        <apex:outputField id="engagementRecordName" value="{!item.engagementRecord.Name}" />
+      </apex:outputLink>
+    </apex:column>         
+    <apex:column rendered="{!DefaultIP=='Ayusa'}">
+       	<apex:facet name="header">
+         <apex:commandLink action="{!doSearchForParticipant}" status="waitMsg" reRender="pb, validationMsg, TotalRecords">
+           <apex:param value="Program_Duration__c" name="column" assignTo="{!sortExpression}" ></apex:param>
+           Program Duration <apex:outputText rendered="{!(sortExpression=='Program_Duration__c' && sortDirection=='DESC')}"> <i class="fa fa-caret-down"></i> </apex:outputText>
+           <apex:outputText rendered="{!(sortExpression=='Program_Duration__c' && sortDirection=='ASC')}"> <i class="fa fa-caret-up"></i> </apex:outputText>
+           </apex:commandLink>
+        </apex:facet>
+        <apex:outputText id="Program_Duration" value="{!item.engagementRecord.Program_Duration__c}" />
+    </apex:column>    
+    <apex:column rendered="{!(DefaultIP=='Work Travel' || DefaultIP == 'Global Internships')}">
+       	<apex:facet name="header">
+         <apex:commandLink action="{!doSearchForParticipant}" status="waitMsg" reRender="pb, validationMsg, TotalRecords">
+           <apex:param value="Program_Year__c" name="column" assignTo="{!sortExpression}" ></apex:param>
+           Program Year <apex:outputText rendered="{!(sortExpression=='Program_Year__c' && sortDirection=='DESC')}"> <i class="fa fa-caret-down"></i> </apex:outputText>
+           <apex:outputText rendered="{!(sortExpression=='Program_Year__c' && sortDirection=='ASC')}"> <i class="fa fa-caret-up"></i> </apex:outputText>
+           </apex:commandLink>
+        </apex:facet>
+        <apex:outputField id="Program_Year" value="{!item.engagementRecord.Program_Year__c}" />
+    </apex:column>     
+    <apex:column >
+       	<apex:facet name="header">
+         <apex:commandLink action="{!doSearchForParticipant}" status="waitMsg" reRender="pb, validationMsg, TotalRecords">
+           <apex:param value="Last_Match_Date__c" name="column" assignTo="{!sortExpression}" ></apex:param>
+           Last Match Date <apex:outputText rendered="{!(sortExpression=='Last_Match_Date__c' && sortDirection=='DESC')}"> <i class="fa fa-caret-down"></i> </apex:outputText>
+           <apex:outputText rendered="{!(sortExpression=='Last_Match_Date__c' && sortDirection=='ASC')}"> <i class="fa fa-caret-up"></i> </apex:outputText>
+           </apex:commandLink>
+        </apex:facet>
+        <apex:outputField id="Last_Match_Date" value="{!item.engagementRecord.Last_Match_Date__c}" />
+    </apex:column>     
+    <apex:column >
+       	<apex:facet name="header">
+         <apex:commandLink action="{!doSearchForParticipant}" status="waitMsg" reRender="pb, validationMsg, TotalRecords">
+           <apex:param value="Engagement_Start__c" name="column" assignTo="{!sortExpression}" ></apex:param>
+           Engagement Start <apex:outputText rendered="{!(sortExpression=='Engagement_Start__c' && sortDirection=='DESC')}"> <i class="fa fa-caret-down"></i> </apex:outputText>
+           <apex:outputText rendered="{!(sortExpression=='Engagement_Start__c' && sortDirection=='ASC')}"> <i class="fa fa-caret-up"></i> </apex:outputText>
+           </apex:commandLink>
+        </apex:facet>
+        <apex:outputField id="Engagement_Start" value="{!item.engagementRecord.Engagement_Start__c}" />
+    </apex:column>    
+    <apex:column >
+       	<apex:facet name="header">
+         <apex:commandLink action="{!doSearchForParticipant}" status="waitMsg" reRender="pb, validationMsg, TotalRecords">
+           <apex:param value="Engagement_End__c" name="column" assignTo="{!sortExpression}" ></apex:param>
+           Engagement End <apex:outputText rendered="{!(sortExpression=='Engagement_End__c' && sortDirection=='DESC')}"> <i class="fa fa-caret-down"></i> </apex:outputText>
+           <apex:outputText rendered="{!(sortExpression=='Engagement_End__c' && sortDirection=='ASC')}"> <i class="fa fa-caret-up"></i> </apex:outputText>
+           </apex:commandLink>
+        </apex:facet>
+        <apex:outputField id="Engagement_End" value="{!item.engagementRecord.Engagement_End__c}" />
+    </apex:column>     
+    <apex:column >
+       	<apex:facet name="header">
+         <apex:commandLink action="{!doSearchForParticipant}" status="waitMsg" reRender="pb, validationMsg, TotalRecords">
+           <apex:param value="Status__c" name="column" assignTo="{!sortExpression}" ></apex:param>
+           Engagement Status <apex:outputText rendered="{!(sortExpression=='Status__c' && sortDirection=='DESC')}"> <i class="fa fa-caret-down"></i> </apex:outputText>
+           <apex:outputText rendered="{!(sortExpression=='Status__c' && sortDirection=='ASC')}"> <i class="fa fa-caret-up"></i> </apex:outputText>
+           </apex:commandLink>
+        </apex:facet>
+        <apex:outputField id="Status" value="{!item.engagementRecord.Status__c}" />
+    </apex:column>     
+    <apex:column >
+       	<apex:facet name="header">
+         <apex:commandLink action="{!doSearchForParticipant}" status="waitMsg" reRender="pb, validationMsg, TotalRecords">
+           <apex:param value="Placement_Status__c" name="column" assignTo="{!sortExpression}" ></apex:param>
+           Placement Status <apex:outputText rendered="{!(sortExpression=='Placement_Status__c' && sortDirection=='DESC')}"> <i class="fa fa-caret-down"></i> </apex:outputText>
+           <apex:outputText rendered="{!(sortExpression=='Placement_Status__c' && sortDirection=='ASC')}"> <i class="fa fa-caret-up"></i> </apex:outputText>
+           </apex:commandLink>
+        </apex:facet>
+        <apex:outputField id="Placement_Status" value="{!item.engagementRecord.Placement_Status__c}" />
+    </apex:column>        
+  </apex:pageBlockTable>
+  </div>
+  </apex:outputPanel>
+  
+  <!-- begin sorting fields -->
+  <apex:outputText rendered="{!IF(totalCount > 0, true, false)}"> 
+    <div class="row margin-t4">
+    <div class="col-sm-12">
+    <div class="box">
+    <div class="sort vs1">
+  Page&nbsp;
+    <apex:inputText styleClass="form-control" id="pageNo" value="{!itotalpageNumber}" size="3" onkeydown="return runScript(event);"/>
+     &nbsp;
+     <apex:outputText value=" of {!iTotalPages}"/>
+    </div>
+    
+    <div class="sort vs1">
+    Listing&nbsp;
+    <apex:selectList styleClass="form-control" id="limits" value="{!limits}" size="1" onchange="doSearch();return false;">
+      <apex:selectOptions value="{!items}"/>
+    </apex:selectList>
+    &nbsp;
+    per Page
+    </div>
+    
+    <div class="sort vs1 no-margin pull-right">
+      <ul class="pagination">
+        <li>
+          <apex:commandLink id="First" value="First" action="{!first}" status="waitMsg" reRender="pb, validationMsg"/>
+        </li>
+        <li>
+          <apex:commandLink action="{!previous}" status="waitMsg" reRender="pb, validationMsg, lowerPageNoPanel" rendered="{!IF(PreviousButtonDisabledForParticipant  == true, false, true)}">
+            <apex:outputText id="Previous" value="Previous"/>
+          </apex:commandLink>
+        </li>
+        <li><!--  <apex:commandLink action="{!next}" status="waitMsg" reRender="pb, validationMsg" rendered="{!IF(NextButtonDisabledForParticipant == true, false, true)}"> -->
+          <apex:commandLink id="Next" action="{!next}" status="waitMsg" reRender="pb, validationMsg" rendered="{!IF(NextButtonDisabledForParticipant == true, false, true)}">
+            <apex:outputText value="Next"/>
+          </apex:commandLink>
+        </li>
+        <li>
+          <apex:commandLink id="Last" value="Last" action="{!lastForParticipant}" status="waitMsg" reRender="pb, validationMsg"/>
+        </li>
+      </ul>
+        <!-- end pagination --> 
+    </div>
+    </div>
+    </div><!--  end column -->
+    </div><!--  end row -->
+    
+ </apex:outputText>
+  <!-- end sorting fields --> 
+  
+</apex:pageBlock>
+<script>
+        
+		            function runScript(obj){
+		                
+		                //alert(obj.keyCode);
+		                if(obj.keyCode == 13){
+		                    callAction();   // call action function
+		                    return false;
+		                }else if((obj.keyCode > 34 && obj.keyCode < 40) || (obj.keyCode > 95 && obj.keyCode < 106) || (obj.keyCode > 47 && obj.keyCode < 58) || obj.keyCode == 8 || obj.keyCode == 46 ){
+		                    return true;
+		                }else{
+		                    return false;
+		                }
+		            }
+		        </script>
+</apex:form>
+</apex:define>
+</apex:composition>
+</apex:page>

@@ -1,0 +1,14 @@
+<apex:component layout="none" id="block_apc_ap_introduction" allowDML="true">
+  <apex:attribute name="PageController" description="Instance of home_controller class" type="home_controller" required="false" default="" />
+  <!-- Introduction-->
+  <apex:outputpanel layout="block" id="blockIntroduction" rendered="{!PageController.currentApp.Intrax_Program__c == 'AuPairCare'}">
+    <div  class="row margin-b2">
+      <div  class="col-sm-8 center-block center-text">
+        <h1 class="no-margin-t">Welcome to Au Pair Room!</h1>
+        <p class="lead">Au Pair Room provides you with interview information and other valuable resources to prepare you for your program year and to use throughout your stay in the United States.</p>
+      </div>
+    </div>
+    <!--  end row --> 
+    <hr class="margin-b2"/>
+  </apex:outputpanel>
+</apex:component>

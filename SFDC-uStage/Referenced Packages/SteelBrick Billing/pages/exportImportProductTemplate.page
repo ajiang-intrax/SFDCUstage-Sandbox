@@ -1,0 +1,18 @@
+<apex:page controller="invoiceit_s.ControllerForExportImportTemplate"  tabStyle="invoiceit_s__Product__c">
+    <apex:form >
+       <apex:pageMessages id="messages"/>
+       <apex:pageBlock title="{!$Label.ExportImportProductsHeading}">  
+          <apex:pageblockSection title="{!$Label.ExportProducts}"> 
+          <apex:outputText value="{!$Label.ExportProductsDescription}"/> <br/>
+             <apex:commandButton value="{!$Label.ExportTemplateSampleData}" action="{!downloadTemplateCsv}" /><br/>
+          <!--   <apex:outputText value="This would export the whole data in csv format"/> <br/>
+              <apex:commandButton value="{!$Label.ExportTemplateFullData}" action="{!exportCsv}" /> -->
+          </apex:pageblockSection>
+          <apex:pageblockSection title="{!$Label.ImportProducts}"> 
+           <apex:outputText value="{!$Label.ImportProductsDescription}"/> <br/>
+              <apex:inputFile value="{!contentFile}" filename="{!nameFile}"/><br/>
+             <apex:commandButton value="{!$Label.ImportProductWithData}" action="{!uploadCSV}" />
+          </apex:pageblockSection>
+       </apex:pageBlock>
+    </apex:form>
+</apex:page>

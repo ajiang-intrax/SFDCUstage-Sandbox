@@ -1,0 +1,146 @@
+<apex:page id="centers_app_my_visa_documents" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+    <apex:composition template="IntraxTemplate_Vs1">
+        <apex:define name="body">
+            <div class="wrapper" id="centers_preapp_welcome_to_intrax">
+                <apex:form id="form">
+                  
+                <!-- Heading -->  
+                  <div class="page-header clearfix">
+		             <h1 class="page-title"><apex:outputText value="{!$Label.T_0053}" /></h1>
+		             <div class="back-to-main"><apex:outputLink id="backToMain" value="apex/centers_app_home?id={!applicantInfo.Id}"><apex:outputText value="{!$Label.T_0075}" /></apex:outputLink></div>
+		          </div>
+                    <!-- Sub Heading -->
+                    <div class="section-header clearfix">
+                        <h2><apex:outputText value="{!$Label.T_0188}" /></h2>
+                    </div> 
+                   
+                    <!-- Section to Hold Basic Informations -->
+                    <div class="white-box clearfix">
+                        <div class="panel two_thirds">
+                            <p><apex:outputText value="{!$Label.T_0189}" /></p>
+                			<p><apex:outputText value="{!$Label.T_0190}" /></p> 
+                		
+                            <apex:pageBlock id="docListBlock" rendered="{!if(DocList.Size > 0, true, false)}" >
+                                <p><strong><apex:outputText value="{!$Label.T_0252}" /></strong></p>
+                                <apex:pageBlockTable id="docListTable" styleClass="pageblocktable" value="{!DocList}" var="item">
+                                    <apex:column headerValue="{!$Label.T_0195}">
+                                        <apex:outputText id="Document_Name" value="{!item.Document_Name__c}"/>
+                                    </apex:column>
+                                    <!-- <apex:column headerValue="Description">
+                                        <apex:outputText id="Description" value="{!item.Description__c}"/>
+                                    </apex:column>  -->
+                                    <apex:column headerValue="{!$Label.T_0196}">
+                                        <apex:outputText id="Type" value="Financial Responsibility" rendered="{! IF(item.Document_Type__c == 'FinancialResponsibility', true, false)}"/>
+                                        <apex:outputText id="Type1" value="F1 Visa" rendered="{! IF(item.Document_Type__c == 'F1-Visa', true, false)}"/>
+                                        <apex:outputText id="Type2" value="I 20" rendered="{! IF(item.Document_Type__c == 'I-20', true, false)}"/>
+                                        <apex:outputText id="Type3" value="Passport" rendered="{! IF(item.Document_Type__c == 'Passport', true, false)}"/>
+                                    </apex:column>    
+                                    <apex:column >
+                                        <apex:commandlink id="docGUID" styleClass="inline-link" action="{!load}" target="_blank">
+                                            <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                            <apex:commandButton value="{!$Label.T_0197}" />
+                                        </apex:commandlink>
+                                       &nbsp;
+                                        <apex:commandlink id="deleteFile" styleClass="inline-link" action="{!deletefile}"  onclick="return ConfirmDelete('{!$Label.T_0253}')">
+                                            <apex:param name="docGuid"  value="{!item.Document_GUID__c}"/>
+                                            <apex:commandButton value="{!$Label.T_0198}" />
+                                        </apex:commandlink>
+                                    </apex:column>
+                                </apex:pageBlockTable>
+                            </apex:pageBlock>
+                            
+                            
+                           
+                          
+<style>.dialog{display:none;}</style>   
+                            
+<script>
+j$.noConflict();                                 
+j$(function() {   
+j$( ".opener" ).bind( "click", function() {   
+var name = j$(this).attr('name');     
+j$(this).closest('.form-row').find('.dialog').addClass(name);          
+j$('.'+name).dialog({
+minHeight: 60,
+maxHeight: 300,
+width: 400,
+modal: true,});  
+});       
+});                            
+</script>
+                           
+                          <apex:outputText id="disableFileUploadText" value="{!disableFileUploadText}" rendered="{!disableFileUpload}"/>
+	                          <apex:outputPanel layout="block" styleClass="form-row" rendered="{!IF(applicantInfo.Visa_Category__c == 'Student (F)', true, false)}">
+	                          	<apex:outputPanel styleClass="form-link no-margin" layout="block" >
+		                                <apex:outputLink styleClass="no-padding" id="AddDocs" value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType=FinancialResponsibility&retparam={!retParam}&lang={!lang}" target="_self" disabled="{!disableFileUpload}"><i class="icon-plus-sign"></i><span><apex:outputText value="{!$Label.T_0191}" /></span></apex:outputLink>
+	                           </apex:outputPanel>
+                            &nbsp;&nbsp;(<a name="financialdocs" class="opener"><apex:outputText value="{!$Label.T_0193}" /></a>)
+                            <div class="dialog" name="financialdocs" title="{!$Label.T_0239}">
+                            <p><apex:outputText value="{!$Label.T_0240}" /></p>
+
+                            <p><apex:outputText value="{!$Label.T_0241}" /></p>
+    
+                            <ul>
+                                <li><apex:outputText value="{!$Label.T_0242}" /></li> 
+                                <li><apex:outputText value="{!$Label.T_0243}" /></li>
+                                <li><apex:outputText value="{!$Label.T_0244}" /></li> 
+                                <li><apex:outputText value="{!$Label.T_0245}" /></li>
+                           </ul> 
+                			</div>
+                                  </apex:outputPanel>
+	                          
+                             <apex:outputPanel layout="block" styleClass="form-row" rendered="{!IF(applicantInfo.Visa_Type__c == 'F-1 Transfer', true, false)}">
+	                           <apex:outputPanel styleClass="form-link no-margin" layout="block">
+	                                <apex:outputLink styleClass="no-padding" id="AddI20" value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType=F1-Visa&retparam={!retParam}&lang={!lang}" target="_self" disabled="{!disableFileUpload}"><i class="icon-plus-sign"></i><span><apex:outputText value="{!$Label.T_0235}" /></span></apex:outputLink>
+	                           </apex:outputPanel>
+                                     &nbsp;&nbsp;(<a name="f1visa" class="opener"><apex:outputText value="{!$Label.T_0237}" /></a>)
+                                       <div class="dialog" name="f1visa" title="{!$Label.T_0246}">
+                            <p><apex:outputText value="{!$Label.T_0247}" /></p>
+                            </div>       
+                                 </apex:outputPanel>
+	                           
+                                 <apex:outputPanel layout="block" styleClass="form-row" rendered="{!IF(applicantInfo.Visa_Type__c == 'F-1 Transfer', true, false)}"> 
+	                           <apex:outputPanel styleClass="form-link no-margin" layout="block" >
+	                                <apex:outputLink styleClass="no-padding" id="AddF1Visa" value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType=I-20&retparam={!retParam}&lang={!lang}" target="_self" disabled="{!disableFileUpload}"><i class="icon-plus-sign"></i><span><apex:outputText value="{!$Label.T_0236}" /></span></apex:outputLink>
+	                            </apex:outputPanel>
+                                          
+                            &nbsp;&nbsp;(<a name="i20" class="opener"><apex:outputText value="{!$Label.T_0238}" /></a>)
+                                 <div class="dialog" name="i20" title="{!$Label.T_0248}">
+                                <p><apex:outputText value="{!$Label.T_0249}" /></p>
+                                 </div>
+                                     </apex:outputPanel>
+                                
+                                      <apex:outputPanel layout="block" styleClass="form-row">
+                                <apex:outputPanel styleClass="form-link no-margin" layout="block">
+                                    <apex:outputLink styleClass="no-padding" value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType=Passport&retparam={!retParam}&lang={!lang}" id="AppPassportCopy" target="_self" disabled="{!disableFileUpload}"><i class="icon-plus-sign"></i><span><apex:outputText value="{!$Label.T_0192}" /></span></apex:outputLink>
+                                  </apex:outputPanel>
+                                           &nbsp;&nbsp;(<a name="passportupload" class="opener"><apex:outputText value="{!$Label.T_0194}" /></a>)
+                           <div class="dialog" name="passportupload" title="{!$Label.T_0250}">
+                           <p><apex:outputText value="{!$Label.T_0251}" /></p>
+                            </div>          
+                                          </apex:outputPanel>
+                             
+                          
+                           <div class="form-row">
+                               <div class="form-link">
+                               		<apex:outputLink id="backLink" value="/apex/centers_app_my_visa_information?id={!applicantInfo.Id}"><i class="icon-chevron-left"></i> <span><apex:outputText value="{!$Label.T_0086}" /></span></apex:outputLink>
+                               </div>
+                               <div class="form-button">
+                                    <apex:commandlink id="ContinueBtn" styleClass="next" action="{!navigator}">
+                                        <apex:param name="nextPage" value="/apex/centers_app_home?id={!applicantInfo.Id}"/>
+                                        <apex:param name="reDirectPage" value="true"/>
+                                        <apex:commandButton value="{!$Label.T_0213}" />
+                                        <i class="icon-chevron-right"></i> 
+                                    </apex:commandlink>
+                                </div>   
+                            </div>                        
+                        </div>
+                        <div class="panel one_third last aside">
+                            <c:Badge_Centers_Contact />     
+                        </div>
+                    </div>
+                </apex:form>    
+            </div>
+        </apex:define>
+    </apex:composition>
+</apex:page>

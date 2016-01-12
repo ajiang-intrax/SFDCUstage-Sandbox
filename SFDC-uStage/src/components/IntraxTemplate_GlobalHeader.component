@@ -1,0 +1,115 @@
+<apex:component id="headerComponent" controller="TemplateController">
+  <div id="global-header" class="clearfix">
+    <div id="global-header-inner" class="clearfix">
+      <div id="global-header-logo"> 
+        
+        <!-- Type='Guest' Logos-->
+        <apex:outputLink value="{!$Site.Prefix}/AppEngine_SiteLoginPage?{!appendset}" rendered="{!IF(ISPICKVAL($User.UserType,'Guest') ,true,false)}" target="_self">
+          <apex:image url="{!URLFOR($Resource.intrax_themes, '/intrax_themes/images/myintrax-logo.png')}" alt="Intrax" title="Intrax"/>
+        </apex:outputLink>
+        <!-- Logo for Ayusa Type='Guest' --> 
+        
+        <!-- Logos for HF AYUSA -->
+        <apex:outputLink value="{!$Site.Prefix}/Home?{!appendset}" rendered="{!NOT(ISPICKVAL($User.UserType,'Guest')) && NOT(ISPICKVAL($User.Type__c,'Partner')) && user.User_Interests__c == 'Hosting an international student'}" target="_self">
+          <apex:image url="{!URLFOR($Resource.intrax_themes, '/intrax_themes/images/myintrax-logo.png')}" alt="Intrax" title="Intrax"/>
+        </apex:outputLink>
+        
+        <!-- Logo for IGI -->
+        <apex:outputLink value="{!$Site.Prefix}/PT_Home?{!appendset}" rendered="{!NOT(ISPICKVAL($User.UserType,'Guest')) && NOT(ISPICKVAL($User.Type__c,'Partner')) && user.User_Interests__c == 'Finding an internship'}" target="_self">
+          <apex:image url="{!URLFOR($Resource.intrax_themes, '/intrax_themes/images/myintrax-logo.png')}" alt="Intrax" title="Intrax"/>
+        </apex:outputLink>
+        
+        <!-- Logo for WT -->
+        <apex:outputLink value="{!$Site.Prefix}/Home?{!appendset}" rendered="{!NOT(ISPICKVAL($User.UserType,'Guest')) && NOT(ISPICKVAL($User.Type__c,'Partner')) && user.User_Interests__c == 'Becoming a Work Travel Participant'}" target="_self">
+          <apex:image url="{!URLFOR($Resource.intrax_themes, '/intrax_themes/images/myintrax-logo.png')}" alt="Intrax" title="Intrax"/>
+        </apex:outputLink>
+        
+        <!-- Logo for Partners -->
+        <apex:outputLink value="{!$Site.Prefix}/pr_home?{!appendset}" rendered="{!NOT(ISPICKVAL($User.UserType,'Guest')) && ISPICKVAL($User.Type__c,'Partner')}" target="_self">
+          <apex:image url="{!URLFOR($Resource.intrax_themes, '/intrax_themes/images/myintrax-logo.png')}" alt="Intrax" title="Intrax"/>
+        </apex:outputLink>
+        
+        <!-- Default -->
+        <apex:outputLink value="{!$Site.Prefix}/your_applications?{!appendset}" rendered="{!NOT(ISPICKVAL($User.UserType,'Guest')) && NOT(ISPICKVAL($User.Type__c,'Partner')) && NOT(user.User_Interests__c == 'Hosting an international student') && NOT(user.User_Interests__c == 'Finding an internship') && NOT(user.User_Interests__c == 'Becoming a Work Travel Participant')}" target="_self">
+          <apex:image url="{!URLFOR($Resource.intrax_themes, '/intrax_themes/images/myintrax-logo.png')}" alt="Intrax" title="Intrax"/>
+        </apex:outputLink>
+      </div>
+      <div id="global-header-links">
+        <div id="new-user-links">
+          <apex:outputPanel layout="block" rendered="{!AND(ISPICKVAL($User.UserType,'Guest'), $Site.LoginEnabled)}">
+            <apex:outputLink value="{!$Site.Prefix}/AppEngine_SiteLoginPage?{!appendSet}" rendered="{!ISPICKVAL($User.UserType,'Guest')}" target="_self">Login</apex:outputLink>
+            <apex:outputLink value="{!$Site.Prefix}/AppEngine_SiteRegister?{!appendSet}" rendered="{!$Site.RegistrationEnabled}" target="_self">New User? Register</apex:outputLink>
+          </apex:outputPanel>
+        </div>
+        <div id="current-user-links">
+          <apex:outputPanel styleClass="clearfix" layout="block" rendered="{!NOT(ISPICKVAL($User.UserType,'Guest'))}">
+            <apex:outputText rendered="{!user.User_Interests__c == 'Becoming an au pair'}"> 
+              <!-- For APC PT -->
+              <apex:outputLink value="{!$Site.Prefix}/your_applications?{!appendset}" target="_top">Home</apex:outputlink>
+            </apex:outputText>
+            <apex:outputText rendered="{!user.User_Interests__c == 'Hosting an au pair'}"> 
+              <!-- For APC HF -->
+              
+              <apex:outputLink value="{!$Site.Prefix}/your_applications?{!appendset}" target="_top">Home</apex:outputlink>
+            </apex:outputText>
+            <apex:outputText rendered="{!user.User_Interests__c == 'Becoming a high school exchange student'}"> 
+              <!-- For AYU PT -->
+              
+              <apex:outputLink value="{!$Site.Prefix}/your_applications?{!appendSet}" target="_top">Home</apex:outputlink>
+            </apex:outputText>
+            <apex:outputText rendered="{!user.User_Interests__c == 'Hosting an international student'}"> 
+              <!-- For AYU HF -->
+              
+              <apex:outputLink value="{!$Site.Prefix}/Home?{!appendSet}" target="_top">Home</apex:outputlink>
+            </apex:outputText>
+            <apex:outputText rendered="{!user.User_Interests__c == 'Studying English'}"> 
+              <!-- For CNT PT -->
+              
+              <apex:outputLink value="{!$Site.Prefix}/your_applications?{!appendSet}" target="_top"><apex:outputText value="{!$Label.T_0027}" /></apex:outputlink>
+            </apex:outputText>
+            <apex:outputText rendered="{!user.User_Interests__c == 'Finding an internship'}"> 
+              <!-- For IGI PT -->
+              
+              <apex:outputLink value="{!$Site.Prefix}/your_applications?{!appendSet}" target="_top">Home</apex:outputlink>
+            </apex:outputText>
+            <apex:outputText rendered="{!user.User_Interests__c == 'Becoming a Work Travel Participant'}"> 
+              <!-- For WT PT -->
+              
+              <apex:outputLink value="{!$Site.Prefix}/Home?{!appendSet}" target="_top">Home</apex:outputlink>
+            </apex:outputText>
+            <apex:outputText rendered="{!NOT(ISPICKVAL($User.UserType,'Guest')) && ISPICKVAL($User.Type__c,'Host Company')}"> 
+              <!-- For Companies -->
+              
+              <apex:outputLink value="{!$Site.Prefix}/Home?{!appendSet}" target="_top">Home</apex:outputlink>
+            </apex:outputText>
+            <apex:outputText rendered="{!NOT(ISPICKVAL($User.UserType,'Guest')) && ISPICKVAL($User.Type__c,'Partner')}"> 
+              <!-- For Partners -->
+              
+              <apex:outputLink value="{!$Site.Prefix}/pr_Home?{!appendSet}" target="_top">Home</apex:outputlink>
+            </apex:outputText>
+            
+            <!-- For Centers -->
+            <apex:outputText rendered="{!user.User_Interests__c == 'Studying English'}">
+            	<apex:outputLink value="{!$Site.Prefix}/account_overview?{!appendSet}"><apex:outputText value="{!$Label.T_0349}" /></apex:outputLink>
+            </apex:outputText>
+            <!-- Others -->
+            <apex:outputText rendered="{!user.User_Interests__c != 'Studying English'}">
+            	<apex:outputLink value="{!$Site.Prefix}/account_overview?{!appendSet}">Settings</apex:outputLink>
+            </apex:outputText>
+            
+            <!-- For Centers -->
+            <apex:outputText rendered="{!user.User_Interests__c == 'Studying English'}">
+            <apex:outputLink value="{!$Site.Prefix}/AppEngine_Logout" target="_top" rendered="{!NOT(ISPICKVAL($User.UserType,'Guest'))}"><apex:outputText value="{!$Label.T_0030}" /></apex:outputLink>
+            </apex:outputText>
+            
+            <!-- Others -->
+            <apex:outputText rendered="{!user.User_Interests__c != 'Studying English'}">
+            <apex:outputLink value="{!$Site.Prefix}/AppEngine_Logout" target="_top" rendered="{!NOT(ISPICKVAL($User.UserType,'Guest'))}">Logout</apex:outputLink>
+            </apex:outputText>
+            
+          </apex:outputPanel>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span id="hideMyParent"></span> </apex:component>

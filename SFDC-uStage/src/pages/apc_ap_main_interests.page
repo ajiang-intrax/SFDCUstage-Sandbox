@@ -1,0 +1,133 @@
+<apex:page docType="html-5.0" title="Interests and Hobbiess" applyBodyTag="false" applyHtmlTag="false" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="false" showHeader="false" id="apc_ap_main_interests">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_apc_ap_application />
+       <div id="app-page" class="row">
+        <div id="app-focus" class="col-md-8 col-md-push-3">
+          
+           <c:block_app_completion ApplicantInfo="{!applicantInfo}" userProfileName="{!userProfileName}"  />
+          
+          <h1>Interests and Hobbies</h1>
+          <p class="lead"> This is the fun part! Host families are interested in who you are and what you enjoy doing in your free time.  
+            Choose as many interests and hobbies as you'd like. </p>
+          <apex:form styleClass="form-vertical ws-validate" id="webform" >
+            <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+            
+            <div class="row">
+            <div class="col-sm-12">
+            <div class="form-group margin-t">
+              <label class="control-label">Tell us about any sports you have played <span class="info">(Optional)</span></label>
+                <apex:inputField styleClass="form-control" value="{!applicantInfo.Interest_Sports__c}" required="FALSE" id="sports" />
+              </div>
+              </div>
+              </div><!--  end row -->
+             
+             <div class="row"> 
+             <div class="col-sm-12">
+            <div class="form-group margin-t">
+              <label class="control-label">Tell us about any experience you have with fine arts <span class="info">(Optional)</span></label>
+                <apex:inputField styleClass="form-control" value="{!applicantInfo.Interest_Fine_Arts__c}" required="FALSE" id="arts" />
+              </div>
+              </div>
+              </div><!--  end row -->
+             
+             <div class="row"> 
+             <div class="col-sm-12">
+            <div class="form-group margin-t">
+              <label class="control-label">Tell us about any other crafts or hobbies you enjoy <span class="info">(Optional)</span></label>
+                <apex:inputField styleClass="form-control" value="{!applicantInfo.Interests_Hobbies__c}" required="FALSE" id="hobbies" />
+              </div>
+              </div>
+              </div><!--  end row -->
+              
+              
+               <div class="row"> 
+             <div class="col-sm-12">
+            <div class="form-group margin-t">
+              <label class="control-label">How do you spend your free time? <span class="info">(Optional)</span></label>
+                <apex:inputField styleClass="form-control" value="{!applicantInfo.Interests_Leisure__c}" required="FALSE" id="leisure" />
+              </div>
+              </div>
+              </div><!--  end row -->
+              
+              <div class="row">
+              <div class="col-sm-12">
+            <div class="form-group margin-t">
+              <label class="control-label">Tell us more about your interests, hobbies or special skills <span class="info">(Optional)</span></label>
+                <apex:inputTextarea styleClass="form-control" id="hobbiesDesc" value="{!applicantInfo.Interests_Hobbies_Description__c}"  onkeyup="countChar(this, 510, 'hobbiesDescCount')" onfocus="countChar(this, 510, 'hobbiesDescCount')"/>
+                <div class="char-limit bb"><span class="char-count-label">Characters left:</span> <span id="hobbiesDescCount" class="char-count"> {!510-len(applicantInfo.Interests_Hobbies_Description__c) }</span> </div>
+                <apex:message for="hobbiesDesc" styleClass="custom-error-text" id="errorHobbies"/>
+              </div>
+              </div>
+              </div><!--  end row -->
+             
+              
+               <div class="row margin-b2"> 
+             <div class="col-sm-6">
+            <div class="form-group">
+              <label class="control-label">What is your religious affiliation? <span class="info"></span></label>
+                        <apex:actionRegion >
+                          <apex:inputField styleClass="form-control" value="{!applicantInfo.Religion__c}" required="True" id="religion">
+                            <apex:actionSupport event="onchange" rerender="religious_activity" status="showref2" />
+                          </apex:inputField>
+                        </apex:actionRegion>
+                        <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showref2" />
+              </div>
+              </div>
+             
+
+                  <apex:pageBlock id="religious_activity">
+                    <apex:outputPanel layout="block" rendered="{!applicantinfo.Religion__c != 'None' && applicantinfo.Religion__c != 'Other' && applicantinfo.Religion__c != 'Atheist' && applicantinfo.Religion__c != NULL}" >
+		
+				<div class="col-sm-6">
+
+              	<div class="form-group">
+                <label class="control-label">What is your level of participation? </label>
+                    <apex:inputField styleClass="form-control" value="{!applicantInfo.Religious_Activity_Home__c}" required="True" id="Religious_Activity_Home">
+                    </apex:inputField>
+              	</div>
+              	</div>
+           
+			</apex:outputPanel>
+			</apex:pageBlock>
+     </div><!--  end row -->
+            
+            <!-- 
+            <div class="row"> 
+            <div class="col-sm-12"> 
+            <div class="form-group margin-t">
+              <label class="control-label">Is there anything else you like to do in your free time? <span class="info">(Optional)</span></label>
+                <apex:inputTextarea required="FALSE" styleClass="form-control" id="leisureDesc" value="{!applicantInfo.Interests_Leisure_Description__c}"  onkeyup="countChar(this, 510, 'leisureDescCount')" onfocus="countChar(this, 510, 'leisureDescCount')"/>
+                <div class="char-limit bb"><span class="char-count-label">Characters left:</span> <span id="leisureDescCount" class="char-count"> {!510-len(applicantInfo.Interests_Leisure_Description__c) }</span> </div>
+                <apex:message for="leisureDesc" styleClass="custom-error-text" id="errormesNeedsDesc"/>
+              </div>
+              </div>
+              </div><!--  end row --
+               -->
+              
+            <div class="row">
+              <div class="col-sm-12">
+                <apex:outputLink styleClass="btn btn-link btn-lg" rendered="{!applicantInfo.Application_Type__c=='Original'}" value="/apex/apc_ap_basic_contact_info?id={!applicantInfo.Id}" id="backlink"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                <apex:outputLink styleClass="btn btn-link btn-lg" rendered="{!applicantInfo.Application_Type__c=='Extension'}" value="/apex/apc_ap_main_experience?id={!applicantInfo.Id}" id="backlink2"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                <apex:commandlink styleClass="btn btn-primary btn-lg" action="{!navigator}" id="nextlink" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                  <apex:param name="nextPage" value="{!IF(applicantInfo.Application_Type__c='Original','/apex/apc_ap_main_family_info','/apex/apc_ap_main_essays')}"/>		
+                  <apex:param name="reDirectPage" value="true" />
+                  <apex:param name="pageId" value="024"/>
+                  <apex:commandButton value="Save & Continue" id="continuebutton"/>
+                </apex:commandlink>
+              </div>
+            </div>
+          </apex:form>
+        </div>
+        <!-- end column  -->
+        
+        <div id="app-side" class="col-md-3 col-md-pull-8">
+          <c:menu_side_apc_ap_basic ApplicantInfo="{!applicantInfo}" />
+        </div>
+        <!-- end column  --> 
+      </div>
+      <!-- end row --> 
+      
+    </apex:define>
+  </apex:composition>
+</apex:page>

@@ -1,0 +1,62 @@
+<apex:page docType="html-5.0" id="DocumentResources" controller="ResourcesController" standardStylesheets="false" showHeader="false" title="Documents and Resources" action="{!allWTDocuments}">
+  <apex:composition template="IntraxTemplate_Vs2">
+    <apex:define name="body">
+     
+     <div class="row">
+     	<div class="span12">
+        <h1>Resources</h1>
+        </div>
+   	 </div>
+   	 
+     <apex:form >   
+     
+     <div class="row-fluid">
+     <apex:outputPanel styleClass="span3" layout="block" rendered="{!IF(urlpara=='pt', false, true)}">
+        
+          <c:Menu_HC_Resources rendered="{!HC_User_Resource_Access=='WT_IGI'}"/>
+          </apex:outputPanel>
+          <div class="span9">
+          
+           <apex:outputPanel rendered="{!IF(urlpara=='' && HC_User_Resource_Access=='WT_IGI', true, false)}">
+          <div class="block">
+          <div class="block-body">
+          <h3>Welcome to Intrax Host Company Resources! </h3>
+          
+         <p> Here you can find a wide variety of documents and other resources to help you with your Intrax program. Please choose a program on the left.
+          </p></div>
+         </div>
+          </apex:outputPanel>
+          
+          		
+          			<apex:repeat value="{!KeyTags}" var="itemTag">
+ 						<div class="block">
+ 						<div class="block-header"><h3>{!itemTag}</h3></div>
+ 						<div class="block-body">
+ 							<ul>
+ 							<apex:repeat value="{!DocumentList}" var="itemDoc"> 
+ 								<apex:outputText rendered="{!IF(itemTag=itemDoc.Keywords,true,false)}">
+ 								<li>
+        							<apex:commandlink title="{!itemDoc.Description}" id="rpt_Name" value="{!itemDoc.Name}" styleClass="inline-link" action="{!getDocumentUrl}" target="_blank">
+		                             <apex:param name="guid" value="{!itemDoc.id}"/>
+		                        	</apex:commandlink>
+		                        	<span style="text-transform:uppercase;">({!itemDoc.type})</span> 
+        						</li>
+        						</apex:outputText>
+        						
+      						</apex:repeat>
+      						</ul>
+      					</div>	
+    				</div>
+  					</apex:repeat>
+          		
+        
+          	
+      </div>
+      
+   
+      
+    </div>
+    </apex:form>  
+    </apex:define>
+  </apex:composition>
+</apex:page>

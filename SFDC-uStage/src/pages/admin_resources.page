@@ -1,0 +1,52 @@
+<apex:page showHeader="true" id="admin_resources" controller="apc_resource_controller" action="{!showResources}">
+	<apex:composition template="intraxtemplate_vs3">
+	<apex:define name="body">
+	
+	<apex:form styleClass="form-vertical" id="Form">
+	<div class="row">
+	<div class="col-sm-8 center-block ">
+	<h1 class="no-margin-t">Family Resources</h1>
+	
+	<apex:actionStatus id="waitMsg" startStyleClass="alert alert-info">
+	  <apex:facet name="start" > <i class="fa fa-refresh fa-spin"></i> <strong>Please Wait.....</strong> </apex:facet>  
+	</apex:actionStatus>
+	
+	 <div class="input-group">
+	    <apex:inputText styleClass="form-control" id="KeySearch" value="{!KeySearch}"/>
+	    <apex:commandLink styleClass="input-group-addon" action="{!showResources}" rerender="pb" status="waitMsg" id="GoButton"> Search </apex:commandLink>
+	</div>
+	<apex:pageBlock id="pb">
+	<apex:outputPanel styleClass="span8" layout="block" rendered="{!IF(allCategories.Size > 0 && allResource.Size > 0, true, false)}" >  
+	        <apex:repeat value="{!allCategories}" var="Category">
+	            <apex:outputPanel layout="block" rendered="{!IF(CategoryAvailableMap[Category] == 'Available' , true, false)}">
+	                        <div class="block">
+	                        <div class="block-header"><h3><b>{!Category}</b></h3></div>
+	                        <div class="block-body">
+	                            <apex:repeat value="{!CategoryResourceMap[Category]}" var="itemRes">
+	                             
+	                             <b>Subject:</b>&nbsp;&nbsp;{!itemRes.Subject__c}<br />
+	                             <b>Body:</b>&nbsp;&nbsp;<apex:outputtext escape="false" value="{!ResourceBodyMap[itemRes.Id]}" />
+	                             &nbsp;&nbsp;&nbsp;<a href="apc_resources_article?cid={!itemRes.Id}">Read More</a>
+	                             <br /> <br />
+	                            </apex:repeat>
+	                        </div>
+	                        
+	                        </div>
+	                        <apex:outputPanel layout="block" rendered="{!IF(CategoryResCnt[Category] > 3 , true, false)}">
+	                        	<a href="apc_resources_category?cat={!Category}&kSearch={!KeySearch}">See all Resource in this Category</a>
+	                        </apex:outputPanel>
+	                        </apex:outputPanel>
+	        </apex:repeat>
+	          
+	    </apex:outputPanel> 
+	    <apex:outputPanel styleClass="span8" layout="block" rendered="{!IF(allCategories.Size > 0 && allResource.Size > 0, false, true)}" >  
+	    	<div class="block">No record found.</div>
+	    </apex:outputPanel>
+	</apex:pageBlock>
+	</div><!-- end col -->
+	</div><!-- end row -->
+	</apex:form>
+	
+	</apex:define>
+	</apex:composition>
+</apex:page>

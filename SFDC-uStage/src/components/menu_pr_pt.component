@@ -1,0 +1,50 @@
+<apex:component layout="none">
+
+	<apex:attribute name="participant" description="Contains the Engagament.IP for the match in context" type="Engagement__c" required="false" default=""/>
+	<apex:attribute name="applicationRecord" description="Contains the Engagament.IP for the match in context" type="Applicant_Info__c" required="false" default=""/>	
+	<apex:variable var="Participant_Profile" value="active" rendered="{! IF($CurrentPage.Name=='pr_pt_profile', true, false)}"/>     
+	<apex:variable var="Match_Information" value="active" rendered="{! IF($CurrentPage.Name=='pr_pt_match_details', true, false)}"/>  
+	<apex:variable var="Match_Information" value="active" rendered="{! IF($CurrentPage.Name=='pr_pt_matches', true, false)}"/>  
+	<apex:variable var="Match_Information" value="active" rendered="{! IF($CurrentPage.Name=='pr_match_new', true, false)}"/> 
+	<apex:variable var="Travel_And_Visa" value="active" rendered="{! IF($CurrentPage.Name=='pr_pt_travel_visa', true, false)}"/>
+	<apex:variable var="Travel_And_Visa" value="active" rendered="{! IF($CurrentPage.Name=='pr_pt_travel_visa_new', true, false)}"/>
+	<apex:variable var="Assessment" value="active" rendered="{! IF($CurrentPage.Name=='pr_pt_assessments' || $CurrentPage.Name=='pr_pt_assessment_details', true, false)}"/>
+	<apex:variable var="DocUploads" value="active" rendered="{! IF($CurrentPage.Name=='pr_pt_document_upload', true, false)}"/>
+   
+  <div class="navbar vs2" role="navigation">
+     
+      <button class="btn-lg btn-default btn navbar-toggle collapsed" data-target="#pt-profile-menu" data-toggle="collapse" type="button">
+       Profile Menu
+      </button>
+    
+    <div class="collapse navbar-collapse" id="pt-profile-menu"> 
+	<ul class="nav nav-pills vs2 inline-block">
+	    <li class="{!Participant_Profile}"><apex:outputLink value="/apex/pr_pt_profile?participantId={!participant.Id}&isInputType=false">Profile</apex:outputLink></li>
+        <li> 
+        	<apex:outputLink value="/apex/Ayusa_app_Home?Id={!applicationRecord.Id}&isInputType=false&IsPartner=true" rendered="{!IF(applicationRecord.Intrax_Program__c == 'Ayusa' && (applicationRecord.Application_Stage__c == 'Working' || applicationRecord.Application_Stage__c == 'Submitted' || applicationRecord.Application_Stage__c == 'Conditional'), true, false)}">Application</apex:outputLink>
+        	<apex:outputLink value="/apex/Ayusa_app_summary?Id={!applicationRecord.id}&participantId={!applicationRecord.Engagement__r.Id}&view=true&backURL=PT" rendered="{!IF(applicationRecord.Intrax_Program__c == 'Ayusa' && !(applicationRecord.Application_Stage__c == 'Working' || applicationRecord.Application_Stage__c == 'Submitted' || applicationRecord.Application_Stage__c == 'Conditional') , true, false)}">Application</apex:outputLink>
+        	<apex:outputLink value="/apex/Participant_Preapp_Home?Id={!applicationRecord.Id}&isInputType=false" rendered="{!IF(applicationRecord.Intrax_Program__c == 'Internship' && applicationRecord.Application_Stage__c == 'Working' , true, false)}">Application</apex:outputLink>
+        	<apex:outputLink value="/apex/Participant_Preapp_Summary?Id={!applicationRecord.id}&participantId={!applicationRecord.Engagement__r.Id}&view=true&backURL=PT" rendered="{!IF(applicationRecord.Intrax_Program__c == 'Internship' && !(applicationRecord.Application_Stage__c == 'Working') , true, false)}">Application</apex:outputLink>
+        	<apex:outputLink value="/apex/Participant_Preapp_Home?Id={!applicationRecord.Id}&isInputType=false" rendered="{!IF(applicationRecord.Intrax_Program__c == 'Work Travel' && applicationRecord.Application_Stage__c == 'Working' , true, false)}">Application</apex:outputLink>
+        	<apex:outputLink value="/apex/Participant_Preapp_Summary?Id={!applicationRecord.id}&participantId={!applicationRecord.Engagement__r.Id}&view=true&backURL=PT" rendered="{!IF(applicationRecord.Intrax_Program__c == 'Work Travel' && !(applicationRecord.Application_Stage__c == 'Working') , true, false)}">Application</apex:outputLink>
+        </li>
+        <li class="{!Match_Information}"><apex:outputLink value="/apex/pr_pt_matches?participantId={!participant.Id}&isInputType=false">Matches</apex:outputLink></li>
+		<li class="{!Travel_And_Visa}"><apex:outputLink value="/apex/pr_pt_travel_visa?participantId={!participant.Id}">Travel and Visas</apex:outputLink></li>
+		<li class="{!Assessment}"><apex:outputLink rendered="{!IF(participant.Intrax_Program__c == 'Ayusa', true, false)}" value="/apex/pr_pt_assessments?isAssessments=true&participantId={!participant.Id}&isInputType=false">Assessments</apex:outputLink></li>
+        <li class="{!DocUploads}"><apex:outputLink value="/apex/pr_pt_document_upload?participantId={!participant.Id}&isInputType=false">Document Uploads</apex:outputLink></li>
+	</ul>
+  </div>
+  </div>
+  <script>
+   var j$ = jQuery.noConflict(); 
+  //Stack menu when collapsed
+j$('#pt-profile-menu').on('show.bs.collapse', function() {
+    j$('#pt-profile-menu .nav-pills').addClass('nav-stacked');
+});
+
+//Unstack menu when not collapsed
+j$('#pt-profile-menu').on('hide.bs.collapse', function() {
+    j$('#pt-profile-menu .nav-pills').removeClass('nav-stacked');
+});
+  </script>
+</apex:component>

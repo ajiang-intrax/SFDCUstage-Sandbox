@@ -1,0 +1,394 @@
+<apex:component layout="none">
+    <script type="text/javascript" class="template_region_body_vs3">
+    
+    var j$ = jQuery.noConflict();
+    
+    // Adds "required" attribute to all required fields unless they already have it
+    function addReq(){
+        j$(document).ready(function () {
+            j$('.req').attr('required','required');
+        });
+    };
+    addReq();
+    
+    // Text field character counter 
+    function countChar(val, maxchars, elem) {
+        var len = val.value.length;
+        if (len > maxchars) {
+            val.value = val.value.substring(0, maxchars);
+        } else {
+            var elem1 = '#'+elem;
+            j$(elem1).text(maxchars - len);
+        }
+    };
+    
+    // Long text field truncation 
+  j$(".truncate").dotdotdot({
+    ellipsis    : ' ... ',
+    wrap        : 'word',
+    after       : "a.readmore",
+    watch       : true,
+    height      : 95,
+    callback : function( isTruncated, orgContent ) {
+        var self = j$( this );
+        self.find(".readmore").click(function(){
+            toggleRead(j$(this));
+        });                
+        
+        //if no more text to show hide read more link
+        if(!isTruncated){                        
+            self.find("a.readmore").css("display","none");
+        }
+        
+    }
+});
+
+// Toggle truncation
+function toggleRead(caller) {
+    var callerText = j$(caller).text();
+    var parent = j$(caller).closest(".truncate");
+    var isTruncated = j$(parent).triggerHandler("isTruncated");
+    if (isTruncated) {  
+        j$(parent).trigger("destroy.dot");
+        j$(parent).find("a").html("&laquo; Read less");
+        j$(parent).find("a").click(function () {
+            toggleRead(this);
+        });
+    } else {
+        
+      // Update text
+      j$(parent).find("a").html("Read more &raquo;");
+        
+      // Re-add ellipsis
+      j$(parent).dotdotdot({
+          ellipsis    : ' [...] ',
+          wrap        : 'word',
+          after       : "a.readmore",
+          watch       : true,
+          height      : 95
+      });
+      
+      // Have to re-add click function again, not totally sure why
+      j$(parent).find("a").click(function () {
+          toggleRead(this);
+      });
+    }
+}
+    
+    // http://www.woothemes.com/flexslider/ 
+    j$(window).load(function(){
+        parameter = {
+            animation: "slide",
+            animationLoop: false,
+            slideshow: true, 
+            pauseOnAction: true,
+            pauseOnHover: true, 
+            useCSS: true, 
+            itemMargin: 15,
+            touch: true, 
+            pausePlay: false,
+            directionNav: false,
+            start: function(slider){
+                j$('body').removeClass('loading');
+            }
+        }
+        parameter['itemWidth'] = 162;
+    });
+    
+    // Offcanvas menu for mobile 
+    j$(document).ready(function () {
+        j$('[data-toggle=offcanvas]').click(function () {
+            j$('.row-offcanvas').toggleClass('active')
+        });
+    });
+
+    // Bootstrap tooltip settings 
+    j$('[data-toggle="tooltip"]').tooltip();
+    
+    // Bootstrap popover settings 
+    
+    function actpopover(){
+    j$('[data-toggle="popover"]').popover({
+        trigger: 'click',
+        placement:'top',
+        html : true, 
+        content: function() {
+            return j$(this).next('.popover-html').html();
+        },
+    });
+    }
+    
+    j$('[data-toggle="popover"]').popover({
+        trigger: 'hover',
+        placement:'top',
+        html : true, 
+        content: function() {
+            return j$(this).next('.popover-html').html();
+        },
+    });
+    
+    // Fix to remove the popover upon clicking the background
+    j$('body').on('click', function (e) {
+        j$('[data-toggle="popover"]').each(function () {
+            if (!j$(this).is(e.target) && j$(this).has(e.target).length === 0 && j$('.popover').has(e.target).length === 0) {
+                j$(this).popover('hide');
+            }
+        });
+    });
+    
+    
+    // IE10 Device and Viewport Width Fix  http://getbootstrap.com/getting-started/#support 
+    
+    if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
+        var msViewportStyle = document.createElement('style')
+        msViewportStyle.appendChild(
+            document.createTextNode(
+                '@-ms-viewport{width:auto!important}'
+            )
+        )
+        document.querySelector('head').appendChild(msViewportStyle)
+    }
+    
+    // Capitalization of input values 
+    
+    function CapitalizeName(target){
+        var str = j$(target).attr('value');
+        str = str.replace(/\b[a-z]/g, function(letter) {
+            return letter.toUpperCase();
+        });
+        var len=str.length;
+        var splChars = [228,246,252,196,214,220,223,224,192,226,194,231,199,233,201,232,200,235,203,250,218,209,241,216,248,
+                            234,202,225,193,197,229,339,198,244,212,237,205,249,217,243,211,214,246,260,261,280,281,377,378,379,380,346,347,262,263,323,324,
+                            321,322,287,305,351,350];
+        String.prototype.replaceAt=function(index, character) {
+                    return this.substr(0, index) + character + this.substr(index+character.length);
+        }
+        for (var i = 0; i < len; i++) {
+            if (splChars.indexOf(str.charCodeAt(i)) != -1){
+                var j=i;
+                var ind=j+1;
+                var pattern=/[a-zA-Z]/
+                
+                if(ind<=(len-1) && (pattern.test(str.charAt(ind))) )
+                {
+                  str=str.replaceAt(ind,(str.charAt(ind)).toLowerCase());
+                }
+            }     
+          }
+        j$(target).attr('value',str);
+        //alert(str);
+    }
+    
+    // Set UpperCases of input values   
+    function UpperCase(target){
+        target.value = target.value.toUpperCase();
+    }
+    
+    // disableSubmit and enableSubmit for save button
+    function disableSubmit(){
+        j$('.btn-primary').attr('disabled', 'disabled');
+        j$('.btn-link').attr('disabled', 'disabled');
+        j$('.btn-default').attr('disabled', 'disabled');  
+    }
+    function enableSubmit(){
+        j$('.btn-primary').removeAttr('disabled');
+        j$('.btn-link').removeAttr('disabled');
+        j$('.btn-default').removeAttr('disabled');
+        actpopover();
+        noalphachar();
+    }
+    
+    //Enable and Disable Button loading
+    
+    function enableLoading(){
+        setLoadingText();
+        j$('.btn-primary').button('loading');
+        
+    }
+    function disableLoading(){
+        j$('.btn-primary').button('reset');
+        j$('html, body').animate({ scrollTop: 0 }, 'slow');
+        dpInitiate();
+    }
+    
+    //Change attribute to save button
+    
+    function setLoadingText(){
+        j$('.btn-primary').attr('data-loading-text','Loading...');
+        
+    }
+    
+    // Mobile sidebar menu height 
+    
+    function SetHeight() {
+        var winH = j$(document).height();
+        j$('#sidebar').css('height', winH);
+    }
+    
+    
+    j$(function () {
+        // on change resize
+        j$(window).resize(function () {
+            SetHeight();
+        });
+        SetHeight();
+    });
+    
+    // SVG detection 
+    
+    if (!Modernizr.svg) {
+        j$('img[src*="svg"]').attr('src', function() {
+            return j$(this).attr('src').replace('.svg', '.png');
+        });
+    }
+    
+    
+    //  Applying WebShim polyfills 
+    
+    j$.webshims.setOptions('forms', {
+        lazyCustomMessages: true,
+        iVal: {
+            //add config to find right wrapper
+            fieldWrapper: '.form-group div',
+            
+            //add bootstrap specific classes
+            errorMessageClass: 'help-block',
+            errorWrapperClass: 'has-error',
+            
+            //general iVal cfg
+            sel: '.ws-validate',
+            handleBubble: 'hide' // hide error bubble
+        }
+    }); 
+    
+    j$.webshims.polyfill('forms');
+    
+    // Custom datepicker initializer 
+    
+    function dpInitiate(){
+        j$(document).ready(function () {
+            var tags = j$('.datepicker');
+            for (var i = tags.length - 1; i >= 0; i--) {
+                datetimepickerInitializer(tags[i]);
+            };
+        });
+    };
+    dpInitiate();
+
+    // Adds multiselect picklist customization
+     function multiselect(){
+    j$(document).ready(function() {
+        j$('.multiselect').multiselect({
+            maxHeight: 200,
+            nonSelectedText: 'Any',
+            buttonWidth:'100%',
+            numberDisplayed: 1
+        });
+    });
+    };
+    multiselect();
+    
+    //Adds single select picklist customization
+    
+    function selectpicker(){
+     j$('.selectpicker').selectpicker({
+      size: 4
+    });
+    };
+    selectpicker();
+    
+
+    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
+    j$('.selectpicker').selectpicker('mobile');
+    }
+    
+    // Re-appends bootstrap classes to picklists once ajax calls are complete
+    
+    j$(window).load(function() {
+        setTimeout("restoreclass()", 800);
+    });
+    
+    function restoreclass(){        
+        j$('.restoreclass select').attr('class', 'form-control');
+    }
+    
+    // Changes panel styles when there is a missing field inside
+    
+    function errorfunc(){           
+        var errorm = j$('.panel-group').find('.errorMsg');
+        var errormRad = j$('.panel-group').find('.custom-error-radio');
+        var errormTxt = j$('.panel-group').find('.custom-error-text');
+        if (errorm == null && errormRad == null && errormTxt == null){  
+        }else{
+            j$('.errorMsg').closest('.panel').addClass('haserror');
+            j$('.custom-error-radio').closest('.panel').addClass('haserror');
+            j$('.custom-error-text').closest('.panel').addClass('haserror');
+        }
+    }
+    
+    //Set text select value "--None--" to "--Select one--"
+    function setSelectOne(){           
+     j$('select option:contains("--None--")').text('--Select one--');
+    }
+    setSelectOne();
+    
+    //Get tooltip for SFDC multiselect list
+   j$('select[multiple=multiple] option').hover( function(){
+        var textaux = j$(this).text();
+        j$(this).attr('title',textaux);
+    });
+    
+    // Running library "numeric" to prevent user to enter an alpha character in a phone input field
+    function noalphachar(){
+    j$('.onlynumber').numeric();
+    }
+    noalphachar(); 
+    
+    // Re-runs essential scripts upon completed AJAX requests
+    function rerunjs(){
+        setSelectOne()
+        setLoadingText();
+        dpInitiate();
+        errorfunc();
+        actpopover();
+        noalphachar();
+        //CapitalizeName(target);
+    }
+    
+    // Webform disabler
+ function disableFields(){
+j$(document).ready(function () {
+j$(".locked input[type=text], .locked input[type=password], .locked input[type=submit], .locked textarea, .locked select, .locked input[type=checkbox], .locked input[type=radio]").attr('disabled', 'disabled');
+
+});
+};
+ disableFields(); 
+setTimeout(disableFields,800);
+    
+    
+    </script>
+    
+    <script type="text/javascript">
+    function ConfirmDelete(strLabel)
+    {
+        if(!confirm(strLabel))
+        {
+            return false;
+        }                      
+    }
+    </script>  
+    <apex:actionstatus id="onsubmit" onstart="enableLoading();" onstop="disableLoading();"/>
+    
+    <!-- Marketo Munchkin code 
+  <script type="text/javascript"> 
+    jQuery.ajax({ 
+      url: '//munchkin.marketo.net/munchkin.js', 
+      dataType: 'script', 
+      cache: true, 
+      success: function() { 
+        Munchkin.init('342-VXF-330',{cookieAnon: false}); 
+      } 
+    }); 
+  </script> -->
+  
+</apex:component>

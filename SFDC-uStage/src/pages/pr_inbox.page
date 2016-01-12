@@ -1,0 +1,11 @@
+<apex:page id="Inbox" title="Inbox" docType="html-5.0" controller="User_Controller" standardStylesheets="false" showHeader="false" applyBodyTag="false" applyHtmlTag="false" action="{!CheckLogin}">
+<apex:composition template="intraxtemplate_vs3">
+<apex:define name="body">
+
+<c:block_pr_announcements />
+
+
+</apex:define>
+</apex:composition>
+
+</apex:page>

@@ -1,0 +1,12 @@
+<apex:component controller="VFGenericTemplateController" access="global">
+    
+    <apex:attribute name="RecordId" description="Thisattribute is to hold the oppotunity Id" 
+                type="Id" assignTo="{!opportunityId}"/> 
+        
+            <!-- Building Body of the Component -->
+           <p><b>Name of Representative:</b> {!opportunity.Interviewer__r.FirstName} {!opportunity.Interviewer__r.LastName}<br/>
+           <b>Phone:</b> {!opportunity.Interviewer__r.Phone}<br/>  
+            <b>Email:</b> {!opportunity.Interviewer__r.Email}<br/>     
+            <b>Location:</b> {!opportunity.Interviewer__r.Territory__c}<br/>
+           </p>
+</apex:component>

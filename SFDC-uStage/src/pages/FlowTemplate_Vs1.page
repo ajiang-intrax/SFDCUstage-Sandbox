@@ -1,0 +1,69 @@
+<apex:page docType="html-5.0" showHeader="false" standardStylesheets="false" id="FlowTemplateVs1">
+<html>
+<head> 
+<apex:includeScript value="{!URLFOR($Resource.flow_themes_vs1, '/flow_themes_vs1/js/jquery-core.js')}"/>    
+<apex:includeScript value="{!URLFOR($Resource.flow_themes_vs1, '/flow_themes_vs1/js/jquery-ui.js')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.flow_themes_vs1, '/flow_themes_vs1/styles/reset.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.flow_themes_vs1, '/flow_themes_vs1/styles/fonts.css')}"/>  
+<apex:stylesheet value="{!URLFOR($Resource.flow_themes_vs1, '/flow_themes_vs1/styles/vs1.css')}"/>    
+<apex:outputText value="<" escape="false"/>!--[if IE]<apex:outputText value=">" escape="false"/>
+<link rel="stylesheet" href="/intraxappengine/resource/flow_themes_vs1/flow_themes_vs1/styles/ie.css"/>  
+<apex:outputText value="<" escape="false"/>![endif]--<apex:outputText value=">" escape="false"/>      
+</head>
+<body>
+<!-- Qualaroo for force.com -->
+<script type="text/javascript">var _kiq = _kiq || [];</script>
+<script type="text/javascript" src="//s3.amazonaws.com/ki.js/35751/9z8.js" async="true"></script>
+<!-- Begin Branding -->
+<div id="global-header" class="clearfix">
+<div id="global-header-inner" class="clearfix">
+<div id="global-header-logo">
+<apex:image url="{!URLFOR($Resource.flow_themes_vs1, '/flow_themes_vs1/images/myintrax-logo.png')}" alt="Intrax" title="Intrax"/>
+</div>
+</div>     
+</div> 
+<!-- End Branding -->    
+<apex:insert name="body"/>
+<!-- Begin Footer --> 
+<div id="global-footer" class="clearfix"> 
+<div id="global-footer-inner">
+<apex:outputLink styleClass="footer-logo" value="http://www.intraxinc.com" target="_self">
+<apex:image url="{!URLFOR($Resource.flow_themes_vs1, '/flow_themes_vs1/images/footer-intrax.png')}" alt="Intrax" title="Intrax"/>
+</apex:outputLink>
+<apex:outputLink styleClass="footer-logo" value="http://www.aupaircare.com" target="_self">
+<apex:image url="{!URLFOR($Resource.flow_themes_vs1, '/flow_themes_vs1/images/footer-aupaircare.png')}" alt="AuPairCare" title="AuPairCare"/>
+</apex:outputLink>
+<apex:outputLink styleClass="footer-logo" value="{!$Site.Prefix}/AppEngine_SiteLoginPage" target="_self">
+<apex:image url="{!URLFOR($Resource.flow_themes_vs1, '/flow_themes_vs1/images/footer-ayusa.png')}" alt="Ayusa" title="Ayusa"/>
+</apex:outputLink>    
+</div>
+</div>  
+<!-- End Footer -->
+<span id="hideMyParent"></span> 
+</body> 
+<script type="text/javascript">
+function openPopup(url) {
+newwindow=window.open(url,'name','height=400,width=400,resizable=yes,toolbar=no,status=no,scrollbars=yes,menubar=no,directories=no,location=no,dependant=no');
+if (window.focus) {newwindow.focus()}
+return false;
+}
+</script>   
+
+<script type="text/javascript"> 
+var j$ = jQuery.noConflict(); 
+j$(document).ready(function() { 
+var startYear=1900;
+var endYear=2015;  
+var optionsString='';  
+if(startYear<endYear){   
+for(i=startYear;i<endYear+1;i++){  
+optionsString += "<option value=\""+i+"\">"+i+"</option>";  
+}  
+j$('#calYearPicker').html(optionsString); 
+}  
+//Hide the home page component;  
+j$('#sidebarDiv #hideMyParent').parent().parent().hide();  
+});  
+</script> 
+</html>  
+</apex:page>

@@ -1,0 +1,185 @@
+<apex:page id="centers_app_my_information" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+    
+    <!-- UI Blocker component for Background processing -->
+    <c:BlockUI />
+    
+    <apex:composition template="IntraxTemplate_Vs1">
+        <apex:define name="body">
+            <div class="wrapper" id="centers_preapp_my_information">    
+                <apex:form id="form">
+                
+                    <!-- Heading -->
+                    <div class="page-header clearfix">
+                        <h1 class="page-title"><apex:outputText value="{!$Label.T_0053}" /></h1>
+                        <div class="back-to-main"><apex:outputLink id="backToMain" value="apex/centers_app_home?id={!applicantInfo.Id}"><apex:outputText value="{!$Label.T_0075}" /></apex:outputLink></div>
+                    </div>
+                        
+                       
+                       <!-- Section Header -->  
+                       <div class="section-header clearfix">
+                            <h2><apex:outputText value="{!$Label.T_0076}" /></h2>
+                       </div> 
+                        
+                       <!-- Panel -->   
+                       <div class="white-box clearfix">   
+                            <div class="panel two_thirds">
+                            
+                            <apex:Messages id="errorMessages" styleClass="custom-error-pagelevel"/>
+                            <p><em> <apex:outputText value="{!$Label.T_0003}" /></em></p><br/>                  
+                        
+                            <!-- First Name -->
+                            <div class="form-row">
+                                <div class="form-label left "><apex:outputText value="{!$Label.T_0004}" /><span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:outputField id="First_Name" value="{!personInfo.First_Name__c}"/>
+                                </div>
+                                <!--  <div class="dropt"> <i class="icon-question-sign"></i>
+                                    <span>{!$ObjectType.Person_Info__c.Fields.First_Name__c.inlineHelpText}</span>
+                                </div>-->
+                            </div>
+                            
+                            <!-- Middle Name -->
+                            <div class="form-row">
+                                <div class="form-label left"><apex:outputText value="{!$Label.T_0077}" /></div>
+                                <div class="form-field">
+                                    <apex:outputField id="Middle_Name" value="{!personInfo.Middle_Name__c}"/>
+                                </div>
+                                <!--  <div class="dropt"> <i class="icon-question-sign"></i>
+                                    <span>{!$ObjectType.Person_Info__c.Fields.Middle_Name__c.inlineHelpText}</span>
+                                </div>-->
+                            </div>    
+                  
+                            <!-- Last Name -->
+                            <div class="form-row">
+                                <div class="form-label left "><apex:outputText value="{!$Label.T_0078}" /><span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:outputField id="Last_Name" value="{!personInfo.Last_Name__c}" />
+                                </div>
+                            </div>
+                              
+                            <!-- Gender -->  
+                            <div class="form-row">
+                                <div class="form-label left "><apex:outputText value="{!$Label.T_0079}" /><span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:outputField id="Gender" value="{!personInfo.Gender__c}" />
+                                </div>
+                            </div>
+                  
+                            <!-- Date of Birth -->
+                            <div class="form-row">
+                                <div class="form-label left "><apex:outputText value="{!$Label.T_0080}" /><span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:outputField id="Date_of_Birth" value="{!personInfo.Date_of_Birth__c}" />
+                                </div>
+                            </div>
+                            
+                            <!-- Country of Birth -->
+                            <div class="form-row">
+								<div class="form-label left "><apex:outputText value="{!$Label.T_0081}" /><span class="required">*</span></div>
+								<div class="form-field">
+									<apex:outputField id="Country_of_Birth" value="{!personInfo.Birth_Country__c}" />
+								</div>
+							</div>
+                               
+                            <!-- Country of Citizenship -->
+                            <div class="form-row">
+                                <div class="form-label left"><apex:outputText value="{!$Label.T_0082}" /><span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:outputField id="Citizenship" value="{!personInfo.Citizenship__c}"/>   
+                                </div>
+                                <!--  <div class="dropt"> <i class="icon-question-sign"></i>
+                                    <span>{!$ObjectType.Person_Info__c.Fields.Citizenship__c.inlineHelpText}</span>
+                                </div>-->
+                            </div>
+              
+                            <!-- Email -->
+                            <div class="form-row">
+                                <div class="form-label left "><apex:outputText value="{!$Label.T_0006}" /><span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:outputField id="Email" value="{!personInfo.Email__c}"/>
+                                </div>
+                            </div>
+           
+                            <!-- Phone -->
+                            <div class="form-row">
+                                <div class="form-label left "><apex:outputText value="{!$Label.T_0083}" /></div>
+                                <div class="form-field">
+                                    <apex:outputField id="Phone" value="{!personInfo.Phone__c}"/>
+                                </div>
+                            </div>
+           
+                            <!-- Skype -->
+                            <div class="form-row">
+                                <div class="form-label left "><apex:outputText value="{!$Label.T_0084}" /></div>
+                                <div class="form-field">
+                                    <apex:outputField id="Skype_Id" value="{!personInfo.Skype_Id__c}"/>
+                                </div>
+                            </div>
+                            
+                            <!-- How Heard -->
+                            <div class="data-row">
+                                <div class="data-label left"><apex:outputText value="{!$Label.T_0085}" /></div>
+                                <div class="data-field">
+                                	
+                                	<apex:outputField id="How_Heard" value="{!applicantInfo.How_Heard__c}"/>
+                                	                                                                      
+                                </div>
+                            </div>  
+              
+                            <!-- Partner Intrax Id -->
+                            <apex:pageBlock id="thePageBlock">
+                                <apex:outputPanel layout="block">
+                                    
+                                    <div class="form-row" style="display:{!IF(AND(applicantInfo.Partner_Name__c == null, applicantInfo.How_Heard__c == 'Agency'),'block','none')}">
+                                        <div class="form-label left">If your partner agency provided a code, please enter it below:</div>
+                                        <div class="form-field">
+                                            <apex:outputField id="Partner_Intrax_Id" value="{!applicantInfo.Partner_Intrax_Id__c}" rendered="{!IF(AND(applicantInfo.Partner_Name__c == null, applicantInfo.How_Heard__c == 'Agency') ,true,false)}"/>
+                                        </div>  
+                                    </div>   
+                                </apex:outputPanel>
+                                <apex:outputPanel layout="block">                                    
+                                    <div class="form-row" style="display:{!IF((applicantInfo.How_Heard__c == 'Referral'),'block','none')}">
+                                        <div class="form-label left"><apex:outputText value="{!$Label.T_0088}" /></div>
+                                        <div class="form-field">                                            
+                                            <apex:outputField id="RB_Last_Name" value="{!applicantInfo.RB_Last_Name__c}" rendered="{!IF((applicantInfo.How_Heard__c == 'Referral') ,true,false)}"/>
+                                        </div>  
+                                    </div>   
+                                </apex:outputPanel>
+                            </apex:pageBlock>
+                            
+                            <!-- Partner Name -->
+                            <div class="data-row" style="display:{!if(applicantInfo.Partner_Name__c == null,'none','block')}">
+                                <div class="data-label left"> <apex:outputText value="{!$Label.T_0149}" /> </div>
+                                <div class="data-field">
+                                    <apex:outputField id="Partner_Name" value="{!applicantInfo.Partner_Name__r.Name}" rendered="{!if(applicantInfo.Partner_Name__c != null,true,false)}"/> &nbsp;
+                                </div>
+                            </div>  
+            
+                            <div class="form-row">
+          
+                                <!-- Back Command Link -->
+                                <div class="form-link">
+                                    <apex:outputLink id="backLink" value="/apex/centers_app_home?id={!applicantInfo.Id}"><i class="icon-chevron-left"></i> <span><apex:outputText value="{!$Label.T_0086}" /></span></apex:outputLink>
+                                </div>
+                                      
+                                <!-- Next Command Link -->      
+                                <div class="form-button">
+                                    <apex:commandlink id="SaveContinue" styleClass="next" action="{!navigator}">
+                                        <apex:param name="nextPage" value="/apex/centers_app_my_academic_plan"/>
+                                        <apex:param name="reDirectPage" value="true"/> 
+                                        <apex:commandButton value="{!$Label.T_0087}" />
+                                        <i class="icon-chevron-right"></i>
+                                    </apex:commandlink>
+                                </div>    
+                            </div>  
+                        </div>
+                            
+                        <div class="panel one_third last aside">
+                            <c:Badge_Centers_Contact />     
+                        </div>
+                    </div>
+                </apex:form>
+            </div>
+        </apex:define>
+    </apex:composition>
+</apex:page>

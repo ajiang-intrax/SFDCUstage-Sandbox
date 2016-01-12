@@ -1,0 +1,125 @@
+<apex:page id="igi_pt_app_education" docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" 
+    controller="IGI_PT_Controller" action="{!checkLogin}"
+    standardStylesheets="false" showHeader="false"  title="Payment">
+ <apex:composition template="intraxtemplate_vs3">
+<apex:define name="body">
+   <div class="row">
+        <div class="col-md-7 col-md-push-3">
+
+<apex:outputPanel layout="block" rendered="{!applicantInfo != NULL && applicantInfo.Opportunity_Name__r.Payment_Received__c == NULL}">
+	<apex:outputPanel layout="block" rendered="{!applicantInfo != NULL && applicantInfo.Service_Level__c == 'Independent' && USCountries == true && applicantInfo.Application_Level__c == 'Main' && applicantInfo.Application_Stage__c == 'Submitted'}">
+	<h1>Your Application Fee</h1>
+<p>Congratulations on being accepted into the Intrax Global Internships program!&nbsp; You have taken an important step toward developing the critical cross-cultural and international business skills necessary in today's global society.</p>
+<p>Your<strong> $500 non-refundable program deposit</strong> is now due. Simply click on the secure <strong>PayPal</strong> link below to submit your online payment. Please read on for further payment information:</p>
+<ul>
+<li>Applications are <strong>subject to cancellation</strong> if program deposit is not received within <strong>7 days</strong> of acceptance.</li>
+<li>Once your deposit has been received, your Program Manager will contact you within <strong>7 days </strong>to discuss the next steps in moving you forward in the matching process.</li>
+</ul>
+<p>Thank you for choosing Intrax Global Internships, please contact us should you have any questions:</p>
+<p>Billing Inquiries: <a href="mailto:billing@globalinternships.com?subject=Re%3A%20IIA%20Deposit">billing@globalinternships.com</a><br/>
+Program Inquiries: <a href="mailto:participants@globalinternships.com">info@globalinternships.com</a></p>
+<form class="form-vertical ws-validate" action="https://www.paypal.com/cgi-bin/webscr" id="paypal" method="post" target="_blank">
+<input name="cmd" type="hidden" value="_s-xclick"/> 
+<input name="hosted_button_id" type="hidden" value="JVTAY45KDHAKN"/>
+<input name="on0" type="hidden" value="Participant Name (Last, First)"/>
+<input name="os0" id="participant_name" maxlength="200" type="hidden" value="{!applicantInfo.Account__r.LastName}, {!applicantInfo.Account__r.FirstName}"/>
+<input name="on1" type="hidden" value="Intrax ID"/>
+<input name="os1" id="participant_name" maxlength="200" type="hidden" value="{!applicantInfo.Account__r.Intrax_Id__c}"/>
+<input name="item_name" type="hidden" value="IGI Application Fee"/>
+<button class="btn btn-lg btn-primary margin-t3">
+<input value="Pay Application Fee" name="submit" type="submit" target="_blank"/> 
+</button>
+</form>
+	</apex:outputPanel>
+	
+	
+	
+	<apex:outputPanel layout="block" rendered="{!personInfo != NULL && applicantInfo != NULL && personInfo.Country_of_Residence__c == 'United States' && applicantInfo.Country_of_Interest__c != 'United States' && applicantInfo.Application_Level__c == 'Main' && applicantInfo.Application_Stage__c == 'Submitted'}">
+	<h1>Your Application Fee</h1>
+<p>Congratulations on being accepted into the Intrax Global Internships program!&nbsp; You have taken an important step toward developing the critical cross-cultural and international business skills necessary in today's global society.</p>
+<p>Your<strong> $500 non-refundable program deposit</strong> is now due. Simply click on the secure <strong>PayPal</strong> link below to submit your online payment. Please read on for further payment information:</p>
+<ul>
+<li>Applications are <strong>subject to cancellation</strong> if program deposit is not received within <strong>7 days</strong> of acceptance.</li>
+<li>Once your deposit has been received, your Program Manager will contact you within <strong>7 days </strong>to discuss the next steps in moving you forward in the matching process.</li>
+</ul>
+<p>Thank you for choosing Intrax Global Internships, please contact us should you have any questions:</p>
+<p>Billing Inquiries: <a href="mailto:billing@globalinternships.com?subject=Re%3A%20IIA%20Deposit">billing@globalinternships.com</a><br/>
+Program Inquiries: <a href="mailto:participants@globalinternships.com">info@globalinternships.com</a></p>
+<form class="form-vertical ws-validate" action="https://www.paypal.com/cgi-bin/webscr" id="paypal" method="post" target="_blank">
+<input name="cmd" type="hidden" value="_s-xclick"/> 
+<input name="hosted_button_id" type="hidden" value="JVTAY45KDHAKN"/>
+<input name="on0" type="hidden" value="Participant Name (Last, First)"/>
+<input name="os0" id="participant_name" maxlength="200" type="hidden" value="{!applicantInfo.Account__r.LastName}, {!applicantInfo.Account__r.FirstName}"/>
+<input name="on1" type="hidden" value="Intrax ID"/>
+<input name="os1" id="participant_name" maxlength="200" type="hidden" value="{!applicantInfo.Account__r.Intrax_Id__c}"/>
+<input name="item_name" type="hidden" value="IGI Application Fee"/>
+<button class="btn btn-lg btn-primary margin-t3">
+<input value="Pay Application Fee" name="submit" type="submit" target="_blank"/> 
+</button>
+</form>
+	</apex:outputPanel>
+</apex:outputPanel>
+
+
+<apex:outputPanel layout="block" rendered="{!EnggInformation != NULL && EnggInformation.Opportunity_Id__r.Payment_Received__c == NULL}">
+	<apex:outputPanel layout="block" rendered="{!applicantInfo != NULL && applicantInfo.Service_Level__c == 'Independent' && USCountries == true && MatchInformation.size > 0}">
+	<h1>Your Program Payment</h1>
+<p>Thank you for participating in Intrax Global Internships! You have taken an important step toward developing the critical cross-cultural and international business skills necessary in today's global society.</p>
+<h3>Payment Instructions:</h3>
+<p>You have received the link to this payment page because <strong>your program payment is now due</strong>. Please refer to your invoice for your balance. Simply click on the secure <strong>PayPal</strong> link below to submit your online payment. Please read on for further payment information.</p>
+<ul>
+<li>Applications are <strong>subject to cancellation</strong> if your current payment due is not received within <strong>7 days</strong> of notification.</li>
+</ul>
+<p>Thank you for choosing Intrax Global Internships, please contact us should you have any questions:</p>
+<p>Billing Inquiries: <a href="mailto:billing@globalinternships.com;">billing@globalinternships.com</a><br/>
+Program Inquiries: <a href="mailto:participants@globalinternships.com;">participants@globalinternships.com</a></p>
+<form class="form-vertical ws-validate" action="https://www.paypal.com/cgi-bin/webscr" id="paypal" method="post">
+<input name="cmd" type="hidden" value="_s-xclick"/> 
+<input name="hosted_button_id" type="hidden" value="WJUEZ32G8P2FY"/>
+<input name="on0" type="hidden" value="Participant Name (Last, First)"/>
+<input name="os0" id="participant_name" maxlength="200" type="hidden" value="{!applicantInfo.Account__r.LastName}, {!applicantInfo.Account__r.FirstName}"/>
+<input name="on1" type="hidden" value="Intrax ID"/>
+<input name="os1" id="participant_name" maxlength="200" type="hidden" value="{!applicantInfo.Account__r.Intrax_Id__c}"/>
+<button class="btn btn-lg btn-primary margin-t3">
+<input value="Pay Program Fee" name="submit" type="submit"/> 
+</button>
+</form>
+	</apex:outputPanel>
+	
+	
+	
+	<apex:outputPanel layout="block" rendered="{!personInfo != NULL && applicantInfo != NULL && personInfo.Country_of_Residence__c == 'United States' && applicantInfo.Country_of_Interest__c != 'United States' && MatchInformation.size > 0}">
+	<h1>Your Program Payment</h1>
+<p>Thank you for participating in Intrax Global Internships! You have taken an important step toward developing the critical cross-cultural and international business skills necessary in today's global society.</p>
+<h3>Payment Instructions:</h3>
+<p>You have received the link to this payment page because <strong>your program payment is now due</strong>. Please refer to your invoice for your balance. Simply click on the secure <strong>PayPal</strong> link below to submit your online payment. Please read on for further payment information.</p>
+<ul>
+<li>Applications are <strong>subject to cancellation</strong> if your current payment due is not received within <strong>7 days</strong> of notification.</li>
+</ul>
+<p>Thank you for choosing Intrax Global Internships, please contact us should you have any questions:</p>
+<p>Billing Inquiries: <a href="mailto:billing@globalinternships.com;">billing@globalinternships.com</a><br/>
+Program Inquiries: <a href="mailto:participants@globalinternships.com;">participants@globalinternships.com</a></p>
+<form class="form-vertical ws-validate" action="https://www.paypal.com/cgi-bin/webscr" id="paypal" method="post">
+<input name="cmd" type="hidden" value="_s-xclick"/> 
+<input name="hosted_button_id" type="hidden" value="WJUEZ32G8P2FY"/>
+<input name="on0" type="hidden" value="Participant Name (Last, First)"/>
+<input name="os0" id="participant_name" maxlength="200" type="hidden" value="{!applicantInfo.Account__r.LastName}, {!applicantInfo.Account__r.FirstName}"/>
+<input name="on1" type="hidden" value="Intrax ID"/>
+<input name="os1" id="participant_name" maxlength="200" type="hidden" value="{!applicantInfo.Account__r.Intrax_Id__c}"/>
+<button class="btn btn-lg btn-primary margin-t3">
+<input value="Pay Program Fee" name="submit" type="submit"/> 
+</button>
+</form>
+	</apex:outputPanel>
+</apex:outputPanel>
+
+
+
+</div><!--  end col -->
+</div><!--  end row -->
+
+
+</apex:define>
+</apex:composition>
+
+</apex:page>

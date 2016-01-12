@@ -1,0 +1,31 @@
+<apex:component layout="none" id="block_cvv_number_help_text">
+    
+<div dir="ltr" align="left">
+	<div dir="ltr" align="left">
+		<div dir="ltr" align="left">
+			<div dir="ltr" align="left">
+				<div dir="ltr" align="left">
+
+					<p><strong>
+                        <apex:image height="192"  width="351" style="align:left;border:0" alt="cvv" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/apc/misc/cvv-examples/csc_master_visa.gif')}" rendered="true"/><br/>
+                            <!--<img height="192" src="./CVV Number_files/csc_1.gif" width="351" align="left" border="0" alt="cvv">-->
+                        Visa®, Mastercard®, and Discover® cardholders:</strong><br/>
+                        Turn your card over and look at the signature box. You should see either the entire 16-digit credit card number or<br/> just the last four digits followed by a special 3-digit code. This 3-digit code is your CVV number / Card Security Code.</p>
+			  </div>
+			</div>
+		</div>
+	</div>
+</div>
+<div dir="ltr" align="left">
+	<p dir="ltr" align="left">&nbsp;</p>
+
+	<p dir="ltr" align="left">
+        <!--<img height="140" src="./CVV Number_files/csc_2.gif" width="200" align="right" border="0" alt="cid">-->
+        <apex:image height="140"  width="200" style="align:right;border:0" alt="cid" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/apc/misc/cvv-examples/csc_AX.gif')}" rendered="true"/>
+        <strong><br/>
+        American Express® cardholders:</strong><br/>
+	Look for the 4-digit code printed on the front of your card just above and to the right of your main credit card number. This 4-digit   code is your Card Identification Number (CID). The CID is the four-digit code printed just above the Account Number. </p>
+  <p dir="ltr" align="left"> </p>
+</div>
+
+</apex:component>

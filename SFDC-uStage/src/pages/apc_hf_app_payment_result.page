@@ -1,0 +1,72 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false"
+	standardController="Applicant_Info__c"
+	extensions="AppEngine_Controller" action="{!CloseApplicationOpp}"
+	standardStylesheets="false" showHeader="false" 
+	title="Payment Confirmation" id="apc_hf_app_payment_result">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_apc_hf_application userAgentCheck="{!userAgentCheck}" />
+      
+      <!-- "ORIGINAL" PANEL -->
+      <apex:outputPanel layout="block" rendered="{!applicantInfo.Application_Type__c == 'Original'}" id="outputpanelOriginal" >
+      <div class="row">
+        <div class="col-md-6">
+          <h1>Your payment was successful. Thank you!</h1>
+        
+          <p class="lead">You have now submitted your host family
+            application for review. You can begin viewing au pairs and find
+            the right match for your family.</p>
+
+			<apex:outputLink styleClass="btn btn-primary btn-lg" rendered="{!applicantInfo.Application_Type__c == 'Original'}"
+			value="/apex/apc_hf_home?vstate=newprf">  <span>Let's Get Started!</span> 
+			</apex:outputLink>
+		</div>	
+			
+           <div class="col-md-6">
+           <div class="well lead margin-t">
+            <p> Please keep the following transaction ID for future reference: <strong>{!paymentTxId}</strong> </p>
+            <p> Charged Amount: <strong>${!paymentAmount}</strong> </p>
+            <p> Transaction date: <strong>{!paymentDate}</strong> </p>
+            <apex:outputLink style="background:#fff;"
+							styleClass="margin-t btn btn-default btn-lg"
+							value="/apex/apc_hf_app_payment_result_pdf?id={!applicantInfo.Id}&viewpage=true&paymentAmount={!paymentAmount}&paymentDate={!paymentDate}&paymentTxId={!paymentTxId}&"
+							target="_blank" id="backlinkOriginal"> <i class="fa fa-print"></i> <span>Print Page</span>
+              <apex:param name="viewpage" value="true" />
+            </apex:outputLink>
+          </div>
+          <!--  end well --> 
+          </div> <!--  end column -->
+          </div> <!--  end row -->
+       
+   </apex:outputPanel>
+   
+   <!-- "EXTENSION" PANEL -->
+      <apex:outputPanel layout="block" rendered="{!applicantInfo.Application_Type__c == 'Extension'}" id="outputpanelExtension" >
+      <div class="row">
+        <div class="col-md-2"> <i class="fa fa-check-circle" style="font-size: 150px;"></i> </div>
+        <!-- end column -->
+        <div class="col-md-10">
+          <h1>Your payment was successful. Thank you!</h1>
+          <p class="lead">You have now submitted your
+            application for extension.</p>
+           <div class="well lead">
+            <p> Please keep the following transaction ID for future reference: <strong>{!paymentTxId}</strong> </p>
+            <p> Charged Amount: <strong>${!paymentAmount}</strong> </p>
+            <p> Transaction date: <strong>{!paymentDate}</strong> </p>
+            <apex:outputLink style="background:#fff;"
+							styleClass="margin-t btn btn-default btn-lg"
+							value="/apex/apc_hf_app_payment_result_pdf?id={!applicantInfo.Id}&viewpage=true&paymentAmount={!paymentAmount}&paymentDate={!paymentDate}&paymentTxId={!paymentTxId}&"
+							target="_blank" id="backlink"> <i class="fa fa-print"></i> <span>Print Page</span>
+              <apex:param name="viewpage" value="true" />
+            </apex:outputLink>
+          </div>
+          <!--  end well --> 
+        </div>
+        <!-- end column --> 
+      </div>
+      <!-- end row --> 
+   </apex:outputPanel>
+    
+    </apex:define>
+  </apex:composition>
+</apex:page>

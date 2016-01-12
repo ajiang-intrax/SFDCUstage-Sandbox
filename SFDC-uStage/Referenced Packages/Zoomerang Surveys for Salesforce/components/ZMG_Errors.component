@@ -1,0 +1,26 @@
+<apex:component >
+<apex:attribute name="errors" type="ZMG.ZMG_Error[]" required="true" description="the error collection" />
+<apex:attribute name="suppressCode" type="Boolean" required="false" description="set to true to prevent display of Error code" />
+<apex:attribute name="supportURL" type="String" required="false" description="optional support url" />
+
+<style>
+ul {
+	margin: 5px 0 0 0;
+	padding-left: 15px;
+}
+li { 
+	font-size: 8pt;
+	margin-bottom: 5px;
+}
+</style>
+	<ul>
+		<apex:repeat value="{!errors}" var="e">
+			<li><apex:outputText value="Error {!e.code}: " rendered="{!NOT(suppressCode)}" /><apex:outputText value="{!e.description}" /></li>
+		</apex:repeat>
+		<li>
+			If this error persists, please contact&nbsp;
+			<apex:outputPanel layout="inline" rendered="{!NOT(ISNULL(supportURL))}"><a target="_new" href="{!supportURL}">Zoomerang Support</a>.</apex:outputPanel>
+			<apex:outputPanel layout="inline" rendered="{!ISNULL(supportURL)}">Zoomerang Support.</apex:outputPanel>
+		</li>
+	</ul>
+</apex:component>

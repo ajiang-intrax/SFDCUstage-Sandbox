@@ -1,0 +1,117 @@
+<apex:component layout="none" id="block_apc_ap_travel_details" allowDML="true">
+  <apex:attribute name="PageController" description="Instance of home_controller class" type="home_controller" required="false" default="" />
+  
+  
+<style>
+i.fa.fa-plane.margin-r2.margin-l2 {
+    font-size: 80px;
+    color: #AED96A;
+}
+</style>
+  
+  <!-- Begining CASE 1: Confirmed Match -->
+  <apex:outputpanel layout="block" id="blockCase1" rendered="{!PageController.currentApp.Intrax_Program__c == 'AuPairCare' && PageController.currentApp.Engagement__c!=null &&
+PageController.currentApp.Application_Type__c == 'Original' && PageController.currentApp.Application_Stage__c == 'Accepted' &&
+PageController.currentApp.Application_Level__c == 'Main' && PageController.confMatch!=null && PageController.confMatch.Status__c='Confirmed'&& (PageController.currentApp.Engagement__r.Status__c=='Processing' || PageController.currentApp.Engagement__r.Status__c=='Program Ready')}">
+   
+   <div class="hp-block padding-6">
+        <h2 class="margin-b1">Your Travel to the United States</h2>
+        
+        <apex:outputPanel layout="block" rendered="{!PageController.currentApp.Engagement__r.Arrival_PNR_Number__c==null}">
+          <p class="lead">We are in the process of booking your flight to the United States. You will be notified when your itinerary is available for viewing.</p>
+        </apex:outputPanel>
+        
+        <apex:outputPanel layout="block" rendered="{!PageController.currentApp.Engagement__r.Arrival_PNR_Number__c!=null}">
+          <p class="lead">Your itinerary is now available.</p>
+          <a class="btn btn-link btn-lg vs2 margin-b4" href="{!PageController.currentApp.Engagement__r.Arrival_Trip_URL__c}" id="linkTripURL" target="_blank"><span>View Itinerary</span></a> 
+         </apex:outputPanel>
+       
+       <!-- 
+        <apex:outputPanel layout="block" id="blockCaseTravel">
+          <p class="lead">Please <apex:outputLink value="" id="linkresinfo1"><b>review some important information</b></apex:outputLink> about your upcoming travel.</p>
+        </apex:outputPanel>
+        --> 
+ </div><!-- end hp block -->
+  </apex:outputpanel>
+  
+      
+  <!-- Begining CASE 2: RETURNING HOME (User has  On Program Engagement and Today is less than 90 days prior to Engagement End Date.) -->
+  <apex:outputpanel layout="block" id="blockCase2" rendered="{!PageController.currentApp.Intrax_Program__c == 'AuPairCare' && PageController.currentApp.Application_Stage__c == 'Accepted' &&
+PageController.currentApp.Application_Level__c == 'Main' && PageController.confMatch.Id!=null && PageController.confMatch.Status__c=='Confirmed' && 
+PageController.currentApp.Engagement__r.Status__c=='On Program' && PageController.currentApp.Engagement__r.Engagement_End__c!=null && (Today()>=(PageController.currentApp.Engagement__r.Engagement_End__c-90) && Today()<=PageController.currentApp.Engagement__r.Engagement_End__c)}" >
+  
+  <div class="hp-block padding-6">
+   
+        <apex:outputpanel layout="block" id="blockCase5" rendered="{!PageController.currentApp.Engagement__r.Flight_booking_needed__c == null}">
+       <h2 class="margin-b1">Returning Home</h2>
+       <p class="lead">It's time to start thinking about traveling home at the end of your program!<br/> 
+            Request for flight no later than <b>
+              <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                <apex:param value="{!PageController.currentApp.Engagement__r.Departure_Request_Deadline__c}" />
+              </apex:outputText>
+              </b> unless you are planning to extend your program 
+             </p>
+            <apex:outputLink rendered="{!PageController.currentApp.Engagement__r.Flight_booking_needed__c == null}" styleClass="btn btn-link btn-lg vs2" value="/apex/apc_ap_flight_booking?id={!PageController.currentApp.Id}" id="linkprofinfo1"> <span>Request a Return Flight</span> </apex:outputLink>
+         </apex:outputpanel>
+   
+        
+        
+        <apex:outputpanel layout="block" id="blockCase4" rendered="{!PageController.currentApp.Engagement__r.Flight_booking_needed__c == 'Yes'}">
+         <h2 class="margin-b1">Returning Home</h2>
+         
+                      <apex:outputpanel layout="block" rendered="{!PageController.currentApp.Engagement__r.Dep_PNR_Number__c==null}">
+                        <p class="lead">Your return flight request has been received. You will be notified when we book your flight.</p>
+                      </apex:outputpanel>
+                  
+                      <apex:outputpanel layout="block" rendered="{!PageController.currentApp.Engagement__r.Dep_PNR_Number__c!=null}">
+                        <p class="lead">Follow the link below to view your return flight itinerary</p>
+                        <a class="btn btn-link btn-lg vs2" href="{!PageController.currentApp.Engagement__r.Departure_Trip_URL__c}" id="linkTripURLDeparture" target="_blank"><span>View Return Flight Itinerary</span></a> 
+                      </apex:outputpanel>
+                  
+                      <apex:outputpanel layout="block" id="blockCasePaid" rendered="{!PageController.isTravelPaid}">
+                        <p class="lead">Your purchased an extension insurance that will provide you health coverage until 
+                        <b>
+                          <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                            <apex:param value="{!PageController.currentApp.Engagement__r.Engagement_End__c + 30}" />
+                          </apex:outputText>
+                          </b> 
+                          </p>
+                      </apex:outputpanel> 
+                              
+        </apex:outputpanel>
+        
+  
+      
+          <apex:outputpanel layout="block" id="blockCase6" rendered="{!PageController.currentApp.Engagement__r.Flight_booking_needed__c == 'No'}">
+           <h2 class="margin-b1">Returning Home</h2>  
+           <p class="lead"><b>You have chosen not to have AuPairCare book a return flight for you</b><br/>
+           If you change your mind or if your plans have changed, please contact your area director.</p> 
+          </apex:outputpanel>
+      
+
+
+<hr class="margin-b3 margin-t3"/>
+<div class="row">
+<div class="col-sm-12">
+  <div class="tcell">
+  <i class="fa fa-plane margin-r2 margin-l2"></i>
+  </div>
+  <div class="tcell">
+   <div class="margin-b1">
+          <apex:outputLink target="_blank" value="/apex/apc_resources_article?cname=travelingafterprogram" id="linkresinfoC1" ><b>Traveling in the United States at the End of Your Program</b></apex:outputLink>
+          <p>30-Day Travel Period</p>
+  </div> 
+  
+        <div class="margin-b1">
+          <apex:outputLink target="_blank" value="/apex/apc_resources_article?cname=extensioninsurance" id="linkresinfoC2" ><b>Extension Insurance During Your Travel Month</b></apex:outputLink>
+          <p>We highly recommend you purchase extension insurance if you're staying in the United States during your 30-Day grace period.</p>
+      </div>
+  </div>
+  </div>
+  </div>
+      
+      
+     
+</div><!-- end hp block -->   
+  </apex:outputpanel>
+</apex:component>

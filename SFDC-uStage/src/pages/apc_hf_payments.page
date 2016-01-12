@@ -1,0 +1,285 @@
+<apex:page tabStyle="Scheduled_Payments__tab" controller="payment_controller" showHeader="true" id="apc_hf_payments">
+    <apex:form id="myForm">
+        <style>
+            .activeTab {background-color: #1798c1; color:white; background-image:none; font-size:16px; }
+            .inactiveTab { background-color: lightgrey; color:black; background-image:none}
+        </style>
+        <script type="text/javascript">
+        jQuery.noConflict();
+        </script>
+        <apex:sectionHeader title="APC Host Family Payment Report"/>
+        <apex:pageBlock id="blockTeam">
+            
+            <apex:tabPanel switchType="client" selectedTab="Scheduledcollection" id="PaymentTabPanel" inactiveTabClass="inactiveTab" contentStyle="font-size: 13px;" tabClass="activeTab">
+                <apex:tab label="Scheduled" name="Scheduledcollection" id="ScheduledTab" >
+                    <apex:pageBlockTable styleClass="table" value="{!payInvoices}" var="item">
+             
+                        <apex:column headerValue="Account Name">
+                            <apex:outputLink value="/{!item.Account__r.id}">{!item.Account__r.Name}</apex:outputLink>
+                        </apex:column>
+                        
+                        <apex:column headerValue="Invoice Number">
+                            <apex:outputLink value="/{!item.id}">{!item.Name}</apex:outputLink>
+                        </apex:column>
+                        
+                        <apex:column headerValue="Invoice Amount" >
+                            <apex:outputText value="{0, number, #,##0.00}">
+                                <apex:param value="{!item.Total__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        
+                        <apex:column headerValue="Amount to be processed">
+                            <apex:outputText value="{0, number, #,##0.00}">
+                                <apex:param value="{!item.Amount_Due__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        <!--                    
+<apex:column headerValue="Past Due date">
+<apex:outputText value="{0,date,MM'/'dd'/'yyyy}"  rendered="{!item.Ship_Date__c != null && item.Ship_Date__c <= TODAY()-7}">
+<apex:param value="{!item.Ship_Date__c}"/>
+</apex:outputText>
+</apex:column>
+
+<apex:column headerValue="Current Week Due date">
+<apex:outputText value="{0,date,MM'/'dd'/'yyyy}" rendered="{!item.Ship_Date__c != null && item.Ship_Date__c <= TODAY() && item.Ship_Date__c > TODAY()-7}">
+<apex:param value="{!item.Ship_Date__c}"/>
+</apex:outputText>
+</apex:column>
+-->                 
+                        <apex:column headerValue="Current Week Due date">
+                            <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                                <apex:param value="{!item.Ship_Date__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="Payment Status">
+                            <apex:outputText value="{!item.Payment_Status__c}"/>
+                        </apex:column>
+                        
+                        <apex:column headerValue="Notes">
+                            <apex:outputText value="{!item.Notes__c}"/>
+                        </apex:column>
+                        
+                        <apex:column headerValue="Token">
+                            <apex:outputText value="{!MaskSubscription[item.Account__r.id]}"/>
+                        </apex:column>
+                        
+                        <apex:column headerValue="">
+                            <apex:commandLink id="Payment" action="{!makeAWSPayment}">
+                                <apex:param name="AcctId" value="{!item.Account__r.id}"/>
+                                <apex:param name="childApplicationOpportunity" value="{!item.Opportunity__c}"/>
+                                <apex:param name="InvId" value="{!item.Id}"/>
+                                <!-- <apex:commandButton value="Pay" id="PaymentId" rendered="{!MaskSubscription[item.Account__r.id] != 'Not Available'}" status="stat"/>-->
+                                <apex:actionStatus id="saveStatus">
+                                    <apex:facet name="stop">
+                                        <apex:commandButton value="Pay" id="PaymentId" rendered="{!MaskSubscription[item.Account__r.id] != 'Not Available'}" status="saveStatus" rerender="saveParentBlock"/>
+                                    </apex:facet>
+                                    <apex:facet name="start">
+                                        <apex:commandButton value="Paying..." disabled="true" status="saveStatus"/>
+                                    </apex:facet>
+                                </apex:actionStatus>
+                                
+                            </apex:commandLink>
+                        </apex:column>
+   
+                    </apex:pageBlockTable>
+                </apex:tab> 
+                
+                <apex:tab label="Collection" name="Standardcollection2" id="CollectionTab" >
+                    <apex:pageBlockTable styleClass="table" value="{!ErrorPaymentRecords}" var="item">
+                        
+                        
+                        <apex:column headerValue="Account Name">
+                            <apex:outputLink value="/{!item.Sales_Invoice__r.Account__r.id}">{!item.Sales_Invoice__r.Account__r.Name}</apex:outputLink>
+                        </apex:column>
+                        
+                        <apex:column headerValue="Invoice Number">
+                            <apex:outputLink value="/{!item.Sales_Invoice__r.id}">{!item.Sales_Invoice__r.Name}</apex:outputLink>
+                        </apex:column>
+                        
+                        <apex:column headerValue="Invoice Amount">
+                            <apex:outputText value="{0, number, #,##0.00}">
+                                <apex:param value="{!item.Sales_Invoice__r.Total__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        
+                        <apex:column headerValue="Amount to be processed">
+                            
+                            <apex:outputText value="{0, number, #,##0.00}">
+                                <apex:param value="{!item.Sales_Invoice__r.Amount_Due__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+              
+                        <apex:column headerValue="Due date">
+                            <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                                <apex:param value="{!item.Sales_Invoice__r.Ship_Date__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="Payment Status">
+                            <apex:outputText value="{!item.Sales_Invoice__r.Payment_Status__c}"/>
+                        </apex:column>
+                        
+                        <apex:column headerValue="Last Rejection">
+                            <apex:outputText value="{0,date,MM/dd/yyyy HH:mm}">
+                                <apex:param value="{!item.createdDate+offset}" />
+                            </apex:outputText>
+                            <!-- <apex:outputText value="{!item.createdDate+offset}"/> -->
+                        </apex:column>
+                        
+                        <apex:column headerValue="Error Code">
+                            <apex:outputText value="{!item.Error_Keys__c}"/>
+                        </apex:column>
+                        
+                        <apex:column headerValue="Token">
+                            <apex:outputText value="{!MaskSubscription[item.Sales_Invoice__r.Account__r.id]}"/>
+                        </apex:column>
+                        
+                        <apex:column headerValue="Last Token Updated On">
+                            <apex:outputText value="{0,date,MM/dd/yyyy HH:mm}" rendered="{!MaskSubscription[item.Sales_Invoice__r.Account__r.id] != 'Not Available'}">
+                                <apex:param value="{!LastSubscriptionDate[item.Sales_Invoice__r.Account__r.id]+offset}" />
+                            </apex:outputText>
+                        </apex:column>
+                        
+                        <!--<apex:column >
+                            <apex:image URL="{!if(MaskSubscription[item.Sales_Invoice__r.Account__r.id] != 'Not Available' && LastSubscriptionDate[item.Sales_Invoice__r.Account__r.id] > item.createdDate,"/img/permissions_confirm16.gif","")}"/>
+                        </apex:column>-->
+                        
+                        <apex:column >
+                            <!-- <apex:outputText value="{!LastSubscriptionDate[item.Sales_Invoice__r.Account__r.id]}" rendered="{!MaskSubscription[item.Sales_Invoice__r.Account__r.id] != 'Not Available' && LastSubscriptionDate[item.Sales_Invoice__r.Account__r.id] > item.createdDate}"/> -->
+                            
+                            <apex:commandLink id="Payment" action="{!makeAWSPayment}">
+                                <apex:param name="AcctId" value="{!item.Sales_Invoice__r.Account__r.id}"/>
+                                <apex:param name="childApplicationOpportunity" value="{!item.Sales_Invoice__r.Opportunity__c}"/>
+                                <apex:param name="InvId" value="{!item.Sales_Invoice__r.Id}"/>
+                                <apex:commandButton value="Pay" id="PaymentId" rendered="{!MaskSubscription[item.Sales_Invoice__r.Account__r.id] != 'Not Available'}"/>
+                            </apex:commandLink>
+                        </apex:column>
+                        <!--
+<apex:column headerValue="">
+<apex:commandLink id="Payment" action="{!makeAWSPayment}">
+<apex:param name="AcctId" value="{!item.Sales_Invoice__r.Account__r.id}"/>
+<apex:param name="childApplicationOpportunity" value="{!item.Sales_Invoice__r.Opportunity__c}"/>
+<apex:param name="InvId" value="{!item.Id}"/>
+<apex:commandButton value="Pay" id="PaymentId" rendered="{!MaskSubscription[item.Sales_Invoice__r.Account__r.id] != 'Not Available'}"/>
+</apex:commandLink>
+</apex:column>-->
+                        
+                    </apex:pageBlockTable>
+                    
+                            
+                    <apex:pageBlock >
+                        <apex:pageBlockTable styleClass="table" value="{!Errorkey}" id="memberTable" var="item1" rows="100">
+                            <apex:column headerValue="Error Code">
+                                <apex:outputText value="{!item1.Name}"></apex:outputText>
+                            </apex:column>
+                            
+                            <apex:column headerValue="Description">
+                                <apex:outputText value="{!item1.Cybersource_Error_Message__c}"></apex:outputText>
+                            </apex:column>
+                        </apex:pageBlockTable>
+                    </apex:pageBlock>
+                    
+                    
+                </apex:tab>
+                
+               <!-- <apex:tab label="Refund" name="Refundcollection" id="RefundTab" >
+                    <apex:pageBlockTable styleClass="table" value="{!refundInvoices}" var="item">
+             
+                        <apex:column headerValue="Account Name">
+                            <apex:outputLink value="/{!item.Account__r.id}">{!item.Account__r.Name}</apex:outputLink>
+                        </apex:column>
+                        
+                        <apex:column headerValue="Invoice Number">
+                            <apex:outputLink value="/{!item.id}">{!item.Name}</apex:outputLink>
+                        </apex:column>
+                        
+                        <apex:column headerValue="Refund Amount" >
+                            <apex:outputText value="{0, number, #,##0.00}">
+                                <apex:param value="{!item.Total__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        
+                        <apex:column headerValue="Amount to be processed">
+                            <apex:outputText value="{0, number, #,##0.00}">
+                                <apex:param value="{!item.Amount_Due__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                     
+                        <apex:column headerValue="Token">
+                            <apex:outputText value="{!MaskSubscription[item.Account__r.id]}"/>
+                        </apex:column>
+                        
+                        <apex:column headerValue="">
+                            <apex:commandLink id="Payment" action="{!makeAWSPayment}">
+                                <apex:param name="AcctId" value="{!item.Account__r.id}"/>
+                                <apex:param name="childApplicationOpportunity" value="{!item.Opportunity__c}"/>
+                                <apex:param name="InvId" value="{!item.Id}"/>
+                                  <apex:actionStatus id="saveStatus">
+                                    <apex:facet name="stop">
+                                        <apex:commandButton value="Refund" id="PaymentId" rendered="{!MaskSubscription[item.Account__r.id] != 'Not Available'}" status="saveStatus" rerender="saveParentBlock"/>
+                                    </apex:facet>
+                                    <apex:facet name="start">
+                                        <apex:commandButton value="Refunding..." disabled="true" status="saveStatus"/>
+                                    </apex:facet>
+                                </apex:actionStatus>
+                                
+                            </apex:commandLink>
+                        </apex:column>
+   
+                    </apex:pageBlockTable>
+                </apex:tab> -->
+                <apex:tab label="Intacct Sync Pending Invoices" name="Intacct Sync Pending Invoices" id="intacctsyncPending" >
+                    <apex:pageBlockTable styleClass="table" value="{!PaymentSuccessNoIntacctSync}" var="item">
+             
+                        <apex:column headerValue="Account Name">
+                            <apex:outputLink value="/{!item.Account__r.id}">{!item.Account__r.Name}</apex:outputLink>
+                        </apex:column>
+                        
+                        <apex:column headerValue="Invoice Number">
+                            <apex:outputLink value="/{!item.id}">{!item.Name}</apex:outputLink>
+                        </apex:column>
+                        
+                        <apex:column headerValue="Invoice Amount" >
+                            <apex:outputText value="{0, number, #,##0.00}">
+                                <apex:param value="{!item.Total__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        
+                        <apex:column headerValue="Amount Processed">
+                            <apex:outputText value="{0, number, #,##0.00}">
+                                <apex:param value="{!item.Amount_Due__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                     	
+                         <apex:column headerValue="Notes">
+                            <apex:outputText value="{!item.Notes__c}"/>
+                        </apex:column>
+                        
+                        <apex:column headerValue="Token">
+                            <apex:outputText value="{!MaskSubscription[item.Account__r.id]}"/>
+                        </apex:column>
+                        
+                        <!--<apex:column headerValue="">
+                            <apex:commandLink id="Payment" action="{!makeAWSPayment}">
+                                <apex:param name="AcctId" value="{!item.Account__r.id}"/>
+                                <apex:param name="childApplicationOpportunity" value="{!item.Opportunity__c}"/>
+                                <apex:param name="InvId" value="{!item.Id}"/>
+                                  <apex:actionStatus id="saveStatus">
+                                    <apex:facet name="stop">
+                                        <apex:commandButton value="Refund" id="PaymentId" rendered="{!MaskSubscription[item.Account__r.id] != 'Not Available'}" status="saveStatus" rerender="saveParentBlock"/>
+                                    </apex:facet>
+                                    <apex:facet name="start">
+                                        <apex:commandButton value="Refunding..." disabled="true" status="saveStatus"/>
+                                    </apex:facet>
+                                </apex:actionStatus>
+                                
+                            </apex:commandLink>
+                        </apex:column>-->
+   
+                    </apex:pageBlockTable>
+                </apex:tab>
+            </apex:tabPanel>
+        </apex:pageBlock>
+
+        
+    </apex:form>
+</apex:page>

@@ -1,0 +1,168 @@
+<apex:page standardcontroller="Zip_Code__c" extensions="googleGeoHelper" recordSetVar="zipCodes" sidebar="false">
+  
+    <apex:stylesheet value="{!URLFOR($Resource.intrax_themes_standard_community, '/intrax_themes_standard_community/custom.css')}" />
+  
+   <head>
+   <style type="text/css">
+     .cmdBtn{
+         color:white !important;
+         background:#343d36 !important;
+      }
+   </style>
+<!-- <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDhHJveUM7lfcyYvhdzrMnWN_pEvbjnQ24">
+      </script>
+      <script type="text/javascript">
+      function initialize() {
+      var centerLatLng = new google.maps.LatLng({!iGeoForZip.GeoAddress__Latitude__s},{!iGeoForZip.GeoAddress__Longitude__s});
+        var mapOptions = {
+          center: centerLatLng,
+          zoom: 12
+        };
+         var map = new google.maps.Map(document.getElementById('map-canvas'),
+            mapOptions);
+        }
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+    <div id="map-canvas" style="width: 1500px; height: 500px"></div>-->
+   <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDhHJveUM7lfcyYvhdzrMnWN_pEvbjnQ24">
+    </script>
+  <script type="text/javascript">
+      function initialize() {
+      var centerLatLng = new google.maps.LatLng({!iGeoForZip.GeoAddress__Latitude__s},{!iGeoForZip.GeoAddress__Longitude__s});
+        var mapOptions = {
+          center: centerLatLng,
+          zoom: 12
+        };
+        
+        // Load a GeoJSON from the same server as our demo.
+  
+          
+        var map = new google.maps.Map(document.getElementById('map-canvas'),
+            mapOptions);
+            
+            //map.data.loadGeoJson('https://storage.googleapis.com/maps-devrel/google.json');
+            <apex:repeat value="{!selected}" var="aZip">
+	            var boundaryObj = JSON.parse('{!aZip.Boundaries__c}');
+	            map.data.addGeoJson(boundaryObj);
+	        </apex:repeat>
+	        
+	        <apex:outputText rendered="{!zipCode.Boundaries__c != null}">
+	        	var boundaryObj = JSON.parse('{!zipCode.Boundaries__c}');
+	            map.data.addGeoJson(boundaryObj);
+	        </apex:outputText>
+          
+          var contentString = '<div class="popover"><div class="popover-type-family">Zip Code</div><div class="popover-title">A Zip Code</div><div class="popover-address">An Address<br/>More Address<br/>More Info, More Info</div></div>';	
+          
+          //Get ZipCode Image, Lat Long and Marker
+          var zipimage = {url: 'https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/documents/portals/maps/pins/dark-green-zip.png',size: new google.maps.Size(44, 53),
+    origin: new google.maps.Point(0,0),anchor: new google.maps.Point(0,32)};
+          var zipLatlng = new google.maps.LatLng({!iGeoForZip.GeoAddress__Latitude__s},{!iGeoForZip.GeoAddress__Longitude__s});
+          var zipmarker = new google.maps.Marker({position: zipLatlng,map: map,icon: zipimage,title: 'Some Title',zIndex: 1});
+          zipmarker['infofocus'] = new google.maps.InfoWindow({content: '{!zipCode.Zip_Code__c}'});
+          google.maps.event.addListener(zipmarker, 'click', function() {this['infofocus'].open(map,this);});
+          
+          
+          //Get All HF's Image, Lat Long and Marker
+          var hfimage = {url: 'https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/documents/portals/maps/pins/pink-hf.png',size: new google.maps.Size(44, 53),
+    origin: new google.maps.Point(0,0),anchor: new google.maps.Point(0,32)};
+          <apex:repeat value="{!iGeoHfsInMatch}" var="aHFGeoMatch">
+          	var contentString = '<div class="popover"><div class="popover-type-ad">Host Family</div><div class="popover-title">{!JSINHTMLENCODE(aHFGeoMatch.FromiGeoLocate__r.Account__r.Name)}</div><div class="popover-address">{!JSINHTMLENCODE(aHFGeoMatch.FromiGeoLocate__r.Account__r.PersonMailingStreet)}<br/>{!JSINHTMLENCODE(aHFGeoMatch.FromiGeoLocate__r.Account__r.PersonMailingCity)}<br/>{!JSINHTMLENCODE(aHFGeoMatch.FromiGeoLocate__r.Account__r.PersonMailingState)}, {!JSINHTMLENCODE(aHFGeoMatch.FromiGeoLocate__r.Account__r.PersonMailingPostalCode)}</div></div>';
+          	var hfLatlng = new google.maps.LatLng({!aHFGeoMatch.FromiGeoLocate__r.GeoAddress__Latitude__s},{!aHFGeoMatch.FromiGeoLocate__r.GeoAddress__Longitude__s});
+          	var hfmarker = new google.maps.Marker({position: hfLatlng,map: map,icon: hfimage,title: 'Some Title',zIndex: 1});
+          	hfmarker['infofocus'] = new google.maps.InfoWindow({content: contentString});
+          	google.maps.event.addListener(hfmarker, 'click', function() {this['infofocus'].open(map,this);});
+          </apex:repeat>
+          
+          
+          
+          //Get The Zip Code AD's image, lat and long and marker
+          var adimage = {url: 'https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/documents/portals/maps/pins/orange-ad.png',size: new google.maps.Size(44, 53),
+    origin: new google.maps.Point(0,0),anchor: new google.maps.Point(0,32)};
+          var adLatlng = new google.maps.LatLng({!iGeoForAD.GeoAddress__Latitude__s},{!iGeoForAD.GeoAddress__Longitude__s});
+          var admarker = new google.maps.Marker({position: adLatlng,map: map,icon: adimage,title: 'Some Title',zIndex: 1});
+          admarker['infofocus'] = new google.maps.InfoWindow({content: '{!iGeoForAD.Contact__r.Name}'});
+          google.maps.event.addListener(admarker, 'click', function() {this['infofocus'].open(map,this);});
+          
+          
+          //Other AD's image, lat and long and marker	
+          var otheradimage = {url: 'https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/documents/portals/maps/pins/blue-ad.png',size: new google.maps.Size(44, 53),
+    origin: new google.maps.Point(0,0),anchor: new google.maps.Point(0,32)};
+          <apex:repeat value="{!iGeoAllAds}" var="anADGeo">
+          	var otherADLatlng = new google.maps.LatLng({!anADGeo.GeoAddress__Latitude__s},{!anADGeo.GeoAddress__Longitude__s});
+          	var otherADMarker = new google.maps.Marker({position: otherADLatlng,map: map,icon: otheradimage,title: 'Some Title',zIndex: 1});
+          	otherADMarker['infofocus'] = new google.maps.InfoWindow({content: '{!areaADNames[anADGeo.Contact__c]}'});
+          	google.maps.event.addListener(otherADMarker, 'click', function() {this['infofocus'].open(map,this);});
+          </apex:repeat>
+          
+          /*google.maps.event.addListener(familymarker, 'click', function() {
+		    map.setZoom(8);
+		    map.setCenter(familymarker.getPosition());
+		  });*/
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+  </head>
+  <body>
+ 
+<div class="map-container">  
+<div id="map-canvas" style="width: 100%; min-height: 600px"></div>
+   <apex:form styleClass="form-vertical">
+  <div class="map-controls">
+         <div class="h3"><apex:outputText value="{!zipCode.Zip_Code__c}"/></div>
+         <div class="margin-b1">
+         <b>Assigned to Area Director</b><br/>
+         <apex:outputText value="{!zipCode.Area__r.Area_Director__r.Name}"/></div>
+         <div class="margin-b1">
+         <b>Assigned to Area</b><br/>
+         <apex:outputText value="{!zipCode.Area__r.Name}"/></div>
+         <div class="margin-b1">
+         <b>Number of Families:</b>&nbsp;<apex:outputText value="{!iGeoHfsInMatch.size}"/>
+         </div>
+         <div class="margin-b1">
+         <b>New Families:</b>&nbsp;<apex:outputText value="{!newHFCount}"/>
+         </div>
+         <div class="margin-b1">
+         <b>Existing Families:</b>&nbsp;<apex:outputText value="{!existingHFCount}"/>
+         </div>
+       <apex:outputPanel styleClass="margin-b1" layout="block" rendered="{!iGeoHfsInMatch.size>0}">  
+      <b>Pick a New Area</b><br/>
+    <apex:selectList styleClass="form-control" value="{!areas}" multiselect="false" size="1" >
+        <apex:selectOptions value="{!areaValues}"/>
+    </apex:selectList>
+    </apex:outputPanel>
+    <div>
+    <apex:commandButton action="{!assignZipToNewArea}" styleClass="cmdBtn" value=" Preview New Assignment " rendered="{!iGeoHfsInMatch.size>0}">
+    </apex:commandButton>
+    </div>
+         </div><!-- map controls -->
+        </apex:form>
+        </div><!-- end map container -->
+  <script>
+    var j$ = jQuery.noConflict();
+    
+    function SetHeight() {
+        var winH = j$(document).height();
+        var winA = j$('#globalHeaderBar').height();
+        var winB = j$('#AppBodyHeader').height();
+        var winC = j$('#backLink').height(); 
+        var winD = j$('.bPageFooter').height(); 
+        var winT = winH - winA - winB - winC - 50;
+        j$('#map-canvas').css('height', winT);
+    }
+    
+    j$(function () {
+        // on change resize
+        j$(window).resize(function () {
+            SetHeight();
+        });
+        SetHeight();
+    });
+    
+    SetHeight();
+    
+    
+    </script>
+  </body>
+</apex:page>

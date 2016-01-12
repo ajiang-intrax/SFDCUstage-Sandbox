@@ -1,0 +1,39 @@
+<apex:page docType="html-5.0" standardStylesheets="true" showHeader="false">
+
+	<apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/reset.css')}"/>
+	<apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/fonts.css')}"/> 
+	<apex:stylesheet value="{!URLFOR($Resource.module_colorbox, '/module-colorbox/css/colorbox.css')}"/>
+	<apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/vs1.css')}"/> 
+	<apex:outputText value="<" escape="false"/>!--[if IE]<apex:outputText value=">" escape="false"/>
+	<link rel="stylesheet" href="/intraxappengine/resource/intrax_themes/intrax_themes/styles/ie.css"/>  
+	<apex:outputText value="<" escape="false"/>![endif]--<apex:outputText value=">" escape="false"/>      
+     
+	<apex:outputText value="<" escape="false"/>!--[if lt IE 8]<apex:outputText value=">" escape="false"/>      
+	<link rel="stylesheet" href="/intraxappengine/resource/intrax_themes/intrax_themes/styles/ie-7.css"/>
+	<apex:outputText value="<" escape="false"/>![endif]--<apex:outputText value=">" escape="false"/>
+	
+    <apex:define name="body">
+      <div class="wrapper">
+      	<apex:form >
+    	<h2>Your Parents' Letter<br/></h2>
+		<div class="white-box">
+
+		   <p>
+      <strong>Sample Parent Letter to the Host Family</strong>
+    </p>
+    <p>Dear Host Family,</p>
+    <p>First, we want to thank you very much for giving our daughter the chance to become an exchange student in the USA and to participate in your daily life. We are grateful that you will help us to make her wish come true.</p>
+    <p>Our daughter was born on July 17, a warm and sunny day in our region. That is also how we can describe her: warm-hearted and of a sunny disposition. She has always been a very open-minded and happy child. Even though she is no child anymore, but a teenage girl, she is still a very joyful person. We are glad and thankful that she lets us take part in her daily life, thoughts and emotions.There have never been any serious conflicts between her and us.</p>
+    <p>At home, she has some chores &ndash; clean her room, feed her animals and clear out the stable.</p>
+    <p>Elena does well at school and we don&rsquo;t worry about her school achievements in the States. Her favorite subjects are history, science and philosophy. We think she is ambitious enough to make great efforts to have a successful year in America.</p>
+    <p>As she told you in her letter, she has a lot of hobbies and interests, particularly, playing the classical guitar, which has given her a lot of joy and self-confidence for years. She also loves to sing and dance, and would love to share her musical talents with you. She hopes to join the school band at an American high school, but understands if this is not possible.</p>
+    <p>Let us tell you a little information about ourselves. We are David and Karol, and Elena is our only daughter. David is an administration official as a federal employee, and I am a guitar teacher at a music school. We spend our free time together as a family doing various activities including hiking, eating and travelling.</p>
+    <p>As you probably can understand, we love Elena wholeheartedly and we cannot really imagine living without her for so long. On the other hand, we know that a high school year means a lot to her and will contribute to her personality development. We hope that she will have a great experience and that you give her the feeling that she is part of your family.We wish that living with Elena will enrich your lives as well.</p>
+    <p>We hope that this letter helped you to receive an impression of Elena and us. Please feel free to contact us if there is anything you wish to be clarified or if you like to know more about our family.</p>
+    <p>Best Wishes,</p>
+    <p>Signature</p>
+    </div>
+  	</apex:form>
+	</div>
+	</apex:define>
+</apex:page>

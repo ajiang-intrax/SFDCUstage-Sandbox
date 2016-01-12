@@ -1,0 +1,53 @@
+<apex:page standardController="invoiceit_s__Payment_Scheduler__c" extensions="invoiceit_s.ControllerForSchedulingPayments">
+  <script>
+    function confirmCancel() {
+        if(confirm("{!$Label.CancellingthiswoulddiscardthechangesPleaseconfirm}")) 
+        {
+           return true;
+        }
+        return false;
+    } 
+    function confirmCanceltheScheduler() {
+        if(confirm("{!$Label.Theoldschedulewillbeoverridden}")) 
+        {
+           return true;
+        }
+        return false;
+    } 
+  </script> 
+  <apex:form id="form1">
+   <apex:sectionHeader title="Payment Scheduler" subtitle="New Payment Scheduler" />
+   <apex:actionFunction name="onChangeOfType"  action="{!onChangeOfType}" reRender="mainSection" />
+   <apex:actionFunction name="onChangeOfStartDate" action="{!onChangeStartDate}" reRender="dailySection"/>
+   <apex:pageBlock mode="edit" id="mainSection">
+     <apex:pageBlockButtons >
+        <apex:commandButton action="{!savePaymentScheduler}" value="{!$Label.ButtonSave}" rendered="{!!isEditMode}" onclick="return confirm1()"/>
+        <apex:commandButton action="{!savePaymentScheduler}" value="{!$Label.ButtonSave}" rendered="{!isEditMode}" onclick="return confirmCanceltheScheduler()"/>
+        <apex:commandButton action="{!cancel}" value="{!$Label.ButtonCancel}" onclick="return confirmCancel()" immediate="true" />
+     </apex:pageBlockButtons>
+     <apex:pageMessages />
+     <apex:pageBlockSection >
+         <apex:inputField value="{!paymentScheduler.Name}" />
+         <apex:inputField value="{!paymentScheduler.invoiceit_s__Currency__c}" />
+         <apex:inputField value="{!paymentScheduler.invoiceit_s__Payment_Options__c}" />
+         <apex:inputField value="{!paymentScheduler.invoiceit_s__Type__c}" onchange="onChangeOfType()" required="true" id="type"/>
+      </apex:pageBlockSection>
+     <apex:pageBlockSection title="{!$Label.Run} {!paymentScheduler.invoiceit_s__Type__c}" columns="1" rendered="{!paymentScheduler.invoiceit_s__Type__c == $Label.OptionOnce}">
+          <apex:inputField value="{!paymentScheduler.invoiceit_s__Start_date_and_time__c}"/>
+          <apex:inputField value="{!paymentScheduler.invoiceit_s__Target_Date__c}"/>
+      </apex:pageBlockSection>
+      <apex:pageBlockSection title="{!$Label.Run} {!paymentScheduler.invoiceit_s__Type__c}" columns="1" rendered="{!paymentScheduler.invoiceit_s__Type__c == $Label.OptionWeekly}">
+          <apex:inputField value="{!paymentScheduler.invoiceit_s__Start_date_and_time__c}"/>
+          <apex:inputField value="{!paymentScheduler.invoiceit_s__Target_Day_of_Week__c}" />
+      </apex:pageBlockSection>
+      <apex:pageBlockSection title="{!$Label.Run} {!paymentScheduler.invoiceit_s__Type__c}" columns="1" rendered="{!paymentScheduler.invoiceit_s__Type__c == $Label.OptionMonthly}">
+          <apex:inputField value="{!paymentScheduler.invoiceit_s__Start_date_and_time__c}" />
+          <apex:inputField value="{!paymentScheduler.invoiceit_s__Target_Day_Of_Month__c}" />
+      </apex:pageBlockSection> 
+      <apex:pageBlockSection title="{!$Label.Run} {!paymentScheduler.invoiceit_s__Type__c}" columns="1" rendered="{!paymentScheduler.invoiceit_s__Type__c == $Label.OptionDaily}" id="dailySection">
+          <apex:inputField value="{!paymentScheduler.invoiceit_s__Start_date_and_time__c}" onchange="onChangeOfStartDate()"/>
+          <apex:outputField value="{!paymentScheduler.invoiceit_s__Target_Date__c}"/>
+      </apex:pageBlockSection>      
+    </apex:pageBlock>
+   </apex:form>
+</apex:page>

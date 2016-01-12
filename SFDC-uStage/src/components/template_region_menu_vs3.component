@@ -1,0 +1,230 @@
+<apex:component layout="none" controller="theme_controller" id="template_region_menu_vs3">
+  <apex:attribute name="appendset" description="" type="string" required="false" default="false"/>
+  <apex:attribute name="user" description="" type="User" required="false" default="false"/>
+  <apex:attribute name="isMatchingStage" description="" type="boolean" required="false" default="false"/>
+  <apex:attribute name="engagementId" description="" type="Id" required="false" default="false"/>
+  <apex:variable var="vCurrentApp" id="varOriginalApp" value="{!OriginalApp}" rendered="{!$Site.Name == 'AuPairCare'}"/>
+  <div id="menu-zone" class="hidden-xs">
+      <div id="menu-zone-inner" class="container">
+        <div class="menu span12">            
+        <apex:outputText rendered="{!user.User_Interests__c == 'Hosting an au pair' && $Site.Name == 'AuPairCare'}">            
+        <ul class="clearfix pull-right">      
+      
+       <apex:outputText rendered="{!HasConfirmedMatch == false && vCurrentApp.Application_Level__c != 'Basic'}">   
+        <li>
+        <apex:outputLink value="apc_hf_app_home?Id={!vCurrentApp.Id}">Your Application</apex:outputLink> 
+        </li>
+        </apex:outputText>
+        
+         <apex:outputText rendered="{!HasConfirmedMatch}">   
+        <li>
+        <apex:outputLink value="apc_hf_profile?Id={!vCurrentApp.Position__c}">Family Profile</apex:outputLink>
+        </li>
+        </apex:outputText>
+        
+         <apex:outputText rendered="{!HasConfirmedMatch}" >
+        <li>
+        <apex:outputLink value="apc_hf_current_au_pairs">Your Au Pairs</apex:outputLink>
+        </li>
+        </apex:outputText>
+        
+        <apex:outputText rendered="{!(vCurrentApp.Id!=null && vCurrentApp.Application_Type__c=='Original' && vCurrentApp.Application_Level__c == 'Main')}">  
+        <li>
+        <apex:outputLink value="apc_hf_search_au_pairs" >Search Au Pairs</apex:outputLink>
+        </li>
+        </apex:outputText>
+        
+        <apex:outputText rendered="{!(vCurrentApp.Id!=null && vCurrentApp.Application_Type__c=='Original' && vCurrentApp.Application_Level__c == 'Main')}">  
+        <li>
+        <apex:outputLink value="apc_hf_interviews" >Interviews</apex:outputLink>
+        </li>
+        </apex:outputText>
+       
+        <apex:outputText rendered="{!(vCurrentApp.Id!=null && vCurrentApp.Application_Type__c=='Original' && vCurrentApp.Application_Level__c == 'Main')}">  
+        <li>
+        <apex:outputLink value="apc_resources" >Resources</apex:outputLink>
+        </li>
+        </apex:outputText>
+        
+        <apex:outputText rendered="{!(vCurrentApp.Id!=null && vCurrentApp.Application_Type__c=='Original' && vCurrentApp.Application_Level__c == 'Main')}">  
+        <li>
+        <apex:outputLink value="apc_hf_contact" >Contact Us</apex:outputLink>
+        </li>
+        </apex:outputText>
+        </ul>
+        </apex:outputText>    
+            
+        <apex:outputText rendered="{!user.User_Interests__c == 'Becoming an au pair' && $Site.Name == 'AuPairCare'}">
+            <apex:outputText rendered="{!vCurrentApp.Id!=null && vCurrentApp.Application_Type__c=='Original' && vCurrentApp.Application_Level__c=='Main' && vCurrentApp.Application_Stage__c=='Accepted'}">
+            <ul class="clearfix pull-right">
+             <li>
+            <apex:outputLink value="/apex/apc_hf_au_pair_profile?Id={!engagementId}" id="apc_profile_link"> Your Profile </apex:outputLink>
+            </li>
+             <li>
+            <apex:outputLink value="apc_ap_interviews" id="apc_cp_interviews">Your Interviews</apex:outputLink>
+            </li>
+             <li>
+                 <apex:outputLink value="/apex/apc_ap_community?Id={!vCurrentApp.Id}" id="apc_ap_community">Host Community</apex:outputLink>
+            </li>
+              <li>
+              <apex:outputLink value="apc_resources" id="apc_resources">Resources</apex:outputLink>
+          
+            </li>
+            <li>
+           <apex:outputLink value="apc_ap_contact" id="apc_ap_contact">Contact Us</apex:outputLink>
+            </li>
+            </ul>
+            
+            </apex:outputText>
+        </apex:outputText>
+        
+        
+  <apex:outputText rendered="{! IF(ISPICKVAL($user.Type__c,'Partner'), true, false)}">
+
+          <apex:outputText rendered="{! IF($CurrentPage.Name!='Partner_DefaultIP_Selection', true, false)}">
+            <ul class="clearfix pull-right">
+              <li>
+                <apex:outputLink value="pr_app_list" >Applications</apex:outputLink>
+              </li>
+              <apex:outputText rendered="{!IF(NOT(DefaultIP=='English Academy') , true, false)}">
+                <li>
+                  <apex:outputLink value="pr_pt_list">Participants</apex:outputLink>
+                </li>
+              </apex:outputText>
+              <apex:outputText rendered="{!IF((isInternshipUser || isWTUser) && NOT(DefaultIP=='Ayusa' || DefaultIP=='AuPairCare' || DefaultIP=='English Academy'), true, false)}">
+                <li>
+                  <apex:outputLink value="pr_camp_list">Campaigns</apex:outputLink>
+                </li>
+              </apex:outputText>
+              <apex:outputText rendered="{!IF((isInternshipUser || isWTUser) && NOT(DefaultIP=='English Academy') , true, false)}">
+                <li>
+                  <apex:outputLink value="pr_report_list">Reports</apex:outputLink>
+                </li>
+              </apex:outputText>
+              <apex:outputText rendered="{!IF((IsAPCUser) && (DefaultIP=='AuPairCare') , true, false)}">
+                <li>
+                  <apex:outputLink value="apc_resources">Resources</apex:outputLink>
+                </li>
+              </apex:outputText>
+            </ul>
+          </apex:outputText>
+  </apex:outputText>
+  <apex:outputText rendered="{! ActiveUserType == 'Institution'}">
+          <apex:variable var="groups" value="active" rendered="{! IF($CurrentPage.Name=='univ_your_groups' || $CurrentPage.Name=='univ_create_application', true, false)}"/>
+          <apex:variable var="home" value="active" rendered="{! IF($CurrentPage.Name=='univ_home', true, false)}"/>
+          <ul class="clearfix pull-right">
+            <li class="{!home}">
+              <apex:outputLink value="univ_home?{!appendset}">Home</apex:outputLink>
+            </li>
+            <li class="{!groups}">
+              <apex:outputLink value="univ_your_groups?{!appendset}&docType=group-documents">Your Groups</apex:outputLink>
+            </li>
+          </ul>
+    <!--  end menu-zone --> 
+  </apex:outputText>
+  <apex:outputText rendered="{! ActiveUserType == 'Host Family'}">
+          <apex:variable var="Students" value="active" rendered="{! IF($CurrentPage.Name=='profiles', true, false)}"/>
+          <apex:variable var="MyStudents" value="active" rendered="{! IF($CurrentPage.Name=='MyStudents', true, false)}"/>
+          <apex:variable var="Application" value="active" rendered="{! IF($CurrentPage.Name=='your_applications', true, false)}"/>
+          <apex:variable var="Resources" value="active" rendered="{! IF($CurrentPage.Name=='IntraxPartnerPortal_Resources', true, false)}"/>
+          <ul class="clearfix pull-right">
+            <li class="{!Application}">
+              <apex:outputLink value="your_applications">Applications</apex:outputLink>
+            </li>
+            <li class="{!Students}">
+              <apex:outputLink value="profiles">View Students</apex:outputLink>
+            </li>
+            <li class="{!MyStudents}">
+              <apex:outputLink value="MyStudents">Your Students
+                <apex:param name="ConfMatch" value="true"/>
+              </apex:outputLink>
+            </li>
+          </ul>
+  </apex:outputText>
+  <apex:outputText rendered="{! ActiveUserType == 'Host Company'}">
+          <apex:variable var="Hiring" value="active" rendered="{! IF($CurrentPage.Name=='Hiring_Event', true, false)}"/>
+          <apex:variable var="Candidates" value="active" rendered="{! IF($CurrentPage.Name=='C_Matches', true, false)}"/>
+          <apex:variable var="Matches" value="active" rendered="{! IF($CurrentPage.Name=='C_Matches_final', true, false)}"/>
+          <apex:variable var="Events" value="active" rendered="{! IF($CurrentPage.Name=='Company_Events', true, false)}"/>
+          <apex:variable var="resources" value="active" rendered="{! IF($CurrentPage.Name=='resources', true, false)}"/>
+          <apex:variable var="reports" value="active" rendered="{! IF($CurrentPage.Name=='Reports', true, false)}"/>
+          <apex:variable var="positions" value="active" rendered="{! IF($CurrentPage.Name=='C_Positions', true, false)}"/>
+          <ul class="clearfix pull-right">
+            <apex:outputText rendered="{!IsWTUser}">
+              <li class="{!Hiring}">
+                <apex:outputLink value="Hiring_Event">Hiring Events</apex:outputLink>
+              </li>
+            </apex:outputText>
+            <li class="{!Candidates}">
+              <apex:outputLink value="C_Matches">Candidates</apex:outputLink>
+            </li>
+            <li class="{!Matches}">
+              <apex:outputLink value="C_Matches_final">Matches</apex:outputLink>
+            </li>
+            <li class="{!Positions}">
+              <apex:outputLink value="C_Positions">Positions</apex:outputLink>
+            </li>
+            <apex:outputText rendered="{!IsWTUser || IsIGIUser}">
+              <li class="{!resources}">
+                <apex:outputLink value="resources">Resources</apex:outputLink>
+              </li>
+            </apex:outputText>
+            <apex:outputText rendered="{!IsWTUser}">
+              <li class="{!reports}">
+                <apex:outputLink value="Reports">Reports</apex:outputLink>
+              </li>
+            </apex:outputText>
+          </ul>
+  </apex:outputText>  
+  <apex:outputText rendered="{! ActiveUserType == 'Participant'}">   
+          <apex:variable var="applications" value="active" rendered="{! IF($CurrentPage.Name=='your_applications', true, false)}"/>
+          <apex:variable var="igi_home" value="active" rendered="{! IF($CurrentPage.Name=='igi_home', true, false)}"/>
+          <apex:variable var="igi_pt_matches" value="active" rendered="{! IF($CurrentPage.Name=='igi_pt_matches', true, false)}"/>
+          <apex:variable var="igi_pt_resources" value="active" rendered="{! IF($CurrentPage.Name=='igi_pt_resources', true, false)}"/>
+          <apex:variable var="wt_resources" value="active" rendered="{! IF($CurrentPage.Name=='resources', true, false)}"/>
+          <apex:variable var="wt_matches" value="active" rendered="{! IF($CurrentPage.Name=='Participant_Matches', true, false)}"/>
+          <apex:variable var="wt_travel_visa" value="active" rendered="{! IF($CurrentPage.Name=='Participant_Travel_Visa', true, false)}"/>
+          <ul class="clearfix pull-right">
+            <apex:outputText rendered="{! user.User_Interests__c != 'Finding an internship' && user.User_Interests__c != 'Becoming a Work Travel Participant'}">
+              <li class="{!applications}">
+                <apex:outputLink value="your_applications?{!appendset}">Applications</apex:outputLink>
+              </li>
+            </apex:outputText>            
+            <apex:outputText rendered="{! user.User_Interests__c == 'Finding an internship' && isMatchingStage}">
+              <li class="{!igi_home}">
+                <apex:outputLink value="igi_home">Your Program</apex:outputLink>
+              </li>
+               <apex:outputText rendered="{!ApplicationInfo.Engagement__r.Placement_Status__c != 'Confirmed'}" >
+               <li class="{!igi_pt_matches}">
+                <apex:outputLink value="igi_pt_matches">Find an Internship</apex:outputLink>
+              </li>
+               </apex:outputText>
+               <apex:outputText rendered="{!ApplicationInfo.Engagement__r.Placement_Status__c == 'Confirmed'}" >
+              <li class="{!igi_pt_matches}">
+                <apex:outputLink value="igi_pt_matches">Your Internship</apex:outputLink>
+              </li>
+              </apex:outputText>
+              <li class="{!igi_pt_resources}">
+                <apex:outputLink value="igi_pt_resources?{!appendset}">Resources</apex:outputLink>
+              </li>
+            </apex:outputText>
+            <apex:outputText rendered="{! user.User_Interests__c == 'Becoming a Work Travel Participant'}">
+              <li class="{!applications}">
+                <apex:outputLink value="your_applications?{!appendset}">Applications</apex:outputLink>
+              </li>
+              <li class="{!wt_matches}">
+                <apex:outputLink value="Participant_Matches?{!appendset}" rendered="{! user.User_Interests__c == 'Becoming a Work Travel Participant'}">Placements</apex:outputLink>
+              </li>
+              <li class="{!wt_travel_visa}">
+                <apex:outputLink value="Participant_Travel_Visa?{!appendset}">Travel and Visas</apex:outputLink>
+              </li>
+              <li class="{!wt_resources}">
+                <apex:outputLink value="resources?{!appendset}">Resources</apex:outputLink>
+              </li>
+            </apex:outputText>
+          </ul>
+  </apex:outputText>
+  </div>
+  </div><!--  end menu zone inner -->
+  </div><!--  end menu zone -->
+</apex:component>

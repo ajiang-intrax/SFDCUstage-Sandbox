@@ -1,0 +1,430 @@
+<apex:page title="Your Family" applyBodyTag="false" applyHtmlTag="false" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="false" showHeader="false" id="apc_ap_main_family_info">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_apc_ap_application />
+      
+      <div id="app-page" class="row">
+        <div id="app-focus" class="col-md-8 col-md-push-3">
+          
+           <c:block_app_completion ApplicantInfo="{!applicantInfo}" userProfileName="{!userProfileName}"  />
+          
+          <!-- Jose-Adding Tips for Partners  (Profile "OCPM Agent Portal")
+          <apex:outputPanel rendered="{!userProfileName == 'OCPM Agent Portal' && applicantInfo.Application_Level__c == 'Main'}" layout="block" id="blockTip">
+	          <div class="lead alert alert-warning clearfix">
+	          <b>Tip</b>&nbsp;&nbsp;
+	          Has the au pair provided detailed information regarding their family and home life that will aid in the matching process?
+	          </div>
+          </apex:outputPanel>
+          -->
+          
+          <h1>Your Family</h1>
+          <p class="lead">Please tell us about your family. We use this information to help find you a great host family match. </p>
+          <apex:form id="webform" styleClass="form-vertical ws-validate" >
+          <apex:variable value="{!1}" var="rowNum" id="rowCounter"/>
+      	  <apex:variable value="{!1}" var="rowNumf" id="rowCounterF"/>
+          <apex:Messages styleClass="custom-error-pagelevel" />
+          <div class="section-title">Please list your parents/guardians below</div>
+          
+              <apex:outputpanel layout="block" id="wrappertable" styleClass="panel-group group1">
+                <apex:repeat id="wtable"  value="{!wrappersParent}" var="wrapper">
+                  <apex:variable value="{!IF(wrappersParent.size==rowNum, 'in', '')}" var="rowLast" id="rowLast" />
+                  <div class="panel panel-default">
+                    <div class="panel-heading">
+                      <h4 class="panel-title">
+                        <apex:outputLink styleClass="accordion-toggle" html-data-toggle="collapse" html-data-parent=".group1" value="#collapse1{!rowNum}">Parent {!rowNum}
+                          <apex:outputText rendered="{!IF(ISBLANK(wrapper.PersonInfoParent.First_Name__c), false, true)}" value=" - {!wrapper.PersonInfoParent.First_Name__c} {!wrapper.PersonInfoParent.Last_Name__c}"> </apex:outputText>
+                        </apex:outputLink>
+                      </h4>
+                    </div>
+                    <!--  end panel heading -->
+                    
+                    <div id="collapse1{!rowNum}" class="panel-collapse collapse {!rowLast}">
+                      <div class="panel-body">
+                      
+                      
+                        <div class="row">
+                        
+                        <div class="col-sm-6">
+                        <div class="form-group">
+                          <label class="control-label">First Name</label>
+                            <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!wrapper.PersonInfoParent.First_Name__c}" required="true" id="firtname"/>
+                          </div>
+                          </div>
+                        
+                        <div class="col-sm-6">  
+                        <div class="form-group">
+                          <label class="control-label">Last Name</label>
+                            <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!wrapper.PersonInfoParent.Last_Name__c}" required="true" id="lastname"/>
+                          </div>
+                          </div>
+                          
+                        </div><!--  end row -->
+                        
+                        <div class="row">
+                        <div class="col-sm-6">
+                        <div class="form-group">
+                          <label class="control-label">Relationship</label>
+                            <apex:inputField styleClass="form-control" value="{!wrapper.PersonInfoParent.Family_Role__c}" required="true" id="familyRole"/>
+                          </div>
+                          </div>
+                        <div class="col-sm-6">
+                        <div class="form-group">
+                          <label class="control-label">Occupation</label>
+                            <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!wrapper.PersonInfoParent.Profession__c}" required="true" id="occupation"/>
+                          </div>
+                          </div>
+                          </div>
+                        
+                        
+                        <div class="row">  
+                        <div class="col-sm-6">
+                        <div class="form-group">
+                          <label class="control-label">Phone Country Code</label>
+                            <apex:actionRegion >
+                              <apex:selectList styleClass="form-control" value="{!wrapper.PersonInfoParent.Phone_Country_Code__c}" multiselect="false" required="TRUE" id="countrycode" size="1">
+                                <apex:selectOption itemValue="" itemLabel="Select Country Code"/>
+                                <apex:selectOptions value="{!listCountryCodeOptions}"/>
+                                <apex:actionSupport event="onchange" rerender="phonecode" />
+                              </apex:selectList>
+                            </apex:actionRegion>
+                            <apex:message for="countrycode" styleClass="custom-error-radio" id="apexmess1"/>
+                          </div>
+                          </div>
+                          <div class="col-sm-6">
+                        <div class="form-group">
+                          <label class="control-label">Phone Number</label>
+                            <apex:outputpanel id="phonecode" layout="block">
+                              <div class="input-group"> <span class="input-group-addon">{!wrapper.PersonInfoParent.Phone_Country_Code__c}</span>
+                                <apex:inputField styleClass="form-control onlynumber" value="{!wrapper.PersonInfoParent.Phone__c}" required="true" id="phone"/>
+                              </div>
+                            </apex:outputpanel>
+                          </div>
+                          </div>
+                          </div><!--  end row -->
+                          
+                       <div class="row">
+                       <div class="col-sm-12">
+                        <div class="form-group">
+                          <label class="control-label">Is this person your emergency contact? </label>
+                            <apex:actionRegion >
+                              <apex:selectRadio styleClass="radio" value="{!wrapper.PersonInfoParent.Emergency_Contact_Indicated__c}" id="emergency" required="true">
+                                <apex:selectOption itemValue="Yes" itemLabel="Yes" />
+                                <apex:selectOption itemValue="No" itemLabel="No" />
+                                <apex:actionSupport event="onclick" rerender="emergencyblock, panel" status="Showstatus" action="{!addEmergContact}"/>
+                              </apex:selectRadio>
+                            </apex:actionRegion>
+                            <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="Showstatus"/>
+                            <apex:message for="emergency" styleClass="custom-error-radio" id="erroremer" />
+                          </div>
+                          </div>
+                       </div>   <!--  end row -->
+                        
+                        <apex:outputPanel layout="block" id="panel">
+						<apex:outputText rendered="{!wrapper.PersonInfoParent.Emergency_Contact_Indicated__c == 'Yes'}">
+						<div class="row">
+						 <div class="col-sm-6">
+						<div class="form-group">
+                          <label class="control-label">Email <span class="info">(Optional)</span></label>
+                            <apex:inputField styleClass="form-control" value="{!wrapper.PersonInfoParent.Email__c}" required="false" id="email"/>
+                          </div>
+                          </div>
+                          </div><!--  end row -->
+						</apex:outputText>
+						</apex:outputPanel>
+
+                        <apex:outputText rendered="{!NOT(wrapperParsize==1)}" id="outputpanel1">
+                          <apex:commandlink styleClass="btn btn-link btn-lg pull-right" action="{!delWrapperPar}" rerender="wrappertable, emergencyblock, rowCounter" onComplete="dpInitiate();" immediate="true" id="linkdelWrapper" status="status"> <i class="fa fa-trash-o"></i> <span>Remove</span>
+                            <apex:param name="toDelIdent" value="{!wrapper.ident}" assignTo="{!toDelIdent}"/>
+                          </apex:commandlink>
+                        </apex:outputText>
+                      </div>
+                      <!--  end panel body --> 
+                    </div>
+                    <!-- end panel collapse --> 
+                  </div>
+                  <!--  end panel -->
+                  
+                  <apex:variable var="rowNum" value="{!rowNum + 1}"/> 
+                </apex:repeat>
+                <apex:outputPanel layout="block" id="addButtonP">
+                  <apex:outputPanel layout="block" rendered="{!wrapperParsize < 2}" id="outputpaneladd">
+                    <apex:commandlink styleClass="btn btn-link btn-lg margin-b" action="{!addRowsPar}" onComplete="dpInitiate();enableSubmit();" immediate="true" rerender="wrappertable, emergencyblock, rowCounter" id="linkaddlWrapper" status="status" onclick="disableSubmit();">
+                      <apex:param name="addCount" value="1" assignTo="{!addCount}"/>
+                      <apex:commandButton value="" id="addbutton"/>
+                           <i class="fa fa-plus-circle"></i>
+                  <span>Add Another Parent/Guardian</span>
+                    </apex:commandlink>
+                  </apex:outputPanel>
+                </apex:outputPanel>
+              </apex:outputpanel>
+              <!--  end panel group --> 
+            
+            
+            
+            <!-- Start Add Sibling -->
+            
+            
+            <apex:outputpanel layout="block" id="checksibling">
+            <apex:outputpanel layout="block" styleClass="panel-group group2" rendered="{!applicantinfo.Any_Sibling_Indicated__c=null || applicantinfo.Any_Sibling_Indicated__c=='No'}">
+	            <div class="row">
+	             <div class="col-sm-12">
+	            <div class="form-group">
+	            <label class="control-label">Do you have any siblings?</label>
+	            <apex:actionRegion >
+                <apex:selectRadio styleClass="radio" value="{!applicantinfo.Any_Sibling_Indicated__c}" id="anysibling" required="true">
+                <apex:selectOption itemValue="Yes" itemLabel="Yes" />
+                <apex:selectOption itemValue="No" itemLabel="No" />
+                <apex:actionSupport event="onclick" onComplete="dpInitiate();" rerender="checksibling,panelsibling, wrappertableFamily, rowCounterF" action="{!addsiblings}" status="showsiblings"/>
+      		    </apex:selectRadio>
+                </apex:actionRegion>
+	            </div>
+	            </div>
+	            </div><!--  end row -->
+            </apex:outputpanel>
+            </apex:outputpanel>
+            <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showsiblings"/>
+            <apex:message for="anysibling" styleClass="custom-error-radio" id="errorsibling" />
+            
+            
+            <apex:outputpanel layout="block" id="panelsibling">
+            <apex:outputpanel layout="block" rendered="{!wrappersFamily.size > 0 }">
+            <div class="section-title">Please list your siblings below.</div>
+              <apex:outputpanel layout="block" id="wrappertableFamily" styleClass="panel-group group2">
+                <apex:repeat id="wtableSib"  value="{!wrappersFamily}" var="wrapper">
+                  <apex:variable value="{!IF(wrappersFamily.size==rowNumf, 'in', '')}" var="rowLast" id="rowLastFam" /> 
+                  <div class="panel panel-default">
+                    <div class="panel-heading">
+                      <h4 class="panel-title">
+                        <apex:outputLink styleClass="accordion-toggle" html-data-toggle="collapse" html-data-parent=".group2" value="#collapse2{!rowNumf}">Sibling {!rowNumf}
+                        <apex:outputText rendered="{!IF(ISBLANK(wrapper.PersonInfoFamily.First_Name__c), false, true)}" value=" - {!wrapper.PersonInfoFamily.First_Name__c}"> </apex:outputText>
+                        </apex:outputLink>
+                      </h4>
+                    </div>
+                    <!--  end panel heading -->
+                    
+                    <div id="collapse2{!rowNumf}" class="panel-collapse collapse {!rowLast}">
+                      <div class="panel-body">
+                      
+                      <div class="row">
+                       <div class="col-sm-12">
+                        <div class="form-group">
+                          <label class="control-label">First Name</label>
+                            <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!wrapper.PersonInfoFamily.First_Name__c}" required="true" id="firtname"/>
+                          </div>
+                          </div>
+                           </div><!--  end row -->
+                        
+                        <div class="row">
+                         <div class="col-sm-6">
+                        <div class="form-group">
+                          <label class="control-label">Date of Birth </label>
+                            <div class="datepicker dp-DOB" locale="{!user.localeSidKey}">
+                              <apex:inputField styleClass="form-control" value="{!wrapper.PersonInfoFamily.Date_of_Birth__c}" required="true" id="dob"/>
+                            </div>
+                          </div>
+                          </div>
+                           <div class="col-sm-6">
+                           <div class="form-group">
+                          <label class="control-label"> Gender</label>
+                            <apex:inputField styleClass="form-control" value="{!wrapper.PersonInfoFamily.Gender__c}" required="true"
+															id="genderchild" />
+                          </div>
+                          </div>
+                          </div><!--  end row -->
+                        
+                       
+                          <apex:commandlink styleClass="btn btn-link btn-lg pull-right" action="{!delWrapperFamily}" rendered="{!wrapperFamsize>1}" rerender="wrappertableFamily, rowCounterF, checksibling, panelsibling" onComplete="dpInitiate();" immediate="true" status="status"> <i class="fa fa-trash-o"></i> <span>Remove</span>
+                            <apex:param name="toDelIdent" value="{!wrapper.ident}" assignTo="{!toDelIdent}"/>
+                          </apex:commandlink>
+                          <apex:commandlink styleClass="btn btn-link btn-lg pull-right" action="{!deletesiblings}" rendered="{!wrapperFamsize==1}" rerender="wrappertableFamily, rowCounterF, checksibling, panelsibling" onComplete="dpInitiate();" immediate="true" status="status"> <i class="fa fa-trash-o"></i> <span>Remove</span>
+                            <apex:param name="toDelIdent" value="{!wrapper.ident}" assignTo="{!toDelIdent}"/>
+                          </apex:commandlink>
+                        <!-- </apex:outputText> -->
+                      </div>
+                      <!--  end panel body --> 
+                    </div>
+                    <!-- end panel collapse --> 
+                  </div>
+                  <!--  end panel -->
+                  
+                  <apex:variable var="rowNumf" value="{!rowNumf + 1}"/>
+                </apex:repeat>
+                <apex:commandlink styleClass="btn btn-link btn-lg margin-b" action="{!addRowsParfamily}" onComplete="dpInitiate();enableSubmit();" immediate="true" rerender="wrappertableFamily, rowCounterF, checksibling" id="linkaddlWrapperF" status="status" onclick="disableSubmit();">
+                  <apex:param name="addCount" value="1" assignTo="{!addCount}"/>
+                  <apex:commandButton value="" id="addbuttonSib"/>
+                  <i class="fa fa-plus-circle"></i>
+                  <span>Add Another Sibling</span>
+                </apex:commandlink>
+              </apex:outputpanel>
+              <!--  end panel group --> 
+           </apex:outputpanel>
+           </apex:outputpanel>
+           
+            
+           
+           <apex:outputPanel layout="block" id="emergencyblock">
+           <apex:outputPanel rendered="{!addEmergency==true}" layout="block">
+           <div class="section-title">Please enter your emergency contact information below.</div>
+                    <div class="panel panel-default">
+                    <div class="panel-heading">
+                      <h4 class="panel-title">Emergency Contact Details</h4>
+                    </div>
+                      <div class="panel-body">
+                      
+                       <div class="row">
+                        <div class="col-sm-6">
+                        <div class="form-group">
+                          <label class="control-label">First Name</label>
+                            <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!personEmergency.First_Name__c}" required="TRUE" id="fname" />
+                          </div>
+                          </div>
+                        <div class="col-sm-6"> 
+                        <div class="form-group">
+                          <label class="control-label">Last Name</label>
+                            <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!personEmergency.Last_Name__c}" required="TRUE" id="lname"/>
+                          </div>
+                          </div>
+                          </div><!--  end row -->
+                        
+                         <div class="row">
+                          <div class="col-sm-6">
+                         <div class="form-group">
+                          <label class="control-label">Phone Country Code</label>
+                            <apex:actionRegion >
+                              <apex:selectList styleClass="form-control" style="height:34px;" value="{!personEmergency.Phone_Country_Code__c}" multiselect="false" required="TRUE" id="countrycodeemerg" size="1">
+                                <apex:selectOption itemValue="" itemLabel="Select Country Code"/>
+                                <apex:selectOptions value="{!listCountryCodeOptions}"/>
+                                <apex:actionSupport event="onchange" rerender="phonecodeemerg" />
+                              </apex:selectList>
+                            </apex:actionRegion>
+                            <apex:message for="countrycodeemerg" styleClass="custom-error-radio" id="apexmess1emerg"/>
+                          </div>
+                          </div>
+                         <div class="col-sm-6">
+                        <div class="form-group">
+                          <label class="control-label">Phone</label>
+                            <apex:outputpanel id="phonecodeemerg" layout="block">
+                              <div class="input-group"> <span class="input-group-addon">{!personEmergency.Phone_Country_Code__c}</span>
+                                <apex:inputField styleClass="form-control onlynumber" value="{!personEmergency.Phone__c}" required="true" id="phoneemerg"/>
+                              </div>
+                            </apex:outputpanel>
+                        </div>
+                        </div>
+                        </div><!--  end row -->
+                        
+                        
+                         <div class="row">
+                          <div class="col-sm-12">
+                        <div class="form-group">
+                          <label class="control-label">Email <span class="info">(Optional)</span></label>
+                            <apex:inputField styleClass="form-control" value="{!personEmergency.Email__c}" required="FALSE" id="email" />
+                          </div>
+                          </div>
+                         <div class="col-sm-12">
+                        <div class="form-group">
+                          <label class="control-label"> Relationship</label>
+                            <apex:inputField styleClass="form-control" value="{!personEmergency.Relationship__c}" required="TRUE" id="relation" />
+                          </div> 
+                          </div>
+                          </div><!--  end row -->
+                        
+                      </div>
+                      <!--  end panel body --> 
+                       </div>
+                      <!--  end panel  --> 
+              </apex:outputPanel>
+            </apex:outputPanel>
+            
+            <apex:outputPanel layout="block" id="panel2"> 
+            
+          
+              <div class="row">
+              <div class="col-sm-12">
+              <div class="form-group">
+                <label class="control-label">Tell us more about your family and your experience with household duties <br/><span class="info">Do you live together, share meals, have pets? Do you have any regular chores or responsibilities such as cooking meals?</span></label>
+                  <apex:inputTextarea styleClass="form-control" id="FamDescrip" value="{!applicantInfo.Family_Description__c}" required="TRUE" onkeyup="countChar(this, 510, 'FamDescripCount')" onfocus="countChar(this, 510, 'FamDescripCount')" />
+                  <div class="char-limit bb"><span class="char-count-label">Characters left:</span> <span id="FamDescripCount" class="char-count"> {!510-len(applicantInfo.Family_Description__c) }</span> </div>
+                  <apex:message for="FamDescrip" styleClass="custom-error-text" id="errormesFamDescrip" />               
+                </div>
+                </div>
+                 </div><!--  end row -->
+               
+              <!-- 
+              <div class="row">
+              <div class="col-sm-12">  
+              <div class="form-group">
+                <label class="control-label">Tell us about your experience with household duties <br/><span class="info">Describe any regular chores or responsibilities such as cooking meals, laundry etc.</span> </label>
+                <apex:inputTextarea styleClass="form-control" id="househlodDu" value="{!applicantInfo.Household_Duties__c}" required="TRUE" onkeyup="countChar(this, 510, 'househlodDuCount')" onfocus="countChar(this, 510, 'househlodDuCount')"/>
+                  <div class="char-limit bb"><span class="char-count-label">Characters left:</span> <span id="househlodDuCount" class="char-count"> {!510-len(applicantInfo.Household_Duties__c) }</span> </div>
+                  <apex:message for="househlodDu" styleClass="custom-error-text" id="errormeshousehlodDu" />
+                </div>
+                </div>
+                 </div><!--  end row --
+                  -->
+                
+            </apex:outputPanel>
+            
+            <!--  
+             <div class="row">
+             <div class="col-sm-12">  
+            <div class="form-group">
+                <label class="control-label">Have you ever lived away from home?</label>
+                  <apex:actionRegion >
+                    <apex:selectRadio styleClass="radio" value="{!applicantInfo.Lived_Independently__c}" id="liveaway" required="true">
+                      <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                      <apex:selectOption itemValue="No" itemLabel="No"/>
+                      <apex:actionSupport event="onclick" rerender="awayhomedesc" status="showlive"/>
+                    </apex:selectRadio>
+                  </apex:actionRegion>
+                   <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showlive"/>
+                  <apex:message for="liveaway" styleClass="custom-error-radio" id="errormessaway"/>
+                </div>
+                </div>
+                </div>
+                
+              <apex:pageBlock id="awayhomedesc">
+                <apex:outputPanel layout="block" rendered="{!applicantInfo.Lived_Independently__c == 'Yes'}" id="outputpanelaway">
+	                  <div class="row">
+             <div class="col-sm-12">
+	                 <div class="form-group">
+	                <label class="control-label">Please tell us where you lived and for how long
+	                <i data-toggle="popover" data-content="Living away from home means having your own apartment, living with a roommate or in a dormitory at school." class="infobtn fa fa-question-circle"></i>
+	                </label>
+		                <apex:inputTextarea styleClass="form-control" id="liveDesc" value="{!applicantInfo.Lived_Independently_Description__c}" required="TRUE" onkeyup="countChar(this, 255, 'liveDescCount')" onfocus="countChar(this, 255, 'liveDescCount')"/>
+		                <div class="char-limit bb"><span class="char-count-label">Characters left:</span> <span id="liveDescCount" class="char-count">{!255-len(applicantInfo.Lived_Independently_Description__c)}</span> </div>
+		                <apex:message for="liveDesc" styleClass="custom-error-text" id="errorlive"/>
+	                </div>
+	                  </div>
+                </div>
+                </apex:outputPanel>
+              </apex:pageBlock>
+              
+              -->
+              
+            <div class="row margin-t">
+              <div class="col-sm-12">
+              <apex:outputLink styleClass="btn btn-link btn-lg" value="/apex/apc_ap_main_interests?id={!applicantInfo.Id}" id="backlinkhealth"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                <apex:commandlink styleClass="btn btn-primary btn-lg" action="{!navigator}" id="nextlink" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                  <apex:param name="nextPage"	value="/apex/apc_ap_main_essays" />
+                  <apex:param name="reDirectPage" value="true" />
+                  <apex:param name="saveParents" value="true" />
+                  <apex:param name="pageId" value="017"/>
+                  <apex:commandButton value="Save & Continue" id="continuebutton"/>
+                </apex:commandlink>
+              </div>
+            </div>
+            
+            
+          </apex:form>
+        </div>
+        <!-- end column  -->
+        <div id="app-side" class="col-md-3 col-md-pull-8">
+          <c:menu_side_apc_ap_basic ApplicantInfo="{!applicantInfo}" />
+        </div>
+        <!-- end column  --> 
+      </div>
+      <!-- end row --> 
+    
+    </apex:define>
+  </apex:composition>
+</apex:page>

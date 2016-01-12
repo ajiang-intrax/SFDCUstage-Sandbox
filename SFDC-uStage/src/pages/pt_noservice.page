@@ -1,0 +1,26 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardController="Applicant_Info__c"
+	extensions="AppEngine_Controller" action="{!checkLogin}"
+	standardStylesheets="false" showHeader="false"  title="No Service" id="pt_noservice">
+	<apex:composition template="intraxtemplate_vs3">
+		<apex:define name="body">
+		 	
+				
+				<apex:outputpanel layout="block" rendered="{!applicantInfo.Intrax_Program__c == 'AuPairCare'}">	
+				<div class="row"> 
+        		
+				<div class="col-md-8 center-block">
+					<h1>Thank You</h1>		
+					<div class="margin-b4">
+						<p>Dear Applicant,</p>
+	 					<p>Thank you for your interest in AuPairCare's au pair program. Your information does not meet the program requirements.</p>
+	 					<p>We wish you every personal and professional success in the future.</p>
+	 					<p>Sincerely,</p>
+	 					<p>AuPairCare</p>
+	 				</div>
+				</div>
+				
+			    </div><!--  end row -->
+				</apex:outputpanel>
+		</apex:define>
+	</apex:composition>
+</apex:page>

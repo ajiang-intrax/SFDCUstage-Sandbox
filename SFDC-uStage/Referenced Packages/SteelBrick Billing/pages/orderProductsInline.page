@@ -1,0 +1,138 @@
+<apex:page standardController="invoiceit_s__Job__c" extensions="invoiceit_s.CreateJobController">
+    <apex:includeScript value="{!URLFOR($Resource.invoiceit_s__jQuery, '/js/jquery-1.5.1.min.js')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.invoiceit_s__jQuery, '/js/jquery-ui-1.8.14.custom.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.invoiceit_s__tooltipster, '/js/jquery.tooltipster.min.js')}"/> 
+    <apex:includeScript value="{!URLFOR($Resource.invoiceit_s__tooltipster, '/js/prettify.js')}"/> 
+    <apex:includeScript value="{!URLFOR($Resource.invoiceit_s__tooltipster, '/js/scripts.js')}"/>    
+    <apex:stylesheet value="{!URLFOR($Resource.invoiceit_s__tooltipster, '/css/tooltipster.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.invoiceit_s__tooltipster, '/css/style.css')}"/>
+
+    <script type="text/javascript">
+
+        $(document).ready(function(){
+         displayChargeToolTip();
+        });
+        
+        function displayChargeToolTip() {
+         var tableCharge = '';
+         <apex:repeat value="{!jobClass.jobProducts}" var="jobproduct"  >
+            tableCharge ='<table width="100%"  style="border: 1px solid #ECECEC;border-collapse:collapse;"  ><tr style="background-color:#ECECEC;border: 1px solid #ECECEC;"><apex:repeat value="{!$ObjectType.invoiceit_s__Job_Rate_Plan_Charge_Tier__c.FieldSets.invoiceit_s__Order_Plan_Charge_Tier}" var="tierfieldAPI"><th><apex:outputText value="{!tierfieldAPI.Label}" /></th></apex:repeat></tr>';
+            
+            <apex:repeat value="{!jobproduct.jobRatePlans}" var="jobrateplan" >
+               if(tableCharge == ''){
+                tableCharge ='<table width="100%"  style="border: 1px solid #ECECEC;border-collapse:collapse;"  ><tr style="background-color:#ECECEC;border: 1px solid #ECECEC;"><apex:repeat value="{!$ObjectType.invoiceit_s__Job_Rate_Plan_Charge_Tier__c.FieldSets.invoiceit_s__Order_Plan_Charge_Tier}"     var="tierfieldAPI"><th><apex:outputText value="{!tierfieldAPI.Label}" /></th></apex:repeat></tr>'
+              }
+              <apex:repeat value="{!jobrateplan.jobRatePlanCharges}" var="jobrateplancharge">
+                 if(tableCharge == ''){
+                   tableCharge ='<table width="100%"  style="border: 1px solid #ECECEC;border-collapse:collapse;"  ><tr style="background-color:#ECECEC;border: 1px solid #ECECEC;"><apex:repeat value="{!$ObjectType.invoiceit_s__Job_Rate_Plan_Charge_Tier__c.FieldSets.invoiceit_s__Order_Plan_Charge_Tier}" var="tierfieldAPI"><th><apex:outputText value="{!tierfieldAPI.Label}" /></th></apex:repeat></tr>'
+                }
+                
+                tableCharge += '<apex:repeat value="{!jobrateplancharge.jobRatePlanChargeTiers}" var="tier" ><tr style="border: 1px solid #ECECEC;" ><td><apex:outputField value="{!tier.jobRatePlanChargeTier.invoiceit_s__Start_Unit__c}" /></td><td><apex:outputField value="{!tier.jobRatePlanChargeTier.invoiceit_s__End_Unit__c}" /></td><td><apex:outputField value="{!tier.jobRatePlanChargeTier.invoiceit_s__Unit_Price__c}" /></td><td><apex:outputField value="{!tier.jobRatePlanChargeTier.invoiceit_s__Unit_Cost_Price__c}" /></td></tr></apex:repeat>';
+                      tableCharge += '</table>'; 
+                     var chargeid = "#" + "{!jobrateplancharge.jobrateplancharge.Id}";
+                    $(chargeid).attr( "title", tableCharge);
+                     tableCharge = '';
+              </apex:repeat> 
+          </apex:repeat>    
+        </apex:repeat> 
+        
+        $('.tooltipCharge').tooltipster({
+           fixedWidth: 300,
+           position: 'bottom-left',
+           tooltipTheme: '.tooltip-custom-New'
+       });
+     }
+    </script> 
+    
+    <apex:form rendered="true">    
+        <apex:outputPanel >
+        <apex:pageBlock >
+             <table cellspacing="0" cellpadding="0" border="0" class="list" width="100%">
+                    <thead class="rich-table-thead">
+                    <tr class="headerRow">
+                        <apex:repeat value="{!$ObjectType.invoiceit_s__Job_Product__c.FieldSets.invoiceit_s__ProductFieldsInline}" var="fieldAPI">
+                            <th colspan="1" scope="col" class="headerRow">
+                                <div>
+                                    {!fieldAPI.Label}
+                                </div>
+                            </th> 
+                        </apex:repeat>
+                        <th colspan="1" scope="col" class="headerRow">
+                          <div>
+                          {!$Label.Quantity}
+                          </div>
+                        </th>
+                        <apex:repeat value="{!$ObjectType.invoiceit_s__Job_Rate_Plan_Charge__c.FieldSets.invoiceit_s__Order_Detail_Page}" var="fieldAPI">
+                            <th colspan="1" scope="col" class="headerRow">
+                                <div>
+                                    {!fieldAPI.Label}
+                                </div>
+                            </th>
+                        </apex:repeat>
+                    </tr>
+                </thead>
+                <tbody>
+                    <apex:repeat value="{!jobClass.jobProducts}" var="jobproduct">
+                        <apex:repeat value="{!jobproduct.jobRatePlans}" var="jobrateplan">
+                            <apex:repeat value="{!jobrateplan.jobRatePlanCharges}" var="jobrateplancharge">
+                                <tr onfocus="if (window.hiOn){hiOn(this);}" onblur="if (window.hiOff){hiOff(this);}" onmouseout="if (window.hiOff){hiOff(this);}" onmouseover="if (window.hiOn){hiOn(this);}" class="dataRow even odd first">
+                                    <apex:repeat value="{!$ObjectType.invoiceit_s__Job_Product__c.FieldSets.invoiceit_s__ProductFieldsInline}" var="fieldAPI">
+                                        <td colspan="1" class="dataCell">
+                                            <apex:outputField value="{!jobproduct.jobproduct[fieldAPI]}" rendered="{!fieldAPI != 'invoiceit_s__Product__c' && jobrateplancharge.jobrateplancharge.invoiceit_s__Sequence_No__c <= 1}"/>
+                                           <!--
+                                                Modified By     : Anil Pinto
+                                                Modified Date   : 14 June 2013
+                                                JIRA Task       : INVOICEIT-85
+                                                Comments        : This code is changed since we wanted to display products name in the orderProductsInline page, so we added a outputPanel
+                                                                  and once we click on that link it should go to new window and open the relevant invoice IT product page
+                                            -->
+                                            <apex:outputPanel rendered="{!fieldAPI == 'invoiceit_s__Product__c' && jobrateplancharge.jobrateplancharge.invoiceit_s__Sequence_No__c <= 1}">
+                                                <a href="/{!jobproduct.jobproduct.invoiceit_s__Product__c}" target="_blank">
+                                                    <apex:outputField value="{!jobproduct.jobproduct.Product__r.Name}"/>
+                                                </a>
+                                            </apex:outputPanel>
+                                        </td>
+                                    </apex:repeat>
+                                   
+                                    <td colspan="1" class="dataCell">
+                                        <apex:outputField value="{!jobrateplancharge.jobrateplancharge.invoiceit_s__Quantity__c}">
+                                            <apex:param value="{0,number,0}" />
+                                        </apex:outputField>
+                                    </td>
+                                    <apex:repeat value="{!$ObjectType.invoiceit_s__Job_Rate_Plan_Charge__c.FieldSets.invoiceit_s__Order_Detail_Page}" var="fieldAPI">
+                                        <td colspan="1" class="dataCell">
+                                            <apex:outputField value="{!jobrateplancharge.jobrateplancharge[fieldAPI]}" rendered="{!fieldAPI != 'Name' && fieldAPI != 'invoiceit_s__Price_Format__c'}"/>
+                                            <apex:outputPanel rendered="{!fieldAPI == 'Name'}">
+                                                <a href="/{!jobrateplancharge.jobrateplancharge.Id}" target="_blank">
+                                                    <apex:outputField value="{!jobrateplancharge.jobrateplancharge[fieldAPI]}"/>
+                                                </a>
+                                            </apex:outputPanel>
+                                            <!--
+                                                Modified By     : Rama krishna
+                                                Modified Date   : 28 -11-13
+                                                JIRA Task       : INVOICEIT-271
+                                                Comments        : added below code, to display the tier/volume data
+                                            -->
+                                            <apex:outputPanel rendered="{!fieldAPI == 'invoiceit_s__Price_Format__c'}">
+                                                <apex:outputField value="{!jobrateplancharge.jobrateplancharge[fieldAPI]}" rendered="{!jobrateplancharge.jobrateplancharge.invoiceit_s__Price_Format__c == 'Volume Pricing' || jobrateplancharge.jobrateplancharge.invoiceit_s__Price_Format__c=='Flat Fee Pricing' || jobrateplancharge.jobrateplancharge.invoiceit_s__Price_Format__c=='Tiered Pricing'}">
+                                                   <a href="#" id="{!jobrateplancharge.jobrateplancharge.Id}" class="tooltipCharge"  >
+                                                     <apex:image id="imageToolTip"  url="{!URLFOR($Resource.invoiceit_s__Images,'/images/priceTypeIcon.gif')}"  /> 
+                                                   </a>
+                                             </apex:outputField>
+                                            </apex:outputPanel>
+                                            <apex:outputPanel rendered="{!fieldAPI == 'invoiceit_s__Price_Format__c'}">
+                                                <apex:outputField value="{!jobrateplancharge.jobrateplancharge[fieldAPI]}" rendered="{!jobrateplancharge.jobrateplancharge.invoiceit_s__Price_Format__c == 'Default' || jobrateplancharge.jobrateplancharge.invoiceit_s__Price_Format__c == 'Per Unit Pricing'}">
+                                             </apex:outputField>
+                                            </apex:outputPanel>
+                                        </td>
+                                    </apex:repeat>
+                                </tr>
+                            </apex:repeat>
+                        </apex:repeat>
+                    </apex:repeat>
+                </tbody>
+            </table><br/><br/><br/><br/>
+        </apex:pageBlock> <br/><br/><br/><br/><br/>
+        </apex:outputPanel>
+    </apex:form>
+</apex:page>

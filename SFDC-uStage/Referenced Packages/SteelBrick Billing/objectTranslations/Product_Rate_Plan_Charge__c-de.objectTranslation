@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>false</plural>
+        <value><!-- Product Rate Plan Charge --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>true</plural>
+        <value><!-- Product Rate Plan Charge --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>false</plural>
+        <value><!-- Product Rate Plan Charge --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>true</plural>
+        <value><!-- Product Rate Plan Charge --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>false</plural>
+        <value><!-- Product Rate Plan Charge --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>true</plural>
+        <value><!-- Product Rate Plan Charge --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>false</plural>
+        <value><!-- Product Rate Plan Charge --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>true</plural>
+        <value><!-- Product Rate Plan Charge --></value>
+    </caseValues>
+    <fields>
+        <label>Buchhaltungscode</label>
+        <name>Accounting_Code__c</name>
+    </fields>
+    <fields>
+        <label><!-- Charge Code --></label>
+        <name>Charge_Code__c</name>
+    </fields>
+    <fields>
+        <label>Buchungssequenznummer</label>
+        <name>Charge_Sequence_Number__c</name>
+    </fields>
+    <fields>
+        <help><!-- Unit Cost Price --></help>
+        <label>Einheitskostenpreis</label>
+        <name>Cost_Price__c</name>
+    </fields>
+    <fields>
+        <label>Währung</label>
+        <name>CurrencyL__c</name>
+        <relationshipLabel>Produkt-Tarifmodell Gebühr</relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Default Quantity --></label>
+        <name>Default_Quantity__c</name>
+    </fields>
+    <fields>
+        <label>Obsolete_Exempted von der Mehrwertsteuer</label>
+        <name>Exempted_From_VAT__c</name>
+    </fields>
+    <fields>
+        <label><!-- Is Price Editable In Quote/Order Wizards --></label>
+        <name>Is_Product_Editable__c</name>
+    </fields>
+    <fields>
+        <help><!-- Use this in conjunction with &quot;Percentage Pricing&quot; in the pricing model. You can typically use this for charges that are a percentage of other charges. 
+e.g., Maintenance Charges could be 25% of the License charges. --></help>
+        <label>% Für sonstige Kosten</label>
+        <name>Percentage_of_other_Charges__c</name>
+    </fields>
+    <fields>
+        <help><!-- Please refer to the user documentation for detailed information on what the different pricing models mean.
+Search for &quot;Pricing Model&quot; in the documentation. --></help>
+        <label>Preisformat</label>
+        <name>Price_Format__c</name>
+        <picklistValues>
+            <masterLabel>Default</masterLabel>
+            <translation><!-- Default --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Flat Fee Pricing</masterLabel>
+            <translation><!-- Flat Fee Pricing --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Per Unit Pricing</masterLabel>
+            <translation><!-- Per Unit Pricing --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Percentage Pricing</masterLabel>
+            <translation><!-- Percentage Pricing --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Tiered Pricing</masterLabel>
+            <translation><!-- Tiered Pricing --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Volume Pricing</masterLabel>
+            <translation><!-- Volume Pricing --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label>Preisart</label>
+        <name>Price_Type__c</name>
+        <picklistValues>
+            <masterLabel>Annual</masterLabel>
+            <translation><!-- Annual --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Half Yearly</masterLabel>
+            <translation><!-- Half Yearly --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Monthly</masterLabel>
+            <translation><!-- Monthly --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>One Time</masterLabel>
+            <translation><!-- One Time --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Quarterly</masterLabel>
+            <translation><!-- Quarterly --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Usage</masterLabel>
+            <translation><!-- Usage --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Weekly</masterLabel>
+            <translation><!-- Weekly --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Use this field if you would want to configure different Tax or VAT percentages for different categories. --></help>
+        <label>Produktcharge Kategorie</label>
+        <name>Product_Charge_Category__c</name>
+        <picklistValues>
+            <masterLabel>Non Taxable</masterLabel>
+            <translation><!-- Non Taxable --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Taxable</masterLabel>
+            <translation><!-- Taxable --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label>Produkt-Tarifmodell</label>
+        <name>Product_Rate_Plan__c</name>
+        <relationshipLabel>Produkt-Tarifmodell Gebühr</relationshipLabel>
+    </fields>
+    <fields>
+        <label>Dauerbuchungszeitraum</label>
+        <name>Recurring_Period__c</name>
+        <picklistValues>
+            <masterLabel>Default</masterLabel>
+            <translation><!-- Default --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Unit of measurement
+(Unit, kilo, tonne etc) --></help>
+        <label>Maßeinheit</label>
+        <name>Unit_Of_Measurement__c</name>
+        <picklistValues>
+            <masterLabel>License</masterLabel>
+            <translation><!-- License --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Ounce</masterLabel>
+            <translation><!-- Ounce --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Pound</masterLabel>
+            <translation><!-- Pound --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Stone</masterLabel>
+            <translation><!-- Stone --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Ton</masterLabel>
+            <translation><!-- Ton --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Unit</masterLabel>
+            <translation><!-- Unit --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>m²</masterLabel>
+            <translation><!-- m² --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Unit Selling Price --></help>
+        <label>Einheitsverkaufspreis</label>
+        <name>Unit_Price__c</name>
+    </fields>
+    <gender><!-- Neuter --></gender>
+    <layouts>
+        <layout>Product Rate Plan Charge Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- Charge Name --></nameFieldLabel>
+</CustomObjectTranslation>

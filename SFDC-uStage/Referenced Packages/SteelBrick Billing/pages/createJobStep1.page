@@ -1,0 +1,53 @@
+<apex:page standardController="invoiceit_s__Job__c" extensions="invoiceit_s.CreateJobController">
+    <apex:includeScript value="{!URLFOR($Resource.invoiceit_s__jQuery, '/js/jquery-1.5.1.min.js')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.invoiceit_s__jQuery, '/js/jquery-ui-1.8.14.custom.min.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.invoiceit_s__jQuery, '/css/smoothness/jquery-ui-1.8.14.custom.css')}"/>
+    <script>
+        function confirmCancel() {
+            var isCancel = confirm("{!$Label.CancellingthiswoulddiscardthechangesPleaseconfirm}");
+            if (isCancel) return true;
+            return false;
+        }  
+        $j = jQuery.noConflict();
+        $j(document).ready(function() {
+            $j("#dialog").dialog({  autoOpen: false, modal: true, position: 'center', width: 190, 
+                                   height:70, dialogClass: "ui-dialog-no-titlebar ui-dialog-no-padding", resizable: true});
+        });
+        /*Function to show the modal dialog for jquery*/
+        function showDialog(){
+            $j("#dialog").dialog("open");
+            $j('#dialog').dialog('option', 'position', 'center');
+            return false;
+        }
+        /*Function to hide the modal dialog for jquery*/
+        function closeDialog(){
+            $j("#dialog").dialog("close");
+            return false;
+        }
+    </script>
+    <apex:sectionHeader title="{!$Label.Step1of3}" subtitle="{!job.Name}" />
+    <apex:form id="jobForm">
+        <apex:actionFunction name="changeCurrencySelection" action="{!changeCurrencySelection}" rerender="render" status="status"/>
+        <apex:actionStatus id="status" onstart="return showDialog()" onstop="return closeDialog()"/>
+        <apex:pageBlock title="" mode="edit">
+            <apex:pageMessages />
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!step2}" value="{!$Label.ButtonNext}" />
+                <apex:commandButton action="{!cancel}" value="{!$Label.ButtonCancel}" onclick="return confirmCancel()" immediate="true" />
+                <apex:commandButton action="{!save}" value="{!$Label.ButtonSavePage1}"/>
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection title="{!$Label.OrderStep1_PB_OrderInformation}" id="render">
+                <apex:inputField value="{!job.Name}"/> 
+                <!-- OrderStep1 is the FieldSet Name -->
+                <apex:repeat value="{!$ObjectType.invoiceit_s__Job__c.FieldSets.invoiceit_s__OrderStep1}" var="fieldAPI">
+                    <apex:inputField value="{!job[fieldAPI]}" rendered="{!fieldAPI != 'invoiceit_s__CurrencyL__c'}" required="{!OR(fieldAPI.required, fieldAPI.dbrequired)}"/>
+                    <apex:inputField value="{!job[fieldAPI]}" onChange="changeCurrencySelection()" rendered="{!fieldAPI == 'invoiceit_s__CurrencyL__c'}"/>
+                </apex:repeat>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        <!-- This div holds the image that is opened as a popup during processing -->
+        <div id="dialog">
+            <apex:image value="{!URLFOR($Resource.invoiceit_s__jQuery,'/css/smoothness/images/please_wait.gif')}"/>
+        </div>
+    </apex:form>
+</apex:page>

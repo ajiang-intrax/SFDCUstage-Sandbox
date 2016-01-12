@@ -1,0 +1,346 @@
+<apex:page id="igi_pt_app_completion" docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardController="Applicant_Info__c"
+    extensions="AppEngine_Controller" action="{!checkLogin}"
+    standardStylesheets="false" showHeader="false"  title="Application Confirmation">
+    <apex:composition template="intraxtemplate_vs3">
+        <apex:define name="body">
+            <c:block_header_igi_pt_application userAgentCheck="{!userAgentCheck}"/>
+            <apex:form id="webform">
+                <div class="row">
+                
+                <div class="col-sm-4 col-md-6">
+                <h1>Your Internship Application</h1>
+                </div> <!--  end col -->
+                <div class="col-sm-8 col-md-6">
+                <div id="apphome-btns" class="pull-right nofloat-xs">
+                <apex:outputPanel layout="block" rendered="{!IF(CheckMainIGIApp, true, false)}">        
+                <apex:outputLink target="_blank" styleClass="centered-xs margin-t margin-l btn btn-link btn-lg" value="igi_pt_app_summary_pdf?id={!applicantInfo.Id}" id="summaryLink">
+                <i class="fa fa-file-text"></i>
+                <span>View Summary</span>
+                </apex:outputLink>
+                <apex:commandLink styleClass="margin-t centered-xs btn btn-lg btn-ultimate" action="{!navigator}" rendered="{!isPartner}" id="submitProfilePartner">
+                        <apex:param name="nextPage" value="/apex/pr_app_list"/>
+                        <apex:param name="SubmitApp" value="IGIPA"/>
+                        <apex:param name="vstate" value="maincomplete"/>
+                        <apex:param name="view" value="true" assignTo="{!view}"/>
+                        <apex:commandButton value="Submit Application for Review"/>
+                </apex:commandLink>
+                <apex:commandLink styleClass="margin-t centered-xs btn btn-lg btn-ultimate" action="{!navigator}" rendered="{!NOT(isPartner)}" id="submitProfilePT">
+                        <apex:param name="nextPage" value="/apex/igi_home"/>
+                        <apex:param name="SubmitApp" value="IGIPA"/>
+                        <apex:param name="vstate" value="maincomplete"/>
+                        <apex:param name="view" value="true" assignTo="{!view}"/>
+                        <apex:commandButton value="Submit Application for Review"/>
+                </apex:commandLink>
+                </apex:outputPanel>
+                
+                <apex:outputPanel layout="block" html-data-toggle="popover" html-data-content="You cannot submit your application until you have a complete profile." rendered="{!IF(CheckMainIGIApp,false, true)}">
+                <button class="margin-t centered-xs btn btn-lg btn-default disabled" id="submitProfileDisabled">Submit Application for Review</button>
+                </apex:outputPanel>
+                </div>
+                </div><!--  end col -->
+                </div><!--  end row -->
+                <p>&nbsp;</p>
+                <hr class="wshadow"/>
+                <p>&nbsp;</p>
+                
+                <div class="row">
+                <div class="col-sm-9 col-md-10 col-lg-9">
+                <div class="row">
+                <div class="col-sm-12 col-md-3 col-lg-4">
+                <h2>Complete Your Profile</h2>
+                <p class="margin-b3">This section is required to submit your application. It will also generate your public profile for companies to see. </p>
+                </div>
+                <div class="col-sm-12 col-md-9 col-lg-8">
+                <div class="app-section-container">
+                <div class="app-section-row">
+                
+                <apex:outputPanel styleClass="app-section {!IF(contains(applicantinfo.PageStatus_Complete__c, '051'), 'complete', '')}" layout="block">
+                <apex:outputLink value="igi_pt_app_personal_info?id={!applicantInfo.Id}" id="personalInfoLink">
+                <span class="status"><i class="fa"></i></span>
+                    <span class="link">
+                        <span class="title">Personal Information</span>
+                        <span class="action"><apex:outputText value="{!IF(contains(applicantinfo.PageStatus_Complete__c, '051'), 'Edit', 'Start this section >')}"/></span> 
+                    </span>
+                </apex:outputLink>
+                </apex:outputPanel> <!--  end app section -->
+                
+                
+                <apex:outputPanel styleClass="app-section {!IF(contains(applicantinfo.PageStatus_Complete__c, '056'), 'complete', '')}" layout="block">
+                <apex:outputLink value="igi_pt_app_contact_info?id={!applicantInfo.Id}" id="contactInfoLink">
+                <span class="status"><i class="fa"></i></span>
+                <span class="link">
+                    <span class="title">Contact Information</span>
+                    <span class="action"><apex:outputText value="{!IF(contains(applicantinfo.PageStatus_Complete__c, '056'), 'Edit', 'Start this section >')}"/></span>
+                </span>
+                </apex:outputLink>
+                </apex:outputPanel>
+                
+                </div> <!--  end app section row -->
+                
+                <div class="app-section-row">
+                
+                <apex:outputPanel styleClass="app-section {!IF(contains(applicantinfo.PageStatus_Complete__c, '052'), 'complete', '')}                                          
+                                                            {!IF(contains(applicantinfo.PageStatus_Started__c, '052'), 'started', '')}" layout="block">
+                <apex:outputLink value="igi_pt_app_education?id={!applicantInfo.Id}" id="educationLink">
+                <span class="status"><i class="fa"></i></span>
+                    <span class="link">
+                    <span class="title">Education and Skills</span>
+                    <span class="action"><apex:outputText value="{!IF(contains(applicantinfo.PageStatus_Complete__c, '052'), 'Edit', 'New Questions! Continue >')}"/></span>
+                    </span>
+                </apex:outputLink>
+                </apex:outputPanel>
+                
+                <apex:outputPanel styleClass="app-section {!IF(contains(applicantinfo.PageStatus_Complete__c, '058'), 'complete', '')}" layout="block">
+                <apex:outputLink value="igi_pt_app_experience?id={!applicantInfo.Id}" id="personalInfo">
+                <span class="status"><i class="fa"></i></span>
+                <span class="link">
+                <span class="title">Work Experience</span>
+                <span class="action"><apex:outputText value="{!IF(contains(applicantinfo.PageStatus_Complete__c, '058'), 'Edit', 'Start this section >')}"/></span>
+                </span>
+                </apex:outputLink>
+                </apex:outputPanel>
+                
+                </div> <!--  end app section row -->
+                
+                <apex:variable var="visapage" value="visible" rendered="{!applicantInfo.Visa_Type__c == 'J-1'}"/>  
+                <apex:variable var="placementpage" value="visible" rendered="{!IF(applicantInfo.Service_Level__c == 'Independent', true, false)}"/> 
+                
+
+                <div class="app-section-row">
+                
+                <apex:outputPanel styleClass="app-section {!IF(contains(applicantinfo.PageStatus_Complete__c, '053'), 'complete', '')}" layout="block">
+                <apex:outputLink value="igi_pt_app_program_pref?id={!applicantInfo.Id}" id="programpref">
+                <span class="status"><i class="fa"></i></span>
+                <span class="link">
+                <span class="title">Internship Preferences</span>
+                <span class="action"><apex:outputText value="{!IF(contains(applicantinfo.PageStatus_Complete__c, '053'), 'Edit', 'Start this section >')}"/></span>
+                </span>
+                </apex:outputLink>
+                </apex:outputPanel>
+                
+                    <apex:outputPanel styleClass="app-section {!IF(contains(applicantinfo.PageStatus_Complete__c, '055'), 'complete', '')}" layout="block"
+                                            rendered="{!IF(applicantInfo.Service_Level__c == 'Independent', true, false)}">
+                <apex:outputLink value="/igi_pt_app_placement?Id={!applicantInfo.Id}" id="placementLink">
+                <span class="status"><i class="fa"></i></span>
+                <span class="link">
+                <span class="title">Placement Information</span>
+                <span class="action"><apex:outputText value="{!IF(contains(applicantinfo.PageStatus_Complete__c, '055'), 'Edit', 'Start this section >')}"/></span>
+                </span>
+                </apex:outputLink>
+                </apex:outputPanel>
+                
+                <apex:outputPanel layout="block" rendered="{!IF(visapage == 'visible', true, false) && IF(placementpage == 'visible', false,true)}" styleClass="app-section {!IF(contains(applicantinfo.PageStatus_Complete__c, '54'), 'complete', '')}" >
+                
+                <apex:outputLink value="igi_pt_app_visa?id={!applicantInfo.Id}" id="visainfo1">
+                <span class="status"><i class="fa"></i></span>
+                <span class="link">
+                <span class="title">Visa Information</span>
+                <span class="action"><apex:outputText value="{!IF(contains(applicantinfo.PageStatus_Complete__c, '054'), 'Edit', 'Start this section >')}"/></span>
+                </span>
+                </apex:outputLink>
+                
+                </apex:outputPanel>
+                
+                    </div> <!--  end app section row -->
+            
+                
+            <!--  <apex:outputPanel layout="block" rendered="{!IF(visapage == 'visible' && placementpage == 'visible', true, false)}">    -->
+            <div class="app-section-row">
+            	
+            	
+            	<!-- <apex:outputPanel layout="block" rendered="{!IF(visapage == 'visible' && placementpage == 'visible', false, true)}" styleClass="app-section {!IF(contains(applicantinfo.PageStatus_Complete__c, '54'), 'complete', '')}" >    
+                
+                <apex:outputLink value="igi_pt_app_visa?id={!applicantInfo.Id}" id="visainfo2">
+                <span class="status"><i class="fa"></i></span>
+                <span class="link">
+                <span class="title">Visa Information</span>
+                <span class="action"><apex:outputText value="{!IF(contains(applicantinfo.PageStatus_Complete__c, '054'), 'Edit', 'Start this section >')}"/></span>
+                </span>
+                </apex:outputLink>
+                
+                </apex:outputPanel> -->
+                
+                <apex:outputPanel layout="block" rendered="{!IF(visapage == 'visible', true, false) && IF(placementpage == 'visible',true, false)}" styleClass="app-section {!IF(contains(applicantinfo.PageStatus_Complete__c, '54'), 'complete', '')}" >
+                <!--personInfo.Country_of_Residence__c != 'United States' && personInfo.Citizenship__c != 'United States' && applicantInfo.Country_of_Interest__c == 'United States'  -->
+                
+                <apex:outputLink value="igi_pt_app_visa?id={!applicantInfo.Id}" id="visainfo">
+                <span class="status"><i class="fa"></i></span>
+                <span class="link">
+                <span class="title">Visa Information</span>
+                <span class="action"><apex:outputText value="{!IF(contains(applicantinfo.PageStatus_Complete__c, '054'), 'Edit', 'Start this section >')}"/></span>
+                </span>
+                </apex:outputLink>
+                
+                </apex:outputPanel>
+              
+                
+                <apex:outputPanel styleClass="app-section {!IF(contains(applicantinfo.PageStatus_Complete__c, '062'), 'complete', '')}" layout="block"
+                                            rendered="{!IF(applicantInfo.Double_Placement_Indicated__c == 'Yes', true, false) && isPartner}">
+                <apex:outputLink value="/igi_pt_app_second_placement?Id={!applicantInfo.Id}" id="placementLink2">
+                <span class="status"><i class="fa"></i></span>
+                <span class="link">
+                <span class="title">Second Placement Info</span>
+                <span class="action"><apex:outputText value="{!IF(contains(applicantinfo.PageStatus_Complete__c, '062'), 'Edit', 'Start this section >')}"/></span>
+                </span>
+                </apex:outputLink>
+                </apex:outputPanel>
+               
+                    <apex:outputPanel styleClass="app-section  {!IF(contains(applicantinfo.PageStatus_Complete__c, '063'), 'complete', '')}" layout="block" 
+                			rendered="{!applicantInfo.Visa_Type__c == 'J-1' && NOT($Site.SiteType == '') && isPartner==false}"	>
+                        <apex:outputLink value="igi_pt_app_dependents?id={!applicantInfo.Id}&docType=igi-dependentdocs" id="dependentsLink1">
+                            <span class="status"><i class="fa"></i></span>
+                            <span class="link">
+                            <span class="title">J2 Dependents</span>
+                            <span class="action"><apex:outputText value="{!IF(contains(applicantinfo.PageStatus_Complete__c, '063'), 'Edit', 'Start this section >')}"/></span>
+                            
+                            </span>
+                        </apex:outputLink>
+                       
+                    
+                </apex:outputPanel>
+                
+                </div> <!--  end app section row --> 
+                <div class="app-section-row">
+                
+                 <apex:outputPanel styleClass="app-section  {!IF(contains(applicantinfo.PageStatus_Complete__c, '063'), 'complete', '')}" layout="block" 
+                			rendered="{!applicantInfo.Visa_Type__c == 'J-1'  && NOT($Site.SiteType == '') && isPartner==true}"	>
+                        <apex:outputLink value="igi_pt_app_dependents?id={!applicantInfo.Id}&docType=igi-dependentdocs" id="dependentsLink">
+                            <span class="status"><i class="fa"></i></span>
+                            <span class="link">
+                            <span class="title">J2 Dependents</span>
+                            <span class="action"><apex:outputText value="{!IF(contains(applicantinfo.PageStatus_Complete__c, '063'), 'Edit', 'Start this section >')}"/></span>
+                            
+                            </span>
+                        </apex:outputLink>
+                       
+                    
+                </apex:outputPanel>
+                
+                </div>
+            <!--  </apex:outputPanel>-->
+            
+                
+                
+                </div> <!--  end app section container -->
+                </div>
+                </div><!--  end row -->
+                <p>&nbsp;</p>
+                <div class="row">
+                <div class="col-sm-12 col-md-3 col-lg-4">
+                <h2>Tell Us More</h2>
+                <p class="margin-b3">You can complete section before or after you submit your application.</p>
+                </div>
+                <div class="col-sm-12 col-md-9 col-lg-8">
+                <div class="app-section-container">
+                
+                <div class="app-section-row">
+                
+               
+                
+                <apex:outputPanel styleClass="app-section {!IF(contains(applicantinfo.PageStatus_Complete__c, '057'), 'complete', '')}" layout="block">
+                        <apex:outputLink value="igi_pt_app_emergency?id={!applicantInfo.Id}" id="emergencyLink">
+                            <span class="status"><i class="fa"></i></span>
+                            <span class="link">
+                            <span class="title">Emergency Contacts</span>
+                            <span class="action"><apex:outputText value="{!IF(contains(applicantinfo.PageStatus_Complete__c, '057'), 'Edit', 'Start this section >')}"/></span>
+                            
+                            </span>
+                        </apex:outputLink>
+                        <!--  <div class="skipped">
+                        <apex:outputText rendered="{!IF(contains(applicantinfo.PageStatus_Complete__c, '57'), 'true', 'false')}"><span class="optional">Skipped</span> <i data-content="test" data-toggle="popover" class="infobtn fa fa-question-circle"></i></apex:outputText>
+                        </div>-->   
+                    
+                </apex:outputPanel>
+                
+                 <apex:outputPanel styleClass="app-section {!IF(contains(applicantinfo.PageStatus_Complete__c, '059'), 'complete', '')}" layout="block">
+                        <apex:outputLink value="/igi_pt_app_health?Id={!applicantInfo.Id}" id="healthLink"> 
+                        <span class="status"><i class="fa"></i></span>
+                            <span class="link">
+                                <span class="title">Health Information</span>
+                <span class="action"><apex:outputText value="{!IF(contains(applicantinfo.PageStatus_Complete__c, '059'), 'Edit', 'Start this section >')}"/></span>
+                            </span>
+                        </apex:outputLink>
+                
+                </apex:outputPanel>
+                    
+                </div> <!--  end app section row -->
+                
+                <div class="app-section-row">
+                
+                <apex:outputPanel rendered="{!NOT($Site.SiteType == '')}"  styleClass="app-section {!IF(contains(applicantinfo.PageStatus_Complete__c, '061'), 'complete', '')}" layout="block">
+                    <apex:outputLink value="igi_pt_app_documents?id={!applicantInfo.Id}&docType=igi-documents" id="documentsLink">
+                    <span class="status"><i class="fa"></i></span>
+                    <span class="link">
+                    <span class="title">Document Checklist</span>
+                    <span class="action"><apex:outputText value="{!IF(contains(applicantinfo.PageStatus_Complete__c, '061'), 'Edit', 'Start this section >')}"/></span>
+                    </span>
+                    </apex:outputLink>
+                </apex:outputPanel>
+                
+                <apex:outputPanel rendered="{!NOT($Site.SiteType == '')}" styleClass="app-section {!IF(contains(applicantinfo.PageStatus_Complete__c, '060'), 'complete', '')}" layout="block">
+                    <apex:outputLink value="igi_pt_app_media?id={!applicantInfo.Id}&docType=Participant-Photo" id="mediaLink">
+                    <span class="status"><i class="fa"></i></span>
+                    <span class="link">
+                    <span class="title">Photo Uploads</span>
+                    <span class="action"><apex:outputText value="{!IF(contains(applicantinfo.PageStatus_Complete__c, '060'), 'Edit', 'Start this section >')}"/></span>
+                    </span>
+                    </apex:outputLink>
+                </apex:outputPanel>
+
+                </div> <!--  end app section row -->
+                
+                
+                
+                
+                
+                </div> <!--  end app section container -->
+                
+                </div>
+                </div> <!--  end row -->
+                
+                
+                </div>
+                
+                
+                <div class="col-sm-3 col-md-2 col-lg-3">
+                
+                <c:block_cart_igi_app PersonInfo="{!personInfo}" ApplicantInfo="{!applicantInfo}"/>
+         
+         <style>.coedit-auth{margin-top:40px !important;}</style>
+        <c:block_app_coedit_authorization ApplicantInfo="{!applicantInfo}" pageController="{!AEC}" rendered="{!applicantInfo.Apply_on_Behalf_of_PT__c && applicantInfo.Application_Stage__c == 'Working'}"/>
+                
+                </div>
+                
+                
+                
+                </div> <!--  end row -->
+                
+                <apex:outputpanel layout="block" id="modalSubmit" rendered="{!$CurrentPage.parameters.vstate == 'newprf'}" >
+                          <div class="modal fade vs1" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-body">
+                                <div class="h1">What's Next?</div>
+                                <p>Congratulations, you have successfully submitted your pre-application to become an intern.</p>
+                                <p>Please continue filling out the rest of your application until you see a check mark <i class="fa fa-check"></i> next to each section. </p>
+                              </div>
+                              <div class="modal-footer">
+                                  
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Continue</button>
+                                                
+                              </div>
+                            </div>
+                          </div>
+                        </div> 
+                        </apex:outputpanel> <!--  end modal window -->
+                <script>
+                var j$ = jQuery.noConflict();
+                j$(window).load(function() {
+                  j$('#myModal').modal();
+                });
+                </script>      
+            
+            </apex:form>
+        </apex:define>
+    </apex:composition>
+</apex:page>

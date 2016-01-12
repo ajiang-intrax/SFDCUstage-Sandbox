@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>false</plural>
+        <value><!-- Order Rate Plan Charge --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>true</plural>
+        <value><!-- Order Rate Plan Charge --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>false</plural>
+        <value><!-- Order Rate Plan Charge --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>true</plural>
+        <value><!-- Order Rate Plan Charge --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>false</plural>
+        <value><!-- Order Rate Plan Charge --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>true</plural>
+        <value><!-- Order Rate Plan Charge --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>false</plural>
+        <value><!-- Order Rate Plan Charge --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>true</plural>
+        <value><!-- Order Rate Plan Charge --></value>
+    </caseValues>
+    <fields>
+        <label>Buchhaltungscode</label>
+        <name>Accounting_Code__c</name>
+    </fields>
+    <fields>
+        <label><!-- Charge Code --></label>
+        <name>Charge_Code__c</name>
+    </fields>
+    <fields>
+        <help><!-- This charge has been invoiced till this date. --></help>
+        <label>Gebührendatum</label>
+        <name>Charge_Date__c</name>
+    </fields>
+    <fields>
+        <help><!-- The quantity your customer commits to spend on a minimum. --></help>
+        <label><!-- Committed Quantity --></label>
+        <name>Committed_Quantity__c</name>
+    </fields>
+    <fields>
+        <label>Einheitskostenpreis</label>
+        <name>Cost_Price__c</name>
+    </fields>
+    <fields>
+        <help><!-- Quantity * Unit Cost --></help>
+        <label>Summe Kosten</label>
+        <name>Cost__c</name>
+    </fields>
+    <fields>
+        <label>Währung</label>
+        <name>CurrencyL__c</name>
+        <relationshipLabel>Bestellen Preisplan Gebühren</relationshipLabel>
+    </fields>
+    <fields>
+        <label>Rabatt Prozent</label>
+        <name>Discount_Percent__c</name>
+    </fields>
+    <fields>
+        <label>Rabattwert</label>
+        <name>Discount_Value__c</name>
+    </fields>
+    <fields>
+        <label><!-- Dispatch Item --></label>
+        <name>Dispatch__c</name>
+    </fields>
+    <fields>
+        <label>Obsolete_Exempted von der Mehrwertsteuer</label>
+        <name>Exempted_From_VAT__c</name>
+    </fields>
+    <fields>
+        <label><!-- Grouping --></label>
+        <name>Grouping__c</name>
+        <relationshipLabel><!-- Order Rate Plan Charges --></relationshipLabel>
+    </fields>
+    <fields>
+        <label>Ist Preis Editable Im Auftrag Wizard</label>
+        <name>Is_Product_Editable__c</name>
+    </fields>
+    <fields>
+        <label>Bestell-Tarifmodell</label>
+        <name>Job_Rate_Plan__c</name>
+        <relationshipLabel>Bestellen Preisplan Gebühren</relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Relate to the master charge when you have multiple accounts who are subscribed to the same usage based service and you wish to roll up the usages from child orders to master order. All those aggregated units are calculated based on pricing on master order --></help>
+        <label><!-- Master Order Rate Plan Charge --></label>
+        <name>Master_Order_Rate_Plan_Charge__c</name>
+        <relationshipLabel><!-- Child Order Rate Plan Charges --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- This is the maximum amount your customer will spend for this service. This is the capped amount. --></help>
+        <label><!-- Max Customer Spend --></label>
+        <name>Max_Customer_Spend__c</name>
+    </fields>
+    <fields>
+        <label><!-- Mid-Term Adjustment --></label>
+        <name>Mid_Term_Adjustment__c</name>
+        <relationshipLabel>Bestellen Preisplan Gebühren</relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Mid Term Status --></label>
+        <name>Mid_Term_Status__c</name>
+        <picklistValues>
+            <masterLabel>New</masterLabel>
+            <translation><!-- New --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Old</masterLabel>
+            <translation><!-- Old --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- This is the minimum amount your customer has committed to spend --></help>
+        <label><!-- Min Customer Spend --></label>
+        <name>Min_Customer_Spend__c</name>
+    </fields>
+    <fields>
+        <label><!-- Net Total --></label>
+        <name>Net_Total__c</name>
+    </fields>
+    <fields>
+        <help><!-- This holds the next charge date for this rate plan charge. This means this charge is included in the invoice only if the the invoice target date is on or after this date. --></help>
+        <label>Nächstes Gebührendatum</label>
+        <name>Next_Charge_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Order --></label>
+        <name>Order__c</name>
+        <relationshipLabel><!-- Order Rate Plan Charges --></relationshipLabel>
+    </fields>
+    <fields>
+        <label>% Für sonstige Kosten</label>
+        <name>Percentage_of_other_Charges__c</name>
+    </fields>
+    <fields>
+        <help><!-- This holds the previous charge date for this rate plan charge. --></help>
+        <label>Letztes Gebührendatum</label>
+        <name>Previous_Charge_Date__c</name>
+    </fields>
+    <fields>
+        <label>Vorherige Mid Term Adjustment</label>
+        <name>Previous_Mid_Term_Adjustment__c</name>
+        <relationshipLabel>Bestellen Preisplan Gebühren (Vorherige Mid Term Adjustment)</relationshipLabel>
+    </fields>
+    <fields>
+        <label>Preisformat</label>
+        <name>Price_Format__c</name>
+        <picklistValues>
+            <masterLabel>Default</masterLabel>
+            <translation><!-- Default --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Flat Fee Pricing</masterLabel>
+            <translation><!-- Flat Fee Pricing --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Per Unit Pricing</masterLabel>
+            <translation><!-- Per Unit Pricing --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Tiered Pricing</masterLabel>
+            <translation><!-- Tiered Pricing --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Volume Pricing</masterLabel>
+            <translation><!-- Volume Pricing --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label>Preisart</label>
+        <name>Price_Type__c</name>
+        <picklistValues>
+            <masterLabel>Annual</masterLabel>
+            <translation><!-- Annual --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Half Yearly</masterLabel>
+            <translation><!-- Half Yearly --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Monthly</masterLabel>
+            <translation><!-- Monthly --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>One Time</masterLabel>
+            <translation><!-- One Time --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Quarterly</masterLabel>
+            <translation><!-- Quarterly --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Usage</masterLabel>
+            <translation><!-- Usage --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Weekly</masterLabel>
+            <translation><!-- Weekly --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Quantity * Unit Price --></help>
+        <label>Summe Verkaufspreis</label>
+        <name>Price__c</name>
+    </fields>
+    <fields>
+        <help><!-- Use this field if you would want to configure different VAT percentages for different categories. --></help>
+        <label>Produktcharge Kategorie</label>
+        <name>Product_Charge_Category__c</name>
+        <picklistValues>
+            <masterLabel>Non Taxable</masterLabel>
+            <translation><!-- Non Taxable --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Taxable</masterLabel>
+            <translation><!-- Taxable --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label>Produkt-Tarifmodell Gebühr</label>
+        <name>Product_Rate_Plan_Charge__c</name>
+        <relationshipLabel>Bestellen Preisplan Gebühren</relationshipLabel>
+    </fields>
+    <fields>
+        <label>Gewinn</label>
+        <name>Profit__c</name>
+    </fields>
+    <fields>
+        <label><!-- Quantity Already Dispatched --></label>
+        <name>Quantity_Already_Dispatched__c</name>
+    </fields>
+    <fields>
+        <label>Menge</label>
+        <name>Quantity__c</name>
+    </fields>
+    <fields>
+        <label><!-- Quantity to Dispatch --></label>
+        <name>Quantity_to_Dispatch__c</name>
+    </fields>
+    <fields>
+        <label>Dauerbuchungszeitraum</label>
+        <name>Recurring_Period__c</name>
+        <picklistValues>
+            <masterLabel>Annual</masterLabel>
+            <translation><!-- Annual --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Half Yearly</masterLabel>
+            <translation><!-- Half Yearly --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Monthly</masterLabel>
+            <translation><!-- Monthly --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Quarterly</masterLabel>
+            <translation><!-- Quarterly --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Weekly</masterLabel>
+            <translation><!-- Weekly --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Remaining Quantity --></label>
+        <name>Remaining_Quantity__c</name>
+    </fields>
+    <fields>
+        <help><!-- Row total of this charge
+Subtotal - Discount + VAT + Tax --></help>
+        <label>Zeilensumme</label>
+        <name>Row_Total__c</name>
+    </fields>
+    <fields>
+        <help><!-- This holds the sequence in which the charges are created and appears on the pdf files --></help>
+        <label>Sequenznummer</label>
+        <name>Sequence_No__c</name>
+    </fields>
+    <fields>
+        <label>Service Activation Datum</label>
+        <name>Service_Activation_Date__c</name>
+    </fields>
+    <fields>
+        <label>Service-End Date</label>
+        <name>Service_End_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Status --></label>
+        <name>Status__c</name>
+        <picklistValues>
+            <masterLabel>Cancelled</masterLabel>
+            <translation><!-- Cancelled --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Completed</masterLabel>
+            <translation><!-- Completed --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>In Progress</masterLabel>
+            <translation><!-- In Progress --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label>Steuercode</label>
+        <name>Tax_Code__c</name>
+    </fields>
+    <fields>
+        <label>MwSt. Prozentsatzes</label>
+        <name>Tax_Percentage__c</name>
+    </fields>
+    <fields>
+        <label>Steuern</label>
+        <name>Tax__c</name>
+    </fields>
+    <fields>
+        <label>Maßeinheit</label>
+        <name>Unit_Of_Measurement__c</name>
+        <picklistValues>
+            <masterLabel>Kg</masterLabel>
+            <translation><!-- Kg --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Ounce</masterLabel>
+            <translation><!-- Ounce --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Pound</masterLabel>
+            <translation><!-- Pound --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Unit</masterLabel>
+            <translation><!-- Unit --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label>Einheitsverkaufspreis</label>
+        <name>Unit_Price__c</name>
+    </fields>
+    <fields>
+        <label>MwSt. Prozentsatzes</label>
+        <name>VAT_Percentage__c</name>
+    </fields>
+    <fields>
+        <label>Mehrwertsteuer</label>
+        <name>VAT__c</name>
+    </fields>
+    <gender><!-- Neuter --></gender>
+    <layouts>
+        <layout>Job Rate Plan Charge Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Dates used in Invoice Run ( PLEASE DO NOT AMEND - System use only ) --></label>
+            <section>Dates used in Invoice Run ( PLEASE DO NOT AMEND - System use only )</section>
+        </sections>
+        <sections>
+            <label><!-- Dispatch Details --></label>
+            <section>Dispatch Details</section>
+        </sections>
+        <sections>
+            <label><!-- Subscription Details --></label>
+            <section>Subscription Details</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- Charge Name --></nameFieldLabel>
+</CustomObjectTranslation>

@@ -1,0 +1,3 @@
+<apex:page showHeader="false" standardController="invoiceit_s__Invoice__c"  renderAs="pdf" sidebar="false" standardStylesheets="false">
+    <c:componentInvoiceEmail invoiceId="{!$CurrentPage.parameters.Id}" />
+</apex:page>

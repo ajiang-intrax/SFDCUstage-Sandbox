@@ -1,0 +1,43 @@
+<apex:page id="Registration" showHeader="false" controller="SiteRegisterController" title="Register">
+  <apex:composition template="{!$Site.Template}">
+    <apex:define name="body">  
+      <center>
+        <apex:panelGrid bgcolor="white" columns="1"> 
+          <br/>
+          <br/>
+          <apex:panelGrid width="758" cellpadding="0" cellspacing="0" bgcolor="white" columns="1" styleClass="topPanelContainer"> 
+            <br/>
+            <apex:outputPanel layout="block" styleClass="topPanel">
+              <apex:panelGrid width="758" cellpadding="0" cellspacing="0" bgcolor="white" columns="2"> 
+                <apex:image url="{!URLFOR($Resource.SiteSamples, 'img/clock.png')}"/>
+                <apex:panelGroup >
+                  <br/>
+                  <apex:outputText styleClass="title" value="New User Registration"/> 
+                  <br/>
+                  <apex:form id="theForm" forceSSL="true">
+                    <apex:pageMessages id="error"/>
+                    <apex:panelGrid columns="2" style="margin-top:1em;">
+                      <apex:outputText value="Username"/>
+                      <apex:inputText required="true" id="username" value="{!username}"/>
+                      <apex:outputText value="Email"/>
+                      <apex:inputText required="true" id="email" value="{!email}"/>
+                      <apex:outputText value="Password"/>
+                      <apex:inputSecret id="password" value="{!password}"/>
+                      <apex:outputText value="Confirm Password"/>
+                      <apex:inputSecret id="confirmPassword" value="{!confirmPassword}"/>
+                      <apex:outputText value=""/>
+                      <apex:commandButton action="{!registerUser}" value="Submit" id="submit"/>
+                    </apex:panelGrid> 
+                    </apex:form>                  
+                  <br/>
+                </apex:panelGroup>
+              </apex:panelGrid> 
+             </apex:outputPanel>
+            <c:SitePoweredBy />
+          </apex:panelGrid> 
+       </apex:panelGrid>
+      </center>
+      <br/>
+    </apex:define>
+  </apex:composition>
+</apex:page>

@@ -1,0 +1,76 @@
+<apex:page docType="html-5.0" title="In_Person Interview" applyBodyTag="false" applyHtmlTag="false" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="false" showHeader="false" id="apc_ap_main_interview">
+<apex:composition template="intraxtemplate_vs3">
+        <apex:define name="body">
+            <c:block_header_apc_ap_application />
+             <div id="app-page" class="row">
+        <div id="app-focus" class="col-md-8 col-md-push-3">
+                    
+                    <c:block_app_completion ApplicantInfo="{!applicantInfo}" userProfileName="{!userProfileName}"  />
+                    
+                    <h1>In-Person Interview</h1>
+                    
+                    <apex:outputPanel styleClass="margin-t3" layout="block" rendered="{!IF(PRIntvList.Size > 0, false, true)}">
+	                    <p class="lead">AuPairCare and the U.S. Department of State require all applicants to the au pair program, complete a one hour in person interview with a representative of your agency. 
+	                    Please use the following form as a guide to your interview, and click on the link below to formally enter record of this interview once complete. 
+	                    Applicants cannot submit their application without a partner's record of the in-person interview.
+	                    </p>
+	                    <p class="lead">
+	                    Please contact your AuPairCare Partner Services representative with any questions.
+	                    </p>
+	                    <apex:form styleClass="form-vertical ws-validate" id="webform">
+	                        <div class="row">
+	                        <div class="col-sm-12">
+	                                <apex:outputLink styleClass="btn btn-link btn-lg margin-r"
+	                                   value="" target="_blank" id="informpdf"><i class="fa fa-download"></i> <span>Download Form</span>
+	                                </apex:outputLink> 
+	                                
+	                                <apex:outputLink value="/apex/apc_ap_main_interview_flow?id={!applicantInfo.Id}" target="_blank" styleClass="btn btn-default btn-lg">{!personInfo.First_Name__c} {!personInfo.Last_Name__c}'s In Person Interview</apex:outputLink>
+	                            </div>
+	                        </div><!--  end row -->
+	                        
+	                        
+	                       
+	                    </apex:form>
+	                  </apex:outputPanel>
+	                  
+	                  <apex:outputPanel styleClass="margin-t3" layout="block" rendered="{!IF(PRIntvList.Size > 0 && PRIntvList[0].Status__c == 'Incomplete' , true, false)}">
+	                  	<p class="lead">
+	                    Your interview is in progress.  Please complete the interview by clicking below.
+	                    </p>
+	                    <apex:form styleClass="form-vertical ws-validate" id="webform01">
+	                        <div class="row">
+	                        <div class="col-sm-12">
+	                                <apex:outputLink styleClass="btn btn-link btn-lg margin-r"
+	                                   value="" target="_blank" id="informpdfIncomp"><i class="fa fa-download"></i> <span>Download Form</span>
+	                                </apex:outputLink> 
+	                                
+	                                <apex:outputLink value="/apex/apc_ap_main_interview_flow?id={!applicantInfo.Id}" target="_blank" styleClass="btn btn-default btn-lg">{!personInfo.First_Name__c} {!personInfo.Last_Name__c}'s In Person Interview</apex:outputLink>
+	                            </div>
+	                        </div><!--  end row -->
+	                    </apex:form>
+	                  </apex:outputPanel>
+	                  
+	                  <apex:outputPanel styleClass="margin-t3" layout="block" rendered="{!IF(PRIntvList.Size > 0 && (PRIntvList[0].Status__c == 'Complete' || PRIntvList[0].Status__c == 'Confirmed'), true, false)}">
+	                  	<p class="lead">
+	                    Thank you for completing the interview.  You can review your responses to the interview questionnaire by clicking below.
+	                    </p>
+	                    <apex:form styleClass="form-vertical ws-validate" id="webform02">
+	                        <div class="row">
+	                        <div class="col-sm-12">
+	                                <apex:outputLink value="/apex/apc_ap_main_interview_flow?id={!applicantInfo.Id}" target="_blank" styleClass="btn btn-default btn-lg">{!personInfo.First_Name__c} {!personInfo.Last_Name__c}'s In Person Interview</apex:outputLink>
+	                            </div>
+	                        </div><!--  end row -->
+	                    </apex:form>
+	                  </apex:outputPanel>
+	                  
+                </div>
+                <!-- end column -->
+                
+                 <div id="app-side" class="col-md-3 col-md-pull-8">
+                    <c:menu_side_apc_ap_basic ApplicantInfo="{!applicantInfo}" />
+                </div>
+            </div>
+            <!-- end row --> 
+        </apex:define>
+    </apex:composition>
+</apex:page>

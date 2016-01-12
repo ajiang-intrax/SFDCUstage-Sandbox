@@ -1,0 +1,79 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="false" showHeader="false" id="apc_ap_main_reference_check">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_apc_ap_application />
+      <div id="app-page" class="row">
+        <div id="app-focus" class="col-md-8 col-md-push-3">
+          
+          <c:block_app_completion ApplicantInfo="{!applicantInfo}" userProfileName="{!userProfileName}"  />
+          
+          <!-- AUDIT BLOCK PARTNER --> 
+          <c:block_apc_pr_audit flaggedList="{!flaggedList}" rendered="{!userProfileName == 'OCPM Agent Portal' && applicantInfo.Application_Level__c == 'Basic' && applicantInfo.Application_Stage__c == 'Submitted'}"/>
+          
+          <h1>Reference Check</h1>
+          <p class="lead">Please review and confirm the references that have been requested by the applicant.  
+          Those with a status of "Completed" are ready to be reviewed and you can access them by clicking on the name of the reference.  
+          If a reference has a status of "Not Yet Started", this means that the reference has not yet responded to the request.  </p>
+          
+          <p class="lead">In order to complete this page there must be 2 confirmed childcare references and 1 confirmed personal reference.  
+          Contact the applicant directly if more references need to be requested for any reason.</p>
+          
+          <apex:form styleClass="form-vertical ws-validate" id="webform">
+            <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+            
+           <apex:outputPanel layout="block" rendered="{!IF(referenceListCheck.Size > 0, true, false)}">
+              <apex:pageBlock id="Block_ListExperience" >
+                <div class="table-responsive vs3">
+                  <apex:pageBlockTable styleClass="table vs3" value="{!referenceListCheck}" var="item">
+                    <apex:column headerValue="Name">
+                    
+                    <apex:outputLink disabled="{!IF(item.Status__c=='Not Started' || item.Status__c=='Incomplete' || item.Status__c==null, true, false )}" id="linktoccRef" rendered="{!item.Experience_Name__c != null && item.Person_Info__c == null}" 
+                    value="/apex/apc_ap_form_cc_reference_pview?id={!item.id}">
+                    <apex:outputText value="{!item.Name}"/> 
+                    </apex:outputLink>
+                    
+                    <apex:outputLink disabled="{!IF(item.Status__c=='Not Started' || item.Status__c=='Incomplete' || item.Status__c==null, true, false )}" id="linktoPersonRef" rendered="{!NOT(item.Experience_Name__c != null && item.Person_Info__c == null)}" 
+                    value="/apex/apc_ap_form_personal_reference_pview?id={!item.id}">
+                    <apex:outputText value="{!item.Name}"/> 
+                    </apex:outputLink>
+                    
+                    </apex:column>
+                    <apex:column headerValue="Type of Reference">
+                    	<apex:outputText value="Childcare" rendered="{!item.Experience_Name__c != null && item.Person_Info__c == null}"/>
+                    	<apex:outputText value="Personal" rendered="{!NOT(item.Experience_Name__c != null && item.Person_Info__c == null)}"/>
+                    </apex:column>
+                    <apex:column headerValue="Status" value="{!item.Status__c}"/>
+                    <apex:column headerValue="Requested On" value="{!item.CreatedDate}"/> 
+                    <apex:column headerValue="Completed On" value="{!item.Reference_Created_Date__c}"/>
+                   
+                   <!-- 
+                    <apex:column headerValue="Action" >
+                      <div class="btn-toolbar no-margin">
+                        <apex:outputLink html-data-toggle="tooltip" html-data-placement="top" title="Edit" styleClass="editb margin-r" id="EditLinkChildren" rendered="{!NOT(item.Experience_Type__c =='Work')}"  value="/apex/apc_ap_main_add_childcare_experience?id={!item.Applicant_Info__c}&eid={!item.id}"><i class="fa fa-pencil"></i> </apex:outputLink>
+                        <apex:outputLink html-data-toggle="tooltip" html-data-placement="top" title="Edit" styleClass="editb margin-r" id="EditLinkWork" rendered="{!item.Experience_Type__c =='Work'}"  value="/apex/apc_ap_main_add_work_experience?id={!item.Applicant_Info__c}&eid={!item.id}"><i class="fa fa-pencil"></i> </apex:outputLink>
+                        <apex:commandLink html-data-toggle="tooltip" html-data-placement="top" title="Remove" action="{!iWantMyJSValues}" styleClass="removeb" oncomplete="confDelete();" rerender=""> <i class="fa fa-trash-o"></i>
+                          <apex:param name="experienceId" value="{!item.id}" assignTo="{!experienceId}"/>
+                        </apex:commandLink>
+                      </div>
+                    </apex:column>
+                  -->
+                  </apex:pageBlockTable>
+                </div>
+              </apex:pageBlock>
+            </apex:outputPanel>
+            
+           
+          </apex:form>
+        </div>
+        <!-- end column -->
+        
+         <div id="app-side" class="col-md-3 col-md-pull-8">
+          <c:menu_side_apc_ap_basic ApplicantInfo="{!applicantInfo}" />
+        </div>
+        <!-- end column  --> 
+      </div>
+      <!-- end row --> 
+      
+    </apex:define>
+  </apex:composition>
+</apex:page>

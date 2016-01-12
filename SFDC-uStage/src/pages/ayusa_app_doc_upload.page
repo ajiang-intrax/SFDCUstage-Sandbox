@@ -1,0 +1,61 @@
+<apex:page docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper">
+	  <apex:form enctype="multipart/form-data">
+      <div class="page-header clearfix">
+ <h1>Ayusa Student Application</h1>
+<div class="back-to-main"><apex:outputLink value="apex/ayusa_app_home?id={!applicantInfo.Id}" rendered="{!if(doctype=='HostFamily',false,true)}">Back to Main Page</apex:outputLink><apex:outputLink value="apex/ayusa_hf_home?id={!applicantInfo.Id}" rendered="{!if(doctype=='HostFamily',true,false)}">Back to Main Page</apex:outputLink></div>
+</div>
+			    <h2>Document Upload</h2>
+          <div class="white-box clearfix">
+
+		      <div class="panel two_thirds">
+                 
+		 
+		       <div class="form-row">
+                   <div class="form-label top"> <apex:outputLabel value="File" for="file"/><span class="required">*</span></div>
+		          <div class="form-field"><apex:inputFile value="{!body}" id="file" contentType="{!contentType}" filename="{!fileName}" required="true"/> </div>
+                   </div>
+                  <p><em>Once you upload photos and documents they cannot be deleted.</em></p>
+		        <div class="form-row">
+                    <div class="form-label top"><apex:outputLabel value="Description" for="description"/></div>
+		          <div class="form-field"><apex:inputTextarea value="{!documentnew.Description__c}" id="description" required="false"/> </div>
+                    <apex:outputPanel layout="block" styleClass="dropt" rendered="{!NOT(IsPartner)}"> <i class="icon-question-sign"></i>
+                   <span>{!$ObjectType.Intrax_Program_Upload__c.Fields.Description__c.inlineHelpText}</span>
+                    </apex:outputPanel>
+                    
+                    <apex:outputPanel layout="block" styleClass="dropt" rendered="{!IsPartner}"> <i class="icon-question-sign"></i>
+                   <span>Examples:  Program Information and Student Interview; Grade Conversion Chart; Program Agreement; SLEP Test Score</span>
+                   </apex:outputPanel>
+                    
+                    
+                   </div>
+		 
+		
+		      
+		             	
+          	 <div class="form-row">
+		              <div class="form-link">
+		                <apex:commandlink action="{!SkipUpload}">
+		               <i class="icon-chevron-left"></i>
+		                  <apex:commandButton value="Skip" />
+		                  <apex:param name="reDirectPage" value="true"/>
+		                </apex:commandlink>
+		              </div>
+		      
+		              <div class="form-button">
+		                <apex:commandlink styleClass="upload" action="{!upload}">
+		                  <apex:commandButton value="Upload" />
+		                  <apex:param name="reDirectPage" value="true"/>
+		                </apex:commandlink>
+		              </div>
+		        </div>
+			
+              </div>
+         </div>
+	    </apex:form>
+		</div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

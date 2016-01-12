@@ -1,0 +1,87 @@
+<apex:page id="apc_ap_travel_payment" docType="html-5.0" applyHtmlTag="false" applyBodyTag="false" 
+           title="Payment Options" standardStylesheets="false" showHeader="false" controller="apc_home_controller"
+           action="{!myInvoiceController.CreateIntacctAccount}">
+
+    <apex:composition template="intraxtemplate_vs3">
+        <apex:define name="body">
+            
+                <div class="row">
+                    <div  class="col-sm-12 col-lg-10 center-block">
+                        <apex:form styleClass="form-vertical ws-validate" id="webform">
+                        <apex:Messages styleClass="custom-error-pagelevel" />
+                        <div class="row margin-t2">                                    
+                            <!-- call the block_cc_payment component here 
+							      we have to pass all the required attributes-->
+                            <c:block_cc_payment applicationObj="{!myInvoiceController.ApplicantInfo}"
+                                                childOppObj="{!myInvoiceController.ChildOpportunity}"
+                                                personInfoObj="{!myInvoiceController.personInfo}"
+                                                matchObj="{!myInvoiceController.ConfMatch}"
+                                                nextPageURLObj1="apc_ap_travel_payment_confirmation"
+                                                nextPageURLObj2="apc_hf_match_payment_confirmation_pdf"
+                                                pymntconfirmEmailTempIdObj="APC_Payment_Confirmation_ID"
+                                                selectedOppProdCartListObj="{!myInvoiceController.selectedOppProdCartList}"
+                                                totalAmount="{!myInvoiceController.selectedItemsTotalPrice}"
+                                                >
+                            </c:block_cc_payment> 
+                            <div class="col-sm-4">
+                       
+                                
+                                <div class="box margin-b2" style="background: #777777; color: #fff;">
+                                    <h4 class="no-margin">Payment Due Now</h4>
+                                                <div class="h3 no-margin">
+                                                            $<apex:outputText value="{0, number, #,##0.00}">
+                                                                <apex:param value="{!myInvoiceController.selectedItemsTotalPrice}"/>
+                                                            </apex:outputText>
+                                                </div>
+                                                
+                                </div><!--  end box -->
+                                
+                            <apex:outputPanel id="schdPaymentsAvailable" rendered="{!(myInvoiceController.schdPaymentsAvailable==True)}">
+                                <div class="box gray margin-b2">
+                                    <h4>Next Scheduled Payment(s)</h4>
+                                                <apex:repeat var="datekey" value="{!myInvoiceController.SelectedItemsPriceMapDueLater}">
+                                                  <hr/>   
+                                                       <div class="h3 no-margin">     
+                                                            $<apex:outputText value="{0, number, #,##0.00}">
+                                                                <apex:param value="{!myInvoiceController.SelectedItemsPriceMapDueLater[datekey]}"/>
+                                                            </apex:outputText>
+                                                       </div> 
+                                                       <div> 
+                                                       <label>Scheduled for</label>
+                                                            <apex:outputText value=" {0,date,MM/dd/yyyy}">
+                                                                <apex:param value="{!datekey}"/>
+                                                            </apex:outputText>
+                                                       </div>
+                                                </apex:repeat>  
+                                </div><!--  end box -->
+                           </apex:outputPanel>
+                                
+                                <div class = "box gray">
+                                                <div class="h4 no-margin">Program Total</div>
+                                                <div class="h3 no-margin">
+                                                    $<apex:outputText value=" {0, number, #,##0.00}">
+                                                        <apex:param value="{!myInvoiceController.selectedItemsTotalPrice}"/>
+                                                    </apex:outputText>
+                                                </div>
+                                </div><!--  end box -->
+                            </div><!--end col-->
+                        </div><!--end row-->
+                    
+                    
+                    </apex:form>
+                    </div>
+                
+                
+                </div>      
+                
+                <!-- end col --> 
+                
+                <!-- end row --> 
+                
+                
+            
+        </apex:define>
+    </apex:composition>
+    
+    
+</apex:page>

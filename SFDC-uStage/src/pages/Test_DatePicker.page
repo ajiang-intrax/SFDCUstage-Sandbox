@@ -1,0 +1,66 @@
+<apex:page docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+    <div class="wrapper">
+ <apex:form > 
+         <div class="page-header clearfix">
+ <h1>Dummy Page</h1>
+</div>
+          <h2>New Date picker</h2>
+          <div class="white-box clearfix">
+          <div class="panel two_thirds">
+          
+          <apex:Messages styleClass="custom-error-pagelevel"/>
+              <p><em> All fields marked with an asterisk (<span class="required no-padding">*</span>) are required</em></p><br/>
+           <!-- 
+            <div class="form-row">
+                <div class="form-label left">Test 1: Date picker OLD VERSION<span class="required">*</span> </div>
+                <div class="form-field">
+                   <apex:inputField value="{!applicantInfo.Engagement_End__c}"  /> 
+                </div>                
+           </div>
+           -->
+            <div class="form-row">
+                <div class="form-label left">Test 1: Date picker standard</div>
+                <div class="form-field dp-standard" locale="{!user.localeSidKey}">
+                   <apex:inputField value="{!applicantInfo.Engagement_End__c}"  /> 
+                </div>                
+           </div>
+           
+            
+           <div class="form-row">
+                <div class="form-label left">Test 2: Date picker with time:</div>
+                <div class="form-field dp-wtime" locale="{!user.localeSidKey}">
+                   <apex:inputField value="{!applicantInfo.ETR_Received_Date__c}" /> 
+                </div>                
+           </div>
+           
+            <!-- 
+           <div class="form-row">
+                <div class="form-label left">Test 2: Date picker with time(output):</div>
+                <div class="form-field">
+                   <apex:outputField value="{!applicantInfo.ETR_Received_Date__c}" /> 
+                </div>                
+           </div>
+          -->
+           <div class="form-button">
+                <apex:commandlink styleClass="next" action="{!navigator}">
+                  <apex:param name="nextPage" value="/apex/Test_DatePicker"/>
+                  <apex:param name="reDirectPage" value="true"/>
+                  <apex:commandButton value="Save" />
+                  <i class="icon-chevron-right"></i>   
+                </apex:commandlink>
+           </div>
+            
+            
+           </div>
+           
+          
+               
+             
+          </div> 
+     </apex:form>
+      </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

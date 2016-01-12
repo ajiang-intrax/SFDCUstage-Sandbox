@@ -1,0 +1,307 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardController="Account" 
+                standardStylesheets="false" showHeader="false"  
+                title="IGI HC Agreement" id="igi_hc_agreement_pdf" renderas="pdf">
+<head>
+<style type="text/css" >
+@page {
+ size:25cm 30cm;
+font-family:Trebuchet MS, Arial, Helvetica, sans-serif;
+margin:2cm 1cm 3cm 1cm;
+padding:0 0 1em 0;
+@top-left {
+ content: element(header);
+}
+@bottom-center {
+ content: element(footer);
+}
+}
+ @page:first {
+@top-left {
+content: element(master);
+}
+
+}
+div.master { position: running(master); padding:2em 1em 1em 1em; }
+div.header { position: running(header); padding:1em; }
+div.footer { display: block; padding: 1em; position: running(footer); font-family:Trebuchet MS, Arial, Helvetica, sans-serif; color:#7d7d7d; }
+.page-numbers { text-align:center; padding-top:0.5cm; width:100%;font-size:9pt; }
+.pagenumber:before { content: counter(page); font-size:9pt; }
+.pagecount:before { content: counter(pages); font-size:9pt; }
+.title { text-align:center; }
+.title div { color:#202020; display:block; font-size:11pt; background:#fff;text-align:center; }
+h2 { background:#e3edd4; font-size:9pt; padding:0.5em 1em; margin-bottom:1em; page-break-inside:avoid;  page-break-after: avoid;}
+.container { width:100%; font-family:Trebuchet MS; font-size:11pt; text-align:left;}
+
+.clearfix:after { content:"."; width:1px; height:1px; display:block; visibility:hidden; clear:both; }
+
+.page-break { page-break-before: always; }
+.page-break-inside { page-break-inside: avoid; }
+.page-title-small { float:right; font-family:Trebuchet MS; font-size:9pt; color:#7d7d7d; }
+   
+    .Cell
+    {   
+        width:120px;
+    }
+    .CellData
+    {   
+        width:230px;
+    }
+ .white { color:white; font-size:1px; }   
+</style></head>
+ <body>
+   <form >
+   <div class="master">
+     <!-- <apex:image style="width:2.5cm;" url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/pdf/pdf-logo-intrax.gif')}"
+                            alt="Intrax" title="Intrax"/>-->
+    <apex:image style="width:2.5cm;" url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/pdf/pdf-logo-intrax.gif')}"
+                            alt="Intrax" title="Intrax"/>
+     <span class="page-title-small">March 2015</span>
+    </div>
+    <div class="header"> <span class="page-title-small">March 2015</span> </div>
+    <div class="footer">
+      <apex:image style="width:100%;" url="{!URLFOR($Resource.intrax_themes, '/intrax_themes/images/pdf-boiler-plate.png')}" alt="Intrax" title="Intrax"/>
+
+      <div class="page-numbers"><span class="pagenumber"></span>/<span class="pagecount"></span></div>
+    </div>
+    <div class="container clearfix">
+    <div class="title">
+      <div><b>HOST COMPANY AGREEMENT</b></div>  <br/>    
+    </div>  
+   </div>
+   <div class="container">
+     This agreement (“Agreement”) is made between Intrax (“Intrax”), located at 600 California Street 10th Floor, San Francisco, CA 94108 and {!Account.name} (“Host Company”), located at
+      {!Account.BillingStreet}, {!Account.BillingCity}, {!Account.BillingState} {!Account.BillingPostalcode}.The purpose of this Agreement is to establish the respective rights and obligations of the parties thereto regarding the matching of Intrax Program participants (“Trainee/Intern”) with Host Company in an internship or trainee position (the “Program”). This Agreement becomes effective on the date it is signed and is valid for one (1) year unless otherwise terminated per the terms of this Agreement.<br/> 
+       <br/>
+Intrax, as a US Department of State (DOS) designated Exchange Visitor Program, abides by all US Department of State regulations outlined in <apex:outputlink value="http://www.ecfr.gov/cgi-bin/text-idx?tpl=/ecfrbrowse/Title22/22cfr62_main_02.tpl">22 CFR Part 62</apex:outputlink> and is the legal sponsor of each Trainee/Intern during their Program.<br/>
+       <br/>
+<b>Host Company agrees and verifies that it:</b>
+<ol type="1">
+    <li>Will abide by the regulations governing the Exchange Visitor Program (22 CFR Part 62) as administered by the DOS</li>
+    <li>Will observe all applicable local, state and federal labor laws with respect to the training of a Trainee/Intern.</li>
+    <li>Certifies that the intern/trainee program meets all the requirements of the&nbsp;<apex:outputlink value="http://www.dol.gov/whd/regs/statutes/FairLaborStandAct.pdf">Fair Labor Standards Act, as amended (29 U.S.C. 201 et seq.)</apex:outputlink></li>
+    <li>Possesses a valid Workers’ Compensation Insurance Policy, or the local US State equivalent, or proof of exemption at the time of signature and will maintain a valid policy as long as a J-1 Intrax Trainee/Intern is part of their organization.</li>
+    <li>Understands that the participant is on a cultural exchange visa program and accepts that Intrax is the legal sponsor of the Trainee/Intern during his/her stay in the United States. </li>
+    <li>Understands that the Host Company and intern/trainee must follow signed and executed Training/Internship Placement Plan/DS-7002 and must rotate through specified phases indicated.  Host Company will participate in the completion of periodic evaluations to monitor this progress.</li> 
+    <li>Will permit Intrax and its designated representative to make on-site visits of Host Company’s facilities to review implementation of the Training/Internship Program at a time convenient to Host Company.</li>
+    <li>Will timely submit to Intrax any changes that will affect the Program and will not implement such changes without Intrax’s approval.  Such changes include, but are not limited to, the location, content, and length of training stated in the Training/Internship Placement Plan/DS-7002.</li>
+    <li>Will notify Intrax promptly should any emergency involve a Trainee/Intern; should a Trainee/Intern’s welfare be impacted in any way; if a Trainee/Intern is arrested or involved in any illegal activities; if the Host Company becomes involved in any litigation related to their participation in the exchange visitor program. </li>
+    <li>Host Company understands and acknowledges that Trainee/Intern is a non-resident alien for whom Intrax must report any Program status changes to the appropriate U.S. government agency.  Host Company will inform Intrax within three (3) business days if an intern/trainee leaves his or her Placement for any reason.</li> 
+    <li>Understands and accepts that the Program is not designed to recruit and train non-resident aliens for employment in the United States.</li>
+    <li>Will not involve Staffing/Employment agencies or Professional Employer Organizations (PEOs) in the J-1 trainee or internship program. </li> 
+    <li>Will not place Trainee/Interns in: <br/>   
+      <span>
+        a. positions which displace full-time or part-time United States workers.<br/> 
+        b. unskilled occupations as defined in&nbsp;<apex:outputlink value="http://www.ecfr.gov/cgi-bin/text-idx?SID=8f3d0184d870949b476095232d50fa40&node=ap22.1.62.f.e&rgn=div9">Appendix E</apex:outputlink> of the Exchange Visitor Program Regulations (CFR Part 62. Title 
+           22 Exchange Visitor Program)<br/>  
+      </span>
+    </li>
+    <li>Understands and accepts that Intrax has the right to withdraw sponsorship from any Trainee/Intern whose Host Company does not comply with Intrax requirements.  Host Company further understands and accepts that Intrax may dismiss a Trainee/Intern from the Intrax Program, thereby requiring the Trainee/Intern to leave the country, and that Intrax, at its discretion, may refuse to process additional applications for placement with Host Company.</li>
+    <li>Understands that all Trainees/Interns are to return home after the program and will not assist in changing a Trainee/Intern’s visa status in the U.S. </li>
+    <li>Will provide sufficient physical training environment space, equipment and trained personnel to ensure that the Trainee/Intern receives the training outlined in the Training Internship Placement Plan.</li>
+    <li>Understands and accepts that Intrax is not responsible for any civil or criminal liability by a Trainee/Intern or for cost associated with defending against such claims.</li>
+    <li>Understands that Intrax, as a legal sponsor of the Trainee/Intern charges program fees to Trainees/Interns in order to validate placements, issue supporting visa documents and other administrative costs related to DS-2019 issuance, as well as to monitor the health, safety, and welfare of Trainees/Interns while on the program .</li>
+  </ol>
+  <br/>  <br/>
+  <u>Severability</u>:  If any provision of this Agreement or the application thereof is held to be invalid, illegal or unenforceable for any reason, such provision or application shall not impair the other provisions or applications of the Agreement which can be given effect without the invalid, illegal or unenforceable provision or application.  To this end, the provisions of this Agreement are declared to be severable and shall be construed and enforced accordingly. 
+    <br/> <br/>
+  <u>No Waiver of Breach</u>:  No waiver of any breach of any term of this Agreement shall be construed to be, or shall be, a waiver of any other breach of this Agreement.  No waiver shall be binding unless in writing and signed by the party waiving the breach.  
+       <br/> <br/>
+  <u>Governing Law</u>:  This Agreement shall be governed by and construed under the laws of the State of California, USA, without regard to principles of conflict of law.  
+    <br/>
+  <br/><u>Complete Agreement</u>:  Both parties acknowledge that this document contains the complete Agreement between them, that neither party has relied on any representations not contained herein, and that any additions or deletions must be made in writing and signed by both parties. 
+   <br/>
+  <br/><u>Termination</u>:  This agreement may be terminated by either party provided that 60 day notice is provided to the other party in writing, or it may be terminated immediately for violating the terms of this Agreement. 
+   <br/>
+  <br/><u>Survival</u>: The terms of this Agreement dealing with Host Company’s requirements and verifications shall survive any expiration or termination of this Agreement.
+    <br/>
+   <br/>
+   <table border="1" cellspacing="0" cellpadding="3">
+          
+     <tr > 
+     <td class="Cell">Host Company:</td> <td class="CellData"> {!Account.Name} </td> 
+     <td class="Cell">Parent Company (if applicable)</td> <td class="CellData">{!Account.Parent.Name}</td> 
+     </tr>
+     
+     <tr >
+        <td class="Cell">
+           Address Trainee/Intern will be assigned:
+        </td>
+        <td class="Celldata" colspan="3">
+           {!Account.BillingStreet}, {!Account.BillingCity}, {!Account.BillingState} {!Account.BillingPostalcode}
+           
+        </td>
+             
+    </tr>                                                                              
+      
+     <tr>
+        <td class="Cell">
+           Website:
+        </td>
+        <td class="Celldata">
+            {!Account.Website}
+        </td>
+        <td class="Cell">
+           Email Address: 
+        </td>
+        <td class="Celldata">
+           {!Account.Email_Business__c}      
+        </td>
+    </tr>
+     <tr class="Row">
+        <td class="Cell">
+            Telephone:
+        </td>
+        <td class="Celldata">
+            {!Account.Phone} 
+        </td>
+        <td class="Cell">
+           Fax: 
+        </td>
+        <td class="Celldata">
+           {!Account.Fax}
+        </td>
+    </tr>
+    
+    <tr class="Row">
+        <td class="Cell">
+            Workers’ Compensation Insurance Policy #:
+        </td>
+        <td class="Celldata">
+            {!Account.Workers_Comp_Policy_Number__c} 
+        </td>
+        <td class="Cell">
+           Name of Workers’  Compensation Insurance Provider:
+        </td>
+        <td class="Celldata">
+           {!Account.Worker_Comp_Provider__c}
+        </td>
+    </tr>
+    
+    <tr class="Row">
+        <td class="Cell">
+           Number of full-time Employees at Training address:
+        </td>
+        <td class="Celldata">
+            {!Account.NumberOfEmployees} 
+        </td>
+        <td class="Cell">
+          Tax ID Number (Employer Identification Number): 
+        </td>
+        <td class="Celldata">
+           {!Account.EIN__c}
+        </td>
+    </tr>
+    <tr >
+        <td class="Cell">
+          Annual Revenue (Companywide):
+        </td>
+        <td class="Celldata" colspan="3">
+        <apex:outputText rendered="{!if(Account.Company_Annual_Revenue__c=='0M - 3M',true,false)}" >
+         <apex:image url="{!$Resource.Checked}" alt="Checked"  width="20" height="20" style="position:relative;top:4px;"/><p style="display:inline;">$0 to $3 Million</p>
+        </apex:outputText>
+     
+       <apex:outputText rendered="{!if(Account.Company_Annual_Revenue__c=='0M - 3M',false,true)}">
+        <apex:image url="{!$Resource.Unchecked}" alt="UnChecked"  width="20" height="20" style="position:relative;top:4px;"/><p style="display:inline;">$0 to $3 Million</p>
+       </apex:outputText> 
+       &nbsp;&nbsp;
+       <apex:outputText rendered="{!if(Account.Company_Annual_Revenue__c=='3M - 10M',true,false)}" >
+         <apex:image url="{!$Resource.Checked}" alt="Checked"  width="20" height="20" style="position:relative;top:4px;"/><p style="display:inline;">$3 Million to $10 Million </p>
+        </apex:outputText>
+     
+       <apex:outputText rendered="{!if(Account.Company_Annual_Revenue__c=='3M - 10M',false,true)}">
+        <apex:image url="{!$Resource.Unchecked}" alt="UnChecked"  width="20" height="20" style="position:relative;top:4px;"/><p style="display:inline;">$3 Million to $10 Million </p>
+       </apex:outputText> 
+       
+        &nbsp;&nbsp;
+       <apex:outputText rendered="{!if(Account.Company_Annual_Revenue__c=='10M - 25M',true,false)}" >
+         <apex:image url="{!$Resource.Checked}" alt="Checked"  width="20" height="20" style="position:relative;top:4px;"/><p style="display:inline;">$10 Million to $25 Million </p>
+        </apex:outputText>
+     
+       <apex:outputText rendered="{!if(Account.Company_Annual_Revenue__c=='10M - 25M',false,true)}">
+        <apex:image url="{!$Resource.Unchecked}" alt="UnChecked"  width="20" height="20" style="position:relative;top:4px;"/><p style="display:inline;">$10 Million to $25 Million </p>
+       </apex:outputText> 
+       
+        &nbsp;&nbsp;
+       <apex:outputText rendered="{!if(Account.Company_Annual_Revenue__c=='>25M',true,false)}" >
+         <apex:image url="{!$Resource.Checked}" alt="Checked"  width="20" height="20" style="position:relative;top:4px;"/><p style="display:inline;">$25 Million or More </p>
+        </apex:outputText>
+     
+       <apex:outputText rendered="{!if(Account.Company_Annual_Revenue__c=='>25M',false,true)}">
+        <apex:image url="{!$Resource.Unchecked}" alt="UnChecked"  width="20" height="20" style="position:relative;top:4px;"/><p style="display:inline;">$25 Million or More</p>
+       </apex:outputText> 
+     
+       
+        </td>
+             
+    </tr>  
+    
+    <tr >
+        <td class="Cell">
+          Business Sector:
+        </td>
+        <td class="Celldata" colspan="3">
+          <apex:outputText rendered="{!if(Account.Company_Type__c =='Private Sector (For-Profit)',true,false)}" >
+         <apex:image url="{!$Resource.Checked}" alt="Checked"  width="20" height="20" style="position:relative;top:4px;"/><p style="display:inline;">For-Profit/Private Sector</p>
+        </apex:outputText>
+     
+       <apex:outputText rendered="{!if(Account.Company_Type__c =='Private Sector (For-Profit)',false,true)}">
+        <apex:image url="{!$Resource.Unchecked}" alt="UnChecked"  width="20" height="20" style="position:relative;top:4px;"/><p style="display:inline;">For-Profit/Private Sector</p>
+       </apex:outputText> 
+       &nbsp;&nbsp;
+       <apex:outputText rendered="{!if(Account.Company_Type__c =='Public Sector (Government)',true,false)}" >
+         <apex:image url="{!$Resource.Checked}" alt="Checked"  width="20" height="20" style="position:relative;top:4px;"/><p style="display:inline;">Government/Public Sector</p>
+        </apex:outputText>
+     
+       <apex:outputText rendered="{!if(Account.Company_Type__c =='Public Sector (Government)',false,true)}">
+        <apex:image url="{!$Resource.Unchecked}" alt="UnChecked"  width="20" height="20" style="position:relative;top:4px;"/><p style="display:inline;">Government/Public Sector</p>
+       </apex:outputText>  
+        &nbsp;&nbsp;
+       <apex:outputText rendered="{!if(Account.Company_Type__c =='Non-Profit',true,false)}" >
+         <apex:image url="{!$Resource.Checked}" alt="Checked"  width="20" height="20" style="position:relative;top:4px;"/><p style="display:inline;">Non-Profit Sector</p>
+        </apex:outputText>
+     
+       <apex:outputText rendered="{!if(Account.Company_Type__c =='Non-Profit',false,true)}">
+        <apex:image url="{!$Resource.Unchecked}" alt="UnChecked"  width="20" height="20" style="position:relative;top:4px;"/><p style="display:inline;">Non-Profit Sector</p>
+       </apex:outputText> 
+        
+        </td>
+             
+    </tr>  
+    
+  </table>
+  <br/><br/><br/>
+   <span> 
+   <div style="position:relative;left:90px;top:30px;">
+    <apex:outputPanel styleClass="white">HCA-PrintName</apex:outputPanel>   
+   </div>
+   <div style="position:relative;left:520px;top:12px;">
+   <apex:outputPanel styleClass="white">HCA-Title</apex:outputPanel>
+   </div>
+   </span>  
+   <span> 
+   <div align="left" style="display:inline">Print Name: ______________________________________________ </div>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+   <div align="right" style="display:inline">Title: __________________________________________</div>
+   </span>
+   <br/><br/> <br/><br/>
+   <span> 
+   <div style="position:relative;left:90px;top:46px;">
+    <apex:outputPanel styleClass="white">HCA-Signature</apex:outputPanel>   
+   </div>
+   <div style="position:relative;left:520px;top:30px;">
+   <apex:outputPanel styleClass="white">HCA-DateSigned</apex:outputPanel>
+   </div>
+   </span>   
+       
+   <br/><br/>
+   <span> 
+   <div align="left" style="display:inline">Signature: ________________________________________________ </div>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+   <div align="right" style="display:inline">Date: __________________________________________</div>
+   </span>
+  
+  </div>   
+  
+ </form>
+</body>
+</apex:page>

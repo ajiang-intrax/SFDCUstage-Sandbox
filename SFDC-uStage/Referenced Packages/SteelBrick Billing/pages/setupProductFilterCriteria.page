@@ -1,0 +1,34 @@
+<apex:page tabStyle="invoiceit_s__Product_Catalog_Filter_Criteria__c" controller="invoiceit_s.ControllerSetupProductFilterCriteria" sidebar="false" showHeader="false">
+    <apex:form >
+        <apex:sectionHeader title="{!$Label.ConfigureProductFilters}"/>
+        <apex:pageMessages id="pageMessages"/>
+        <apex:pageBlock >
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!addRow}" value="{!$Label.ButtonNew}" rerender="table, pageMessages"/>
+                <apex:commandButton action="{!save}" value="{!$Label.ButtonSave}" rerender="table, pageMessages"/>
+            </apex:pageBlockButtons>
+            <apex:pageBlockTable value="{!filters}" var="filter" id="table">
+                <apex:column >
+                    <apex:commandLink value="{!$Label.LinkDelete}" action="{!deleteRow}" rendered="{!filter.Id != null}" rerender="table, pageMessages">
+                        <apex:param value="{!filter.Id}" name="id" />
+                    </apex:commandLink>
+                </apex:column> 
+                <apex:column headerValue="{!$Label.Name}">
+                    <apex:inputField value="{!filter.Name}"/> 
+                </apex:column>
+                <apex:column headerValue="{!$Label.SourceObject}">
+                    <apex:inputField value="{!filter.invoiceit_s__Source_Object__c}"/>
+                </apex:column>
+                <apex:column headerValue="{!$Label.SourceField}">
+                    <apex:inputField value="{!filter.invoiceit_s__Source_Field__c}"/>
+                </apex:column>
+                <apex:column headerValue="{!$Label.DestinationObject}">
+                    <apex:inputField value="{!filter.invoiceit_s__Destination_Object__c}"/>
+                </apex:column>
+                <apex:column headerValue="{!$Label.DestinationField}">
+                    <apex:inputField value="{!filter.invoiceit_s__Destination_Field__c}"/>
+                </apex:column>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,49 @@
+<apex:page docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+<div class="wrapper">
+          <apex:form >
+           <div class="page-header clearfix">
+ <h1>Ayusa Student Application</h1>
+<div class="back-to-main"><apex:outputLink value="apex/ayusa_app_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+</div>
+              <h2>Other Family Members</h2>
+            <div class="white-box clearfix">  
+             <div class="panel two_thirds">
+              <div class="form-row">
+              
+                <div class="form-button">
+                <apex:commandlink styleClass="add" action="{!navigator}">
+                    <i class="icon-plus-sign"></i>
+                  <apex:param name="nextPage" value="/apex/ayusa_app_fam_add_new"/>
+                  <apex:param name="reDirectPage" value="false"/>
+                  <apex:commandButton value="Add New" />
+                </apex:commandlink>
+              </div>
+              
+              </div>  
+              
+            <div class="form-row">
+              
+                <div class="form-button">
+                <i class="icon-chevron-left"></i>     
+                <apex:outputLink value="/apex/ayusa_app_fam_imm">Back</apex:outputLink>
+              </div> 
+            
+              <div class="form-button">
+                <apex:commandlink styleClass="next" action="{!navigator}">
+                  <apex:param name="nextPage" value="/apex/ayusa_app_photos_videos"/>
+                  <apex:param name="reDirectPage" value="false"/>
+                  <apex:commandButton value="Next" />
+                  <i class="icon-chevron-right"></i>   
+                </apex:commandlink>
+              </div>              
+            </div>
+                    </div>
+                </div>
+              
+       </apex:form>
+        </div>
+        </apex:define>
+  </apex:composition>
+</apex:page>

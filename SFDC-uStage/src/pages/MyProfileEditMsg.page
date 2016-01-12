@@ -1,0 +1,41 @@
+<apex:page docType="html-5.0" id="portalUserProfilePage" controller="MyProfileEditPageController" standardStylesheets="true" showHeader="false" title="My Intrax Profile">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+    <div class="wrapper">
+        <apex:form id="form">
+        <h1>Important Message</h1> 
+    <apex:pageBlock id="UserDetail">
+        <div class="white-box clearfix">
+             <div class="panel two_thirds">
+               <apex:pageBlock id="viewUserDetail">
+                            
+                                <apex:outputPanel layout="block" rendered="true"> 
+                                <p>Updating your email address will also update your username.</p>
+                                <p>Your previous username  <strong>{!TrimUserName}</strong> will no longer available. To Improve your experience we will update your username to be the same as your email address.</p>
+                                <p> Your new username will be : <span style="background:yellow;"><strong>{!$CurrentPage.parameters.DbUserEmail}</strong></span></p>
+                                <p>Please update your account settings if this email address is not correct.</p>
+                                </apex:outputPanel>
+                                
+                                <div class="form-row">
+                                    
+                                        <div class="form-button">
+                                            <apex:commandLink id="confirm" action="{!Confirm}">
+                                                <apex:commandButton value="Confirm" />
+                                            </apex:commandLink>
+                                        </div>  
+                                    
+                                        <div class="form-link">
+                                            <apex:commandLink id="cancel" action="{!cancel}" value="Back to Account Settings"
+                                                    rerender="UserDetail" immediate="true">
+                                            </apex:commandLink>
+                                        </div>      
+                                </div>
+                  </apex:pageBlock>
+             </div>  
+        </div>
+           </apex:pageBlock>         
+             </apex:form>
+         </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

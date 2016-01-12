@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Quote</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Quotes</value>
+    </caseValues>
+    <fields>
+        <label><!-- Account --></label>
+        <name>Account__c</name>
+        <relationshipLabel><!-- Quotes --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Billing Contact --></label>
+        <name>Billing_Contact__c</name>
+        <relationshipLabel><!-- Quote --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Contracted MRR --></label>
+        <name>Contracted_MRR__c</name>
+    </fields>
+    <fields>
+        <label><!-- Create Automatic Order? --></label>
+        <name>Create_Automatic_Order__c</name>
+    </fields>
+    <fields>
+        <label><!-- Currency --></label>
+        <name>CurrencyL__c</name>
+        <relationshipLabel><!-- Quote --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Discount Code --></label>
+        <name>Discount_Code__c</name>
+    </fields>
+    <fields>
+        <label><!-- Discount Percent --></label>
+        <name>Discount_Percent__c</name>
+    </fields>
+    <fields>
+        <help><!-- Discount offered on this quote --></help>
+        <label><!-- Discount Value --></label>
+        <name>Discount_Value__c</name>
+    </fields>
+    <fields>
+        <label><!-- Email Sent --></label>
+        <name>Email_Sent__c</name>
+    </fields>
+    <fields>
+        <help><!-- If you are a multi currency org, this field will hold the exchange rate between the Quote Currency and your Corporate Currency. 
+Value in Corporate Currency = Value in Quote Currency x Exchange Rate Applied --></help>
+        <label><!-- Exchange Rate Applied --></label>
+        <name>Exchange_Rate_Applied__c</name>
+    </fields>
+    <fields>
+        <help><!-- Subtotal - Discount Value --></help>
+        <label><!-- Net Total --></label>
+        <name>Net_Total__c</name>
+    </fields>
+    <fields>
+        <help><!-- Leave this blank for &quot;Evergreen Subscriptions&quot; i.e., those that don&apos;t expire --></help>
+        <label><!-- Terms (Months) --></label>
+        <name>Number_Of_Terms__c</name>
+    </fields>
+    <fields>
+        <help><!-- Select the partner who places this quote on behalf of the client --></help>
+        <label><!-- Partner --></label>
+        <name>Partner__c</name>
+        <relationshipLabel><!-- Quotes (Partner) --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Currency Symbol --></label>
+        <name>Quote_Currency_Symbol__c</name>
+    </fields>
+    <fields>
+        <label><!-- Parent Quote --></label>
+        <name>Quote__c</name>
+        <relationshipLabel><!-- Cloned Quotes --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Recalculate --></label>
+        <name>Recalculate__c</name>
+    </fields>
+    <fields>
+        <label><!-- Primary(Shipping) Contact --></label>
+        <name>Shipping_Contact__c</name>
+        <relationshipLabel><!-- Quote (Shipping Contact) --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Valid From --></label>
+        <name>Start_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Status --></label>
+        <name>Status__c</name>
+        <picklistValues>
+            <masterLabel>Active</masterLabel>
+            <translation><!-- Active --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Cancelled</masterLabel>
+            <translation><!-- Cancelled --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Converted</masterLabel>
+            <translation><!-- Converted --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Expired</masterLabel>
+            <translation><!-- Expired --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Quantity * Unit Price --></help>
+        <label><!-- Subtotal --></label>
+        <name>Sub_Total__c</name>
+    </fields>
+    <fields>
+        <label><!-- Tax --></label>
+        <name>Tax__c</name>
+    </fields>
+    <fields>
+        <label><!-- Obsolete_Today&apos;s MRR --></label>
+        <name>Todays_MRR__c</name>
+    </fields>
+    <fields>
+        <help><!-- (Grand Total - Total Cost) 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    x  100
+          Grand Total --></help>
+        <label><!-- Total Profit Percent --></label>
+        <name>TotalProfitPercent__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total Contract Value --></label>
+        <name>Total_Contract_Value__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total Cost Price --></label>
+        <name>Total_Cost__c</name>
+    </fields>
+    <fields>
+        <label><!-- Obsolete Total Profit Percent --></label>
+        <name>Total_Profit_Percent__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total Profit (Excl Tax/VAT) --></label>
+        <name>Total_Profit__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total Quote Products --></label>
+        <name>Total_Quote_Products__c</name>
+    </fields>
+    <fields>
+        <help><!-- Subtotal - Discount + VAT + Tax --></help>
+        <label><!-- Grand Total --></label>
+        <name>Total__c</name>
+    </fields>
+    <fields>
+        <label><!-- VAT --></label>
+        <name>VAT__c</name>
+    </fields>
+    <fields>
+        <label><!-- Valid To --></label>
+        <name>Valid_To__c</name>
+    </fields>
+    <layouts>
+        <layout>Quote Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Products --></label>
+            <section>Products</section>
+        </sections>
+        <sections>
+            <label><!-- Quote Value --></label>
+            <section>Quote Value</section>
+        </sections>
+        <sections>
+            <label><!-- System Information --></label>
+            <section>System Information</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+    <webLinks>
+        <label><!-- AddOptionalExtras --></label>
+        <name>AddOptionalExtras</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Attach_Quote_As_PDF --></label>
+        <name>Attach_Quote_As_PDF</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Clone_Quote_With_Different_Currecy --></label>
+        <name>Clone_Quote_With_Different_Currecy</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Conga_Quote2 --></label>
+        <name>Conga_Quote2</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Convert_Quote --></label>
+        <name>Convert_Quote</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Email_Quote --></label>
+        <name>Email_Quote</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Generate_Quote --></label>
+        <name>Generate_Quote</name>
+    </webLinks>
+</CustomObjectTranslation>

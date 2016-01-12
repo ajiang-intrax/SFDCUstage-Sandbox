@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- DocuSign Envelope Document --></value>
+    </caseValues>
+    <fields>
+        <help><!-- Attachment ID --></help>
+        <label>첨부파일 ID</label>
+        <name>Attachment_ID__c</name>
+    </fields>
+    <fields>
+        <label>확장된 첨부파일 이름</label>
+        <name>Attachment_NameEx__c</name>
+    </fields>
+    <fields>
+        <help><!-- Attachment Name --></help>
+        <label>첨부파일 이름</label>
+        <name>Attachment_Name__c</name>
+    </fields>
+    <fields>
+        <help><!-- DocuSign Envelope ID --></help>
+        <label>DocuSign 봉투 ID</label>
+        <name>DocuSign_EnvelopeID__c</name>
+        <relationshipLabel>DocuSign 봉투 문서</relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Document ID --></help>
+        <label>문서 ID</label>
+        <name>Document_ID__c</name>
+    </fields>
+    <fields>
+        <label>문서 이름</label>
+        <name>Document_Name__c</name>
+    </fields>
+    <fields>
+        <help><!-- Document Order --></help>
+        <label>문서 순서</label>
+        <name>Document_Order__c</name>
+    </fields>
+    <fields>
+        <label>외부 문서 ID</label>
+        <name>External_Document_Id__c</name>
+    </fields>
+    <fields>
+        <help><!-- Saleforce Document Type --></help>
+        <label>문서 종류</label>
+        <name>SFDocument_Type__c</name>
+        <picklistValues>
+            <masterLabel>Attachment</masterLabel>
+            <translation><!-- Attachment --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Content</masterLabel>
+            <translation><!-- Content --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>DSTemplate</masterLabel>
+            <translation><!-- DSTemplate --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Document</masterLabel>
+            <translation><!-- Document --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Quote</masterLabel>
+            <translation><!-- Quote --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Validation Message --></help>
+        <label>확인 메시지</label>
+        <name>Validation_Message__c</name>
+    </fields>
+    <layouts>
+        <layout>DocuSign Envelope Document Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- DocuSign Document Name --></nameFieldLabel>
+</CustomObjectTranslation>

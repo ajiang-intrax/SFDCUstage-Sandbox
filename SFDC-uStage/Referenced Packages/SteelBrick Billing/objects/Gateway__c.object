@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <deprecated>false</deprecated>
+    <description>Configuration object. The administrator should create ONE account for the appropriate payment gateway.</description>
+    <enableActivities>false</enableActivities>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>false</enableReports>
+    <fields>
+        <fullName>Active__c</fullName>
+        <defaultValue>true</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Active</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Default__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Default</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Gateway_Type__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Gateway Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Authorize.net</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>PayPal</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>WireCard</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>ACH</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Merchant_ID__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Also know as:
+&quot;API Login&quot; on Authorize.net
+&quot;Merchant Login&quot; on PayPal(PayFlow Pro)</inlineHelpText>
+        <label>Merchant ID</label>
+        <length>128</length>
+        <maskChar>asterisk</maskChar>
+        <maskType>all</maskType>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>EncryptedText</type>
+    </fields>
+    <fields>
+        <fullName>Merchant_Reference__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Not used by Authorize.net
+&quot;Partner&quot; in Paypal(Payflow)</inlineHelpText>
+        <label>Merchant Reference</label>
+        <length>128</length>
+        <maskChar>asterisk</maskChar>
+        <maskType>all</maskType>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>EncryptedText</type>
+    </fields>
+    <fields>
+        <fullName>Merchant_Seal_User_Id__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Not used by Paypal and Wirecard
+&quot;Merchant Seal&quot; in Authorize.net</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Not used by Paypal and Wirecard
+&quot;Merchant Seal&quot; in Authorize.net</inlineHelpText>
+        <label>Merchant Seal User Id</label>
+        <length>100</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Security_Key__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Also known as:
+&quot;Transaction Key&quot; on Authorize.net
+&quot;Password&quot; on PayPal(Payflow Pro)</inlineHelpText>
+        <label>Merchant Security Key</label>
+        <length>128</length>
+        <maskChar>asterisk</maskChar>
+        <maskType>all</maskType>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>EncryptedText</type>
+    </fields>
+    <fields>
+        <fullName>Test_Mode__c</fullName>
+        <defaultValue>true</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Test Mode</label>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <label>Payment Gateway</label>
+    <listViews>
+        <fullName>All</fullName>
+        <columns>NAME</columns>
+        <columns>Gateway_Type__c</columns>
+        <columns>Active__c</columns>
+        <columns>Default__c</columns>
+        <columns>Test_Mode__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>All Payment Gateways</label>
+        <language>en_US</language>
+    </listViews>
+    <nameField>
+        <label>Payment Gateway Name</label>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Payment Gateways</pluralLabel>
+    <searchLayouts>
+        <customTabListAdditionalFields>Active__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Default__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Test_Mode__c</customTabListAdditionalFields>
+    </searchLayouts>
+    <sharingModel>ReadWrite</sharingModel>
+    <validationRules>
+        <fullName>Active_payment_methods_can_be_default</fullName>
+        <active>true</active>
+        <description>Only active payment methods can be default</description>
+        <errorConditionFormula>Default__c &amp;&amp; Active__c = false</errorConditionFormula>
+        <errorDisplayField>Active__c</errorDisplayField>
+        <errorMessage>Only active payment methods can be default</errorMessage>
+    </validationRules>
+</CustomObject>

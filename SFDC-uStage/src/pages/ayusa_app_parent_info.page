@@ -1,0 +1,87 @@
+<apex:page id="ayusa_app_parent_info" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+    <div class="wrapper">
+ <apex:form id="form"> 
+         <div class="page-header clearfix">
+ <h1>Ayusa Student Application</h1>
+<div class="back-to-main"><apex:outputLink id="BacktoMain" value="apex/ayusa_app_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+</div>
+          <h2>Family Overview</h2>
+          <div class="white-box clearfix">
+          <div class="panel two_thirds">
+          
+          <apex:Messages styleClass="custom-error-pagelevel"/>
+              <p><em> All fields marked with an asterisk (<span class="required no-padding">*</span>) are required</em></p><br/>
+           
+            <div class="form-row">
+                <div class="form-label left">Who do you live with?<span class="required">*</span> </div>
+                <div class="form-field">
+                   <apex:actionRegion >
+                   <apex:inputField id="Lives_With" value="{!applicantInfo.Lives_With__c}" required="TRUE" > 
+                   <apex:actionSupport event="onchange" rerender="lives-with" status="status"/>
+                   </apex:inputField>                  
+                   </apex:actionRegion>
+                </div>                
+           </div>
+            
+              <apex:pageBlock id="lives-with">
+                    <apex:outputPanel layout="block" rendered="{! applicantInfo.Lives_With__c == 'Other'}">
+                    <div class="form-row">
+                        <div class="form-label left"> If other, please describe.<span class="required">*</span></div>
+                        <div class="form-field">
+                            <apex:inputField id="Lives_With_Other" value="{!applicantInfo.Lives_With_Other__c}" required="TRUE"/> 
+                        </div>
+                    </div>
+                    
+                 </apex:outputPanel>
+             </apex:pageBlock>
+                        
+           
+           <div class="form-row">
+                <div class="form-label left"> Parents' marital status<span class="required">*</span> </div>
+                <div class="form-field">
+                   <apex:actionRegion >
+                    <apex:inputField id="MaritalStatus" value="{!applicantInfo.Parent_Marital_Status__c}" required="TRUE">
+                    <apex:actionSupport event="onchange" rerender="legally-responsible" status="status"/>
+                    </apex:inputField>
+                    </apex:actionRegion>
+                </div>
+           </div>
+           
+           <apex:pageBlock id="legally-responsible">
+           <apex:outputPanel layout="block" rendered="{!IF( (ApplicantInfo.Parent_Marital_Status__c == 'Divorced') || (ApplicantInfo.Parent_Marital_Status__c == 'Separated' || (ApplicantInfo.Parent_Marital_Status__c == 'Other')), true, false)}">
+           <div class="form-row">
+                <div class="form-label left"> If divorced, separated or other, who is legally responsible for you?<span class="required">*</span> </div>
+                <div class="form-field">
+                    <apex:inputField id="Legal_Guardian" value="{!applicantInfo.Legal_Guardian__c}" required="TRUE"/>
+                </div>
+           </div>
+           </apex:outputPanel>
+           </apex:pageBlock>
+            
+              
+            <div class="form-row">
+             <div class="form-link">
+                    <apex:outputLink id="Back" styleClass="back" value="/apex/ayusa_app_home?id={!applicantInfo.Id}">
+                    <i class="icon-chevron-left"></i>
+                    <span>Back</span>
+                    </apex:outputLink>
+                </div>
+              <div class="form-button">
+                <apex:commandlink styleClass="next" action="{!navigator}">
+                  <apex:param name="nextPage" value="/apex/ayusa_app_fam_members"/>
+                  <apex:param name="reDirectPage" value="false"/>
+                  <apex:commandButton id="Save" value="Save & Continue" />
+                  <i class="icon-chevron-right"></i>   
+                </apex:commandlink>
+              </div>
+            </div>
+                </div>
+             
+          </div> 
+     </apex:form>
+      </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

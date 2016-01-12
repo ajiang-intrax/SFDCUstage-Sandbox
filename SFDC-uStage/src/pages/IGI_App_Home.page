@@ -1,0 +1,176 @@
+<apex:page docType="html-5.0" standardController="Applicant_Info__c"  extensions="AppEngine_Controller" standardStylesheets="true" showHeader="false">
+	<apex:composition template="IntraxTemplate_Vs1">
+    	<apex:define name="body">
+        	<div class="wrapper">
+        		<apex:form >
+		        	
+	        	<!-- Intrax Global Internship Application -->
+	        	<div class="page-header clearfix">
+	            	<h1>Intrax Global Internship Application</h1>
+	          	</div>
+          
+          		<div class="white-box clearfix">
+           			<div class="panel two_thirds">
+                  		<apex:pageMessages />
+                		<p>Welcome to the <strong>Intrax Global Internship Application</strong>!  Remember, all answers must be entered in English.  Once you have answered all required questions on a page, click the SAVE &amp; CONTINUE button to save your information and proceed.  When you have completed all required questions within a section, you will see a green check mark next to the section title.</p>
+               			<p>Since you have the ability to save your work and return to complete it, we encourage you to take your time as you complete the entire application. </p> 
+              			<p>&nbsp;</p>
+              			
+              			<div class="pane">
+                			<div class="app-summary-section">
+                  				<div class="app-summary-section-header">About You</div>
+                  				<div class="app-summary-section-body">
+                  
+				                    <div class="app-summary-section-link">
+				                    	<apex:commandlink action="{!navigator}">
+					                        <apex:param name="nextPage" value="/apex/IGI_App_Program_Selection"/>
+					                        <apex:param name="reDirectPage" value="true"/>
+					                        <apex:outputLabel >Program Selection</apex:outputLabel>
+					                        <apex:outputPanel layout="inline" styleClass="finished" rendered="{! IF(NOT(ISBLANK(applicantInfo.Intrax_Program_Options__c)), true, false)}"><i class="icon-ok"></i></apex:outputPanel>
+				                      	</apex:commandlink>
+				                    </div>
+				                    
+				                    <div class="app-summary-section-link">
+				                    	<apex:commandlink action="{!navigator}">
+					                        <apex:param name="nextPage" value="/apex/IGI_App_Biographical_Details"/>
+					                        <apex:param name="reDirectPage" value="true"/>
+					                        <apex:outputLabel >Biographical Informations</apex:outputLabel>
+					                        <apex:outputPanel layout="inline" styleClass="finished" rendered="{! IF(NOT(ISBLANK(personInfo.Gender__c)), true, false)}"><i class="icon-ok"></i></apex:outputPanel>
+				                      	</apex:commandlink>
+				                    </div>
+				                    
+				                    <div class="app-summary-section-link">
+				                    	<apex:commandlink action="{!navigator}">
+					                        <apex:param name="nextPage" value="/apex/IGI_App_Contact_Details"/>
+					                        <apex:param name="reDirectPage" value="true"/>
+					                        <apex:outputLabel >Contact Details</apex:outputLabel>
+					                        <apex:outputPanel layout="inline" styleClass="finished" rendered="{! IF(NOT(ISBLANK(applicantInfo.Home_Country__c)), true, false)}"><i class="icon-ok"></i></apex:outputPanel>
+				                      	</apex:commandlink>
+				                    </div>
+				                    
+                    				<div class="app-summary-section-link">
+				                        <apex:commandlink action="{!navigator}">
+					                        <apex:param name="nextPage" value="/apex/IGI_App_Education_Details"/>
+					                        <apex:param name="reDirectPage" value="true"/>
+					                        <apex:outputLabel >Education Details</apex:outputLabel>
+					                        <apex:outputPanel layout="inline" styleClass="finished" rendered="{! IF(NOT(ISNULL(applicantInfo.Graduation_Date__c)), true, false)}"><i class="icon-ok"></i></apex:outputPanel>
+				                    	</apex:commandlink>
+                    				</div>
+                    				
+                    				<div class="app-summary-section-link">
+					                        <apex:commandlink action="{!navigator}">
+						                        <apex:param name="nextPage" value="/apex/IGI_App_Language_Skills"/>
+						                        <apex:param name="reDirectPage" value="true"/>
+						                        <apex:outputLabel >Language Skills</apex:outputLabel>
+						                        <apex:outputPanel layout="inline" styleClass="finished" rendered="{! IF(NOT(ISBLANK(applicantInfo.Language_1__c)), true, false)}"><i class="icon-ok"></i></apex:outputPanel>
+					                    	</apex:commandlink>
+					                    </div>
+                  				</div>
+                			</div>
+
+              			</div>
+              
+              			<div class="pane last">
+                			<div class="app-summary-section">
+                  				<div class="app-summary-section-header">Your Program Details</div>
+                 					<div class="app-summary-section-body">
+                  						<!-- 
+					                    <div class="app-summary-section-link">
+					                    	<apex:commandlink action="{!navigator}">
+						                        <apex:param name="nextPage" value="/apex/IGI_App_Program_Determination"/>
+						                        <apex:param name="reDirectPage" value="true"/>
+						                        <apex:outputLabel >Program Determination</apex:outputLabel>
+						                        <apex:outputPanel layout="inline" styleClass="finished" rendered="{!OR(applicantInfo.Service_Level__c = 'Premium', applicantInfo.Service_Level__c = 'Independent')}"><i class="icon-ok"></i></apex:outputPanel>
+					                      	</apex:commandlink>
+					                    </div>
+					                     -->
+					                    <div class="app-summary-section-link">
+					                    	<apex:commandlink action="{!navigator}">
+						                        <apex:param name="nextPage" value="/apex/IGI_App_Experience"/>
+						                        <apex:param name="reDirectPage" value="true"/>
+						                        <apex:outputLabel >Experience Details</apex:outputLabel>
+						                        <apex:outputPanel layout="inline" styleClass="finished" rendered="{! IF(NOT(ISBLANK(experience.Employer_Name__c)), true, false)}"><i class="icon-ok"></i></apex:outputPanel>
+					                      	</apex:commandlink>
+					                    </div>
+					                    
+					                    <div class="app-summary-section-link">
+					                      	<apex:commandlink action="{!navigator}">
+					                        	<apex:param name="nextPage" value="/apex/IGI_App_Placement_Information"/>
+					                        	<apex:param name="reDirectPage" value="true"/>
+					                        	<apex:outputLabel >Placement Information</apex:outputLabel>
+					                        	<apex:outputPanel layout="inline" styleClass="finished" rendered="{! IF(NOT(ISBLANK(positionInfo.Company_Name__c)), true, false)}"><i class="icon-ok"></i></apex:outputPanel>
+					                    	</apex:commandlink>
+					                    </div>
+					                    
+					                     <div class="app-summary-section-link">
+					                    	<apex:commandlink action="{!navigator}">
+						                        <apex:param name="nextPage" value="/apex/IGI_App_Program_Preferences"/>
+						                        <apex:param name="reDirectPage" value="true"/>
+						                        <apex:outputLabel >Program Preferences</apex:outputLabel>
+						                        <apex:outputPanel layout="inline" styleClass="finished" rendered="{! IF(NOT(ISBLANK(applicantInfo.Engagement_Start__c)), true, false)}"><i class="icon-ok"></i></apex:outputPanel>
+					                      	</apex:commandlink>
+					                    </div>
+                  					</div>
+                				</div>
+                				
+                				
+	                			<div class="app-summary-section">
+	                  				<div class="app-summary-section-header">Your Photo Album</div>
+	                 					<div class="app-summary-section-body">
+	                  
+						                    <div class="app-summary-section-link">
+						                    	<apex:commandlink action="{!navigator}">
+							                        <apex:param name="nextPage" value="/apex/IGI_App_Photo_Album"/>
+							                        <apex:param name="docType" value="Media" assignTo="{!docType}" />
+							                        <apex:param name="reDirectPage" value="true"/>
+							                        <apex:outputLabel > Photo Album </apex:outputLabel>
+							                        <!--  <apex:outputPanel layout="inline" styleClass="finished" rendered="{!OR(applicantInfo.Service_Level__c = 'Premium', applicantInfo.Service_Level__c = 'Independent')}"><i class="icon-ok"></i></apex:outputPanel>-->
+						                      	</apex:commandlink>
+						                    </div>
+						                </div>
+	                				</div>
+	                			
+	                			
+                				<div class="app-summary-section" style=" width:90%; margin:0 auto; text-align:center;">
+                  					<p><strong>Have you completed your application?</strong></p>
+                                 
+				                  	<div class="form-button no-float">
+				                        <apex:commandlink styleClass="submit" action="{!navigator}" rendered="{!checkCtrApplicationReadyToSubmit}">
+						                        <apex:param name="nextPage" value="/apex/IGI_App_Submitted"/>
+						                        <apex:param name="SubmitApp" value="PA"/>
+						                        <apex:param name="env" value="{!env}"/>
+						                        <apex:param name="reDirectPage" value="true"/>
+						                    	<apex:param name="reviewSubmit" value="RS"/>
+					                    	<apex:commandButton value="Submit Application" />
+				                    	</apex:commandlink>
+					                </div>
+                 
+					                <apex:outputPanel styleClass="form-button no-float"  layout="block" rendered="{!NOT(checkCtrApplicationReadyToSubmit)}">
+				                    	<apex:outputLink styleClass="no-submit">Submit Application</apex:outputLink>
+					                </apex:outputPanel>                                   
+                  
+                  					<div class="form-link no-float">
+			                    		<apex:commandlink action="{!navigator}" target="_blank" > 
+			                        		<i class="icon-file"></i>
+				                      		<apex:param name="nextPage" value="/apex/IGI_App_View_PDF_Summary"/>
+				                      		<apex:param name="docType" value="All" assignTo="{!docType}"/>
+				                      		<apex:param name="reDirectPage" value="false"/>
+				                        	<apex:param name="role" value="Both" assignTo="{!role}"/>
+				                    	<apex:commandButton value="View PDF Summary" />
+				                    </apex:commandlink>
+                  				</div>
+                  				
+                			</div>                
+              			</div>
+            		</div>
+		            <div class="panel one_third last aside">
+		                <c:Badge_Centers_Contact />  
+		                  
+		            </div>
+            
+          			</div>
+        		</apex:form>
+      		</div>
+    	</apex:define>
+	</apex:composition>
+</apex:page>

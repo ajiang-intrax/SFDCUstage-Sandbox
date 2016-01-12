@@ -1,0 +1,102 @@
+<apex:page standardController="invoiceit_s__Job__c" extensions="invoiceit_s.CreateJobController" tabStyle="invoiceit_s__Job__c" action="{!initializeDispatch}">
+    
+    <div class="bPageTitle">
+        <apex:sectionHeader title="Dispatch Products for " subtitle="{!job.Name}" />
+        <div class="ptBreadcrumb">&nbsp;«&nbsp;
+            <a href="/{!job.Id}">{!$Label.dispatchProducts_Back} Order : {!job.Name}</a>
+        </div>
+    </div>
+    
+    <apex:pageMessages id="pageMessages"/> 
+    <apex:form > 
+    <apex:pageBlock > 
+    <apex:pageBlockButtons >   
+       <apex:commandButton value="{!$Label.ButtonDispatch}" action="{!createDispatchLineItems}" />
+       <apex:commandButton value="{!$Label.ButtonCancel}" action="{!cancel}" onclick="return confirmCancel()" immediate="true" />
+     </apex:pageBlockButtons>
+         
+     <apex:pageBlockSection title="Order Details">
+         <apex:outputField value="{!job.Name}"/>
+         <apex:outputField value="{!job.invoiceit_s__Status__c}"/>
+         <apex:outputField value="{!job.invoiceit_s__Service_Activation_Date__c}"/>
+         <apex:outputField value="{!job.invoiceit_s__Service_End_Date__c}"/>
+     </apex:pageBlockSection>
+     <apex:pageBlockSection title="Dispatch Details">
+         <apex:inputField value="{!dispatch.Name}"/>
+     </apex:pageBlockSection><br/>
+     
+     <apex:outputPanel rendered="{!!isDispatchSuccess}">
+     <table cellspacing="0" cellpadding="0" border="0" class="list" width="100%">
+        <thead class="rich-table-thead">
+        <tr class="headerRow">
+            <th colspan="1" scope="col" class="headerRow">
+              <div>
+              Select
+              </div>
+            </th>
+            <th colspan="1" scope="col" class="headerRow">
+              <div>
+               {!$Label.ProductName}
+              </div>
+            </th>
+            <th colspan="1" scope="col" class="headerRow">
+              <div>
+              {!$Label.ProductCode}
+              </div>
+            </th>
+            <apex:repeat value="{!$ObjectType.invoiceit_s__Job_Rate_Plan_Charge__c.FieldSets.invoiceit_s__Dispatch_Products}" var="fieldAPI">
+                <th colspan="1" scope="col" class="headerRow">
+                    <div>
+                        <apex:outputText value="{!fieldAPI.Label}" /> 
+                    </div>
+                </th>
+            </apex:repeat>
+            <th colspan="1" scope="col" class="headerRow">
+              <div>
+              Available Stocks
+              </div>
+            </th>
+            <th colspan="1" scope="col" class="headerRow">
+              <div>
+              Quantity To Dispatch
+              </div>
+            </th>           
+        </tr>
+    </thead>
+    <tbody>
+        <apex:repeat value="{!jobClass.jobProducts}" var="jobproduct">
+            <apex:repeat value="{!jobproduct.jobRatePlans}" var="jobrateplan">
+                <apex:repeat value="{!jobrateplan.jobRatePlanCharges}" var="jobrateplancharge">
+                    <tr onfocus="if (window.hiOn){hiOn(this);}" onblur="if (window.hiOff){hiOff(this);}" onmouseout="if (window.hiOff){hiOff(this);}" onmouseover="if (window.hiOn){hiOn(this);}" class="dataRow even odd first">
+                        <td colspan="1" class="dataCell">
+                            <apex:inputField value="{!jobrateplancharge.jobrateplancharge.invoiceit_s__Dispatch__c}" rendered="{!jobrateplancharge.jobrateplancharge.invoiceit_s__Remaining_Quantity__c > 0 && jobrateplancharge.jobrateplancharge.invoiceit_s__Price_Type__c == $Label.OptionOneTime}"/>
+                            <apex:outputField value="{!jobrateplancharge.jobrateplancharge.invoiceit_s__Dispatch__c}" rendered="{!jobrateplancharge.jobrateplancharge.invoiceit_s__Remaining_Quantity__c <= 0}"/>
+                        </td>
+                        <td colspan="1" class="dataCell">
+                            <apex:outputField value="{!jobproduct.jobProduct.Name}" rendered="{!jobrateplancharge.jobrateplancharge.invoiceit_s__Sequence_No__c <= 1}"/>
+                        </td>
+                        <td colspan="1" class="dataCell">
+                            <apex:outputField value="{!jobproduct.jobproduct.invoiceit_s__Product_Code__c}" rendered="{!jobrateplancharge.jobrateplancharge.invoiceit_s__Sequence_No__c <= 1}"/>
+                        </td>
+                        <apex:repeat value="{!$ObjectType.invoiceit_s__Job_Rate_Plan_Charge__c.FieldSets.invoiceit_s__Dispatch_Products}" var="fieldAPI"> 
+                            <td colspan="1" class="dataCell">
+                                <apex:outputField value="{!jobrateplancharge.jobrateplancharge[fieldAPI]}" rendered="{!fieldAPI != 'invoiceit_s__Dispatch__c'}"/>                               
+                            </td>
+                        </apex:repeat>  
+                        <td colspan="1" class="dataCell">
+                            <apex:outputText value="{!map_ProductId_AvailableQuantity[jobproduct.jobProduct.invoiceit_s__Product__c]}" />                          
+                        </td>
+                        <td colspan="1" class="dataCell">
+                            <apex:inputField value="{!jobrateplancharge.jobrateplancharge.invoiceit_s__Quantity_to_Dispatch__c}" rendered="{!jobrateplancharge.jobrateplancharge.invoiceit_s__Remaining_Quantity__c > 0 && jobrateplancharge.jobrateplancharge.invoiceit_s__Price_Type__c == $Label.OptionOneTime}"/>
+                            <apex:outputText value="0" rendered="{!jobrateplancharge.jobrateplancharge.invoiceit_s__Remaining_Quantity__c <= 0}"/>
+                        </td>                
+                    </tr>
+                </apex:repeat>
+            </apex:repeat>
+        </apex:repeat>
+    </tbody>
+    </table>
+    </apex:outputPanel>
+    </apex:pageBlock> 
+    </apex:form>
+</apex:page>

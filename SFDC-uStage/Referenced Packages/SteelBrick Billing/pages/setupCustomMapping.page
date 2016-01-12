@@ -1,0 +1,34 @@
+<apex:page tabStyle="invoiceit_s__Custom_Mappings__c" controller="invoiceit_s.ControllerSetupCustomMapping" sidebar="false" showHeader="false">
+        <apex:form >
+                <apex:sectionHeader title="{!$Label.MapProductfieldstoQuotesOrders}"/>
+                <apex:pageMessages id="pageMessages"/>
+                <apex:pageBlock >
+                  <apex:pageBlockButtons >
+                        <apex:commandButton action="{!addRow}" value="{!$Label.ButtonNew}" rerender="table, pageMessages"/>
+                        <apex:commandButton action="{!save}" value="{!$Label.ButtonSave}" rerender="table, pageMessages"/>
+                  </apex:pageBlockButtons>
+                        <apex:pageBlockTable value="{!mappings}" var="mapping" id="table">
+                                <apex:column >
+                                        <apex:commandLink value="{!$Label.LinkDelete}" action="{!deleteRow}" rendered="{!mapping.Id != null}" rerender="table, pageMessages">
+                                <apex:param value="{!mapping.Id}" name="id" />
+                                </apex:commandLink>
+                        </apex:column> 
+                                <apex:column headerValue="{!$Label.Name}">
+                                <apex:inputField value="{!mapping.Name}"/> 
+                        </apex:column>
+                        <apex:column headerValue="{!$Label.SourceObject}">
+                                <apex:inputField value="{!mapping.invoiceit_s__Source_Object__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$Label.SourceField}">
+                                <apex:inputField value="{!mapping.invoiceit_s__Source_Field__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$Label.DestinationObject}">
+                                <apex:inputField value="{!mapping.invoiceit_s__Destination_Object__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$Label.DestinationField}">
+                                <apex:inputField value="{!mapping.invoiceit_s__Destination_Field__c}"/>
+                        </apex:column>
+                        </apex:pageBlockTable>
+                </apex:pageBlock>
+        </apex:form>
+</apex:page>

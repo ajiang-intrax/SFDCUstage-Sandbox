@@ -1,0 +1,34 @@
+<apex:page standardController="invoiceit_s__Grouping__c"  extensions="invoiceit_s.ControllerGrouping">
+  <apex:form >
+       <apex:sectionHeader title="Group" subtitle="Grouping"/>  
+       <apex:pageMessages id="messege"></apex:pageMessages>
+             <apex:pageBlock >
+                 <apex:pageBlockSection collapsible="true" columns="1" id="blockSection">   
+                   <apex:pageBlockTable value="{!map_Acc_mapOrder_Charges}" var="account" id="table">
+                       <apex:column value="{!mapIdAccount[account].Name}" headerValue="Account Name"/>
+                        <apex:column headerValue="Orders">
+                        <apex:pageBlockTable value="{!map_Acc_mapOrder_Charges[account]}" var="order">
+                            <apex:column value="{!map_Job[order].Name}" headerValue="Order Name"/>
+                            <apex:column headerValue="Order Rate Plan Charges">
+                               <apex:pageBlockTable value="{!map_Acc_mapOrder_Charges[account][order]}" var="charges">
+                                     <apex:column headerValue="Select">
+                                        <apex:inputcheckbox value="{!charges.isSelectedCharge}" />
+                                      </apex:column>
+                                    <apex:column value="{!charges.orderCharge.Name}" headerValue="Charge Name" />
+                                    <apex:column value="{!charges.orderCharge.Price_Type__c}" headerValue="Price Type" />
+                                    <apex:column value="{!charges.orderCharge.Charge_Code__c}" headerValue="Charge Code" rendered="{!groupObj.invoiceit_s__Type__c == 'Minimum Customer Spend'}"/>
+                                </apex:pageBlockTable> 
+                                </apex:column>          
+                          </apex:pageBlockTable> 
+                    </apex:column>                
+                    </apex:pageBlockTable>      
+                 </apex:pageBlockSection>
+                 <apex:pageBlockButtons >
+                 <apex:commandButton action="{!step1}" value="{!$Label.ButtonPrevious}" />
+                <apex:commandButton value="Save" style="width:40px;" action="{!saveGroup}" rendered="{!groupObj.Id == null && listOfWrapperCharges.size >= 1 }"/>
+                <apex:commandButton value="Update Group" action="{!updateGroup}" rendered="{!groupObj.Id != null && listOfWrapperCharges.size >= 1 }"/>
+                <apex:commandButton value="{!$Label.ButtonCancel}" action="{!cancel}"/>
+            </apex:pageBlockButtons>
+           </apex:pageBlock> 
+   </apex:form> 
+</apex:page>

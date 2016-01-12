@@ -1,0 +1,88 @@
+<apex:page docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+    
+    <!-- UI Blocker component for Background processing -->
+    <c:BlockUI />
+    
+    <apex:composition template="IntraxTemplate_Vs1">
+        <apex:define name="body">
+            <div class="wrapper" id="IGI_PreApp_Contact_Details">    
+                <apex:form >
+                
+                    <!-- Heading -->
+                    <div class="page-header clearfix">
+                        <h1 class="page-title">Intrax Global Internship Application</h1>
+                        
+                        <!-- Back To Main Page Link -->
+                        <div class="back-to-main"><div class="form-link no-margin">
+                            <apex:outputLink styleClass="no-padding" value="apex/IGI_App_Home?id={!applicantInfo.Id}"><i class="icon-chevron-left no-padding"></i><i class="icon-chevron-left"></i> <span>Back to Main Page</span></apex:outputLink></div></div>
+                        </div>
+                       
+                       <!-- Section Header -->  
+                       <div class="section-header clearfix">
+                            <h2>Program Selection</h2>
+                            <div class="progress-bar">Page 1 <em>of</em> 6</div>
+                       </div> 
+                        
+                       <!-- Panel -->   
+                       <div class="white-box clearfix">   
+                            <div class="panel two_thirds">
+                            
+                            <!--  <p class="divider-bottom"> -->
+                            	<apex:Messages styleClass="custom-error-pagelevel"/>
+            					<p><em> All fields marked with an asterisk (<span class="required no-padding">*</span>) are required</em></p><br/>
+            				<!--  </p>    -->                  
+                        	
+                            <!-- What program are you applying for?  -->
+                            <div class="form-row">
+                                <div class="form-label left ">What program are you applying for?<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField id="ipo" value="{!applicantInfo.Intrax_Program_Options__c}" required="TRUE"/>
+                                </div>
+                               
+                            </div>
+
+                            <div class="form-row">
+          
+                                <!-- Back Command Link -->
+                                <div class="form-link">
+				              		<apex:outputLink value="/apex/IGI_app_home?id={!applicantInfo.Id}"><i class="icon-chevron-left"></i> <span>Back</span></apex:outputLink>
+				                </div>
+                                     
+                                <!-- Codigo Original -->    
+                                <!-- Next Command Link -->      
+                                <!--<div class="form-button">
+                                    <apex:commandlink styleClass="next" action="{!navigator}">
+                                        <apex:param name="nextPage" value="/apex/IGI_PreApp_Biographical_Details"/>
+                                        <apex:param name="reDirectPage" value="false"/> 
+                                        <apex:commandButton value="Save & Continue" />
+                                        <i class="icon-chevron-right"></i>
+                                    </apex:commandlink>
+                                </div> -->
+                                
+                                <!-- Codigo Denia -->    
+                                <!-- Next Command Link --> 
+                                <div class="form-button">
+                                    <apex:commandlink styleClass="next" action="{!navigator}"> 
+                                        <apex:param name="nextPage" value="/apex/IGI_App_Biographical_Details"/> <!-- Cambiada la pagina a la que apuntaba, ahora apunta a IGI_App_Photo_Album
+                                        																	 COOL!!VEO QUE LO VAS PILLANDO. LA HE CAMBIADO A OTRA PAGINA PARA QUE SIGA EL NUEVO
+                                        																	 ORDEN QUE DEBE SEGUIR, PERO LO QUE HAS HECHO ESTA BIEN!-->
+                                        <apex:param name="reDirectPage" value="true"/> 
+                                        <!--  <apex:param name="docType" value="Media" assignTo="{!docType}" /> -->
+                                        <apex:commandButton value="Save & Continue" />
+                                        <i class="icon-chevron-right"></i>
+                                    </apex:commandlink>
+                                </div> 
+                                
+                                
+                            </div>  
+                        </div>  
+                            
+                        <div class="panel one_third last aside">
+                            <c:Badge_Centers_Contact />     
+                        </div>
+                    </div>
+                </apex:form>
+            </div>
+        </apex:define>
+    </apex:composition>
+</apex:page>

@@ -1,0 +1,140 @@
+<!-- <apex:page controller="DocuSign_Final_Controller" action="{!MethodTCFinal}">
+{!msgDisplay}
+</apex:page>
+ -->
+<apex:page title="Participant's Travel and Visa | Intrax" standardStylesheets="false" showHeader="false" controller="DocuSign_Controller" action="{!MethodTCFinal}">
+  
+    <apex:composition template="IntraxTemplate_Vs2" >
+      <apex:define name="body">
+      <apex:form >
+        <!-- begin row -->
+          <div class="row">
+          <apex:outputPanel styleClass="span9" layout="block">
+          <!--
+            <h1>
+            Create New Match
+            </h1>  
+          -->
+          </apex:outputPanel>
+        </div>
+        <!-- end row -->
+        <!-- begin row --> 
+        <div class="row">
+          
+          <!-- end span3 -->
+          <!-- begin span9 -->
+            <div class="span12">
+            <apex:outputPanel styleClass="block" layout="block">
+            
+              <div class="block-body">
+                <apex:outputPanel id="myPanel" layout="block">
+                    
+                    
+                    <apex:pageMessages />
+                    <apex:pageBlock id="pb" >
+                        <p>{!msgDisplay} </p>
+                        <!-- 
+                        <apex:outputPanel id="match-input" rendered="{!$CurrentPage.parameters.mOrigin = 'mat'}" >
+                        <div class="form-row">
+                            <div class="form-label left "> Participant Name </div>
+                            <div class="form-field">
+                                <apex:outputField value="{!participant.Account_Id__r.Name}" />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-label left "> Intrax Id </div>
+                            <div class="form-field">
+                                <apex:outputField value="{!participant.Account_id__r.Intrax_Id__c}" />
+                            </div>
+                        </div>
+                        
+                    </apex:outputPanel>
+                     
+                     <apex:outputPanel id="positon-input" rendered="{!$CurrentPage.parameters.mOrigin = 'pos'}">
+                      <div class="form-row">
+                        <div class="form-label left ">Company Name </div>
+                        <div class="form-field">
+                          <apex:outputField value="{!positionInfo.Host_Company_Id__r.Name}" />
+                        </div>
+                      </div>
+                      <div class="form-row">
+                        <div class="form-label left ">Position Title</div>
+                        <div class="form-field">
+                          <apex:outputField value="{!positionInfo.Title__c}" />
+                        </div>
+                      </div>
+                      <div class="form-row">
+                        <div class="form-label left ">Position Code </div>
+                        <div class="form-field">
+                          <apex:outputField value="{!positionInfo.Code__c}"/>
+                        </div>
+                      </div>
+                      </apex:outputPanel>
+                      
+                      <div class="form-row">
+                            <div class="form-label left">
+                                <apex:outputText rendered="{!$CurrentPage.parameters.mOrigin = 'pos'}" value="Select a Participant" />
+                                <apex:outputText rendered="{!$CurrentPage.parameters.mOrigin = 'mat'}" value="Select a Position" /> <span class="required">*</span></div>
+                            <div class="form-field">
+                                <apex:selectList id="participant-selection-pos" value="{!engagementId}" multiselect="false" size="1" required="false">
+                                    <apex:selectOption itemValue="" itemLabel="- Select One -"/>
+                                    <apex:selectOptions value="{!createMatchOptions}"/>
+                                </apex:selectList>
+                                
+                                <apex:message for="participant-selection-pos" styleClass="custom-error-radio"/>
+                            </div>                
+                      </div>
+
+                      <div class="form-row">
+                        <div class="form-label left ">Consider Other Positions <span class="required">*</span> </div>
+                        <div class="form-field">
+                            <apex:selectRadio id="ConsiderOtherOptions" value="{!newMatch.Consider_Other_Positions__c}" required="false">
+                                <apex:selectOption itemValue="true" itemLabel="Yes"/>
+                                <apex:selectOption itemValue="false" itemLabel="No"/>
+                            
+                            </apex:selectRadio>
+                        </div>
+                      </div>
+                      <div class="dp-group">
+                          <div class="form-row">
+                            <div class="form-label left ">Start Date <span class="required">*</span></div>
+                            <div class="form-field dp-standard start" locale="{!activeUser.localeSidKey}">
+                              <apex:inputField value="{!newMatch.Start_Date__c}" required="false"/>
+                            </div>
+                          </div>
+                          <div class="form-row">
+                            <div class="form-label left "> End Date <span class="required">*</span> </div>
+                            <div class="form-field dp-standard end" locale="{!activeUser.localeSidKey}">
+                              <apex:inputField value="{!newMatch.End_Date__c}" required="false"/>
+                            </div>
+                          </div>
+                      </div>
+                      
+                -->
+                      
+                <apex:outputPanel styleClass="form-row" layout="block">
+                  <div class="form-link">
+                    <apex:outputLink value="/apex/Home"><i class="icon-chevron-left"></i> <span>Back To Home</span></apex:outputLink>
+                  </div> 
+                  <!-- 
+                  <div class="form-input">
+                    <apex:commandButton action="{!createMatch}" value="Create Match" status="waitMsg" />
+                  </div>
+                  -->
+                </apex:outputPanel>  
+             </apex:pageBlock>
+            
+            </apex:outputPanel>
+                
+                
+              </div>
+            </apex:outputPanel>
+          </div>
+          <!-- end span9 -->
+        </div>
+        <!-- end row -->
+        </apex:form>
+      </apex:define>
+    </apex:composition>
+  
+</apex:page>

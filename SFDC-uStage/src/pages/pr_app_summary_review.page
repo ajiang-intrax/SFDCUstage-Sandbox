@@ -1,0 +1,82 @@
+<apex:page id="SummaryReview" title="Summary Review" docType="html-5.0" controller="IntraxPartnerPortalEngineController" action="{!checkLogin}" standardStylesheets="false" showHeader="false" applyBodyTag="false" applyHtmlTag="false" >
+<apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+        <div class="row margin-b4">
+        <div class="col-sm-9 center-block center-text">
+          <h1>Summary Review</h1>
+          </div>
+        <!-- end column -->
+      </div>
+      <!-- end row -->                     
+          
+            <div class="row">
+        <div class="col-md-10 center-block"> 
+          <apex:form styleClass="form-vertical ws-validate" id="webform">
+            <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+            
+           <apex:outputPanel layout="block" rendered="{!IF(summaryReviewAppsList.Size > 0, true, false)}">
+              <apex:pageBlock id="Block_ListExperience" >
+                <div class="table-responsive vs3">
+                  <apex:pageBlockTable styleClass="table vs3" value="{!summaryReviewAppsList}" var="item">                  
+                  	
+                  	<apex:column >
+                    <apex:facet name="header">Application Name</apex:facet>
+                    <apex:outputLink value="/apex/apc_ap_main_home?Id={!item.Id}&IsPartner=true">
+                        <apex:outputText value="{!item.Name}" />
+                    </apex:outputLink>
+                    </apex:column>
+                    
+                    <apex:column headerValue="Health Form">
+                    	<apex:outputText value="Required" rendered="{!NOT(CONTAINS(item.PageStatus_Complete__c,'041'))}"/>
+                    	<apex:outputText value=" {0,date,dd/MM/yyyy}" rendered="{!CONTAINS(item.PageStatus_Complete__c,'041')}" >
+                    		<apex:param value="{!item.Doctor_Form_Reviewed__c}"/>
+                    	</apex:outputText>                    	                                       
+                    </apex:column>
+                    
+                    <apex:column headerValue="BG Check"> 
+                    	<apex:outputText value="Required" rendered="{!NOT(CONTAINS(item.PageStatus_Complete__c,'046'))}"/>
+                    	<apex:outputText value=" {0,date,dd/MM/yyyy}" rendered="{!CONTAINS(item.PageStatus_Complete__c,'046')}">
+                    		<apex:param value="{!item.BGC_Reviewed__c}"/>
+                    	</apex:outputText>
+                    </apex:column>
+                    <apex:column headerValue="School Details">
+                    	<apex:outputText value="Required" rendered="{!NOT(CONTAINS(item.PageStatus_Complete__c,'047'))}"/>
+                    	<apex:outputText value=" {0,date,dd/MM/yyyy}" rendered="{!CONTAINS(item.PageStatus_Complete__c,'047')}">
+                    		<apex:param value="{!item.Graduation_Verified__c}"/>
+                    	</apex:outputText>
+                    </apex:column>
+                    <!-- 
+                    <apex:column headerValue="Type of Reference">
+                        <apex:outputText value="Childcare" rendered="{!item.Experience_Name__c != null && item.Person_Info__c == null}"/>
+                        <apex:outputText value="Personal" rendered="{!NOT(item.Experience_Name__c != null && item.Person_Info__c == null)}"/>
+                    </apex:column>
+                     -->
+                    <apex:column headerValue="References">
+                        <apex:outputText value="Done" rendered="{!item.References__r.size==3}" />
+                        <apex:outputText value="Required" rendered="{!item.References__r.size<3}" />
+                    </apex:column>
+                    <apex:column headerValue="References Confirmed">
+	                    <apex:pageblockTable value="{!item.References__r}" var="itemR">
+	                    	<apex:column >
+		                        <apex:outputText value="Childcare - {!itemR.Status__c}" rendered="{!itemR.Experience_Name__c != null && itemR.Person_Info__c == null}"/>
+		                        <apex:outputText value="Personal - {!itemR.Status__c}" rendered="{!NOT(itemR.Experience_Name__c != null && itemR.Person_Info__c == null)}"/>
+		                    </apex:column>
+	                    </apex:pageblockTable>
+                    </apex:column>
+            
+                  </apex:pageBlockTable>
+                </div>
+              </apex:pageBlock>
+            </apex:outputPanel>
+            
+            <apex:outputPanel layout="block" styleClass="lead box gray center-text" rendered="{!IF(summaryReviewAppsList.Size==0, true, false)}">
+                <apex:outputText value="There are currently no references for you to review."/>
+            </apex:outputPanel>
+          </apex:form>
+        </div>
+        <!-- end column -->
+      </div>
+      <!-- end row --> 
+    </apex:define>
+    </apex:composition>
+</apex:page>

@@ -1,0 +1,1386 @@
+<apex:page controller="profile_controller" docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardStylesheets="false" showHeader="false" title="View Au Pairs" id="pr_pt_profile_details">
+<apex:composition template="intraxtemplate_vs3">
+<apex:define name="body">
+
+	  <apex:includeScript value="{!URLFOR($Resource.module_videoJs, '/videojs/video.min.js')}"/>
+      <apex:stylesheet value="{!URLFOR($Resource.module_videoJs, '/videojs/video-js.css')}"/> 
+      <script src="//www.google.com/jsapi"></script>
+      
+      <!-- <c:block_header_apc_hf_application userAgentCheck="{!userAgentCheck}"/> -->
+      <!-- <c:block_header_apc_hf_application -->
+      <style>
+      body {position: relative;}
+      .detail-view.vs1 .item-subtitle{font-size:18px; font-family:'milowebita';}
+      .detail-view.vs1 .item-subtitle.extension span{color:#7cb040; padding-right:5px;}
+      .detail-view.vs1 .item-subtitle.extension i{font-size:20px; color: #ccc; cursor:pointer;}
+      .detail-view.vs1 .item-subtitle.infant{color:#7cb040;}
+      .detail-view.vs1 .match-actions .match-action-item + .match-action-item{margin-left:20px;}
+      .detail-view.vs1 .match-actions .match-action-item span{padding-left:10px; color:#202020; font-size:18px;}
+      .detail-view.vs1 .match-actions i{ color:#ccc; vertical-align:middle;}
+      .detail-view.vs1 .match-actions i.fa-heart{font-size:30px;}
+      .detail-view.vs1 .match-actions i.fa-heart.selected{color:#dc5656;}
+      .detail-view.vs1 .match-actions i.fa-phone{font-size:38px;}
+      .detail-view.vs1 .match-actions i.fa-phone.selected{color:#7cb040;}
+      .detail-view.vs1 .match-actions i.fa-times-circle{font-size:32px;}
+      .detail-view.vs1 .match-actions i.fa-times-circle.selected{color:#000;}
+      .detail-view.vs1 .item-image{position:relative;}      
+      .detail-view.vs1 .media-actions{background:rgba(0, 0, 0, 0.2); width:100%; padding:8px; text-align:center; bottom:0; position:absolute;}
+      .detail-view.vs1 .media-actions a{margin-right:20px; vertical-align:1;}
+      .detail-view.vs1 .media-actions i{color:#fff; font-size:25px;}
+      .detail-view.vs1 .item-quote{background:#FAF8D3; padding:20px 40px 20px 30px; margin:20px 0; position:relative; border-radius: 3px;}
+      .detail-view.vs1 .item-quote .item-quote-text:before{content:'"';} 
+      .detail-view.vs1 .item-quote .item-quote-text:after{content:'"';}
+      .detail-view.vs1 .item-quote .collapse.in{display:inline;}
+      .detail-view.vs1 h3{font-size:20px; margin-bottom:10px; font-family:'milowebbold';}
+      .detail-view.vs1 hr.vs2{background-color: #f2f2f2; height: 10px; margin-top:40px; border: none;}
+      .detail-view.vs1 hr.vs3 {background-color: #ccc; height: 1px; border: none; margin-bottom:20px;}
+      .detail-view.vs1 h2{margin-top:40px;}
+      .detail-view.vs1 .item-field{margin-bottom:20px;}
+      .detail-view.vs1 .item-field.vs1 label{display:block;}
+      .detail-view.vs1 .item-quote .img-circle{border-radius: 50%;
+  width: 65px;
+  position: absolute;
+  top: -25px;
+  right: -25px;
+  border: #fff 5px solid;}
+  .capitalize{text-transform:lowercase; display:block;}
+  .capitalize:first-letter{text-transform:capitalize;}
+  .capitalize ul li:first-letter{text-transform:capitalize;}
+  .checklist.vs1 .item {margin-bottom:10px;}
+  .checklist.vs1 .item .answer { position: relative; display:table-cell; padding-right:10px;}
+  .checklist.vs1 .item .answer .icon{font-size:45px; color:#f66d09; position:absolute;}
+  .checklist.vs1 .item .answer .yes,
+  .checklist.vs1 .item .answer .no{display:table-cell; padding:10px;}
+  .checklist.vs1 .item.Yes .answer .icon{top:0; left:-2px;}
+  .checklist.vs1 .item.No .answer .icon{top:0; right:5px;}
+  .checklist.vs1 .item label{padding-left:20px; display:table-cell;}
+  .icon {font-size: 40px; color: #87b64f;}
+  #hobbies .icon:before{  
+  padding: 15px;
+  background: #e0f3c9;
+  border-radius: 50%;}
+  .highlight{display: inline-block;
+  margin-right: 20px;
+}
+  .highlight .icon{}
+  .highlight .highlight-label{
+  font-family: 'milowebita';
+  padding-left: 5px;
+  line-height:40px;}
+   #apnav.affix{top:10px;}
+      #apnav.affix h3{display:none;}
+      #apnav.affix-top .match-actions {display: none;}
+      #apnav-inner{width:220px; padding:0; border: #ccc solid 1px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.2);}
+      #apnav .nav li {padding:12px 25px; }
+      #apnav .nav li a{padding:0; font-size:16px;}
+      #apnav .nav li a:hover{background:none;}
+      #apnav .nav li.active{background:#efefef;}
+      #apnav .nav li.active a{font-family:'milowebbold';}
+  
+ </style>
+ 	
+ 	<apex:form >
+      <div class="detail-view vs1 row ">
+		<div class="col-md-3 hidden-print">
+		<div class="row">
+		<div class="col-md-10 center-block">
+		<div class="item-image">								
+					<apex:image value="{!returnURL}" rendered="{!returnURL != 'no-picture'}"/>
+					<apex:image value="Male-URL" rendered="{!returnURL == 'no-picture' && participant.Gender__c == 'Male'}"/>
+					<apex:image value="Female-URL" rendered="{!returnURL  == 'no-picture' && participant.Gender__c == 'Female'}"/>									
+					
+					<div class="media-actions">
+					<apex:commandLink oncomplete="popModalPhoto();">
+					<i class="fa fa-camera"></i>
+					</apex:commandLink>
+					
+					<apex:commandLink oncomplete="openvideo();" action="{!retrieveVideo}" rerender="modalvideo">
+					<i class="fa fa-video-camera"></i>
+					</apex:commandLink>
+					</div> <!--  end media actions -->
+			</div><!--  end item image -->
+		
+
+			<div class="hidden-sm hidden-xs margin-t2" data-spy="affix" data-offset-top="520" id="apnav">
+		     <div id="apnav-inner">
+		      
+		      <!-- 
+		      <div class="match-actions margin-t2 center-text">	            
+	            <apex:pageBlock id="icons-Menu">		           
+		            <apex:commandLink styleClass="match-action-item" action="{!MySearch.saveAsFavorite}" id="saveAsFavoriteMenu" rerender="icons-block, icons-blockMenu" rendered="{!NOT(isFavoriteId[applicant.Id])}">
+		            <apex:param name="recordId" value="{!applicant.Id}"/>
+		            <i data-toggle="tooltip" title="Save Profile" class="fa fa-heart" ></i> </apex:commandLink>
+		            
+		            <apex:commandLink styleClass="match-action-item" id="requestInterviewMenu" oncomplete="popModalInterview();" rendered="{!NOT(hasInterviewInProgress)}">                
+	                  <i data-toggle="tooltip" title="Request an Interview" class="fa fa-phone" ></i> 
+					</apex:commandLink>
+					
+					<apex:outputPanel styleClass="match-action-item" id="requestInterviewSelectedMenu" rendered="{!hasInterviewInProgress}">                
+	                  <i data-toggle="tooltip" title="Interview Requested" class="fa fa-phone selected" ></i> 
+					</apex:outputPanel>
+		            
+		            <apex:commandLink styleClass="match-action-item" action="{!MySearch.removeAsFavorite}" id="removeAsFavoriteMenu" rerender="icons-block,icons-blockMenu" rendered="{!isFavoriteId[applicant.Id]}">
+		            <apex:param name="recordId" value="{!applicant.Id}"/>
+		            <i data-toggle="tooltip" title="Undo Save" class="fa fa-heart selected" ></i> </apex:commandLink>
+
+		            <apex:commandLink styleClass="match-action-item" action="{!MySearch.saveAsDismissed}" id="saveAsDismissedMenu" rerender="icons-block,icons-blockMenu" rendered="{!NOT(isDismissedId[applicant.Id])}">
+		            <apex:param name="recordId" value="{!applicant.Id}"/>
+		            <i data-toggle="tooltip" title="Remove Au Pair" class="fa fa-times-circle" ></i> </apex:commandLink>
+		           
+		            <apex:commandLink styleClass="match-action-item" action="{!MySearch.removeAsDismissed}" id="removeAsDismissedMenu" rerender="icons-block,icons-blockMenu" rendered="{!isDismissedId[applicant.Id]}">
+		            <apex:param name="recordId" value="{!applicant.Id}"/>
+		            <i data-toggle="tooltip" title="Undo Remove" class="fa fa-times-circle selected" ></i> </apex:commandLink>		                       
+	            </apex:pageBlock>
+	        </div>
+		    -->
+		    <ul class="nav nav-list vs1 margin-t1"> 
+			<li>
+        		<a onclick="goOverview();" href="#over" id="linkOverview"><span>Overview</span></a>
+      		</li>
+      		<li>
+        		<a onclick="goChildCare();" href="#child" id="linkChildCare"><span>Childcare Experience</span></a>
+      		</li>
+      		<li>
+        		<a onclick="goEducation();" href="#education" id="linkEducation"><span>Education and Training</span></a>
+      		</li>
+      		<li>
+        		<a onclick="goPersonal();" href="#personal" id="linkPersonal"><span>Personal Life</span></a>
+      		</li>
+      		<li>
+        		<a onclick="goHealth();" href="#health" id="linkHealth"><span>Overall Health</span></a>
+      		</li>
+      		<li>
+        		<a onclick="goReference();" href="#reference" id="linkReference"><span>Reference Check</span></a>
+      		</li>
+			</ul>
+			
+			</div> <!--  end apnav inner -->
+			<div class="center-text margin-t2">
+				<b><apex:outputLink value="/apex/pr_pt_profile?participantId={!participant.Id}">Return to Search Results</apex:outputLink></b>
+			</div>
+			</div> <!--  end apnav -->
+			
+		</div>
+		</div><!--  end row -->	
+				
+			
+			
+		</div><!--  end col -->
+		
+		<div class="col-md-8">
+		
+		<div class="row">
+		<div class="col-sm-4">
+		<apex:outputLink value="/apex/pr_pt_profile?participantId={!participant.Id}">
+			<b>Return to Search Results</b>
+			</apex:outputLink>
+		</div>
+		<!-- 
+		<div class="col-sm-8">
+			<div class="match-actions pull-right">
+	            <apex:pageBlock id="icons-block">
+		            <apex:commandLink styleClass="match-action-item" action="{!MySearch.saveAsFavorite}" id="saveAsFavorite" rerender="icons-block,icons-blockMenu" rendered="{!NOT(isFavoriteId[applicant.Id])}">
+		           		<apex:param name="recordId" value="{!applicant.Id}"/>
+		            	<i class="fa fa-heart" ></i>
+		            	<span>Save</span>
+		            </apex:commandLink>
+		            <apex:commandLink styleClass="match-action-item" action="{!MySearch.removeAsFavorite}" id="removeAsFavorite" rerender="icons-block,icons-blockMenu" rendered="{!isFavoriteId[applicant.Id]}">
+			            <apex:param name="recordId" value="{!applicant.Id}"/>
+			            <i class="fa fa-heart selected" ></i>
+			            <span>Saved</span>
+			        </apex:commandLink>
+			        <apex:commandLink styleClass="match-action-item" id="requestInterview" oncomplete="popModalInterview();" rendered="{!NOT(hasInterviewInProgress)}">                
+	                  <i class="fa fa-phone" ></i> 
+	                  <span>Interview</span>
+					</apex:commandLink>
+					<apex:outputPanel styleClass="match-action-item" id="requestInterviewSelectedMenu" rendered="{!hasInterviewInProgress}">                
+	                  <i class="fa fa-phone selected" ></i> 
+	                  <span>Interview</span>
+					</apex:outputPanel>
+		            <apex:commandLink styleClass="match-action-item" action="{!MySearch.saveAsDismissed}" id="saveAsDismissed" rerender="icons-block,icons-blockMenu" rendered="{!NOT(isDismissedId[applicant.Id])}">
+			            <apex:param name="recordId" value="{!applicant.Id}"/>
+			            <i class="fa fa-times-circle" ></i>
+			            <span>Remove</span>
+			        </apex:commandLink>
+		            <apex:commandLink styleClass="match-action-item" action="{!MySearch.removeAsDismissed}" id="removeAsDismissed" rerender="icons-block,icons-blockMenu" rendered="{!isDismissedId[applicant.Id]}">
+			            <apex:param name="recordId" value="{!applicant.Id}"/>
+			            <i class="fa fa-times-circle selected" ></i>
+			            <span>Removed</span>
+		            </apex:commandLink>
+	            </apex:pageBlock>
+	       	</div>
+		</div>
+		-->
+		</div><!--  end row -->	
+			
+		<div id="over"></div>
+			
+		<div class="row margin-b2">
+			
+			<div class="col-sm-12">
+				<h1>
+				<apex:outputText value="{!participant.Account_Id__r.FirstName}"/>
+				<apex:outputText value=" '{!primary.Nick_Name__c}' " rendered="{!NOT(ISBLANK(primary.Nick_Name__c))}"/>
+				<apex:outputText value=" {!participant.Account_Id__r.LastName}"/>
+				</h1>
+			</div>
+        </div>
+        <!--  end row --> 
+						
+		<div class="row margin-b2">
+			<div class="col-sm-4">
+				<label>Arrives By</label><br/>  
+				<span><apex:outputfield value="{!participant.Engagement_Start__c}"/></span>
+			</div>
+			
+			<div class="col-sm-4">
+					<label>Age</label><br/> 
+					<span><apex:outputText value="{!primary.Age__c}"/></span>
+				</div>	
+			
+			<div class="col-sm-4">
+				<label>Driving</label><br/> 
+				<span><apex:outputField value="{!participant.Driving_Frequency__c}"/>
+				</span>	
+			</div>		
+		</div><!--  end row -->
+				
+		<div class="row margin-b2">
+			<div class="col-sm-4">
+				<label>Nationality</label><br/>  
+				<span><apex:outputField value="{!participant.Nationality__c}"/></span>
+			</div>
+			<div class="col-sm-4">
+				<label>Spoken Languages(s)</label><br/> 
+					<apex:repeat id="repeatLang"  value="{!listLanguage}" var="lang">
+						<span>
+						<apex:outputText value="{!lang}"/>
+						<apex:outputText rendered="{!lang == 'English'}">
+							<apex:outputText value=" (Conversational)"/>
+						</apex:outputText>
+						<apex:outputText rendered="{!lang != 'English'}">
+							<apex:outputText value=" ({!mapLang[lang]})"/>
+						</apex:outputText>
+						</span>
+					<br/>
+					</apex:repeat>
+			</div>
+			<div class="col-sm-4">
+				<label>Swimming</label><br/>  
+				<span><apex:outputField value="{!participant.Swimming_Level__c}"/></span>				
+			</div>						
+		</div>
+				
+		<div class="row margin-b2">
+			<div class="col-sm-4">
+				<label>Childcare Hours</label><br/>  
+					<span><apex:outputField value="{!participant.Childcare_Total_Hours__c}"/>&nbsp;Total</span><br/>					
+				</div>
+			<div class="col-sm-4">
+				<label>Ages of Children Cared For</label><br/> 
+					<span><apex:outputText value="{!ChildrenAges}"/></span>	
+			</div>
+			<div class="col-sm-4">
+				<label>Childcare Experiences</label><br/> 
+					<span>
+						<apex:outputText value="{!ChildrenTypes}"/>
+					</span>
+				</div>					
+		</div>
+														
+		<div class="row margin-b2">
+			<div class="col-sm-12">
+			
+			<apex:repeat id="repeatHLIghts"  value="{!HLightList}" var="item">			
+				<apex:outputPanel styleClass="highlight" layout="block" rendered="{!item == 'Previous Au Pair'}">
+					<span class="icon ix-aupair"></span>
+					<span class="highlight-label">{!item}</span>
+				</apex:outputPanel>
+				
+				<apex:outputPanel styleClass="highlight" layout="block" rendered="{!item == 'Advanced Education'}">
+					<span class="icon ix-graduation"></span>
+					<span class="highlight-label">{!item}</span>
+				</apex:outputPanel>
+				
+				<apex:outputPanel styleClass="highlight" layout="block" rendered="{!item == 'Older Sibling'}">
+					<span class="icon ix-oldersibling"></span>
+					<span class="highlight-label">{!item}</span>
+				</apex:outputPanel>
+				
+				<apex:outputPanel styleClass="highlight" layout="block" rendered="{!item == 'Lifeguard'}">
+					<span class="icon ix-lifeguard"></span>
+					<span class="highlight-label">{!item}</span>
+				</apex:outputPanel>
+				
+				<apex:outputPanel styleClass="highlight" layout="block" rendered="{!item == 'Nursing experience'}">
+					<span class="icon ix-nurse"></span>
+					<span class="highlight-label">{!item}</span>
+				</apex:outputPanel>				
+			 
+				<apex:outputPanel styleClass="highlight" layout="block" rendered="{!item == 'Trained in First Aid'}">
+					<span class="icon ix-firstaid"></span>
+					<span class="highlight-label">{!item}</span>
+				</apex:outputPanel>				
+				
+				<apex:outputPanel styleClass="highlight" layout="block" rendered="{!item == 'Teacher or Tutor'}">
+					<span class="icon ix-tutor"></span>
+					<span class="highlight-label">{!item}</span>
+				</apex:outputPanel>
+				
+				<apex:outputPanel styleClass="highlight" layout="block" rendered="{!item == 'Large Family'}">
+					<span class="icon ix-largefamily"></span>
+					<span class="highlight-label">{!item}</span>
+				</apex:outputPanel>
+				
+				<apex:outputPanel styleClass="highlight" layout="block" rendered="{!item == 'Multiples Experience'}">
+					<span class="icon ix-multiples"></span>
+					<span class="highlight-label">{!item}</span>
+				</apex:outputPanel>
+				
+				<apex:outputPanel styleClass="highlight" layout="block" rendered="{!item == 'Athletic'}">
+					<span class="icon ix-shoe"></span>
+					<span class="highlight-label">{!item}</span>
+				</apex:outputPanel>
+				
+				<apex:outputPanel styleClass="highlight" layout="block" rendered="{!item == 'Multi-lingual'}">
+					<span class="icon ix-translate"></span>
+					<span class="highlight-label">{!item}</span>
+				</apex:outputPanel>
+				
+				<apex:outputPanel styleClass="highlight" layout="block" rendered="{!item == 'Musical'}">
+					<span class="icon ix-music"></span>
+					<span class="highlight-label">{!item}</span>
+				</apex:outputPanel>
+				
+				<apex:outputPanel styleClass="highlight" layout="block" rendered="{!item == 'Lived Independently'}">
+					<span class="icon ix-independent"></span>
+					<span class="highlight-label">{!item}</span>
+				</apex:outputPanel>
+				
+				<apex:outputPanel styleClass="highlight" layout="block" rendered="{!item == 'Cooking skills'}">
+					<span class="icon ix-cooking"></span>
+					<span class="highlight-label">{!item}</span>
+				</apex:outputPanel>
+				
+				<apex:outputPanel styleClass="highlight" layout="block" rendered="{!item == 'Traveler'}">
+					<span class="icon ix-travel"></span>
+					<span class="highlight-label">{!item}</span>
+				</apex:outputPanel>			
+			</apex:repeat>
+			
+		</div>
+	</div><!--  end row -->
+			
+			
+	<hr class="vs2"/>
+			
+	<div id="child"></div>
+			
+			<div class="row">
+				<div class="col-sm-12">
+					<h2>Childcare Experience</h2>
+				</div><!--  end col -->
+			</div><!--  end row -->
+			
+			<apex:repeat id="repeatExperience"  value="{!listExperience}" var="experience">
+				<div class="row">
+						<div class="col-sm-12">
+						
+						<h3 class="pull-left">{!experience.Experience_Type__c} Experience</h3>
+						<div class="pull-right margin-t2">
+						<em>with</em><apex:outputText value=" {!experience.Name} "/>
+						<apex:outputText rendered="{!experience.Experience_Category__c =='Private/Individual'}">
+						Family
+						</apex:outputText>
+					</div>
+					</div><!--  end col -->
+				</div><!--  end row -->
+			
+				<hr class="vs3"/>
+			
+					
+				<div class="row">
+					<div class="col-sm-4">
+					<div class="item-field vs2"><label>Dates:</label> 
+					<span><apex:outputfield value="{!experience.Start_Date__c}"/></span> - 
+					<span><apex:outputfield value="{!experience.End_Date__c}"/></span>
+					</div>
+					</div><!--  end col -->
+					<div class="col-sm-4">
+					<div class="item-field vs2"><label>Childcare Hours:</label> <span><apex:outputField value="{!experience.Amount_Hours__c}"/></span></div>
+					</div><!--  end col -->
+					<div class="col-sm-4">
+					<div class="item-field vs2"><label>Hours with Infants:</label> <span><apex:outputField value="{!experience.Amount_Hours_Under_2__c}"/></span></div>
+					</div><!--  end col -->
+				</div><!--  end row -->
+				
+				<apex:variable value="{!1}" var="rowNum" id="rowCounter"/>											
+			
+				<div class="margin-b2 margin-t2">
+			
+					<apex:repeat id="repeatExperienceDet"  value="{!MapExperienceDet[experience.id]}" var="experienceDet">
+				 
+						<div class="pull-left margin-r4">					
+							<div class="tcell">
+								<apex:outputPanel styleClass="icon ix-fam-brother-sm margin-r1" layout="block" rendered="{!experienceDet.Gender__c == 'Male'}"></apex:outputPanel>
+								<apex:outputPanel styleClass="icon ix-fam-sister-sm margin-r1" layout="block" rendered="{!experienceDet.Gender__c == 'Female'}"></apex:outputPanel>
+							</div>
+							
+							<div class="item-field vs1 tcell">
+								<label><apex:outputText value="Child {!rowNum}"/></label>
+								<span>
+								<apex:outputText value="Less than 1 year" rendered="{!ExpDetDOBStart[experienceDet.Id] == '0'}"/>
+								<apex:outputText value="{!ExpDetDOBStart[experienceDet.Id]}" rendered="{!ExpDetDOBEnd[experienceDet.Id] <> '0'}"/>							
+								<apex:outputText value=" - {!ExpDetDOBEnd[experienceDet.Id]}" rendered="{!ExpDetDOBEnd[experienceDet.Id] <> '0'} && ExpDetDOBStart[experienceDet.Id] <> ExpDetDOBEnd[experienceDet.Id] }"/>
+								<apex:outputText value=" years old" rendered="{! ExpDetDOBEnd[experienceDet.Id] <> '0'}"/>
+								</span>
+								<apex:outputText rendered="{!experienceDet.Special_Needs_Indicated__c == 'Yes'}">
+									<br/><a data-toggle="popover" data-content="{!experienceDet.Special_Needs_Description__c}">Has special needs</a>              		
+								</apex:outputText>
+							</div>					
+						</div>
+				
+					<apex:variable var="rowNum" value="{!rowNum + 1}"/>
+				</apex:repeat>
+		    
+			</div><!--  end responsive table -->	
+			
+				<apex:outputPanel layout="block" rendered="{!experience.Experience_Category__c == 'Private/Individual'}">
+					<div class="row">
+						<div class="col-sm-12">
+						<div class="item-field vs1">
+						<label>Responsibilities</label>
+						<span class="capitalize"><apex:outputfield value="{!experience.Position_Responsibilities__c}"/></span>
+						</div>
+						</div><!--  end col -->
+					</div><!--  end row -->
+				</apex:outputPanel>
+				
+				<div class="row">
+					<div class="col-sm-12">
+					<div class="item-quote">
+					<span class="item-quote-text">{!experience.Position_Description__c}</span>
+					<apex:image styleClass="img-circle" value="{!returnURL}" rendered="{!returnURL != 'no-picture'}"/>	
+					</div>
+					</div><!--  end col -->
+				</div><!--  end row -->
+			</apex:repeat>
+			
+			
+			
+			<hr class="vs2"/>
+			<div id="education"></div>
+			<div class="row margin-b2">
+			<div class="col-sm-12">
+			<h2>Education and Training</h2>
+			</div><!--  end col -->
+			</div><!--  end row -->
+			
+			<apex:variable var="v2" value="'[]'"/>
+			<apex:variable var="v1u" value="'{!MapEducation['University/College']}'"/>
+			
+			<apex:outputPanel rendered="{!v1u != v2}">
+				<apex:repeat id="repeatUni" value="{!MapEducation['University/College']}" var="college">
+				 	
+						<div class="row margin-b2">
+							<div class="col-sm-4">
+							<label class="block"><apex:outputfield value="{!college.Program_Type__c}"/> Degree</label>	
+							<apex:outputfield value="{!college.Field_of_Study__c}"/>
+							</div>
+							<div class="col-sm-4">
+									<apex:outputfield value="{!college.Institution_Name__c}"/><br/>
+									<apex:outputField value="{!college.Country__c}"/>	
+							</div>	
+							<div class="col-sm-4">
+							<div>Graduated on&nbsp;<apex:outputField value="{!college.Graduation_Date__c}"/></div>
+							</div>						
+						</div><!--  end row -->
+				
+				</apex:repeat>
+			</apex:outputPanel>
+			
+			<hr class="vs3"/>
+			<apex:repeat id="repeatSchool" value="{!MapEducation['High/Secondary School']}" var="school">
+			
+				<div class="row margin-b2">
+					<div class="col-sm-4">
+					<label class="block">High School</label>
+					</div>
+					<div class="col-sm-4">
+					<apex:outputfield value="{!school.Institution_Name__c}"/><br/>
+					<apex:outputField value="{!school.Country__c}"/>
+					</div>
+					<div class="col-sm-4">
+					<div>Graduated on&nbsp;<apex:outputField value="{!school.Graduation_Date__c}"/></div>
+					</div>
+				</div><!--  end row -->
+				
+			</apex:repeat>
+			
+			<apex:variable var="v1v" value="'{!MapEducation['Vocational Training']}'"/>
+			<apex:outputPanel rendered="{!v1v != v2}">
+			<hr class="vs3"/>
+			<apex:repeat id="repeatVocational" value="{!MapEducation['Vocational Training']}" var="training">
+				
+				<div class="row margin-b2">
+					<div class="col-sm-4">
+					<label class="block"><apex:outputfield value="{!training.Program_Type__c}"/> Certificate</label>
+					</div>
+					<div class="col-sm-4">
+					<apex:outputfield value="{!training.Institution_Name__c}"/><br/>
+					<apex:outputField value="{!training.Country__c}"/>
+					</div>
+					<div class="col-sm-4">
+					<div>Completed on&nbsp;<apex:outputField value="{!training.Graduation_Date__c}"/></div>
+					</div>
+				</div><!--  end row -->
+			
+			</apex:repeat>
+			</apex:outputPanel>
+			
+			<hr class="vs2"/>
+			<div id="personal"></div>
+			<div class="row margin-b2">
+			<div class="col-sm-12">
+			<h2>Driving Experience</h2>
+			</div><!--  end col -->
+			</div><!--  end row -->
+		
+				<div class="row">
+					<div class="col-sm-4">
+					<div class="item-field vs1"><label>First License Received On</label>
+					<div><apex:outputfield value="{!participant.Drivers_Licence_Acquired__c}"/></div>
+					</div>
+					<div class="item-field vs1"><label>Driving Frequency:</label>
+					<span><apex:outputfield value="{!participant.Driving_Frequency__c}"/></span></div>
+					</div>
+					<div class="col-sm-4">
+					<div class="item-field vs1"><label>Current License Expiration</label>
+					<span><apex:outputfield value="{!participant.Drivers_Licence_Expires__c}"/></span></div>
+					<div class="item-field vs1"><label>Comfortable Driving</label>
+					<span><apex:outputfield value="{!participant.Driving_Transmission__c}"/></span></div>
+					</div>
+					<div class="col-sm-4">
+					<div class="item-field vs1"><label><apex:outputText value="Where {!IF(participant.Gender__c =='Male', 'he', 'she')} drives"/></label>
+					<span><apex:outputText value="{!SUBSTITUTE(participant.Driving_Experience__c, ';', ', ')}"/></span></div>
+					<div class="item-field vs1"><label>Experience Driving in Snow</label>
+					<span><apex:outputfield value="{!participant.Driving_Snow_Experience__c}"/></span></div>
+					</div>
+				</div><!--  end row -->
+			
+			<div class="row">
+					<div class="col-sm-12">
+					<div class="item-quote">
+					<span class="item-quote-text">{!participant.Driving_Experience_Description__c}</span>
+					<apex:image styleClass="img-circle" value="{!returnURL}" rendered="{!returnURL != 'no-picture'}"/>	
+					</div>
+					</div>
+			</div><!--  end row -->
+			
+			
+			<hr class="vs2"/>
+			
+			<div class="row margin-b2">
+			<div class="col-sm-12">
+			<h2><apex:outputText value="{!participant.Account_Id__r.FirstName}"/>'s Family</h2>
+			</div>
+			</div><!--  end row -->
+			
+			<apex:repeat id="repeatFamily"  value="{!familyList}" var="family">
+			
+					<div class="inline-block margin-r4">
+					
+					<div class="tcell">
+						<apex:outputPanel styleClass="icon ix-fam-brother-sm margin-r1 {!family['Age__c']}" rendered="{!family['Role__c'] == 'Sibling' && family['Gender__c'] == 'Male'}" layout="block"></apex:outputPanel>
+						<apex:outputPanel styleClass="icon ix-fam-sister-sm margin-r1 {!family['Age__c']}" rendered="{!family['Role__c'] == 'Sibling' && family['Gender__c'] == 'Female'}" layout="block"></apex:outputPanel>
+					</div>
+					
+					<div class="item-field vs1 tcell">
+					<strong><apex:outputText value="{!family['First_Name__c']}"/></strong>
+					<apex:outputText rendered="{!NOT(ISBLANK(family['Profession__c']))}">
+						<br/>			
+						<apex:outputText value="{!family['Profession__c']}" rendered="{!NOT(ISBLANK(family['Profession__c']))}"/>
+					</apex:outputText>
+					<apex:outputText rendered="{!family['Role__c'] == 'Sibling'}">
+						<br/>
+						<apex:outputText value="{!IF(family['Gender__c'] == 'Male','Brother', 'Sister')}"/>
+						<br/>						
+						<apex:outputText value="({!family['Age__c']} yrs old)" rendered="{!family['Age__c'] >= 1}"/>
+						<apex:outputText value="(Less than 1 year old)" rendered="{!family['Age__c'] < 1}"/>
+						
+					</apex:outputText>
+					</div>
+					
+					</div>
+			
+			</apex:repeat>
+			
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="item-quote">
+						<span class="item-quote-text">{!applicant.Family_Description__c}</span>
+						<apex:image styleClass="img-circle" value="{!returnURL}" rendered="{!returnURL != 'no-picture'}"/>	
+					</div>
+				</div>
+			</div><!--  end row -->
+			
+			<hr class="vs2"/>
+			
+		<div id="hobbies">
+		
+			<div class="row margin-b2">
+			<div class="col-sm-12">
+			<h2>Interests and Hobbies</h2>
+			</div>
+			</div>
+				<div class="row margin-b4">
+					<div class="col-sm-6">					
+						<div class="tcell">
+						<div class="icon ix-hobby-bike margin-r2"></div>
+						</div>
+						<div class="item-field vs1 tcell"><label>Sports</label>
+							<span class="capitalize">
+								<apex:outputText value="{!SUBSTITUTE(participant.Interest_Sports__c, ';', ', ')}" rendered="{!NOT(ISBLANK(participant.Interest_Sports__c))}"/>
+								<apex:outputText value="--" rendered="{!ISBLANK(participant.Interest_Sports__c)}"/>
+							</span>
+						</div>
+				</div><!--  end col -->
+				
+				<div class="col-sm-6">		
+						<div class="tcell">
+						<div class="icon ix-hobby-theatre margin-r2"></div>
+						</div>
+						<div class="item-field vs1 tcell"><label>Crafts or Hobbies</label>
+							<span class="capitalize">
+								<apex:outputText value="{!SUBSTITUTE(participant.Interests_Hobbies__c, ';', ', ')}" rendered="{!NOT(ISBLANK(participant.Interests_Hobbies__c))}"/>
+								<apex:outputText value="--" rendered="{!ISBLANK(participant.Interests_Hobbies__c)}"/>
+							</span>
+						</div>
+				</div><!--  end col -->
+				</div><!--  end row -->		
+					
+					<div class="row">
+					<div class="col-sm-6">
+						<div class="tcell">
+						<div class="icon ix-hobby-photos margin-r2"></div>
+						</div>
+						<div class="item-field vs1 tcell"><label>Fine Arts</label>
+							<span class="capitalize">
+								<apex:outputText value="{!SUBSTITUTE(participant.Interest_Fine_Arts__c, ';', ', ')}" rendered="{!NOT(ISBLANK(participant.Interest_Fine_Arts__c))}"/>
+								<apex:outputText value="--" rendered="{!ISBLANK(participant.Interest_Fine_Arts__c)}"/>								
+							</span>
+						</div>
+					</div><!--  end col -->
+					
+					<div class="col-sm-6">
+					
+						<div class="tcell">
+						<div class="icon ix-hobby-coffee margin-r2"></div>
+						</div>
+						<div class="item-field vs1 tcell"><label>Other Activities</label>
+							<span class="capitalize">
+								<apex:outputText value="{!SUBSTITUTE(participant.Interests_Leisure__c, ';', ', ')}" rendered="{!NOT(ISBLANK(participant.Interests_Leisure__c))}"/>
+								<apex:outputText value="--" rendered="{!ISBLANK(participant.Interests_Leisure__c)}"/>
+							</span>
+						</div>						
+					</div><!--  end col -->
+				</div><!--  end row -->
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="item-quote">
+							<span class="item-quote-text">{!participant.Interests_Hobbies_Description__c}</span>
+							<apex:image styleClass="img-circle" value="{!returnURL}" rendered="{!returnURL != 'no-picture'}"/>	
+						</div>
+					</div>
+				</div><!--  end row -->
+			</div><!--  end hobbies -->
+			
+				
+			<hr class="vs2"/>
+			<div class="row margin-b2">
+			<div class="col-sm-12">
+			<h2><apex:outputText value="In {!IF(participant.Gender__c == 'Male', 'His', 'Her')} Own Words" /></h2>
+			</div>
+				</div><!--  end row -->
+			<apex:repeat id="repeatEssay" value="{!essayList}" var="essay">
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="item-field vs1"><label><apex:outputfield value="{!essay.Label__c}"/></label>
+							<div class="item-quote">	
+							<div class="truncate">
+								{!essay.Narrative__c}	
+							<a class="readmore">Read More</a>	
+							</div>
+							<apex:image styleClass="img-circle" value="{!returnURL}" rendered="{!returnURL != 'no-picture'}"/>	
+							</div>		
+							
+						</div>
+					</div>
+				</div><!--  end row -->
+			</apex:repeat>
+			
+			
+			
+			<hr class="vs2"/>
+			<div class="row margin-b2">
+			<div class="col-sm-12">
+			<h2>Personality Quiz</h2>
+			</div><!--  end col -->
+			</div><!--  end row -->
+			
+			
+			<div class="row margin-b4">
+			<div class="col-sm-6">
+			<!--  <c:block_script_disc_chart />-->
+			<div id="chart_div"></div>
+			</div><!--  end col -->
+			<div class="col-sm-6">
+			<div class="margin-b2">{!discInfo.Summary_of_Personality__c}</div>
+			<div><a data-toggle="collapse" data-target="#discbullets">See Full Breakdown of Results</a></div>
+			</div><!--  end col -->
+			</div><!--  end row -->
+			
+			<div id="discbullets" class="collapse">
+			<div class="row margin-b2">
+			<div class="col-sm-6">
+			<p><label>Dominance</label></p>
+			<div class="capitalize"><apex:outputText value="{!discInfo.DDescription__c}" escape="false"/></div>
+			</div><!--  end col -->
+			<div class="col-sm-6">
+			<p><label>Influence</label></p>
+			<div class="capitalize"><apex:outputText value="{!discInfo.IDescription__c}" escape="false"/></div>
+			</div><!--  end col -->
+			</div><!--  end row -->
+			
+			<div class="row">
+			<div class="col-sm-6">
+			<p><label>Steadiness</label></p>
+			<div class="capitalize"><apex:outputText value="{!discInfo.SDescription__c}" escape="false"/></div>
+			</div><!--  end col -->
+			<div class="col-sm-6">
+			<p><label>Compliance</label></p>
+			<div class="capitalize"><apex:outputText value="{!discInfo.CDescription__c}" escape="false"/></div>
+			
+			</div><!--  end col -->
+			</div><!--  end row -->
+			</div><!--  end DISC bullets -->
+				
+			
+			<hr class="vs2"/>
+			<div id="health"></div>
+			<div class="row">
+			<div class="col-sm-12">
+			<h2>Health</h2>
+			<h3>Yasemin's Answers to Our Health Questionnaire</h3>
+			<hr class="vs3"/>
+			</div><!--  end col -->
+			</div><!--  end row -->
+		
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="checklist vs1">
+					
+							<div class="item {!participant.Allergies_Indicated__c}">
+								<div class="answer">
+									<div class="icon ix-form-circled"></div>
+									<div class="yes">Yes</div>
+									<div class="no">No</div>
+								</div>
+								<label>Do you have any allergies?</label>
+								<apex:outputPanel layout="block" rendered="{!participant.Allergies_Indicated__c == 'Yes'}">
+									<div class="item-quote">
+										<span class="item-quote-text">{!applicant.Allergy_Description__c}</span>
+										<apex:image styleClass="img-circle" value="{!returnURL}" rendered="{!returnURL != 'no-picture'}"/>	
+									</div>
+								</apex:outputPanel>
+							</div>
+												
+							<div class="item {!participant.Special_Diet_Indicated__c}">
+								<div class="answer">
+									<div class="icon ix-form-circled"></div>
+									<div class="yes">Yes</div>
+									<div class="no">No</div></div>
+								<label>Do you follow a special diet?</label>
+								<apex:outputPanel layout="block" rendered="{!participant.Special_Diet_Indicated__c == 'Yes'}">
+									<div class="item-quote">
+										<span class="item-quote-text">{!participant.Special_Diet__c}</span>
+										<apex:image styleClass="img-circle" value="{!returnURL}" rendered="{!returnURL != 'no-picture'}"/>	
+									</div>
+								</apex:outputPanel>
+							</div>
+					
+					<div class="item {!primary.Physical_Disabilities_Indicated__c}">
+						<div class="answer">
+							<div class="icon ix-form-circled"></div>
+							<div class="yes">Yes</div>
+							<div class="no">No</div></div>
+							<label>Do you have any physical disabilities? </label>
+							<apex:outputPanel layout="block" rendered="{!primary.Physical_Disabilities_Indicated__c == 'Yes'}">
+								<div class="item-quote">
+									<span class="item-quote-text">{!primary.Physical_Disabilities_Description__c}</span>
+									<apex:image styleClass="img-circle" value="{!returnURL}" rendered="{!returnURL != 'no-picture'}"/>	
+								</div>
+							</apex:outputPanel>
+					</div>
+					
+					<div class="item {!primary.Contagious_Disease_Indicated__c}">
+						<div class="answer">
+							<div class="icon ix-form-circled"></div>
+							<div class="yes">Yes</div>
+							<div class="no">No</div>
+						</div>
+						<label>Do you have any contagious diseases?</label>
+						<apex:outputPanel layout="block" rendered="{!primary.Contagious_Disease_Indicated__c == 'Yes'}">
+							<div class="item-quote">
+								<span class="item-quote-text">{!primary.Contagious_Disease_Description__c}</span>
+								<apex:image styleClass="img-circle" value="{!returnURL}" rendered="{!returnURL != 'no-picture'}"/>	
+							</div>
+						</apex:outputPanel>
+					</div>
+					
+					<div class="item {!primary.Drug_Dependency_Indicated__c}">
+						<div class="answer">
+							<div class="icon ix-form-circled"></div>
+							<div class="yes">Yes</div>
+							<div class="no">No</div>
+						</div>
+						<label>Do you have a drug or alcohol dependency?</label>
+						<apex:outputPanel layout="block" rendered="{!primary.Drug_Dependency_Indicated__c == 'Yes'}">
+							<div class="item-quote">
+								<span class="item-quote-text">{!primary.Drug_Dependency_Description__c}</span>
+								<apex:image styleClass="img-circle" value="{!returnURL}" rendered="{!returnURL != 'no-picture'}"/>	
+							</div>
+						</apex:outputPanel>
+					</div>
+					
+					<div class="item {!primary.Medication_Indicated__c}">
+						<div class="answer">
+							<div class="icon ix-form-circled"></div>
+							<div class="yes">Yes</div>
+							<div class="no">No</div>
+						</div>
+						<label>Do you take any medications prescribed by a doctor?</label>
+						<apex:outputPanel layout="block" rendered="{!primary.Medication_Indicated__c == 'Yes'}">
+							<div class="item-quote">
+								<span class="item-quote-text">{!primary.Medication_Description__c}</span>
+								<apex:image styleClass="img-circle" value="{!returnURL}" rendered="{!returnURL != 'no-picture'}"/>	
+							</div>
+						</apex:outputPanel>
+					</div>
+									
+					<div class="item {!primary.Hospitalization_Indicated__c}">
+						<div class="answer">
+							<div class="icon ix-form-circled"></div>
+							<div class="yes">Yes</div>
+							<div class="no">No</div>
+						</div>
+						<label>Have you been hospitalized in the last 12 months? </label>
+						<apex:outputPanel layout="block" rendered="{!primary.Hospitalization_Indicated__c == 'Yes'}">
+							<div class="item-quote">
+								<span class="item-quote-text">{!primary.Hospitalization_Description__c}</span>
+								<apex:image styleClass="img-circle" value="{!returnURL}" rendered="{!returnURL != 'no-picture'}"/>	
+							</div>
+						</apex:outputPanel>
+					</div>
+					
+					<div class="item {!primary.Psychiatric_Treatment_Indicated__c}">
+						<div class="answer">
+							<div class="icon ix-form-circled"></div>
+							<div class="yes">Yes</div>
+							<div class="no">No</div>
+						</div>
+						<label>Have you ever received counseling or psychiatric treatment? </label>
+						<apex:outputPanel layout="block" rendered="{!primary.Psychiatric_Treatment_Indicated__c == 'Yes'}">
+							<div class="item-quote">
+								<span class="item-quote-text">{!primary.Psychiatric_Treatment_Description__c}</span>
+								<apex:image styleClass="img-circle" value="{!returnURL}" rendered="{!returnURL != 'no-picture'}"/>	
+							</div>
+						</apex:outputPanel>
+					</div>
+					
+				    <div class="item {!primary.Pregnancy_Indicated__c}">
+						<div class="answer">
+							<div class="icon ix-form-circled"></div>
+							<div class="yes">Yes</div>
+							<div class="no">No</div>
+						</div>
+						<label>Are you pregnant? </label>
+					</div>
+					
+					<div class="item {!primary.Braces_Indicated__c}">
+						<div class="answer">
+							<div class="icon ix-form-circled"></div>
+							<div class="yes">Yes</div>
+							<div class="no">No</div>
+						</div>
+						<label>Do you have orthodontics/braces? </label>
+						</div>
+					</div><!--  end checklist -->
+					
+					</div><!--  end col -->
+				</div><!--  end row -->
+		    
+		    <!--  
+		    <h3>Physician's Review</h3>
+			<hr class="vs3"/>
+			<p class="margin-b2">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+			Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+			
+			<div class="row">
+			<div class="col-sm-4">
+			<div class="item-field vs1">
+			<label>Physician's Health Rating</label>
+			<span>{!primary.Overall_Health__c}</span>
+			</div>
+			</div><!--  end col --
+			<div class="col-sm-4">
+				<div class="item-field vs1">
+			<label>Date of Physical</label>
+			<span><apex:outputField value="{!primary.Physical_Exam_Date__c}"/></span>
+			</div>
+			</div><!--  end col --
+			
+			<apex:outputPanel layout="block" rendered="{!IF(phyDocList.size == 0, true, false)}">
+			<div class="col-sm-4">
+			There's no report for this Au Pair
+			</div><!--  end col --
+			</apex:outputPanel>
+			
+			<apex:outputPanel layout="block" rendered="{!IF(phyDocList.size == 1, true, false)}">
+			
+			<div class="col-sm-4">
+				<apex:commandLink styleClass="btn btn-link vs2 btn-lg margin-r1" action="{!loadPic}" rerender="" target="_blank">
+                <apex:param name="docGuid" value="{!phyDocList[0].Document_GUID__c}"/>
+                <i class="fa fa-stethoscope "></i><span>View Full Report</span>
+                </apex:commandLink> 
+			</div><!--  end col --
+			</apex:outputPanel>
+			
+			</div><!--  end row --
+			
+			<apex:outputPanel layout="block" rendered="{!IF(phyDocList.size > 1, true, false)}">
+			<div class="row">
+			<div class="col-sm-8">
+			<apex:pageBlock id="Block_ListExperience" >
+            	<div class="table-responsive margin-t4">
+                	<apex:pageBlockTable styleClass="table vs2" value="{!phyDocList}" var="item">
+                    	<apex:column headerValue="Uploaded Documents">
+	                        <apex:outputText value="{!item.Document_Name__c}"/>
+	                    </apex:column>
+	                    
+	                    <apex:column headerValue="View Documents">
+	                        <apex:commandLink action="{!loadPic}" rerender="" target="_blank">
+	                        <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+	                        <i class="fa fa-picture-o"></i>
+	                        </apex:commandLink>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </div>
+            </apex:pageBlock>
+			</div><!--  end col --
+			</div>
+			</apex:outputPanel>
+			
+			-->
+			
+			
+			<hr class="vs2"/>
+			
+			<div class="row">
+			<div class="col-sm-12">
+			<h2>Our Interview with <apex:outputText value=" {!participant.Account_Id__r.FirstName}"/></h2>
+			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+			Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+			</div><!--  end col -->
+			</div><!--  end row -->
+			<hr class="vs3"/>
+			
+			<div class="row">
+					<div class="col-sm-12">
+					<div class="item-field vs1">
+					<label>
+					<apex:outputText value="How will this applicant meet the responsibilities and challenges of their year with a host family in another country?"/>
+					</label>
+					<div>{!asseessmentInterv.PT_Suitability__c}</div>
+					</div>
+					</div>
+		    </div><!--  end row -->
+		    
+		    <div class="row">
+					<div class="col-sm-12">
+					<div class="item-field vs1">
+					<label>
+					<apex:outputText value="Please describe the applicant’s attitude, level of maturity and overall personality."/>
+					</label>
+					<div>{!asseessmentInterv.PT_Assessment__c}</div>
+					</div>
+					</div>
+		    </div><!--  end row -->
+		    
+		    <div class="row">
+					<div class="col-sm-12">
+					<div class="item-field vs1">
+					<label>
+					<apex:outputText value="What skills and attributes make this person an ideal candidate for the au pair program?"/>
+					</label>
+					<apex:outputText escape="false" value="{!SUBSTITUTE(asseessmentInterv.Participant_Traits__c,';',', ')}"/>
+					</div>
+					</div>
+		    </div><!--  end row -->
+			
+			
+			
+			<hr class="vs2"/>
+			<div id="reference"></div>
+			<div class="row margin-b2">
+			<div class="col-sm-12">
+			<h2>References</h2>
+			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+			</div><!--  end col -->
+			</div><!--  end row -->
+				<div class="row">
+				<div class="col-sm-4">
+				
+				<h3>Childcare Reference</h3>
+				
+				</div> 
+				</div>
+				<hr class="vs3"/>
+				
+				<apex:repeat id="repeatChildRef" value="{!listChildCareRef}" var="personChild">
+				
+					<div class="row">
+						<div class="col-sm-4">
+						<div class="item-field vs1">
+						<c:block_rating ratingScore="{!personChild.Rating__c}" read_only="true" extId="{!personChild.Id}" /><br/>
+						<span>"<apex:outputText escape="false" value="{!SUBSTITUTE(personChild.Participant_Traits__c,';',', ')}"/>"</span>
+						</div> 
+						</div>
+						
+						<div class="col-sm-4">
+						<div class="item-field vs1">
+						<strong>
+						<label>{!mapExperienceRef[personChild.id].First_Name__c} {!mapExperienceRef[personChild.id].Last_Name__c} &nbsp;
+						<apex:outputText rendered="{!mapExperienceRef[personChild.id].Experience_Category__c =='Private/Individual'}">
+						Family
+						</apex:outputText>
+						</label>
+						</strong>
+						
+						<span>
+						{!participant.Account_Id__r.FirstName} took care of&nbsp;
+						
+						<apex:outputText rendered="{!mapExperienceRef[personChild.id].Experience_Category__c =='Private/Individual'}">
+						{!MapExpDetSize[mapExperienceRef[personChild.id].Id]}
+						</apex:outputText>
+						
+						<apex:outputText rendered="{!mapExperienceRef[personChild.id].Experience_Category__c =='Public/Group'}">
+							<apex:outputText value="{!mapExperienceRef[personChild.id].Number_of_Children__c}"/>
+						</apex:outputText>
+						Children within the ages: 
+						<apex:outputText escape="false" value=" {!SUBSTITUTE(mapExperienceRef[personChild.id].Children_Ages__c,';',', ')}"/>
+						
+						</span>
+						<br/>
+						
+						<apex:outputText rendered="{!mapExperienceRef[personChild.id].Experience_Category__c =='Private/Individual'}">
+						<apex:outputText rendered="{!MapExpDetNeed[mapExperienceRef[personChild.id].Id]}"  
+						value="At least one child has special needs"/>
+						</apex:outputText>
+						
+						<apex:outputText rendered="{!mapExperienceRef[personChild.id].Experience_Category__c =='Public/Group'}">
+						<apex:outputText rendered="{!mapExperienceRef[personChild.id].Special_Needs_Indicated__c =='Yes'}"  
+						value="At least one child has special needs"/>	
+						</apex:outputText>
+						
+						
+						</div>
+						</div>
+						
+						<div class="col-sm-4">
+						</div>
+					</div><!--  end row -->
+
+				</apex:repeat>
+				
+				
+				<div class="row">
+				<div class="col-sm-4">
+				
+				<h3>Personal Reference</h3>
+				
+				</div>
+				</div>
+				<hr class="vs3"/>
+				
+				<apex:repeat id="repeatPersonRef" value="{!listPersonalRef}" var="personRef">
+
+					<div class="row">
+						<div class="col-sm-4">
+						<div class="item-field vs1">
+						<c:block_rating ratingScore="{!personRef.Rating__c}" read_only="true" extId="{!personRef.Id}" /><br/>
+						<span>"<apex:outputText escape="false" value="{!SUBSTITUTE(personRef.Participant_Traits__c,';',', ')}"/>"</span>
+						</div> 
+						</div>
+						<div class="col-sm-4">
+						<div class="item-field vs1"><strong><label>{!personRef.Name}</label></strong>
+						<span>
+						<apex:outputText value="{!participant.Account_Id__r.FirstName}"/>'s&nbsp;
+						<apex:outputText value="{!personRef.Relation_To_Participant__c}"/>&nbsp;has known&nbsp;
+						<apex:outputText value="{!IF(participant.Gender__c == 'Male', 'him', 'her')}"/>&nbsp;
+						for {!personRef.Time_Known__c}
+						</span>
+						
+						</div>
+						</div>
+						<div class="col-sm-4">
+						</div>
+					</div><!--  end row -->
+
+				</apex:repeat>
+			
+	 		<!-- 
+			<div class="modal fade vs1" id="appPhotos" tabindex="-1" role="dialog" aria-hidden="true">
+				<apex:pageBlock id="appPhotosBlock">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-body">
+							<div class="h1">Photos</div>
+							<div class="row">
+								<div class="col-sm-12">									 
+									<apex:repeat value="{!ParticipantPhotoList}" var="item">
+										<apex:image url="{!item}"/>
+									</apex:repeat>
+									
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				</apex:pageBlock>
+			</div>
+			-->
+		
+		<!--  end modal window --> 
+		<apex:outputPanel layout="block" id="modalvideo">
+		<div class="modal fade vs1" id="apvideo" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-body">
+						<div class="h1">Au Pair Video</div>
+							<div class="row">
+							<div class="col-sm-12">
+								<div class="embed-responsive embed-responsive-16by9">
+				                	<apex:outputPanel layout="block" rendered="{!MapVideoSize>0}">
+				                	<apex:repeat id="AlbumPicKeyThumb"  value="{!MapPTVideoThumb}" var="keyURLThumb">
+                        			<apex:repeat id="AlbumPicKey"  value="{!MapPTVideoThumb[keyURLThumb]}" var="keyURLVideo">
+		                  			<apex:repeat id="AlbumPic"  value="{!MapPTVideoThumb[keyURLThumb][keyURLVideo]}" var="item">
+				                	<video id="videoPt" class="embed-responsive-item video-js vjs-default-skin " controls="true" height="300px" width="100%" preload="auto" poster="{!keyURLThumb}" data-setup='{"example_option":true}'>
+				                        <source src="{!keyURLVideo}" type='rtmp/mp4' />
+				                        <!--<source src="rtmp://your.streaming.provider.net/cfx/st/&mp4:path/to/video.mp4" type='rtmp/mp4' />-->
+				                        <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that 
+				                        <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+			                        	</p>
+			                       </video>
+			                       </apex:repeat>
+			                       </apex:repeat>
+			                       </apex:repeat>
+			                       </apex:outputPanel>
+			                       
+			                       <apex:outputPanel layout="block" rendered="{!MapVideoSize == 0}">
+			                       <p>This Au Pair doesn't have a video yet</p>
+			                       </apex:outputPanel>
+			                       
+			                   </div> 
+							</div><!--  end column -->
+						</div><!--  end row -->
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--  end modal window --> 
+		</apex:outputPanel>
+		
+		<div class="modal fade vs1" id="myModalInterview" tabindex="-1" role="dialog" aria-hidden="true">
+				<apex:pageBlock id="myModalInterviewBlock">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-body">
+							<div class="h1">Request an Interview</div>
+							<div class="row">
+								<div class="col-sm-12">
+									Are you sure you want to schedule an interview with this Au Pair?
+									
+								</div><!--  end column -->
+							</div><!--  end row -->
+							
+							<div class="row">
+								<div class="col-sm-6">
+									<apex:commandLink >				                        				                        
+				                        <apex:commandButton value="Schedule Interview" rerender=""/>
+			                        </apex:commandLink>									
+								</div><!--  end column -->
+								<div class="col-sm-6">
+									<apex:commandLink value="Cancel" onclick="closeRequestInterview();" rerender="icons-Menu"/>	
+								</div><!--  end column -->
+							</div><!--  end row -->
+						</div>
+					</div>
+				</div>
+				</apex:pageBlock>
+			</div>
+
+
+
+	</div><!--  end column -->
+
+
+</div><!--  end row -->
+</apex:form>
+	<script>
+	  var j$ = jQuery.noConflict();
+	  function popModalPhoto(){
+	   j$.magnificPopup.open({
+	    items: [
+	    <apex:repeat value="{!ParticipantPhotoList}" var="item">
+	      {
+	        src: '{!item}',
+	        //title: 'Peter & Paul fortress in SPB'
+	      },
+	    </apex:repeat>
+	    ],
+	    gallery: {
+	      enabled: true
+	    },
+	    type: 'image' 
+	  });
+	  }
+	</script>
+
+<script>
+var j$ = jQuery.noConflict();
+j$('body').scrollspy({ target: '#apnav' })
+
+function popModalInterview(){
+	j$('#myModalInterview').modal();
+}
+
+function closeRequestInterview(){
+	j$('#myModalInterview').modal('hide');
+}
+
+function popModalInterviewClose(){
+	j$('#myModalInterview').modal('hide');
+}
+
+function goOverview(){
+	j$('html, body').animate({'scrollTop': j$('#over').offset().top});
+}
+function goChildCare(){
+	j$('html, body').animate({'scrollTop': j$('#child').offset().top});
+}
+
+function goEducation(){
+	j$('html, body').animate({'scrollTop': j$('#education').offset().top});
+}
+
+function goPersonal(){
+	j$('html, body').animate({'scrollTop': j$('#personal').offset().top});
+}
+
+function goHealth(){
+	j$('html, body').animate({'scrollTop': j$('#health').offset().top});
+}
+
+function goReference(){
+	j$('html, body').animate({'scrollTop': j$('#reference').offset().top});
+}
+
+function openvideo(){
+	j$('#apvideo').modal();
+	videojs('#videoPt');
+}
+
+j$(document).on('hidden.bs.modal', '#apvideo', function (event) {
+   videojs('#videoPt').dispose();
+});
+
+
+
+</script>
+
+			
+				
+<script>
+
+/* DISC chart generator */
+
+   google.load('visualization', '1.1', {packages: ['corechart']});
+      google.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        //change values here
+        var dominance = {!discInfo.D_Score__c};
+        var influence = {!discInfo.I_Score__c};
+        var steadiness = {!discInfo.S_Score__c};
+        var compliance = {!discInfo.C_Score__c};        
+        
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', '');
+        data.addColumn('number', '');
+        data.addColumn({
+          type: 'string',
+          role: 'style'
+        });
+        data.addRows(4);
+
+        data.setValue(0, 0, 'Dominance');
+        data.setValue(0, 1, dominance);
+        data.setValue(0, 2, '#CE2220');
+
+        data.setValue(1, 0, 'Influence');
+        data.setValue(1, 1, influence);
+        data.setValue(1, 2, '#F5AD1D');
+
+        data.setValue(2, 0, 'Steadiness');
+        data.setValue(2, 1, steadiness);
+        data.setValue(2, 2, '#ABBF20');
+
+        data.setValue(3, 0, 'Compliance');
+        data.setValue(3, 1, compliance);
+        data.setValue(3, 2, '#1F91DA');
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+
+        chart.draw(data, {
+          bar: {
+            groupWidth: "85%" //100% = no width between bars
+          },
+          
+          height:300,
+          vAxis: {
+            minValue: 0,
+            maxValue: 28,
+            viewWindow: {
+              max: 28,
+              min: 0
+            },
+            ticks: [0, 4, 8, 12, 16, 20, 24, 28],
+            gridlines: {
+              color: '#eee',
+              count: 5
+            }
+          },
+          hAxis: {
+            //slantedText: true,
+            //slantedTextAngle: 60
+          },
+          legend: 'none'
+        });
+      }
+    </script>
+
+</apex:define>
+</apex:composition>
+</apex:page>

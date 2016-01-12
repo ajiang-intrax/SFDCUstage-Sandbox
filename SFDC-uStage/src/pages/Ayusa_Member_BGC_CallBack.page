@@ -1,0 +1,32 @@
+<apex:page standardStylesheets="false" showHeader="false" controller="DocuSign_Controller" action="{!MethodBGCFinal}">
+ <apex:composition template="FlowTemplate_Vs1">
+      <apex:define name="body">
+      
+          <div class="row">
+          <apex:outputPanel styleClass="span9" layout="block">
+        
+          </apex:outputPanel>
+        </div>
+          <apex:pageMessages />
+      <apex:pageblock >
+                  
+                    
+                    <div style='font-size:18px;margin:50px;'>                 
+                <apex:outputPanel > <center> {!msgDisplay}</center>  </apex:outputPanel>
+            </div>
+                      
+         
+       
+                   
+                     
+                       
+                 
+             </apex:pageBlock>
+        
+          
+       
+      </apex:define>
+  </apex:composition>
+ 
+ 
+</apex:page>

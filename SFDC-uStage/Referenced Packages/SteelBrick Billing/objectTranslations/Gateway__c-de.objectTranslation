@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>false</plural>
+        <value><!-- Payment Gateway --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>true</plural>
+        <value><!-- Payment Gateway --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>false</plural>
+        <value><!-- Payment Gateway --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>true</plural>
+        <value><!-- Payment Gateway --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>false</plural>
+        <value><!-- Payment Gateway --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>true</plural>
+        <value><!-- Payment Gateway --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>false</plural>
+        <value><!-- Payment Gateway --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>true</plural>
+        <value><!-- Payment Gateway --></value>
+    </caseValues>
+    <fields>
+        <label>Aktiv</label>
+        <name>Active__c</name>
+    </fields>
+    <fields>
+        <label><!-- Default --></label>
+        <name>Default__c</name>
+    </fields>
+    <fields>
+        <label>Gateway-Typ</label>
+        <name>Gateway_Type__c</name>
+        <picklistValues>
+            <masterLabel>ACH</masterLabel>
+            <translation><!-- ACH --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Authorize.net</masterLabel>
+            <translation><!-- Authorize.net --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>PayPal</masterLabel>
+            <translation><!-- PayPal --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>WireCard</masterLabel>
+            <translation><!-- WireCard --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Also know as:
+&quot;API Login&quot; on Authorize.net
+&quot;Merchant Login&quot; on PayPal(PayFlow Pro) --></help>
+        <label>Händler-ID</label>
+        <name>Merchant_ID__c</name>
+    </fields>
+    <fields>
+        <help><!-- Not used by Authorize.net
+&quot;Partner&quot; in Paypal(Payflow) --></help>
+        <label>Händler Reference</label>
+        <name>Merchant_Reference__c</name>
+    </fields>
+    <fields>
+        <help><!-- Not used by Paypal and Wirecard
+&quot;Merchant Seal&quot; in Authorize.net --></help>
+        <label><!-- Merchant Seal User Id --></label>
+        <name>Merchant_Seal_User_Id__c</name>
+    </fields>
+    <fields>
+        <help><!-- Also known as:
+&quot;Transaction Key&quot; on Authorize.net
+&quot;Password&quot; on PayPal(Payflow Pro) --></help>
+        <label>Händler Security Key</label>
+        <name>Security_Key__c</name>
+    </fields>
+    <fields>
+        <label>Test-Modus</label>
+        <name>Test_Mode__c</name>
+    </fields>
+    <gender><!-- Neuter --></gender>
+    <layouts>
+        <layout>Gateway Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- Payment Gateway Name --></nameFieldLabel>
+    <validationRules>
+        <errorMessage>Nur aktiv Zahlungsmethoden kann Verzug</errorMessage>
+        <name>Active_payment_methods_can_be_default</name>
+    </validationRules>
+</CustomObjectTranslation>

@@ -1,0 +1,49 @@
+<apex:page docType="html-5.0" standardStylesheets="true" showHeader="false">
+
+	<apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/reset.css')}"/>
+	<apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/fonts.css')}"/> 
+	<apex:stylesheet value="{!URLFOR($Resource.module_colorbox, '/module-colorbox/css/colorbox.css')}"/>
+	<apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/vs1.css')}"/> 
+	<apex:outputText value="<" escape="false"/>!--[if IE]<apex:outputText value=">" escape="false"/>
+	<link rel="stylesheet" href="/intraxappengine/resource/intrax_themes/intrax_themes/styles/ie.css"/>  
+	<apex:outputText value="<" escape="false"/>![endif]--<apex:outputText value=">" escape="false"/>      
+     
+	<apex:outputText value="<" escape="false"/>!--[if lt IE 8]<apex:outputText value=">" escape="false"/>      
+	<link rel="stylesheet" href="/intraxappengine/resource/intrax_themes/intrax_themes/styles/ie-7.css"/>
+	<apex:outputText value="<" escape="false"/>![endif]--<apex:outputText value=">" escape="false"/>
+	
+    <apex:define name="body">
+      <div class="wrapper">
+      	<apex:form >
+    	<h2>Essay Questions<br/></h2>
+		<div class="white-box">
+
+		    <p>
+		     Minimum requirement is at least 250 characters per essay.
+		    </p>
+		    <p>
+		      <strong>Student Letter</strong>
+		    </p>
+		    <p>
+		    This letter should be addressed to the host family members who will share their home with you during your program. Please be as thorough as possible so that the host family will have a good understanding of you, and answer all the questions. Lastly, please do not write your last/family name, hometown or name of school in your letter; this is for confidentiality purposes prior to the confirmation of your placement.<br/>
+		        <br/>Please answer these questions in your letter:<br/>1. What do you want the host family to know about you?<br/>2. Why do you want to attend high school and live in the U.S. with an American family?<br/>3. What is your life like in your home country (relationships with family, home, friends, school)?<br/>4. What plans do you have for your future education and career?<br/>
+		     
+		    </p>
+		    <p>
+		      <strong>Sample Student Letter to the Host Family</strong>
+		    </p>
+		    <p>Dear Host Family,</p>
+		    <p>Thank you so much for being willing to participate in the exchange program and accepting me to live with your family.</p>
+		    <p>I am a 15-year old Taiwanese girl and have just finished my junior high school. I like to try new things and I want to explore the world, including America. I want to learn about the American culture and share in your life.</p>
+		    <p>I love Japanese comics. I am a very outgoing, straightforward, creative, artistic, academic and fun-loving person. I enjoy playing sports, such as badminton, tennis and swimming. I speak two different languages, Mandarin and Taiwanese, and I look forward to becoming fluent in English. Although I don&rsquo;t have the opportunity to volunteer in Taiwan, I want to participate in these activities in America. It makes me happy to help other people, especially older people and younger children.</p>
+		    <p>I have played the flute for 7 years and it always brightens my days when I play it. I like to sing, and I hope to join the school choir in America. I understand that I may not be able to join the choir at my school so I am interested in trying other things and joining school clubs.</p>
+		    <p>My dad is in charge of a company which produces machines and he is interested in bicycling. My mom is a full-time mother and she loves traveling. My younger sister is two years younger than me and she is in 7th grade. We are a close family and I hope to become a part of your family as well.</p>
+		    <p>I think the Chinese characters and Chinese language are the most important parts of Chinese culture. I am glad to share the beauty of the Chinese culture with my host family. I also would like to show my host family how we celebrate the different Chinese festivals. For example, Moon Festival, Chinese New Year, Dragon Boat Festival, Lantern Festival, etc. Also, I can share the knowledge of traditional toys and Taiwanese snacks, especially stinky tofu and pearl milk tea. I will sing some Taiwanese folk songs for you, too.</p>
+		    <p>When I saw the wonderful pictures of my Ayusa sisters and brothers, it made me more determined to go to America and learn about your culture. I believe that I can also take amazing photos and have unforgettable memories with you and my new friends in America. I am excited to become a part of your family!</p>
+		    <p>Warm Regards,</p>
+		    <p>Signature (First name only)</p>
+  			</div>
+  	</apex:form>
+	</div>
+	</apex:define>
+</apex:page>

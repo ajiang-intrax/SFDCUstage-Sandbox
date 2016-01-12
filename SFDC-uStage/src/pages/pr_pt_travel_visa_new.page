@@ -1,0 +1,260 @@
+<apex:page applyBodyTag="false" applyHtmlTag="false" title="Participant's Travel and Visa | Intrax" standardStylesheets="false" showHeader="false" controller="IntraxPartnerPortalEngineController" action="{!checkLogin}">
+    <apex:composition template="intraxtemplate_vs3">
+      <apex:define name="body">
+      
+      <apex:form styleClass="form-vertical ws-validate" id="webForm">
+        
+    
+          <div class="row margin-b2">
+          <div class="col-sm-9 center-text center-block">
+                    <c:block_pr_pt_profile_thumb photoUrl="{!returnUrl}" gender="{!participant.Account_Id__r.Gender__pc}"/> 
+            <h1>
+              <apex:outputText rendered="{!IF($CurrentPage.parameters.participantId == null, false, true)}" value="{!participant.Name}"/>
+              <apex:outputText rendered="{!IF($CurrentPage.parameters.participantId == null, true, false)}" value="No Individual Participant Selected"/>
+            </h1>
+          </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+        <div class="row">
+          <div class="col-sm-12">
+          <div class="center-text">
+          <c:menu_pr_pt participant="{!participant}" applicationRecord="{!applicationRecord}" />
+</div>
+          </div><!--  end column --> 
+        </div><!--  end row -->
+                <hr class="margin-b4"/>
+        <div class="row margin-b2">
+          <div class="col-sm-9 center-text center-block">
+            <h2>Add a New Travel Record</h2>
+          </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+          
+             
+           
+          <apex:outputPanel layout="block" rendered="{!IF((ISBLANK(match.Start_Date__c) || ISBLANK(match.End_Date__c)), false, true)}">
+            <apex:outputPanel layout="block" rendered="{!IF(listTrips.size > 0, true,false)}">
+              <div class="row margin-b2">
+                <div class="col-sm-9 center-text center-block">
+                  <apex:outputText rendered="{!IF(ISBLANK(match.Start_Date__c), false, true)}"> Match Start Date:&nbsp;
+                    <apex:outputField value="{!match.Start_Date__c}"/>
+                  </apex:outputText>
+                  <apex:outputText rendered="{!IF(ISBLANK(match.End_Date__c), false, true)}"> &nbsp;| Match End Date:&nbsp;
+                    <apex:outputField value="{!match.End_Date__c}"/>
+                  </apex:outputText>
+                </div>
+                <!--  end column --> 
+              </div>
+              <!--  end row --> 
+            </apex:outputPanel>
+          </apex:outputPanel>
+                
+                
+                  <apex:actionStatus id="waitMsg" startStyleClass="feedback">
+                    <apex:facet name="start" > 
+                    <p class="alert alert-info"><i class="fa fa-refresh fa-spin"></i> <strong>Please Wait.....</strong></p> </apex:facet>
+                  </apex:actionStatus>
+               
+               
+                <apex:outputPanel id="myPanel" layout="block">
+                    <apex:pageBlock id="pb">
+                  <apex:Messages styleClass="custom-error-pagelevel"/>
+                    <div class="row margin-b2">
+            <div class="col-md-9 col-lg-7 center-block">
+                     
+                       <div class="row">
+                     <div class="col-sm-6">
+                     <div class="form-group">   
+                      <label class="control-label">Airline</label>
+                          <apex:inputField styleClass="form-control" value="{!newTrip.Carrier__c}" required="true"/>
+                   </div>
+                   </div>
+                   <div class="col-sm-6">
+                   <div class="form-group">   
+                       <label class="control-label">Flight Number</label>
+                          <apex:inputField styleClass="form-control" value="{!newTrip.Carrier_Number__c}" required="true"/>
+                    </div>
+                    </div><!-- end column -->
+                     </div><!-- end row -->   
+                      
+                      <div class="section-title">Departure Information</div>
+                     <div class="row">
+                     <div class="col-sm-4">
+                     <div class="form-group">   
+                     <label class="control-label">Airport Code</label>
+                          <apex:inputField styleClass="form-control" value="{!newTrip.Departing_From__c}" required="true"/>
+                    </div>
+                     </div><!-- end column -->
+                      <div class="col-sm-4">
+                      <div class="form-group">   
+                      <label class="control-label">City</label>
+                          <apex:inputField styleClass="form-control" value="{!newTrip.Departing_City__c}" required="true"/>
+                      </div>
+                      </div><!-- end column -->
+                       <div class="col-sm-4">
+                       <div class="form-group">   
+                        <label class="control-label">Departure Date</label>
+                            <div class="datepicker wtime" locale="en_US">
+                               <apex:inputField styleClass="form-control" value="{!newTrip.Departure_Date_Time__c}" required="true"  /> 
+                            </div>  
+                            </div>
+                       </div><!-- end column -->
+                     </div><!-- end row --> 
+                      
+                       <div class="section-title">Arrival Information</div>
+                        <div class="row">
+                     <div class="col-sm-4">
+                     <div class="form-group">   
+                     <label class="control-label">Airport Code</label>
+                          <apex:inputField styleClass="form-control" value="{!newTrip.Arriving_At__c}" required="true"/>
+                          </div>
+                          </div><!-- end column -->
+                          <div class="col-sm-4">
+                          <div class="form-group">   
+                           <label class="control-label">City</label>
+                          <apex:inputField styleClass="form-control" value="{!newTrip.Arriving_City__c}" required="true"/>
+                          </div>
+                          </div><!-- end column -->
+                          <div class="col-sm-4">
+                          <div class="form-group">   
+                          <label class="control-label">Arrival Date</label>
+                            <div class="datepicker wtime" locale="en_US">
+                               <apex:inputField styleClass="form-control" value="{!newTrip.Arrival_Date_Time__c}" required="true"  /> 
+                           </div>
+                           </div>
+                          </div><!-- end column -->
+                     </div><!-- end row -->   
+                                     
+                     <apex:outputPanel layout="block" rendered="{!IF(match.Engagement__r.Intrax_Program__c == 'Work Travel' && match.Engagement__r.Status__c == 'Program Ready', true,false)}" >
+                      <div class="row">
+                     <div class="col-sm-6">
+                     <div class="form-group">   
+                      <label class="control-label">Arrival to Host Community</label>
+                     <apex:inputCheckbox styleClass="checkbox" value="{!newTrip.Arrival_to_Host_Community__c}" disabled="true" />
+                     </div>
+                     </div> 
+                     <div class="col-sm-6">
+                     <div class="form-group">   
+                      <label class="control-label">Ground Transportation Type</label>
+                          <apex:inputField styleClass="form-control" value="{!newTrip.Ground_Transporation_Type__c}"  />
+                   </div>
+                   </div><!-- end column -->
+                     </div><!-- end row --> 
+                    
+                     <div class="row">
+                     <div class="col-sm-6"> 
+                     <div class="form-group">        
+                      <label class="control-label">Arrival to Host Community Date</label>
+                            <div class="datepicker wtime" locale="en_US">
+                               <apex:inputField styleClass="form-control" value="{!newTrip.Arrival_to_Host_Community_Date__c}" /> 
+                            </div> 
+                            </div>
+                      </div><!-- end column -->
+                     </div><!-- end row --> 
+                     
+                     <div class="row">
+                     <div class="col-sm-12">  
+                     <div class="form-group">         
+                            <label class="control-label">Final Trip Destination</label>
+                          <apex:inputTextArea html-placeholder="Street 1, Street 2, City, State, Postal Code" value="{!newtrip.Description__c}" onkeyup="countChar(this, 255, 'TripDesc')"/>
+                          <div class="char-limit"><span class="char-count-label">Characters left:</span>
+                                <span id="TripDesc" class="char-count">
+                                    {!255-len(trip.Description__c) }
+                                </span>
+                          </div>
+                          </div>
+                            </div><!-- end column -->
+                     </div><!-- end row --> 
+                      </apex:outputPanel> 
+                       
+                      <apex:outputPanel layout="block" rendered="{!IF(match.Engagement__r.Intrax_Program__c == 'Work Travel' && match.Engagement__r.Status__c == 'On Program', true,false)}" >
+                      
+                       <div class="row">
+                     <div class="col-sm-6">
+                     <div class="form-group">   
+                      <label class="control-label">Departure from Host Community</label>
+                          <apex:inputCheckbox styleClass="checkbox" value="{!newTrip.Departure_from_Host_Community__c}" disabled="true" />      
+                          </div>
+                          </div><!-- end column -->
+                     </div><!-- end row -->                   
+                      </apex:outputPanel>  
+                      
+                       
+                       
+                       
+                       
+                      
+                      
+                      <apex:outputPanel layout="block" rendered="{!IF(match.Engagement__r.Intrax_Program__c == 'Ayusa', true,false)}" >
+                       <div class="row">
+                     <div class="col-sm-6">
+                     <div class="form-group">   
+                      <label class="control-label">Arrival to Host Community</label>
+                          <apex:inputCheckbox styleClass="checkbox" value="{!newTrip.Arrival_to_Host_Community__c}" />
+                       </div>
+                       </div><!-- end column -->
+                        <div class="col-sm-6">  
+                        <div class="form-group">   
+                      <label class="control-label">Arrival to Host Country</label>
+                          <apex:inputCheckbox styleClass="checkbox" value="{!newTrip.Arrival_to_Host_Country__c}" />
+                     </div>
+                      </div><!-- end column -->
+                     </div><!-- end row -->     
+                      
+                       <div class="row">
+                     <div class="col-sm-6">
+                     <div class="form-group">   
+                      <label class="control-label">Departure from Host Community</label>
+                          <apex:inputCheckbox styleClass="checkbox" value="{!newTrip.Departure_from_Host_Community__c}" />
+                     </div>
+                     </div><!-- end column -->
+                        <div class="col-sm-6"> 
+                        <div class="form-group">      
+                       <label class="control-label">Record Locator</label>
+                          <apex:inputField styleClass="form-control" value="{!newtrip.Record_Locator__c}" required="true"/>
+                    </div>
+                      </div><!-- end column -->
+                     </div><!-- end row -->  
+                     
+                     <div class="row">
+                     <div class="col-sm-12"> 
+                     <div class="form-group">   
+                          <label class="control-label">Notes</label>
+                          <apex:inputTextArea styleClass="form-control" value="{!newtrip.Description__c}" onkeyup="countChar(this, 255, 'TripDesc')"/>
+                          <div class="char-limit"><span class="char-count-label">Characters left:</span>
+                                <span id="TripDesc" class="char-count">
+                                    {!255-len(trip.Description__c) }
+                                </span>
+                          </div>
+                          </div> 
+                           </div><!-- end column -->
+                     </div><!-- end row -->  
+ 
+                      </apex:outputPanel>
+                   
+                     
+                      
+                    <div class="row margin-t2">
+                     <div class="col-sm-12">
+                    <apex:outputLink styleClass="btn btn-link btn-lg" value="/apex/pr_pt_travel_visa?participantId={!participant.Id}"><i class="fa fa-chevron-left"></i> <span>Cancel</span></apex:outputLink>
+                    <apex:commandLink styleClass="btn btn-primary btn-lg" action="{!saveInfoOfTrip}" reRender="myPanel, validationMsg, buttonPanel, myPanel1, myPanel2" status="waitMsg">
+                    Save Travel Info
+                    </apex:commandLink>
+                  </div><!-- end column -->
+                  </div><!-- end row -->
+                 
+                 </div>
+                <!--  end column --> 
+              </div>
+              <!--  end row -->  
+                    </apex:pageBlock>
+                </apex:outputPanel>
+            
+         
+        </apex:form>
+      </apex:define>
+    </apex:composition>
+  
+</apex:page>

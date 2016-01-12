@@ -1,0 +1,647 @@
+<apex:page title="Participant's Summary | Intrax" standardStylesheets="false" showHeader="false"  standardController="Applicant_Info__c"  extensions="AppEngine_Controller" action="{!checkLogin}">
+	
+    	<apex:composition template="IntraxTemplate_Vs2" >    	
+      		<apex:define name="body">
+      			<apex:form >
+        		<div class="row">
+		            <apex:outputPanel styleClass="span9" layout="block">
+		          		<h1>
+		          			<apex:outputText rendered="{!IF($CurrentPage.parameters.Id == null, false, true)}" value="{!applicantInfo.Name}"/>
+                        	<apex:outputText rendered="{!IF($CurrentPage.parameters.Id == null, true, false)}" value="No Individual Participant Selected"/>
+		          		</h1>
+		            </apex:outputPanel>
+            		<apex:outputPanel styleClass="span3" layout="block">
+            		           		
+         			</apex:outputPanel>
+        		</div>    
+        		
+        		<div class="row">
+          			<apex:outputPanel styleClass="span3" layout="block">
+          			<c:Badge_Participant_Photo photoURL="{!UrlPic}" />
+          			
+		            <!-- <c:Menu_Partner_Participant_Details />  -->
+          			</apex:outputPanel>
+          			<!-- end span3 -->
+          
+          			<!-- begin span9 -->  
+          			<div class="span9"> 
+            
+              			<!-- begin block -->
+            			<apex:outputPanel styleClass="block" layout="block">
+              				
+              				<apex:outputPanel styleClass="block-header" layout="block">
+                				<h3> Summary </h3>
+              				</apex:outputPanel>
+              				
+              				<apex:outputPanel styleClass="block-body" layout="block">
+				                <!--  
+				                <apex:actionStatus id="waitMsg" startStyleClass="feedback">
+				                  <apex:facet name="start" > <i class="no-float icon-spinner icon-spin icon-2x pull-left"></i> <strong>Please Wait.....</strong> </apex:facet>
+				                </apex:actionStatus>
+                				
+                				<apex:actionFunction name="doSearch" action="{!doSearchForMatches}" status="waitMsg" reRender="myPanel, validationMsg, myPanel1, abcd"/>
+				                
+				                <apex:outputPanel id="myPanelForNoRecord" layout="block">
+				                	<apex:outputPanel rendered="{!AND($CurrentPage.parameters.isInputType != 'false', $CurrentPage.parameters.isInputType != 'true')}" > Please select any match record. </apex:outputPanel>
+				                </apex:outputPanel>
+                				-->
+                				<apex:outputPanel id="myPanel" layout="block">
+                  					
+                  					
+                    					
+                    					<apex:pageMessages id="validationMsg"/>
+                    					<apex:outputPanel rendered="{!IF(ISBLANK(applicantInfo.Id), true, false)}" layout="block">
+                                			<apex:outputLabel ><span class="no-records">No record(s) to display.</span></apex:outputLabel>
+                            			</apex:outputPanel>
+                            			
+                            			<apex:outputPanel rendered="{!IF(ISBLANK(applicantInfo.Id), false, true)}" layout="block">
+                    						<div id="flight-list" class="list-view container-fluid">
+                    							<div class="row-fluid">
+			                    					<div class="span6">
+			                    						<div class="list-field">
+									                       <label> <strong><apex:outputText value="NickName"/></strong></label>
+									                       <apex:outputField value="{!personInfo.Nick_Name__c}"/>&nbsp;
+									                    </div>
+									                    <div class="list-field">
+									                       <label><strong><apex:outputText value="First Name"/></strong></label>
+									                       <apex:outputField value="{!personInfo.First_Name__c}"/>&nbsp;
+									                    </div>
+									                    <div class="list-field">
+									                       <label><strong><apex:outputText value="Middle Name"/></strong></label>
+									                       <apex:outputField value="{!personInfo.Middle_Name__c}"/>&nbsp;
+									                    </div>
+									                    <div class="list-field">
+									                       <label><strong><apex:outputText value="Last Name"/></strong></label>
+									                       <apex:outputField value="{!personInfo.Last_Name__c}"/>&nbsp;
+									                    </div>
+									                    <div class="list-field">
+									                       <label><strong><apex:outputText value="Date of Birth"/></strong></label>
+									                       <apex:outputField value="{!personInfo.Date_of_Birth__c}"/>&nbsp;
+									                    </div>
+								                    </div>
+								                    <div class="span6">
+								                    	<div class="list-field">
+									                       <label><strong><apex:outputText value="City of Birth"/></strong></label>
+									                       <apex:outputField value="{!personInfo.Birth_City__c}"/>&nbsp;
+									                    </div>
+									                    <div class="list-field">
+									                       <label><strong><apex:outputText value="Country of Birth"/></strong></label>
+									                       <apex:outputField value="{!personInfo.Birth_Country__c}"/>&nbsp;
+									                    </div>
+									                    <div class="list-field">
+									                       <label><strong><apex:outputText value="Nationality"/></strong></label>
+									                       <apex:outputField value="{!personInfo.Nationality__c}"/>&nbsp;
+									                    </div>
+									                    <div class="list-field">
+									                       <label><strong><apex:outputText value="Country of (Legal/Home) Residence"/></strong></label>
+									                       <apex:outputField value="{!personInfo.Country_of_Residence__c}"/>&nbsp;
+									                    </div>
+									                    <div class="list-field">
+									                       <label><strong><apex:outputText value="Country of Citizenship"/></strong></label>
+									                       <apex:outputField value="{!personInfo.Citizenship__c}"/>&nbsp;
+									                    </div>
+									                    <div class="list-field">
+									                       <label><strong><apex:outputText value="Allergies"/></strong></label>
+									                       <apex:outputField value="{!applicantInfo.Allergies_Indicated__c}"/>&nbsp;
+									                    </div>
+									                    <div class="list-field">
+									                       <label><strong><apex:outputText value="If yes"/></strong></label>
+									                       <apex:outputField value="{!applicantInfo.Allergies_from_Applicant__c}"/>&nbsp;
+									                    </div>
+									                    <div class="list-field">
+									                       <label><strong><apex:outputText value="If Other"/></strong></label>
+									                       <apex:outputField value="{!applicantInfo.Allergies_Other_desc__c}"/>&nbsp;
+									                    </div>
+								                    </div>
+						                    	</div> <!-- end row fluid -->
+					                    
+                    				
+                    							<h3>Contact Information</h3>
+			                    					    
+			                    					<div class="row-fluid">
+									                    <div class="span6">
+									                    	<div class="list-field">
+										                       <label><strong><apex:outputText value="Address"/></strong></label>
+										                       <apex:outputText value="{!applicantInfo.Home_Street_1__c} {!applicantInfo.Home_Street_2__c}"/>&nbsp; <br/>
+										                       <apex:outputText value="{!applicantInfo.Home_Postal_Code__c}, {!applicantInfo.Home_City__c} - {!applicantInfo.Home_State__c} "/>&nbsp;<br/>
+										                       <apex:outputText value="{!applicantInfo.Home_Country__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Who do you live with?"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Lives_With__c}"/>&nbsp;
+										                    </div>
+										                </div>
+										                
+										                <div class="span6">
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Home Phone"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Home_Phone__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Mobile Phone"/></strong></label>
+										                       <apex:outputField value="{!personInfo.Mobile__c}"/>&nbsp;
+										                    </div>
+										                     <div class="list-field">
+										                       <label><strong><apex:outputText value="Email"/></strong></label>
+										                       <apex:outputField value="{!personInfo.Email__c}"/>&nbsp;
+										                    </div>
+										                </div>
+								                    </div>
+								                    
+								                    <h3>Interests</h3>
+								                    
+									                <div class="row-fluid">
+									                	<div class="span6">
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="(1)Adaptable/flexible - (5)Appreciates Routines"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Personality_Structure__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="(1)Mature - (5)Young for his/her age"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Personality_Maturity__c}"/>&nbsp;
+										                    </div>
+										                
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="(1)Independent - (5)Needs guidance"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Personality_Independence__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="(1)Open-minded - (5)Has strong opinions"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Personality_Opinionatedness__c}"/>&nbsp;
+										                    </div>
+										                </div>
+										                
+										                <div class="span6">
+										                	<div class="list-field">
+										                       <label><strong><apex:outputText value="(1)Sense of humor - (5)Serious"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Personality_Funniness__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="(1)Sociable - (5)Reserved"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Personality_Expressiveness__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="(1)Active - (5)Low-key"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Personality_Energy_Level__c}"/>&nbsp;
+										                    </div>
+										                </div>
+										                
+									                </div>
+								                    
+								                    <div class="row-fluid">
+									                	<div class="span6">
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Top Level Interests"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Interests_Top__c}"/>&nbsp;
+										                    </div>
+										                </div>
+										                <div class="span6">
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Other Interests"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Interests__c}"/>&nbsp;
+										                    </div>
+										                </div>
+									                </div>
+									                
+									                <h3>Culture</h3>
+									                
+									                 <div class="row-fluid">
+									                	<div class="span6">
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Have you ever travelled outside your country?"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.International_Travel__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="If yes, please tell us where"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.International_Travel_Description__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="What is your religion?"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Religion__c}"/>&nbsp;
+										                    </div>
+										                
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="If you do participate in religious activities, please indicate how frequently"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Religious_Activity_Home__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="How actively would you like to pursue your religion while in the U.S.?"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Religious_Activity_on_Program__c}"/>&nbsp;
+										                    </div>
+										                </div>
+										                
+										                <div class="span6">
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Language 1"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Language_spoken_1__c}"/>
+														       &nbsp;
+														       <apex:outputField value="{!applicantInfo.Language_spoken_years_1__c}"/>
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Language 2"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Language_spoken_2__c}"/>
+														       &nbsp;
+														       <apex:outputField value="{!applicantInfo.Language_spoken_years_2__c}"/>
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Language 3"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Language_spoken_3__c}"/>
+														       &nbsp;
+														       <apex:outputField value="{!applicantInfo.Language_spoken_years_3__c}"/>
+										                    </div>
+										                </div>
+									                </div>
+									                
+									                <h3>About your Home</h3>
+									                
+									                <div class="row-fluid">
+									                	<div class="span6">
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Have you ever lived away from your parents"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Lived_Independently__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="What are your responsibilities at home?"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Home_Responsibilities__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Do you have a curfew at home?"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Curfew_Indicated__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="If yes, what time is your curfew during the week?"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Curfew_Weekdays__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="How much time do you spend studying at home per week?"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Study_Time__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Are you willing to live in a home where people smoke?"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Live_With_Smoker__c}"/>&nbsp;
+										                    </div>
+										                </div>
+										                
+										                <div class="span6">
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Do you have any pets at home?"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Pets__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="If yes, what kind of pets do you have?"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Pet_Types__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="If other, please describe"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Pets_Description__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Are you able to live with pets?"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Live_With_Pets__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="If no, please describe why not"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Live_With_Pets_Description__c}"/>&nbsp;
+										                    </div>
+										                </div>
+									                </div>
+									                
+									                <div class="row-fluid">
+									                	<div class="span6">
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Do you follow a special diet?"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Special_Diet_Indicated__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="If yes, please select which diet you follow"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Special_Diet__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="If other, please describe your special diet"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Special_Diet_Description__c}"/>&nbsp;
+										                    </div>
+										                </div>
+										                
+										                <div class="span6">
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Are you able to prepare meals for yourself if needed occasionally?"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Meal_Self_Sufficient__c}"/>&nbsp;
+										                    </div>
+										                    
+										                </div>
+									                </div>
+									                
+									                <h3>About your Family</h3>
+									                
+									                <div class="row-fluid">
+									                	<div class="span6">
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Who do you live with?"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Lives_With__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="If other, please describe"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Lives_With_Other__c}"/>&nbsp;
+										                    </div>
+										                </div>
+										                
+										                <div class="span6">
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Parents' marital status"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Parent_Marital_Status__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="If divorced, separated or other, who is legally responsible for you?"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Legal_Guardian__c}"/>&nbsp;
+										                    </div>
+										                </div>
+									                </div>
+									                
+									                <h3>Your Family Members</h3>
+									                
+									                <apex:repeat value="{!FamilyInfoList}" var="item">
+                   
+									                  <div class="row-fluid">
+									                  		<div class="list-view-header span12">
+									                   		<div class="title pull-left"><apex:outputText value="{!item.First_Name__c} {!item.Last_Name__c}"/></div> 
+									                       
+									                   		</div>  <!-- end list-view-header -->
+									                 
+									                   		<div class="span12">      
+									                  
+											                   <div class="span4">
+											                   	   <div class="list-field">
+											                           <label><apex:outputText value="Relationship"/></label>
+											                       <apex:outputField value="{!item.Role__c}"/>&nbsp;
+											                       </div> 
+											                       <div class="list-field">
+											                           <label><apex:outputText value="Gender"/></label>
+											                       <apex:outputField value="{!item.Gender__c}"/>&nbsp;
+											                       </div>
+											                       
+											                  </div> 
+											                  <div class="span4">   
+											                       
+											                       <div class="list-field">
+											                          <label><apex:outputText value="Email"/></label>
+											                       <apex:outputText value="{!item.Email__c}"/>&nbsp;
+											                       </div> 
+											                      <div class="list-field"> 
+											                      <label><apex:outputText value="Mobile Phone"/></label>
+											                       <apex:outputText value="{!item.Mobile__c}"/>&nbsp;
+											                      </div>    
+											                 </div> 
+											                 <div class="span4">      
+											                      <div class="list-field">
+											                           <label><apex:outputText value="Date of Birth"/></label>
+											                       <apex:outputText value="{!item.Date_of_Birth__c}"/>&nbsp;
+											                       </div> 
+											                 </div>
+									                	</div> <!-- end span12 -->
+									               		</div>
+									              	</apex:repeat>
+									                
+									             <h3>Your Parent's Letter</h3>   
+									                 <div class="row-fluid">
+									                	<div class="span12">
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Please write a letter, in English, if possible. This letter should be addressed to the host family who will share their home with your son or daughter during his/her program."/></strong></label>
+										                       <apex:outputField value="{!EssayParentLetter.Narrative__c}"/>&nbsp;
+										                    </div>
+										                </div>
+									                </div>
+									                
+									             <h3>Health Overview</h3>
+									             
+									             <div class="row-fluid">
+									                	<div class="span6">
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Do you have allergies?"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Allergies_Indicated__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="If yes, please select"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Allergies_from_Applicant__c}"/>&nbsp;
+										                    </div>
+										                </div>
+										                
+										                <div class="span6">
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Do you have any medical conditions or disabilities, mental or physical?"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Disabilities__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="If yes, please describe"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Disabilities_Description__c}"/>&nbsp;
+										                    </div>
+										                </div>
+									                </div>
+									                
+									                <h3>Academic and Language Skills</h3>
+									                
+									                <div class="row-fluid">
+									                	<div class="span6">
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Expected Graduation Date from Secondary School"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Graduation_Date__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Academic Years Completed"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Academic_Years_Completed__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Average Grade In All Classes"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.GPA_Self_Reported__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Number of Failed Grades"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Low_Grade_Count__c}"/>&nbsp;
+										                    </div>
+										                </div>
+										                
+										                <div class="span6">
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="English Level"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.English_Level__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Years of English Study"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.English_Study_Years__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Have you been on an exchange program before?"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Prior_Exchange_Experience__c}"/>&nbsp;
+										                    </div>
+										                    <apex:outputPanel layout="block" rendered="{!ApplicantInfo.Prior_Exchange_Experience__c == 'Yes'}">
+											                    <div class="list-field">
+											                       <label><strong><apex:outputText value="If yes, did you have a J-1 or F-1 visa?"/></strong></label>
+											                       <apex:outputField value="{!applicantInfo.Prior_Exchange_Visa__c}"/>&nbsp;
+											                    </div>
+										                    </apex:outputPanel>
+										                </div>
+									                </div>
+									                
+									                <h3>Essay Questions</h3>
+									                
+									                		<apex:repeat value="{!EssayList}" var="item1" >
+										                		<div class="row-fluid">
+											                		<div class="span12">
+													                    <div class="list-field">
+													                       <label><strong><apex:outputText value="{!item1.Label__c}"/></strong></label>
+													                       <apex:outputField value="{!item1.Narrative__c}"/>&nbsp;
+													                    </div>
+											                    	</div>
+										                		</div>
+										                    </apex:repeat>
+										                
+									                
+									                <h3>Academic Recommendations</h3>
+									                <div class="row-fluid">
+												        <div class="span12">
+											        	<apex:repeat value="{!communicationInfoList}" var="item1" >
+											             
+															       <div class="list-field">
+															       		<strong><apex:outputText value="{!item1.Status__c} - " /></strong> <apex:outputText value="English Teacher" rendered="{! if(item1.Type_Code__c == 'ETR', true, false)}" />  <apex:outputText rendered="{! if(item1.Type_Code__c == 'SOR', true, false)}" value="School"/> recommendation from&nbsp; <apex:outputText value="{!item1.Recipient_First_Name__c}  {!item1.Recipient_Last_Name__c}" /> at&nbsp; <apex:outputText value="{!item1.To_Address__c}" />.
+															      
+															 		</div>
+														</apex:repeat>
+														</div>
+													</div>
+														 
+												    
+												    <h3>Program Preferences</h3>
+												    
+												    <div class="row-fluid">
+									                	<div class="span6">
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="What program are you interested in?"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Program_Duration__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Preferred Start Date"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Engagement_Start__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Preferred departure airport"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Airport__c}"/>&nbsp;
+										                    </div>
+										                    
+										                </div>
+										                
+										                <div class="span6">
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Are you willing to pay tuition for private high school?"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Private_High_School_Indicated__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Please, indicate the range of tuition costs that you are willing to pay"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Private_High_School_Tuition__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Partner"/></strong></label>
+										                       <apex:outputField value="{!applicantInfo.Partner_Name__r.Name}"/>&nbsp;
+										                    </div>
+										                </div>
+									                </div>
+									                
+									        <h3>Emergency Contact Info</h3>
+									        	<div class="row-fluid">
+							                        <apex:outputText styleClass="no-records" value="No record(s) to display." rendered="{!IF(EmergencyInfoList.Size == 0 , true, false)}"></apex:outputText>
+							                    </div>
+									        
+										        <apex:repeat value="{!EmergencyInfoList}" var="item">
+	                   
+								                  <div class="row-fluid">
+								                  		<div class="list-view-header span12">
+								                   		<div class="title pull-left"><apex:outputText value="{!item.First_Name__c} {!item.Last_Name__c}"/></div> 
+								                       
+								                   		</div>  <!-- end list-view-header -->
+								                 
+								                   		<div class="span12">      
+								                  
+										                   <div class="span4">
+										                       <div class="list-field">
+										                           <label><apex:outputText value="Country of Residence"/></label>
+										                       <apex:outputField value="{!item.Country_of_Residence__c}"/>&nbsp;
+										                       </div>
+										                       <div class="list-field">
+										                          <label><apex:outputText value="Email"/></label>
+										                       <apex:outputText value="{!item.Email__c}"/>&nbsp;
+										                       </div> 
+										                  </div> 
+										                  <div class="span4">   
+										                       <div class="list-field">
+										                           <label><apex:outputText value="Emergency Phone"/></label>
+										                       <apex:outputText value="{!item.Mobile__c}"/>&nbsp;
+										                       </div> 
+										                      <div class="list-field"> 
+										                      <label><apex:outputText value="Other Phone"/></label>
+										                       <apex:outputText value="{!item.Mobile__c}"/>&nbsp;
+										                      </div>    
+										                 </div> 
+										                 <div class="span4">      
+										                      <div class="list-field">
+										                           <label><apex:outputText value="Relationship"/></label>
+										                       <apex:outputField value="{!item.Role__c}"/>&nbsp;
+										                       </div> 
+										                 </div>
+								                	</div> <!-- end span12 -->
+								               		</div>
+								              	</apex:repeat>
+							                
+							                <h3>File Uploads</h3>
+							                
+							                	<apex:outputPanel StyleClass="row-fluid" rendered="{!IF(DocListAll.Size == 0 , true, false)}">
+							                        <apex:outputText styleClass="no-records" value="No record(s) to display."></apex:outputText>
+							                   	</apex:outputPanel>
+				                    
+							                  <apex:pageBlock rendered="{!if(DocListAll.Size > 0, true, false)}">
+							                  
+								                <apex:pageBlockTable styleClass="pageblocktable" value="{!DocListAll}" var="item">
+								                	<apex:column headerValue="File Name">
+								                    	<apex:outputText value="{!item.Document_Name__c}"/>
+								                	</apex:column>
+								                	<apex:column headerValue="Document Type">
+								                    	<apex:outputText value="{!item.Document_Type__c}"/>
+								                	</apex:column>
+								                	<apex:column headerValue="Description">
+								                    	<apex:outputText value="{!item.Description__c}"/>
+								                	</apex:column>
+								                                            
+								                	<apex:column >
+								                    	<apex:commandlink styleClass="inline-link" target="_blank" action="{!load}">
+								                        	<apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+								                        	<apex:commandButton value="View" />
+								                    	</apex:commandlink>
+								                </apex:column>
+								                </apex:pageBlockTable>
+								             </apex:pageBlock>
+		                 					</div>	
+                 						 </apex:outputPanel>   
+       
+                				</apex:outputPanel>
+                				
+                				               				
+                				<div class="form-link"> 
+				              		<apex:outputLink rendered="{!IF($CurrentPage.parameters.BackURL == 'PT', true, false)}" id="BackLinkPT" value="/apex/pr_pt_profile?participantId={!participantId}"><i class="icon-chevron-left"></i><span>Back To Participant</span></apex:outputLink>
+				                </div>
+				                
+				                <div class="form-link"> 
+				              		<apex:outputLink rendered="{!IF($CurrentPage.parameters.BackURL == 'AP', true, false)}" id="BackLinkAP" value="/apex/pr_app_list"><i class="icon-chevron-left"></i><span>Back To Applications</span></apex:outputLink>
+				                </div>  
+		                        
+		                        <div class="form-link"> 
+				              		<apex:outputLink rendered="{!IF($CurrentPage.parameters.BackURL == 'HM', true, false)}" id="BackLinkHM" value="/apex/Ayusa_app_home?id={!applicantInfo.Id}&IsPartner=true"><i class="icon-chevron-left"></i><span>Back to Application</span></apex:outputLink>
+				                </div>  
+				                
+               				</apex:outputPanel>
+              			</apex:outputPanel>
+          			</div>
+          			<!-- end span9 -->
+       			</div>
+        		<!-- end row -->
+        		</apex:form>
+      		</apex:define>
+    	</apex:composition>
+	
+</apex:page>

@@ -1,0 +1,18 @@
+<apex:component >
+<apex:variable var="SC_Home" value="active" rendered="{! IF($CurrentPage.Name=='SC_Home', true, false)}"/>    
+<apex:variable var="IGI_HC_MyMatches" value="active" rendered="{! IF($CurrentPage.Name=='IGI_HC_MyMatches', true, false)}"/>  
+<apex:variable var="IGI_HC_MyInterviews" value="active" rendered="{! IF($CurrentPage.Name=='IGI_HC_MyInterviews', true, false)}"/>  
+
+<ul class="sub-navigation clearfix">
+    <li class="{!SC_Home}">
+       <apex:outputLink value="SC_Home">Home</apex:outputLink>
+      </li>
+<li class="{!IGI_HC_MyMatches}">
+    <apex:outputLink value="IGI_HC_MyMatches">Matches</apex:outputLink>
+    </li>
+<li class="{!IGI_HC_MyInterviews} last">
+    <apex:outputLink value="IGI_HC_MyInterviews">Interviews</apex:outputLink>
+    </li>
+   
+</ul>
+</apex:component>

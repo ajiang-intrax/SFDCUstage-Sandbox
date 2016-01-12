@@ -1,0 +1,237 @@
+<apex:component layout="none" id="block_profile_hf_ayu" controller="HFPortal_Controller" >
+<apex:outputPanel rendered="{!IF((CheckForSavedMatch=='' && checkHFStatus && $CurrentPage.parameters.ConfMatch=''),true,false)}">
+<p class="alert alert-info" >  <button type="button" class="close" data-dismiss="alert">&times;</button>Save this student if you are interested in hosting. Your local Ayusa representative will be in contact with you to determine if these students are available and walk you through the next steps of the process. You can review all of your Exchange Student selections as well as Ayusa’s Recommendations by using the filters on the View Students Tab.</p>      
+</apex:outputPanel>
+      <apex:outputPanel id="profile-details" layout="block" styleClass="block">
+        
+        <div class="block-header"><h3>Summary</h3><a style="display:block;" class="btn btn-mini float-r hide-next">Show/Hide</a></div>
+            <div class="block-body">
+             <div class="list-view container-fluid">
+               <div class="row-fluid">
+                 <div class="span6">
+                   <div class="list-field"> 
+                     <label><strong> <apex:outputText value="Name"/> </strong></label> 
+                     <apex:outputText value="{!engagementInfo.Account_Id__r.FirstName} "/>&nbsp;
+                      <apex:outputText value="{!LEFT(engagementInfo.Account_Id__r.LastName,1)}"/>
+                     
+                   </div>
+                   <div class="list-field">
+                     <label><strong> <apex:outputText value="Age"/>  </strong></label>
+                     <apex:outputField value="{!engagementInfo.Age_At_Program_Start__c}"/> &nbsp;
+                   </div>       
+                   <div class="list-field">
+                     <label><strong> <apex:outputText value="Gender"/>  </strong></label>
+                     <apex:outputField value="{!engagementInfo.Gender__c}"/> &nbsp;
+                   </div>
+                   <div class="list-field">
+                     <label><strong> <apex:outputText value="Country"/>  </strong></label>
+                     <apex:outputField value="{!engagementInfo.Account_Id__r.Citizenship__pc}"/> &nbsp; 
+                   </div> 
+                   <div class="list-field">
+                     <label><strong> <apex:outputText value="Nationality"/>  </strong></label>
+                     <apex:outputField value="{!engagementInfo.Nationality__c}"/> &nbsp;
+                   </div>                               
+                 </div> <!-- end span -->
+                 <div class="span6"> 
+                   <div class="list-field"> 
+                        <label><strong> <apex:outputText value="Interests & Hobbies"/> </strong></label>
+                        <apex:outputField value="{!engagementInfo.Interests_Top__c}"/> &nbsp;
+                   </div>
+                   <div class="list-field">
+                        <label><strong> <apex:outputText value="Languages Spoken"/> </strong></label>
+                        <apex:outputText value="{!engagementInfo.Language_1__c}, {!engagementInfo.Language_1_Proficiency__c}"/><br/>
+                        <apex:outputText value="{!engagementInfo.Language_2__c}, {!engagementInfo.Language_2_Proficiency__c}" rendered="{!IF(NOT(ISBLANK(engagementInfo.Language_2__c)), true, false)}"/><br/>
+                        <apex:outputText value="{!engagementInfo.Language_3__c}, {!engagementInfo.Language_3_Proficiency__c}" rendered="{!IF(NOT(ISBLANK(engagementInfo.Language_3__c)), true, false)}"></apex:outputText>
+                   </div>
+                   <div class="list-field">
+                        <label><strong> <apex:outputText value="Religion"/> </strong></label>
+                        <apex:outputField value="{!engagementInfo.Account_Id__r.Religion__pc}"/> &nbsp;
+                   </div>
+                  </div> <!-- end span -->
+                 </div><!-- end row -->
+               </div><!-- end list view -->  
+          </div> <!-- end block body -->
+          
+          <apex:outputPanel rendered="{!IF(checkHFStatus || $CurrentPage.parameters.ConfMatch=='true', true, false)}">
+              <div class="block-header"><h3>Photos</h3><a style="display:block;" class="btn btn-mini float-r hide-next">Show/Hide</a></div>
+              <div class="block-body">
+                
+                    <div class="row-fluid">
+                    <div class="span12">
+                   <apex:outputLabel rendered="{!IF(StudentPhotosList.Size == 0 , true, false)}"><span class="no-records">No record(s) to display.</span></apex:outputLabel>
+                   <apex:outputPanel styleClass="flex-small" layout="block" rendered="{!if(StudentPhotosList.Size > 0, true, false)}">
+                   <div class="flexslider carousel">
+                   <ul class="slides">
+                    <apex:repeat value="{!returnURLList}" var="item">    
+                    <li>
+                     <apex:outputLink value="{!item}" target="_blank"> 
+                    <apex:image url="{!item}"></apex:image> 
+                      </apex:outputLink>  
+                    </li>   
+                    </apex:repeat>
+                    </ul>
+                    </div>
+                    </apex:outputPanel>
+                    </div> <!-- end span --> 
+                    </div><!-- end row -->
+                   
+              </div> <!-- end block body -->
+          </apex:outputPanel>
+          <div class="block-header"><h3>Program Preferences</h3><a style="display:block;" class="btn btn-mini float-r hide-next">Show/Hide</a></div>
+            <div class="block-body">
+             <div class="list-view container-fluid">
+               <div class="row-fluid">
+                 <div class="span6">
+                   <div class="list-field"> 
+                     <label><strong> <apex:outputText value="Program Length"/> </strong></label>
+                     <apex:outputField value="{!engagementInfo.Program_Duration__c}"/> &nbsp;
+                   </div>
+                   <div class="list-field">
+                     <label><strong> <apex:outputText value="Able to live with pets?"/>  </strong></label>
+                     <apex:outputField value="{!engagementInfo.Live_With_Pets__c}"/> &nbsp;
+                   </div>       
+                                 
+                 </div> <!-- end span -->
+                 <div class="span6"> 
+                   <div class="list-field"> 
+                        <label><strong> <apex:outputText value="Ok to live in double placement with another student?"/> </strong></label>
+                        <apex:outputField value="{!engagementInfo.Double_Placement_Indicated__c}"/> &nbsp;
+                   </div>
+                   <div class="list-field">
+                        <label><strong> <apex:outputText value="Willing to pay a tuition at private school?"/> </strong></label>
+                        <apex:outputField value="{!engagementInfo.Private_High_School_Indicated__c}"/> &nbsp; 
+                   </div>
+                   
+                  </div> <!-- end span -->
+                 </div><!-- end row -->
+               </div><!-- end list view -->  
+          </div> <!-- end block body -->
+          
+         
+          
+          <div class="block-header"><h3>Family</h3><a style="display:block;" class="btn btn-mini float-r hide-next">Show/Hide</a></div>
+            <div class="block-body">
+             <div class="list-view container-fluid">
+               <div class="row-fluid">
+                 <div class="span6">
+                    
+                    <div class="list-field"> 
+                    <label><strong> <apex:outputText value="Siblings"/> </strong></label>
+                    
+                    <apex:repeat value="{!FamilyInfoList}" var="item">    
+                    <apex:outputPanel rendered="{!if(item.Role__c == 'Sibling' && item.Gender__c == 'Male' , true, false)}">
+                    <text>Brother, </text><apex:outputText value="{!item.Age__c}"/> &nbsp;<br/> 
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!if(item.Role__c == 'Sibling' && item.Gender__c == 'Female' , true, false)}">
+                    <text>Sister, </text><apex:outputText value="{!item.Age__c}"/> &nbsp;<br/> 
+                    </apex:outputPanel>
+                    </apex:repeat>
+                   
+                   </div>
+                 </div> <!-- end span -->
+                 
+                 <div class="span6"> 
+                   <div class="list-field">  
+                        <label><strong> <apex:outputText value="Father's Occupation"/> </strong></label>
+                        
+                        <apex:repeat value="{!FamilyInfoList}" var="item">    
+                        <apex:outputPanel rendered="{!if(item.Role__c == 'Parent' && item.Gender__c == 'Male' , true, false)}">
+                        <apex:outputText value="{!item.Profession__c}"/> &nbsp;<br/> 
+                        </apex:outputPanel>
+                        </apex:repeat>
+                        
+                   </div>
+                   <div class="list-field">
+                        <label><strong> <apex:outputText value="Mother's Occupation"/> </strong></label>
+                        <apex:repeat value="{!FamilyInfoList}" var="item">    
+                        <apex:outputPanel rendered="{!if(item.Role__c == 'Parent' && item.Gender__c == 'Female' , true, false)}">
+                        <apex:outputText value="{!item.Profession__c}"/> &nbsp;<br/> 
+                        </apex:outputPanel>
+                        </apex:repeat>
+                   </div>
+                   
+                  </div> <!-- end span -->
+                 </div><!-- end row -->
+               </div><!-- end list view -->  
+          </div> <!-- end block body -->
+          
+          <div class="block-header"><h3>Essays</h3><a style="display:block;" class="btn btn-mini float-r hide-next">Show/Hide</a></div>
+            <div class="block-body">
+             <div class="list-view container-fluid">
+               <div class="row-fluid">
+                 <div class="span12">
+                   <div class="list-field">
+                     <p><strong> <apex:outputText value="{!engagementInfo.Account_Id__r.FirstName}'s Letter"/> </strong></p>
+                     <apex:outputpanel rendered="{!IF(studentLetter != NULL , true, false)}">
+                     <apex:outputField value="{!studentLetter.Narrative__c}"/> &nbsp;
+                     </apex:outputpanel>
+                   </div>
+                   &nbsp; 
+                  <div class="list-field"> 
+                     <p><strong>
+                     	<apex:outputText value="{!engagementInfo.Account_Id__r.FirstName}'s Interests" rendered="{!NOT(CONTAINS(engagementInfo.Intrax_Program_Options__c,'YES'))}"/> 
+                     	<apex:outputText value="{!engagementInfo.Account_Id__r.FirstName}'s Reason for Applying to Study in USA" rendered="{!CONTAINS(engagementInfo.Intrax_Program_Options__c,'YES')}"/>
+                     </strong></p>
+                     <apex:outputpanel rendered="{!IF(studentInterests != NULL , true, false)}">
+                     <apex:outputField value="{!studentInterests.Narrative__c}"/> &nbsp;
+                     </apex:outputpanel>
+                   </div>
+                   &nbsp; 
+                   <div class="list-field"> 
+                     <p><strong> <apex:outputText value="{!engagementInfo.Account_Id__r.FirstName}'s Future Plans"/> </strong></p>
+                     
+                     <apex:outputpanel rendered="{!IF(studentGoals != NULL , true, false)}">
+                     <apex:outputField value="{!studentGoals.Narrative__c}" /> &nbsp;
+                     </apex:outputpanel>
+                   </div>
+                   &nbsp;  
+                   <div class="list-field"> 
+                     <p><strong> 
+                     	<apex:outputText value="{!engagementInfo.Account_Id__r.FirstName}'s Volunteer Experience" rendered="{!NOT(CONTAINS(engagementInfo.Intrax_Program_Options__c,'YES'))}"/> 
+                     	<apex:outputText value="{!engagementInfo.Account_Id__r.FirstName}'s Additional Essay" rendered="{!CONTAINS(engagementInfo.Intrax_Program_Options__c,'YES')}"/>
+                     </strong></p>
+                     
+                     <apex:outputpanel rendered="{!IF(studentVolunteer != NULL , true, false)}">
+                     <apex:outputField value="{!studentVolunteer.Narrative__c}"/> &nbsp;
+                     </apex:outputpanel>
+                   </div>
+                 </div> <!-- end span -->
+                </div><!-- end row -->
+               </div><!-- end list view -->  
+          </div> <!-- end block body -->
+          
+          <div class="block-header"><h3>Recommendations</h3><a style="display:block;" class="btn btn-mini float-r hide-next">Show/Hide</a></div>
+            <div class="block-body">
+             <div class="list-view container-fluid">
+               <div class="row-fluid">
+                 <div class="span12">
+                   <div class="list-field"> 
+                     <apex:outputField value="{!applicationRecord.English_Summary__c }"/> &nbsp;
+                     <label><strong><apex:outputText value="{!engagementInfo.Account_Id__r.FirstName}'s English Teacher"/> </strong></label><br/>
+                   </div>
+                   <div class="list-field"> 
+                     <apex:outputField value="{!applicationRecord.General_Summary__c }"/> &nbsp;
+                     <label><strong> <apex:outputText value="Ayusa Staff"/> </strong></label>
+                    </div>
+                 </div> <!-- end span -->
+                 
+                 </div><!-- end row -->
+               </div><!-- end list view -->  
+          </div> <!-- end block body -->
+         <apex:outputPanel id="buttonPanel" layout="block" styleClass="block-body" >
+         <apex:outputPanel styleClass="form-link no-float" rendered="{!IF($CurrentPage.parameters.ConfMatch=='',TRUE,false)}">
+             <apex:outputLink value="/apex/profiles">
+                 <i class="icon-chevron-left"></i> <span>Back to Profiles</span>
+             </apex:outputLink>
+         </apex:outputPanel>         
+         <apex:outputPanel styleClass="form-link no-float" rendered="{!IF($CurrentPage.parameters.ConfMatch=='true',TRUE,false)}">
+             <apex:outputLink value="/apex/MyStudents?ConfMatch=true">
+                 <i class="icon-chevron-left"></i> <span>Back to Your Students</span>
+             </apex:outputLink>
+         </apex:outputPanel>
+      </apex:outputPanel>           
+         
+          
+      </apex:outputPanel> 
+      
+</apex:component>

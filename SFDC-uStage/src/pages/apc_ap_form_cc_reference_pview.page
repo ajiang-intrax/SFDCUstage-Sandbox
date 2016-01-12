@@ -1,0 +1,409 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false"
+	title="Childcare Reference Information" Controller="APC_Reference_Controller"
+	language="{!reference.Reference_Language__c}"
+	standardStylesheets="false" showHeader="false" id="apc_ap_form_cc_reference_pview"> 
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+   <style>
+#branding-zone, #footer-zone{display:none;}   
+#content-zone {
+background: #f8f8f8;
+}
+.refer-box{background: #fff;
+border:#ccc solid 1px;   
+border-radius: 5px;
+padding:60px;}
+.data-list .form-group{margin-bottom:15px;}
+
+
+   </style>		
+   		<div class="row">
+   		<div class="col-md-8 center-block refer-box">
+   		
+   		<apex:image styleClass="center-block" url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/logos/medium-logo-aupaircare.png')}"/>
+   		
+   		<apex:form styleClass="form-vertical ws-validate" id="webform">
+	        	
+	        	<!-- 
+	        	<apex:outputpanel layout="block" rendered="{!ReferenceStatus == 'Active' && Status == 'Incomplete'}">	
+	        	 -->
+	        	 
+	        	<div class="row margin-b4">
+			    <div class="col-sm-12 center-text margin-t2">
+	        	<h1><apex:outputText value="{!$Label.T_0378}" /></h1>
+	        	<apex:outputLink styleClass="btn btn-link btn-lg margin-b2" value="/apex/apc_ap_main_reference_check?id={!reference.Applicant_Info__c}"><i class="fa fa-chevron-left"></i> <span>Back to Reference Check</span></apex:outputLink>
+	           
+	        	<apex:Messages styleClass="custom-error-pagelevel" id="messageapex1" />
+	        	 <!-- REFERENCE INTRO -->
+	        	<p class="lead"><apex:outputText value="{!$Label.T_0379}" /></p>
+	            <!-- REFERENCE NAME -->
+	            </div>
+                <!-- end column  -->
+                </div>
+      	        <!-- end row --> 
+      	
+      	        <div class="row">
+			    <div class="col-sm-12">
+			    
+	            <p class="margin-b3"><label><apex:outputText value="{!$Label.T_0381}" />:</label> {!primaryApplicant.Name}</p> 
+	            
+	            <div class="row">
+              	<div class="col-sm-6">
+                <div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0382}" /></label>
+                <apex:outputField styleClass="form-control" value="{!reference.Time_Known__c}"  id="timeknown" />
+              	</div>
+              	  </div>
+                <!-- end column  -->
+                </div>
+      	        <!-- end row --> 
+              	
+              	<div class="row">
+              	<div class="col-sm-12">
+              	<div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0383}" /></label>
+                <apex:outputField styleClass="form-control" value="{!reference.Data_Verified__c}"  id="dataever" />
+                <!-- 
+                <apex:selectRadio styleClass="radio" value="{!reference.Data_Verified__c}" id="dataever"  >
+                  <apex:selectOption itemValue="Yes" itemLabel="{!$Label.T_0327}"/>
+                  <apex:selectOption itemValue="No" itemLabel="{!$Label.T_0328}"/>
+                </apex:selectRadio>
+                <apex:message for="dataever" styleClass="custom-error-radio" id="errormessdata"/>
+                 -->
+                </div>
+              	</div>
+                <!-- end column  -->
+                </div>
+      	        <!-- end row --> 
+             
+	            <div class="row">
+              	<div class="col-sm-12">
+	            <div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0384}" /><br/><span class="info"><apex:outputText value="{!$Label.T_0385}" /></span></label>
+               
+                <apex:outputField styleClass="form-control" value="{!reference.Data_Verified_Description__c}"  id="VerifiedDescrip" />
+                <!-- 
+                <apex:inputTextarea styleClass="form-control" id="VerifiedDescrip" value="{!reference.Data_Verified_Description__c}"
+						required="FALSE" onkeyup="countChar(this, 510, 'VerifiedDescripCount')" onfocus="countChar(this, 510, 'VerifiedDescripCount')" />
+                    <div class="char-limit bb"> <span class="char-count-label">Characters left:</span><span id="VerifiedDescripCount" class="char-count">{!510-len(reference.Data_Verified_Description__c)}</span> </div>
+                    <apex:message for="VerifiedDescrip" styleClass="custom-error-text" id="errormesnarrativeUS" />
+                -->
+                </div>
+                </div>
+                <!-- end column  -->
+                </div>
+      	        <!-- end row --> 
+                
+                
+                <apex:outputpanel layout="block" rendered="{!Category == 'Public/Group'}">	
+                
+               <div class="box gray data-list margin-b4">
+               
+               <div class="section-title">Summary of Childcare Experience</div>
+               
+                
+               
+               
+               <div class="row">
+                <div class="col-sm-12">
+                <div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0386}"/></label>
+                {!experience.Employer_Name__c}
+				</div>
+                </div><!-- end column -->
+                </div><!--  end row -->
+               
+               
+                <div class="row">
+                <div class="col-sm-5">
+                <div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0387}"/></label>
+                <apex:outputText value=" {0,date,MM'/'dd'/'yyyy}">
+    			<apex:param value="{!experience.Start_Date__c}" /> 
+				</apex:outputText>
+				</div>
+                </div><!-- end column -->
+                <div class="col-sm-5">
+                 <div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0388}"/></label>
+                <apex:outputText value=" {0,date,MM'/'dd'/'yyyy}">
+                <apex:param value="{!experience.End_Date__c}" />
+                </apex:outputText>
+               </div>
+                </div><!-- end column -->
+                </div><!--  end row -->
+                
+                   <div class="row">
+                <div class="col-sm-5">
+               <div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0389}"/></label> {!experience.Frequency__c}
+                </div>
+                </div><!-- end column -->
+                <div class="col-sm-5">
+                <div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0426}"/></label> {!experience.Employment_Hrs__c}
+                </div>
+                </div><!-- end column -->
+                </div><!--  end row -->
+               
+               
+                 <div class="row">
+                <div class="col-sm-5">
+               <div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0390}"/></label> {!experience.Number_of_Children__c}
+                </div>
+                </div><!-- end column -->
+                <div class="col-sm-5">
+                <div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0391}"/></label> {!experience.Children_Ages__c}
+                </div>
+                </div><!-- end column -->
+                </div><!--  end row -->
+                
+                       <div class="row">
+                <div class="col-sm-12">
+               <div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0392}"/></label> {!experience.Special_Needs_Indicated__c}
+               </div>
+                </div><!-- end column -->
+                </div><!--  end row -->
+               
+                <div>
+                <a data-toggle="popover" data-content="{!$Label.T_0429}">
+                <b><apex:outputText value="{!$Label.T_0394}"/></b>
+                </a>
+                </div>
+      	         
+                </div> <!--  end box gray -->
+                
+               </apex:outputpanel>
+ 
+               <apex:outputpanel layout="block" rendered="{!Category == 'Private/Individual'}">
+               
+               <div class="box gray data-list margin-b4">
+               
+               <div class="section-title">Summary of Childcare Experience</div>
+               
+               <div class="row">
+               <div class="col-lg-8">
+                <div class="row">
+                <div class="col-sm-6">
+                <div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0387}"/></label>
+                <apex:outputText value=" {0,date,MM'/'dd'/'yyyy}">
+    			<apex:param value="{!experience.Start_Date__c}" /> 
+				</apex:outputText>
+				</div>
+                </div><!-- end column -->
+                <div class="col-sm-6">
+                 <div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0388}"/></label>
+                <apex:outputText value=" {0,date,MM'/'dd'/'yyyy}">
+                <apex:param value="{!experience.End_Date__c}" />
+                </apex:outputText>
+                </div>
+                </div><!-- end column -->
+                </div><!--  end row -->
+                
+                <div class="row">
+                <div class="col-sm-6">
+               <div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0389}"/></label> {!experience.Frequency__c}
+                </div>
+                </div><!-- end column -->
+                <div class="col-sm-6">
+                <div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0426}"/></label> {!experience.Employment_Hrs__c}
+                </div>
+                </div><!-- end column -->
+                </div><!--  end row -->
+               </div><!--  end column -->
+                <div class="col-lg-4">
+                <div class="row margin-b2">
+                <div class="col-sm-12">
+                <div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0395}" /></label>
+                <apex:outputText escape="false" value="{!SUBSTITUTE(experience.Position_Responsibilities__c,';','<br/>')}"/>
+                <!-- 
+                <apex:outputField styleClass="form-control" value="{!experience.Position_Responsibilities__c}" id="respons" />
+                 -->
+                </div>
+              	</div><!--  end column -->
+                </div><!--  end row -->
+                </div><!--  end column -->
+               </div><!--  end row -->
+               
+               
+               
+                
+                <div class="row">
+                <div class="col-sm-12">
+                <div class="section-title">List of Children Cared for:</div>
+                
+                <apex:variable value="{!1}" var="rowNum" id="rowCounter"/>
+                <apex:repeat id="exptable"  value="{!experDetList}" var="item" rendered="{!experDetList.size > 0}">
+                <div class="row">
+                 <div class="col-sm-4">
+                   <div class="form-group">
+               <label class="control-label"><apex:outputText value="Child {!rowNum}"/></label>
+               </div>
+                 </div><!--  end column -->
+                
+                <div class="col-sm-4">
+               <div class="form-group">
+               <label class="control-label"><apex:outputText value="{!$Label.T_0398}"/></label>
+                <apex:outputText value=" {0,date,MM'/'yyyy}">
+    			<apex:param value="{!item.Date_of_Birth__c}" /> 
+				</apex:outputText>
+				</div>
+                </div>
+                <div class="col-sm-4">
+                <div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0397}"/></label> {!item.Special_Needs_Indicated__c}
+                </div>
+                </div>
+                </div><!--  end row -->
+                <apex:variable var="rowNum" value="{!rowNum + 1}"/>
+                </apex:repeat>
+                
+                <div class="margin-b1">
+                <a data-toggle="popover" data-content="{!$Label.T_0429}">
+                <b><apex:outputText value="{!$Label.T_0394}"/></b>
+                </a></div>
+                
+                <div>
+                <a data-toggle="popover" data-content="{!$Label.T_0400}">
+                <b><apex:outputText value="{!$Label.T_0399}"/></b>
+                </a>
+                </div>
+               
+                
+                  </div>
+                <!-- end column  -->
+                </div>
+      	        <!-- end row --> 
+      	        </div><!--  end box -->
+                </apex:outputpanel>
+                
+                <apex:outputpanel layout="block" rendered="{!Category == 'Public/Group'}">	
+                <div class="row">
+              	<div class="col-sm-12">
+              	<div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0412}" /></label>
+                <apex:outputField styleClass="form-control" value="{!reference.Participant_Traits__c}" id="traits" />
+              	</div>
+              	</div><!--  end column -->
+              	</div><!--  end row -->
+                </apex:outputpanel>
+                
+                <div class="row">
+              	<div class="col-sm-12">
+              	<div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0430}" /></label>
+                <apex:outputField styleClass="form-control" value="{!reference.Rating__c}" id="rate" />
+                </div>
+              	  </div>
+                <!-- end column  -->
+                </div>
+      	        <!-- end row --> 
+                
+                <div class="row">
+              	<div class="col-sm-12">
+              	<div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0401}" /></label>
+                <apex:outputField styleClass="form-control" value="{!reference.Recommend_Participation__c}"  id="recommendation" />
+                <!-- 
+                <apex:selectRadio styleClass="radio" value="{!reference.Recommend_Participation__c}" id="recommendation"  >
+                  <apex:selectOption itemValue="Yes" itemLabel="{!$Label.T_0327}"/>
+                  <apex:selectOption itemValue="No" itemLabel="{!$Label.T_0328}"/>
+                </apex:selectRadio>
+                <apex:message for="recommendation" styleClass="custom-error-radio" id="errormessreco"/>
+                 -->
+                </div>
+              	</div>
+                <!-- end column  -->
+                </div>
+      	        <!-- end row --> 
+              	
+              	<div class="row">
+              	<div class="col-sm-12">
+	            <div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0402}" /></label>
+                <apex:outputField styleClass="form-control" value="{!reference.Recommend_Participation_Description__c}"  id="RcomendDescrip" />
+                <!-- 
+                <apex:inputTextarea styleClass="form-control" id="RcomendDescrip" value="{!reference.Recommend_Participation_Description__c}"
+						required="FALSE" onkeyup="countChar(this, 510, 'RcomendDescripCount')" onfocus="countChar(this, 510, 'RcomendDescripCount')" />
+                    <div class="char-limit bb"> <span class="char-count-label">Characters left:</span><span id="RcomendDescripCount" class="char-count">{!510-len(reference.Recommend_Participation_Description__c)}</span> </div>
+                    <apex:message for="RcomendDescrip" styleClass="custom-error-text" id="errormerecomend" />
+                 -->
+                </div>
+                </div>
+                <!-- end column  -->
+                </div>
+      	        <!-- end row --> 
+              	
+                
+                <div class="row">
+              	<div class="col-sm-6">
+              	<div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0403}" /></label>
+                <apex:outputField styleClass="form-control" value="{!reference.Name}" id="name" />
+              	</div>
+              	</div>
+                <!-- end column  -->
+                </div>
+      	        <!-- end row --> 
+              	
+              	<div class="section-title"><apex:outputText value="{!$Label.T_0404}" /></div>
+              	
+              	<div class="row">
+              	<div class="col-sm-6">
+              	<div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0405}" /></label>
+                <apex:outputField styleClass="form-control" value="{!reference.Phone_Country_Code__c}"  id="phonecode" />
+              	</div>
+              	</div>
+              	
+              	<div class="col-sm-6">
+              	<div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0406}" /></label>
+                <apex:outputField styleClass="form-control" value="{!reference.Phone__c}"  id="phone" />
+              	</div>
+              	</div>
+                <!-- end column  -->
+                </div>
+      	        <!-- end row --> 
+                
+                <apex:outputText rendered="{!reference.Status__c == 'Complete'}">	
+				  <div class="row">
+	              <div class="col-sm-12 margin-t">
+	                <!--  Accept Reference -->
+	                <apex:commandlink immediate="true" styleClass="btn btn-lg btn-link vs2 margin-r2"  action="{!AcceptReference}" id="accepRef" status="onsubmit">
+                    <i class="fa fa-thumbs-o-up"></i> <span>Accept Reference</span>
+                  	</apex:commandlink> 
+                  	
+                  	<!--  Reject Reference -->
+					<apex:commandlink immediate="true" styleClass="btn btn-lg btn-link vs2"  action="{!RejectReference}" id="rejectlink" status="onsubmit">
+                    <i class="fa fa-thumbs-o-down" style="color:#a94442;"></i> <span>Reject Reference</span>
+                  	</apex:commandlink>
+                  </div>
+                  <!-- end column  -->
+                  </div>
+      	          <!-- end row --> 
+	          </apex:outputText>
+	       
+	             
+	            </div>
+                <!-- end column  -->
+                </div>
+      	        <!-- end row -->   
+	             
+	        </apex:form>
+ 
+   		</div><!-- end column -->
+   		</div><!--  end row -->
+    
+      	
+    </apex:define>
+  </apex:composition>
+</apex:page>

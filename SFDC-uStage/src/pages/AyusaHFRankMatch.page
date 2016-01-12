@@ -1,0 +1,350 @@
+<!-- 
+    Purpose         :   Ranking Match.
+                
+    Created Date    :   06/06/2012
+    
+    Current Version :   v1.0
+    
+    Revision Log    :   V_1.1 Created
+ -->
+<apex:page standardController="Position__c" extensions="RankingController" title="{!Position__c.Name}" showHeader="true" id="AyusaHfRankMatch" >
+<div class="wrapper">
+<script>    
+    //This javascript method is to select/unselect all the check boxes if header lel check box is selected.
+    function checkAll(selectAll) {
+        
+        var inputElem = document.getElementsByTagName("input");
+        for(var i=0; i<inputElem.length; i++) {
+                if(inputElem[i].id.indexOf("selectedRecords")!=-1)
+                    inputElem[i].checked = selectAll.checked;
+        }
+    }
+  window.onload = setFocus
+function setFocus() {
+        document.getElementById("{!$Component.ProgramOptions}").focus();
+}
+    var prevOptionValue='';
+    function FnAlertNone(selOption)
+    {
+  
+     if (selOption.value=='Business Internship')
+      {
+      alert('You cannot choose any other Citizenship now!!!');
+      }
+     
+    }
+
+    
+    //validate next button
+    function validateBeforeSave() {
+            
+        var inputElem = document.getElementsByTagName("input");
+        for(var i=0; i<inputElem.length; i++) {
+            if(inputElem[i].id.indexOf("selectedRecords")!=-1 && inputElem[i].checked) {
+                matchSelected();
+                return false;
+            }
+        }
+        matchSelected();  
+        //show error message
+        //alert('Please select at least one record.');
+        return false;
+    }
+  
+  
+
+</script>
+    <!-- Form -->
+     
+    <apex:form >
+        
+        <!-- Action Function -->
+        <apex:actionFunction name="matchSelected" action="{!save}" status="loadingMsg" />
+        
+        <apex:pageBlock >
+            <apex:pageMessages id="validationMsg" />
+            <apex:commandLink action="{!cancel}" value="Back to previous page" />
+            <br/>
+            <table width="100%">
+                <tr>
+                    <th width="11%">
+                        Host Family
+                    </th>
+                    <th width="11%">
+                        Start
+                    </th>
+                    <th width="11%">
+                        Position
+                    </th>
+                    <th width="11%">
+                        Gender Preference
+                    </th>
+                    <th width="11%">
+                        Nationality Preference
+                    </th>
+                    <th width="11%">
+                        No. Of Students
+                    </th>
+                    <th width="11%">
+                        Religious Restriction
+                    </th>
+                    <th width="11%">
+                        Smoker
+                    </th>
+                    <th width="11%">
+                        Pets
+                    </th>
+                    <th width="12%">
+                        Interests
+                    </th>
+                    <th width="11%">
+                        School Category
+                    </th>
+                   
+                </tr>
+                <tr>
+                    <td>
+                        <apex:outputField value="{!Position__c.Host_Company_Id__c}" />
+                    </td>
+                    <td>
+                        <apex:outputField value="{!Position__c.Engagement_Start__c}" />
+                    </td>
+                    <td>
+                        <apex:outputField value="{!match.Position_Name__c}"/>
+                    </td>
+                    <td>
+                        <apex:outputField value="{!Position__c.Gender_Preference__c}" />
+                    </td>
+                    <td>
+                        <apex:outputField value="{!Position__c.Nationality_Preferences__c}" />
+                    </td>
+                    <td>
+                        <apex:outputField value="{!Position__c.Positions_Sold__c}" />
+                    </td>
+                    <td>
+                        <apex:outputField value="{!Position__c.Religious_Restriction_Indicated__c}" />
+                    </td>
+                    <td>
+                        <apex:outputField value="{!Position__c.Smoker_in_Family__c}" />
+                    </td>
+                    <td>
+                        <apex:outputField value="{!Position__c.Pets__c}" />
+                    </td>
+                    <td>
+                        <apex:outputField value="{!Position__c.Interests__c}" />
+                    </td>
+                     <td>
+                        <apex:outputField value="{!Position__c.School_Category__c}" />
+                    </td>
+                     
+                    
+                </tr>
+            </table>
+            <br/>
+             <table width="100%">
+             <tr><th>Filter By:</th></tr>
+            <tr>
+              <th>  <apex:outputLabel value="Program Options" /></th> 
+            <th>  <apex:outputLabel value="Engagement Dates" /></th> 
+            <th> <apex:outputLabel value="Gender" /></th>
+            <th> <apex:outputLabel value="Smoking OK" /></th>
+             <th> <apex:outputLabel value="Special Diet"  /></th>
+           
+            <th> <apex:outputLabel value="Pets OK"  /></th>
+            <th> <apex:outputLabel value="Private School OK"  /></th>
+              <th> <apex:outputLabel value="Tuition Range"  /></th>
+             <th> <apex:outputLabel value="Program Duration"  /></th>
+            
+            </tr>
+            <tr>
+            <td>
+               <apex:selectList value="{!selectAyusaProgramOptions}" size="3" multiselect="true" id="ProgramOptions">                           
+                            <apex:selectOptions value="{!AyusaProgramOptions}" /> 
+                                    
+               </apex:selectList>
+          
+            </td>
+             <td>
+                     <apex:outputLabel value="Start" style="font-weight: bold;"/>&nbsp;
+                     <apex:inputField value="{!DummyObj.Engagement_Start__c}" />
+                     <br/>
+                      <apex:outputLabel value="End" style="font-weight: bold;" />&nbsp;&nbsp;&nbsp;
+                     <apex:inputField value="{!DummyObj.Engagement_End__c}"/>
+                 </td>   
+            <td>
+                
+                        <apex:selectList value="{!selectGenderPref}" size="1" multiselect="false">  
+                       		<apex:selectOption itemValue="--None--" itemLabel="--None--"/>
+                            <apex:selectOptions value="{!GenderPref}" /> 
+                       </apex:selectList>
+                
+            </td>
+            <td>       
+                  
+                        <apex:selectList value="{!selectSmokerFamily}" size="1" multiselect="false">
+                             <apex:selectOptions value="{!SmokerFamily}" /> 
+                        </apex:selectList>
+                  
+                     
+            </td>
+              <td>
+                   <apex:selectList value="{!selectSpecialDiet}" size="1" multiselect="False">
+                              <apex:selectOptions value="{!lstSpecialDiet}" /> 
+                    </apex:selectList> 
+                 </td>
+           
+            <td>    
+                   <apex:selectList value="{!selectPet}" size="1" multiselect="false">
+                              <apex:selectOptions value="{!Pets}" /> 
+                        </apex:selectList>  
+             </td>
+             <td>    
+                   <apex:selectList value="{!selectSchoolCategory}" size="1" multiselect="false">
+                              <apex:selectOptions value="{!Categories}" /> 
+                    </apex:selectList>  
+             </td>
+               <td>    
+                   <apex:selectList value="{!selectTuitionRange}" size="1" multiselect="false">
+                              <apex:selectOptions value="{!TuitionRange}" /> 
+                    </apex:selectList>  
+             </td>
+              <td>    
+                   <apex:selectList value="{!selectProgramDuration}" size="1" multiselect="false">
+                              <apex:selectOptions value="{!ProgramDuration}" /> 
+                    </apex:selectList>  
+             </td>
+            </tr>
+            </table>
+         
+             <table width="100%">
+            
+            <tr>
+            
+             <th> <apex:outputLabel value="Nationality"  /></th>
+              <th>  <apex:outputLabel value="Search By Name" /></th>
+              <th>  <apex:outputLabel value="SNK OK" /></th> 
+            <th> <apex:outputLabel value="Double Placement OK"  /></th>
+              <th>  <apex:outputLabel value="Age" /></th> 
+            <th> <apex:outputLabel value="Interests"/></th>
+            <th> <apex:outputLabel value="Language Spoken"  /></th>
+            <th> <apex:outputLabel value="Religion"  /></th>
+            </tr>
+            <tr>
+             <td>    
+                   <apex:selectList value="{!selectNationalPreferences}" size="3" multiselect="True">
+                              <apex:selectOptions value="{!Nationality}" /> 
+                    </apex:selectList>  
+             </td>              
+                    <td> 
+                    <apex:inputtext value="{!selectEngName}"/>
+                 </td>
+                 
+                   <td>
+                   <apex:selectList value="{!selectSNK}" size="1" multiselect="false">
+                      <apex:selectOptions value="{!lstSNK}" /> 
+                   </apex:selectList>
+                 </td>
+                   <td>
+                   <apex:selectList value="{!selectDPIndicated}" size="1" multiselect="false">
+                      <apex:selectOptions value="{!lstDPIndicated}" /> 
+                   </apex:selectList>
+                 </td>
+            <td>
+                   <apex:selectList value="{!selectAges}" size="3" multiselect="true">
+                      <apex:selectOptions value="{!lstAges}" /> 
+                   </apex:selectList>
+                 </td>
+                 
+                 <td>              
+                        <apex:selectList value="{!selectInterests}" size="3" multiselect="True">
+                              <apex:selectOptions value="{!Interests}" /> 
+                        </apex:selectList>    
+                                                 
+            </td>
+                
+                  <td>
+                   <apex:selectList value="{!selectLanguagesSpoken}" size="3" multiselect="True">
+                              <apex:selectOptions value="{!lstLangSpoken}" /> 
+                    </apex:selectList> 
+                 </td>
+                 <td>
+                   <apex:selectList value="{!selectReligions}" size="3" multiselect="True">
+                              <apex:selectOptions value="{!Religion}" /> 
+                    </apex:selectList> 
+                 </td>
+            </tr>
+            
+            
+                
+         
+                     <tr><td>
+                     <apex:commandButton value="Search" action="{!initAyusa}" reRender="pbs, validationMsg" status="loadingMsg" />
+                   </td>  
+                </tr>                    
+            </table>
+            <BR/>
+            <apex:pageBlockSection columns="1" title="Result" collapsible="false" id="pbs">
+                <apex:actionStatus startText="Please Wait....." startStyle="font-weight: bold;color: green;" id="loadingMsg"/>
+                <!-- <apex:outputLabel value="{!serachedProgramOptions}" escape="false" />-->
+                <!-- Resultant table -->
+                <apex:pageBlockTable value="{!PossibleMatchesList}" var="item" rendered="{!IF(PossibleMatchesList.Size > 0, true, false)}">
+                    <apex:column >
+                        <apex:facet name="header">
+                            <input type="checkbox" id="headerCheck" onclick="checkAll(this);" />
+                        </apex:facet>
+                        <apex:inputCheckBox value="{!item.selected}" id="selectedRecords"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:commandLink action="{!sortResults}" value="Rank{!IF(sortDir='ASC','▲','▼')}" reRender="pbs, validationMsg" status="loadingMsg" />
+                        </apex:facet>
+                        <apex:outputText value="{!item.ranking}" />
+                    
+                        
+                    </apex:column>
+                    
+                   <apex:column value="{!item.engagement.Account_Id__c}" />
+                    <apex:column value="{!item.oLI.whatId}" />               
+                    <apex:column value="{!item.engagement.Placement_Status__c}" />
+                    <apex:column value="{!item.engagement.Account_Id__r.Gender__pc}" />
+                    <apex:column value="{!item.engagement.Account_Id__r.Nationality__pc}" />                    
+                    <apex:column value="{!item.engagement.Account_Id__r.Age__pc}" />
+                    <apex:column value="{!item.engagement.Tuition__c}" />
+                    <apex:column value="{!item.engagement.Interests_Top__c}" />
+                    <apex:column value="{!item.engagement.Engagement_Start__c}" />
+                   
+                   
+                  
+                </apex:pageBlockTable>
+                
+                <!-- Panel to render Paging functionality -->
+                <apex:outputPanel rendered="{!IF(totalResults > 0,true,false)}" >
+                    <table border="0" align="center">
+                        <tr>
+                            <td align="left" >
+                                <B><apex:commandLink action="{!getPrevious}" value="Previous" rendered="{!IF(resultsStartNumber = 1, false, true)}" reRender="pbs, validationMsg" status="loadingMsg"/> </B>
+                            </td>
+                            <td width="50">
+                            </td>
+                            <td >
+                                <B>Record(s) {!resultsStartNumber}-{!resultsStopNumber} of {!totalResults}</B>
+                            </td>
+                            <td width="50">
+                            </td>
+                            <td align="right">
+                                <B><apex:commandLink action="{!getNext}" value="Next" rendered="{!IF(resultsStopNumber = totalResults, false, true)}" reRender="pbs, validationMsg" status="loadingMsg" /></B>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" align="center" >
+                                <apex:image url="{!$Resource.MatchSelected}" style="cursor:pointer;" onclick="validateBeforeSave(); return false;"/>
+                            </td>
+                        </tr>
+                    </table>
+                </apex:outputPanel>
+                <apex:outputLabel rendered="{!IF(totalResults > 0, false, true)}" > {!searchResultMessage} </apex:outputLabel>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</div>
+</apex:page>

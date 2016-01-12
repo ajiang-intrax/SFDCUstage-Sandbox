@@ -1,0 +1,29 @@
+<apex:component layout="none" id="completioncomp">
+	<apex:attribute name="ApplicantInfo" description="This is the value for the Applicant_Info__c object." type="Applicant_Info__c" required="false" default=""/>
+	<apex:attribute name="isIGIMainReady" description="this value indicated whether the IGI Main app is ready to be submitted" type="boolean" required="false" default="false"/>
+	
+	<!-- Basic IGI PT Submit Label 'BASIC' -->
+	<apex:outputPanel rendered="{!CONTAINS(applicantinfo.PageStatus_Complete__c,'51') && CONTAINS(applicantinfo.PageStatus_Complete__c,'52') &&
+									CONTAINS(applicantinfo.PageStatus_Complete__c,'53') &&
+									applicantInfo.Application_Level__c=='Basic' && applicantInfo.Application_Stage__c=='Working'}" layout="block">
+	          
+	          <apex:outputLink styleClass="noline" value="/apex/igi_pt_app_completion?id={!applicantInfo.Id}" id="completionlink_igi_basic">
+	          <div class="margin-t3 appcomplete alert alert-warning clearfix">
+	          <span>Your pre-application is ready for submission. Please follow this link if you are happy with your answers.</span> 
+	          <i class="fa fa-chevron-right pull-right hidden-xs"></i>
+	          </div>
+	          </apex:outputLink>
+	</apex:outputPanel>	
+	
+	<!-- Basic IGI PT Submit Label 'MAIN' -->
+	<apex:outputPanel rendered="{!applicantInfo.Application_Level__c == 'Main' && applicantInfo.Application_Stage__c == 'Working' && isIGIMainReady}" layout="block">
+	          
+	          <apex:outputLink value="/apex/igi_pt_app_home?id={!applicantInfo.Id}" id="completionlink_igi_main">
+	          <div class="margin-t3 appcomplete alert alert-warning clearfix">
+	          <span>Your application is ready for submission. Please follow this link if you are happy with your answers.</span> 
+	          <i class="fa fa-chevron-right pull-right hidden-xs"></i>
+	          </div>
+	          </apex:outputLink>
+	</apex:outputPanel>
+
+</apex:component>

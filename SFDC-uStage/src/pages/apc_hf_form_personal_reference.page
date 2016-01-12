@@ -1,0 +1,387 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false"
+	title="Childcare Reference Information" Controller="APC_Reference_Controller"
+	language="{!reference.Reference_Language__c}" action="{!checkStatus}"
+	standardStylesheets="false" showHeader="false" id="apc_hf_form_personal_reference"> 
+  <apex:composition template="intraxtemplate_vs3"> 
+    <apex:define name="body">
+<style>
+#content-zone {
+background: #f8f8f8;
+}
+.refer-box{background: #fff;
+border:#ccc solid 1px;   
+border-radius: 5px;
+padding:60px;}
+</style>	
+   		
+   		<div class="row">
+   		<div class="col-md-8 center-block refer-box">
+   		
+   		<apex:image styleClass="center-block" url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/logos/medium-logo-aupaircare.png')}"/>
+   		
+   		<apex:form styleClass="form-vertical ws-validate" id="webform">
+	        	
+	        	<apex:outputpanel layout="block" rendered="{!ReferenceStatus == 'Active' && Status == 'Incomplete'}">	
+	        	
+	        	<div class="row margin-b4">
+			    <div class="col-sm-12 center-text margin-t2">
+	        	<h1><apex:outputText value="{!$Label.T_0425}" /></h1>
+	        	<apex:Messages styleClass="custom-error-pagelevel" id="messageapex1" />
+	            <!-- REFERENCE INTRO -->
+	            <p class="lead"><apex:outputText value="{!$Label.T_0410}" /></p>
+	            </div><!--  end column -->
+              	</div><!--  end row -->
+              	
+              	
+	            <!-- REFERENCE NAME -->
+	            <p class="margin-b3"><label><apex:outputText value="{!$Label.T_0381}" />:</label> {!primaryApplicant.Name}</p>
+	            
+	            <div class="row">
+              	<div class="col-sm-6">
+                <div class="form-group">
+                <label class="control-label"><apex:outputText value="Your First Name" /></label>
+                <apex:inputField styleClass="form-control" value="{!reference.First_Name__c}" required="TRUE" id="fname" />
+              	</div>
+              	</div><!--  end column -->
+              	<div class="col-sm-6">
+                <div class="form-group">
+                <label class="control-label"><apex:outputText value="Your Last Name" /></label>
+                <apex:inputField styleClass="form-control" value="{!reference.Last_Name__c}" required="TRUE" id="lname" />
+              	</div>
+              	</div><!--  end column -->
+              	</div><!--  end row -->
+              	
+              	<div class="row">
+              	<div class="col-sm-6">
+                <div class="form-group">
+                <label class="control-label"><apex:outputText value="Your Address" /></label>
+                <apex:inputField styleClass="form-control" value="{!reference.Street__c}" required="TRUE" id="address" />
+              	</div>
+              	</div><!--  end column -->
+              	<div class="col-sm-6">
+                <div class="form-group">
+                <label class="control-label"><apex:outputText value="Your City" /></label>
+                <apex:inputField styleClass="form-control" value="{!reference.City__c}" required="TRUE" id="city" />
+              	</div>
+              	</div><!--  end column -->
+              	</div><!--  end row -->
+              	
+              	<div class="row">
+              	<div class="col-sm-6">
+                <div class="form-group">
+                <label class="control-label"><apex:outputText value="State" /></label>
+                <apex:inputField styleClass="form-control" value="{!reference.State__c}" required="TRUE" id="state" />
+              	</div>
+              	</div><!--  end column -->
+              	<div class="col-sm-6">
+                <div class="form-group">
+                <label class="control-label"><apex:outputText value="Your Zip Code" /></label>
+                <apex:inputField styleClass="form-control" value="{!reference.Postal_Code__c}" required="TRUE" id="zip" />
+              	</div>
+              	</div><!--  end column -->
+              	</div><!--  end row -->
+              	
+              	<div class="row">
+              	<div class="col-sm-6">
+                <div class="form-group">
+                <label class="control-label"><apex:outputText value="Your Phone" /> <i data-toggle="popover" data-content="We ask for your phone number as we will contact you via phone to verify this reference." class="infobtn fa fa-question-circle"></i></label>
+                <apex:inputField styleClass="form-control" value="{!reference.Phone__c}" required="TRUE" id="phone1" />
+              	</div>
+              	</div><!--  end column -->
+              	<div class="col-sm-6">
+                <div class="form-group">
+                <label class="control-label"><apex:outputText value="Your Email" /></label>
+                <apex:inputField styleClass="form-control" value="{!reference.Email__c}" required="TRUE" id="email" />
+              	</div>
+              	</div><!--  end column -->
+              	</div><!--  end row --> 
+	            
+	            <div class="row">
+              	<div class="col-sm-6">
+                <div class="form-group">
+                <label class="control-label"><apex:outputText value="How long have you known this family?" /></label>
+                <apex:inputField styleClass="form-control" value="{!reference.Time_Known__c}" required="TRUE" id="timeknown" />
+              	</div>
+              	</div><!--  end column -->
+              	</div><!--  end row -->
+              	
+              	<div class="row">
+              	<div class="col-sm-12">
+	            <div class="form-group">
+                <label class="control-label"><apex:outputText value="Please describe the capacity in which you know them" /></label>
+                <apex:inputTextarea styleClass="form-control" id="relToFam" value="{!reference.Relationship_to_Family__c}"
+						required="TRUE" onkeyup="countChar(this, 128, 'relToFamCount')" onfocus="countChar(this, 128, 'relToFamCount')" />
+                    <div class="char-limit bb"> <span class="char-count-label">Characters left:</span><span id="relToFamCount" class="char-count">{!128-len(reference.Relationship_to_Family__c)}</span> </div>
+                    <apex:message for="relToFam" styleClass="custom-error-text" id="errormesrelToFam" />
+                </div>
+                </div><!--  end column -->
+              	</div><!--  end row -->
+              	
+              	<div class="row">
+              	<div class="col-sm-12">
+              	<div class="form-group">
+                <label class="control-label"><apex:outputText value="Have you visited the applicant family in their home?" /></label>
+                <apex:actionRegion >
+                <apex:selectRadio styleClass="radio" value="{!reference.Home_Visit_Indicated__c}" id="particip" required="true" >
+                  <apex:selectOption itemValue="Yes" itemLabel="{!$Label.T_0327}"/>
+                  <apex:selectOption itemValue="No" itemLabel="{!$Label.T_0328}"/>
+                 <apex:actionSupport event="onclick" rerender="recomBlock" status="showrec"/>
+                </apex:selectRadio>
+                </apex:actionRegion> 
+                <apex:actionStatus startStyleClass="feedback-st" startText="Loading. Please wait..." id="showrec"/>
+                <apex:message for="particip" styleClass="custom-error-radio" id="errormesspart"/>
+                </div>
+              	</div><!--  end column -->
+              	</div><!--  end row -->
+              	
+              	<apex:pageBlock id="recomBlock">
+              	<apex:outputPanel layout="block" rendered="{!reference.Home_Visit_Indicated__c == 'Yes'}" id="outputpanel5">
+	            <div class="row">
+              	<div class="col-sm-12">
+	            <div class="form-group">
+                <label class="control-label"><apex:outputText value="If yes, please describe frequency (number of times)" /></label>
+                <apex:inputField styleClass="form-control" id="RcomendDescrip" value="{!reference.Home_Visit_Frequency__c}" required="TRUE"/>                    
+                </div>
+                </div><!--  end column -->
+              	</div><!--  end row -->
+              	</apex:outputPanel>
+              	</apex:pageBlock>
+              	
+              	<div class="row">
+              	<div class="col-sm-12">
+	            <div class="form-group">
+                <label class="control-label"><apex:outputText value="Please, give us your impression of the family, include your observations of the relationship of the parents to each other, to the children and vice versa" /></label>
+                <apex:inputTextarea styleClass="form-control" id="Suitability1" value="{!reference.Family_impression__c}"
+						required="TRUE" onkeyup="countChar(this, 255, 'SuitabilityCount1')" onfocus="countChar(this, 255, 'SuitabilityCount1')" />
+                    <div class="char-limit bb"> <span class="char-count-label">Characters left:</span><span id="SuitabilityCount1" class="char-count">{!255-len(reference.Data_Verified_Description__c)}</span> </div>
+                    <apex:message for="Suitability1" styleClass="custom-error-text" id="errormesnarrativeUS1" />
+                </div>
+                </div><!--  end column -->
+              	</div><!--  end row -->
+              	
+              	<div class="row">
+              	<div class="col-sm-12">
+	            <div class="form-group">
+                <label class="control-label"><apex:outputText value="Please describe any unusual conditions including physical or emotional handicaps or disorders that the the children or parent(s) may have." /></label>
+                <apex:inputTextarea styleClass="form-control" id="disabilities" value="{!reference.Family_Disabilities_Description__c}"
+						required="TRUE" onkeyup="countChar(this, 255, 'disabilitiesCount2')" onfocus="countChar(this, 255, 'disabilitiesCount2')" />
+                    <div class="char-limit bb"> <span class="char-count-label">Characters left:</span><span id="disabilitiesCount2" class="char-count">{!255-len(reference.Family_Disabilities_Description__c)}</span> </div>
+                    <apex:message for="disabilities" styleClass="custom-error-text" id="errormesdisabilities" />
+                </div>
+                </div>
+              	</div>
+              	
+              	<div class="row">
+              	<div class="col-sm-12">
+              	<div class="form-group">
+                <label class="control-label"><apex:outputText value="Are you aware of any alcoholism, drug abuse, domestic violence, sexual abuse or other problems in the family?" /></label>
+                <apex:actionRegion >
+                <apex:selectRadio styleClass="radio" value="{!reference.Family_Abuse_Indicated__c}" id="family_abuse" required="true" >
+                  <apex:selectOption itemValue="Yes" itemLabel="{!$Label.T_0327}"/>
+                  <apex:selectOption itemValue="No" itemLabel="{!$Label.T_0328}"/>
+                 <apex:actionSupport event="onclick" rerender="abuseBlock" status="showabuse"/>
+                </apex:selectRadio>
+                </apex:actionRegion>
+                <apex:actionStatus startStyleClass="feedback-st" startText="Loading. Please wait..." id="showabuse"/>
+                <apex:message for="family_abuse" styleClass="custom-error-radio" id="errormessabuse"/>
+                </div>
+              	</div><!--  end column -->
+              	</div><!--  end row -->
+              	
+              	<apex:pageBlock id="abuseBlock">
+              	<apex:outputPanel layout="block" rendered="{!reference.Family_Abuse_Indicated__c == 'Yes'}" id="outputpanel6">
+	            <div class="row">
+              	<div class="col-sm-12">
+	            <div class="form-group">
+                <label class="control-label"><apex:outputText value="Please describe" /></label>
+                <apex:inputTextarea styleClass="form-control" id="abuseDesc" value="{!reference.Family_Abuse_Description__c}"
+						required="TRUE" onkeyup="countChar(this, 255, 'abuseCount')" onfocus="countChar(this, 255, 'abuseCount')" />
+                    <div class="char-limit bb"> <span class="char-count-label">Characters left:</span><span id="abuseCount" class="char-count">{!255-len(reference.Family_Abuse_Description__c)}</span> </div>
+                    <apex:message for="abuseDesc" styleClass="custom-error-text" id="errorAbuseDesc" />
+                </div>
+                </div><!--  end column -->
+              	</div><!--  end row -->
+              	</apex:outputPanel>
+              	</apex:pageBlock>
+              	
+              	<div class="row">
+              	<div class="col-sm-12">
+              	<div class="form-group">
+                <label class="control-label"><apex:outputText value="Are you aware of any criminal charges including any family member?" /></label>
+                <apex:actionRegion >
+                <apex:selectRadio styleClass="radio" value="{!reference.Family_Criminal_Charges_Indicated__c}" id="criminal_indicated" required="true" >
+                  <apex:selectOption itemValue="Yes" itemLabel="{!$Label.T_0327}"/>
+                  <apex:selectOption itemValue="No" itemLabel="{!$Label.T_0328}"/>
+                 <apex:actionSupport event="onclick" rerender="criminalBlock" status="showcriminal"/>
+                </apex:selectRadio>
+                </apex:actionRegion>
+                <apex:actionStatus startStyleClass="feedback-st" startText="Loading. Please wait..." id="showcriminal"/>
+                <apex:message for="criminal_indicated" styleClass="custom-error-radio" id="errorcriminal_indicated"/>
+                </div>
+              	</div><!--  end column -->
+              	</div><!--  end row -->
+              	
+              	<apex:pageBlock id="criminalBlock">
+              	<apex:outputPanel layout="block" rendered="{!reference.Family_Criminal_Charges_Indicated__c == 'Yes'}" id="outputpanel8">
+	            <div class="row">
+              	<div class="col-sm-12">
+	            <div class="form-group">
+                <label class="control-label"><apex:outputText value="Please describe" /></label>
+                <apex:inputTextarea styleClass="form-control" id="criminalDesc" value="{!reference.Criminal_Convictions_Description__c}"
+						required="TRUE" onkeyup="countChar(this, 300, 'criminalCount')" onfocus="countChar(this, 300, 'criminalCount')" />
+                    <div class="char-limit bb"> <span class="char-count-label">Characters left:</span><span id="criminalCount" class="char-count">{!300-len(reference.Criminal_Convictions_Description__c)}</span> </div>
+                    <apex:message for="criminalDesc" styleClass="custom-error-text" id="errorcriminalDesc" />
+                </div>
+                </div><!--  end column -->
+              	</div><!--  end row -->
+              	</apex:outputPanel>
+              	</apex:pageBlock>
+              	           	
+              	
+              	<apex:pageBlock id="homeStayBlock">
+              	<apex:outputPanel layout="block" rendered="{!reference.Family_Homestay_Indicated__c == 'No'}" id="outputpanel7">
+	            <div class="row">
+              	<div class="col-sm-12">
+	            <div class="form-group">
+                <label class="control-label"><apex:outputText value="Please describe" /></label>
+                <apex:inputTextarea styleClass="form-control" id="homestayDesc" value="{!reference.Family_Homestay_Description__c}"
+						required="TRUE" onkeyup="countChar(this, 255, 'homestayCount')" onfocus="countChar(this, 255, 'homestayCount')" />
+                    <div class="char-limit bb"> <span class="char-count-label">Characters left:</span><span id="homestayCount2" class="char-count">{!255-len(reference.Family_Homestay_Description__c)}</span> </div>
+                    <apex:message for="homestayDesc" styleClass="custom-error-text" id="errorHomeStayDesc" />
+                </div>
+                </div><!--  end column -->
+              	</div><!--  end row -->
+              	</apex:outputPanel>
+              	</apex:pageBlock>
+              	
+              	<div class="row">
+              	<div class="col-sm-12">
+	            <div class="form-group">
+                <label class="control-label"><apex:outputText value="Please feel free to make any further comments or observations which you feel would help us to better evaluate the applicant’s suitability for hosting an au pair" /></label>
+                <apex:inputTextarea styleClass="form-control" id="comments" value="{!reference.Comments__c}"
+						required="TRUE" onkeyup="countChar(this, 500, 'commentsCount')" onfocus="countChar(this, 500, 'commentsCount')" />
+                    <div class="char-limit bb"> <span class="char-count-label">Characters left:</span><span id="commentsCount" class="char-count">{!500-len(reference.Comments__c)}</span> </div>
+                    <apex:message for="comments" styleClass="custom-error-text" id="errormescomments" />
+                </div>
+                </div><!--  end column -->
+              	</div><!--  end row -->
+              	
+              	<!-- 
+              	<div class="row">
+              	<div class="col-sm-12">
+              	<div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0412}" /></label>
+                <apex:inputField styleClass="form-control" value="{!reference.Participant_Traits__c}" required="TRUE" id="traits" />
+              	</div>
+              	</div>
+              	</div>
+             	-->
+             	<!-- 
+             	<div class="row">
+              	<div class="col-sm-12">
+              	<div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0427}" /></label>
+                <apex:actionRegion >
+                <apex:selectRadio styleClass="radio" value="{!reference.Allow_AuPair__c}" id="allow" required="true" >
+                  <apex:selectOption itemValue="Yes" itemLabel="{!$Label.T_0327}"/>
+                  <apex:selectOption itemValue="No" itemLabel="{!$Label.T_0328}"/>
+                <apex:actionSupport event="onclick" rerender="allowBlock" status="show"/>
+                </apex:selectRadio>
+                </apex:actionRegion>
+                <apex:actionStatus startStyleClass="feedback-st" startText="Loading. Please wait..." id="show"/>
+                <apex:message for="allow" styleClass="custom-error-radio" id="errormessallow"/>
+                </div>
+              	</div>
+              	</div>
+             
+	            <apex:pageBlock id="allowBlock">
+              	<apex:outputPanel layout="block" rendered="{!reference.Allow_AuPair__c == 'No'}" id="outputpanel4">
+	            <div class="row">
+              	<div class="col-sm-12">
+	            <div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0384}" /></label>
+                <apex:inputTextarea styleClass="form-control" id="Suitability" value="{!reference.Participant_Suitability__c}"
+						required="TRUE" onkeyup="countChar(this, 510, 'SuitabilityCount')" onfocus="countChar(this, 510, 'SuitabilityCount')" />
+                    <div class="char-limit bb"> <span class="char-count-label">Characters left:</span><span id="SuitabilityCount" class="char-count">{!510-len(reference.Data_Verified_Description__c)}</span> </div>
+                    <apex:message for="Suitability" styleClass="custom-error-text" id="errormesnarrativeUS" />
+                </div>
+                </div>
+              	</div>
+              	</apex:outputPanel>
+              	</apex:pageBlock>                              
+                -->
+                <!-- 
+                <div class="row">
+              	<div class="col-sm-6">
+              	<div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0403}" /></label>
+                <apex:inputField onblur="CapitalizeName(event.target);" styleClass="form-control" value="{!reference.Name}" required="TRUE" id="name" />
+              	</div>
+              	</div>
+              	</div>
+				-->              	
+              	<!-- 
+                <div class="row">
+              	<div class="col-sm-12">
+              	<div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0407}" /></label>
+                <apex:selectRadio styleClass="radio" value="{!reference.Reference_Contact_Requested__c}" id="request" required="true" >
+                  <apex:selectOption itemValue="Yes" itemLabel="{!$Label.T_0327}"/>
+                  <apex:selectOption itemValue="No" itemLabel="{!$Label.T_0328}"/>
+                </apex:selectRadio>
+                <apex:message for="request" styleClass="custom-error-radio" id="errormessrequest"/>
+                </div>
+              	  </div>                
+                </div>
+                -->
+      	        
+              	
+              	
+	            <div class="row">
+	              <div class="col-sm-12 margin-t">
+	                <apex:commandlink styleClass="btn btn-primary btn-lg" action="{!submitForm}" id="nextpage" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+	                <apex:commandButton value="Submit Reference" id="continuebutton" />
+	                </apex:commandlink>
+	              </div><!--  end column -->
+              	</div><!--  end row -->
+	            
+	            </apex:outputpanel>
+	            
+	            
+	            <apex:outputpanel layout="block" rendered="{!ReferenceStatus == 'Active' && Status == 'Complete'}">	
+	               <div class="row">
+	              <div class="col-sm-12 center-text"> 
+	        	<h1><apex:outputText value="{!$Label.T_0414}" /></h1>
+	            <p class="lead"><apex:outputText value="{!$Label.T_0415}" /></p>
+	            	</div><!--  end column -->
+              	</div><!--  end row -->
+	            </apex:outputpanel>
+	            
+	            <apex:outputpanel layout="block" rendered="{!ReferenceStatus == 'Canceled'}">	
+	               <div class="row">
+	              <div class="col-sm-12 center-text"> 
+	        	<h1><apex:outputText value="{!$Label.T_0428}" /></h1>
+	            <p><label><apex:outputText value="{!$Label.T_0381}" />:</label> {!primaryApplicant.Name}.</p>
+	            	</div><!--  end column -->
+              	</div><!--  end row -->
+	            </apex:outputpanel>
+	            
+	            
+	        </apex:form>
+   		
+   		
+   		
+   		</div>
+        <!-- end column  -->
+        </div>
+      	<!-- end row --> 
+    
+    	
+    <script>
+    	
+    </script>
+    
+      	
+    </apex:define>
+  </apex:composition>
+</apex:page>

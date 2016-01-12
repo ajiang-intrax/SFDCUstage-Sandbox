@@ -1,0 +1,316 @@
+<apex:page id="IGI_HC_Positions" title="Position | Intrax" standardStylesheets="false" showHeader="false" controller="IGI_HC_Controller" action="{!checkLoginWithPositionSearch}">
+    
+        <apex:composition template="IntraxTemplate_Vs2">
+            <apex:define name="body">
+            <apex:form >
+                 <apex:pageblock >
+                <apex:pageBlockSection >
+                 <apex:pageBlockSectionItem >
+                  <h1>Positions</h1>
+                 </apex:pageBlockSectionItem>
+                 
+                 <apex:pageBlockSectionItem >
+                  <apex:outputText > <h4>Find details about your company’s current or past positions available for Intrax participants.</h4>
+                  </apex:outputText>
+                 </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+               </apex:pageblock>
+
+                <div class="row-fluid">
+                    
+                    <div class="span3">
+
+                        <div class="block filter-group">
+                            <div class="block-header">
+                                <h3>Search Filters</h3>
+                            </div>
+                            <div class="block-body">
+                                
+                                
+                               <div class="filter">
+                                <div class="filter-name">Position</div>
+                                <div class="filter-field">
+                                    <apex:selectList value="{!positionNameSelected}" multiselect="false" size="1"  >
+                                    <apex:selectOption itemValue="" itemLabel="--None--"/>
+                                    <apex:selectOptions value="{!positionsName}"/>
+                                    <apex:actionSupport event="onchange" rerender="AyusaFilters" status="waitMsg" onComplete="doSearch();return false;"/>
+                                    </apex:selectList>
+                                </div>  
+                              </div> 
+                              <div class="filter">
+                               <div class="filter-name">Program</div>
+                               <div class="filter-field">
+                                <apex:selectList value="{!IntProgramSelected}" multiselect="false" size="1"  >
+                               <apex:selectOption itemValue="" itemLabel="--None--"/>
+                               <apex:selectOptions value="{!MatchIntProgram}"/>
+                               <apex:actionSupport event="onchange" rerender="AyusaFilters" status="waitMsg" onComplete="doSearch();return false;"/>
+                               </apex:selectList>
+                                </div>  
+                            </div> 
+                            
+                            
+                            <div class="filter">
+                               <div class="filter-name">Position Status</div>
+                               <div class="filter-field">
+                                <apex:selectList value="{!PositionStatusSelected}" multiselect="false" size="1"  >
+                               <apex:selectOption itemValue="" itemLabel="--None--"/>
+                               <apex:selectOptions value="{!PositionStatusValue}"/>
+                               <apex:actionSupport event="onchange" rerender="AyusaFilters" status="waitMsg" onComplete="doSearch();return false;"/>
+                               </apex:selectList>
+                                </div>  
+                            </div> 
+                           <apex:outputPanel rendered="{!if(CONTAINS(ContactIP,'Work Travel'), true, false)}"> 
+                            <div class="filter">
+                               <div class="filter-name">Season</div>
+                               <div class="filter-field">
+                                <apex:selectList value="{!SeasonSelected}" multiselect="false" size="1"  >
+                               <apex:selectOption itemValue="" itemLabel="--None--"/>
+                               <apex:selectOptions value="{!MatchSeason}"/>
+                               <apex:actionSupport event="onchange" rerender="AyusaFilters" status="waitMsg" onComplete="doSearch();return false;"/>
+                               </apex:selectList>
+                                </div>  
+                            </div> 
+                           </apex:outputPanel> 
+                            <div class="filter">
+                               <div class="filter-name">Program Year</div>
+                               <div class="filter-field">
+                                <apex:selectList value="{!ProgramYearSelected}" multiselect="false" size="1"  >
+                               <apex:selectOption itemValue="" itemLabel="--None--"/>
+                               <apex:selectOptions value="{!MatchProgramYear}"/>
+                               <apex:actionSupport event="onchange" rerender="AyusaFilters" status="waitMsg" onComplete="doSearch();return false;"/>
+                               </apex:selectList>
+                                </div>  
+                            </div> 
+                            <div class="filter">
+                               <div class="filter-name">Location</div>
+                               <div class="filter-field">
+                                <apex:selectList value="{!AccountSelected}" multiselect="false" size="1"  >
+                               <apex:selectOption itemValue="" itemLabel="--None--"/>
+                               <apex:selectOptions value="{!MatchAccount}"/>
+                               <apex:actionSupport event="onchange" rerender="AyusaFilters" status="waitMsg" onComplete="doSearch();return false;"/>
+                               </apex:selectList>
+                                </div>  
+                            </div> 
+                                
+                            </div>
+                            
+                            
+                            
+                        </div>
+                        
+                    </div>
+                     
+                    <div class="span9">
+
+                           <apex:actionStatus id="waitMsg" startStyleClass="alert alert-info">
+                            <apex:facet name="start" >
+                                <i class="icon-spinner icon-spin"></i>  <strong>Please Wait.....</strong>
+                            </apex:facet>
+                        </apex:actionStatus>
+
+                        <apex:pageBlock id="pb">
+
+                            <apex:pageMessages id="validationMsg" />
+                            <apex:outputPanel rendered="{!IF(positionInfo.Size == 0, true, false)}"
+                                layout="block" styleClass="block">
+                                <div class="block-body">No record(s) to display.</div>
+                            </apex:outputPanel>
+
+                                
+                           <!-- <apex:actionFunction name="callAction" action="{!pageNavigationforCampaign}" status="waitMsg" reRender="pb, validationMsg"/> --> 
+                            <apex:actionFunction name="doSearch" action="{!doSearchPositionsForPageSize}" status="waitMsg" reRender="pb, validationMsg"/>
+                            
+                            
+                            <div id="app-list" class="list-view">
+
+                                
+                                <!-- <apex:repeat id="CampaignList" value="{!CampaignIds}" var="item"> -->
+                                    <div class="block">
+                                        
+                                        <div class="block-body">
+                                            
+                                           <!--  <p class="divider-bottom"><strong>Available Positions</strong>&nbsp;(<a data-toggle="collapse"  data-target=".{!item}">Expand All</a>)</p> -->
+                                           <!-- <p class="divider-bottom"><strong>Available Positions</strong>&nbsp;(<a data-toggle="collapse"  data-target=".">Expand All</a>)</p>  --> 
+                                            <div class="list-view">
+                                            <apex:repeat id="CampaignPositionList" value="{!positionInfo}" var="cpw">
+                                                <div class="row-fluid">
+                                                <div data-toggle="collapse"  data-target="#{!cpw.Code__c}" class="list-view-header collapsed span12">
+                                                <div class="title pull-left">
+                                                            
+                                                                <apex:outputField value="{!cpw.Host_Company_Id__c}" />
+                                                                <apex:outputText value=" - {!cpw.Title__c}"
+                                                                    rendered="{!IF(NOT(ISBLANK(cpw.Title__c)), true, false)}" />
+                                                            
+                                                            
+                                                </div>  <!--  end title -->
+                                                <div class="controls pull-right clearfix"> 
+                                                <div class="arrows margin-r">
+                                                <span class="arrow-up"><i class="icon-caret-up"></i></span>
+                                                <span class="arrow-down"><i class="icon-caret-down"></i></span>
+                                                </div>
+                                                </div>
+
+                                                </div> <!--  end controls -->
+                                                
+                                                <div class="span12 collapse" id="{!cpw.Code__c}" >
+                                                    
+                                              <apex:outputPanel rendered="{!IF( cpw.Intrax_Program__c =='Internship' ,true,false)}" >
+                                                    
+                                                    <div class="row-fluid">
+                                                    
+                                                    <div class="span4">
+                                                        <label>Position Code</label>
+                                                        <apex:outputField value="{!cpw.Code__c}" />
+                                                        <label>Program</label>
+                                                        <apex:outputField value="{!cpw.Intrax_Program__c}" />
+                                                        
+                                                        <label>Program Year</label>
+                                                        <apex:outputField value="{!cpw.Program_Year__c}" />
+                                                        
+                                                        <label>Category</label>
+                                                        <apex:outputField value="{!cpw.Intrax_Program_Category__c}" />
+                                                    </div>
+                                                    <div class="span4">
+                                                        <label>City</label>
+                                                        <apex:outputField value="{!cpw.City__c}" />
+
+                                                        <label>State</label>
+                                                        <apex:outputField value="{!cpw.State__c}" />
+                                                        
+                                                        <label>Compensation Type</label>
+                                                        <apex:outputField value="{!cpw.Compensation_Type__c}" />
+                                                        
+                                                        <label>Functional Areas</label>
+                                                        <apex:outputField value="{!cpw.Functional_Areas__c}" />
+                                                        
+                                                    </div>
+                                                    <div class="span4">
+                                                    <label>Desired Start Date</label>
+                                                        <apex:outputField value="{!cpw.Engagement_Start__c}" />
+
+                                                        <label>Desired End Date</label>
+                                                        <apex:outputField value="{!cpw.Engagement_End__c}" />
+                                                        
+                                                        <label>Primary Language</label>
+                                                        <apex:outputField value="{!cpw.Language_1__c}" />
+                                                        
+                                                        <label>Primary Language Proficiency</label>
+                                                        <apex:outputField value="{!cpw.Language_1_Proficiency__c}" />
+                                                    </div>
+                                                </div>  <!--  end row -->
+                                                                
+                                                            
+                                                </apex:outputPanel>         
+                                                
+                                                
+                                                
+                                                <apex:outputPanel rendered="{!IF( cpw.Intrax_Program__c =='Work Travel' ,true,false)}" >
+                                                
+                                                    <div class="row-fluid">
+                                                    
+                                                    <div class="span4">
+                                                        <label>Position Code</label>
+                                                        <apex:outputField value="{!cpw.Code__c}" />
+                                                        <label>Program</label>
+                                                        <apex:outputField value="{!cpw.Program_Year__c}" />
+                                                        <label>Season</label>
+                                                        <apex:outputField value="{!cpw.Season__c}" />
+                                                        <label>Program Year</label>
+                                                        <apex:outputField value="{!cpw.Program_Year__c}" />
+                                                    </div>
+                                                    <div class="span4">
+                                                        <label>City</label>
+                                                        <apex:outputField value="{!cpw.City__c}" />
+
+                                                        <label>State</label>
+                                                        <apex:outputField value="{!cpw.State__c}" />
+                                                        
+                                                        <label>Gender Preference</label>
+                                                        <apex:outputField value="{!cpw.Gender_Preference__c}" />
+
+                                                        <label>English Level</label>
+                                                        <apex:outputField value="{!cpw.Language_1_Proficiency__c}" />
+                                                    </div>
+                                                    <div class="span4">
+                                                    <label>Earliest Start Date</label>
+                                                        <apex:outputField value="{!cpw.Engagement_Start__c}" />
+
+                                                        <label>Latest Start Date</label>
+                                                        <apex:outputField value="{!cpw.Engagement_Latest_Start__c}" />
+                                                    
+                                                        <label>Earliest End Date</label>
+                                                        <apex:outputField value="{!cpw.Engagement_Earliest_End__c}" />
+
+                                                        <label>Latest End Date</label>
+                                                        <apex:outputField value="{!cpw.Engagement_End__c}" />
+                                                    </div>
+                                                </div>  <!--  end row -->
+                                                
+                                                
+                                                </apex:outputPanel>
+                                                
+                                                    <div class="row-fluid margin-b">
+                                                <apex:outputLink styleClass="btn" id="nameLink"
+                                                                value="/apex/C_position_details?pid={!cpw.ID}">
+                                                                Go to Position
+                                                            </apex:outputLink>
+                                                            </div> <!--  end row -->
+                                            
+                                                    
+                                            </div>       <!--  end span 12 -->
+
+            
+                                                </div>
+
+                                                
+
+                                            </apex:repeat>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <!-- </apex:repeat> -->
+                                
+                            </div>
+                            
+
+
+
+                        </apex:pageBlock>
+
+
+
+
+
+                    </div>
+                    <!-- end span9 -->
+                </div>
+                <!-- end row -->
+
+
+                <div class="row">
+                    <div class="span12"></div>
+                    <!-- end span12 -->
+                </div>
+                <!-- end row -->
+                <script>
+
+            function runScript(obj){
+                
+                //alert(obj.keyCode);
+                if(obj.keyCode == 13){
+                    callAction();   // call action function
+                    return false;
+                }else if((obj.keyCode > 34 && obj.keyCode < 40) || (obj.keyCode > 95 && obj.keyCode < 106) || (obj.keyCode > 47 && obj.keyCode < 58) || obj.keyCode == 8 || obj.keyCode == 46 ){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        </script>
+
+    </apex:form>
+            </apex:define>
+        </apex:composition>
+
+        
+</apex:page>

@@ -1,0 +1,65 @@
+<apex:page id="Participant_Preapp_Essay_Details" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper">
+          <!-- <apex:messages /> -->
+          <apex:form >
+          <div class="page-header clearfix">
+            <h1>  
+              <apex:outputText value="Intrax Global Internship Application" rendered="{! IF(applicantInfo.Intrax_Program__c == 'Internship', true, false)}"/>
+              <apex:outputText value="Work and Travel Application" rendered="{! IF(applicantInfo.Intrax_Program__c == 'Work Travel' , true, false)}"/>
+              <!--  <apex:outputText value=" - {!personInfo.First_Name__c} {!personInfo.Last_Name__c}" rendered="{!IsPartner}" />-->
+             </h1>
+            <div class="back-to-main"><apex:outputLink value="/apex/Participant_Preapp_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+            </div>
+          <h2>New Essay</h2>
+          <div class="white-box clearfix">
+          <div class="panel two_thirds"> 
+            
+             <apex:messages StyleClass="custom-error-essays" />
+                            
+            <div class="form-row">
+                <p> 
+                    <apex:outputText value="{!EssayInfo.Label__c}" /><span class="required">*</span>  
+                </p>
+                <div class="form-field essay">
+           
+                  <!-- <apex:inputTextArea value="{!EssayNarrative}" required="TRUE" id="Narrative"/> -->
+                  
+                 <apex:inputTextarea id="Narrative" value="{!EssayNarrative}" required="TRUE" onkeyup="countChar(this, 5000, 'NarrativeCount')"/> 
+                  </div>
+                  <div class="char-limit"><span class="char-count-label">Characters left:</span>
+            <span id="NarrativeCount" class="char-count">
+                  {!5000-len(EssayNarrative) }
+                  </span>
+                  </div>
+            </div>
+            <div class="form-row">
+                
+                <div class="form-link">
+                    <apex:outputLink styleClass="back" value="/apex/Participant_Preapp_Essays?id={!applicantInfo.Id}">
+                    <i class="icon-chevron-left"></i>
+                    <span>Back</span>
+                    </apex:outputLink>
+                </div>
+                
+                <div class="form-button">
+                
+                <apex:commandLink styleClass="save" action="{!navigator}">
+                  <apex:param name="nextPage" value="/apex/Participant_Preapp_essays" />
+                  <apex:param name="reDirectPage" value="true"/>
+                  <apex:param name="essayType" value="Student" assignTo="{!EssayType}"/>
+                  <apex:commandButton value="Save & Return" /> 
+                </apex:commandLink>
+                
+        
+              </div>
+            </div> 
+                </div>
+                </div>
+     
+       </apex:form>
+          </div>
+    </apex:define>
+    </apex:composition>
+    </apex:page>

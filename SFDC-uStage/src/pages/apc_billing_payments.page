@@ -1,0 +1,282 @@
+<apex:page docType="html-5.0" id="apc_billing_payments"
+           controller="MyProfilePageController" standardStylesheets="false"
+           showHeader="false" title="APC Billing and Payments" action="{!apcBillingPayments.getCCDetails}">
+    <apex:composition template="intraxtemplate_vs3">
+        <apex:define name="body">
+            <style>
+                .payrow label{width:200px; margin-bottom:5px;}
+            </style>
+            <div class="row">
+                
+                <div class="col-md-9 col-md-push-3 form-vertical">
+                    <apex:pageBlock id="viewUserDetail">
+                        
+                        <h1 class="margin-b4">Billing and Payments</h1>
+                        
+                        <apex:outputPanel layout="block" rendered="False">
+                            
+                            <p class="alert alert-danger"> <b class="sm">Looks like your credit card on file is no longer valid. 
+                                Please update your credit card information as soon as possible.
+                                </b></p>
+                            
+                        </apex:outputPanel> 
+                        
+                        <apex:form styleClass="form-horizontal ws-validate">
+                            
+                            <apex:outputPanel styleClass="margin-t4" layout="block" rendered="True" id="cconfile">   
+                                <div class="panel panel-default">
+                                    
+                                    <div class="panel-heading">
+                                        Your Credit Card on File
+                                    </div>
+                                    <apex:outputPanel rendered="{!apcBillingPayments.subscriptionsRecord.size != 0}">
+                                        <div class="panel-body">
+                                            <apex:Messages />
+                                            <div class="payment-conf">      
+                                                <div class="payrow">
+                                                    <label>Credit Card Number</label>
+                                                    <apex:outputText value="{!apcBillingPayments.PaySubsWrapper.maskedCCNumber}" id="maskCCout" />
+                                                </div>
+                                                <div class="payrow">
+                                                    <label><apex:outputText value="Type of Card" /></label>
+                                                    <apex:outputText id="typCardout" value="{!apcBillingPayments.PaySubsWrapper.cardType}" />
+                                                </div>
+                                                <div class="payrow">
+                                                    <label><apex:outputText value="Expire Date" /></label>
+                                                    <apex:outputText id="detailemail" value="{!apcBillingPayments.PaySubsWrapper.cardExpirationMonth}  / {!apcBillingPayments.PaySubsWrapper.cardExpirationYear}" />
+                                                </div>  
+                                                <div class="payrow">
+                                                    <label><apex:outputText value="Name on Card" /></label>
+                                                    <apex:outputText id="CardName" value="{!apcBillingPayments.PaySubsWrapper.firstName} {!apcBillingPayments.PaySubsWrapper.lastName}" />
+                                                </div>      
+                                                <div class="payrow">
+                                                    <label><apex:outputText value="Billing Address" /></label>
+                                                    <apex:outputText id="AddLine1" value="{!apcBillingPayments.applicantInfo.Account__r.BillingStreet}" />
+                                                </div>  
+                                                <!-- <div class="payrow">
+<label><apex:outputText value="Address Line 2" /></label>
+<apex:outputText id="AddLine2" value="-" />
+</div> -->
+                                                <div class="payrow">
+                                                    <label><apex:outputText value="City" /></label>
+                                                    <apex:outputText id="city" value="{!apcBillingPayments.applicantInfo.Account__r.BillingCity}" />
+                                                </div>
+                                                <div class="payrow">
+                                                    <label><apex:outputText value="State" /></label>
+                                                    <apex:outputText id="state" value="{!apcBillingPayments.applicantInfo.Account__r.BillingState}" />
+                                                </div>
+                                                <div class="payrow">
+                                                    <label><apex:outputText value="Country" /></label>
+                                                    <apex:outputText id="country" value="{!apcBillingPayments.applicantInfo.Account__r.BillingCountry}"/>
+                                                </div>
+                                                <div class="payrow">
+                                                    <label><apex:outputText value="Postal Code" /></label>
+                                                    <apex:outputText id="poscode" value="{!apcBillingPayments.applicantInfo.Account__r.BillingPostalCode}" />
+                                                </div>
+                                                
+                                                <div class="payrow">
+                                                    <apex:outputLink styleClass="margin-t2 btn btn-lg btn-default" value="/apex/apc_cc_update">
+                                                        Update Credit Card
+                                                    </apex:outputLink>
+                                                </div>
+                                            </div> 
+                                        </div>
+                                    </apex:outputPanel>
+                                    
+                                    <apex:outputPanel id="noscreditCard" rendered="{!apcBillingPayments.subscriptionsRecord.size == 0}"> 
+                                        <div class="box gray center-text">You currently have no credit card on file.</div>
+                                        <div class="panel-body">
+                                            <apex:outputLink styleClass="margin-t2 btn btn-lg btn-default" value="/apex/apc_cc_update">
+                                                Add Credit Card
+                                            </apex:outputLink>
+                                        </div>
+                                    </apex:outputPanel>
+                                    
+                                </div>
+                            </apex:outputPanel>
+                            
+                            <apex:outputPanel styleClass="margin-t4" layout="block" rendered="True" id="payments_credit">
+                                
+                                <div class="panel panel-default">
+                                    
+                                    <div class="panel-heading">
+                                        Your Payments
+                                    </div>
+                                    <div class="panel-body">
+                                        
+                                        <apex:outputPanel id="ServiceCredit" layout="block" rendered="{!apcBillingPayments.hasServiceCredit==true}">
+                                            
+                                            <p class="alert alert-info">  <b class="sm">You have childcare credit in the amount of 
+                                                <b class="sm">$<apex:outputText value=" {0, number, #,##0.00}">
+                                                    <apex:param value="{!apcBillingPayments.totalServiceCredit}"/> 
+                                                    </apex:outputText></b>.This credit will apply 
+                                                towards your next payment(s).
+                                                </b>
+                                            </p>
+                                            
+                                        </apex:outputPanel>
+                                        <apex:outputPanel layout="block" rendered="true" id="duepayments">
+                                            
+                                            
+                                            <div class="margin-b2"><label>Due or Upcoming Payments</label></div>
+                                            <apex:outputPanel layout="block" id="scheduledPayments" rendered="{!apcBillingPayments.hasScheduledPayments == true}">
+                                                
+                                                
+                                                <div class="table-responsive">
+                                                <table class="table vs3">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Invoice Id</th>
+                                                            <th>Amount Due</th>
+                                                            <th>Status</th>
+                                                            <th>Due Date</th>
+                                                            
+                                                            <th>Amount Owed</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <apex:repeat var="item1" value="{!apcBillingPayments.scheduledPayments}">
+                                                            <tr>
+                                                                <td>
+                                                                    <apex:outputLink styleClass="blue" value="/apex/apc_view_sales_invoice" target="_blank">
+                                                                        <apex:outputText value="{!item1.Document_Number__c}" id="documentId" />
+                                                                        <apex:param name="documentNumber" value="{!item1.Document_Number__c}"/>
+                                                                        <apex:param name="documentType" value="{!item1.Document_Type__c}"/>
+                                                                        <apex:param name="parentEntity" value="{!item1.Parent_Entity__r.name}"/>
+                                                                        <apex:param name="intacctEntity" value="{!item1.Intacct_Entity__r.name}"/>
+                                                                    </apex:outputLink>
+                                                                </td>
+                                                                                                                    
+                                                                <td>
+                                                                    <apex:outputText value=" {0, number, #,##0.00}">
+                                                                        <apex:param value="{!item1.Amount_Due__c}"/>
+                                                                    </apex:outputText>
+                                                                </td>
+                                                                
+                                                                <td>
+                                                                    <apex:outputText value="{!item1.Payment_Status__c}"/>
+                                                                </td>
+                                                                <td>
+                                                                    <apex:outputText value=" {0,date,MMM dd, yyyy}">
+                                                                        <apex:param value="{!item1.Ship_Date__c}"/>
+                                                                    </apex:outputText>
+                                                                </td>
+                                                                
+                                                                <td>
+                                                                    <apex:outputText value=" {0, number, #,##0.00}">
+                                                                        <apex:param value="{!item1.Total__c}"/>
+                                                                    </apex:outputText>
+                                                                </td>
+                                                            </tr>
+                                                        </apex:repeat>
+                                                    </tbody>
+                                                </table>
+                                                </div>
+                                                
+                                            </apex:outputPanel>
+                                            
+                                            
+                                            
+                                            <apex:outputPanel id="noscheduledPayments" rendered="{!apcBillingPayments.hasScheduledPayments == false}"> 
+                                                <div class="box gray center-text">You currently have no scheduled payments.</div>
+                                            </apex:outputPanel>
+                                            
+                                        </apex:outputPanel> 
+                                        
+                                        
+                                        <apex:outputPanel layout="block" rendered="True" id="pastpayments">
+                                            
+                                            <div class="margin-b2 margin-t4"><label>Past Payments</label></div>
+                                            <apex:outputPanel id="pastpaymentsList" rendered="{!apcBillingPayments.hasPastPayments == true}">
+                                               <div class="table-responsive">
+                                                <table class="table vs3">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Invoice Id</th>
+                                                            <th>Amount Due</th>
+                                                            <th>Status</th>
+                                                            <th>Date Paid</th>
+                                                            <th>Amount Owed</th>
+                                                            
+                                                            
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <apex:repeat var="item1" value="{!apcBillingPayments.pastPaymentsWithoutMatchBreakSC}">
+                                                            <tr>
+                                                                <td>
+                                                                    <apex:outputLink styleClass="blue" value="/apex/apc_view_sales_invoice" target="_blank">
+                                                                        <apex:outputText value="{!item1.Document_Number__c}" id="documentId" />
+                                                                        <apex:param name="documentNumber" value="{!item1.Document_Number__c}"/>
+                                                                        <apex:param name="documentType" value="{!item1.Document_Type__c}"/>
+                                                                        <apex:param name="parentEntity" value="{!item1.Parent_Entity__r.name}"/>
+                                                                        <apex:param name="intacctEntity" value="{!item1.Intacct_Entity__r.name}"/>
+                                                                    </apex:outputLink>
+                                                                </td>
+                                                                
+                                                                <td>
+                                                                    <apex:outputText value=" {0, number, #,##0.00}">
+                                                                        <apex:param value="{!item1.Amount_Due__c}"/>
+                                                                    </apex:outputText>
+                                                                </td>
+                                                                
+                                                                <td>
+                                                                    <apex:outputText value="{!item1.Payment_Status__c}"/>
+                                                                </td>
+                                                                <td>
+                                                                    <apex:variable var="cnt" value="{!0}" /> 
+                                                                    <apex:repeat value="{!item1.Sales_Invoice_Payment_Details__r}"  var="PaymentDetails">
+                                                                        <apex:outputText value=" {0,date,MMM dd, yyyy}">
+                                                                            <apex:param value="{!PaymentDetails.Posting_Date__c}"/>
+                                                                        </apex:outputText>
+                                                                        <apex:variable var="cnt" value="{!cnt+1}"/>
+                                                                    </apex:repeat>
+                                                                    <!--<apex:outputText value=" {0,date,MMM dd, yyyy}">
+                                                                    <apex:param value="{!item1.Posting_Date__c}"/>
+                                                                    </apex:outputText>-->
+                                                                </td>
+                                                                <td>
+                                                                    <apex:outputText value=" {0, number, #,##0.00}">
+                                                                        <apex:param value="{!item1.Total__c}"/>
+                                                                    </apex:outputText>
+                                                                </td>
+                                                             
+                                                              
+                                                            </tr>
+                                                        </apex:repeat>
+                                                    </tbody>
+                                                </table>
+                                                </div>
+                                                
+                                            </apex:outputPanel>
+                                            
+                                            <apex:outputPanel layout="block" id="nopastpayments" rendered="{!apcBillingPayments.hasPastPayments == false}">
+                                                <div class="box gray center-text">You currently have no past payments.</div>
+                                            </apex:outputPanel>
+                                            
+                                        </apex:outputPanel> 
+                                        
+                                    </div>
+                                    
+                                </div>
+                                
+                                
+                            </apex:outputPanel> 
+                            
+                        </apex:form>
+                        
+                    </apex:pageBlock>
+                </div>
+<!--  end column -->
+
+ <div class="col-md-3 col-md-pull-9">
+    <c:menu_side_account_settings />
+</div>
+<!--  end column -->
+
+</div>
+<!--  end row -->
+
+</apex:define>
+</apex:composition>
+</apex:page>

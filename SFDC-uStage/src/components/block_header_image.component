@@ -1,0 +1,25 @@
+<apex:component layout="none">
+<apex:attribute name="userAgentCheck" description="Checking for user agent to detect mobile devices etc." type="string" required="false" default="" /> 
+<apex:attribute name="uInParameter" description="manage the background" type="String" required="false" default=""/>
+<apex:attribute name="UserInterests" description="Another way to manage the background" type="String" required="false" default=""/>
+<apex:outputText rendered="{!NOT(userAgentCheck=='mobile')}">
+<style>
+#header-zone {
+<apex:outputText rendered="{!uInParameter == 'APCPT'}">  
+background: url("{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/apc/headers/bg-apc-vs2.jpg')}") no-repeat scroll 50% 0 transparent; 
+height: 200px;
+</apex:outputText>
+<apex:outputText rendered="{!uInParameter == 'APCHF'}">  
+background: url("{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/apc/headers/bg-apc-vs1.jpg')}") no-repeat scroll 50% 0 transparent; 
+height: 200px;
+</apex:outputText>
+<apex:outputText rendered="{!UserInterests == 'Finding an internship'}">  
+background: url("{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/gi/headers/narrow-6.jpg')}") no-repeat scroll 50% 0 transparent; 
+height: 200px;
+</apex:outputText>
+}
+</style> 
+</apex:outputText>
+
+
+</apex:component>

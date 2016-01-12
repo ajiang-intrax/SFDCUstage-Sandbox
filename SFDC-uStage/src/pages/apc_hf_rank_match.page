@@ -1,0 +1,426 @@
+<!-- 
+    Purpose         :   Ranking Match.
+                
+    Created Date    :   06/06/2012
+    
+    Current Version :   v1.0
+    
+    Revision Log    :   V_1.1 Created
+ -->
+<apex:page standardController="Position__c" extensions="RankingController" title="{!Position__c.Name}" showHeader="true" SideBar="false">
+<apex:stylesheet value="{!URLFOR($Resource.module_sortableTable, 'sortableTable.css')}"/>
+<apex:includeScript value="{!URLFOR($Resource.module_sortableTable, 'sortableTable.js')}"/>
+
+<style>
+.ix-margin-b2{margin-bottom:20px !important;}
+.ix-padding-05{padding:5px !important; }
+.ix-btn-large{padding: 12px;
+    font-size: 14px;
+    background: #fff;
+    cursor: pointer;}
+
+.ix-input-large{
+    padding: 14px !important;
+    background: #fff !important;
+    border: 1px solid #b5b5b5 !important;
+    border-radius: 3px !important;
+    font-weight: bold !important;
+    font-size:14px !important;
+}
+
+.ix-table{}
+
+.ix-table .ix-table-cell{
+padding: 10px;
+vertical-align: top;
+box-sizing: border-box;}
+    
+.ix-table .ix-table-cell .ix-label{
+color:#202020;
+text-align: left;
+font-weight: bold;
+white-space: nowrap;
+display:block;
+margin-bottom:5px;
+}
+
+.ix-table .ix-table-cell .ix-form-field{ 
+width: 100%;
+padding: 5px;}
+
+</style>
+
+
+<div class="wrapper">
+<script>   
+    function showDrivingAbility (it, box) {
+      var vis = (box.checked) ? "block" : "none";
+      document.getElementById(it).style.display = vis;
+    }
+
+    function renderMe(){
+        forEach(document.getElementsByTagName('table'), function(table) {
+          if (table.className.search(/\bsortable\b/) != -1) {
+            sorttable.makeSortable(table);
+          }
+        });     
+    } 
+    
+    //This javascript method is to select/unselect all the check boxes if header lel check box is selected.
+    function checkAll(selectAll) {
+        
+        var inputElem = document.getElementsByTagName("input");
+        for(var i=0; i<inputElem.length; i++) {
+                if(inputElem[i].id.indexOf("selectedRecords")!=-1)
+                    inputElem[i].checked = selectAll.checked;
+        }
+    }
+  
+    var prevOptionValue='';
+    function FnAlertNone(selOption)
+    {
+  
+     if (selOption.value=='Business Internship')
+      {
+      alert('You cannot choose any other Citizenship now!!!');
+      }
+     
+    }
+
+    
+    //validate next button
+    function validateBeforeSave() {
+        var inputElem = document.getElementsByTagName("input");
+        for(var i=0; i<inputElem.length; i++) {
+            if(inputElem[i].id.indexOf("selectedRecords")!=-1 && inputElem[i].checked) {
+                matchSelected();
+                return false;
+            }
+        }
+        matchSelected();  
+        //show error message
+        //alert('Please select at least one record.');
+        return false;
+    }
+    window.onload = setFocus
+function setFocus() {
+        document.getElementById("{!$Component.Preparedness}").focus();
+}
+
+function showSimpleDialog(text){    
+   var sd = new SimpleDialog("Test"+Dialogs.getNextId(), false);    
+   sd.setTitle("Match Notes");   
+   sd.createDialog();   
+   window.parent.sd = sd;   
+   sd.setContentInnerHTML("<p align='justify'>" + text + "</p><p align='center'><br /><button class='btn' onclick='window.parent.sd.hide(); return false;'>Close</button></p>");    
+   sd.show();   
+ } 
+ 
+</script>
+    <!-- Form -->
+     
+    <apex:form >
+        
+        <!-- Action Function -->
+        <apex:actionFunction name="matchSelected" action="{!save}" status="loadingMsg" />
+        
+        <apex:pageBlock >
+            <apex:pageMessages id="validationMsg" />
+            <apex:commandLink action="{!cancel}" value="Back to previous page" />
+           
+           <p>&nbsp;</p>
+           
+           <apex:outputPanel id="fullBlock" rendered="{!PositionNotClosed}">
+       
+           <div class="pbSubheader tertiaryPalette"><h3>Information About the Family</h3></div>
+            
+            <table class="list" width="100%" border="0" cellpadding="0" cellspacing="0">
+                <thead>
+                <tr class="headerRow">
+                    <th class="headerRow"> Family </th>    
+                    <th class="headerRow"> No. of Children </th> 
+                    <th class="headerRow"> No. of Children U2 </th> 
+                    <th class="headerRow"> Special Needs Indicated </th>                 
+                    <th class="headerRow"> Pets </th>                    
+                    <th class="headerRow"> Nationality Preferences </th> 
+                    <th class="headerRow"> Language Preferences </th> 
+                    <th class="headerRow"> Required Languages </th> 
+                    <th class="headerRow"> Previous Au Pairs </th>                  
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td> <apex:outputField value="{!Position__c.Host_Company_Id__c}" /> </td> 
+                    <td> <apex:outputText value="{!ChildrenTotal}" /> </td> 
+                    <td> <apex:outputText value="{!ChildrenU2}" /> </td> 
+                    <td> <apex:outputText value="{!IF(hasSpecialNeeds, 'Yes', 'No')}" /> </td>
+                    <td> <apex:outputField value="{!Position__c.Pet_Types__c}"/> </td>            
+                    <td> <apex:outputField value="{!Position__c.Nationality_Preferences__c}" /> </td>
+                    <td> <apex:outputField value="{!Position__c.Language_Preferences__c}" /> </td>
+                    <td> <apex:outputField value="{!Position__c.Languages_Required__c}" /> </td>
+                    <td> 
+                        <apex:repeat value="{!previousMatches}" var="item">
+                            <apex:outputField value="{!item.Engagement__r.Name}"/> <br/>
+                        </apex:repeat> 
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+  
+            
+            <p>&nbsp;</p>
+            
+             <div class="pbSubheader tertiaryPalette"><h3>Available Filters</h3></div>          
+             
+             
+        
+             <table  width="100%" class="ix-table ix-margin-b2">
+                <tr>
+                <td class="ix-table-cell">
+                   <apex:outputLabel styleClass="ix-label" value="Name" for="nameFilter" /> 
+                   <apex:inputText styleClass="ix-form-field" value="{!ptName}" id="nameFilter"/>
+                </td>
+                
+                <!-- 
+                   <apex:outputLabel styleClass="ix-label" value="Last Name" for="lnFilter" /> 
+                   <apex:inputText value="{!lastName}" id="lnFilter"/>
+                -->
+                
+              <td class="ix-table-cell">
+                   <apex:outputLabel styleClass="ix-label" value="Native Speakers" for="nativeFilter" /> 
+                      <apex:inputCheckBox value="{!nativeIndicated}" id="nativeFilter" />                    
+               </td>
+                
+                <td class="ix-table-cell">
+                   <apex:outputLabel styleClass="ix-label" value="Gender" for="genderFilter" /> 
+                      <apex:selectList styleClass="ix-form-field" value="{!selectGenderPref}" size="1" multiselect="false" id="genderFilter" >
+                             <apex:selectOptions value="{!GenderPref}"  /> 
+                     </apex:selectList> 
+                </td>
+                
+                <td class="ix-table-cell">
+                   <apex:outputLabel styleClass="ix-label" value="Preferred Arrival" for="EngStartFilter" /> 
+                   <!--<apex:inputField styleClass="ix-padding-05" value="{!DummyObj.Engagement_Start__c}" id="EngStartFilter"/>--> 
+                   <apex:selectList styleClass="ix-form-field" value="{!ArrivalSelected}" size="1" multiselect="false" id="EngStartFilter">
+                        <apex:selectOption itemValue="" itemLabel="--Any--"/>
+                        <apex:selectOptions value="{!ArrivalDates}" />
+                    </apex:selectList>             
+                </td>
+                              
+                <td class="ix-table-cell">
+                    <apex:outputLabel styleClass="ix-label" value="Minimum Age" for="ageFilter"/>
+                    <apex:selectList styleClass="ix-form-field" value="{!selectAgeRange}" size="1" multiselect="false" id="ageFilter">
+                        <apex:selectOptions value="{!apc_ageOptions}" />
+                    </apex:selectList>
+                </td>
+                
+               <td class="ix-table-cell">
+                    <apex:outputLabel styleClass="ix-label" value="Driving Frequency" for="driversFrequencyFilter"/> 
+                    <apex:selectList styleClass="ix-form-field" value="{!drivingFrequencyIndicated}" size="1" multiselect="false" id="driversFrequencyFilter">
+                        <apex:selectOptions value="{!drivingFrequencyOptions}"/>
+                    </apex:selectList>                  
+               </td>
+                
+               <td class="ix-table-cell"> 
+                    <apex:outputLabel styleClass="ix-label" value="Driving Snow Experience" for="driversSnowFilter"/>
+                    <apex:selectList styleClass="ix-form-field" value="{!drivingSnowIndicated}" size="1" multiselect="false" id="driversSnowFilter">
+                        <apex:selectOptions value="{!drivingSnowOptions}"/>
+                    </apex:selectList>             
+               </td>
+               </tr>  
+           
+                <tr>
+                    
+                    <td class="ix-table-cell">
+                   <apex:outputLabel styleClass="ix-label" value="Nationality" for="nationalityFilter"/>
+                      <apex:selectList styleClass="ix-form-field" value="{!selectNationality}"  size="13" multiselect="true" id="nationalityFilter">
+                             <apex:selectOptions value="{!apc_nationality}"  /> 
+                     </apex:selectList> 
+                </td>
+                
+                <td class="ix-table-cell">
+                     <apex:outputLabel styleClass="ix-label" value="Languages Spoken" for="LanguageFilter" />  
+                     <apex:selectList styleClass="ix-form-field" value="{!selectLangs}" size="13" multiselect="true" id="LanguageFilter">
+                        <apex:selectOptions value="{!apc_languages}" />                           
+                     </apex:selectList>    
+                </td>   
+                
+                <td class="ix-table-cell">
+                    <apex:outputLabel styleClass="ix-label" value="Special Diet" for="specialDietFilter"/>
+                    <apex:selectList styleClass="ix-form-field" value="{!specialDietSelected}" size="13" multiselect="true" id="specialDietFilter">
+                        <apex:selectOptions value="{!apc_specialDiet}" />
+                    </apex:selectList>
+                 </td>
+                  
+               <td class="ix-table-cell">   
+                    <apex:outputLabel styleClass="ix-label" value="Children Comfortable Ages" for="childrenAges"/>
+                    <apex:selectList styleClass="ix-form-field" value="{!ChildrenAgesSelected}" size="13" multiselect="true" id="childrenAgesFilter">
+                        <apex:selectOptions value="{!ChildrenAgesOptions}" />
+                    </apex:selectList>                  
+               </td>    
+                 
+                <td class="ix-table-cell">  
+                       <apex:outputLabel styleClass="ix-label" value="Experience with Ages" for="experienceAgesFilter"/> 
+                       <apex:selectList styleClass="ix-form-field" value="{!experienceAgesSelected}" multiselect="true" size="13" id="experienceAgesFilter">
+                            <apex:selectOptions value="{!ExperienceAgesOptions}"/>
+                       </apex:selectList>                  
+                </td>  
+                   
+               <td class="ix-table-cell">   
+                   <apex:outputLabel styleClass="ix-label" value="Experience Type" for="experienceTypeFilter"/> 
+                   <apex:selectList styleClass="ix-form-field" value="{!experienceTypeSelected}" multiselect="true" size="13" id="experienceTypeFilter">
+                        <apex:selectOptions value="{!ExperienceTypeOptions}"/>
+                   </apex:selectList>                  
+                </td>
+                
+                 <td class="ix-table-cell">
+                <apex:outputLabel styleClass="ix-label" value="Hobbies and Interests" for="hobbiesFilter"/> 
+                <apex:selectList styleClass="ix-form-field" value="{!hobbiesSelected}" size="13" multiselect="true" id="hobbiesFilter">
+                    <apex:selectOptions value="{!hobbiesOptions}" />
+                </apex:selectList>
+            </td> 
+                
+                </tr>
+               
+            <tr>
+
+            <td class="ix-table-cell"> 
+                <apex:outputLabel styleClass="ix-label" value="Special Needs" for="specialNeedsFilter"/> 
+                <apex:selectList styleClass="ix-form-field" value="{!specialNeedsIndicated}" size="1" multiselect="false" id="specialNeedsFilter">
+                    <apex:selectOptions value="{!specialNeedsOptions}" />
+                </apex:selectList>
+            </td>  
+              
+            <td class="ix-table-cell">  
+                <apex:outputLabel styleClass="ix-label" value="Religion" for="religionFilter"/> 
+                <apex:selectList styleClass="ix-form-field" value="{!religionIndicated}" size="1" multiselect="false" id="religionFilter">
+                    <apex:selectOptions value="{!eng_religionOptions}" />
+                </apex:selectList>
+           </td>   
+              
+             <td class="ix-table-cell">
+                <apex:outputLabel styleClass="ix-label" value="Religious Activity" for="religiousActivityFilter"/> 
+                <apex:selectList styleClass="ix-form-field" value="{!religiousActivityIndicated}" size="1" multiselect="false" id="religiousActivityFilter">
+                    <apex:selectOptions value="{!religiousActivityOptions}" />
+                </apex:selectList>
+           </td>   
+                
+            <td class="ix-table-cell">
+                    <apex:outputLabel styleClass="ix-label" value="Swimmers Only" for="swimmersFilter"/>
+                    <apex:inputCheckBox value="{!swimmersSelected}" id="swimmersFilter"/> 
+            </td>
+                
+            <!--<td class="ix-table-cell">  
+                   <apex:outputLabel styleClass="ix-label" value="Comfortable with Special Needs" for="confSpecialNeedsFilter" />
+                   <apex:inputCheckBox value="{!confSpecialNeedsSelected}" id="confSpecialNeedsFilter"/>              
+           </td>       -->           
+              
+           <td class="ix-table-cell">   
+                   <apex:outputLabel styleClass="ix-label" value="In-Country Au Pair" for="inCountryFilter" />
+                   <apex:inputCheckBox value="{!inCountrySelected}" id="inCountryFilter" onclick="showDrivingAbility('drivingAbility', this)"/>                    
+            </td>   
+                
+           <td class="ix-table-cell">     
+                   <apex:outputLabel styleClass="ix-label" value="Infant Specialized" for="infantSpecializedFilter" />
+                   <apex:inputCheckBox value="{!infantSpecializedSelected}" id="infantSpecializedFilter"/>                 
+           </td>
+    
+                <td class="ix-table-cell"> 
+                    <div id="drivingAbility" style="display:none">
+                        <apex:outputLabel styleClass="ix-label" value="Driving Ability" for="drivingAbilityFilter"/> 
+                        <apex:selectList styleClass="ix-form-field" value="{!drivingAbilityFilterIndicated}" size="1" multiselect="false" id="drivingAbilityFilter">
+                            <apex:selectOptions value="{!drivingAbilityFilterOptions}" />
+                        </apex:selectList>
+                     </div>
+                </td>
+            </tr>
+           </table> 
+        
+     
+     
+      
+                          
+          <apex:commandButton value="Apply Search Filters" styleClass="ix-input-large" action="{!initAPC}" reRender="pbs, validationMsg" status="loadingMsg" oncomplete="renderMe();" />
+          
+          <p>&nbsp;</p>
+            
+            <apex:pageBlockSection columns="1" title="Au Pair Results" collapsible="false" id="pbs">
+                <apex:actionStatus startText="Please Wait....." startStyle="font-weight: bold;color: green;" id="loadingMsg"/>
+                
+                 <apex:outputPanel layout="block" rendered="{!IF(totalResults > 0,true,false)}" >
+                 <B>Record(s) {!resultsStartNumber}-{!resultsStopNumber} of {!totalResults}</B>
+                 
+                 </apex:outputPanel>
+                
+                <apex:pageBlockTable id="resultTable" styleClass="list sortable" value="{!PossibleMatchesList}" var="item" rendered="{!IF(PossibleMatchesList.Size > 0, true, false)}">
+                    <apex:column >
+                        <apex:facet name="header">
+                            <input type="checkbox" id="headerCheck" onclick="checkAll(this);" />
+                        </apex:facet>
+                        <apex:inputCheckBox value="{!item.selected}" id="selectedRecords"/>
+                    </apex:column>
+                    <!-- 
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:commandLink action="{!sortResults}" value="Rank{!IF(sortDir='ASC','▲','▼')}" reRender="pbs, validationMsg" status="loadingMsg" />
+                        </apex:facet>
+                        <apex:outputText value="{!item.ranking}" />                       
+                    </apex:column>
+                    -->
+                   <apex:column title="Name" headerValue="Name"> 
+                   <apex:outputLink target="_blank" value="{!URLFOR($Action.Engagement__c.View,item.engagement.Id)}">
+                   {!item.engagement.Account_Id__r.Name}
+                   </apex:outputLink>
+                    
+                   </apex:column>
+                   <apex:column headerValue="HF Interviewing" value="{!interviews_by_pt[item.engagement.Id]}"/>
+                   <apex:column headerValue="First Available Date" value="{!item.engagement.Earliest_Match_Date__c}"/>
+                   <apex:column value="{!item.engagement.Nationality__c}" />
+                   <apex:column headerValue="Age" value="{!item.engagement.Account_Id__r.Age__pc}" />
+                   <apex:column value="{!item.engagement.Gender__c}" />
+                   <apex:column headerValue="IC" value="{!item.engagement.In_Country__c}"/>       
+                   <apex:column headerValue="SN" value="{!item.engagement.Special_Needs_Circulated__c}"/>
+                   <apex:column headerValue="IS" value="{!item.engagement.Infant_Specialized_Circulated__c}"/>  
+                   <apex:column headerValue="U2" value="{!item.engagement.Under_2_Circulated__c }"/>
+                   <apex:column value="{!item.engagement.Childcare_Total_Hours__c}"/>
+                   <apex:variable value="{!IF(item.engagement.Drivers_Licence_Acquired__c != null, IF(today() > item.engagement.Drivers_Licence_Acquired__c,year(today())-year(item.engagement.Drivers_Licence_Acquired__c),0), 0)}" var="years_driving"/>
+                   <apex:column headerValue="Years Driving" value="{!years_driving}" />
+                   <apex:column headerValue="Driving Frequency" value="{!item.engagement.Driving_Frequency__c}"/>
+                   <apex:column headerValue="Matching Notes">
+                        <apex:outputPanel rendered="{!item.engagement.Match_Notes__c != ''}" >
+                            <a onclick="showSimpleDialog('{!item.engagement.Match_Notes__c}');" style="text-decoration: underline;cursor: pointer;">See Notes</a>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!item.engagement.Match_Notes__c == ''}" >
+                            -- No Notes --
+                        </apex:outputPanel> 
+                    </apex:column>
+                </apex:pageBlockTable>
+                
+                <!-- Panel to render Paging functionality -->
+                <apex:outputPanel layout="block" rendered="{!IF(totalResults > 0,true,false)}" >
+                   
+                         
+                      <div class="ix-margin-b2">
+                            <B><apex:commandLink action="{!getPrevious}" value="Previous" rendered="{!IF(resultsStartNumber = 1, false, true)}" reRender="pbs, validationMsg" status="loadingMsg"/> </B>
+                            <B><apex:commandLink action="{!getNext}" value="Next" rendered="{!IF(resultsStopNumber = totalResults, false, true)}" reRender="pbs, validationMsg" status="loadingMsg" /></B>
+                      </div>
+                      
+                        <div class="ix-margin-b2">
+                           
+                            <button class="ix-btn-large" onclick="validateBeforeSave(); return false;">Make Selection</button>
+                        </div>
+                            
+                            <!--  <apex:image url="{!$Resource.MatchSelected}" style="cursor:pointer;" onclick="validateBeforeSave(); return false;"/>-->
+                         
+                      
+               
+                </apex:outputPanel>
+                <div class="ix-margin-b2">
+                <apex:outputLabel rendered="{!IF(totalResults > 0, false, true)}" > {!searchResultMessage} </apex:outputLabel>
+                </div>
+            </apex:pageBlockSection>
+            </apex:outputPanel>
+        </apex:pageBlock>
+    </apex:form>
+</div>
+</apex:page>

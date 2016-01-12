@@ -1,0 +1,29 @@
+<apex:page docType="html-5.0" id="scorm_outage" controller="IGI_PT_Controller"  standardStylesheets="false" showHeader="false"  > 
+<apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+   <apex:form id="myForm">
+       
+        <div class="wrapper">
+		<h1>Site Under Maintenance</h1>
+			  <div class="white-box clearfix">
+				    <div class="panel full">
+                        <apex:outputText value="{!externalSystemOutage.Message__c}"></apex:outputText> <br/>
+                        <b>Start Date/Time</b>: &nbsp;<apex:outputField value="{!externalSystemOutage.Planned_Start_Date_Time__c}"/> <br/>
+                        <b>End Date/Time</b>:  &nbsp;<apex:outputField value="{!externalSystemOutage.Planned_End_Date_Time__c}"/> <br/>
+                         
+		           
+		            <div class="form-row">
+				     <div class="form-button">
+					 </div>
+			  </div>
+		          </div>
+		          
+		      </div>  
+		      
+			 
+		  </div> 
+        
+          </apex:form>
+    </apex:define>
+</apex:composition>
+</apex:page>

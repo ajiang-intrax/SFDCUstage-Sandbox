@@ -1,0 +1,18 @@
+<apex:page docType="html-5.0" standardController="Match__c" extensions="FlowMatchController" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper" id="ayusa-student-preapp-academic-language-skills">
+        <apex:messages />
+        <h1>Monthly Contact Form</h1>
+            <div class="white-box clearfix">
+            <div class="flow two_thirds">
+          <flow:interview buttonLocation="bottom" name="AY_Contact_Participant" finishLocation="{!finishPage}">
+            <apex:param name="MatchId" value="{!match.id}"/>
+            <!--  <apex:param name="pType" value="Partner"/>--> 
+          </flow:interview>  
+            </div>
+        </div>
+      </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

@@ -1,0 +1,103 @@
+<apex:page standardStylesheets="false" showHeader="false" sidebar="false" controller="CSignatureGenerator_Member" action="{!getMembers}" renderas="pdf">
+<head>
+<style type="text/css" >
+@page {
+ size:portrait;
+font-family:Trebuchet MS, Arial, Helvetica, sans-serif;
+margin:2cm 1cm 3cm 1cm;
+padding:0 0 1em 0;
+@top-left {
+ content: element(header);
+}
+@bottom-center {
+ content: element(footer);
+}
+}
+ @page:first {
+@top-left {
+content: element(master);
+}
+.header {
+display:none;
+}
+}
+div.master { position: running(master); padding:2em 1em 1em 1em; }
+div.header { position: running(header); padding:1em; }
+div.footer { display: block; padding: 1em; position: running(footer); font-family:Trebuchet MS, Arial, Helvetica, sans-serif; color:#7d7d7d; }
+.page-numbers { text-align:center; padding-top:0.5cm; width:100%; }
+.pagenumber:before { content: counter(page); font-size:9pt; }
+.pagecount:before { content: counter(pages); font-size:9pt; }
+.title { text-align:center; background:#b8d459; margin-bottom:2em; }
+.title div { color:#202020; display:inline-block; font-size:18pt; background:#fff; padding:0 1em; text-align:center; }
+h2 { background:#e3edd4; font-size:11pt; padding:0.5em 1em; margin-bottom:1em; page-break-inside:avoid;  page-break-after: avoid;}
+.container { width:100%; font-family:Trebuchet MS, Arial, Helvetica, sans-serif; font-size:11pt; }
+.left-column { width:40%; margin-right:10%; float:left; }
+.right-column { width:40%; float:left; }
+.data-row { margin-bottom:1em; }
+.repeat-last { border-bottom:1px solid #e3edd4; }
+.data-row.last { border-bottom:none; }
+.data-row:after { display:block; visibility:hidden; content:"."; clear:both; width:1px; height:1px; }
+.data-label { float:left; font-weight:bold; }
+.data-label.left { margin-left:1em; }
+.data-field { float:left; margin-left:1em; font-style:italic; }
+.essay { margin-right:1em; margin-left:1em; }
+.essay.answer{border-bottom:1px solid #e3edd4; padding-bottom:1em; }
+.clearfix:after { content:"."; width:1px; height:1px; display:block; visibility:hidden; clear:both; }
+.regular{font-weight:normal;}
+.page-break { page-break-before: always; }
+.page-break-inside { page-break-inside: avoid; }
+.page-title-small { float:right; font-family:Trebuchet MS, Arial, Helvetica, sans-serif; font-size:9pt; color:#7d7d7d; }
+.white { color:white; font-size:1px; }
+</style>
+</head>
+<body>   
+    <apex:variable var="rowIndex" value="{!0}"/>
+    <apex:outputPanel >
+        <center><h3>Member Background Check</h3></center>
+        <p>
+            The United States Department of State has mandated that families hosting foreign exchange students
+            undergo a background check. All family members in the home who are 18 years of age or older must
+            be checked. We ask for your cooperation by completing this form and returning it to <b>Ayusa</b>
+            headquarters by mail, fax, or to your Ayusa representative.
+        </p>
+        <p>
+            My signature below authorizes <b>Ayusa</b> to conduct a background check with the personal information I
+            have provided. This background check may include, but is not limited to, my driving history; a social
+            security number verification; present and former addresses; child abuse registry; and police records. I understand that this
+            authorization and release shall be valid for subsequent checks during my period of hosting with <b>Ayusa</b>.
+        </p>
+        <p>
+            As a host family member with <b>Ayusa</b>, I hereby attest to the truthfulness of the representations I have
+            made. If any statement I have made is found to be false, my host family status with Ayusa may be
+            revoked, regardless of the time elapsed before discovery.
+        </p>
+        <p>
+            I hereby release and agree to hold harmless from liability any person or organization that provides this
+            information. I also agree to hold harmless <b>Ayusa</b>, and its officers, employees, and volunteers.
+        </p>                
+    </apex:outputPanel>
+     
+     
+   <apex:repeat value="{!memberList}" var="p">
+        <apex:variable var="rowIndex" value="{!TEXT(rowIndex+1)}"/>        
+        <div style='margin:50px;'>
+            <div style='font-size:18px;margin:20px;'>{!rowIndex}) Name: {!p.First_Name__c} {!p.Last_Name__c} </div>
+           
+              <div style='font-size:18px;margin:20px;'>                 
+                <apex:outputPanel >Signature: <span class="white">{!p.Id}-Signature</span></apex:outputPanel>
+            </div>
+          
+            
+             <div style='font-size:18px;margin:20px;'>                 
+                <apex:outputPanel >SSN: <span class="white">{!p.Id}-BackgroundSSN</span></apex:outputPanel>
+            </div>
+             
+            <div style='font-size:18px;margin:20px;'>                 
+                <apex:outputPanel >Date Signed:<span class="white">{!p.Id}-DateSigned</span></apex:outputPanel>
+            </div>
+           
+        </div>        
+        
+    </apex:repeat> 
+    </body>
+</apex:page>

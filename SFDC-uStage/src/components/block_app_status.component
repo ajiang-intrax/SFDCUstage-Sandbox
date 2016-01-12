@@ -1,0 +1,6 @@
+<apex:component layout="none" controller="User_Controller">
+
+	<c:block_app_status_hf_ayu rendered="{!ActiveUserType = 'Host Family'}" />
+	<c:block_app_status_pt_ayu rendered="{!ActiveUserType = 'Participant'}" />
+
+</apex:component>

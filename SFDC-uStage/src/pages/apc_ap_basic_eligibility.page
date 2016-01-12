@@ -1,0 +1,348 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="false" showHeader="false" id="apc_ap_basic_eligibility">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_apc_ap_application />
+      <div id="app-page" class="row">
+        <div id="app-focus" class="col-md-8 col-md-push-3">
+          
+          <c:block_app_completion ApplicantInfo="{!applicantInfo}" userProfileName="{!userProfileName}"  />
+          
+          <!-- AUDIT BLOCK PARTNER --> 
+          <c:block_apc_pr_audit flaggedList="{!flaggedList}" rendered="{!userProfileName == 'OCPM Agent Portal' && applicantInfo.Application_Level__c == 'Basic' && applicantInfo.Application_Stage__c == 'Submitted'}"/>
+          
+          <h1>Program Eligibility</h1>
+          <p class="lead">Please answer the following questions carefully, as they will help us determine if this is the right program for you.</p>
+          <apex:form styleClass="form-vertical ws-validate" id="webform">
+            <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+            <div class="row">
+            <div class="col-sm-12">
+            <div class="form-group">
+              <label class="control-label">Do you have childcare experience?
+              <i data-toggle="popover" data-content="Childcare experience can include working in a daycare, camp or as a nanny, babysitting, and caring for cousins or siblings." class="infobtn fa fa-question-circle"></i>
+              </label>
+                <apex:selectRadio styleClass="radio" value="{!applicantInfo.Childcare_Experience_Indicated__c}" id="childExper" required="true" >
+                  <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                  <apex:selectOption itemValue="No" itemLabel="No"/>
+                </apex:selectRadio>
+                <apex:message for="childExper" styleClass="custom-error-radio" id="errormess1"/>
+              </div>
+              </div>
+            </div><!--  end row -->
+            
+            <div class="row">
+            <div class="col-sm-12">
+            <div class="form-group">
+              <label class="control-label">Have you completed high school/secondary school?
+              <i data-toggle="popover" data-content="This often refers to the highest level of required schooling, before university."></i>
+              </label>
+                <apex:actionRegion >
+                  <apex:selectRadio styleClass="radio" value="{!personInfo.Secondary_School_Indicated__c}" id="secondSchool" required="true">
+                    <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                    <apex:selectOption itemValue="No" itemLabel="No"/>
+                    <apex:actionSupport event="onclick" rerender="graduationblock, graduationmsg" status="showschool" onComplete="dpInitiate();"/>
+                  </apex:selectRadio>
+                </apex:actionRegion>
+                <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showschool"/>
+                <apex:message for="secondSchool" styleClass="custom-error-radio" id="errormessschool"/>
+            </div>
+             </div>
+            </div><!--  end row -->
+            <div class="row">
+            <div class="col-sm-12">
+              <apex:pageBlock id="graduationblock">
+              <apex:outputPanel layout="block" rendered="{!personInfo.Secondary_School_Indicated__c != null}" id="outputpanelgrad" >
+                <div class="form-group">
+                  <apex:outputPanel layout="block" rendered="{!personInfo.Secondary_School_Indicated__c == 'Yes'}">
+                  <label class="control-label">Graduation Date</label>
+                  </apex:outputPanel>
+                  <apex:outputPanel layout="block" rendered="{!personInfo.Secondary_School_Indicated__c == 'No'}">
+                  <label class="control-label">If you expect to graduate soon, please tell us the date <span class="info">(Optional)</span></label>
+                  </apex:outputPanel>
+                     <div class="row">
+                    <div class="col-sm-6">
+                    <div class="datepicker" locale="{!user.localeSidKey}">
+                      <apex:inputField styleClass="form-control" value="{!personInfo.Graduation_Date__c}" required="TRUE" id="graduationdateReq" rendered="{!personInfo.Secondary_School_Indicated__c == 'Yes'}" />
+                      <apex:inputField styleClass="form-control" value="{!personInfo.Graduation_Date__c}" required="FALSE" id="graduationdate" rendered="{!personInfo.Secondary_School_Indicated__c == 'No'}" />
+                    </div>
+                    </div>
+                     </div><!--  end row -->
+                    
+                </div>
+              </apex:outputPanel>
+                </apex:pageBlock>
+                 </div>
+            
+            
+            </div><!--  end row -->
+            
+            
+            <apex:pageBlock id="graduationmsg">
+            <apex:outputPanel layout="block" rendered="{!personInfo.Secondary_School_Indicated__c == 'No'}">
+              <p class="alert alert-info">Please note that in order to become an au pair you must complete secondary school.</p>
+              </apex:outputPanel>
+        </apex:pageBlock>
+            <div class="row">
+            <div class="col-sm-12">
+            <div class="form-group">
+              <label class="control-label">Do you have a criminal record?</label>
+                <apex:actionRegion >
+                  <apex:selectRadio styleClass="radio" value="{!personInfo.Offence_Indicated__c}" id="offence" required="true">
+                    <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                    <apex:selectOption itemValue="No" itemLabel="No"/>
+                    <apex:actionSupport onComplete="dpInitiate();" event="onclick" rerender="offence_description" status="showsconvicted"/>
+                  </apex:selectRadio>
+                </apex:actionRegion>
+                <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showsconvicted"/>
+                <apex:message for="offence" styleClass="custom-error-radio" id="errormess3"/>
+              </div>
+            </div>
+            </div><!--  end row -->
+            
+            <apex:pageBlock id="offence_description">
+              <apex:outputPanel layout="block" rendered="{!personInfo.Offence_Indicated__c == 'Yes'}" id="outputpanel2" >
+                <div class="row">
+               <div class="col-sm-12">
+               <div class="form-group">
+                <label class="control-label">If yes, please describe</label>
+                  <apex:inputTextarea styleClass="form-control" id="offenceDesc" value="{!personInfo.Criminal_Convictions_Description__c}" required="TRUE" onkeyup="countChar(this, 510, 'offenceDescCount')" onfocus="countChar(this, 510, 'offenceDescCount')"/>
+                  <div class="char-limit bb"><span class="char-count-label">Characters left:</span> <span id="offenceDescCount" class="char-count"> {!510-len(applicantInfo.Criminal_Convictions_Description__c) }</span> </div>
+                 <apex:message for="offenceDesc" styleClass="custom-error-text" id="errormesoffenceDesc"/>
+                </div> 
+                 </div>
+            </div><!--  end row -->
+              </apex:outputPanel>
+            </apex:pageBlock>
+            
+            <div class="row">
+               <div class="col-sm-6">
+            <div class="form-group">
+              <label class="control-label">Do you have a driver's license?</label>
+                <apex:actionRegion >
+                <apex:selectRadio styleClass="radio" value="{!applicantInfo.Drivers_Licence_Indicated__c}" id="driverlicense" required="true" >
+                  <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                  <apex:selectOption itemValue="No" itemLabel="No"/>
+                  <apex:actionSupport onComplete="dpInitiate();" event="onclick" rerender="nonlicense" status="showlicense" />
+                </apex:selectRadio>
+                </apex:actionRegion>
+                <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showlicense"/>
+                <apex:message for="driverlicense" styleClass="custom-error-radio" id="errormessdrive"/>
+              </div>
+              </div>
+            </div><!--  end row -->
+            
+             <apex:outputPanel layout="block" id="nonlicense">
+            <apex:outputPanel layout="block" rendered="{!applicantInfo.Drivers_Licence_Indicated__c == 'No'}">
+              <p class="alert alert-info">All AuPairCare au pairs are required to have a driver's license before matching. 
+              If you do not have a driver's license, please apply for one as soon as possible.</p>
+            </apex:outputPanel>
+            </apex:outputPanel>
+            
+            <div class="row">
+               <div class="col-sm-12">
+            <div class="form-group">
+              <label class="control-label">Have you been an au pair in the United States before?</label>
+                <apex:actionRegion >
+                  <apex:selectRadio styleClass="radio" value="{!applicantInfo.Being_AuPair_Indicated__c}" id="beingAuPair" required="true">
+                    <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                    <apex:selectOption itemValue="No" itemLabel="No"/>
+                    <apex:actionSupport event="onclick" onComplete="dpInitiate();" rerender="blockAuPair" status="showaupair"/>
+                  </apex:selectRadio>
+                </apex:actionRegion>
+                <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit(); setSelectOne();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showaupair"/>
+                <apex:message for="beingAuPair" styleClass="custom-error-radio" id="errormessAuPair"/>
+              </div>
+              </div>
+            </div><!--  end row -->
+            
+            <apex:pageBlock id="blockAuPair">
+            
+             <apex:outputPanel layout="block" rendered="{!applicantInfo.Being_AuPair_Indicated__c == 'Yes'}" id="outputpanelaupair">
+                    <div class="panel panel-default ">
+                      <div class="panel-heading"><h4 class="panel-title">Program Details</h4></div>
+                      <div class="panel-body">
+                        
+                        <div class="row">
+                        
+                        <div class="col-sm-6">
+                        <div class="form-group">
+                          <label class="control-label">Which agency sponsored your au pair year?</label>
+                            <apex:inputField styleClass="form-control" value="{!applicantInfo.US_AuPair_Agency__c}" required="TRUE" id="aupairagency" />
+                          </div>
+                          </div>
+                        
+                        <div class="col-sm-6">
+                        <div class="form-group">
+                          <label class="control-label">Did you successfully complete your year?</label>
+		                    <apex:actionRegion >
+		                      <apex:selectRadio styleClass="radio" value="{!applicantInfo.AP_Completion_Year_Indicated__c}" id="yearaupair" required="true">
+		                        <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+		                        <apex:selectOption itemValue="No" itemLabel="No"/>
+		                        <apex:actionSupport event="onclick" rerender="blockdate" status="showspassyear"/>
+		                      </apex:selectRadio>
+		                    </apex:actionRegion>
+		                    <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();dpInitiate();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showspassyear"/>
+		                    <apex:message for="yearaupair" styleClass="custom-error-radio" id="errormessyear"/>
+	                  	</div>
+	                  	</div>
+                         </div><!--  end row -->
+                       
+                       
+                    	<apex:outputPanel layout="block" id="blockdate">
+              			<apex:outputPanel layout="block" rendered="{!(applicantInfo.Being_AuPair_Indicated__c == 'Yes') && (applicantInfo.AP_Completion_Year_Indicated__c == 'Yes')}" id="outputpanelprogram">
+                            <div class="row">
+                            <div class="col-sm-6">
+                            <div class="form-group">
+					            <label class="control-label">When did your program end?</label>
+					            <div class="datepicker" locale="{!user.localeSidKey}">
+					            <apex:inputField styleClass="form-control" value="{!applicantInfo.AP_program_End_Date__c}" required="TRUE" id="programyeardate" />
+					            </div>
+					            </div>
+					            </div>
+					            </div><!--  end row -->
+		           		</apex:outputPanel>
+		              	</apex:outputPanel>
+                       
+                      </div>
+                    </div>
+              </apex:outputPanel>
+            
+            </apex:pageBlock>
+            
+            <div class="row">
+            <div class="col-sm-12">
+            <div class="form-group">
+              <label class="control-label">Are you a United States citizen?</label>
+                <apex:actionRegion >
+                  <apex:selectRadio styleClass="radio" value="{!applicantInfo.US_Passport_Indicated__c}" id="usaPassport" required="true">
+                    <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                    <apex:selectOption itemValue="No" itemLabel="No"/>
+                    <apex:actionSupport event="onclick" onComplete="dpInitiate();" rerender="blockPassport, blockVisaDenie" status="showspass"/>
+                  </apex:selectRadio>
+                </apex:actionRegion>
+                <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showspass"/>
+                <apex:message for="usaPassport" styleClass="custom-error-radio" id="errormess4"/>
+              </div>
+              </div>
+              </div><!--  end row -->
+              
+            
+            <apex:pageBlock id="blockVisaDenie">
+            <apex:outputPanel layout="block" rendered="{!applicantInfo.US_Passport_Indicated__c == 'No'}">
+            
+            <div class="row">
+            <div class="col-sm-12">
+            <div class="form-group">
+              <label class="control-label">Have you ever been denied a visa to the United States?</label>
+                <apex:actionRegion >
+                  <apex:selectRadio styleClass="radio" value="{!applicantInfo.Visa_Denied__c}" id="VISAAPC" required="true">
+                    <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                    <apex:selectOption itemValue="No" itemLabel="No"/>
+                    <apex:actionSupport event="onclick" onComplete="dpInitiate();" rerender="blockVisaDenie" status="DenieVisa"/>
+                  </apex:selectRadio>
+                </apex:actionRegion>
+                <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="DenieVisa"/>
+                <apex:message for="VISAAPC" styleClass="custom-error-radio" id="errormessVisa"/>
+              </div>
+              </div>
+              </div><!--  end row -->
+             
+             <apex:outputPanel layout="block" rendered="{!applicantInfo.Visa_Denied__c == 'Yes'}" id="outputpanelVisa">
+                    <div class="panel panel-default ">
+                      <div class="panel-heading"><h4 class="panel-title">Visa Denial Details</h4></div>
+                      <div class="panel-body">
+                      
+                      <div class="row">
+                       <div class="col-sm-6">
+                        <div class="form-group">
+		              <label class="control-label">Type of Visa</label>
+		                  <apex:selectList styleClass="form-control" style="height:34px;" value="{!applicantInfo.Visa_Type__c}" multiselect="false" required="TRUE" id="Visade" size="1">
+		                    <apex:selectOption itemValue="" itemLabel="--Select Visa Type--"/>
+		                    <apex:selectOption itemValue="B-1" itemLabel="B-1 Visa (Business)"/>
+			            	<apex:selectOption itemValue="B-2" itemLabel="B-2 Visa (Tourist) "/>
+			            	<apex:selectOption itemValue="F-1 Student" itemLabel="F-1 Visa (Student)"/>
+			            	<apex:selectOption itemValue="F-2" itemLabel="F-2 Visa (Dependent of Student)"/>
+			            	<apex:selectOption itemValue="J-1" itemLabel="J-1 Visa (Au Pair, Scholar, Trainee, Researcher or Teacher)"/>
+			            	<apex:selectOption itemValue="H-1" itemLabel="H-1B Visa (Professionals)"/>
+		                  </apex:selectList>
+		                <apex:message for="Visade" styleClass="custom-error-radio" id="apexmessVisa"/>
+		              </div>
+		              </div>
+		              
+		               <div class="col-sm-6">
+	          			 <div class="form-group">
+	                         <label class="control-label">Year of Denial</label>
+	                           <apex:inputField styleClass="form-control short" html-placeholder="YYYY" value="{!applicantInfo.Visa_Denial_Year__c}" required="TRUE" id="Visayear" />
+	                         </div>
+	                         </div>
+	                    </div><!--  end row -->
+	                    
+	                     <div class="row">    
+	                     <div class="col-sm-12">
+	          			 <div class="form-group">
+	                            <label class="control-label">Reason(s) for Denial</label>
+				                  <apex:inputTextarea styleClass="form-control" id="Visadetail" value="{!applicantInfo.Visa_Denial_Reason__c}" required="TRUE" onkeyup="countChar(this, 510, 'VisadetailCount')" onfocus="countChar(this, 510, 'VisadetailCount')"/>
+				                  <div class="char-limit bb"><span class="char-count-label">Characters left:</span> <span id="VisadetailCount" class="char-count"> {!510-len(applicantInfo.Visa_Denial_Reason__c) }</span> </div>
+				                 <apex:message for="Visadetail" styleClass="custom-error-text" id="errormesVisadetail"/>
+				                </div>
+				                </div>
+				       </div><!--  end row -->
+                      </div>
+                    </div>
+	             </apex:outputPanel>
+	        </apex:outputPanel>
+            </apex:pageBlock>
+           
+            
+              <div class="row">
+                <div class="col-sm-12 margin-t">
+                
+                <apex:outputText rendered="{!applicantInfo.Application_Type__c=='Extension'}">
+                  <apex:outputLink styleClass="btn btn-link btn-lg" value="/apex/apc_ap_basic_contact_info?id={!applicantInfo.Id}" id="backlink"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                  <apex:commandlink styleClass="btn btn-primary btn-lg" action="{!navigator}" id="nextlink" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                    <apex:param name="nextPage"	value="/apex/apc_ap_basic_program_preferences" />
+                    <apex:param name="reDirectPage" value="true" />
+                    <apex:param name="pageId" value="014"/>
+                    <apex:commandButton value="Save & Continue" id="continuebutton"/>
+                  </apex:commandlink>
+                  </apex:outputText>
+                
+                
+                <apex:outputText rendered="{!applicantInfo.Application_Type__c=='Original' && applicantInfo.Application_Level__c=='Basic' }">
+                  <apex:outputLink styleClass="btn btn-link btn-lg" value="/apex/apc_ap_basic_contact_info?id={!applicantInfo.Id}" id="backlink2"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                  <apex:commandlink styleClass="btn btn-primary btn-lg" action="{!navigator}" id="nextlink2" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                    <apex:param name="nextPage"	value="/apex/apc_ap_basic_program_preferences" />
+                    <apex:param name="reDirectPage" value="true" />
+                    <apex:param name="pageId" value="014"/>
+                    <apex:commandButton value="Save & Continue" id="continuebutton2"/>
+                  </apex:commandlink>
+                  </apex:outputText>
+                  
+                  <apex:outputText rendered="{!applicantInfo.Application_Type__c=='Original' && applicantInfo.Application_Level__c=='Main' }">
+                  <apex:outputLink styleClass="btn btn-link btn-lg" value="/apex/apc_ap_main_physician_form?id={!applicantInfo.Id}&docType=Doctor" id="backlink3"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                  <apex:commandlink styleClass="btn btn-primary btn-lg" action="{!navigator}" id="nextlink3" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                    <apex:param name="nextPage"	value="/apex/apc_ap_basic_program_preferences" />
+                    <apex:param name="reDirectPage" value="true" />
+                    <apex:param name="pageId" value="014"/>
+                    <apex:commandButton value="Save & Continue" id="continuebutton3"/>
+                  </apex:commandlink>
+                  </apex:outputText>
+                  
+                  
+                </div>
+              </div>
+              
+           
+          </apex:form>
+        </div>
+        <!-- end column -->
+        
+         <div id="app-side" class="col-md-3 col-md-pull-8">
+          <c:menu_side_apc_ap_basic ApplicantInfo="{!applicantInfo}" />
+        </div>
+        <!-- end column  --> 
+      </div>
+      <!-- end row --> 
+      
+    </apex:define>
+  </apex:composition>
+</apex:page>

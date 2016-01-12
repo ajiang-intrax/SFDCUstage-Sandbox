@@ -1,0 +1,68 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" Controller="apc_home_controller" 
+           standardStylesheets="false" showHeader="false" id="apc_ap_main_payment_confirmation" action="{!myInvoiceController.afterLoadAction}">
+    <apex:composition template="intraxtemplate_vs3">
+        <apex:define name="body">
+            <c:block_header_apc_ap_application /> 
+            <div id="app-page" class="row">
+                <div id="app-focus" class="col-md-8 col-md-push-3">
+                    
+                  <!--  <c:block_app_completion ApplicantInfo="{!myInvoiceController.applicantInfo}" userProfileName="{!myInvoiceController.userProfileName}"  />-->
+                    <apex:outputPanel layout="block" id="outputpanelOriginal" >
+                        <div class="row">
+                            <div class="row">
+                                <h1>Your payment was successful. Thank you!</h1>
+                                <!--<apex:outputLink value="/apex/apc_ap_home"><b>Return to Homepage ></b></apex:outputLink>-->
+                            </div>	
+                            
+                            <div class="col-md-10">
+                                <div class="well lead margin-t">
+                                    <p> Please keep the following transaction ID for future reference: <strong>{!myInvoiceController.paymentTxId}</strong> </p>
+                                    <p> Charged Amount: <strong>$<apex:outputText value=" {0, number, #,##0.00}">
+                                        <apex:param value="{!myInvoiceController.paymentAmount}"/>
+                                        </apex:outputText>
+                                        
+                                        </strong>
+                                    </p>
+                                    <p> Transaction date: <strong>{!myInvoiceController.paymentDate}</strong> </p>
+                                    <apex:outputLink style="background:#fff;"
+                                                     styleClass="margin-t btn btn-default btn-lg"
+                                                     value="/apex/apc_ap_main_payment_confirmation_pdf?id={!myInvoiceController.paramAppId}&viewpage=true&title=AuPairCare Childcare Application&paymentAmount={!myInvoiceController.paymentAmount}&paymentTxId={!myInvoiceController.paymentTxId}&paymentDate={!myInvoiceController.paymentDate}&"
+                                                     target="_blank" id="backlinkOriginal"> <i class="fa fa-print"></i> <span>Print Page</span>
+                                    </apex:outputLink>
+                                </div>
+                                <!--  end well --> 
+                            </div> <!--  end column -->
+                        </div> <!--  end row -->
+                        
+                    </apex:outputPanel>
+                    
+                    <apex:form styleClass="form-horizontal ws-validate" id="webform">
+                        
+                        <div class="form-group">
+                            <div class="col-sm-12 margin-t">
+                                <apex:outputLink styleClass="btn btn-link btn-lg" value="/apex/apc_ap_main_ext_agreements?id={!myInvoiceController.applicantInfo.Id}" id="backlink"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                                <apex:commandlink styleClass="btn btn-primary btn-lg" action="{!myInvoiceController.navigator}" id="nextlink" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                                    <apex:param name="nextPage"	value="/apex/apc_ap_main_completion?id={!myInvoiceController.applicantInfo.Id}" />
+                                    <apex:param name="Id"	value="{!myInvoiceController.applicantInfo.Id}" />
+                                    <apex:param name="reDirectPage" value="true" />
+                                    <apex:param name="pageId" value="032"/>
+                                    <apex:commandButton value="Save & Continue" id="continuebutton"/>
+                                </apex:commandlink>
+                            </div>
+                        </div>
+                        
+                        
+                    </apex:form>
+                </div>
+                <!-- end column -->
+                
+                <div id="app-side" class="col-md-3 col-md-pull-8">
+                    <c:menu_side_apc_ap_basic ApplicantInfo="{!myInvoiceController.applicantInfo}" />
+                </div>
+                <!-- end column  --> 
+            </div>
+            <!-- end row --> 
+            
+        </apex:define>
+    </apex:composition>
+</apex:page>

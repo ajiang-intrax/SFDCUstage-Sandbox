@@ -1,0 +1,31 @@
+<apex:page id="Help_ayusa_app_partner_detailed_report" docType="html-5.0" standardStylesheets="true" showHeader="false">
+
+    <apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/reset.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/fonts.css')}"/> 
+    <apex:stylesheet value="{!URLFOR($Resource.module_colorbox, '/module-colorbox/css/colorbox.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/vs1.css')}"/> 
+    <apex:outputText value="<" escape="false"/>!--[if IE]<apex:outputText value=">" escape="false"/>
+    <link rel="stylesheet" href="/intraxappengine/resource/intrax_themes/intrax_themes/styles/ie.css"/>  
+    <apex:outputText value="<" escape="false"/>![endif]--<apex:outputText value=">" escape="false"/>      
+     
+    <apex:outputText value="<" escape="false"/>!--[if lt IE 8]<apex:outputText value=">" escape="false"/>      
+    <link rel="stylesheet" href="/intraxappengine/resource/intrax_themes/intrax_themes/styles/ie-7.css"/>
+    <apex:outputText value="<" escape="false"/>![endif]--<apex:outputText value=">" escape="false"/>
+    
+    <apex:define name="body">
+      <div class="wrapper">
+        <apex:form >
+        <h2>Detailed Report Help</h2>
+        <div class="white-box">
+            <p>Below are instructions for each of the required partner reports to be uploaded here:</p>
+            <p><strong>Student Interview</strong></p>
+            <p>Prior to the interview, please review the Ayusa Student Handbook so you are familiar with our policies and procedures. The interview must be conducted primarily in English and in person. Please keep in mind that students should not come to the U.S. only because their parents want them to. The student should be interviewed separately from his/her natural parents. Also, it is important to determine the student’s level of maturity and flexibility to adjust to living with an American host family. The student should demonstrate a strong desire to integrate into the host family lifestyle. All Ayusa host families are volunteers; as such, it is the student’s responsibility to adapt to the host family, high school, and American way of life. As your discussion develops feel free to ask the questions in any order, but make sure to provide answers to all questions.</p>
+            <p><strong>Grade Conversion Chart</strong></p>
+            <p>Please enter the student’s grades as represented on the official transcripts and then convert the grades to the U.S. equivalent on the form. Also fill in the grading scale chart to correspond to each year of school. Please indicate whether the last year’s transcripts are complete academic year transcripts or progress reports.</p>
+            <p><strong>SLEP test</strong></p>
+            <p>Please carefully follow all of the instructions for administering the SLEP test as outlined in the SLEP Test Manual. Be sure to upload the original scored SLEP test with the application.</p>
+        </div>
+    </apex:form>
+    </div>
+    </apex:define>
+</apex:page>

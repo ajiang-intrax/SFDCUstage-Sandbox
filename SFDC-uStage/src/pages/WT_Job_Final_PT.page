@@ -1,0 +1,45 @@
+<apex:page title="Participant's Job Placement | Intrax" standardStylesheets="false" showHeader="false" controller="DocuSign_Controller" action="{!MethodJobFinal}">
+  
+    <apex:composition template="IntraxTemplate_Vs2" >
+      <apex:define name="body">
+      	  <apex:form >
+          <div class="row">
+          <apex:outputPanel styleClass="span9" layout="block">
+          
+          </apex:outputPanel>
+        </div>
+        <div class="row">
+          
+          
+            <div class="span12">
+            <apex:outputPanel styleClass="block" layout="block">
+            
+              <div class="block-body">
+                <apex:outputPanel id="myPanel" layout="block">
+                    
+                    
+                    <apex:pageMessages />
+                    <apex:pageBlock id="pb" >
+                        <p>{!msgDisplay} </p>
+                       
+                <apex:outputPanel styleClass="form-row" layout="block">
+                  <div class="form-link">
+                    <apex:outputLink value="/apex/Home"><i class="icon-chevron-left"></i> <span>Back To Home</span></apex:outputLink>
+                  </div> 
+                  
+                </apex:outputPanel>  
+             </apex:pageBlock>
+            
+            </apex:outputPanel>
+                
+                
+              </div>
+            </apex:outputPanel>
+          </div>
+          
+        </div>
+        </apex:form> 
+      </apex:define>
+    </apex:composition>
+  
+  </apex:page>

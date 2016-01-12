@@ -1,0 +1,64 @@
+<!--
+Page: IntraxPartnerPortal_Navigation
+
+Description: Intrax Partner Portal Navigation Tab Component
+
+-->
+<apex:component > 
+    
+    <apex:variable var="IntraxPartnerPortal_Home" value="active" rendered="{! IF($CurrentPage.Name=='IntraxPartnerPortal_Home', true, false)}"/>
+    <apex:variable var="IntraxPartnerPortal_Participant" value="active" rendered="{! IF($CurrentPage.Name=='IntraxPartnerPortal_Participant', true, false)}"/>      
+    <apex:variable var="IntraxPartnerPortal_Application" value="active" rendered="{! IF($CurrentPage.Name=='IntraxPartnerPortal_Application', true, false)}"/>  
+    <apex:variable var="IntraxPartnerPortal_Matches" value="active" rendered="{! IF($CurrentPage.Name=='IntraxPartnerPortal_Matches', true, false)}"/>
+    <apex:variable var="IntraxPartnerPortal_Match_Information" value="active" rendered="{! IF($CurrentPage.Name=='IntraxPartnerPortal_Match_Information', true, false)}"/>
+    <apex:variable var="IntraxPartnerPortal_Participant_Profile" value="active" rendered="{! IF($CurrentPage.Name=='IntraxPartnerPortal_Participant_Profile', true, false)}"/> 
+    <apex:variable var="IntraxPartnerPortal_Travel_And_Visa" value="active" rendered="{! IF($CurrentPage.Name=='IntraxPartnerPortal_Travel_And_Visa', true, false)}"/> 
+    <apex:variable var="IntraxPartnerPortal_Resources" value="active" rendered="{! IF($CurrentPage.Name=='IntraxPartnerPortal_Resources', true, false)}"/> 
+    <apex:variable var="IntraxPartnerPortal_Participant_Summary" value="active" rendered="{! IF($CurrentPage.Name=='IntraxPartnerPortal_Participant_Summary', true, false)}"/> 
+    <apex:variable var="IntraxPartnerPortal_Participant_App" value="active" rendered="{! IF($CurrentPage.Name=='IntraxPartnerPortal_Participant_App', true, false)}"/> 
+   
+    <ul> 
+        
+        <li class="{!IntraxPartnerPortal_Home}">
+            <apex:outputLink value="IntraxPartnerPortal_Home">Home</apex:outputLink>
+        </li>
+        
+        <li class="{!IntraxPartnerPortal_Participant}">
+            <apex:outputLink value="IntraxPartnerPortal_Participant">Participants</apex:outputLink>
+        </li>
+         
+        <li class="{!IntraxPartnerPortal_Application}">
+            <apex:outputLink value="IntraxPartnerPortal_Application">Applications</apex:outputLink>
+        </li>
+        
+        <li class="{!IntraxPartnerPortal_Matches}">
+            <apex:outputLink value="IntraxPartnerPortal_Matches">Matches</apex:outputLink>
+        </li>
+        
+        <li class="{!IntraxPartnerPortal_Participant_Profile}">
+            <apex:outputLink value="IntraxPartnerPortal_Participant_Profile">Participant Profile</apex:outputLink>
+        </li>
+        
+        <li class="{!IntraxPartnerPortal_Match_Information}">
+            <apex:outputLink value="IntraxPartnerPortal_Match_Information">Match Information</apex:outputLink>
+        </li>
+        
+        <li class="{!IntraxPartnerPortal_Participant_App}">
+            <apex:outputLink value="IntraxPartnerPortal_Participant_App">Participant Application</apex:outputLink>
+        </li>
+        
+        <li class="{!IntraxPartnerPortal_Travel_And_Visa}">
+            <apex:outputLink value="IntraxPartnerPortal_Travel_And_Visa">Travel And Visa</apex:outputLink>
+        </li>
+              
+        <li class="{!IntraxPartnerPortal_Resources}">
+            <apex:outputLink value="IntraxPartnerPortal_Resources">Resources</apex:outputLink>
+        </li>
+        
+        <li class="{!IntraxPartnerPortal_Participant_Summary}">
+            <apex:outputLink value="IntraxPartnerPortal_Participant_Summary">Participant Summary</apex:outputLink>
+        </li>
+                 
+    </ul>
+    
+</apex:component>

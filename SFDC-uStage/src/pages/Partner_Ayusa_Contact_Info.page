@@ -1,0 +1,124 @@
+<!--
+Page: IntraxPartnerPortal_Participant_Profile
+
+Description: Intrax Partner Portal Participant Profile
+
+-->
+<apex:page id="Partner_Ayusa_Contact_Info" title="Participant's Profile | Intrax" standardStylesheets="false" showHeader="false" controller="IntraxPartnerPortalEngineController" action="{!checkLoginWithParticipantSearch}">
+    
+    	<apex:composition template="IntraxTemplate_Vs2" >
+            <apex:define name="body">    
+            	<apex:form >
+            	<!-- begin row -->
+        		<div class="row">
+          			
+          			<!-- begin span9 -->
+            		<apex:outputPanel styleClass="span9" layout="block">
+            			<h1>{!participant.Name}</h1>
+          			</apex:outputPanel>
+            		<!-- end span9 -->
+            		
+           			<!-- begin span3 -->
+            		<apex:outputPanel styleClass="span3" layout="block"> 
+            		</apex:outputPanel>
+             		<!-- end span3 -->
+        		
+        		</div>
+        		<!-- end row -->
+        
+         		<!-- begin row -->
+        		<div class="row">
+          
+           			<!-- begin span3 -->
+            		<apex:outputPanel styleClass="span3" layout="block">
+	           			
+	           			<apex:outputPanel styleClass="profile-thumb" layout="block" rendered="{!IF($CurrentPage.parameters.isPhotoAvaialable != null, true, false)}">
+	            			<!-- <apex:image url="/servlet/servlet.FileDownload?file={!attachment.ID}"></apex:image>-->
+	            			<apex:image url="{!returnURL}"></apex:image>
+            			</apex:outputPanel>
+            			
+            			<apex:outputPanel styleClass="block" layout="block" rendered="{!IF($CurrentPage.parameters.isPhotoAvaialable == null, true, false)}">
+							<div class="block-header">
+	 							<h3>No Individual Participant Selected</h3>
+							</div>
+         				</apex:outputPanel>
+            
+            			<c:Menu_Side_ManagePax />
+          			</apex:outputPanel>
+            		<!-- end span3 -->
+            		
+          			<apex:outputPanel styleClass="span9" layout="block"> 
+              
+                		<apex:actionStatus id="waitMsg" startStyleClass="feedback">
+	                        <apex:facet name="start" >
+	                            <i class="no-float icon-spinner icon-spin icon-2x pull-left"></i>  <strong>Please Wait.....</strong>
+	                        </apex:facet>
+                        </apex:actionStatus>
+		                            
+		                <!--<apex:actionFunction name="doSearch" action="{!doSearchForParticipant}" status="waitMsg" reRender="myPanel, validationMsg, myPanel1, abcd"/>
+		                          
+	                    <apex:outputPanel id="myPanelForNoRecord" layout="block" styleClass="block" rendered="{!AND($CurrentPage.parameters.isInputType != 'false', $CurrentPage.parameters.isInputType != 'true')}">
+	                       	
+	                       	<div class="block-body">
+	                       		Please select a participant record.
+                      		</div>
+                   		</apex:outputPanel>	
+	                      -->  
+                   		<apex:outputPanel id="myPanel1">
+                      		<apex:pageBlock id="pb1" rendered="{!AND($CurrentPage.parameters.isInputType != null, $CurrentPage.parameters.isInputType == 'false')}">
+	                              
+                              	<apex:outputPanel layout="block" styleClass="block">
+	                                      
+                                	<div class="block-header"><h3>Ayusa Contact Information</h3> </div>
+	                                     	
+                                   	<div class="block-body">
+	                                            
+                                    	<apex:pageMessages id="validationMsg"/>
+	                                         
+                               			<div class="data-row">
+                                          	<div class="data-label left">Name</div>
+                                           	<div class="data-field">
+                                            	<apex:outputText value="{!AyusaContact[0].Name}" />
+                                           	</div>
+                                        </div>
+                                        
+                                        <div class="data-row">
+                                          	<div class="data-label left">Address:</div>
+                                           	<div class="data-field">
+                                           		<apex:outputText value="{!AyusaContact[0].Street}"/>&nbsp; <br/>
+							                    <apex:outputText value="{!AyusaContact[0].PostalCode}, {!AyusaContact[0].City} - {!AyusaContact[0].State} "/>&nbsp;<br/>
+							                    <apex:outputText value="{!AyusaContact[0].Country}"/>&nbsp;
+                                            	<!--  <apex:outputField value="{!participant.Gender__c}" /> -->
+                                           	</div>
+                                        </div>
+                                        
+                                        <div class="data-row">
+                                          	<div class="data-label left">Phone Number</div>
+                                           	<div class="data-field">
+                                            	<apex:outputText value="{!AyusaContact[0].Phone}" />
+                                           	</div>
+                                        </div>
+                                        
+                                        <div class="data-row">
+                                          	<div class="data-label left">Email</div>
+                                           	<div class="data-field">
+                                            	<apex:outputText value="{!AyusaContact[0].Email}" />
+                                           	</div>
+                                        </div>
+                                       
+	                                          
+	                                </div>
+	                            </apex:outputPanel>              
+	                            <!-- end block -->   
+	                                                  
+	                        </apex:pageBlock>
+                        </apex:outputPanel>
+                        	
+            		</apex:outputPanel>
+        		</div>
+      			<!-- end row -->    
+      			</apex:form>
+            </apex:define>
+        </apex:composition>
+	
+</apex:page>

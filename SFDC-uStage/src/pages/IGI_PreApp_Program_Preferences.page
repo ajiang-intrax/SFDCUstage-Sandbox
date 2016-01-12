@@ -1,0 +1,175 @@
+<apex:page docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+    
+    <!-- UI Blocker component for Background processing --> 
+    <c:BlockUI />
+    
+    <apex:composition template="IntraxTemplate_Vs1">
+        <apex:define name="body">
+            <div class="wrapper" id="IGI_PreApp_Program_Preferences">    
+                <apex:form >
+                
+                    <!-- Heading -->
+                    <div class="page-header clearfix">
+                        <h1 class="page-title">Intrax Global Internship Application</h1>
+                        
+                        <!-- Back To Main Page Link -->
+                        <div class="back-to-main"><apex:outputLink value="apex/igi_preapp_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+                        </div>
+                       
+                       <!-- Section Header -->  
+                       <div class="section-header clearfix">
+                            <h2>Program Preferences</h2>
+                       </div> 
+                        
+                       <!-- Panel -->   
+                       <div class="white-box clearfix">   
+                            <div class="panel two_thirds"> 
+                            
+                            <apex:outputPanel layout="block" styleClass="form-row" rendered="{! applicantInfo.Intrax_Program_Options__c == 'Business Internship' || applicantInfo.Intrax_Program_Options__c == 'Hospitality Internship' }">
+                                <div class="form-label left ">Have you already secured an internship offer from a company?<span class="required">*</span></div>
+                                <div class="form-field">
+									<apex:selectRadio value="{!selectedServiceLevel}" required="true">
+		          						<apex:selectOptions value="{!listServiceLevel}"></apex:selectOptions>
+		      						</apex:selectRadio>
+	      						</div>
+                            </apex:outputPanel> 
+                            
+                            <!-- Engagement Start -->
+                            <div class="form-row">
+                                <div class="form-label left ">Earliest Start Date<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!applicantInfo.Engagement_Start__c}" required="TRUE"/>
+                                </div>
+                            </div>
+                            
+                            <!-- Engagement End -->
+                            <div class="form-row">
+                                <div class="form-label left ">Latest End Date<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!applicantInfo.Engagement_End__c}" required="TRUE"/>
+                                </div>
+                            </div>
+                            
+                            <!-- Requested Duration -->
+                            <div class="form-row">
+                                <div class="form-label left ">Requested Duration<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!applicantInfo.Program_Duration__c}" required="TRUE"/>
+                                </div>
+                            </div>
+                            
+                            <!-- Do you have Flexible Dates? -->
+                            <div class="form-row">
+                                <div class="form-label left ">Do you have flexible dates?<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:selectRadio value="{!applicantInfo.Flexible_Dates__c}" required="TRUE">
+                                        <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                                        <apex:selectOption itemValue="No" itemLabel="No"/>
+                                    </apex:selectRadio>
+                                </div>
+                            </div>
+                            
+                            <!-- What is your desired destination country?  -->
+                            <apex:pageBlock rendered="{!applicantInfo.Intrax_Program_Options__c == 'ProWorld Internship' || applicantInfo.Intrax_Program_Options__c == 'Business Internship'}" >
+                            <div class="form-row">
+                                <div class="form-label left ">What is your desired destination country?</div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!applicantInfo.Country_of_Interest__c}" required="FALSE"/>
+                                </div>
+                            </div>
+                            </apex:pageBlock>
+                            
+                            <!-- Desired location notes -->
+                            <div class="form-row">
+                                <div class="form-label left ">Desired location notes</div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!applicantInfo.Location_of_Interest__c}" required="FALSE"/>
+                                </div>
+                            </div>
+                            
+                            <apex:pageBlock rendered="{!applicantInfo.Intrax_Program_Options__c == 'ProWorld Internship'}" >
+                            <div class="form-row">
+                                <div class="form-label left ">Select project(s) of interest</div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!applicantInfo.Projects_of_Interest__c}" required="FALSE"/>
+                                </div>
+                            </div>
+                            </apex:pageBlock>
+                            
+                            <apex:pageBlock rendered="{!applicantInfo.Intrax_Program_Options__c == 'WEST' || applicantInfo.Intrax_Program_Options__c == 'Business Internship'}" >
+                            <div class="form-row">
+                                <div class="form-label left ">Select Functional Area(s)</div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!applicantInfo.Functional_Areas__c}" required="FALSE"/>
+                                </div>
+                            </div>
+                            </apex:pageBlock>
+                            
+                            <apex:pageBlock rendered="{!applicantInfo.Intrax_Program_Options__c == 'Hospitality Internship'}" >
+                            <div class="form-row">
+                                <div class="form-label left ">Select Position Type(s)</div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!applicantInfo.Position_Types__c}" required="FALSE"/>
+                                </div>
+                            </div>
+                            </apex:pageBlock>
+                        
+                            <!-- Location 1st Choice -->
+                            <apex:outputPanel rendered="{! applicantInfo.Intrax_Program_Options__c == 'WEST'}" >
+                            <div class="form-row">
+                                <div class="form-label left ">Intrax Center First Choice</div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!applicantInfo.Location_Preference_1__c}" required="FALSE"/>
+                                </div>
+                            </div>
+                            
+                             <!-- Location 2nd Choice -->
+                            <div class="form-row">
+                                <div class="form-label left ">Intrax Center Second Choice</div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!applicantInfo.Location_Preference_2__c}" required="FALSE"/>
+                                </div>
+                            </div>
+                            
+                             <!-- Location 3rd Choice -->
+                            <div class="form-row">
+                                <div class="form-label left ">Intrax Center Third Choice</div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!applicantInfo.Location_Preference_3__c}" required="FALSE"/>
+                                </div>
+                            </div>
+                            </apex:outputPanel>
+                            <!-- Program Preferences Comments -->
+                            <div class="form-row">
+                                <div class="form-label left ">Program Preferences Comments</div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!applicantInfo.Program_Preference_Comment__c}" required="FALSE"/>
+                                </div>
+                            </div>
+                        
+                            <div class="form-row">
+          						<div class="form-link">
+				              		<apex:outputLink value="/apex/IGI_preApp_Program_Selection?id={!applicantInfo.Id}"><i class="icon-chevron-left"></i> <span>Back</span></apex:outputLink>
+				                </div>
+                               
+                                <!-- Command Link for Save & Continue  -->      
+                                <div class="form-button">
+                                    <apex:commandlink styleClass="next" action="{!navigator}">
+                                        <apex:param name="nextPage" value="/apex/IGI_preApp_Biographical_Details"/>
+                                        <apex:param name="reDirectPage" value="true"/> 
+                                        <apex:commandButton value="Save & Continue" />
+                                        <i class="icon-chevron-right"></i>
+                                    </apex:commandlink>
+                                </div>    
+                            </div>  
+                        </div>
+                            
+                        <div class="panel one_third last aside">
+                          <!--   <c:Badge_Centers_Contact />     --> 
+                        </div>
+                    </div>
+                </apex:form>
+            </div>
+        </apex:define>
+    </apex:composition>
+</apex:page>

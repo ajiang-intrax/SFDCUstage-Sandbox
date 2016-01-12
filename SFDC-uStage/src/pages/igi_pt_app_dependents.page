@@ -1,0 +1,552 @@
+<apex:page id="igi_pt_app_dependents" docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardController="Applicant_Info__c"
+    extensions="AppEngine_Controller" action="{!checkLogin}"
+    standardStylesheets="false" showHeader="false"  title="J2 Dependents Information">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_igi_pt_application userAgentCheck="{!userAgentCheck}"/>
+      <div class="row">
+        <div class="col-md-7 col-md-push-3">
+        
+          <c:block_app_completion_igi applicantInfo="{!applicantInfo}" isIGIMainReady="{!CheckMainIGIApp}"/>
+            
+          <h1>J2 Dependents</h1>
+          
+          <p class="lead">The J2 visa is intended for spouses and/or dependents (e.g. children) accompanying the principal J1 holder to the US. Only spouses and unmarried dependents under the age of 21 qualify for J2 status. You will need to provide complete information and documentation for each spouse and/or dependent that will be accompanying you (if any) before submitting this part of your application. 
+
+Please enter your spouse and/or dependent’s information below exactly as it appears on his or her passport and double check for accuracy. This information will be used to generate a form DS-2019 and must therefore be accurate.</p>
+            <apex:form styleClass="form-vertical ws-validate" id="webform">
+            <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+            
+            <apex:variable var="passport" value="{!IF(DocTypeList != NULL && DocTypeList['Passport'] == '1', 'complete', 'incomplete')}" />
+            <apex:variable var="financial"  value="{!IF(DocTypeList != NULL && DocTypeList['FinancialResponsibility'] == '1', 'complete', 'incomplete')}" />
+            <apex:variable var="relationship"  value="{!IF(DocTypeList != NULL && DocTypeList['Proof-of-Relationship'] == '1', 'complete', 'incomplete')}" />
+            
+            <apex:outputPanel rendered="{!IF(applicantInfo.Application_Level__c == 'Main', true, false)}">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                          <label class="control-label">Will any dependents accompany you on your program in the U.S.?</label>                                          
+                          <apex:actionRegion >
+                              <apex:selectRadio styleClass="radio"   value="{!applicantInfo.J2_Dependent_Indicated__c}" required="true" id="dependentsIndicated">
+                                <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                                <apex:selectOption itemValue="No" itemLabel="No"/>
+                                <apex:actionSupport event="onchange" onComplete="rerunjs();" rerender="dependentsIndicatedBlock" status="pleasewait01"/>
+                              </apex:selectRadio>
+                              <apex:message styleClass="custom-error-radio" for="dependentsIndicated"/>
+                          </apex:actionRegion>
+                        </div>
+                    </div>
+                                            
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();"  startStyleClass="feedback-st" startText="Loading. Please wait..." id="pleasewait01"/>
+                    </div>  
+                </div>   
+                
+                <apex:pageBlock id="dependentsIndicatedBlock">        
+                    <apex:outputpanel layout="block" id="wrappertable" styleClass="panel-group group1" rendered="{!applicantInfo.J2_Dependent_Indicated__c == 'Yes'}">
+                        <apex:repeat id="wtable"  value="{!dependentsMap}" var="wrapper">
+                          <apex:variable var="rowLast" value="{!IF( dependentsMapLast == wrapper, 'in','')}"/>                    
+                          <div class="panel panel-default">
+                            <div class="panel-heading">
+                              <h4 class="panel-title">
+                                <!-- <apex:outputLink styleClass="accordion-toggle" html-data-toggle="collapse" html-data-parent=".group1" value="#collapse1{!rowNum}">record Num -->
+                                <apex:outputLink styleClass="accordion-toggle" html-data-toggle="collapse" html-data-parent=".group1" value="#collapse1{!wrapper}">
+                                  <apex:outputText rendered="{!IF(ISBLANK(dependentsMap[wrapper].Name), true, false)}" value=" Dependent {!wrapper}"> </apex:outputText>
+                                  <apex:outputText rendered="{!IF(ISBLANK(dependentsMap[wrapper].Name), false, true)}" value=" {!dependentsMap[wrapper].Name}"> </apex:outputText>
+                                </apex:outputLink>
+                              </h4>
+                            </div>
+                            <!--  end panel heading -->
+                            <div id="collapse1{!wrapper}" class="panel-collapse collapse {!rowLast}">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                              <label class="control-label">First Name</label>                                           
+                                              <apex:inputField styleClass="form-control" value="{!dependentsMap[wrapper].First_Name__c}" required="true" id="FirstName"/>
+                                            </div>
+                                        </div><!--  end col -->                                 
+                                   
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                              <label class="control-label">Last Name</label>                                            
+                                              <apex:inputField styleClass="form-control" value="{!dependentsMap[wrapper].Last_Name__c}" required="true" id="LastName"/>
+                                            </div>
+                                        </div><!--  end col -->                                 
+                                    </div><!--  end row -->
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                              <label class="control-label">Middle Name<span class="info">(Optional)</span></label>                                          
+                                              <apex:inputField styleClass="form-control" value="{!dependentsMap[wrapper].Middle_Name__c}" required="false" id="MiddleName"/>
+                                            </div>
+                                        </div><!--  end col -->     
+                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <label class="control-label">Relationship</label>
+                                                                <apex:selectRadio styleClass="radio"
+                                                                    value="{!dependentsMap[wrapper].Role__c}"
+                                                                    required="TRUE" id="rel">
+                                                                    <apex:selectOption itemValue="Spouse" itemLabel="Spouse" />
+                                                                    <apex:selectOption itemValue="Child"
+                                                                        itemLabel="Child" />
+                                                                </apex:selectRadio>
+                                                            </div>
+                                                        </div>
+                                                        <!--  end col -->                           
+                                                                    
+                                    </div><!--  end row -->
+                                                    
+                                                <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <label class="control-label">Birth Date </label>
+                                                                <div class="datepicker" locale="{!user.localeSidKey}">
+                                                                    <apex:inputField styleClass="form-control"
+                                                                        value="{!dependentsMap[wrapper].Date_of_Birth__c}"
+                                                                        required="TRUE" id="birthDate" />
+                                                                </div>
+
+
+                                                            </div>
+                                                        </div>
+                                                        <!--  end col -->
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <label class="control-label">Gender </label>
+                                                                <apex:selectRadio styleClass="radio"
+                                                                    value="{!dependentsMap[wrapper].Gender__c}"
+                                                                    required="TRUE" id="gender">
+                                                                    <apex:selectOption itemValue="Male" itemLabel="Male" />
+                                                                    <apex:selectOption itemValue="Female"
+                                                                        itemLabel="Female" />
+                                                                </apex:selectRadio>
+                                                            </div>
+                                                        </div>
+                                                        <!--  end col -->
+                                                    </div>
+                                                    <!--  end row -->
+                                                    
+                                                    
+                                                    
+                                                    
+                <div class="row"> 
+                <!--  
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label">Phone Country Code</label>
+                            <apex:actionRegion >
+                              <apex:selectList styleClass="form-control" style="height:40px;" value="{!dependentsMap[wrapper].Phone_Country_Code__c}" multiselect="false" required="TRUE" id="countrycode" size="1">
+                                <apex:selectOption itemValue="" itemLabel="Select Country Code"/>
+                                <apex:selectOptions value="{!listCountryCodeOptions}"/>
+                                <apex:actionSupport event="onchange" rerender="phonecode" status="showcode" />
+                              </apex:selectList>
+                              <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showcode"/>
+                            </apex:actionRegion>                            
+                            <apex:message for="countrycode" styleClass="custom-error-radio" id="apexmess1"/>
+                      </div>
+                </div> 
+                -->
+                    <div class="col-sm-6"> 
+                    <div class="form-group">
+                      <label class="control-label">Phone Number</label>
+                         <apex:inputField styleClass="form-control onlynumber" value="{!dependentsMap[wrapper].Phone__c}" required="TRUE" id="phone" /> 
+                                  
+                    </div>
+                </div> 
+                
+           
+                <div class="col-sm-6"> 
+                    <div class="form-group">
+                      <label class="control-label">Phone Type</label>
+                        <apex:inputField styleClass="form-control" value="{!dependentsMap[wrapper].Phone_Type__c}" required="TRUE" id="phoneType" />
+        
+                    </div>
+                </div> <!--  end col -->
+            </div> <!--  end row -->
+                                                    
+
+            <div class="row">
+            <div class="col-sm-6">  
+            <div class="form-group">
+              <label class="control-label"> Email </label>
+                <apex:inputField styleClass="form-control" value="{!dependentsMap[wrapper].Email__c}" required="TRUE" id="email" />
+            </div>
+            </div> <!--  end col -->
+             </div>                             
+                                                    
+                                        <div class="row">
+                                       
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                              <label class="control-label">Country of Birth</label>                                         
+                                              <apex:inputField styleClass="form-control" value="{!dependentsMap[wrapper].Birth_Country__c}" required="true" id="bcountry"/>
+                                            </div>
+                                        </div><!--  end col --> 
+                                         <div class="col-sm-6">
+                                            <div class="form-group">
+                                              <label class="control-label">City of Birth</label>                                            
+                                              <apex:inputField styleClass="form-control" value="{!dependentsMap[wrapper].Birth_City__c}" required="true" id="bcity"/>
+                                            </div>
+                                        </div><!--  end col -->                                 
+                                    </div><!--  end row -->
+                                    
+                              <div class="row">
+            <div class="col-sm-6">          
+                <div class="form-group">
+                  <label class="control-label">Country of Legal Residence</label>
+                    <apex:inputField styleClass="form-control" value="{!dependentsMap[wrapper].Country_of_Residence__c}" required="TRUE" id="legalResidence" />
+                </div>
+            </div> <!--  end col -->    
+            <div class="col-sm-6">          
+                <div class="form-group">
+                  <label class="control-label">Citizenship</label>
+                    <apex:inputField styleClass="form-control" value="{!dependentsMap[wrapper].Citizenship__c}" required="TRUE" id="Citizenship" />
+                </div>
+            </div> <!--  end col -->                                        
+            </div> 
+            
+            
+            <div class="row">  
+            <div class="col-sm-6"> 
+            <div class="form-group">
+              <label class="control-label">Home Address Line 1 </label>
+                <apex:inputField html-placeholder="Street address" styleClass="form-control" value="{!dependentsMap[wrapper].Street__c}" required="TRUE" id="haddressLine1" />
+            </div>
+             </div> <!--  end col -->
+            <div class="col-sm-6"> 
+            <div class="form-group">
+              <label class="control-label">Home Address Line 2 <span class="info">(Optional)</span></label>
+                <apex:inputField html-placeholder="Street address" styleClass="form-control" value="{!dependentsMap[wrapper].Street_2__c}" required="FALSE" id="haddressLine2" />
+            </div>
+            </div> <!--  end col -->
+            </div> <!--  end row -->
+           
+            
+             <div class="row">
+            
+            <div class="col-sm-6">  
+            <div class="form-group">
+              <label class="control-label">Home City </label>
+                <apex:inputField styleClass="form-control" value="{!dependentsMap[wrapper].City__c}" required="TRUE" id="city" />
+            </div>
+             </div> <!--  end col -->
+            <div class="col-sm-6"> 
+            <div class="form-group">
+              <label class="control-label">Home State/Province </label>
+                <apex:inputField styleClass="form-control" value="{!dependentsMap[wrapper].State__c}" required="TRUE" id="state" />
+            </div>
+             </div> <!--  end col -->
+             </div> <!--  end row -->
+             
+              <div class="row">
+            <div class="col-sm-6">  
+            <div class="form-group">
+              <label class="control-label">Home Postal Code </label>
+                <apex:inputField styleClass="form-control" value="{!dependentsMap[wrapper].Postal_Code__c}" required="TRUE" id="hpostalCode" />
+            </div>            
+             </div> <!--  end col -->
+            <div class="col-sm-6">  
+            <div class="form-group">
+              <label class="control-label">Home Country</label>
+                <apex:inputField styleClass="form-control" value="{!dependentsMap[wrapper].Country__c}" required="TRUE" id="hcountry" />
+            </div>
+             </div> <!--  end col -->
+            </div> <!--  end row -->
+             <apex:param name="persId" value="{!dependentsMap[wrapper].Id}"/>
+             <div class="row">
+                <div class="col-sm-12">
+                     <div class="form-group">   
+                     <label class="control-label">Please describe your planned financial support for this dependent while in the United States:</label>                   
+                     <apex:inputField styleClass="form-control" value="{!dependentsMap[wrapper].Financial_Support_Description__c}" required="TRUE" id="finDesc" />  
+                    </div>
+                </div><!--  end col -->                 
+          </div>
+          
+          
+        
+              <div>
+                    <apex:commandlink id="passportLink" styleClass="btn btn-link btn-lg" action="{!saveDependentsIGI}" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit" >
+                      <apex:param name="doctype2" value="Passport"/>
+                       <apex:param name="prId" value="upload_per_inf"/>
+                       <apex:param name="prType" value="per_inf"/>
+                      <apex:param name="persId" value="{!dependentsMap[wrapper].Id}"/>
+                      <i class="fa fa-plus-circle"></i> <span>Upload Passport</span> </apex:commandlink>
+                 
+                
+                  
+                 <apex:outputPanel layout="block" rendered="{!IF(DocList.Size > 0, true, false)}">
+                      <apex:pageBlock id="Block_ListPassport">
+                        <div class="table-responsive">
+                          <table class="table vs3">
+                            <thead>
+                              <tr>
+                                <th>File Name</th>
+                                <th>Remove</th>
+                              </tr>
+                            </thead>
+                            <apex:repeat value="{!DocList}" var="item">
+                              <apex:outputPanel rendered="{!(IF(item.Document_Type__c == 'Passport' , true, false) && IF(item.Person_Info__c == dependentsMap[wrapper].Id , true, false))}">
+                                <tr>
+                                  <td><apex:commandLink action="{!load}" target="_blank" >
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                      <apex:outputText value="{!item.Document_Name__c}"/>
+                                      
+                                    </apex:commandLink></td>
+                                  <td><apex:commandLink action="{!iWantMyJSValues}" styleClass="btn-lg" oncomplete="confDelete();" immediate="true" > <i class="fa fa-trash-o"></i>
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}" assignTo="{!docGuid}"/>
+                                    </apex:commandLink></td>
+                                </tr>
+                              </apex:outputPanel>
+                            </apex:repeat>
+                          </table>
+                        </div>
+                        
+                      </apex:pageBlock>
+                  </apex:outputPanel>  
+              
+              
+           </div>
+           <div>       
+                    <apex:commandlink id="financialLink" 
+                                            styleClass="btn btn-link btn-lg" action="{!saveDependentsIGI}" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit">
+                      <apex:param name="doctype2" value="FinancialResponsibility"/>
+                       <apex:param name="prId" value="upload_per_inf"/>
+                       <apex:param name="prType" value="per_inf"/>
+                      <apex:param name="persId" value="{!dependentsMap[wrapper].Id}"/>
+                      <i class="fa fa-plus-circle"></i> <span>Upload Proof of Financial Responsibility</span> </apex:commandlink>
+                  
+                
+                  
+               
+                  
+               
+                 <apex:outputPanel layout="block" rendered="{!IF(DocList.Size > 0, true, false)}">
+                      <apex:pageBlock id="Block_ListFinancialResponsibility" >
+                        <div class="table-responsive">
+                          <table class="table vs3">
+                            <thead>
+                              <tr>
+                                <th>File Name</th>
+                                <th>Remove</th>
+                              </tr>
+                            </thead>
+                            <apex:repeat value="{!DocList}" var="item">
+                              <apex:outputPanel rendered="{!(IF(item.Document_Type__c == 'FinancialResponsibility', true, false) && IF(item.Person_Info__c == dependentsMap[wrapper].Id , true, false))}">
+                                <tr>
+                                  <td><apex:commandLink action="{!load}" target="_blank" >
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                      <apex:outputText value="{!item.Document_Name__c}"/>
+                                    </apex:commandLink></td>
+                                  <td><apex:commandLink action="{!iWantMyJSValues}" styleClass="btn-lg" oncomplete="confDelete();" immediate="true" > <i class="fa fa-trash-o"></i>
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}" assignTo="{!docGuid}"/>
+                                    </apex:commandLink></td>
+                                </tr>
+                              </apex:outputPanel>
+                            </apex:repeat>
+                          </table>
+                        </div>
+                        <!--  end table responsive --> 
+                      </apex:pageBlock>
+              </apex:outputPanel>
+          </div>
+          <div>
+          
+                    <apex:commandlink id="relationshipLink" 
+                                            styleClass="btn btn-link btn-lg" action="{!saveDependentsIGI}" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit">
+                       <apex:param name="doctype2" value="Proof-Of-Relationship"/>
+                       <apex:param name="prId" value="upload_per_inf"/>
+                       <apex:param name="prType" value="per_inf"/>
+                      <apex:param name="persId" value="{!dependentsMap[wrapper].Id}"/>
+                      <i class="fa fa-plus-circle"></i> <span>Upload Proof of Relationship</span> </apex:commandlink>
+                
+                  
+                
+                 <apex:outputPanel layout="block" rendered="{!IF(DocList.Size > 0, true, false)}">
+                      <apex:pageBlock id="Block_Listrelationship" >
+                        <div class="table-responsive">
+                          <table class="table vs3">
+                            <thead>
+                              <tr>
+                                <th>File Name</th>
+                                <th>Remove</th>
+                              </tr>
+                            </thead>
+                            <apex:repeat value="{!DocList}" var="item">
+                              <apex:outputPanel rendered="{!(IF(item.Document_Type__c == 'Proof-of-Relationship', true, false) && IF(item.Person_Info__c == dependentsMap[wrapper].Id , true, false))}">
+                                <tr>
+                                  <td><apex:commandLink action="{!load}" target="_blank" >
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                      <apex:outputText value="{!item.Document_Name__c}"/>
+                                    </apex:commandLink></td>
+                                  <td><apex:commandLink action="{!iWantMyJSValues}" styleClass="btn-lg" oncomplete="confDelete();" immediate="true" > <i class="fa fa-trash-o"></i>
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}" assignTo="{!docGuid}"/>
+                                    </apex:commandLink></td>
+                                </tr>
+                              </apex:outputPanel>
+                            </apex:repeat>
+                          </table>
+                        </div>
+                        <!--  end table responsive --> 
+                      </apex:pageBlock>
+                 </apex:outputPanel>
+              </div>
+              <div>
+                                    <apex:outputText id="outputpanel1">
+                                      <apex:commandlink styleClass="btn btn-link btn-lg pull-right" action="{!removeDependentsRecord}" rerender="wrappertable" onComplete="dpInitiate();" immediate="true" id="linkdelWrapper" status="status"> <i class="fa fa-trash-o"></i> <span>Remove</span>
+                                        <apex:param name="toDelIdent" value="{!wrapper}" assignTo="{!toDelIdent}"/>
+                                      </apex:commandlink>
+                                    </apex:outputText>
+                                    
+                 </div>                   
+                                </div>
+                            </div>
+                            
+                          </div>
+                          <!--  end panel -->
+                        </apex:repeat>
+                        
+                          <apex:outputPanel layout="block" id="outputpaneladd">
+                            <apex:commandlink styleClass="btn btn-link btn-lg margin-b" action="{!addDependentsRecord}" onComplete="dpInitiate();" immediate="true" rerender="wrappertable, experienceblock, rowCounter" id="linkaddlWrapper" status="status">
+                              <apex:commandButton value="" id="addbutton"/>
+                                  <i class="fa fa-plus-circle"></i>
+                                    <span>Add J2 Dependent</span>
+                            </apex:commandlink>
+                          </apex:outputPanel>
+                       
+        <apex:outputPanel layout="block" id="J2_Terms_Accepted" rendered="{!IF(UserInterests=='Finding an internship', true, false)}">                                  
+        <div class="col-sm-12">
+              <div class="form-group">
+                <apex:inputField value="{!applicantInfo.J2_Terms_Accepted__c}" id="agreementcheck" />
+                &nbsp; <span class="lead">I affirm that the information provided for my spouse and/or dependents is correct.  I will inform Intrax of my spouse and/or dependents’ arrival in the USA and will notify Intrax promptly should my accompanying spouse and/or dependents depart from the United States prior to my departure date.  I understand that Intrax cannot guarantee that a visa will be approved.                                        
+              </span> </div>
+            </div>
+        </apex:outputPanel>                  
+                       
+                      </apex:outputpanel>
+                      
+           
+                      
+                  </apex:pageBlock>
+                  <!--  end panel group --> 
+            
+            </apex:outputPanel> <!-- END MAIN BLOCK -->
+            
+                      
+            
+            
+                    
+            <div class="row">
+                <div class="form-group margin-t4">
+                  <!--  <apex:outputLink styleClass="btn btn-link btn-lg"  value="/apex/igi_pt_app_contact_info?id={!applicantInfo.Id}" id="backlink2"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                  -->
+                  
+                  <apex:commandlink styleClass="btn btn-primary btn-lg margin-r"  action="{!navigator}" id="nextlink2" onComplete="rerunjs();hwsize();" reRender="webform" status="onsubmit">
+                     <apex:param name="nextPage" value="/apex/igi_pt_app_home" />
+                    <apex:param name="reDirectPage" value="true" />
+                    <apex:param name="pageId" value="063"/>
+                    <apex:commandButton value="Save & Continue" id="continuebutton2"/>
+                  </apex:commandlink>
+                  
+                   <!-- <apex:commandlink styleClass="btn btn-link btn-lg" rendered="{!NOT(CONTAINS(applicantInfo.PageStatus_Complete__c,'063'))}"
+                                    action="{!setPageIdStarted}" id="skipLink" reRender="webform" status="onsubmit">
+                    <apex:param name="pageId" value="063"/>
+                    <apex:commandButton value="" id="skipButton"/>        
+                        <span>Skip this page</span>             
+                  </apex:commandlink> -->
+                </div> 
+                
+              </div>
+            
+            
+             <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                  <div class="modal-body">
+                    <p>Are you sure you want to remove this file?</p>
+                  </div>
+                  <div class="modal-footer">
+                    <apex:commandLink styleClass="btn btn-primary" action="{!deletefile}" immediate="true">
+                      <apex:param name="igiDepsParam" value="true" assignTo="{!igiDepsParam}" />
+                      <apex:commandButton value="Yes" id="yesbutton"/>
+                    </apex:commandLink>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--  end modal -->
+            
+            <div class="modal fade modal-widget" id="myModalUpload" tabindex="-1" role="dialog" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title">Upload Document</h4>
+                  </div>
+                  <div class="modal-body">                     
+                                       
+                   <iframe width="100%" height="400" frameborder="0" scrolling="no" src="{!fileUploadUrl}pid={!$CurrentPage.parameters.prId}&aid={!$CurrentPage.parameters.persId}&orgid={!$Organization.Id}&rType={!$CurrentPage.parameters.prType}&docType={!$CurrentPage.parameters.docType2}&retparam={!retParam}"></iframe>
+                  
+                  <!--  <iframe width="100%" height="400" frameborder="0" scrolling="no" src="{!fileUploadUrl}pid={!$CurrentPage.parameters.prId}&aid={!$CurrentPage.parameters.persId}&rType={!$CurrentPage.parameters.prType}&orgid={!$Organization.Id}&docType={!$CurrentPage.parameters.docType2}&retparam={!retParam}"></iframe>
+                   -->
+                 <!--  
+                  <iframe width="100%" height="400" frameborder="0" scrolling="no" src="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&docType={!$CurrentPage.parameters.docType2}&orgid={!$Organization.Id}&retparam={!retParam}"></iframe>
+                   -->
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--  end modal --> 
+            
+            
+            
+            
+            
+            
+          </apex:form>
+          <apex:form >
+            <c:block_app_coedit_authorization ApplicantInfo="{!applicantInfo}" pageController="{!AEC}" rendered="{!applicantInfo.Apply_on_Behalf_of_PT__c && applicantInfo.Application_Stage__c == 'Working'}"/>
+          </apex:form>
+        </div>
+        <!-- end column -->
+        
+        <div class="col-md-3 col-md-pull-7">
+          <apex:form >
+            <c:menu_igi_pt_app ApplicantInfo="{!applicantInfo}" personInfo="{!personInfo}" returnURL="{!returnURL}"/>
+          </apex:form>
+        </div>
+        <!-- end column  --> 
+      </div>
+      <!-- end row --> 
+      
+      
+   <script>
+var j$ = jQuery.noConflict();
+
+function confDelete(){
+j$('#myModal').modal();
+} 
+  
+function popModal(){
+var auxerr= j$('.custom-error-pagelevel').attr('role');
+//alert(auxerr);
+    if(auxerr=="alert"){
+    }else{
+        j$('#myModalUpload').modal();
+    }
+} 
+    
+</script>     
+      
+      
+      
+      
+      
+      
+      
+      
+    </apex:define>
+  </apex:composition>
+</apex:page>

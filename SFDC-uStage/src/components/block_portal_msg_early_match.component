@@ -1,0 +1,76 @@
+<apex:component id="block_portal_msg_early_match" >
+<apex:attribute name="APCArrivalDates" description="Custom Setiing APC_ArrivalDates__c object" type="APC_ArrivalDates__c" required="false" default="" />
+
+					<!-- JOSE B-03139 Display Match Request Deadline messages in HF and PT portals (Match Deadlines - B) -->
+
+<apex:outputPanel layout="block" rendered="{!$CurrentPage.Name == 'apc_hf_home'}">
+               <div class="hp-block">
+<div class="row">
+
+<div class="col-sm-8">
+  <div class="tcell"><i class="fa fa-calendar-check-o margin-r2 margin-l2"></i>
+  </div>
+  <div class="tcell">
+  <h3>Request your match by 
+				   <br class="visible-xs"/>
+				    <b><apex:outputText value=" {0,date,MMMM}">
+					<apex:param name="month" value="{!APCArrivalDates.Match_Request_Deadline__c}"/>
+					</apex:outputText>
+					<apex:outputText value=" {!Day(APCArrivalDates.Match_Request_Deadline__c)}"></apex:outputText>,
+					<apex:outputText value=" {!Year(APCArrivalDates.Match_Request_Deadline__c)}"></apex:outputText></b>
+					
+					<br/>
+					for an au pair arrival on 
+					<br class="visible-xs"/>
+					<b><apex:outputText value=" {0,date,MMMM}">
+					<apex:param name="month" value="{!APCArrivalDates.US_Arrival__c}"/>
+					</apex:outputText>
+					<apex:outputText value=" {!Day(APCArrivalDates.US_Arrival__c)}"></apex:outputText>,
+					<apex:outputText value=" {!Year(APCArrivalDates.US_Arrival__c)}"></apex:outputText></b>
+					
+					</h3>
+  </div>
+</div>
+<div class="col-sm-4">
+<apex:outputLink styleClass="btn btn-lg btn-primary margin-t2" value="/apex/apc_hf_search_au_pairs"> <span>Search All Au Pairs</span> </apex:outputLink>
+</div>
+  
+</div>
+</div> 
+</apex:outputPanel>  
+
+
+<apex:outputPanel layout="block" rendered="{!$CurrentPage.Name != 'apc_hf_home'}">
+<div class="alert alert-warning">
+<div class="row">
+
+<div class="col-sm-12">
+  <div class="tcell vmiddle"><i class="fa fa-calendar-check-o margin-r2 margin-l2" style="font-size: 30px;"></i></div>
+  <div class="tcell vmiddle">
+  <p class="lead no-margin">Request your match by 
+				    <b><apex:outputText value=" {0,date,MMMM}">
+					<apex:param name="month" value="{!APCArrivalDates.Match_Request_Deadline__c}"/>
+					</apex:outputText>
+					<apex:outputText value=" {!Day(APCArrivalDates.Match_Request_Deadline__c)}"></apex:outputText>,
+					<apex:outputText value=" {!Year(APCArrivalDates.Match_Request_Deadline__c)}"></apex:outputText></b>
+					for an au pair arrival on 
+					<b><apex:outputText value=" {0,date,MMMM}">
+					<apex:param name="month" value="{!APCArrivalDates.US_Arrival__c}"/>
+					</apex:outputText>
+					<apex:outputText value=" {!Day(APCArrivalDates.US_Arrival__c)}"></apex:outputText>,
+					<apex:outputText value=" {!Year(APCArrivalDates.US_Arrival__c)}"></apex:outputText></b>
+					</p>
+  </div>
+</div>
+
+  
+</div>
+</div>
+</apex:outputPanel>  
+
+
+
+
+
+
+</apex:component>

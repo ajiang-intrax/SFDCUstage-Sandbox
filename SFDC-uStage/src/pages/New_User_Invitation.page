@@ -1,0 +1,131 @@
+<apex:page id="Page" standardController="Communication__c"
+    extensions="User_Invitation_Controller" action="{!checklogin}"
+    standardStylesheets="false" showHeader="false">
+    <apex:composition template="IntraxTemplate_Vs2">
+        <apex:define name="body">
+            <script>
+                function disableBtn(sender){
+                    sender.disabled = true;
+                }
+                
+                function SendNewInvitation() {
+                    document.getElementById('loadingImage').style.display = 'block';
+                }
+             </script>
+
+            <apex:form id="Form">
+            <!--  
+                <div class="row-fluid">
+                    <div class="span12">
+                        <h1>Applications</h1>
+                    </div>
+
+                </div>
+            -->
+
+                <div class="row-fluid">
+                    <div class="span12">
+                        <div class="block">
+                            <div class="block-header">
+                                <h3>New User Invitation</h3>
+                            </div>
+                            <div class="block-body">
+                                <apex:pageMessages />
+                                <p>
+                                    <em> All fields marked with an asterisk (<span
+                                        class="required no-padding">*</span>) are required
+                                    </em>
+                                </p>
+                                
+                                <div class="form-row">
+                                    <div class="form-label left ">
+                                        First Name <span class="required no-padding">*</span>
+                                    </div>
+                                    <div class="form-field">
+                                        <apex:inputField value="{!comInfo.Recipient_First_Name__c}" id="firstname" required="false" />
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-label left ">
+                                        Last Name <span class="required no-padding">*</span>
+                                    </div>
+                                    <div class="form-field">
+                                        <apex:inputField value="{!comInfo.Recipient_Last_Name__c}" id="lastname" required="false" />
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-label left ">
+                                        Email <span class="required no-padding">*</span>
+                                    </div>
+                                    <div class="form-field">
+                                        <apex:inputField value="{!comInfo.To_Address__c}" id="email" required="false" />
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-label top">Message</div>
+                                    <div class="form-field">
+                                        <apex:inputField id="message" value="{!comInfo.Message__c}"
+                                            required="FALSE"
+                                            onkeyup="countChar(this, 500, 'messageCount')" />
+                                        <div class="char-limit">
+                                            <span class="char-count-label">Characters left:</span> <span
+                                                id="messageCount" class="char-count">
+                                                {!500-len(comInfo.Message__c) } </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-label top">
+                                        Program <span class="required no-padding">*</span>
+                                    </div>
+                                    <div style="padding-left: 15px;">
+                                        <apex:selectRadio layout="pageDirection" value="{!ipo_options}" id="ipo" required="false">
+                                            <p>
+                                                <apex:selectOptions value="{!ProgramOptions}" />
+                                            </p>
+                                        </apex:selectRadio>
+                                        <apex:message for="ipo" styleClass="custom-error-radio" />
+                                    </div>
+                                </div>
+
+                                <p>
+                                <div style="display: none;" class="feedback" id="loadingImage">
+                                    <i class="icon-spinner icon-spin icon-2x"></i> <span>Sending
+                                        invitation</span>
+                                </div>
+
+                                </p>
+
+                                <div class="form-row">
+                                    <div class="form-link" id="BackLink">
+                                        <apex:outputLink id="Back" styleClass="back" value="/apex/pr_app_list">
+                                            <i class="icon-chevron-left"></i>
+                                            <span>Back</span>
+                                        </apex:outputLink>
+                                    </div>
+                                    <div class="form-button">
+                                        <apex:commandlink styleClass="next"
+                                            action="{!CreateCommunication}"
+                                            onclick="SendNewInvitation();">
+                                            <apex:commandButton id="SendInvitation" value="Send invitation"
+                                                onClick="disableBtn();" />
+                                        </apex:commandlink>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- end span12 -->
+                </div>
+                <!-- end row -->
+            </apex:form>
+        </apex:define>
+    </apex:composition>
+
+</apex:page>

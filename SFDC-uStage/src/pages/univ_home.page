@@ -1,0 +1,135 @@
+<apex:page id="univ_home" docType="html-5.0" applyBodyTag="false" applyHtmlTag="false"
+	controller="university_controller" action="{!checkLogin}"
+	standardStylesheets="false" showHeader="false"  title="Home">
+
+ <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">	
+	<apex:form > 
+	 <c:block_header_igi_pt_application /> 
+        <div class="row margin-b4">
+          <div class="col-md-9 center-block center-text">
+            <h1>Welcome {!ContactUsUser.Name}</h1>
+			<p class="lead">Intrax Global Internships shares campus educators goals for preparing students to embark on successful careers within an international workforce. 
+			Every Intrax program is designed to put to use what the participant has already learned in the classroom, and to challenge the student to learn, grow, and do.
+			</p>
+			
+			 </div>
+          </div><!--  end row -->
+          <hr class="margin-b4"/>
+          
+          <div class="row margin-b6">
+          <div class="col-md-9 center-block">
+          <apex:image url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/univ/univ-offering-direct.jpg')}"/>
+          <h2 class="margin-b3 margin-t3 center-text">Programs For Individual Students</h2>
+          <p>Intrax Global Internships prepares students with real-world and world-wide professional experiences in a variety of internship positions:</p>
+
+          <div class="center-block inline-block margin-t2 margin-b2">
+          <div class="tcell">
+          <ul class="margin-r">
+          <li>Business</li>
+          <li>Information Media &amp; Communications</li>
+          <li>Public Administration &amp; Law</li>
+          </ul>
+          </div>
+          <div class="tcell">
+          <ul>
+          <li>Engineering</li>
+          <li>Social Development</li>
+          <li>Hospitality &amp; Tourism</li>
+          </ul>
+          </div>
+          
+          </div>
+          <p>Through carefully matched internship placements with pre-screened host companies, Intrax provides students with invaluable career experiences in Europe, Asia, North and South America. 
+          We also work with eligible international students who are looking for OPT/CPT opportunities in the United States. </p>
+          <p>The Intrax matching process mirrors aspects of an actual job search, providing participants the opportunity to review and apply for pre-selected positions for which they're qualified, cultivating interview skills from the very beginning of the process. Once on the program, students &#8212; and administrators &#8212; rest assured knowing that Intrax Global Internships will provide students with the support they need both on and off the job, so that they &#8212; and you &#8212; can focus on what's important: their education.</p>
+          
+          <p>
+          Invite your students to apply or contact your Intrax representative listed below to request more information. Intrax offers scholarships to students from our partner universities to help offset the cost of the program.</p>
+         <div class="center-text">
+          <apex:outputLink styleClass=" margin-t btn btn-lg btn-primary" value="univ_user_invitation">
+	           Invite a Student
+	         </apex:outputLink>
+	         </div>
+        </div>
+         </div><!--  end row -->
+        
+         <hr class="margin-b6"/>
+           <div class="row margin-b4">
+           
+            <div class="col-md-9 center-block">
+            <div class="row">
+          <div class="col-md-6">
+          <apex:image url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/univ/univ-offering-custom-grp.jpg')}"/>
+           <h3>Custom Internship Groups</h3>
+           <p>Custom Internship Groups combine the comfort of traveling as a group, independence of individualized internship placements, and benefits of 24/7 support from our team. 
+           These programs are tailored to your university, college, or professional organization's needs. Participants spend the majority of their time engaged in a full-time internship position with a carefully screened host company or organization all while living, learning, and exploring their new city. Our staff members work closely with our university, college, and professional partners to assess the needs and goals for the group, then collaborate in screening applicants for the programs. 
+           Each program operates uniquely, but all participants benefit from signature elements of the Intrax Global Internship.</p>
+           <p>
+           
+           </p>
+          </div>
+          
+           <div class="col-md-6">
+            <apex:image url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/univ/univ-offering-fac-led.jpg')}"/>
+            <h3>Faculty Led Programs</h3>
+            <p>Custom programs for student, academic, and professional groups who want immersive and experiential exposure in developing economies. 
+            Leaders travel with participants into the field to apply training in practical and intercultural contexts. 
+            Past examples have included service learning projects, pre-professional development experiences, practicums, and externships. Intrax staff members work closely with faculty-led group leaders in all elements of pre-program planning, from exploring options to final boarding call. 
+            During this phase, leaders will also meet our Intrax on-site teams at their destination, who will meet them when they arrive and guide them through their Intrax experience. 
+            Our on-site staff members are a mix of local staff members and expats with close ties to the local communities in Belize, Ghana, and Peru.</p>
+          <p>
+          
+       
+          </p>
+          </div>
+          </div>
+          </div>
+          </div><!--  end row -->
+       
+       <hr class="margin-b4 margin-t4"/>
+       <apex:outputPanel layout="block" rendered="{!ContactUsUser != NULL && ContactUsUser.OwnerId != NULL}">    
+       <div class="row">
+       <div class="col-md-9 center-block center-text">
+       <h2>Have Questions? Contact Us</h2>
+       <p class="margin-b4">Our staff is always here to help answer your questions, provide information or help you set up a new group. Below is the contact information for your institution's account manager:</p>
+       <p>
+       {!ContactUsUser.Owner.Name}<br/>
+       <em>{!ContactUsUser.Owner.Title}</em><br/>
+       {!ContactUsUser.Owner.Phone}<br/>
+       <a href="mailto:{!ContactUsUser.Owner.Email};">{!ContactUsUser.Owner.Email}</a>
+       </p>
+       </div>
+       </div> 
+       </apex:outputPanel>
+       <!--  end row -->
+        
+        
+          <!--<apex:commandlink title="Read More" id="rpt_Direct" action="{!getDocumentUrl}" target="_blank">
+		   <apex:param name="guid" value="{!Directlink}"/>
+		   <b>Direct Read More</b>
+		   </apex:commandLink> -->
+		   <!--   <apex:commandlink title="Read More" id="rpt_Business" action="{!getDocumentUrl}" target="_blank">
+		   <apex:param name="guid" value="{!Businesslink}"/>
+		   <b>Read More</b>
+		   </apex:commandlink>-->
+		   <!--<apex:commandlink title="Read More" id="rpt_SocialDev" action="{!getDocumentUrl}" target="_blank">
+		   <apex:param name="guid" value="{!SocialDevlink}"/>
+		   <b>Read More</b>
+		   </apex:commandlink>-->
+		   <!--<apex:commandlink id="rpt_Univ" action="{!getReportUrl}" target="_blank">
+		         <apex:param name="guid" value="{!UnivReportLink}"/>
+		         <apex:param name="csv" value="1"/>
+		         <apex:commandButton value="University Report" />
+		    </apex:commandlink>-->
+        
+          
+       
+          
+          
+          </apex:form>
+          
+          </apex:define>
+	</apex:composition>
+	
+</apex:page>

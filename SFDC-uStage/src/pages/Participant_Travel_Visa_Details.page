@@ -1,0 +1,417 @@
+<apex:page title="Home | Intrax" standardStylesheets="false" showHeader="false" controller="ParticipantPortalController" action="{!checkLogin}">
+    
+        <apex:composition template="IntraxTemplate_Vs2" >
+            <apex:define name="body">                   
+                <apex:form >
+                <!-- begin row -->
+                <div class="row">
+                    <apex:outputPanel styleClass="span9" layout="block">
+                        <h1>
+                            <apex:outputText value="Travel and Visa Information"/>
+                        </h1>
+                    </apex:outputPanel>
+                    
+                </div>
+                <!-- end row -->   
+            
+                <!-- begin row -->
+                <div class="row">
+                    
+                    <!-- begin span3 -->
+                    <!-- <div class="span3">
+                       <c:Menu_Participant_Side_Navigator />
+                    </div>
+                     -->
+                    <!-- end span3 -->
+                    
+                    <!-- begin span9 -->
+                    <div class="span9">
+           
+                        <!-- begin block --> 
+                        <apex:outputPanel styleClass="block" layout="block">
+                            
+                                <div class="block-body">
+                        
+                                
+                                
+                                <apex:actionStatus id="waitMsg" startStyleClass="feedback" layout="block">
+                                    <apex:facet name="start" >   
+                                        <i class="no-float icon-spinner icon-spin icon-2x pull-left"></i>  <strong>Please Wait.....</strong>
+                                    </apex:facet>
+                                </apex:actionStatus>
+                           
+                                <apex:outputPanel id="myPanel">
+                                    <apex:outputPanel rendered="{!IF($CurrentPage.parameters.isView == 'false', true, false)}" layout="block">
+                                
+                                        <apex:pageBlock id="pb">
+                                            
+                                            <apex:pageMessages id="validationMsg"/>
+                                            <!--
+                                            <div class="form-row">
+                                                <div class="form-label left ">Trip Name<span class="required">*</span></div>
+                                                <div class="form-field">
+                                                  <apex:inputField value="{!trip.Name}" required="true"/>
+                                                </div>
+                                            </div>
+                                            -->    
+                                            <div class="form-row">
+                                                <div class="form-label left ">Departure Airport Code <span class="required">*</span></div>
+                                                <div class="form-field">
+                                                  <apex:inputField value="{!trip.Departing_From__c}" required="true"/>
+                                                </div>
+                                            </div>
+                                                        
+                                                <div class="form-row">
+                                                    <div class="form-label left ">Departure City <span class="required">*</span></div>
+                                                    <div class="form-field">
+                                                        <apex:inputField value="{!trip.Departing_City__c}" required="true"/>
+                                                    </div>
+                                            </div>
+                                                
+                                           <!--   <div class="form-row">
+                                                <div class="form-label left">Departure Date <span class="required">*</span></div>
+                                                    <div class="form-field datepicker wtime" locale="{!activeUser.localeSidKey}">
+                                                       <apex:inputField value="{!trip.Departing_Date__c}" required="true" /> 
+                                                    </div> 
+                                            </div>
+                                            -->
+                                            <div class="form-row">
+                                                <div class="form-label left">Departure Date <span class="required">*</span></div>
+                                                    <div class="form-field datepicker wtime" locale="en_US">
+                                                       <apex:inputField value="{!trip.Departure_Date_Time__c}" required="true" /> 
+                                                    </div> 
+                                            </div>            
+                                            <div class="form-row">
+                                                <div class="form-label left ">Airline <span class="required">*</span></div>
+                                                <div class="form-field">
+                                                  <apex:inputField value="{!trip.Carrier__c}" required="true"/>
+                                                </div>
+                                            </div>
+                                      
+                                            <div class="form-row">
+                                                <div class="form-label left ">Flight Number <span class="required">*</span></div>
+                                                <div class="form-field">
+                                                  <apex:inputField value="{!trip.Carrier_Number__c}" required="true"/>
+                                                </div>
+                                            </div> 
+                                            
+                                            <div class="form-row">
+                                                <div class="form-label left ">Arrival Airport Code <span class="required">*</span></div>
+                                                <div class="form-field">
+                                                  <apex:inputField value="{!trip.Arriving_At__c}" required="true"/>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="form-row">
+                                                <div class="form-label left ">Arrival City <span class="required">*</span></div>
+                                                <div class="form-field">
+                                                  <apex:inputField value="{!trip.Arriving_City__c}" required="true"/>
+                                                </div>
+                                            </div>
+                                            
+                                            <!--  <div class="form-row">
+                                                <div class="form-label left">Arrival Date <span class="required">*</span></div>
+                                                    <div class="form-field datepicker wtime" locale="{!activeUser.localeSidKey}">
+                                                       <apex:inputField value="{!trip.Arriving_Date__c}" required="true" /> 
+                                                    </div>
+                                            </div>
+                                            -->
+                                            <div class="form-row">
+                                                <div class="form-label left">Arrival Date <span class="required">*</span></div>
+                                                    <div class="form-field datepicker wtime" locale="en_US">
+                                                       <apex:inputField value="{!trip.Arrival_Date_Time__c}" required="true" /> 
+                                                    </div>
+                                            </div>
+                                            <!-- IGI-880 (Start) -->
+                                            <apex:outputPanel rendered="{!IF(trip.Arrival_to_Host_Community__c == true, true,false)}" >
+						                      <div class="form-row">
+						                        <div class="form-label left "> Arrival to Host Community </div>
+						                        <div class="form-field">
+						                          <apex:inputCheckbox value="{!trip.Arrival_to_Host_Community__c}" disabled="true" />
+						                        </div>
+						                      </div>
+						                      </apex:outputPanel>
+						                      <apex:outputPanel rendered="{!IF(trip.Departure_from_Host_Community__c == true, true,false)}" >
+						                      <div class="form-row">
+						                        <div class="form-label left "> Departure from Host Community </div>
+						                        <div class="form-field">
+						                          <apex:inputCheckbox value="{!trip.Departure_from_Host_Community__c}" disabled="true" />
+						                        </div>
+						                      </div>                                            
+						                      </apex:outputPanel>
+						                      <!-- IGI-880 (End) -->
+                                            <!-- 3 new checkboxes added -->
+                                            
+                                            <!-- <div class="form-row">
+                                                <div class="form-label left "> Arrival to Host Community </div>
+                                                <div class="form-field">
+                                                  <apex:inputCheckbox value="{!trip.Arrival_to_Host_Community__c}" required="true"/>
+                                                </div>
+                                            </div>    
+                                            <div class="form-row">
+                                                <div class="form-label left "> Arrival to Host Country </div>
+                                                <div class="form-field">
+                                                  <apex:inputCheckbox value="{!trip.Arrival_to_Host_Country__c}" required="true"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-label left "> Departure from Host Community </div>
+                                                <div class="form-field">
+                                                  <apex:inputCheckbox value="{!trip.Departure_from_Host_Community__c}" required="true"/>
+                                                </div>
+                                            </div>
+                      						 -->
+                                            <!--            
+                                            <div class="form-row">
+                                                <div class="form-label left ">International Travel <span class="required">*</span></div>
+                                                <div class="form-field">
+                                                  <apex:selectRadio value="{!trip.International_Leg__c}" id="International_Leg" required="true">
+                                                        <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                                                        <apex:selectOption itemValue="No" itemLabel="No"/>
+                                                  </apex:selectRadio>
+                                                  <apex:message for="International_Leg" styleClass="custom-error-radio"/>  
+                                                </div>
+                                            </div>
+                                            -->
+                                           <!--  <div class="form-row">
+                                                <div class="form-label left ">Record Locator <span class="required">*</span></div>
+                                                <div class="form-field">
+                                                  <apex:inputField value="{!trip.Record_Locator__c}" required="true"/>
+                                                </div>
+                                            </div>
+                                             -->
+                                             <apex:outputPanel rendered="{!IF(trip.Arrival_to_Host_Community__c == true, true,false)}" >
+                                            <div class="form-row">
+					                        <div class="form-label left "> Ground Transportation Type </div>
+					                        <div class="form-field">
+					                          <apex:inputField value="{!trip.Ground_Transporation_Type__c}"  />
+					                        </div>
+					                      </div>  
+					                      
+					                      <div class="form-row">
+					                        <div class="form-label left "> Arrival to Host Community Date </div>
+					                        <div class="form-field">
+					                            <div class="form-field datepicker wtime" locale="en_US">
+					                               <apex:inputField value="{!trip.Arrival_to_Host_Community_Date__c}" /> 
+					                            </div> 
+					                        </div>
+					                      </div> 
+					                      
+                                            <div class="form-row">
+                                                <div class="form-label top ">Address of your final trip destination (Street 1, Street 2, City, State, Postal Code) </div>
+                                                <div class="form-field">
+                                                  <apex:inputField value="{!trip.Description__c}" id="Description" onkeyup="countChar(this, 255, 'TripDesc')"/>
+                                                <div class="char-limit"><span class="char-count-label">Characters left:</span>
+                                                        <span id="TripDesc" class="char-count">
+                                                            {!255-len(trip.Description__c) }
+                                                        </span>
+                                                </div>
+                                                </div>
+                                            </div>
+                                           </apex:outputPanel>
+                                           <div class="form-row">
+                                            <div class="form-link">
+                                                <apex:outputLink value="/apex/Participant_Travel_Visa">
+                                                    <i class="icon-chevron-left"></i> <span>Back To Trips</span>
+                                                </apex:outputLink>  
+                                            </div>
+                                           
+                                            <!-- Command Link for Save & Continue  -->      
+                                            <div class="form-button">
+                                                <apex:commandLink action="{!updateIndividualTrip}">
+                                                     <span>Update</span> <!-- <i class="icon-chevron-right"></i> -->
+                                                </apex:commandlink>
+                                            </div>    
+                                        </div>  
+                                        <!--          
+                                            <apex:outputPanel rendered="{!IF($CurrentPage.parameters.isView == 'false', true, false)}" styleClass="form-button">
+                                                <apex:outputLink value="/apex/Partner_PT_Travel_Visa?participantId={!participant.Id}">
+                                                    <i class="icon-chevron-left"></i> <span>Back To Trips</span>
+                                                </apex:outputLink>
+                                                
+                                                <apex:commandLink action="{!updateIndividualTrip}">
+                                                     <span>Update</span> <i class="icon-chevron-right"></i>
+                                                </apex:commandlink>
+                                                
+                                            </apex:outputPanel>
+                                        -->                 
+                                        </apex:pageBlock>
+                                        
+                                    </apex:outputPanel>
+                                </apex:outputPanel>
+                            
+                                <apex:outputPanel id="myPanel1">
+                                    <apex:outputPanel rendered="{!IF($CurrentPage.parameters.isView == 'true', true, false)}" layout="block">
+                                    
+                                        <apex:pageBlock id="pb1">
+                                            <apex:pageMessages id="validationMsg"/>
+                                                    
+                                            <div class="data-row">
+                                                    <div class="data-label left ">Departure Airport Code</div>
+                                                <div class="data-field">
+                                                  <apex:outputField value="{!trip.Departing_From__c}"/>
+                                                </div>
+                                                </div>
+                                            
+                                            <div class="data-row">
+                                                <div class="data-label left ">Departure City</div>
+                                                <div class="data-field">
+                                                        <apex:outputField value="{!trip.Departing_City__c}"/>
+                                                </div>
+                                            </div>
+                                        
+                                            <!--  <div class="data-row">
+                                                <div class="data-label left ">Departure Date</div>
+                                                <div class="data-field">
+                                                        <apex:outputField value="{!trip.Departing_Date__c}"/>
+                                                </div>
+                                            </div>
+                                                -->
+                                            <div class="data-row">
+                                                <div class="data-label left ">Departure Date</div>
+                                                <div class="data-field">
+                                                        <apex:outputField value="{!trip.Departure_Date_Time__c}"/>
+                                                </div>
+                                            </div>
+                                            <div class="data-row">
+                                                <div class="data-label left ">Airline</div>
+                                                <div class="data-field">
+                                                  <apex:outputField value="{!trip.Carrier__c}"/>
+                                                </div>
+                                            </div>
+                                      
+                                            <div class="data-row">
+                                                <div class="data-label left ">Flight Number</div>
+                                                <div class="data-field">
+                                                  <apex:outputField value="{!trip.Carrier_Number__c}"/>
+                                                </div>
+                                            </div> 
+                                            
+                                            <div class="data-row">
+                                                <div class="data-label left ">Arrival Airport Code</div>
+                                                <div class="data-field">
+                                                  <apex:outputField value="{!trip.Arriving_At__c}"/>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="data-row">
+                                                <div class="data-label left ">Arrival City</div>
+                                                <div class="data-field">
+                                                  <apex:outputField value="{!trip.Arriving_City__c}"/>
+                                                </div>
+                                            </div>
+                                            
+                                            <!--  <div class="data-row">
+                                                <div class="data-label left ">Arrival Date</div>
+                                                <div class="data-field">
+                                                  <apex:outputField value="{!trip.Arriving_Date__c}"/>
+                                                </div>
+                                            </div>
+                                            -->
+                                            <div class="data-row">
+                                                <div class="data-label left ">Arrival Date</div>
+                                                <div class="data-field">
+                                                  <apex:outputField value="{!trip.Arrival_Date_Time__c}"/>
+                                                </div>
+                                            </div>
+                                            <!-- <div class="data-row">
+                                                <div class="data-label left ">Arrival to Host Community </div>
+                                                <div class="data-field">
+                                                  <apex:outputField value="{!trip.Arrival_to_Host_Community__c}"/>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="data-row">
+                                                <div class="data-label left ">Arrival to Host Country</div>
+                                                <div class="data-field">
+                                                  <apex:outputField value="{!trip.Arrival_to_Host_Country__c}"/>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="data-row">
+                                                <div class="data-label left ">Departure from Host Community</div>
+                                                <div class="data-field">
+                                                  <apex:outputField value="{!trip.Departure_from_Host_Community__c}"/>
+                                                </div>
+                                            </div>
+                                             -->
+                                            <!--
+                                            <div class="data-row">
+                                                <div class="data-label left ">International Travel</div>
+                                                <div class="data-field">
+                                                  <apex:outputField value="{!trip.International_Leg__c}"/>
+                                                </div>
+                                            </div>
+                                            -->
+                                            <!-- 
+                                            <div class="data-row">
+                                                <div class="data-label left ">Record Locator</div>
+                                                <div class="data-field">
+                                                  <apex:outputField value="{!trip.Record_Locator__c}"/>
+                                                </div>
+                                            </div>
+                                             -->
+                                            <apex:outputPanel rendered="{!IF(trip.Arrival_to_Host_Community__c == true, true,false)}" > 
+                                            <div class="data-row">
+                                                <div class="data-label left ">Arrival to Host Community</div>
+                                                <div class="data-field">
+                                                  <apex:outputField value="{!trip.Arrival_to_Host_Community__c}"/>
+                                                </div>
+                                            </div>
+                                            </apex:outputPanel>
+                                            <apex:outputPanel rendered="{!IF(trip.Departure_from_Host_Community__c == true, true,false)}" >
+                                            <div class="data-row">
+                                                <div class="data-label left ">Departure from Host Community</div>
+                                                <div class="data-field">
+                                                  <apex:outputField value="{!trip.Departure_from_Host_Community__c}"/>
+                                                </div>
+                                            </div>
+                                            </apex:outputPanel>
+                                           <apex:outputPanel rendered="{!IF(trip.Arrival_to_Host_Community__c == true, true,false)}" >
+					                      <div class="data-row">
+                                                <div class="data-label left ">Ground Transporation Type</div>
+                                                <div class="data-field">
+                                                  <apex:outputField value="{!trip.Ground_Transporation_Type__c}"/>
+                                                </div>
+                                            </div>
+					                      <div class="data-row">
+                                                <div class="data-label left ">Arrival to Host Community Date</div>
+                                                <div class="data-field">
+                                                  <apex:outputField value="{!trip.Arrival_to_Host_Community_Date__c}"/>
+                                                </div>
+                                            </div>
+					                      
+                                              
+                                            <div class="data-row">
+                                                <div class="data-label left ">Address of your final trip destination (Street 1, Street 2, City, State, Postal Code)</div>
+                                                <div class="data-field">
+                                                  <apex:outputField value="{!trip.Description__c}"/>
+                                                </div>
+                                            </div>
+                                   			</apex:outputPanel>
+                                        </apex:pageBlock>
+                                    
+                                    </apex:outputPanel>
+                                </apex:outputPanel>
+                                <apex:outputPanel id="buttonPanel" layout="block">
+                                   <apex:outputPanel rendered="{!IF($CurrentPage.parameters.isView == 'true', true, false)}" styleClass="form-link no-float">
+                                       <apex:outputLink value="/apex/Participant_Travel_Visa">
+                                           <i class="icon-chevron-left"></i> <span>Back To Trips</span>
+                                       </apex:outputLink>
+                                   </apex:outputPanel>
+                                </apex:outputPanel> 
+                            </div>
+                             
+                        </apex:outputPanel>
+                        <!-- end block --> 
+                        
+                    </div>   
+                    <!-- end span9 -->
+            
+                </div>
+                <!-- end row -->   
+                </apex:form>  
+            </apex:define>
+        </apex:composition>
+    
+</apex:page>

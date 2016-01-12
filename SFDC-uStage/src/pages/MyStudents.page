@@ -1,0 +1,193 @@
+<apex:page title="MyStudents" standardStylesheets="false" showHeader="false" controller="HFPortal_Controller" action="{!checkLogin}">
+
+     
+        <apex:composition template="IntraxTemplate_Vs2" >
+        
+            <apex:define name="body">
+            <apex:form >
+            <div class="row-fluid"><div class="span6"><h1>Your Students</h1></div><div class="span6"></div></div>
+                
+                <div class="row-fluid">
+           
+                    
+                   
+                       
+                       
+            
+                <div class="span12">
+                    <apex:actionStatus id="waitMsg" startStyleClass="alert alert-info">
+                            <apex:facet name="start" >
+                                <i class="no-float icon-spinner icon-spin icon-2x"></i>  <strong>Please Wait.....</strong>
+                            </apex:facet>
+                        </apex:actionStatus>
+                    
+                        <apex:pageBlock id="pb">
+                                    
+                            <apex:pageMessages id="validationMsg"/>
+                             <apex:outputPanel rendered="{!IF(confStudentList.Size != 0, true, false)}" layout="block">
+                                <p>Thank you for opening your home to host these students.</p>
+                            </apex:outputPanel>
+                            
+                            <apex:outputPanel rendered="{!IF(confStudentList.Size == 0, true, false)}" layout="block" styleClass="block">
+                                <div class="block-body">
+                               There are currently no students to display.
+                                </div>
+                            </apex:outputPanel>
+                            
+                          
+                          
+                                
+                            <!--<apex:actionFunction name="callAction" action="{!pageNavigation}" status="waitMsg" reRender="pb, validationMsg"/>-->
+                
+               
+                                    
+                                      <div class="list-view" >
+                   
+                   <apex:outputPanel id="StudentListBlock" >                             
+                   <apex:pageblocktable value="{!confStudentList}" var="item" rendered="{!IF(confStudentList.Size > 0, true, false)}">
+                      
+                         <apex:column >
+                   <div class="block">         
+                        <div class="block-body">     
+                            <div class="row">  
+                                <!-- Adding the profile student picture to each "repeat" row  -->
+                                <div class="span3">
+                              <!--   <apex:outputLink styleClass="ph-thumb default sm" value="/apex/profile?participantId={!item.eng.Id}" rendered="{!IF(ProfilePhotoMap[item.eng.id] == 'no-picture' && item.eng.Gender__c == 'Male' , true, false)}">
+                                <apex:image url="{!URLFOR($Resource.intrax_themes_vs2, '/intrax_themes_vs2/images/icons/male-icon.png')}"></apex:image> 
+                                <apex:image url="{!NationalityEngagementList[item.eng.Id]}" styleClass="flag-icon"></apex:image>
+                                </apex:outputLink>
+                                
+                                <apex:outputLink styleClass="ph-thumb default sm" value="/apex/profile?participantId={!item.eng.Id}" rendered="{!IF(ProfilePhotoMap[item.eng.id] == 'no-picture' && item.eng.Gender__c == 'Female', true, false)}">
+                                <apex:image url="{!URLFOR($Resource.intrax_themes_vs2, '/intrax_themes_vs2/images/icons/female-icon.png')}"></apex:image>
+                                <apex:image url="{!NationalityEngagementList[item.eng.Id]}" styleClass="flag-icon"></apex:image> 
+                                </apex:outputLink> -->
+                                
+                                <apex:outputLink styleClass="ph-thumb default sm" value="/apex/profile?participantId={!item.eng.Id}&ConfMatch=true" rendered="{!IF(ProfilePhotoMap[item.eng.id] == 'no-picture' && item.eng.Gender__c == 'Male' , true, false)}">
+                                <apex:image url="{!URLFOR($Resource.intrax_themes_vs2, '/intrax_themes_vs2/images/icons/male-icon.png')}"></apex:image>
+                                <apex:image url="{!NationalityEngagementList[item.eng.Id]}" styleClass="flag-icon"></apex:image> 
+                                </apex:outputLink>
+                                 
+                                <apex:outputLink styleClass="ph-thumb default sm" value="/apex/profile?participantId={!item.eng.Id}&ConfMatch=true" rendered="{!IF(ProfilePhotoMap[item.eng.id] == 'no-picture' && item.eng.Gender__c == 'Female' , true, false)}">
+                                <apex:image url="{!URLFOR($Resource.intrax_themes_vs2, '/intrax_themes_vs2/images/icons/female-icon.png')}"></apex:image> 
+                                <apex:image url="{!NationalityEngagementList[item.eng.Id]}" styleClass="flag-icon"></apex:image>
+                                </apex:outputLink>
+                            
+                                <apex:outputLink styleClass="ph-thumb sm" value="/apex/profile?participantId={!item.eng.Id}&ConfMatch=true" rendered="{!IF(ProfilePhotoMap[item.eng.id] != 'no-picture', true, false)}">
+                                <apex:image url="{!ProfilePhotoMap[item.eng.id]}"></apex:image> 
+                                </apex:outputLink>     
+                                </div> <!-- end span -->
+                                                                
+                                      
+                                              
+                                <div class="span3">                                                                                                                                    
+                                    <label>Name</label>
+                                    <apex:outputLink id="studentLink" value="/apex/profile?participantId={!item.eng.Id}&ConfMatch=true"> <apex:outputText value="{!item.eng.Account_Id__r.FirstName}" />&nbsp;<apex:outputText value="{!LEFT(item.eng.Account_Id__r.LastName,1)}" /> </apex:outputLink>                       
+                                    <label>Program Duration</label>
+                                    <apex:outputText value="{!item.eng.Program_Duration__c}"/>
+                            
+                                </div>  <!-- end span -->
+                                              
+                                <div class="span3">
+                                    <label>Country</label>
+                                    <apex:outputText value="{!item.eng.Account_Id__r.Citizenship__pc}" />                         
+                                    <label>Interests and Hobbies</label>
+                                    <apex:outputText value="{!item.eng.Interests_Top__c}" />
+                                </div>   <!-- end span -->                                                        
+                         
+                        
+                                <div class="span3">
+                               
+                                
+                                <apex:outputPanel layout="block" >
+                                <p class="center"><i class="icon-ok icon-3x"></i><br/><em><apex:outputText value="{!ConfMatchText}"  escape="false"></apex:outputText></em></p>
+                                </apex:outputPanel>
+                                 
+                                </div>   <!-- end span -->                             
+
+                          </div><!-- end block row -->
+                         </div><!-- end block body --> 
+                        </div><!-- end block -->
+                        </apex:column>
+                     </apex:pageblocktable>                                            
+                     </apex:outputPanel>  
+                     
+                     </div>
+                     <!-- end app list -->
+                    <apex:outputPanel rendered="{!IF(confStudentList.Size > 0, true, false)}" layout="block" styleClass="clearfix navbar">
+                                <div class="navbar-inner">
+                                    <div class="navbar-form">
+                                                
+                                        <div class="pull-left margin-r">  
+                                            Page&nbsp;
+                                            <apex:inputText id="pageNoBottom" value="{!totalpageNumber}" size="3" onkeydown="return runScript(event);"/>
+                                            &nbsp;
+                                            <apex:outputLabel value="of {!listOfListStudent.size}"/> 
+                                        </div>
+                                        
+                                        <div class="pull-left margin-r">                                      
+                                             
+                                            List Size&nbsp;
+                                            <apex:selectList value="{!limits}" styleClass="short" size="1" onchange="doSearch();return false;">
+                                                <apex:selectOptions value="{!items}"/>
+                                            </apex:selectList>
+                                           
+                                        </div> 
+                                        
+                                        <div class="pagination pull-right">
+                                            <ul>
+                                                <li><apex:commandLink value="First" action="{!first}" status="waitMsg" reRender="pb, validationMsg"/></li>
+                                                <li><apex:commandLink action="{!previous}" status="waitMsg" reRender="pb, validationMsg" rendered="{!IF(PreviousButtonDisabled  == true, false, true)}">
+                                                <apex:outputText value="Previous"/>
+                                                </apex:commandLink></li>
+                                                            
+                                                <li><apex:commandLink action="{!next}" status="waitMsg" reRender="StudentListBlock, pb, validationMsg" rendered="{!IF(NextButtonDisabled == true, false, true)}">
+                                                <apex:outputText value="Next"/>
+                                                </apex:commandLink></li>
+                                                
+                                                <li><apex:commandLink value="Last" action="{!last}" status="waitMsg" reRender="pb, validationMsg"/></li>
+                                            </ul>   
+                                        </div> 
+                                               
+                                    </div> 
+                                </div> 
+                                               
+                            </apex:outputPanel> 
+                    
+                    
+                    </apex:pageBlock> 
+                
+                    
+                </div><!-- end span9 -->
+                </div><!-- end row -->
+                
+           	<script type="text/javascript">
+            function selectAllCheckboxes(obj,receivedInputID){
+                var inputCheckBox = document.getElementsByTagName("input");
+                for(var i=0; i<inputCheckBox.length; i++){
+                    if(inputCheckBox[i].id.indexOf(receivedInputID)!=-1){
+                        inputCheckBox[i].checked = obj.checked;
+                    }
+                }
+            }
+            
+            function runScript(obj){
+                
+                //alert(obj.keyCode);
+                if(obj.keyCode == 13){
+                    callAction();   // call action function
+                    return false;
+                }else if((obj.keyCode > 34 && obj.keyCode < 40) || (obj.keyCode > 95 && obj.keyCode < 106) || (obj.keyCode > 47 && obj.keyCode < 58) || obj.keyCode == 8 || obj.keyCode == 46 ){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        </script>
+        
+    </apex:form>
+            </apex:define>
+             
+        </apex:composition>
+        
+        
+</apex:page>

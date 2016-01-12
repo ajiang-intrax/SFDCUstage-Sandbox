@@ -1,0 +1,948 @@
+<apex:component >
+	<apex:attribute name="ApplicantInfo" description="This is the value for the Applicant_Info__c object." type="Applicant_Info__c" required="false" default=""/>
+	<apex:attribute name="personInfo" description="This is the value for the Person_Info__c object." type="Person_Info__c" required="false" default=""/>
+	<apex:attribute name="positionInfo" description="This is the value for the Position_Info__c object." type="Position_Info__c" required="false" default=""/>
+	<apex:attribute name="positionInfoSecond" description="This is the value for the Second Position_Info__c object." type="Position_Info__c" required="false" default=""/>
+	<apex:attribute name="experienceMap" description="This is the value for the Experience__c Map" type="map" required="false" default=""/>
+	<apex:attribute name="educationMap" description="This is the value for the Education__c Map object." type="map" required="false" default=""/>
+	<apex:attribute name="emergencyMap" description="This is the value for the Emergency (Person_Info__c) Map object."  type="map" required="false" default=""/>
+	<apex:attribute name="user" description="This is the value for the User object." type="User" required="false" default=""/>
+	<apex:attribute name="educationMaplast" description="Integer that indicates the last element of the indicated map" type="integer" required="false" default=""/>
+	<apex:attribute name="experienceMaplast" description="Integer that indicates the last element of the indicated map" type="integer" required="false" default=""/>
+	<apex:attribute name="emergencyMaplast" description="Integer that indicates the last element of the indicated map" type="integer" required="false" default=""/>
+	
+         
+         <div class="section-title">Personal Information </div>
+         
+         <div class="row">
+         <div class="col-sm-6">
+         <div class="form-group">
+           <label class="control-label">First Name</label>
+             <apex:outputField styleClass="form-control" value="{!personInfo.First_Name__c}" id="firstName">
+            
+             </apex:outputField>
+         </div>
+         </div><!--  end col -->
+        <div class="col-sm-6">
+           <div class="form-group">
+           	<label class="control-label">Middle Name </label>
+             <apex:outputField styleClass="form-control" value="{!personInfo.Middle_Name__c}"  id="middleName" />
+             
+         </div>
+         </div> <!--  end col -->
+         </div><!--  end row -->
+         
+         <div class="row">
+           <div class="col-sm-6">
+          <div class="form-group">
+           	<label class="control-label">Last Name </label>
+             <apex:outputField styleClass="form-control" value="{!personInfo.Last_Name__c}" id="lastName" />
+         </div>
+         </div><!--  end col -->
+        
+         <div class="col-sm-6">
+         <div class="form-group">
+           	<label class="control-label">Nickname </label>
+             <apex:outputField styleClass="form-control" value="{!personInfo.Nick_Name__c}"  id="nickname" />
+             
+         </div>
+         </div> <!--  end col -->
+         </div> <!--  end row -->
+                 
+         <div class="row">
+         	<div class="col-sm-6">
+            <div class="form-group">	              
+             <label class="control-label">Birth Date </label>	              	
+             <apex:outputField styleClass="form-control" value="{!personInfo.Date_of_Birth__c}"  id="birthDate" /> 
+         </div>
+          </div> <!--  end col -->
+          
+          <div class="col-sm-6">
+              <div class="form-group">
+            <label class="control-label">Gender </label>
+              <apex:outputField styleClass="form-control" value="{!personInfo.Gender__c}"  id="gender" />
+              
+          </div>
+          </div> <!--  end col -->
+         </div> <!--  end row --> 
+         <div class="row">
+          <div class="col-sm-6">          
+           <div class="form-group">
+             <label class="control-label">Where are you currently living?</label>
+               <apex:outputField styleClass="form-control" value="{!personInfo.Country_of_Residence__c}"  id="legalResidence" />
+           </div>
+          </div> <!--  end col -->
+          <div class="col-sm-6">
+            <div class="form-group">
+            <label class="control-label">Are you a citizen of that country?</label>
+            	<apex:outputText value="Yes" rendered="{!personInfo.Citizenship__c == personInfo.Country_of_Residence__c}" />
+            	<apex:outputText value="No" rendered="{!personInfo.Citizenship__c != personInfo.Country_of_Residence__c}" />            
+           </div>
+          </div> <!--  end col -->            
+         </div> <!--  end row -->
+         
+        	<apex:outputPanel layout="block" rendered="{!personInfo.Citizenship__c != personInfo.Country_of_Residence__c}">
+          <div class="form-group">
+            <label class="control-label">What is your citizenship?</label>
+              <apex:outputField styleClass="form-control" value="{!personInfo.Citizenship__c}" id="citizenship" />
+          </div>
+        	</apex:outputPanel>    
+        	
+        	<div class="section-title"> Education and Skills </div>
+        	
+        	<apex:outputpanel layout="block" id="wrappertableEd" styleClass="panel-group group1">
+              <apex:repeat id="wtableEd"  value="{!educationMap}" var="wrapper">
+                <apex:variable var="rowLast" value="{!IF( educationMapLast == wrapper, 'in','')}"/>
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h4 class="panel-title">
+                          <apex:outputLink styleClass="accordion-toggle" html-data-toggle="collapse" html-data-parent=".group1" value="#collapse1{!wrapper}">
+	                        <apex:outputText rendered="{!IF(ISBLANK(educationMap[wrapper].Institution_Name__c), true, false)}" value="School {!wrapper}"> </apex:outputText>
+	                        <apex:outputText rendered="{!IF(ISBLANK(educationMap[wrapper].Institution_Name__c), false, true)}" value=" {!educationMap[wrapper].Institution_Name__c}"> </apex:outputText>
+	                      </apex:outputLink>
+         				
+                    </h4>
+                  </div>
+                  <!--  end panel heading -->
+                  <div id="collapse1{!wrapper}" class="panel-collapse collapse {!rowLast}">
+                   <div class="panel-body">
+                       <div class="row">
+			            <div class="col-sm-6">
+			                <div class="form-group">
+				              	<label class="control-label">Type of Institution </label>	
+						        <apex:outputField styleClass="form-control" value="{!educationMap[wrapper].Institution_Type__c}" id="institutionType2"/>
+						            
+			            	</div>
+			            </div> <!--  end col -->
+			         <apex:pageBlock id="typeofdegree3">
+			          <apex:outputPanel layout="block" rendered="{!educationMap[wrapper].Institution_Type__c == 'University/College' || educationMap[wrapper].Institution_Type__c == 'High/Secondary School' }">  
+			            <div class="col-sm-6">
+			              <div class="form-group restoreclass">
+				              <label class="control-label">Type of Degree </label>
+				              <apex:outputField styleClass="form-control" value="{!educationMap[wrapper].Program_Type__c}"  id="degreeType" />
+			              </div>
+			            </div> <!--  end col -->
+			            </apex:outputPanel>
+			          </apex:pageBlock>
+			        </div> <!--  end row -->
+                       <div class="row">
+                        
+				        <div class="col-sm-6">
+				              <div class="form-group">
+					              <label class="control-label">Field of Study </label>
+					              <apex:outputField styleClass="form-control" value="{!educationMap[wrapper].Field_of_Study__c}"  id="fieldStudy" />
+				              </div>
+				        </div> <!--  end col -->	
+		         
+                        <div class="col-sm-6">
+				              <div class="form-group">
+					              <label class="control-label">Approximate Graduation Date</label>								              
+	                           	  <apex:outputField styleClass="form-control" value="{!educationMap[wrapper].Graduation_Date__c}"  id="graduationDate"/>				                          	  	
+				              </div>
+				        </div> <!--  end col -->							        					            
+		            </div> <!--  end row -->		                        
+                       
+                      </div>
+                  </div>
+
+                  <!-- end panel collapse --> 
+                </div>
+                <!--  end panel -->
+                
+              </apex:repeat>	                
+
+            </apex:outputpanel>
+            <!--  end panel group --> 
+          
+         
+        <div class="section-title sec"> Language Skills </div>  
+          <div class="row">  
+            <div class="col-sm-12"> 
+           	<div class="form-group">		            		
+             	
+               	<apex:outputField styleClass="form-control" value="{!applicantInfo.Primary_Language__c}"  id="nativeLang" /> (Native)
+               	<apex:outputText rendered="{!NOT(ISBLANK(applicantInfo.Language_1__c))}">
+               	,&nbsp;<apex:outputField value="{!applicantInfo.Language_1__c}"  id="lang1" /> 
+               	<apex:outputText rendered="{!NOT(ISBLANK(applicantInfo.Language_1_Proficiency__c))}">
+               	(<apex:outputField value="{!applicantInfo.Language_1_Proficiency__c}"  id="lang1_prof" />)
+               	</apex:outputText>
+               	</apex:outputText>
+               	<apex:outputText rendered="{!NOT(ISBLANK(applicantInfo.Language_2__c))}">
+            	,&nbsp;<apex:outputField html-maxlength="10" value="{!applicantInfo.Language_2__c}"  id="lang2" />
+            	<apex:outputText rendered="{!NOT(ISBLANK(applicantInfo.Language_2_Proficiency__c))}">
+            	(<apex:outputField value="{!applicantInfo.Language_2_Proficiency__c}"  id="lan2_prof" />)
+            	</apex:outputText>
+            	</apex:outputText>
+            	<apex:outputText rendered="{!NOT(ISBLANK(applicantInfo.Language_3__c))}">
+            	,&nbsp;<apex:outputField value="{!applicantInfo.Language_3__c}"  id="lang3" />
+            	<apex:outputText rendered="{!NOT(ISBLANK(applicantInfo.Language_3_Proficiency__c))}">
+            	(<apex:outputField value="{!applicantInfo.Language_3_Proficiency__c}"  id="lang3_prof" />)
+            	</apex:outputText>
+            	</apex:outputText>
+              
+               
+           	</div>
+           </div> <!--  end col -->
+           
+      </div> <!--  end row -->
+   
+          
+      
+      
+      
+          
+          <!-- WORK EXPERIENCE -->
+          <apex:outputPanel rendered="{!applicantInfo.Work_Experience_Indicated__c == 'Yes'}" layout="block">
+          <div class="section-title">Work Experience</div> 	   
+         	        
+          <apex:outputpanel layout="block" id="wrappertableExp" styleClass="panel-group group1">
+              <apex:repeat id="wtableExp"  value="{!experienceMap}" var="wrapper">
+                <apex:variable var="rowLast" value="{!IF( experienceMapLast == wrapper, 'in','')}"/>	                  
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h4 class="panel-title">
+                      <apex:outputLink styleClass="accordion-toggle" html-data-toggle="collapse" html-data-parent=".group1" value="#collapse1{!wrapper}">	                          
+                        <apex:outputText rendered="{!IF(ISBLANK(experienceMap[wrapper].Employer_Name__c), false, true)}" value=" {!experienceMap[wrapper].Employer_Name__c}"> </apex:outputText>
+                      </apex:outputLink>
+                    </h4>
+                  </div>
+                  <!--  end panel heading -->
+                  <div id="collapse1{!wrapper}" class="panel-collapse collapse {!rowLast}">
+                   <div class="panel-body">
+		            <div class="row">
+			            <div class="col-sm-6">
+				            <div class="form-group">
+				              <label class="control-label">City</label>						                	
+				              <apex:outputField styleClass="form-control" value="{!experienceMap[wrapper].City__c}"  id="city"/>
+				            </div>
+			            </div><!--  end col -->	
+			            <div class="col-sm-6">
+				            <div class="form-group">
+				              <label class="control-label">Country</label>						                	
+				              <apex:outputField styleClass="form-control" value="{!experienceMap[wrapper].Country__c}"  id="country"/>
+				            </div>
+			            </div><!--  end col -->						            
+		            </div><!--  end row -->
+		            
+		            <div class="row dp-group">
+		             <div class="col-sm-6">
+				            <div class="form-group">
+				              <label class="control-label">Position Title</label>						                	
+				              <apex:outputField styleClass="form-control" value="{!experienceMap[wrapper].Position_Title__c}"  id="positionTitle"/>
+				            </div>
+			            </div><!--  end col -->		
+			            <div class="col-sm-6">
+				            <div class="form-group">
+				              <label class="control-label">Position Dates</label>						                	
+				              <div class="datepicker start" locale="{!user.localeSidKey}">
+                            	<apex:outputField styleClass="form-control" value="{!experienceMap[wrapper].Start_Date__c}"  id="startDate"/> --&nbsp;<apex:outputField styleClass="form-control" value="{!experienceMap[wrapper].End_Date__c}"  id="endDate"/>
+                          	  </div>
+				            </div>
+			            </div><!--  end col -->	
+		            </div><!--  end row -->
+		            
+		            
+		            <div class="row">
+			            <div class="col-sm-6">
+				            <div class="form-group">
+				              <label class="control-label">Position Description</label>						                	
+				              <apex:outputField styleClass="form-control" value="{!experienceMap[wrapper].Position_Description__c}"  id="positionDescription"/>
+				            </div>
+			            </div><!--  end col -->							            					            
+		            </div><!--  end row -->
+		            
+                      </div>
+                  </div>
+                  
+                </div>
+                <!--  end panel -->
+              </apex:repeat>
+              
+             
+            </apex:outputpanel>
+       
+            <!--  end panel group --> 
+           </apex:outputPanel>              
+         
+         	<!-- PROGRAM PREFERENCES -->
+         	
+         	<div class="section-title">Internship Preferences</div>
+         	
+         	<div class="row">	            
+          <div class="col-sm-6">
+            <div class="form-group">
+             	<label class="control-label">Destination</label>
+               <apex:outputField styleClass="form-control destinationpick" value="{!applicantInfo.Country_of_Interest__c}"  id="countryInterest"/>
+            </div>
+          </div><!--  end col -->
+          
+         	<apex:outputPanel >
+           <div class="col-sm-6">
+            <div class="form-group restoreclass">
+              <label class="control-label">Type of Internship</label>
+              <apex:outputField styleClass="form-control" value="{!applicantInfo.Intrax_Program_Category__c}"  id="internshipType" />				              
+            </div>
+           </div><!--  end col -->
+      </apex:outputPanel>
+         </div><!--  end row -->
+      
+
+        	<apex:outputPanel >
+            <div class="row">
+           <div class="col-sm-6">
+               <div class="form-group">
+             <label class="control-label">Areas of Interest </label>
+              	<apex:outputField styleClass="form-control" value="{!applicantInfo.Functional_Areas__c}"  id="InterestArea" />			               
+           </div>
+           </div> <!--  end col -->
+           
+              <div class="col-sm-6">
+              <div class="form-group">
+            		<label class="control-label">Desired Start/End Dates</label>
+            		<apex:outputField styleClass="form-control" value="{!applicantInfo.Engagement_Start__c}"  id="startDate" /> --&nbsp;<apex:outputField styleClass="form-control" value="{!applicantInfo.Engagement_End__c}"  id="endDate" />
+          	</div>
+          </div> <!--  end col -->
+      	</div><!--  end row -->
+     	</apex:outputPanel>	        	
+
+        	<apex:outputPanel layout="block" rendered="{!applicantInfo.Country_of_Interest__c != 'United States' && personInfo.Country_of_Residence__c == 'United States' && personInfo.Citizenship__c != 'United States'}">
+        		<div class="row">
+        		<div class="col-sm-6">
+            <div class="form-group">	
+            <label class="control-label">Are you part of a faculty led program? </label>		             
+               <apex:outputText styleClass="form-control" value="Yes" rendered="{!CONTAINS(applicantInfo.Intrax_Program_Options__c,'Internship Group')}"  id="facultyLedProgramYes"/>
+               <apex:outputText styleClass="form-control" value="No" rendered="{!NOT(CONTAINS(applicantInfo.Intrax_Program_Options__c,'Internship Group'))}"  id="facultyLedProgramNo"/>		                
+           </div>
+       </div><!--  end col -->	
+        		</div> <!-- end row -->            		
+        	</apex:outputPanel>
+        	
+        	
+    
+       
+   
+    	<apex:outputPanel layout="block" rendered="{!applicantInfo.Country_of_Interest__c != personInfo.Citizenship__c}">
+        		<div class="row">
+         		<div class="col-sm-6">
+             <div class="form-group">	
+             	<label class="control-label">Do you have a visa/work authorization for your destination? </label>			             
+                <apex:outputField styleClass="form-control" value="{!applicantInfo.Work_Authorization_Indicated__c}" id="workAuth"/>		                
+             </div>
+        </div><!--  end col -->	
+        		</div>
+        	</apex:outputPanel>
+        	
+        	<apex:outputPanel layout="block" rendered="{!NOT(ISNULL(applicantInfo.Visa_Category__c)) && applicantInfo.Visa_Type__c == 'J-1'}">
+        		<div class="row">
+         		<div class="col-sm-6">
+             <div class="form-group">	
+              <label class="control-label">Visa Category</label>
+              <apex:outputField value="{!applicantInfo.Visa_Category__c}" rendered="{!NOT(ISNULL(applicantInfo.Visa_Category__c))}" />
+            </div>
+        </div><!--  end col -->
+        <div class="col-sm-6">
+             <div class="form-group">	
+              <label class="control-label">Visa Type</label>
+              <apex:outputField value="{!applicantInfo.Visa_Type__c}"/>
+              
+            </div>
+        </div><!--  end col -->		
+        		</div> <!-- end row -->
+        	</apex:outputPanel>
+        
+         
+         <!-- PLACEMENT INFO -->	
+         <apex:outputPanel layout="block" rendered="{!applicantInfo.Double_Placement_Indicated__c == 'Yes'}">
+          <div class="section-title">Placement Information</div>
+          
+          <div class="row">
+           <div class="col-sm-6">
+           <div class="form-group">
+             <label class="control-label">Company Name</label>
+               <apex:outputField styleClass="form-control" value="{!positionInfo.Company_Name__c}"  id="companyName"/>	                	
+           </div>
+           </div><!--  end col -->
+         		<div class="col-sm-6">
+             <div class="form-group">	
+             <label class="control-label">Position Title</label>		             
+             <apex:outputField styleClass="form-control" value="{!positionInfo.Position_Title__c}"  id="positionTitle" />  
+            </div>
+        </div><!--  end col -->			        
+         	   </div><!--  end row -->
+     
+     <div class="row">
+       <div class="col-sm-6">
+            <div class="form-group">	
+            <label class="control-label">Position Category</label>		             
+            <apex:outputField styleClass="form-control" value="{!positionInfo.Intrax_Program_Category__c}"  id="positionCategory" />  
+           </div>
+       </div><!--  end col -->
+     <div class="col-sm-6">
+            <div class="form-group">	
+            <label class="control-label">Functional Area</label>		             
+            <apex:outputField styleClass="form-control" value="{!positionInfo.Functional_Areas__c}"  id="functionalArea" />
+            <apex:inputTextArea styleClass="form-control" value="{!positionInfo.Functional_Areas_Other__c}"  id="functionalAreaOther" />  
+           </div>
+       </div><!--  end col -->	  
+         		
+	        
+        </div>
+          <div class="row">
+         		<div class="col-sm-6">
+             <div class="form-group">	
+             <label class="control-label">Position Pay Rate</label>		             
+             <apex:outputField styleClass="form-control" value="{!positionInfo.Pay_Rate__c}"  id="payRate" />&nbsp; (<apex:outputField styleClass="form-control" value="{!positionInfo.Pay_Rate_Basis__c}"  id="payRateBasis" />	)  
+            </div>
+        </div><!--  end col -->
+            <div class="col-sm-6">
+             <div class="form-group">	
+	             <label class="control-label">Is this a tipped position?</label>
+	             <apex:outputField styleClass="form-control" value="{!positionInfo.Tipped_Position__c}"  id="tippedPosition" />
+             </div>
+        </div><!--  end col -->	  
+          </div>
+            <div class="row">
+        	<div class="col-sm-6">
+             <div class="form-group">	
+             <label class="control-label">Position Description</label>		             
+             <apex:outputField styleClass="form-control" value="{!positionInfo.Position_Description__c}"  id="positionDesc" />  
+            </div>
+        </div><!--  end col -->			  
+        </div>
+        
+      
+    
+        
+    
+   
+          <div class="section-title sec">About the Company</div>
+          
+         	
+         	<div class="row">
+         		<div class="col-sm-6">
+             <div class="form-group">	
+             <label class="control-label">Address Line 1 </label>		             
+             <apex:outputField styleClass="form-control" value="{!positionInfo.Company_Street_1__c}"  id="companyAddress1" />  
+            </div>
+        </div><!--  end col -->	
+         		<div class="col-sm-6">
+             <div class="form-group">	
+             <label class="control-label">Address Line 2 </label>		             
+             <apex:outputField styleClass="form-control" value="{!positionInfo.Company_Street_2__c}"  id="companyAddress2" />  
+            </div>
+        </div><!--  end col -->	
+         	</div> <!-- end row -->   
+         	
+         	<div class="row">
+         		<div class="col-sm-6">
+             <div class="form-group">	
+             <label class="control-label">City</label>		             
+             <apex:outputField styleClass="form-control" value="{!positionInfo.Company_City__c}"  id="companyCity" />  
+            </div>
+        </div><!--  end col -->	
+        <div class="col-sm-6">
+             <div class="form-group">	
+             <label class="control-label">State</label>		             
+             <apex:outputField styleClass="form-control" value="{!positionInfo.Company_State__c}"  id="companyState" />  
+            </div>
+        </div><!--  end col -->	
+         	</div>     		
+         	
+         	<div class="row">
+         		<div class="col-sm-6">
+             <div class="form-group">	
+             <label class="control-label">Postal Code</label>		             
+             <apex:outputField styleClass="form-control" value="{!positionInfo.Company_Postal_Code__c}"  id="companyPostalCode" />  
+            </div>
+        </div><!--  end col -->	
+        <div class="col-sm-6">
+             <div class="form-group">	
+             <label class="control-label">Country</label>		             
+             <apex:outputField styleClass="form-control" value="{!positionInfo.Company_Country__c}"  id="companyCountry" />  
+            </div>
+        </div><!--  end col -->	
+         	</div>
+          
+          <div class="row">
+         		<div class="col-sm-6">
+             <div class="form-group">	
+             <label class="control-label">Company Website <i data-toggle="popover" data-content="Enter 'none' if the company does not have a website." class="infobtn fa fa-question-circle"></i></label>		             
+             <apex:outputField styleClass="form-control" value="{!positionInfo.Company_Website__c}"  id="companyWebsite" />  
+            </div>
+        </div><!--  end col -->	
+        <div class="col-sm-6">
+             <div class="form-group">	
+             <label class="control-label">Company Phone</label>		             
+             <apex:outputField styleClass="form-control" value="{!positionInfo.Company_Phone__c}"  id="companyPhone" />  
+            </div>
+        </div><!--  end col -->	
+         	</div>
+         	
+         	<div class="row">
+         		<div class="col-sm-6">
+             <div class="form-group">	
+             <label class="control-label">Company Description</label>		             
+             <apex:outputField styleClass="form-control" value="{!positionInfo.Company_Description__c}"  id="companyDesc" />  
+            </div>
+        </div><!--  end col -->			       
+         	</div>
+         	
+         	<div class="section-title sec">About Your Supervisor</div>
+          
+          <div class="row">
+         		<div class="col-sm-6">
+             <div class="form-group">	
+             <label class="control-label">First Name</label>		             
+             <apex:outputField styleClass="form-control" value="{!positionInfo.Supervisor_First_Name__c}"  id="supervisorFN" />  
+            </div>
+        </div><!--  end col -->	
+        <div class="col-sm-6">
+             <div class="form-group">	
+             <label class="control-label">Last Name</label>		             
+             <apex:outputField styleClass="form-control" value="{!positionInfo.Supervisor_Last_Name__c}"  id="supervisorLN" />  
+            </div>
+        </div><!--  end col -->	
+         	</div>
+         	
+         	<div class="row">
+         		<div class="col-sm-6">
+             <div class="form-group">	
+             <label class="control-label">Email</label>		             
+             <apex:outputField styleClass="form-control" value="{!positionInfo.Supervisor_Email__c}"  id="supervisorEmail" />  
+            </div>
+        </div><!--  end col -->	
+        <div class="col-sm-6">
+             <div class="form-group">	
+             <label class="control-label">Phone</label>		             
+             <apex:outputField styleClass="form-control" value="{!positionInfo.Supervisor_Phone__c}"  id="supervisorPhone" />  
+            </div>
+        </div><!--  end col -->	
+         	</div>
+         </apex:outputPanel>
+        
+        
+        <!--Second Position Info  -->
+        
+            <!-- PLACEMENT INFO -->	
+         <apex:outputPanel layout="block" rendered="{!applicantInfo.Service_Level__c == 'Independent'}">
+          <div class="section-title">Second Placement Information</div>
+          
+          <div class="row">
+           <div class="col-sm-6">
+           <div class="form-group">
+             <label class="control-label">Company Name</label>
+               <apex:outputField styleClass="form-control" value="{!positionInfoSecond.Company_Name__c}"  id="scompanyName"/>	                	
+           </div>
+           </div><!--  end col -->
+         		<div class="col-sm-6">
+             <div class="form-group">	
+             <label class="control-label">Position Title</label>		             
+             <apex:outputField styleClass="form-control" value="{!positionInfoSecond.Position_Title__c}"  id="spositionTitle" />  
+            </div>
+        </div><!--  end col -->			        
+         	   </div><!--  end row -->
+     
+     <div class="row">
+       <div class="col-sm-6">
+            <div class="form-group">	
+            <label class="control-label">Position Category</label>		             
+            <apex:outputField styleClass="form-control" value="{!positionInfo.Intrax_Program_Category__c}"  id="spositionCategory" />  
+           </div>
+       </div><!--  end col -->
+     <div class="col-sm-6">
+            <div class="form-group">	
+            <label class="control-label">Functional Area</label>		             
+            <apex:outputField styleClass="form-control" value="{!positionInfoSecond.Functional_Areas__c}"  id="sfunctionalArea" />
+            <apex:inputTextArea styleClass="form-control" value="{!positionInfoSecond.Functional_Areas_Other__c}"  id="sfunctionalAreaOther" />  
+           </div>
+       </div><!--  end col -->	  
+         		
+	        
+        </div>
+          <div class="row">
+         		<div class="col-sm-6">
+             <div class="form-group">	
+             <label class="control-label">Position Pay Rate</label>		             
+             <apex:outputField styleClass="form-control" value="{!positionInfoSecond.Pay_Rate__c}"  id="spayRate" />&nbsp; (<apex:outputField styleClass="form-control" value="{!positionInfoSecond.Pay_Rate_Basis__c}"  id="spayRateBasis" />	)  
+            </div>
+        </div><!--  end col -->
+            <div class="col-sm-6">
+             <div class="form-group">	
+	             <label class="control-label">Is this a tipped position?</label>
+	             <apex:outputField styleClass="form-control" value="{!positionInfoSecond.Tipped_Position__c}"  id="stippedPosition" />
+             </div>
+        </div><!--  end col -->	  
+          </div>
+            <div class="row">
+        	<div class="col-sm-6">
+             <div class="form-group">	
+             <label class="control-label">Position Description</label>		             
+             <apex:outputField styleClass="form-control" value="{!positionInfoSecond.Position_Description__c}"  id="spositionDesc" />  
+            </div>
+        </div><!--  end col -->			  
+        </div>
+        
+      
+    
+        
+    
+   
+          <div class="section-title sec">About the Company</div>
+          
+         	
+         	<div class="row">
+         		<div class="col-sm-6">
+             <div class="form-group">	
+             <label class="control-label">Address Line 1 </label>		             
+             <apex:outputField styleClass="form-control" value="{!positionInfoSecond.Company_Street_1__c}"  id="scompanyAddress1" />  
+            </div>
+        </div><!--  end col -->	
+         		<div class="col-sm-6">
+             <div class="form-group">	
+             <label class="control-label">Address Line 2 </label>		             
+             <apex:outputField styleClass="form-control" value="{!positionInfoSecond.Company_Street_2__c}"  id="scompanyAddress2" />  
+            </div>
+        </div><!--  end col -->	
+         	</div> <!-- end row -->   
+         	
+         	<div class="row">
+         		<div class="col-sm-6">
+             <div class="form-group">	
+             <label class="control-label">City</label>		             
+             <apex:outputField styleClass="form-control" value="{!positionInfoSecond.Company_City__c}"  id="scompanyCity" />  
+            </div>
+        </div><!--  end col -->	
+        <div class="col-sm-6">
+             <div class="form-group">	
+             <label class="control-label">State</label>		             
+             <apex:outputField styleClass="form-control" value="{!positionInfoSecond.Company_State__c}"  id="scompanyState" />  
+            </div>
+        </div><!--  end col -->	
+         	</div>     		
+         	
+         	<div class="row">
+         		<div class="col-sm-6">
+             <div class="form-group">	
+             <label class="control-label">Postal Code</label>		             
+             <apex:outputField styleClass="form-control" value="{!positionInfoSecond.Company_Postal_Code__c}"  id="scompanyPostalCode" />  
+            </div>
+        </div><!--  end col -->	
+        <div class="col-sm-6">
+             <div class="form-group">	
+             <label class="control-label">Country</label>		             
+             <apex:outputField styleClass="form-control" value="{!positionInfoSecond.Company_Country__c}"  id="scompanyCountry" />  
+            </div>
+        </div><!--  end col -->	
+         	</div>
+          
+          <div class="row">
+         		<div class="col-sm-6">
+             <div class="form-group">	
+             <label class="control-label">Company Website <i data-toggle="popover" data-content="Enter 'none' if the company does not have a website." class="infobtn fa fa-question-circle"></i></label>		             
+             <apex:outputField styleClass="form-control" value="{!positionInfoSecond.Company_Website__c}"  id="scompanyWebsite" />  
+            </div>
+        </div><!--  end col -->	
+        <div class="col-sm-6">
+             <div class="form-group">	
+             <label class="control-label">Company Phone</label>		             
+             <apex:outputField styleClass="form-control" value="{!positionInfoSecond.Company_Phone__c}"  id="scompanyPhone" />  
+            </div>
+        </div><!--  end col -->	
+         	</div>
+         	
+         	<div class="row">
+         		<div class="col-sm-6">
+             <div class="form-group">	
+             <label class="control-label">Company Description</label>		             
+             <apex:outputField styleClass="form-control" value="{!positionInfoSecond.Company_Description__c}"  id="scompanyDesc" />  
+            </div>
+        </div><!--  end col -->			       
+         	</div>
+         	
+         	<div class="section-title sec">About Your Supervisor</div>
+          
+          <div class="row">
+         		<div class="col-sm-6">
+             <div class="form-group">	
+             <label class="control-label">First Name</label>		             
+             <apex:outputField styleClass="form-control" value="{!positionInfoSecond.Supervisor_First_Name__c}"  id="ssupervisorFN" />  
+            </div>
+        </div><!--  end col -->	
+        <div class="col-sm-6">
+             <div class="form-group">	
+             <label class="control-label">Last Name</label>		             
+             <apex:outputField styleClass="form-control" value="{!positionInfoSecond.Supervisor_Last_Name__c}"  id="ssupervisorLN" />  
+            </div>
+        </div><!--  end col -->	
+         	</div>
+         	
+         	<div class="row">
+         		<div class="col-sm-6">
+             <div class="form-group">	
+             <label class="control-label">Email</label>		             
+             <apex:outputField styleClass="form-control" value="{!positionInfoSecond.Supervisor_Email__c}"  id="ssupervisorEmail" />  
+            </div>
+        </div><!--  end col -->	
+        <div class="col-sm-6">
+             <div class="form-group">	
+             <label class="control-label">Phone</label>		             
+             <apex:outputField styleClass="form-control" value="{!positionInfoSecond.Supervisor_Phone__c}"  id="ssupervisorPhone" />  
+            </div>
+        </div><!--  end col -->	
+         	</div>
+         </apex:outputPanel>
+        
+        
+        
+          <!--End Second Position Info  -->
+         <!-- VISA INFO -->
+         <apex:outputPanel layout="block" rendered="{!applicantInfo.Visa_Type__c == 'J-1'}">
+          <div class="section-title">Visa Information</div>
+          
+          <div class="row">
+              <div class="col-sm-6">
+                  <div class="form-group">
+                    <label class="control-label">City of Birth</label>
+                    <apex:outputField styleClass="form-control" value="{!personInfo.Birth_City__c}" id="birthCity" />
+                  </div>
+              </div><!--  end col -->
+              <div class="col-sm-6">
+                  <div class="form-group">
+                    <label class="control-label">Country of Birth </label>
+                    <apex:outputField styleClass="form-control" value="{!personInfo.Birth_Country__c}" id="birthCountry" />
+                  </div>
+              </div><!--  end col -->
+          </div><!--  end row -->
+          
+          <div class="row">
+              <div class="col-sm-6">
+                  <div class="form-group">
+                      <label class="control-label">Have you obtained a visa for the United States before, other than a B-1 or B-2?</label>
+                      <apex:outputField styleClass="form-control" value="{!applicantInfo.Prior_Exchange_Experience__c}" id="priorExchange" />	                        
+                  </div>
+              </div><!--  end col -->                 
+          </div><!--  end row -->
+          
+             <apex:outputPanel rendered="{!applicantInfo.Prior_Exchange_Experience__c == 'Yes'}" layout="block">
+                
+                 <div class="row">
+                     <div class="col-sm-6">
+                        <div class="form-group restoreclass">
+                           <label class="control-label">What type of visa did you obtain?</label>
+                           <apex:outputField styleClass="form-control" value="{!applicantInfo.Prior_Exchange_Visa__c}" id="priorVisa"/>
+                        </div>
+                     </div>
+                 </div>
+                 
+                 <div class="row">
+                     <div class="col-sm-6">
+                        <div class="form-group">
+                           <label class="control-label">Visa Start Date</label>                              
+                           <apex:outputField styleClass="form-control" value="{!applicantInfo.Prior_Visa_Start_Date__c}" id="visaStartDate"/>
+                        </div>
+                     </div>
+                     <div class="col-sm-6">
+                        <div class="form-group">
+                           <label class="control-label">Visa End Date</label>       
+                           <apex:outputField styleClass="form-control" value="{!applicantInfo.Prior_Visa_End_Date__c}" id="visaEndDate"/>                              
+                        </div>
+                     </div>                      
+                 </div>                                     
+             
+             </apex:outputPanel>	         
+         </apex:outputPanel>
+         
+         <!-- EMERGENCY CONTACTS -->
+         
+         <div class="section-title">Emergency Contacts</div>
+         
+         
+         <apex:outputpanel layout="block" id="wrappertable" styleClass="panel-group group1"  rendered="{!ISBLANK(emergencyMap[1].First_Name__c)}">
+         </apex:outputpanel>
+         <apex:outputpanel layout="block" id="wrappertableEemregency" styleClass="panel-group group1"  rendered="{!NOT(ISBLANK(emergencyMap[1].First_Name__c))}">
+             <apex:repeat id="wtableEmergency"  value="{!emergencyMap}" var="wrapper">
+               <apex:variable var="rowLast" value="{!IF( emergencyMapLast == wrapper, 'in','')}"/>	                  
+               <div class="panel panel-default">
+                 <div class="panel-heading">
+                   <h4 class="panel-title">                   		                        
+                     <apex:outputLink styleClass="accordion-toggle" html-data-toggle="collapse" html-data-parent=".group1" value="#collapse1{!wrapper}">	                                                  
+                       <apex:outputText rendered="{!IF(ISBLANK(emergencyMap[wrapper].First_Name__c), false, true)}" value=" {!emergencyMap[wrapper].First_Name__c} {!emergencyMap[wrapper].Last_Name__c}"> </apex:outputText>
+                     </apex:outputLink>
+                   </h4>
+                 </div>
+                 <!--  end panel heading -->	                    
+                 <div id="collapse1{!wrapper}" class="panel-collapse collapse {!rowLast}">
+                  <div class="panel-body">
+                  	<div class="row">
+		            <div class="col-sm-6">
+			            <div class="form-group">
+			              <label class="control-label">First Name</label>						                	
+			              <apex:outputField styleClass="form-control" value="{!emergencyMap[wrapper].First_Name__c}" id="firstName"/>
+			            </div>
+		            </div><!--  end col -->
+		            <div class="col-sm-6">
+		             <div class="form-group">
+		              <label class="control-label">Last Name </label>
+		                <apex:outputField styleClass="form-control" value="{!emergencyMap[wrapper].Last_Name__c}" id="lastName"/>
+		            </div>
+		            </div><!--  end col -->
+	            </div><!--  end row -->
+                  	
+                  	<div class="row">
+		            <div class="col-sm-6">
+			            <div class="form-group">
+			              <label class="control-label">Emergency Phone</label>						                	
+			              <apex:outputField styleClass="form-control" value="{!emergencyMap[wrapper].Mobile__c}" id="mobilePhone"/>
+			            </div>
+		            </div><!--  end col -->
+		            <div class="col-sm-6">
+		             <div class="form-group">
+		              <label class="control-label">Email</label>
+		                <apex:outputField styleClass="form-control" value="{!emergencyMap[wrapper].Email__c}" id="email"/>
+		            </div>
+		            </div><!--  end col -->
+	            </div><!--  end row -->
+	            
+	            <div class="row">
+		            <div class="col-sm-6">
+			            <div class="form-group">
+			              <label class="control-label">Relationship</label>						                	
+			              <apex:outputField styleClass="form-control" value="{!emergencyMap[wrapper].Role_Other__c}" id="relationship"/>
+			            </div>
+		            </div><!--  end col -->
+		            
+	            </div><!--  end row -->
+                                             
+                     </div>
+                 </div>
+                 
+               </div>
+               <!--  end panel -->           
+             </apex:repeat>	                
+           </apex:outputpanel>
+       
+       <!-- HEALTH INFORMATION -->
+       
+       <div class="section-title">Health Information</div>
+       
+       <div class="row">
+          <div class="col-sm-12">
+           <div class="form-group">
+             <label class="control-label">Have you been hospitalized for a serious injury or operation?</label>
+          <apex:outputField styleClass="form-control" value="{!personInfo.Hospitalization_Indicated__c}" id="hospIndicated" />
+          <apex:outputText rendered="{!personInfo.Hospitalization_Indicated__c == 'Yes'}">, &nbsp;<apex:outputField styleClass="form-control" value="{!personInfo.Hospitalization_Description__c}"  id="hospDesc" />
+           </apex:outputText>   
+           </div>            
+          </div><!--  end col -->	  
+         </div><!--  end row -->
+         
+      
+         
+         <div class="row">
+          <div class="col-sm-12">
+           <div class="form-group">
+             <label class="control-label">Are you physically impaired or is your mobility restricted?</label>
+             <apex:outputField styleClass="form-control" value="{!applicantInfo.Disabilities__c}"  id="disabIndicated" />
+             <apex:outputText rendered="{!applicantInfo.Disabilities__c == 'Yes'}">
+             , &nbsp;<apex:inputTextArea styleClass="form-control" value="{!applicantInfo.Disabilities_Description__c}"  id="disabDesc" />			                
+          </apex:outputText>  		                	
+           </div>            
+          </div><!--  end col -->	    
+         </div><!--  end row -->
+         
+        	 
+         
+         <div class="row">
+          <div class="col-sm-12">
+           <div class="form-group">
+             <label class="control-label">Do you have any mental health issues?</label>
+             <apex:outputField styleClass="form-control" value="{!personInfo.Psychiatric_Treatment_Indicated__c}"  id="mentalIndicated" />
+             <apex:outputText rendered="{!personInfo.Psychiatric_Treatment_Indicated__c == 'Yes'}">
+             , &nbsp;<apex:outputField styleClass="form-control" value="{!personInfo.Psychiatric_Treatment_Description__c}"  id="mentalDesc" />			                
+        </apex:outputText>   
+           </div>            
+          </div><!--  end col -->
+         </div><!--  end row -->
+         
+
+        	 
+         
+         <div class="row">
+          <div class="col-sm-12">
+           <div class="form-group">
+              <label class="control-label">Do you have any dietary restrictions?</label>
+              <apex:outputField styleClass="form-control" value="{!applicantInfo.Special_Diet_Indicated__c}"  id="dietIndicated" />
+              <apex:outputText rendered="{!applicantInfo.Special_Diet_Indicated__c == 'Yes'}">
+              , &nbsp;<apex:inputTextArea styleClass="form-control" value="{!applicantInfo.Special_Diet_Description__c}"  id="dietDesc" />
+        	</apex:outputText>  
+        </div>            
+          </div><!--  end col -->
+         </div><!--  end row -->
+         
+
+         
+         <div class="row">
+          <div class="col-sm-12">
+           <div class="form-group">
+             	<label class="control-label">Do you have any allergies?</label>		          
+          	<apex:outputField styleClass="radio" value="{!applicantInfo.Allergies_Indicated__c}"  id="allergiesIndicated" />
+          	<apex:outputText rendered="{!applicantInfo.Allergies_Indicated__c == 'Yes'}">
+          	, &nbsp;<apex:outputField styleClass="form-control" value="{!applicantInfo.Allergies_Other_desc__c}"  id="allergiesDesc" />			                
+        	</apex:outputText>  
+           </div>            
+          </div><!--  end col -->
+         </div><!--  end row -->
+
+        	
+         
+         <div class="row">
+          <div class="col-sm-12">
+           <div class="form-group">
+             	<label class="control-label">Are you currently on any medication?</label>
+			<apex:outputField styleClass="radio" value="{!personInfo.Medication_Indicated__c}"  id="medicationIndicated" />
+			 <apex:outputText rendered="{!personInfo.Medication_Indicated__c == 'Yes'}">
+               <apex:outputField styleClass="form-control" value="{!personInfo.Medication_Description__c}"  id="medicationDesc" />			                
+        	</apex:outputText>
+        </div>            
+          </div><!--  end col -->
+         </div><!--  end row -->
+         
+        	
+         
+         <div class="row">
+          <div class="col-sm-12">
+           <div class="form-group">
+             <label class="control-label">Please tell us about any other health issues or concerns </label>
+             <apex:outputField styleClass="form-control" value="{!personInfo.Health_Concerns__c}"  id="healthConcerns" />	
+           </div>            
+          </div><!--  end col -->	            
+         </div><!--  end row -->
+         
+         <div class="row">
+          <div class="col-sm-12">
+           <div class="form-group">
+             <label class="control-label">Have you ever had or ever suffered from any of the following conditions? </label>
+             <apex:outputField styleClass="form-control" value="{!personInfo.Chronic_Disease__c}"  id="chronicDesease" />	
+           </div>            
+          </div><!--  end col -->	            
+         </div><!--  end row -->
+         
+         <div class="row">
+          <div class="col-sm-12">
+           <div class="form-group">
+             <label class="control-label">Have you ever had any disease or abnormality? </label>
+             <apex:outputField styleClass="form-control" value="{!personInfo.Illnesses__c}"  id="illnesses" />	
+           </div>            
+          </div><!--  end col -->	            
+         </div><!--  end row -->
+         
+         <div class="row">
+          <div class="col-sm-12">
+           <div class="form-group">
+             <label class="control-label">Other disease or abnormality? </label>
+             <apex:outputField styleClass="form-control" value="{!personInfo.Illness_Description__c}"  id="illnessDesc" />	
+           </div>            
+          </div><!--  end col -->	            
+         </div><!--  end row -->     
+           
+</apex:component>

@@ -1,0 +1,50 @@
+<apex:component layout="none" controller="TemplateController"> 
+    <apex:variable var="applications" value="active" rendered="{! IF($CurrentPage.Name=='your_applications', true, false)}"/>  
+    <apex:variable var="igi_home" value="active" rendered="{! IF($CurrentPage.Name=='igi_home', true, false)}"/>
+    <apex:variable var="igi_pt_matches" value="active" rendered="{! IF($CurrentPage.Name=='igi_pt_matches', true, false)}"/>  
+    <apex:variable var="igi_pt_resources" value="active" rendered="{! IF($CurrentPage.Name=='igi_pt_resources', true, false)}"/>  
+    <apex:variable var="wt_resources" value="active" rendered="{! IF($CurrentPage.Name=='resources', true, false)}"/>  
+    <apex:variable var="wt_matches" value="active" rendered="{! IF($CurrentPage.Name=='Participant_Matches', true, false)}"/>
+    <apex:variable var="wt_travel_visa" value="active" rendered="{! IF($CurrentPage.Name=='Participant_Travel_Visa', true, false)}"/>
+    
+    <ul class="clearfix pull-right">
+    
+     <apex:outputText rendered="{! user.User_Interests__c != 'Finding an internship' && user.User_Interests__c != 'Becoming a Work Travel Participant'}">  
+        <li class="{!applications}">
+            <apex:outputLink value="your_applications?{!appendset}">Applications</apex:outputLink>
+        </li>
+     </apex:outputText>         
+     <apex:outputText rendered="{! user.User_Interests__c == 'Finding an internship' && isMatchingStage}">   
+         <li class="{!igi_home}">
+            <apex:outputLink value="igi_home">Your Program</apex:outputLink>
+        </li>         
+        <li class="{!igi_pt_matches}">
+            <apex:outputLink value="igi_pt_matches">Find an Internship</apex:outputLink>
+        </li>                     
+        <li class="{!igi_pt_matches}">
+            <apex:outputLink value="igi_pt_matches">Your Internship</apex:outputLink>
+        </li>        
+         <li class="{!igi_pt_resources}">
+            <apex:outputLink value="igi_pt_resources?{!appendset}">Resources</apex:outputLink>
+        </li>
+     </apex:outputText>
+
+     
+     <apex:outputText rendered="{! user.User_Interests__c == 'Becoming a Work Travel Participant'}">    
+     <li class="{!applications}">
+            <apex:outputLink value="your_applications?{!appendset}">Applications</apex:outputLink>
+        </li>	
+         <li class="{!wt_matches}">
+            <apex:outputLink value="Participant_Matches?{!appendset}" rendered="{! user.User_Interests__c == 'Becoming a Work Travel Participant'}">Placements</apex:outputLink>
+        </li>
+     	<li class="{!wt_travel_visa}">
+            <apex:outputLink value="Participant_Travel_Visa?{!appendset}">Travel and Visas</apex:outputLink>
+        </li>
+          <li class="{!wt_resources}">
+            <apex:outputLink value="resources?{!appendset}">Resources</apex:outputLink>
+        </li>
+     </apex:outputText>       
+       
+    </ul>
+    
+</apex:component>

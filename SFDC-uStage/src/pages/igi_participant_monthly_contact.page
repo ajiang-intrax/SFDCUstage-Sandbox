@@ -1,0 +1,18 @@
+<apex:page id="IGIParticipant_Monthly_Contact" docType="html-5.0" standardController="Engagement__c" extensions="FlowEngagementController" standardStylesheets="true" showHeader="false">
+  <apex:composition template="FlowTemplate_Vs1">
+    <apex:define name="body">
+              
+      <div class="wrapper">
+        <apex:messages />
+        <h1>Intrax Internship Program - Monthly Contact</h1>
+            <div class="white-box clearfix">
+            <div class="flow two_thirds">
+          <flow:interview buttonLocation="bottom" name="IGI_PT_Check_In" finishLocation="{!IGICheckInFinishPage}">
+            <apex:param name="EngagementId" value="{!Engagement.Id}"/>
+          </flow:interview>
+            </div>
+        </div>
+      </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

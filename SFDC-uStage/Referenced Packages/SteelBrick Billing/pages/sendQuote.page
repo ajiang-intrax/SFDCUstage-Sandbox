@@ -1,0 +1,293 @@
+<apex:page standardController="invoiceit_s__Quote__c" extensions="invoiceit_s.ControllerSendQuote"  sidebar="false" standardStylesheets="false" renderAs="pdf">
+  <apex:stylesheet value="{!URLFOR($Resource.invoiceit_s__InvoiceIt,'pdf/web/css/style.css')}"/>
+  <apex:stylesheet value="{!URLFOR($Resource.invoiceit_s__InvoiceIt,'pdf/web/css/codainvoiceprint.css')}"/>
+  <apex:variable value="{!invoiceit_s__Quote__c.Shipping_Contact__r}" var="shippingContact" /> 
+   
+     <table>
+        <tr>
+            <td>
+                <div><apex:image value="{!sLogo}"  width="180" height="60" />
+                </div>
+            </td>
+            <td class="alignright title">{!$Label.Quotation}
+            </td>
+        </tr>
+    </table><br/>
+    <table>
+        <tr>
+            <td class="zeropadding">{!$Organization.Name}&nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td class="zeropadding">{!$Organization.Street}&nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td class="zeropadding">{!$Organization.City}&nbsp;{!$Organization.State} 
+            </td>
+        </tr>
+        <tr>
+            <td class="zeropadding">{!$Organization.Postalcode}&nbsp;{!$Organization.Country}                
+            </td>
+        </tr>
+        <tr>
+            <td class="zeropadding">&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="zeropadding">&nbsp;</td>
+        </tr>
+    </table>
+    
+    <div class="hspacer"></div>
+        <table>
+        <tr>
+            <td class="strong"><apex:outputText value="{!$Label.ShippingAddress}" rendered="false" /></td>
+            <td class="strong"><apex:outputText value="{!$Label.ShippingAddress}" rendered="false" /></td>
+            <td class="aligntop" rowspan="2" style="padding-right:0;width:42%"><span>
+                <table>   
+                    <tr>
+                        <td class="strong alignright bgcolor boxed boxedtop">
+                            <nobr>{!$Label.QuoteName}</nobr>
+                        </td>
+                        <td class="boxed boxedtop"><apex:outputText value="{!invoiceit_s__Quote__c.Name}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="strong alignright bgcolor boxed" height="10">
+                            <nobr>{!$Label.QuoteDate}</nobr>
+                        </td>
+                        <td class="boxed"><apex:outputField value="{!invoiceit_s__Quote__c.invoiceit_s__Start_Date__c}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="strong alignright bgcolor boxed" height="10">
+                            <nobr>{!$Label.Validupto}</nobr>
+                        </td>
+                        <td class="boxed"><apex:outputField value="{!invoiceit_s__Quote__c.invoiceit_s__Valid_To__c}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="strong alignright bgcolor boxed" height="10">
+                            <nobr>{!$Label.QuoteCurrency}</nobr>
+                        </td>
+                        <td class="boxed"><apex:outputText value="{!invoiceit_s__Quote__c.CurrencyL__r.Name}({!invoiceit_s__Quote__c.CurrencyL__r.invoiceit_s__Currency_Symbol__c})" />
+                        </td>
+                    </tr>
+                </table></span>        
+            </td>
+        </tr>
+        <tr>
+            <td class="aligntop">  {!shippingContact.Salutation}{!shippingContact.Name}
+                <br /><table class="nopadding" border="0" cellpadding="0" cellspacing="0"><colgroup span="1"></colgroup><tbody><tr class=""><td class="" colspan="1"></td></tr></tbody></table>
+               <apex:outputLabel value="{!shippingContact.MailingStreet}<br>" rendered="{!shippingContact.MailingStreet != null}" escape="false"/>
+                 <apex:outputLabel value="{!shippingContact.MailingCity}<br>" rendered="{!shippingContact.MailingCity != null}" escape="false"/>
+                 <apex:outputLabel value="{!shippingContact.MailingState}<br>" rendered="{!shippingContact.MailingState != null}" escape="false"/>
+                 <apex:outputLabel value="{!shippingContact.MailingCountry}<br>" rendered="{!shippingContact.MailingCountry != null}" escape="false"/>
+                 <apex:outputLabel value="{!shippingContact.MailingPostalCode}<br>" rendered="{!shippingContact.MailingPostalCode != null}" escape="false"/>
+            </td>
+            <td class="aligntop">
+            
+            
+            </td>
+        </tr>
+    </table>
+    <div class="hspacer"></div>
+    <div class="hspacer"></div>
+    
+    <table class="boxedtable" border="0" cellpadding="0" cellspacing="0" width="100%">
+    <colgroup span="7"></colgroup>
+    <thead class="rich-table-thead">
+    <tr class="">
+        <th class="" scope="col" colspan="1">
+            <div>&nbsp;{!$Label.SlNo}</div>
+        </th>
+    
+        <th class="" scope="col" colspan="1"><div><div class="alignleft headerpadding">&nbsp;{!$Label.ProductName}</div></div>
+        </th>
+
+        <apex:repeat value="{!$ObjectType.invoiceit_s__Quote_Product__c.FieldSets.invoiceit_s__Quote_Product_Email_Fields}" var="fieldAPIQP">
+          <th class="" scope="col" colspan="1"><div><div class="alignleft headerpadding">&nbsp;{!fieldAPIQP.Label}</div></div>
+          </th>
+        </apex:repeat>
+
+        <apex:repeat value="{!$ObjectType.invoiceit_s__Quote_Rate_Plan_Charge__c.FieldSets.invoiceit_s__Quote_Email_Fields}" var="fieldAPI">
+          <th class="" scope="col" colspan="1"><div><div class="alignleft headerpadding">&nbsp;{!fieldAPI.Label}</div></div>
+          </th>
+        </apex:repeat>
+    
+        <th class="" scope="col" colspan="1"><div><div class="alignleft rightline headerpadding">&nbsp;{!$Label.NetValue}</div></div>
+        </th>
+    </tr>
+    </thead>
+    
+    <tbody>
+    <!-- this is used for displaying the sequence numbers -->
+    <apex:variable value="{!1}" var="rowNum"/>
+    <apex:repeat value="{!quoteClass.quoteProducts}" var="quoteproduct">
+      <apex:repeat value="{!quoteproduct.quoteRatePlans}" var="quoterateplan">
+        <apex:variable value="{!1}" var="chargesCounter"/>
+        <apex:repeat value="{!quoterateplan.quoteRatePlanCharges}" var="quoterateplancharge">
+        
+      <tr class="">
+      <td class="aligntop widthsupersmall aligncenter bottomline" colspan="1">
+      <span><apex:outputText value="{!FLOOR(rowNum)}" rendered="{!FLOOR(chargesCounter) == 1}" /></span>
+      </td>
+    
+      <td class="aligntop bottomline" colspan="1">
+          <apex:outputPanel rendered="{!FLOOR(chargesCounter) == 1}">
+           <apex:outputField value="{!quoteproduct.quoteproduct.Name}" /><br/>
+           <span class="description">Product Code : {!quoteproduct.quoteproduct.invoiceit_s__Product_Code__c}</span>
+          </apex:outputPanel>
+      </td>
+      
+      <apex:repeat value="{!$ObjectType.invoiceit_s__Quote_Product__c.FieldSets.invoiceit_s__Quote_Product_Email_Fields}" var="fieldAPIQP">
+           
+               <td class="alignright aligntop widthsmall bottomline" colspan="1">
+                 <apex:outputPanel rendered="{!FLOOR(chargesCounter) == 1}">
+                 <span>
+                    <apex:outputField value="{!quoteproduct.quoteproduct[fieldAPIQP]}" />   
+                  </span>
+                  </apex:outputPanel>
+              </td>
+           
+      </apex:repeat>
+      
+      <apex:repeat value="{!$ObjectType.invoiceit_s__Quote_Rate_Plan_Charge__c.FieldSets.invoiceit_s__Quote_Email_Fields}" var="fieldAPI">
+           <td class="alignright aligntop widthsmall bottomline" colspan="1">
+             <span>
+                <apex:outputField value="{!quoterateplancharge.quoterateplancharge[fieldAPI]}" />   
+              </span>
+          </td>
+      </apex:repeat>
+    
+      <td class="alignright alignright aligntop widthmedium rightline bottomline" colspan="1">
+       <apex:outputField value="{!quoterateplancharge.quoterateplancharge.invoiceit_s__Price__c}" />
+      </td>
+    
+     </tr>
+         <apex:variable var="chargesCounter" value="{!chargesCounter + 1}"/> 
+        </apex:repeat>
+       <apex:variable var="rowNum" value="{!rowNum + 1}"/>
+    </apex:repeat>
+   </apex:repeat>
+    </tbody>
+  </table>
+  
+  <apex:outputPanel rendered="{!invoiceit_s__Quote__c.invoiceit_s__Discount_Value__c > 0}">
+  <table>
+        <tr>
+            <td class="aligntop generalnopadding">
+                <table>
+                    <tr>
+                        <td class="strong alignright">{!$Label.NetTotal}
+                        </td>
+                        <td class="widthmedium boxed boxedtopnone alignright"><apex:outputText value="{!invoiceit_s__Quote__c.CurrencyL__r.invoiceit_s__Currency_Symbol__c}" />&nbsp;
+                            <apex:outputField value="{!invoiceit_s__Quote__c.invoiceit_s__Sub_Total__c}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="strong alignright">{!$Label.Discount}
+                        </td>
+                        <td class="widthmedium boxed boxedtopnone alignright"><apex:outputText value="{!invoiceit_s__Quote__c.CurrencyL__r.invoiceit_s__Currency_Symbol__c}" />&nbsp;
+                            <apex:outputField value="{!invoiceit_s__Quote__c.invoiceit_s__Discount_Value__c}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="strong alignright">{!$Label.Vat}
+                        </td>
+                        <td class="widthmedium boxed alignright"><apex:outputText value="{!invoiceit_s__Quote__c.CurrencyL__r.invoiceit_s__Currency_Symbol__c}" />&nbsp;
+                             <apex:outputField value="{!invoiceit_s__Quote__c.invoiceit_s__VAT__c}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="strong alignright">{!$Label.Tax}
+                        </td>
+                        <td class="widthmedium boxed alignright"><apex:outputText value="{!invoiceit_s__Quote__c.CurrencyL__r.invoiceit_s__Currency_Symbol__c}" />&nbsp;
+                            <apex:outputField value="{!invoiceit_s__Quote__c.invoiceit_s__Tax__c}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="strong alignright">{!$Label.QuoteTotal}
+                        </td>
+                        <td class="widthmedium boxed alignright"><apex:outputText value="{!invoiceit_s__Quote__c.CurrencyL__r.invoiceit_s__Currency_Symbol__c}" />&nbsp;
+                            <apex:outputField value="{!invoiceit_s__Quote__c.invoiceit_s__Total__c}" />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+   </apex:outputPanel>
+   <apex:outputPanel rendered="{!invoiceit_s__Quote__c.invoiceit_s__Discount_Value__c <= 0}">
+     <table>
+        <tr>
+            <td class="aligntop generalnopadding">
+                <table>
+                    <tr>
+                        <td class="strong alignright">{!$Label.NetTotal}
+                        </td>
+                        <td class="widthmedium boxed boxedtopnone alignright"><apex:outputText value="{!invoiceit_s__Quote__c.CurrencyL__r.invoiceit_s__Currency_Symbol__c}" />&nbsp;
+                            <apex:outputField value="{!invoiceit_s__Quote__c.invoiceit_s__Sub_Total__c}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="strong alignright">{!$Label.Vat}
+                        </td>
+                        <td class="widthmedium boxed alignright"><apex:outputText value="{!invoiceit_s__Quote__c.CurrencyL__r.invoiceit_s__Currency_Symbol__c}" />&nbsp;
+                             <apex:outputField value="{!invoiceit_s__Quote__c.invoiceit_s__VAT__c}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="strong alignright">{!$Label.Tax}
+                        </td>
+                        <td class="widthmedium boxed alignright"><apex:outputText value="{!invoiceit_s__Quote__c.CurrencyL__r.invoiceit_s__Currency_Symbol__c}" />&nbsp;
+                            <apex:outputField value="{!invoiceit_s__Quote__c.invoiceit_s__Tax__c}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="strong alignright">{!$Label.QuoteTotal}
+                        </td>
+                        <td class="widthmedium boxed alignright"><apex:outputText value="{!invoiceit_s__Quote__c.CurrencyL__r.invoiceit_s__Currency_Symbol__c}" />&nbsp;
+                            <apex:outputField value="{!invoiceit_s__Quote__c.invoiceit_s__Total__c}" />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+   </apex:outputPanel>
+  <div class="hspacer"></div>
+  <div class="hspacer"></div>
+  <div class="hspacer"></div>
+  
+  <apex:outputPanel rendered="{!iCountOfOptionalExtra > 0}">
+  <b><apex:outputLabel value="{!$Label.OptionalExtras}" style="float:left;" /></b> <br/><br/>
+  <table class="boxedtable" border="0" cellpadding="0" cellspacing="0" width="100%">
+    <colgroup span="7"></colgroup>
+    <thead class="rich-table-thead">
+    <tr class="">
+        <apex:repeat value="{!$ObjectType.invoiceit_s__Optional_Extra__c.FieldSets.invoiceit_s__Optional_Charges_Creation}" var="fieldAPI">
+        <th class="" scope="col" colspan="1"><div><div class="aligncenter headerpadding"><apex:outputLabel value="{!fieldAPI.Label}" /></div></div>
+        </th>
+        </apex:repeat>
+        <th class="" scope="col" colspan="1"><div><div class="aligncenter rightline headerpadding"><apex:outputLabel value="{!$Label.UnitSellingPrice}" /></div></div>
+        </th>
+    </tr>
+    </thead>
+    
+    <tbody>
+     <apex:repeat value="{!listOptionalExtra}" var="OptionalExtra">
+     <tr>
+      <apex:repeat value="{!$ObjectType.invoiceit_s__Optional_Extra__c.FieldSets.invoiceit_s__Optional_Charges_Creation}" var="fieldAPI">
+          <td class="aligntop widthmedium rightline bottomline" colspan="1"><apex:outputField value="{!OptionalExtra[fieldAPI]}" /></td>
+      </apex:repeat>
+          <td class="alignright aligntop widthmedium rightline bottomline" colspan="1">
+              <apex:outputField value="{!OptionalExtra.Product_Rate_Plan_Charge__r.CurrencyL__r.invoiceit_s__Currency_Symbol__c}" />&nbsp;
+              <apex:outputField value="{!OptionalExtra.invoiceit_s__Unit_Selling_Price__c}" />
+          </td>
+     </tr>
+      </apex:repeat>
+    </tbody> 
+  </table>
+  </apex:outputPanel>
+</apex:page>

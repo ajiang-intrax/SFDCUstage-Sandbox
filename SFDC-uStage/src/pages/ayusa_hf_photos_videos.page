@@ -1,0 +1,89 @@
+<apex:page id="ayusa_hf_photos_videos" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper">
+          <apex:form id="form">
+       <div class="page-header clearfix">
+ <h1>Ayusa Host Family Application</h1>
+<div class="back-to-main"><apex:outputLink id="BacktoMain" value="apex/ayusa_hf_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+</div>
+              <h2>Family Photo Album</h2>
+                        
+            <div class="white-box clearfix">
+                <div class="panel two_thirds">
+               <div class="form-row">
+                   <p>Add photos of your family and home (optional).</p>
+                   <apex:outputLabel rendered="{!IF((DocList.Size > 0 && docType == 'HostFamily'), false, true)}"> <span class="no-records">No record(s) to display.</span></apex:outputLabel>
+                   </div>  
+             
+                  <apex:pageBlock rendered="{!if(DocList.Size > 0, true, false)}">
+                <apex:pageBlockTable styleClass="pageblocktable" value="{!DocList}" var="item">
+                <apex:column headerValue="File Name">
+                    <apex:outputText id="DocName" value="{!item.Document_Name__c}"/>
+                </apex:column>
+                <apex:column headerValue="Description">
+                    <apex:outputText id="Desc" value="{!item.Description__c}"/>
+                </apex:column>
+                                            
+                <apex:column >
+                    <apex:commandlink styleClass="inline-link" action="{!load}" target="_blank">
+                        <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                        <apex:commandButton value="View" />
+                    </apex:commandlink>
+                    <apex:outputText value=" | " />
+                    <apex:commandlink styleClass="inline-link" action="{!deletefile}"  onclick="return ConfirmDelete('Are You Sure ?');">
+                        <apex:param name="docGuid"  value="{!item.Document_GUID__c}"/>
+                        
+                        <apex:commandButton id="Delete" value="Delete" />
+                    </apex:commandlink>
+                </apex:column>
+                </apex:pageBlockTable>
+                </apex:pageBlock>    
+                <apex:outputText value="{!disableFileUploadText}"
+                          rendered="{!disableFileUpload}"/>          
+              <div class="form-row">
+                  <div class="form-link">
+                        <!--<apex:commandlink action="{!navigator}">
+                            <i class="icon-plus-sign"></i>
+                          <apex:param name="nextPage" value="/apex/ayusa_app_doc_upload"/>
+                          <apex:param name="reDirectPage" value="true"/>
+                          <apex:param name="docType" value="HostFamily" assignTo="{!docType}"/>
+                            <apex:commandButton value="Add a New Photo/Video" />
+                        </apex:commandlink>-->
+                        
+                      <apex:outputLink value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType={!$CurrentPage.parameters.docType}&retparam={!retParam}" id="theLink" target="_self" disabled="{!disableFileUpload}"><i class="icon-plus-sign"></i><span>Add a New Photo</span></apex:outputLink>
+                      </div>
+                  </div>    
+                <div class="form-row">
+                  
+                    
+                    <div class="form-link">
+                        <apex:commandlink id="Back" styleClass="back" action="{!navigator}"> 
+                        <!-- <apex:param name="nextPage" value="/apex/apex/ayusa_hf_fam_references"/> -->
+                        <!-- AYII: story 72 -->
+                        <apex:param name="nextPage" value="/apex/ayusa_hf_fam_letter"/>
+                        <apex:param name="EssayType" value="Host Family" assignTo="{!EssayType}"/>
+                        <!-- AYII: story 72 -->
+                        <apex:param name="reDirectPage" value="true"/>
+                        <i class="icon-chevron-left"></i>
+                        <span>Back</span>
+                        </apex:commandLink>
+                    </div>
+              
+                      <div class="form-button">
+                        <apex:commandlink styleClass="next" action="{!navigator}">
+                         <apex:param name="nextPage" value="/apex/ayusa_hf_home"/>
+                          <apex:param name="reDirectPage" value="false"/>
+                          <apex:commandButton id="Continue" value="Continue" />
+                          <i class="icon-chevron-right"></i>   
+                        </apex:commandlink>
+                      </div>                      
+                </div>
+            </div>
+               
+                </div>
+          </apex:form>
+      </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

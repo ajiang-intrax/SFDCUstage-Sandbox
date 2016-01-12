@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Product Rate Plan Charge Tier</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Product Rate Plan Charge Tiers</value>
+    </caseValues>
+    <fields>
+        <help><!-- The start and end units are both inclusive for calculation. --></help>
+        <label><!-- End Unit --></label>
+        <name>End_Unit__c</name>
+    </fields>
+    <fields>
+        <label><!-- Product Rate Plan Charge --></label>
+        <name>Product_Rate_Plan_Charge__c</name>
+        <relationshipLabel><!-- Product Rate Plan Charge Tiers --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The start and end units are both inclusive for calculation. --></help>
+        <label><!-- Start Unit --></label>
+        <name>Start_Unit__c</name>
+    </fields>
+    <fields>
+        <label><!-- Unit Cost Price --></label>
+        <name>Unit_Cost_Price__c</name>
+    </fields>
+    <fields>
+        <label><!-- Unit Price --></label>
+        <name>Unit_Price__c</name>
+    </fields>
+    <startsWith>Consonant</startsWith>
+    <validationRules>
+        <errorMessage><!-- Tiered pricing can only be created for Product Rate Plan Charges whose price format is &apos;Tiered&apos; --></errorMessage>
+        <name>Cannot_create_for_non_tiered_charges</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Start and End unit should be greater than zero --></errorMessage>
+        <name>Start_and_end_unit_cannot_be_0</name>
+    </validationRules>
+</CustomObjectTranslation>

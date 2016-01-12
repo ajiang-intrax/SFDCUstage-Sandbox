@@ -1,0 +1,428 @@
+<!--  
+Description: Home Page for Intrax Partner Portal Participant records list page.
+-->
+<apex:page id="page" title="Participants | Intrax" standardStylesheets="false" showHeader="false" controller="IntraxPartnerPortalEngineController" action="{!checkLoginWithParticipantSearch}">
+     
+        <apex:composition template="IntraxTemplate_Vs2" >
+            <apex:define name="body">
+                <apex:form id="form">
+                <h1><apex:outputText value="{!DefaultIP}" /> <apex:outputText value=" Participants" /></h1>
+                
+                <div class="row-fluid">
+                <div class="span3"> 
+                  
+                    <div class="block filter-group">
+                        <div class="block-header">
+                            <h3>Search Filters</h3>
+                        </div>
+                        <div class="block-body">
+                    <div class="filter">
+                    <div class="filter-name">Participant Name</div>
+                    <div class="filter-field">
+                        <!-- <apex:inputfield id="PName" value="{!participant.Name}"/>  -->
+                        <apex:inputText id="PName" value="{!EngName}"/>
+                        <apex:commandLink styleClass="btn margin-t" action="{!doSearchForParticipant}" rerender="pb" status="waitMsg" id="GoButton">
+                            <apex:commandButton id="Search" value="Search"/>
+                        </apex:commandLink>
+                    </div>   
+                   </div><!-- end filter -->
+                   <!-- 
+                    <div class="filter">
+                   <div class="filter-name">Intrax Program</div> 
+                   <div class="filter-field">
+                    <apex:selectList id="IntraxProgramSelected" value="{!IntraxProgramSelected}" multiselect="false" size="1"  >
+                   <apex:selectOption itemValue="" itemLabel="--None-- "/>
+                   <apex:selectOptions id="PartnerIntraxPrograms" value="{!PartnerIntraxPrograms}"/>
+                   <apex:actionSupport event="onchange" rerender="AyusaFilters,IGIWTFilters,WTFilters" status="waitMsg" onComplete="doSearch();return false;"/>
+                   </apex:selectList>
+                    </div>  
+                        </div> 
+                    -->     
+                        <!-- end filter -->
+                  
+                   <apex:pageBlock id="WTFilters" >
+                       <apex:outputPanel rendered="{!CONTAINS(IntraxProgramSelected,'Ayusa') || IntraxProgramSelected == ''}" >
+                             <div class="filter">
+                        <div class="filter-name">Program Duration</div>
+                        <div class="filter-field">      
+                        <apex:selectList id="programDurationSelected" value="{!programDurationSelected}" multiselect="false" size="1"  >
+                           <apex:selectOption itemValue="" itemLabel="--None-- "/>
+                           <apex:selectOptions id="programDuration" value="{!programDuration}"/>
+                           <apex:actionSupport event="onchange" rerender="AyusaFilters,IGIWTFilters,WTFilters" status="waitMsg" onComplete="doSearch();return false;"/>
+                        </apex:selectList>
+                        </div>
+                        </div>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!IntraxProgramSelected != '--None--' && CONTAINS(IntraxProgramSelected,'Work Travel')}" >
+                            <div class="filter">
+                                 <div class="filter-name">Program Year</div>
+                             <div class="filter-field"> 
+                                 <apex:selectList id="ProgramYearFilter" value="{!ProgramYearSelected}" multiselect="false" size="1" onchange="doSearch();return false;">
+                                    <apex:selectOptions id="ProgramYearVal" value="{!ProgramYear}"/>
+                                    <apex:selectOption itemValue="" itemLabel="--None--"/>
+                                 </apex:selectList>
+                                 </div>
+                                </div><!-- end filter -->
+                                <div class="filter">
+                                 <div class="filter-name">Season</div>
+                             <div class="filter-field"> 
+                                 <apex:selectList id="ProgramSeasonFilter" value="{!ProgramSeasonSelected}" multiselect="false" size="1" onchange="doSearch();return false;">
+                                    <apex:selectOption itemValue="" itemLabel="--None--"/>
+                                    <apex:selectOptions id="ProgramSeasonVal" value="{!ProgramSeason}"/>
+                                 </apex:selectList>
+                                 </div>
+                                </div><!-- end filter -->
+                                <div class="filter">
+                                 <div class="filter-name">Service Level</div>
+                             <div class="filter-field"> 
+                                 <apex:selectList id="ProgramSvLvlFilter" value="{!ProgramSvLvlSelected}" multiselect="false" size="1" onchange="doSearch();return false;">
+                                    <apex:selectOption itemValue="" itemLabel="--None--"/>
+                                    <apex:selectOptions id="ProgramSvLvlVal" value="{!ProgramSvLvl}"/>
+                                 </apex:selectList>
+                                 </div>
+                                </div><!-- end filter -->
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!IntraxProgramSelected != '--None--' && CONTAINS(IntraxProgramSelected,'Ayusa')}" >
+                            <div class="filter">
+                                 <div class="filter-name">Program Year</div>
+                             <div class="filter-field"> 
+                                 <apex:selectList id="ProgramYearFilter1" value="{!ProgramYearSelected}" multiselect="false" size="1" onchange="doSearch();return false;">
+                                    <apex:selectOption itemValue="" itemLabel="--None--"/>
+                                    <apex:selectOptions id="ProgramYearVal1" value="{!ProgramYear}"/>
+                                 </apex:selectList>
+                                 </div>
+                                </div><!-- end filter -->
+                            </apex:outputPanel>
+                    </apex:pageBlock>
+                    
+                   <!-- Commented out as per IGI 511
+                    <div class="filter">
+                  <div class="filter-name">Engagement Stage</div>
+                  <div class="filter-field"> 
+                      <apex:actionRegion >
+                      <apex:selectList value="{!EngagementStatusSelected}" multiselect="false" size="1" > 
+                   <apex:selectOption itemValue="" itemLabel="--None-- "/>
+                   <apex:selectOptions value="{!EngagementStatus}"/>
+                   <apex:actionSupport event="onchange" rerender="AyusaFilters" status="waitMsg" onComplete="doSearch();return false;"/>
+                   </apex:selectList>
+                   </apex:actionRegion>
+                   </div>
+                        </div>
+                   
+                    <div class="filter">
+                  <div class="filter-name">Placement Status</div>
+                <div class="filter-field"> 
+                    <apex:actionRegion >
+                        <apex:selectList value="{!PlacementStatusSelected}" multiselect="false" size="1" > 
+                            <apex:selectOption itemValue="" itemLabel="--None-- "/>
+                                <apex:selectOptions value="{!PlacementStatus}"/>
+                                <apex:actionSupport event="onchange" rerender="AyusaFilters" status="waitMsg" onComplete="doSearch();return false;"/>
+                        </apex:selectList>
+                     </apex:actionRegion>
+                </div>
+                  
+                        </div>
+                 -->
+                        
+                        <apex:pageBlock id="IGIWTFilters">
+                             <apex:outputPanel rendered="{! (CONTAINS(IntraxProgramSelected, 'Internship') || CONTAINS(IntraxProgramSelected, 'Work Travel')) && IntraxProgramSelected != '--None--'}" >
+                              <div class="filter">
+                                <div class="filter-name">Status</div>
+                                    <div class="filter-field"> 
+                                      <apex:actionRegion id="SelectRegion">
+                                      <apex:selectList id="StatusSelected" value="{!StatusSelected}" multiselect="false" size="1" > 
+                                           <apex:selectOption itemValue="" itemLabel="--None-- "/>
+                                           <apex:selectOptions id="Status" value="{!Status}"/>
+                                           <apex:actionSupport event="onchange" rerender="AyusaFilters" status="waitMsg" onComplete="doSearch();return false;"/>
+                                      </apex:selectList>
+                                    </apex:actionRegion>
+                                </div>
+                              </div><!-- end filter -->   
+                            </apex:outputPanel>
+                        </apex:pageBlock>
+                        
+                        <apex:pageBlock id="AyusaFilters">
+                             <apex:outputPanel rendered="{! CONTAINS(IntraxProgramSelected, 'Ayusa') && IntraxProgramSelected != '--None--'}" >
+                              <div class="filter">
+                                <div class="filter-name">Engagement Status</div>
+                                    <div class="filter-field"> 
+                                      <apex:actionRegion >
+                                      <apex:selectList id="EngagementStatusSelected" value="{!EngagementStatusSelected}" multiselect="false" size="1" > 
+                                           <apex:selectOption itemValue="" itemLabel="--None-- "/>
+                                           <apex:selectOptions id="EngagementStatus" value="{!EngagementStatus}"/>
+                                           <apex:actionSupport event="onchange" rerender="AyusaFilters" status="waitMsg" onComplete="doSearch();return false;"/>
+                                      </apex:selectList>
+                                    </apex:actionRegion>
+                                </div>
+                              </div><!-- end filter -->  
+                              
+                              <div class="filter">
+                                  <div class="filter-name">Placement Status</div>
+                                    <div class="filter-field"> 
+                                    <apex:actionRegion >
+                                        <apex:selectList id="PlacementStatusSelected" value="{!PlacementStatusSelected}" multiselect="false" size="1" > 
+                                            <apex:selectOption itemValue="" itemLabel="--None-- "/>
+                                                <apex:selectOptions id="PlacementStatus" value="{!PlacementStatus}"/>
+                                                <apex:actionSupport event="onchange" rerender="AyusaFilters" status="waitMsg" onComplete="doSearch();return false;"/>
+                                        </apex:selectList>
+                                     </apex:actionRegion>
+                                    </div>
+                             </div> 
+                              
+                              <div class="filter">
+                                     <div class="filter-name">Pending PDO?</div>
+                                          <div class="filter-field">
+                                            <apex:selectList id="PendingPDOSelected" value="{!PendingPDOSelected}" size="1" onchange="doSearch();return false;">
+                                                <apex:selectOption itemValue="" itemLabel="--None-- "/>
+                                                <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                                                <apex:selectOption itemValue="No" itemLabel="No"/>
+                                            </apex:selectList>
+                                      </div>
+                              </div><!-- end filter -->
+                              <!-- Removed. story 687
+                              <div class="filter">
+                                     <div class="filter-name">Needs Travel Information? </div>
+                                        <div class="filter-field">
+                                            <apex:selectList value="{!NeedsTravelSelected}" size="1" onchange="doSearch();return false;">
+                                                <apex:selectOption itemValue="" itemLabel="--None-- "/>
+                                                <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                                                <apex:selectOption itemValue="No" itemLabel="No"/>
+                                            </apex:selectList>
+                                        </div>
+                              </div>
+                              -->
+                              <div class="filter">
+                                     <div class="filter-name">Arrival Trip Needed? </div>
+                                        <div class="filter-field">
+                                            <apex:selectList id="ApprivalTripNeeded" value="{!ApprivalTripNeeded}" size="1" onchange="doSearch();return false;">
+                                                <apex:selectOption itemValue="" itemLabel="--None-- "/>
+                                                <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                                                <apex:selectOption itemValue="No" itemLabel="No"/>
+                                            </apex:selectList>
+                                        </div>
+                              </div><!-- end filter -->
+                              <div class="filter">
+                                     <div class="filter-name">Departure Trip Needed? </div>
+                                        <div class="filter-field">
+                                            <apex:selectList id="DepartureTripNeeded" value="{!DepartureTripNeeded}" size="1" onchange="doSearch();return false;">
+                                                <apex:selectOption itemValue="" itemLabel="--None-- "/>
+                                                <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                                                <apex:selectOption itemValue="No" itemLabel="No"/>
+                                            </apex:selectList>
+                                        </div>
+                              </div><!-- end filter -->
+                              
+                              
+                              <div class="filter">
+                                     <div class="filter-name">Double Placement </div>
+                                        <div class="filter-field">
+                                            <apex:selectList id="DoublePlacementSelected" value="{!DoublePlacementSelected}" size="1" onchange="doSearch();return false;">
+                                                <apex:selectOption itemValue="" itemLabel="--None-- "/>
+                                                <apex:selectOption itemValue="true" itemLabel="Yes"/>
+                                                <apex:selectOption itemValue="false" itemLabel="No"/>
+                                            </apex:selectList>
+                                        </div>
+                              </div><!-- end filter -->
+                              
+                              <div class="filter">
+                                     <div class="filter-name">Single No Children </div>
+                                        <div class="filter-field">
+                                            <apex:selectList id="SingleNoChildrenSelected" value="{!SingleNoChildrenSelected}" size="1" onchange="doSearch();return false;">
+                                                <apex:selectOption itemValue="" itemLabel="--None-- "/>
+                                                <apex:selectOption itemValue="true" itemLabel="Yes"/>
+                                                <apex:selectOption itemValue="false" itemLabel="No"/>
+                                            </apex:selectList>
+                                        </div>
+                              </div><!-- end filter -->
+                              
+                              <div class="filter">
+                                     <div class="filter-name">Pending School Permission </div>
+                                        <div class="filter-field">
+                                            <apex:selectList id="PendingSchoolSelected" value="{!PendingSchoolSelected}" size="1" onchange="doSearch();return false;">
+                                                <apex:selectOption itemValue="" itemLabel="--None-- "/>
+                                                <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                                                <apex:selectOption itemValue="No" itemLabel="No"/>
+                                            </apex:selectList>
+                                        </div>
+                              </div><!-- end filter -->
+                            
+                           </apex:outputPanel>
+                        </apex:pageBlock>
+                        
+                 
+                        </div><!-- end block body -->
+                    </div><!-- end block -->
+               </div><!-- end span3 -->
+               
+               <apex:actionFunction name="callAction" action="{!pageNavigationForParticipant}" status="waitMsg" reRender="pb, validationMsg"/>
+               <apex:actionFunction name="doSearch" action="{!doSearchOnTheBasisOfPageSizeForParticipant}" status="waitMsg" reRender="pb, validationMsg"/>
+                 
+                <div class="span9">
+                    
+                      <apex:actionStatus id="waitMsg" startStyleClass="alert alert-info">
+                            <apex:facet name="start" >
+                                <i class="icon-spinner icon-spin"></i>  <strong>Please Wait.....</strong>
+                            </apex:facet>
+                        </apex:actionStatus>
+                        
+                        <apex:pageBlock id="pb">
+                            
+                            <apex:pageMessages id="validationMsg"/>
+                             <apex:outputPanel rendered="{!IF(totalCount == 0, true, false)}" layout="block" styleClass="block"> 
+                                <div class="block-body">
+                                 No record(s) to display.
+                                </div>
+                             </apex:outputPanel> 
+                     
+                            <!-- begin sorting fields -->
+                            <apex:outputPanel rendered="{!IF(totalCount > 0, true, false)}" layout="block" styleClass="clearfix navbar">
+                                <div class="navbar-inner">
+                                    <div class="navbar-form">
+                                                
+                                        <div class="pull-left margin-r">  
+                                            Sort By&nbsp;
+                                            <apex:selectList id="sortExpression" value="{!sortExpression}" styleClass="short" multiselect="false" size="1" onchange="doSearch();return false;">
+                                                <apex:selectOptions value="{!SortByParticipant}"/>
+                                             </apex:selectList>
+                                        
+                                        </div>  
+        
+                                        <div class="pull-left margin-r">                                      
+                                             
+                                           <apex:pageBlock id="SortByDirectionBlock">
+                                            <!-- 
+                                            <apex:selectRadio value="{!sortDirection}" onchange="doSearch();return false;">
+                                                <apex:selectOptions value="{!SortByDirection}"/>
+                                             </apex:selectRadio>
+                                             -->
+                                              
+                                             <apex:commandLink action="{!doSearchforParticipant}"  styleClass="navbar-link" value=" Reverse Order" reRender="pb,validationMsg" status="waitMsg"> 
+                                                 <apex:param value="{!sortExpression}" ></apex:param>
+                                             </apex:commandLink>
+                                             <apex:outputText id="participantRecords" style="font-weight:bold" value=" Total Records: {!totalCount}" />
+                                             <!--  
+                                             <apex:outputText value=" Records retrieved: {!participantRecords.size}" />
+                                                -->
+                                            </apex:pageBlock>
+                                        </div> 
+                                             
+                                    </div>  
+                                </div> 
+                                               
+                            </apex:outputPanel> 
+                            <!-- end sorting fields -->  
+                      
+                    
+                    
+                   <div id="pt-list" class="list-view" >
+                            <apex:repeat id="ParticipantList" value="{!listParticipantAndMatch}" var="item" rendered="{!IF(totalCount > 0, true, false)}">
+                    <div class="block">
+                        <div class="block-body"> 
+                   <div class="row-fluid">
+                       <div class="span4">
+                      <label>Name</label>
+                   <apex:outputLink value="/apex/Partner_PT_Profile?participantId={!item.engagementRecord.id}&isInputType=false"> 
+                     <apex:outputField id="engagementRecordName" value="{!item.engagementRecord.Name}" />
+                     </apex:outputLink>
+                        
+                        <apex:outputPanel rendered="{!IF(item.engagementRecord.Intrax_Program__c == 'Ayusa',true,false)}" >
+                        <label>Program Duration:</label>
+                          <apex:outputText id="Program_Duration" value="{!item.engagementRecord.Program_Duration__c}" /> 
+                         </apex:outputPanel>
+                         <apex:outputPanel id="Intrax_Program" rendered="{!IF(item.engagementRecord.Intrax_Program__c == 'Internship' || item.engagementRecord.Intrax_Program__c == 'Work Travel' ,true,false)}" >
+                        <label>Program Year: </label>
+                        <apex:outputField id="Program_Year" value="{!item.engagementRecord.Program_Year__c}" />
+                         </apex:outputPanel>
+                        <label>Last Match Date:</label>
+                          <apex:outputField id="Last_Match_Date" value="{!item.engagementRecord.Last_Match_Date__c}" />
+                           
+                       </div> 
+                        <div class="span4">
+                            <label>Engagement Start:</label>
+                          <apex:outputField id="Engagement_Start" value="{!item.engagementRecord.Engagement_Start__c}" /> 
+                          <label>Engagement End:</label>
+                          <apex:outputField id="Engagement_End" value="{!item.engagementRecord.Engagement_End__c}" />
+                        </div> 
+                       <div class="span4">
+                        <label>Engagement Status:</label>
+                        <apex:outputField id="Status" value="{!item.engagementRecord.Status__c}" />
+                        
+                        <label>Placement Status:</label>
+                        <apex:outputField id="Placement_Status" value="{!item.engagementRecord.Placement_Status__c}" />
+                        
+                             
+                       </div> 
+                      
+                  </div>
+                   </div><!-- end block body -->
+                    </div><!-- end block --> 
+                    </apex:repeat>
+                            </div>
+                    
+                    
+                    <!-- begin sorting fields -->
+                            <apex:outputPanel rendered="{!IF(totalCount > 0, true, false)}" layout="block" styleClass="clearfix navbar">
+                                <div class="navbar-inner">
+                                    <div class="navbar-form">
+                                                
+                                        <div class="pull-left margin-r">  
+                                            Page&nbsp;
+                                            <apex:inputText id="pageNo" value="{!itotalpageNumber}" size="3" onkeydown="return runScript(event);"/>&nbsp;
+                                            <apex:outputLabel value="of {!iTotalPages}"/>   
+                                        </div>  
+        
+                                        <div class="pull-left margin-r">                                      
+                                             
+                                            Listing&nbsp;
+                                            <apex:selectList id="limits" value="{!limits}" styleClass="short" size="1" onchange="doSearch();return false;">
+                                                <apex:selectOptions value="{!items}"/>
+                                            </apex:selectList>
+                                            &nbsp;
+                                            <apex:outputLabel value="per Page"/>
+                                        </div> 
+                                          
+                                        <div class="pagination pull-right">
+                                            <ul>
+                                                <li><apex:commandLink id="First" value="First" action="{!first}" status="waitMsg" reRender="pb, validationMsg"/></li>
+                                                <li><apex:commandLink action="{!previous}" status="waitMsg" reRender="pb, validationMsg, lowerPageNoPanel" rendered="{!IF(PreviousButtonDisabledForParticipant  == true, false, true)}">
+                                                <apex:outputText id="Previous" value="Previous"/>
+                                                </apex:commandLink></li>
+                                                            
+                                                <li><!--  <apex:commandLink action="{!next}" status="waitMsg" reRender="pb, validationMsg" rendered="{!IF(NextButtonDisabledForParticipant == true, false, true)}"> -->
+                                                <apex:commandLink id="Next" action="{!next}" status="waitMsg" reRender="pb, validationMsg" rendered="{!IF(NextButtonDisabledForParticipant == true, false, true)}">
+                                                <apex:outputText value="Next"/>
+                                                </apex:commandLink></li>
+                                                
+                                                <li><apex:commandLink id="Last" value="Last" action="{!lastForParticipant}" status="waitMsg" reRender="pb, validationMsg"/></li>
+                                            </ul>   
+                                        </div> <!-- end pagination -->            
+                                    </div> 
+                                </div> 
+                                               
+                            </apex:outputPanel> 
+                            <!-- end sorting fields -->  
+                    
+                    </apex:pageBlock>
+                    
+                </div><!-- end span9 -->
+                </div><!-- end row -->
+                <script>
+        
+                    function runScript(obj){
+                        
+                        //alert(obj.keyCode);
+                        if(obj.keyCode == 13){
+                            callAction();   // call action function
+                            return false;
+                        }else if((obj.keyCode > 34 && obj.keyCode < 40) || (obj.keyCode > 95 && obj.keyCode < 106) || (obj.keyCode > 47 && obj.keyCode < 58) || obj.keyCode == 8 || obj.keyCode == 46 ){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }
+                </script>
+                </apex:form>
+            </apex:define>
+        </apex:composition>
+        
+</apex:page>

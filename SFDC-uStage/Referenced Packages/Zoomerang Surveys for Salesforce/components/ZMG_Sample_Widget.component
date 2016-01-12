@@ -1,0 +1,9 @@
+<apex:component >
+<apex:attribute name="theWidget" type="ZMG.ZMG_Widget_Renderer" required="true" description="the widget to be rendered" />
+<style>
+#mainBody {
+	border: none;
+}
+</style>
+<apex:image url="{!URLFOR($Resource.ZMG__ZMG_Resources, 'images/' & theWidget.sampleImage)}" />
+</apex:component>

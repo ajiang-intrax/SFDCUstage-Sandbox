@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <namedFilters>
+        <fullName>nf_01IU0000000CzqSMAS_00NU0000000T8KdMAK</fullName>
+        <active>true</active>
+        <booleanFilter>1 OR 2</booleanFilter>
+        <field>Job__c.Billing_Contact__c</field>
+        <filterItems>
+            <field>Contact.AccountId</field>
+            <operation>equals</operation>
+            <valueField>$Source.Account__c</valueField>
+        </filterItems>
+        <filterItems>
+            <field>Contact.AccountId</field>
+            <operation>equals</operation>
+            <valueField>$Source.Partner__c</valueField>
+        </filterItems>
+        <infoMessage>You can pick a contact that belongs to the selected Account or Partner. This can be overridden.</infoMessage>
+        <isOptional>true</isOptional>
+        <name>Order_Billing Contact</name>
+        <sourceObject>Job__c</sourceObject>
+    </namedFilters>
+    <namedFilters>
+        <fullName>nf_01IU0000000CzqSMAS_00NU0000000T8KlMAK</fullName>
+        <active>true</active>
+        <booleanFilter>1 OR 2</booleanFilter>
+        <field>Job__c.Shipping_Contact__c</field>
+        <filterItems>
+            <field>Contact.AccountId</field>
+            <operation>equals</operation>
+            <valueField>$Source.Account__c</valueField>
+        </filterItems>
+        <filterItems>
+            <field>Contact.AccountId</field>
+            <operation>equals</operation>
+            <valueField>$Source.Partner__c</valueField>
+        </filterItems>
+        <infoMessage>You can pick a contact that belongs to the selected Account or Partner. This can be overridden.</infoMessage>
+        <isOptional>true</isOptional>
+        <name>Order_Shipping Contact</name>
+        <sourceObject>Job__c</sourceObject>
+    </namedFilters>
+    <namedFilters>
+        <fullName>nf_01IU0000000CzqcMAC_00NU0000000T8LvMAK</fullName>
+        <active>true</active>
+        <booleanFilter>1 OR 2</booleanFilter>
+        <field>Quote__c.Billing_Contact__c</field>
+        <filterItems>
+            <field>Contact.AccountId</field>
+            <operation>equals</operation>
+            <valueField>$Source.Account__c</valueField>
+        </filterItems>
+        <filterItems>
+            <field>Contact.AccountId</field>
+            <operation>equals</operation>
+            <valueField>$Source.Partner__c</valueField>
+        </filterItems>
+        <infoMessage>You can pick a contact that belongs to the selected Account or Partner. This can be overridden.</infoMessage>
+        <isOptional>true</isOptional>
+        <name>Quote_Billing Contact</name>
+        <sourceObject>Quote__c</sourceObject>
+    </namedFilters>
+    <namedFilters>
+        <fullName>nf_01IU0000000CzqcMAC_00NU0000000T8M2MAK</fullName>
+        <active>true</active>
+        <booleanFilter>1 OR 2</booleanFilter>
+        <field>Quote__c.Shipping_Contact__c</field>
+        <filterItems>
+            <field>Contact.AccountId</field>
+            <operation>equals</operation>
+            <valueField>$Source.Account__c</valueField>
+        </filterItems>
+        <filterItems>
+            <field>Contact.AccountId</field>
+            <operation>equals</operation>
+            <valueField>$Source.Account__c</valueField>
+        </filterItems>
+        <infoMessage>You can pick a contact that belongs to the selected Account or Partner. This can be overridden.</infoMessage>
+        <isOptional>true</isOptional>
+        <name>Quote_Shipping Contact</name>
+        <sourceObject>Quote__c</sourceObject>
+    </namedFilters>
+    <namedFilters>
+        <fullName>nf_01IU0000000FjkpMAC_00NU0000002VujXMAS</fullName>
+        <active>true</active>
+        <errorMessage>You can choose a contact that belongs to the same account as the payment.</errorMessage>
+        <field>Payment__c.Paid_by__c</field>
+        <filterItems>
+            <field>Contact.AccountId</field>
+            <operation>equals</operation>
+            <valueField>$Source.Account__c</valueField>
+        </filterItems>
+        <infoMessage>Choose the contact who made this payment. This contact must belong to the same account as the payment.</infoMessage>
+        <isOptional>false</isOptional>
+        <name>Payment_Paid by</name>
+        <sourceObject>Payment__c</sourceObject>
+    </namedFilters>
+</CustomObject>

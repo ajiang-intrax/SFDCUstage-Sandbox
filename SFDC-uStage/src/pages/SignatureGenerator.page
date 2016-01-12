@@ -1,0 +1,65 @@
+<apex:page showHeader="false" sidebar="false" controller="CSignatureGenerator" action="{!getMembers}" contentType="pdf">
+    <style>
+    .white { color:white; font-size:1px; }
+    p { margin-left:50px;margin-right:50px; }
+    </style>    
+    <apex:variable var="rowIndex" value="{!0}"/>
+    <apex:outputPanel rendered="{!type != 'Agreement'}">
+        <center><h3>Host Family Member Background Check</h3></center>
+        <p>
+            The United States Department of State has mandated that families hosting foreign exchange students
+            undergo a background check. All family members in the home who are 18 years of age or older must
+            be checked. We ask for your cooperation by completing this form and returning it to <b>Ayusa</b>
+            headquarters by mail, fax, or to your Ayusa representative.
+        </p>
+        <p>
+            My signature below authorizes <b>Ayusa</b> to conduct a background check with the personal information I
+            have provided. This background check may include, but is not limited to, my driving history; a social
+            security number verification; present and former addresses; child abuse registry; and police records. I understand that this
+            authorization and release shall be valid for subsequent checks during my period of hosting with <b>Ayusa</b>.
+        </p>
+        <p>
+            As a host family member with <b>Ayusa</b>, I hereby attest to the truthfulness of the representations I have
+            made. If any statement I have made is found to be false, my host family status with Ayusa may be
+            revoked, regardless of the time elapsed before discovery.
+        </p>
+        <p>
+            I hereby release and agree to hold harmless from liability any person or organization that provides this
+            information. I also agree to hold harmless <b>Ayusa</b>, and its officers, employees, and volunteers.
+        </p>                
+    </apex:outputPanel>
+    <apex:outputPanel rendered="{!type == 'Agreement'}">
+        <p>
+            <b>The United States Department of State has mandated that all members of the
+            household age 18 and older who live in the home full or part time or who stay
+            frequently must sign the Host Family Application form.</b>
+        </p>
+        <p>
+            <i>By signing below, I certify that all information in our AYUSA Host Family Application is true and
+            accurate.</i>
+        </p>
+    </apex:outputPanel>    
+    <apex:repeat value="{!personInfoList}" var="p">
+        <apex:variable var="rowIndex" value="{!TEXT(rowIndex+1)}"/>        
+        <div style='margin:50px;'>
+            <div style='font-size:18px;margin:20px;'>{!rowIndex}) Name: {!p.First_Name__c} {!p.Last_Name__c} </div>
+            <div style='font-size:18px;margin:20px;'>
+                Signature: 
+                <apex:outputPanel styleClass="white" rendered="{!type == 'Agreement'}" > {!p.Id}-AgreementSignature</apex:outputPanel>
+                <apex:outputPanel styleClass="white" rendered="{!type != 'Agreement'}" > {!p.Id}-BackgroundSignature</apex:outputPanel>
+            </div>
+            <div style='font-size:18px;margin:20px;'>                 
+                <apex:outputPanel rendered="{!type != 'Agreement'}" >SSN: <span class="white">{!p.Id}-BackgroundSSN</span></apex:outputPanel>
+            </div>
+            <div style='font-size:18px;margin:20px;'>
+                Date Signed: 
+                <apex:outputPanel styleClass="white" rendered="{!type == 'Agreement'}" > {!p.Id}-AgreementDate</apex:outputPanel>
+                <apex:outputPanel styleClass="white" rendered="{!type != 'Agreement'}" > {!p.Id}-BackgroundDate</apex:outputPanel>                
+            </div>
+        </div>        
+        <!-- Name, Signature, Date, SSN 
+             Rename new SSN field to  ESSN_Non_Validated__c
+             Quick Investigation to Size the SSN Docusign CustomField
+          -->
+    </apex:repeat> 
+</apex:page>

@@ -1,0 +1,120 @@
+<apex:page id="ayusa_preapp_stu_parent" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper" id="ayusa-student-preapp-bio">
+            <apex:form id="form">
+                <div class="page-header clearfix">
+<h1 class="page-title">Ayusa Student Application</h1>
+<div class="back-to-main"><apex:outputLink id="BacktoMain" value="apex/ayusa_preapp_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+</div>
+            <div class="section-header clearfix">
+            <h2>About Your Family</h2>
+            <div class="progress-bar">Page 3 <em>of</em> 6</div>
+            </div> 
+            
+            <div class="white-box clearfix">
+             
+            <div class="panel two_thirds">
+                  <p>To get started, please enter the name and contact information for one parent or guardian.  You will have the opportunity to add another parent (if applicable) and other family members in the main application.</p>
+                    
+                  <apex:Messages styleClass="custom-error-pagelevel"/>
+                  <p><em> All fields marked with an asterisk (<span class="required no-padding">*</span>) are required</em></p><br/>
+                  
+              <div class="form-row">
+                <div class="form-label left">Parent First Name<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="FirstName" value="{!personInfo.First_Name__c}" required="TRUE"/>
+                </div>    
+                  <div class="dropt"> <i class="icon-question-sign"></i>
+                   <span>{!$ObjectType.Person_Info__c.Fields.First_Name__c.inlineHelpText}</span>
+                  </div>
+                </div>
+              
+              <div class="form-row">
+                <div class="form-label left"> Parent Last Name<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="LastName" value="{!personInfo.Last_Name__c}" required="TRUE"/>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-label left">Gender<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="Gender" value="{!personInfo.Gender__c}" required="TRUE"/>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-label left">Email<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="Email" value="{!personInfo.Email__c}" required="TRUE"/>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-label left">Mobile Phone<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="Mobile" value="{!personInfo.Mobile__c}" required="TRUE"/>
+                </div>
+                <div class="dropt"> <i class="icon-question-sign"></i>
+                    <span>{!$ObjectType.Person_Info__c.Fields.Mobile__c.inlineHelpText}</span>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-label left">Work Phone<span class="required">*</span> </div>
+                <div class="form-field">
+                  <apex:inputField id="WorkPhone" value="{!personInfo.Work_Phone__c}" />
+                </div>
+                <div class="dropt"> <i class="icon-question-sign"></i>
+                    <span>{!$ObjectType.Person_Info__c.Fields.Work_Phone__c.inlineHelpText}</span>
+                </div>
+              </div>
+               <div class="form-row">
+                <div class="form-label left">Occupation<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="Profession" value="{!personInfo.Profession__c}" />
+                </div>
+                <div class="dropt"> <i class="icon-question-sign"></i>
+                    <span>{!$ObjectType.Person_Info__c.Fields.Profession__c.inlineHelpText}</span>
+                </div>
+              </div>
+             
+             <div class="form-row">
+                <div class="form-label left">Who do you live with?<span class="required">*</span> </div>
+                <div class="form-field">
+                  <apex:inputField id="LivesWith" value="{!applicantInfo.Lives_With__c}" required="TRUE"/>
+                </div>
+              </div> 
+              
+          
+            <div class="form-row">
+                             
+              <div class="form-link">
+                    <apex:outputLink id="Back" styleClass="back" value="/apex/ayusa_preapp_stu_home?id={!applicantInfo.Id}">
+                    <i class="icon-chevron-left"></i>
+                    <span>Back</span>
+                    </apex:outputLink>
+                </div>
+              
+              <div class="form-button">
+                <apex:commandlink styleClass="next" action="{!navigator}">
+                  <apex:param name="nextPage" value="/apex/ayusa_preapp_stu_skills"/>
+                  <apex:param name="role" value="Parent" assignTo="{!role}"/>
+                  <apex:param name="familyMember" value="true" assignTo="{!familyMember}"/>
+                  <apex:param name="reDirectPage" value="false"/>
+                  <apex:commandButton id="Save" value="Save & Continue" />
+                    <i class="icon-chevron-right"></i>
+                </apex:commandlink>
+              </div>
+            
+            </div>
+            
+           </div>
+            
+          </div>
+              </apex:form>
+      </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

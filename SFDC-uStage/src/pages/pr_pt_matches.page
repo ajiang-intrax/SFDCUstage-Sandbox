@@ -1,0 +1,193 @@
+<apex:page applyBodyTag="false" applyHtmlTag="false" id="page" title="Participant's Travel and Visa | Intrax" standardStylesheets="false" showHeader="false" controller="IntraxPartnerPortalEngineController" action="{!checkLogin}">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      
+      <apex:form styleClass="form-vertical ws-validate" id="webForm">
+        <div class="row margin-b2">
+          <div class="col-sm-9 center-text center-block">
+                    <c:block_pr_pt_profile_thumb photoUrl="{!returnUrl}" gender="{!participant.Account_Id__r.Gender__pc}"/> 
+            <h1>
+              <apex:outputText rendered="{!IF($CurrentPage.parameters.participantId == null, false, true)}" value="{!participant.Name}"/>
+              <apex:outputText rendered="{!IF($CurrentPage.parameters.participantId == null, true, false)}" value="No Individual Participant Selected"/>
+            </h1>
+          </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="center-text">
+              <c:menu_pr_pt participant="{!participant}" applicationRecord="{!applicationRecord}" />
+            </div>
+          </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+        <hr class="margin-b4"/>
+        <div class="row margin-b4">
+          <div class="col-sm-9 center-text center-block">
+            <h2>Participant Matches</h2>
+             <apex:outputText rendered="{!IF(CONTAINS(participant.Intrax_Program__c, 'Work Travel'),true,false )}">
+                <apex:outputLink styleClass="btn vs2 btn-lg btn-link" id="createMatch" value="/apex/pr_match_new?participantId={!participant.Id}&mOrigin=mat" ><i class="fa fa-edit"></i> <span>Create New Match</span> </apex:outputLink>
+        </apex:outputText>
+          </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+        <div class="row margin-b2">
+  <div class="col-sm-12">
+        <apex:actionStatus id="waitMsg" startStyleClass="feedback">
+          <apex:facet name="start" >
+            <p class="alert alert-info"><i class="fa fa-refresh fa-spin"></i> <strong>Please Wait.....</strong></p>
+          </apex:facet>
+        </apex:actionStatus>
+        <apex:outputPanel layout="block" id="myPanel2">
+          <apex:outputPanel layout="block" rendered="{!IF(selectedMatches.Size == 0, true, false)}">
+            <div class="h3 box gray center-text">No record(s) to display.</div>
+          </apex:outputPanel>
+        </apex:outputPanel>
+        
+        <apex:outputPanel layout="block" id="myPanel1">
+          <apex:pageBlock id="pb1" rendered="{!IF(selectedMatches.Size > 0, true, false)}">
+          <div class="table-responsive vs3">
+              <apex:pageBlockTable styleClass="table vs3" value="{!selectedMatches}" var="item" rendered="{!IF(selectedMatches.Size > 0, true, false)}">
+               <apex:column style="min-width:300px;" headerValue="Match Name">
+               <apex:outputText value="{!item.Name}"/>
+               <div class="margin-t1">
+                <apex:outputLink value="/apex/apc_hf_profile?id={!item.Position_Name__c}" rendered="{!IF(item.Engagement__r.Intrax_Program__c == 'AuPairCare', true, false)}">View Details</apex:outputLink> 
+                <apex:outputLink value="/apex/pr_pt_match_details?matchId={!item.id}&participantId={!item.Engagement__c}" rendered="{!IF(item.Engagement__r.Intrax_Program__c == 'AuPairCare', false, true)}">View Details</apex:outputLink>&nbsp;
+                 <apex:outputLink value="/apex/igi_tipp_pdf_view?id={!item.id}" target="_blank" rendered="{!IF(((item.Engagement__r.Intrax_Program__c == 'Internship')&&(PosInfo_Status[item.id]=='Accepted' || PosInfo_Status[item.id]=='In-Review')), true, false)}">View TIPP Info</apex:outputLink> &nbsp;                
+                <apex:outputLink value="/apex/pr_pt_hiring_profile?mId={!item.id}&fpage=prtmatches" rendered="{!IF(item.Engagement__r.Intrax_Program__c == 'Work Travel', true, false)}">Hiring Profile</apex:outputLink><br/>
+                <apex:outputLink value="/apex/WT_Agreement_PDF?envelopeID={!DocuSignEnvMap[item.id]}" target="_blank" rendered="{!IF(item.Engagement__r.Intrax_Program__c == 'Work Travel' && DocuSignEnvMap[item.id] != null && DocuSignEnvMap[item.id] != 'no-Envelope', true, false)}">Job Placement Agreement</apex:outputLink>
+               </div>
+               </apex:column>
+                <apex:column rendered="{!IF(CONTAINS(participant.Intrax_Program__c, 'AuPairCare'),false,true)}" style="min-width:200px;" headerValue="Position">
+                <apex:outputField id="Position_Name" value="{!item.Position_Name__r.Name}"/>
+                </apex:column>
+                <apex:column headerValue="Match Stage">
+                <apex:outputText id="Status" value="{!item.Status__c}"/>
+                </apex:column>
+               <!--  <apex:column rendered="{!IF(CONTAINS(participant.Intrax_Program__c, 'AuPairCare'),false,true)}" headerValue="Double Placement"> -->
+                <!--   rendered="{!IF(item.Engagement__r.Intrax_Program__c == 'Ayusa',true,false)}" -->
+                <!-- D-01802 -->
+                <apex:column rendered="{!IF(CONTAINS(participant.Intrax_Program__c, 'Ayusa'),true,false)}" headerValue="Double Placement">
+                <apex:outputtext value="Yes" rendered="{!IF(item.Double_Placement__c==true && item.Engagement__r.Intrax_Program__c == 'Ayusa', true,false)}" />
+                <apex:outputtext value="No" rendered="{!IF(item.Double_Placement__c==false && item.Engagement__r.Intrax_Program__c == 'Ayusa',true,false)}" />
+                </apex:column>
+                <apex:column headerValue="Start Date">
+                <apex:outputField id="Start_Date" value="{!item.Start_Date__c}"/>
+                </apex:column>
+                
+                <apex:column rendered="{!IF((CONTAINS(participant.Intrax_Program__c, 'Work Travel')|| CONTAINS(participant.Intrax_Program__c, 'AuPairCare') || CONTAINS(participant.Intrax_Program__c,'Internship')),false,true)}" headerValue="Interview Status">
+                <!--   rendered="{!IF(item.Engagement__r.Intrax_Program__c == 'Internship' || item.Engagement__r.Intrax_Program__c == 'Work Travel',true,false)}" -->
+                <apex:outputField id="Interview_Status" value="{!item.Interview_Status__c}" rendered="{!IF(item.Engagement__r.Intrax_Program__c == 'Internship' || item.Engagement__r.Intrax_Program__c == 'Work Travel',true,false)}"/>
+                </apex:column>
+                
+                <apex:column rendered="{!IF(item.Engagement__r.Intrax_Program__c == 'Ayusa', true,false)}">
+                    <apex:facet name="header">Arrival Trip Needed</apex:facet>
+                    <!-- rendered="{!IF(item.Engagement__r.Intrax_Program__c == 'Ayusa', true,false)}" -->
+                    <apex:outputField id="Arrival_Trip_Needed" value="{!item.Engagement__r.Arrival_Trip_Needed__c}"  />
+                </apex:column>
+                <!-- D-01802 -->
+              <!--   <apex:column rendered="{!IF(CONTAINS(participant.Intrax_Program__c, 'AuPairCare'),false,true)}" headerValue="Single No Children">
+                 <!--  rendered="{!IF(item.Engagement__r.Intrax_Program__c == 'Ayusa', true,false)}" -->
+               <apex:column rendered="{!IF(CONTAINS(participant.Intrax_Program__c, 'Ayusa'),true,false)}" headerValue="Single No Children"> 
+                <apex:outputtext value="Yes" rendered="{!IF(item.Single_No_Children__c==true && item.Engagement__r.Intrax_Program__c == 'Ayusa', true,false)}" />
+                <apex:outputtext value="No"  rendered="{!IF(item.Single_No_Children__c==false && item.Engagement__r.Intrax_Program__c == 'Ayusa', true,false)}" />
+                </apex:column> 
+                
+               <apex:column headerValue="End Date">
+               <apex:outputField id="End_Date" value="{!item.End_Date__c}"/>
+               </apex:column>
+                
+               <apex:column headerValue="Offer Status">
+               <!-- rendered="{!IF(item.Engagement__r.Intrax_Program__c == 'Internship' || item.Engagement__r.Intrax_Program__c == 'Work Travel',true,false)}" -->
+               <apex:outputText id="Offer_Status" value="{!item.Offer_Status__c}" rendered="{!IF(item.Engagement__r.Intrax_Program__c == 'Internship' || item.Engagement__r.Intrax_Program__c == 'Work Travel',true,false)}"/>
+               </apex:column>
+                
+               <!-- D-01802 -->
+               <!--  <apex:column rendered="{!IF(CONTAINS(participant.Intrax_Program__c, 'AuPairCare'),false,true)}" headerValue="Departure Trip Needed">
+               <!--  rendered="{!IF(item.Engagement__r.Intrax_Program__c == 'Ayusa', true,false)}" -->
+               <apex:column rendered="{!IF(CONTAINS(participant.Intrax_Program__c, 'Ayusa'),true,false)}" headerValue="Departure Trip Needed"> 
+                <apex:outputField id="Departure_Trip_Needed" value="{!item.Engagement__r.Departure_Trip_Needed__c}" rendered="{!IF(item.Engagement__r.Intrax_Program__c == 'Ayusa', true,false)}"/>
+               </apex:column>
+                
+                
+              </apex:pageBlockTable>
+              </div>
+          </apex:pageBlock>
+        </apex:outputPanel>
+        
+         </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+        
+        
+        <apex:outputPanel rendered="{!IF(CONTAINS(participant.Intrax_Program__c, 'AuPairCare'),true,false)}" layout="block" id="myPanel6">
+        
+        <div class="row margin-b4">
+          <div class="col-sm-9 center-text center-block">
+            <h2>Interviews</h2>
+          </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+        
+        <div class="row margin-b2">
+        <div class="col-sm-12">
+        <apex:actionStatus id="waitMsg1" startStyleClass="feedback">
+          <apex:facet name="start" >
+            <p class="alert alert-info"><i class="fa fa-refresh fa-spin"></i> <strong>Please Wait.....</strong></p>
+          </apex:facet>
+        </apex:actionStatus>
+        <apex:outputPanel layout="block" id="myPanel3">
+          <apex:outputPanel layout="block" rendered="{!IF(selectedInterviews.Size == 0, true, false)}">
+            <div class="h3 box gray center-text">No record(s) to display.</div>
+          </apex:outputPanel>
+        </apex:outputPanel>
+        
+        <apex:outputPanel layout="block" id="myPanel4">
+          <apex:pageBlock id="pb2" rendered="{!IF(selectedInterviews.Size > 0, true, false)}">
+          <div class="table-responsive vs3">
+              <apex:pageBlockTable styleClass="table vs3" value="{!selectedInterviews}" var="item" rendered="{!IF(selectedInterviews.Size > 0, true, false)}">
+               
+               <apex:column style="min-width:300px;" headerValue="Family Name">
+               <apex:outputText value="{!item.Position__r.Name}"/>
+               </apex:column>
+               
+               <apex:column headerValue="Interview Status">
+               <apex:outputField id="statusInterview" value="{!item.Status__c}"/>
+               </apex:column>
+               
+               <apex:column headerValue="Requested Date/Time">
+               <apex:outputField id="requested_Date" value="{!item.Interview_Start_Date__c}"/>
+               </apex:column>
+               
+               <apex:column headerValue="Expiration Date/Time">
+               <apex:outputField id="expiration_Date" value="{!item.Interview_End_Date__c}"/>
+               </apex:column>
+               
+               <apex:column headerValue="Feedback (if Cancelled)">
+               <apex:outputField id="feedback" value="{!item.Interview_Feedback_Options__c}"/>
+               <apex:outputPanel layout="block" id="myPanelPop" rendered="{!IF(item.Interview_Feedback_Options__c != null, true, false)}">
+               <a data-toggle="popover" data-content="{!item.Interview_Feedback__c}">
+               Read more
+               </a>
+               </apex:outputPanel>
+               </apex:column>
+                 
+              </apex:pageBlockTable>
+              </div>
+          </apex:pageBlock>
+        </apex:outputPanel>
+        </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+        </apex:outputPanel> <!--  end outputpael myPanel6 -->
+        
+      </apex:form>
+    </apex:define>
+  </apex:composition>
+</apex:page>

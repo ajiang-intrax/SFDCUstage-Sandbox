@@ -1,0 +1,8 @@
+<apex:component >
+<apex:attribute name="theWidget" type="ZMG.ZMG_Widget_Renderer" required="true" description="the widget being rendered" />
+
+<div class="poweredBy" id="poweredByDiv">
+	<apex:outputLink value="{!theWidget.poweredByUrl}" target="_blank">Powered by Zoomerang<sup>®</sup> Online Surveys</apex:outputLink>
+</div>
+
+</apex:component>

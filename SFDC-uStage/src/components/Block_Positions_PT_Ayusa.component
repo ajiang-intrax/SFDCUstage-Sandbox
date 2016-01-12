@@ -1,0 +1,593 @@
+<!--  
+Component: Block_Positions_PT_Ayusa
+
+Description: Intrax Partner Portal Ayusa Match Information Details
+
+-->
+<!-- <apex:component layout="none" id="AyusaPartnerMatchInfo" controller="IntraxPartnerPortalEngineController" > -->
+<apex:component layout="none" id="AyusaPartnerMatchInfo" controller="IntraxPartnerPortalEngineController" >
+
+                        <apex:outputPanel rendered="{!IF(ISBLANK(match.Id), false, true)}" layout="block" styleClass="block"> 
+                            <div class="block-header"><h3>Match Information <apex:outputText rendered="{!IF(match.Position_Name__r.Name == null, false, true)}" value=" - {!match.Position_Name__r.Name}"/></h3></div>
+                                 <div class="block-body">
+                                  <div class="list-view container-fluid">
+                                    <div class="row-fluid">
+                                      <div class="span4">
+                                        <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="Match Status"/>
+                                            </strong></label>
+                                          <apex:outputField value="{!match.Status__c}"/>
+                                          &nbsp; </div>
+                                        <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="Match Type"/>
+                                            </strong></label>
+                                          <apex:outputField value="{!match.Match_Type__c}"/>
+                                          &nbsp; </div>
+                                          <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="Double Placement"/>
+                                            </strong></label>
+                                          <apex:outputtext value="Yes" rendered="{!match.Double_Placement__c}"/>
+                                          <apex:outputtext value="No" rendered="{!IF(match.Double_Placement__c==false,True,False)}"/>
+                                          &nbsp; </div>
+                                      </div> <!-- end span -->
+                                      
+                                      <div class="span4">
+                                        
+                                        <div class="list-field">
+                                        <label><apex:outputText value="Start Date"/></label>
+                                        <apex:outputField value="{!match.Start_Date__c}"/>&nbsp;
+                                        </div> 
+                                        
+                                        <!--
+                                        <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="Travel Info Needed"/>
+                                            </strong></label>
+                                          <apex:outputField value="{!match.Engagement__r.Needs_Travel__c}"/>
+                                          &nbsp; </div>
+                                        --> 
+                                        
+                                        <div class="list-field">
+                                        <label><apex:outputText value="Arrival Trip Needed"/></label>
+                                        <apex:outputField value="{!match.Engagement__r.Arrival_Trip_Needed__c}"/>&nbsp;
+                                        </div>
+                                        
+                                        <div class="list-field">
+                                        <label><apex:outputText value="Single No Children"/></label>
+                                        <apex:outputtext value="Yes" rendered="{!match.Single_No_Children__c}"/>
+                                        <apex:outputtext value="No" rendered="{!IF(match.Single_No_Children__c==false,True,False)}"/>
+                                        &nbsp;
+                                        </div>
+                                         
+                                     </div> <!-- end span -->
+                                     
+                                     
+                                      <div class="span4">
+                                        <div class="list-field">
+                                            <label><apex:outputText value="End Date"/></label>
+                                             <apex:outputField value="{!match.End_Date__c}"/>&nbsp;
+                                         </div> 
+                                         <div class="list-field">
+                                            <label><apex:outputText value="Departure Trip Needed"/></label>
+                                            <apex:outputField value="{!match.Engagement__r.Departure_Trip_Needed__c}"/>&nbsp;
+                                        </div> 
+                                     </div> <!-- end span -->
+                                     
+                                     
+                                       </div><!-- end row -->
+                                      </div><!-- end list view -->  
+                                    </div> <!-- end block body -->
+                                  <div class="block-header"><h3>Ayusa Family Information</h3><a style="display:block;" class="btn btn-mini float-r hide-next">Show/Hide</a></div>  
+                                   <div class="block-body"> 
+                                   <div class="list-view container-fluid">
+                                    <div class="row-fluid">
+                                      <div class="span12">
+                                        <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="Family Activities"/>
+                                            </strong></label>
+                                          <apex:outputField value="{!familyApp.Family_Activities__c}"/>
+                                          &nbsp; </div>
+                                      </div> <!-- end span -->
+                                     </div>
+                                     
+                                     
+                                     
+                                     <div class="row-fluid">
+                                      <div class="span6">
+                                        <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="Address"/>
+                                            </strong></label>
+                                            <apex:outputText value="{!match.Position_Name__r.Street__c}"/>&nbsp; <br/>
+                                            <apex:outputText value="{!match.Position_Name__r.Postal_Code__c}, {!match.Position_Name__r.City__c} - {!match.Position_Name__r.State__c} "/>&nbsp;<br/>
+                                            <apex:outputText value="{!match.Position_Name__r.Country__c}"/>
+                                          &nbsp; </div>
+                                          
+                                    </div> <!-- end span -->
+                                    <div class="span6">
+                                        <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="Home Phone"/>
+                                            </strong></label>
+                                          <apex:outputField value="{!familyApp.Home_Phone__c}"/>
+                                          &nbsp; </div>
+                                        <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="Home Type"/>
+                                            </strong></label>
+                                          <apex:outputField value="{!familyApp.Home_Type__c}"/>
+                                          &nbsp; </div>
+                                        
+                                      </div> <!-- end span -->
+                                      
+                                    </div> <!-- end row -->
+                                    
+                                    <div class="row-fluid">
+                                     <div class="span12">
+                                      
+                                      <div class="span6">
+                                        
+                                        <!--  
+                                        <div class="list-field">
+                                          
+                                          <label><strong>
+                                            <apex:outputText value="Phone"/>
+                                            </strong></label>
+                                          <apex:outputField value="{!familyApp.Account__r.Phone}"/>
+                                          &nbsp; </div>
+                                        -->
+                                          
+                                          <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="Mobile"/>
+                                            </strong></label>
+                                            <apex:outputField value="{!personPrimary.Mobile__c}"/>
+                                            <!-- <apex:outputField value="{!familyApp.Account__r.PersonMobilePhone}"/> -->
+                                            &nbsp; </div>
+                                            
+                                         <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="Email"/>
+                                            </strong></label>
+                                            <apex:outputField value="{!personPrimary.Email__c}"/>
+                                            <!-- <apex:outputField value="{!familyApp.Account__r.PersonMobilePhone}"/> -->
+                                            &nbsp; </div>
+                                      
+                                      </div> <!-- end span  6-->
+                                      
+                                      
+                                      <div class="span6">
+                                        <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="Work Phone"/>
+                                            </strong></label>
+                                          <apex:outputField value="{!personPrimary.Work_Phone__c}"/>
+                                          <!-- <apex:outputField value="{!familyApp.Account__r.PersonOtherPhone}"/> -->
+                                          &nbsp; </div>
+                                      </div> <!-- end span  6-->
+                                      
+                                     </div> <!-- end span  12-->
+                                     </div>
+                                    
+                                    <div class="row-fluid">
+                                      <div class="span6">
+                                        <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="Bedrooms"/>
+                                            </strong></label>
+                                            <apex:outputText value="{!familyApp.Bedrooms__c}"/>
+                                            &nbsp; </div>
+                                        <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="Bathrooms"/>
+                                            </strong></label>
+                                          <apex:outputField value="{!familyApp.Bathrooms__c}"/>
+                                          &nbsp; </div>
+                                    </div> <!-- end span -->
+                                    <div class="span6">
+                                        <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="Bedroom Shared Indicated"/>
+                                            </strong></label>
+                                          <apex:outputField value="{!familyApp.Bedroom_Shared_Indicated__c}"/>
+                                          &nbsp; </div>
+                                        <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="Smoker in Family"/>
+                                            </strong></label>
+                                          <apex:outputField value="{!match.Position_Name__r.Smoker_in_Family__c}"/>
+                                          &nbsp; </div>
+                                        
+                                      </div> <!-- end span -->
+                                      
+                                    </div> <!-- end row -->
+                                    
+                                    <div class="row-fluid">
+                                      <div class="span6">
+                                        <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="Pets"/>
+                                            </strong></label>
+                                            <apex:outputText value="{!match.Position_Name__r.Pets__c}"/>
+                                            &nbsp; </div>
+                                            
+                                    </div> <!-- end span -->
+                                    
+                                    <div class="span6">
+                                        <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="Pets Description"/>
+                                            </strong></label>
+                                          <apex:outputField value="{!match.Position_Name__r.Pets_Description__c}"/>
+                                          &nbsp; </div>
+                                      </div> <!-- end span -->
+                                      
+                                    
+                                        <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="Pet Types"/>
+                                            </strong></label>
+                                            <apex:outputText value="{!familyApp.Pet_Types__c}"/>
+                                            &nbsp; </div>
+                                            
+                                
+                                    </div> <!-- end row -->
+                                    
+                                    <div class="row-fluid">
+                                      <div class="span6">
+                                        <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="Special Diet Indicated"/>
+                                            </strong></label>
+                                            <apex:outputText value="{!familyApp.Special_Diet_Indicated__c}"/>
+                                            &nbsp; </div>
+                                    </div> <!-- end span -->
+                                    <div class="span6">
+                                        <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="Special Diet Description"/>
+                                            </strong></label>
+                                          <apex:outputField value="{!familyApp.Special_Diet_Description__c}"/>
+                                          &nbsp; </div>
+                                      </div> <!-- end span -->
+                                      
+                                    </div> <!-- end row -->
+                                    
+                                    <div class="row-fluid">
+                                      <div class="span6">
+                                        <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="Community Type"/>
+                                            </strong></label>
+                                            <apex:outputText value="{!familyApp.Community_Type__c}"/>
+                                            &nbsp; </div>
+                                            <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="Community Population"/>
+                                            </strong></label>
+                                            <apex:outputText value="{!familyApp.Community_Population__c}"/>
+                                            &nbsp; </div>
+                                    </div> <!-- end span -->
+                                    <div class="span6">
+                                        <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="Community Description"/>
+                                            </strong></label>
+                                          <apex:outputField value="{!familyApp.Community_Description__c}"/>
+                                          &nbsp; </div>
+                                      </div> <!-- end span -->
+                                      
+                                    </div> <!-- end row -->
+                                    
+                                    <div class="row-fluid">
+                                      <div class="span6">
+                                        <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="Nearest City"/>
+                                            </strong></label>
+                                            <apex:outputText value="{!familyApp.Nearest_City__c}"/>
+                                            &nbsp; </div>
+                                       
+                                    </div> <!-- end span -->
+                                    <div class="span6">
+                                        <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="Nearest Airport"/>
+                                            </strong></label>
+                                          <apex:outputField value="{!familyApp.Airport__c}"/>
+                                          &nbsp; </div>
+                                          
+                                      </div> <!-- end span -->
+                                      
+                                    </div> <!-- end row -->
+                                    
+                                <div class="row-fluid">
+                                   <div class="span6">
+                                      <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="School Name"/>
+                                            </strong></label>
+                                          <apex:outputField value="{!match.School_Name__c}"/>
+                                          &nbsp; </div>  
+                                    </div> <!-- end span -->
+                                        
+                                    <div class="span6">
+                                         <div class="list-field">
+                                              <label><strong>
+                                                <apex:outputText value="School Address"/>
+                                                </strong></label>
+                                              <apex:outputField value="{!match.School_Address__c}"/>
+                                          &nbsp; </div> 
+                                    </div> <!-- end span -->
+                                </div> <!-- end row -->
+                                    
+                                    </div><!-- end list view --> 
+                                    </div> <!-- end block body -->
+                                     <div class="block-header"><h3>Family Members</h3><a style="display:block;" class="btn btn-mini float-r hide-next">Show/Hide</a></div> 
+                                  <div class="block-body"> 
+                                  <div class="list-view container-fluid">
+                                        <div class="row-fluid">
+                                            <div class="list-view-header span12">
+                                               <div class="span4">
+                                                       <label><apex:outputText value="Name"/></label>
+                                                </div>
+                                                <div class="span4">
+                                                       <label><apex:outputText value="Age"/></label>
+                                                </div>
+                                                <div class="span4">
+                                                       <label><apex:outputText value="Occupation"/></label>
+                                                </div>
+                                            </div>
+                                       <apex:repeat value="{!familyInfo}" var="item" >
+                                             <div class="span12">
+                                                <div class="span4">
+                                                    <div class="list-field">
+                                                       <apex:outputText value="{!item.First_Name__c} {!item.Last_Name__c}"/>&nbsp;
+                                                    </div>
+                                                </div>
+                                                <div class="span4">
+                                                    <div class="list-field">
+                                                       <apex:outputField value="{!item.Age__c}"/>&nbsp;
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="span4">
+                                                    <div class="list-field">
+                                                       <apex:outputField value="{!item.Profession__c}" rendered="{! IF(item.Role__c == 'Spouse or Partner' || item.Role__c == 'Parent' || item.Role__c == 'Spouse' || item.Primary_Applicant__c == true, true, false)}"/>&nbsp;
+                                                    </div>
+                                                </div>
+                                             </div>
+                                        </apex:repeat>
+                                      </div>
+                                        
+                                    </div>  <!-- end list view -->
+                                    </div> <!-- end block body -->
+                                    
+                                    <div class="block-header"><h3>Letter to Participant</h3><a style="display:block;" class="btn btn-mini float-r hide-next">Show/Hide</a></div>  
+                                   <div class="block-body"> 
+                                   <div class="list-view container-fluid">
+                                    <div class="row-fluid">
+                                      <div class="span12">
+                                        <div class="list-field">
+                                          
+                                            <apex:outputField value="{!FamilyLetter.Narrative__c}"/>
+                                          
+                                            &nbsp; </div>
+                                      </div> <!-- end span -->
+                                     </div>
+                                                                         
+                                    </div><!-- end list view --> 
+                                    </div> <!-- end block body -->
+                                    
+                                    
+                                   <div class="block-header">
+                                    <h3>Family Photos</h3>
+                                    <a style="display: block;" class="btn btn-mini float-r hide-next">Show/Hide</a>
+                                    </div>
+                                    <div class="block-body">
+                    
+                                    <div class="row-fluid">
+                                        <div class="span12">
+                                            <apex:outputLabel rendered="{!IF(FamilyPhotos.Size == 0 , true, false)}">
+                                                <span class="no-records">No record(s) to display.</span>
+                                            </apex:outputLabel>
+                                            <apex:outputPanel styleClass="flex-small" layout="block"
+                                                rendered="{!if(FamilyPhotos.Size > 0, true, false)}">
+                                                <div class="flexslider carousel">
+                                                    <ul class="slides">
+                                                        <apex:repeat value="{!returnURLListHF}" var="item">
+                    
+                                                            <li><apex:outputLink value="{!item}" target="_blank">
+                                                                    <apex:image url="{!item}"></apex:image>
+                                                                </apex:outputLink></li>
+                                                        </apex:repeat>
+                                                    </ul>
+                                                </div>
+                                            </apex:outputPanel>
+                                        </div>
+                                        <!-- end span -->
+                                    </div>
+                                    <!-- end row -->
+                                </div>
+                                <!-- end block body -->
+                                    
+                                  <div class="block-header"><h3>Local Staff Contact Information</h3><a style="display:block;" class="btn btn-mini float-r hide-next">Show/Hide</a></div>
+                                  <div class="block-body"> 
+                                   <div class="list-view container-fluid">
+                                       <div class="row-fluid">
+                                            <div class="span6">
+                                                    <div class="list-field">
+                                                        <label><strong>
+                                                    <apex:outputText value="Name"/>
+                                                    </strong></label>
+                                                  <apex:outputField value="{!match.Owner_Name__c}"/>
+                                                  &nbsp; </div>  
+                                            </div> <!-- end span -->
+                                                
+                                            <div class="span6">
+                                                 <div class="list-field">
+                                                      <label><strong>
+                                                        <apex:outputText value="Email"/>
+                                                        </strong></label>
+                                                      <apex:outputField value="{!match.Owner_Email__c}"/>
+                                                  &nbsp; </div> 
+                                            </div> <!-- end span -->
+                                            
+                                        </div> <!-- end row -->
+                                        
+                                         <div class="row-fluid">
+                                            <div class="span6">
+                                                    <div class="list-field">
+                                                        <label><strong>
+                                                    <apex:outputText value="City"/>
+                                                    </strong></label>
+                                                  <apex:outputField value="{!match.Owner_City__c}"/>
+                                                  &nbsp; </div>  
+                                            </div> <!-- end span -->
+                                                
+                                            <div class="span6">
+                                                 <div class="list-field">
+                                                      <label><strong>
+                                                        <apex:outputText value="State"/>
+                                                        </strong></label>
+                                                      <apex:outputField value="{!match.Owner_State__c}"/>
+                                                  &nbsp; </div> 
+                                            </div> <!-- end span -->
+                                            
+                                        </div> <!-- end row -->
+                                        
+                                             <div class="row-fluid">
+                                            <div class="span6">
+                                                    <div class="list-field">
+                                                        <label><strong>
+                                                    <apex:outputText value="Phone"/>
+                                                    </strong></label>
+                                                  <apex:outputField value="{!match.Owner_Phone__c}"/>
+                                                  &nbsp; </div>  
+                                            </div> <!-- end span -->
+                                                
+                                        </div> <!-- end row -->
+                                                                         
+                                    </div><!-- end list view --> 
+                                 </div> <!-- end block body -->
+                                
+                                    
+                                   <apex:pageBlock rendered="{!if(AccountUser.Type == 'Institution', true, false)}">
+                                    <div class="block-header"> <h3>School Information</h3><a style="display:block;" class="btn btn-mini float-r hide-next">Show/Hide</a></div> 
+                                    <div class="block-body">
+                                        <div class="list-view container-fluid">
+                                            <div class="row-fluid">
+                                      <div class="span6">
+                                        <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="Account Name"/>
+                                            </strong></label>
+                                            <apex:outputText value="{!AccountUser.Name}"/>
+                                            &nbsp; </div>
+                                            <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="Address"/>
+                                            </strong></label>
+                                                <apex:outputField value="{!AccountUser.ShippingStreet}"/>&nbsp; <br/>
+                                                <apex:outputText value="{!AccountUser.ShippingPostalCode}, {!AccountUser.ShippingCity} - {!AccountUser.ShippingState} "/>&nbsp;<br/>
+                                                <apex:outputField value="{!AccountUser.ShippingCountry}"/>&nbsp;
+                                            &nbsp; </div>
+                                            
+                                            
+                                                                                  
+                                    </div> <!-- end span -->
+                                    <div class="span6">
+                                        <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="Phone Number"/>
+                                            </strong></label>
+                                          <apex:outputField value="{!AccountUser.Phone}"/>
+                                          &nbsp; </div>
+                                           <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="Enrollment Total"/>
+                                            </strong></label>
+                                          <apex:outputField value="{!AccountUser.Enrollment_Total__c}"/>
+                                          &nbsp; </div>
+                                          
+                                      </div> <!-- end span -->
+                                      
+                                    </div> <!-- end row -->
+                                  </div>
+                                  </div> 
+                                   </apex:pageBlock>
+                                  
+                                   
+                                   <!-- 
+                                   
+                                   <div class="block-header"> <h3>Ayusa Contact Information</h3><a style="display:block;" class="btn btn-mini float-r hide-next">Show/Hide</a></div> 
+                                    <div class="block-body">
+                                        <div class="list-view container-fluid">
+                                            <div class="row-fluid">
+                                      <div class="span6">
+                                        <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="Name"/>
+                                            </strong></label>
+                                            <apex:outputText value="{!ayusaContact.Name}"/>
+                                            &nbsp; </div>
+                                            <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="Address"/>
+                                            </strong></label>
+                                                <apex:outputField value="{!ayusaContact.Street}"/>&nbsp; <br/>
+                                                <apex:outputText value="{!ayusaContact.PostalCode}, {!ayusaContact.City} - {!ayusaContact.State} "/>&nbsp;<br/>
+                                                <apex:outputField value="{!ayusaContact.Country}"/>&nbsp;
+                                            &nbsp; </div>
+                                                                                    
+                                        <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="Regional Manager"/>
+                                            </strong></label>
+                                          <apex:outputField value="{!ManagerUser.Title}"/>
+                                          &nbsp; </div>
+                                          
+                                    </div> <!-- end span --
+                                    <div class="span6">
+                                        <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="Phone Number"/>
+                                            </strong></label>
+                                          <apex:outputField value="{!ayusaContact.Phone}"/>
+                                          &nbsp; </div>
+                                           <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="Email"/>
+                                            </strong></label>
+                                          <apex:outputField value="{!ayusaContact.Email}"/>
+                                          &nbsp; </div>
+                                          <div class="list-field">
+                                          <label><strong>
+                                            <apex:outputText value="Reports to"/>
+                                            </strong></label>
+                                          <apex:outputField value="{!ayusaContact.ManagerId}"/>
+                                          &nbsp; </div>
+                                      </div> <!-- end span --
+                                      
+                                    </div> <!-- end row --
+                                  </div>
+                                    
+                                
+                                </div>
+                                -->
+                                
+                                <apex:outputPanel id="buttonPanel" layout="block">
+                                       <apex:outputPanel styleClass="form-link no-float">
+                                           <apex:outputLink value="/apex/Partner_Matches?participantId={!participant.Id}">
+                                               <i class="icon-chevron-left"></i> <span>Back To Matches</span>
+                                           </apex:outputLink>
+                                       </apex:outputPanel>
+                                    </apex:outputPanel>
+                                     
+                          </apex:outputPanel> 
+                
+</apex:component>

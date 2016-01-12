@@ -1,0 +1,31 @@
+<!--  
+Class: Menu_Side_ManagePax
+
+Description: Intrax Partner Portal Participant Page side menu navigator.
+
+-->
+<apex:component controller="IntraxPartnerPortalEngineController" layout="none">
+   	<!-- <apex:variable var="IntraxPartnerPortal_Participant_Summary" value="active" rendered="{! IF($CurrentPage.Name=='IntraxPartnerPortal_Participant_Summary', true, false)}"/> -->
+	<apex:variable var="IntraxPartnerPortal_Participant_Profile" value="active" rendered="{! IF($CurrentPage.Name=='IntraxPartnerPortal_Participant_Profile', true, false)}"/>
+    <apex:variable var="IntraxPartnerPortal_Participant_App" value="active" rendered="{! IF($CurrentPage.Name=='IntraxPartnerPortal_Participant_App', true, false)}"/>      
+	<apex:variable var="IntraxPartnerPortal_Match_Information" value="active" rendered="{! IF($CurrentPage.Name=='IntraxPartnerPortal_Match_Information', true, false)}"/>  
+	<apex:variable var="IntraxPartnerPortal_Travel_And_Visa" value="active" rendered="{! IF($CurrentPage.Name=='IntraxPartnerPortal_Travel_And_Visa', true, false)}"/>
+	<apex:variable var="IntraxPartnerPortal_Assessment" value="active" rendered="{! IF($CurrentPage.Name=='IntraxPartnerPortal_Assessment', true, false)}"/>
+	<apex:variable var="IntraxPartnerPortal_DocUploads" value="active" rendered="{! IF($CurrentPage.Name=='Partner_Ayusa_Contact_Info', true, false)}"/>
+    
+	<ul class="nav nav-list bs-docs-sidenav affix">
+<!--	<li class="{!IntraxPartnerPortal_Participant_Summary}"><apex:outputLink value="/apex/IntraxPartnerPortal_Participant_Summary"><i class="icon-chevron-right"></i> Summary</apex:outputLink></li> -->
+		<li class="{!IntraxPartnerPortal_Participant_Profile}"><apex:outputLink value="/apex/IntraxPartnerPortal_Participant_Profile?participantId={!participantId}&isInputType=false{!IF($CurrentPage.parameters.isPhotoAvaialable!= null,'&isPhotoAvaialable='&$CurrentPage.parameters.isPhotoAvaialable,'')}"><i class="icon-chevron-right"></i> Summary</apex:outputLink></li>
+        <li class="{!IntraxPartnerPortal_Participant_App}">
+        	<apex:outputLink value="/apex/Ayusa_app_Home?Id={!applicationRecord.Id}&isInputType=false" rendered="{!applicationRecord.Intrax_Program__c == 'Ayusa'}"><i class="icon-chevron-right"></i> Application</apex:outputLink>
+        	<apex:outputLink value="/apex/IGI_Preapp_Home?Id={!applicationRecord.Id}&isInputType=false" rendered="{!applicationRecord.Intrax_Program__c == 'Internship'}"><i class="icon-chevron-right"></i> Application</apex:outputLink>
+        </li>
+        <li class="{!IntraxPartnerPortal_Match_Information}"><apex:outputLink value="/apex/IntraxPartnerPortal_Match_Information?participantId={!participantId}&isInputType=false{!IF($CurrentPage.parameters.isPhotoAvaialable!= null,'&isPhotoAvaialable='&$CurrentPage.parameters.isPhotoAvaialable,'')}"><i class="icon-chevron-right"></i> Match Information</apex:outputLink></li>
+		<li class="{!IntraxPartnerPortal_Travel_And_Visa}"><apex:outputLink value="/apex/IntraxPartnerPortal_Travel_And_Visa?participantId={!participantId}&isInputType=false{!IF($CurrentPage.parameters.isPhotoAvaialable!= null,'&isPhotoAvaialable='&$CurrentPage.parameters.isPhotoAvaialable,'')}"><i class="icon-chevron-right"></i> Travel and Visas</apex:outputLink></li>
+		 
+		<li class="{!IntraxPartnerPortal_Assessment}"><apex:outputLink value="/apex/IntraxPartnerPortal_Assessment?isAssessments=true&participantId={!participantId}&isInputType=false{!IF($CurrentPage.parameters.isPhotoAvaialable!= null,'&isPhotoAvaialable='&$CurrentPage.parameters.isPhotoAvaialable,'')}"><i class="icon-chevron-right"></i> Assessments</apex:outputLink></li>
+        <li class="{!IntraxPartnerPortal_DocUploads}"><apex:outputLink value="/apex/Engagement_Doc_Upload?participantId={!participantId}&isInputType=false{!IF($CurrentPage.parameters.isPhotoAvaialable!= null,'&isPhotoAvaialable='&$CurrentPage.parameters.isPhotoAvaialable,'')}"><i class="icon-chevron-right"></i> Documents Uploads</apex:outputLink></li>
+		<!-- <li class="{!IntraxPartnerPortal_DocUploads}"><apex:outputLink value="/apex/Partner_Doc_Uploads?participantId={!participantId}&isInputType=false"><i class="icon-chevron-right"></i> Documents Uploads</apex:outputLink></li>-->
+		 
+	</ul> 
+</apex:component>

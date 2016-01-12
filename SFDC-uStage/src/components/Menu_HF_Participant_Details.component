@@ -1,0 +1,16 @@
+<!--  
+Class: Menu_Side_ManagePax
+Description: Intrax HF Portal Confirmed Match Participant Page side menu navigator.
+-->
+
+<apex:component layout="none">
+
+    <apex:attribute name="participant" description="Contains the Engagament.IP for the match in context" type="Engagement__c" required="false" default=""/>
+    <apex:variable var="Participant_Profile" value="active" rendered="{! IF($CurrentPage.Name=='profile', true, false)}"/>     
+    <apex:variable var="Travel_Plans" value="active" rendered="{! IF($CurrentPage.Name=='HF_PT_Travel_Visa', true, false)}"/>
+    
+    <ul class="nav nav-list bs-docs-sidenav affix">
+        <li class="{!Participant_Profile}"><apex:outputLink value="/apex/profile?participantId={!participant.Id}&ConfMatch=true"><i class="icon-chevron-right"></i> Profile</apex:outputLink></li>
+        <li class="{!Travel_Plans}"><apex:outputLink value="/apex/HF_PT_Travel_Visa?participantId={!participant.Id}&ConfMatch=true"><i class="icon-chevron-right"></i> Travel Plans</apex:outputLink></li>      
+    </ul>
+</apex:component>

@@ -1,0 +1,32 @@
+<apex:component layout="none">
+<apex:attribute name="trip" description="This is the value for the Trip_Info__c object." type="Trip__c" required="false" default="" />
+
+<h2>Your Most Recent Travel Plan</h2>
+    <div class="row">
+<div class="col-sm-6">
+<h3>{!trip.Carrier__c} ({!trip.Carrier_Number__c})</h3>
+<label>From {!trip.Departing_City__c} <span class="optional">- Airport Code: {!trip.Departing_From__c}</span></label>
+<div class="margin-b">
+<i class="fa fa-plane"></i> {!trip.Departing_Date__c}
+
+</div>
+<label>To {!trip.Arriving_City__c} <span class="optional">- Airport Code: {!trip.Arriving_At__c}</span></label>
+<div class="margin-b">
+<i class="fa fa-plane"></i> {!trip.Arriving_Date__c}
+</div>
+</div>
+
+
+
+<div class="col-sm-6">
+<h3> Transportation to Final Address</h3>
+<label>Address</label>
+<div class="margin-b">{!trip.Description__c}</div>
+<label>Arrival</label>
+<div class="margin-b">Via {!trip.Ground_Transporation_Type__c} on {!trip.Arrival_to_Host_Community_Date__c}</div>
+</div>  
+</div>  <!--  end row -->
+
+<apex:outputLink styleClass="margin-b3" value="/apex/igi_pt_travel_visa_details?tId={!trip.Id}&editMode=true" id="linkEditWrapper"><strong>Edit Travel Plan ></strong></apex:outputLink>
+ <hr class="margin-b3"/>
+</apex:component>

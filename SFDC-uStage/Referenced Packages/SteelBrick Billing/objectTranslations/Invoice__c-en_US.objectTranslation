@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Invoice</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Invoices</value>
+    </caseValues>
+    <fields>
+        <label><!-- Account --></label>
+        <name>Account__c</name>
+        <relationshipLabel><!-- Invoices --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- It is the sum of invoice lines amount excluding VAT/TAX --></help>
+        <label><!-- Subtotal --></label>
+        <name>Amount__c</name>
+    </fields>
+    <fields>
+        <help><!-- This is the contact to which the invoice is sent by email --></help>
+        <label><!-- Billing Contact --></label>
+        <name>Billing_Contact__c</name>
+        <relationshipLabel><!-- Invoices (Billing Contact) --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Cancellation Reason --></label>
+        <name>Cancellation_Reason__c</name>
+        <picklistValues>
+            <masterLabel>Customer cancelled the order</masterLabel>
+            <translation><!-- Customer cancelled the order --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Duplicate order</masterLabel>
+            <translation><!-- Duplicate order --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Currency --></label>
+        <name>CurrencyL__c</name>
+        <relationshipLabel><!-- Invoices --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Obsolete_Invoice Reference --></label>
+        <name>Custom_Invoice_Number__c</name>
+    </fields>
+    <fields>
+        <label><!-- Delivery Type --></label>
+        <name>Delivery_Type__c</name>
+        <picklistValues>
+            <masterLabel>Email</masterLabel>
+            <translation><!-- Email --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Email &amp; Print</masterLabel>
+            <translation><!-- Email &amp; Print --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Print</masterLabel>
+            <translation><!-- Print --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- This is the total discount provided on this invoice. --></help>
+        <label><!-- Discount Value --></label>
+        <name>Discount_Value__c</name>
+    </fields>
+    <fields>
+        <label><!-- Due Date --></label>
+        <name>Due_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Email Sent --></label>
+        <name>Email_Sent__c</name>
+    </fields>
+    <fields>
+        <help><!-- If you are a multi currency org, this field will hold the exchange rate between the Invoice Currency and your Corporate Currency. 
+Value in Corporate Currency = Value in Invoice Currency x Exchange Rate Applied --></help>
+        <label><!-- Exchange Rate Applied --></label>
+        <name>Exchange_Rate_Applied__c</name>
+    </fields>
+    <fields>
+        <label><!-- Currency Symbol --></label>
+        <name>Invoice_Currency_Symbol__c</name>
+    </fields>
+    <fields>
+        <label><!-- Invoice Date --></label>
+        <name>Invoice_Date__c</name>
+    </fields>
+    <fields>
+        <help><!-- This field is used to hold the custom invoice number you need. This can have a specific suffix, prefix or a sequence number based on your legal entity used.
+Search Invoice IT documentation for &quot;Legal Entity&quot; to find out how to use this field --></help>
+        <label><!-- Invoice Reference --></label>
+        <name>Invoice_Reference__c</name>
+    </fields>
+    <fields>
+        <label><!-- Invoice Run (Created By) --></label>
+        <name>Invoice_Run_Created_By__c</name>
+        <relationshipLabel><!-- Invoices --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Invoice State --></label>
+        <name>Invoice_State__c</name>
+        <picklistValues>
+            <masterLabel>Proforma</masterLabel>
+            <translation><!-- Proforma --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Regular</masterLabel>
+            <translation><!-- Regular --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Invoice Status --></label>
+        <name>Invoice_Status__c</name>
+        <picklistValues>
+            <masterLabel>Cancelled</masterLabel>
+            <translation><!-- Cancelled --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Draft</masterLabel>
+            <translation><!-- Draft --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Posted</masterLabel>
+            <translation><!-- Posted --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- This would be Subtotal - Discount value --></help>
+        <label><!-- Net Total --></label>
+        <name>Net_Total__c</name>
+    </fields>
+    <fields>
+        <label><!-- Number Of Invoice Lines --></label>
+        <name>Number_Of_Invoice_Lines__c</name>
+    </fields>
+    <fields>
+        <label><!-- Order --></label>
+        <name>Order__c</name>
+        <relationshipLabel><!-- Invoices --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Paid Amount --></label>
+        <name>Paid_Amount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Payment Request Amount --></label>
+        <name>Payment_Request_Amount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Payment Status --></label>
+        <name>Payment_Status__c</name>
+    </fields>
+    <fields>
+        <label><!-- Regular Invoice --></label>
+        <name>Regular_Invoice__c</name>
+        <relationshipLabel><!-- Invoices --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Shipping Contact --></label>
+        <name>Shipping_Contact__c</name>
+        <relationshipLabel><!-- Invoices (Shipping Contact) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Yellow - Invoices that are active
+Green - Invoices that have been paid
+Red - Invoices that are overdue
+White - Invoices that have been cancelled --></help>
+        <label><!-- Status Flag --></label>
+        <name>Status_Flag__c</name>
+    </fields>
+    <fields>
+        <label><!-- Target  Date --></label>
+        <name>Target_Date__c</name>
+    </fields>
+    <fields>
+        <help><!-- It is the sum of invoice lines tax --></help>
+        <label><!-- Tax --></label>
+        <name>Tax__c</name>
+    </fields>
+    <fields>
+        <help><!-- Subtotal - Discount + VAT + Tax --></help>
+        <label><!-- Total Invoice Value --></label>
+        <name>Total_Invoice_Value__c</name>
+    </fields>
+    <fields>
+        <label><!-- Unpaid Amount --></label>
+        <name>Unpaid_Amount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Unpost Reason --></label>
+        <name>Unpost_Reason__c</name>
+        <picklistValues>
+            <masterLabel>Invoice generated before order adjustment</masterLabel>
+            <translation><!-- Invoice generated before order adjustment --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Order information entered incorrectly</masterLabel>
+            <translation><!-- Order information entered incorrectly --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Wrong invoice or target dates</masterLabel>
+            <translation><!-- Wrong invoice or target dates --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- It is the sum of invoice lines vat --></help>
+        <label><!-- VAT --></label>
+        <name>VAT__c</name>
+    </fields>
+    <layouts>
+        <layout>Invoice Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Invoice Value --></label>
+            <section>Invoice Value</section>
+        </sections>
+    </layouts>
+    <startsWith>Vowel</startsWith>
+    <webLinks>
+        <label><!-- Attach_Invoice_as_PDF --></label>
+        <name>Attach_Invoice_as_PDF</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Authorize --></label>
+        <name>Authorize</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Cancel_Invoice --></label>
+        <name>Cancel_Invoice</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Cancel_Post --></label>
+        <name>Cancel_Post</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Charge --></label>
+        <name>Charge</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Convert_to_Regular_Invoice --></label>
+        <name>Convert_to_Regular_Invoice</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- EmailInvoice --></label>
+        <name>EmailInvoice</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Post --></label>
+        <name>Post</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Refund --></label>
+        <name>Refund</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- View_Email_Quote --></label>
+        <name>View_Email_Quote</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- View_Invoice --></label>
+        <name>View_Invoice</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Void --></label>
+        <name>Void</name>
+    </webLinks>
+</CustomObjectTranslation>

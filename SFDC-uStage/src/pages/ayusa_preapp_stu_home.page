@@ -1,0 +1,118 @@
+<apex:page id="ayusa_preapp_stu_home" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper" id="ayusa-student-preapp-bio">
+          <apex:form id="form" >
+        <div class="page-header clearfix">
+<h1 class="page-title">Ayusa Student Application</h1>
+<div class="back-to-main"><apex:outputLink id="BacktoMain" value="apex/ayusa_preapp_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+</div>
+               <div class="section-header clearfix">
+            <h2>Contact Info</h2>
+            <div class="progress-bar">Page 2 <em>of</em> 6</div>
+            </div> 
+              
+         
+          <div class="white-box clearfix">
+         
+         <div class="panel two_thirds">
+            <apex:Messages styleClass="custom-error-pagelevel"/>
+            <p><em> All fields marked with an asterisk (<span class="required no-padding">*</span>) are required</em></p><br/>
+
+              <div class="form-row">
+                <div class="form-label left">Home Phone<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="Home_Phone" value="{!applicantInfo.Home_Phone__c}" required="TRUE"/>
+                </div>
+                <div class="dropt"> <i class="icon-question-sign"></i>
+                   <span>{!$ObjectType.Applicant_Info__c.Fields.Home_Phone__c.inlineHelpText}</span>
+                </div>
+              </div> 
+              
+              <div class="form-row">
+                <div class="form-label left">Mobile Phone</div>
+                <div class="form-field">
+                  <apex:inputField id="Mobile" value="{!personInfo.Mobile__c}" required="FALSE"/>
+                </div>
+                <div class="dropt"> <i class="icon-question-sign"></i>
+                   <span>{!$ObjectType.Person_Info__c.Fields.Mobile__c.inlineHelpText}</span>
+                </div>
+              </div>
+ 
+                  
+              <div class="form-row">
+                <div class="form-label left">Email<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="Email" value="{!personInfo.Email__c}" required="TRUE"/>
+                </div>
+              </div> 
+              <div class="form-row">
+                <div class="form-label left">Street Address 1<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="Street1" value="{!applicantInfo.Home_Street_1__c}" required="TRUE"/>
+                </div>
+                  <div class="dropt"> <i class="icon-question-sign"></i>
+                   <span>{!$ObjectType.Applicant_Info__c.Fields.Home_Street_1__c.inlineHelpText}</span>
+                </div>
+              </div>  
+                <div class="form-row">
+                <div class="form-label left">Street Address 2</div>
+                <div class="form-field">
+                  <apex:inputField id="Street2" value="{!applicantInfo.Home_Street_2__c}" required="FALSE"/>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-label left">City<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="City" value="{!applicantInfo.Home_City__c}" required="TRUE"/>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-label left">Province/State</div>
+                <div class="form-field">
+                  <apex:inputField id="HomeState" value="{!applicantInfo.Home_State__c}" required="false"/>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-label left">Country<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="Country" value="{!applicantInfo.Home_Country__c}" required="TRUE"/>
+                </div>
+              </div>
+                  
+                  <div class="form-row">
+                <div class="form-label left">Postal Code</div>
+                <div class="form-field">
+                  <apex:inputField id="Zip" value="{!applicantInfo.Home_Postal_Code__c}" required="false"/>
+                </div>
+              </div>
+           
+            <div class="form-row">
+          
+              <div class="form-link">
+                    <apex:outputLink styleClass="back" id="Back" value="/apex/ayusa_preapp_stu_bio?id={!applicantInfo.Id}">
+                    <i class="icon-chevron-left"></i>
+                    <span>Back</span>
+                    </apex:outputLink>
+                </div>
+              
+              <div class="form-button">
+                <apex:commandlink styleClass="next" action="{!navigator}">
+                  <apex:param name="nextPage" value="/apex/ayusa_preapp_stu_parent"/>
+                  <apex:param name="reDirectPage" value="true"/>
+                  <apex:param name="role" value="Parent" assignTo="{!role}"/>
+                  <apex:commandButton id="Save" value="Save & Continue" />
+                    <i class="icon-chevron-right"></i>
+                </apex:commandlink> 
+              </div>
+            </div>
+            
+           </div>
+            
+          </div>
+              </apex:form>
+      </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

@@ -1,0 +1,100 @@
+<apex:page id="apc_ap_match_request" docType="html-5.0" applyHtmlTag="false" applyBodyTag="false" title="Match Request" standardStylesheets="false" showHeader="false" controller="home_controller">
+<apex:composition template="intraxtemplate_vs3">
+<apex:define name="body">
+
+<apex:form id="webform">    
+<apex:outputpanel layout="block" id="blockCase1" rendered="{!currentApp.Intrax_Program__c == 'AuPairCare' && 
+currentApp.Application_Level__c == 'Main' && matchConf.Id!=null && 
+matchConf.Status__c='Requested' && matchConf.Offer_Status__c='Offered' && currentApp.Engagement__r.Status__c!='Program Complete'}">
+
+            <apex:outputPanel layout="block" rendered="{!msgDisplay == 'Exception'}">
+              <p class="alert alert-danger">{!msgDisplay}</p>              
+            </apex:outputPanel>
+            
+<div id="hp-body" class="row ">
+    <div class="col-md-8 center-block">  
+    <div class="hp-block padding-6 orange-border">
+            <h2 class="margin-b1">New Match Request</h2>            
+               <div class="ap-teaser">
+  <div class="item ap-teaser-photo">
+    <apex:variable var="hostAccGender" value="{!matchConf.Position_Name__r.Host_Company_Id__r.Gender__pc}" />
+                        <apex:variable var="sRetURL" value="{!ReturnURL}" />
+                           <apex:image url="{!sRetURL}" rendered="{!IF(sRetURL!='' && sRetURL!=null, true, false)}"/>       
+                            <apex:image value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/male-profile-med.png')}"  rendered="{!(sRetURL=='' || sRetURL==null) && (ISBLANK(hostAccGender) || hostAccGender == 'Male')}"/>
+                            <apex:image value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/female-profile-med.png')}"  rendered="{!(sRetURL=='' || sRetURL==null) && hostAccGender == 'Female'}"/>                             
+  </div> 
+  <div class="item ap-teaser-name"><apex:outputText value="{!matchConf.Position_Name__r.Host_Company_Id__r.LastName} "/>Family</div> 
+  <div class="item ap-teaser-other">
+  <label>Proposed Arrival Date</label><br/>
+  <apex:outputText value="{!matchConf.Arrival_Date__c}"/>
+   </div>          
+            </div><!-- end ap teaser -->
+            
+            
+         
+       <apex:outputText rendered="{!matchConf.Request_Notes__c != null}">
+            <div class="margin-t1 box gray">
+            <label>Note From the Family</label><br/>
+            <apex:outputText value="{!matchConf.Request_Notes__c}"/>
+            </div>      
+       </apex:outputText> 
+     
+    
+     <div class="margin-t2">
+            <apex:outputLink styleClass="btn btn-primary btn-lg" value="/apc_hf_cc_agreement?mid={!matchConf.Id}&uType=Participant" id="SignAgreement">
+                I accept this match and date. <b>Sign childcare agreement</b>
+            </apex:outputLink>  
+            </div>
+    <div class="margin-t2">
+            <apex:commandLink id="Cancel" action="{!checkUser}" html-data-backdrop="static" html-data-keyboard="false" html-data-toggle="modal" html-data-target="#dochelpUrgent" reRender="none" >
+               <b class="sm">I do not accept this request</b>
+            </apex:commandLink>
+            <i class="padding-l1 infobtn fa fa-question-circle" data-toggle="popover" data-content="If you wish to request a different arrival date, decline this request and ask your the family to request a new match with the new date."></i>
+     </div> 
+      
+            
+            <!--Modal-->
+            <div id="dochelpUrgent" class="modal vs1 fade in">
+                <div class="modal-dialog">
+                    <div class="modal-content">                        
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <h2 class="no-margin-t">Are You Sure?</h2>
+                                   <p class="lead">The current match request will be cancelled. This does not prevent the family from sending future match requests.</p>
+                            
+                            <div>
+                            
+                            <apex:commandLink styleClass="btn btn-link btn-lg vs2" action="{!DeclineMatchOffer}" id="Understand">
+                                <span>I Understand</span>
+                            </apex:commandLink>
+                            
+                            <apex:commandLink html-data-dismiss="modal">Go Back</apex:commandLink>
+                            
+                            </div>
+                            
+                                </div>
+                            </div>
+                           
+                            <!--  end row --> 
+                        </div>
+                        <!--  end modal body --> 
+                    </div>
+                    <!--  end modal content --> 
+                </div>
+                <!--  end modal dialog --> 
+            </div>
+            <!-- end modal -->
+            
+ 
+    </div><!--  end hp block -->
+</div><!--  end col -->
+</div> <!--  end row -->    
+                          
+      
+
+</apex:outputpanel>
+    </apex:form>
+    </apex:define>
+    </apex:composition>
+</apex:page>

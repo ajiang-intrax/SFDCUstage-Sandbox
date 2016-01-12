@@ -1,0 +1,287 @@
+<apex:component layout="none" id="block_apc_ap_match_interview" allowDML="true">
+  <apex:attribute name="PageController" description="Instance of home_controller class" type="home_controller" required="false" default="" />
+  
+  
+    <!-- start match request rejection  -->
+    <apex:pageBlock id="rejectPanel" rendered="{!If( PageController.withdrawnMatchList != null && PageController.withdrawnMatchList.SIZE > 0 && PageController.withdrawnMatch.Offer_Status__c=='Declined',true,false)}">
+    <apex:outputPanel layout="block" > 
+         <apex:outputPanel layout="block" rendered="{!PageController.withdrawnMatch.Hide_From_PT__c == false}"> 
+
+      <div class="hp-block invert red">
+        <div class="ap-teaser">
+
+       <div class="item padding-t1">
+       <h3 class="no-margin"><b>Match Request Rejected</b></h3>
+      <p class="lead no-margin">You rejected a match request from the {!PageController.withdrawnMatch.Position_Name__r.Host_Company_Id__r.Name} Family. If this was due to the arrival date they requested please let the host family know so that they can consider matching with you for another date.</p>
+      </div>  
+       <div class="item padding-t1">
+       <apex:commandLink action="{!PageController.hide_from_PT}" rerender="rejectPanel">
+    <i class="fa fa-remove" style="font-size: 30px;"></i> 
+   </apex:commandLink>
+       </div> 
+       </div> 
+       </div>
+        
+    </apex:outputPanel>
+    </apex:outputPanel>
+    </apex:pageBlock>
+  <!-- end match request rejection --> 
+  
+  
+  
+  
+   <!-- start match request expiration  -->
+   <apex:outputPanel id="expirePanel" rendered="{!If(PageController.withdrawnMatchList != null && PageController.withdrawnMatchList.SIZE > 0 && PageController.withdrawnMatch.Offer_Status__c!='Declined',true,false)}">
+    <apex:outputPanel layout="block"> 
+         <apex:outputPanel layout="block" rendered="{!PageController.withdrawnMatch.Hide_From_PT__c == false}"> 
+
+      <div class="hp-block invert red">
+        <div class="ap-teaser">
+
+       <div class="item padding-t1">
+       <h3 class="no-margin"><b>Match Expired</b></h3>
+      <p class="lead no-margin">The {!PageController.withdrawnMatch.Position_Name__r.Host_Company_Id__r.Name} Family's request to match with you has expired. Please let the host family know if you are still interested in matching with them. They can choose to renew their request.</p>
+      </div>  
+       <div class="item padding-t1">
+       <apex:commandLink action="{!PageController.hide_from_PT}" rerender="expirePanel">
+    <i class="fa fa-remove" style="font-size: 30px;"></i> 
+   </apex:commandLink>
+       </div> 
+       </div> 
+       </div>
+        
+    </apex:outputPanel>
+    </apex:outputPanel>
+    </apex:outputPanel>
+  <!-- end match request rejection --> 
+  
+  
+  
+ 
+  <!-- Begining CASE 5: Engagement has Match -->
+  <apex:outputpanel layout="block" id="blockCase5">
+    <apex:outputPanel layout="block" rendered="{!If( PageController.matchConf.Status__c=='Requested' && PageController.matchConf.Match_Type__c!='Extension' && PageController.matchConf.Offer_Status__c=='Offered',true,false)}">
+
+        <apex:variable var="hostAccGender" value="{!PageController.matchConf.Position_Name__r.Host_Company_Id__r.Gender__pc}" />
+        <apex:variable var="sRetURL" value="{!PageController.ReturnURL}"/>
+<div class="hp-block padding-6 orange-border">
+      <h2 class="margin-b1">New Match Request!</h2>
+      <p class="lead">The {!PageController.matchConf.Position_Name__r.Host_Company_Id__r.Name} Family would like you to be their au pair.
+        <apex:outputText rendered="{!PageController.matchConf.Engagement__r.In_Country__c=='Yes'}">
+          They would like you to arrive to their home on
+          <apex:outputText value=" {0,date,MM'/'dd'/'yyyy}" >
+            <apex:param value="{!PageController.matchConf.Arrival_Date__c}"/>
+          </apex:outputText>
+        </apex:outputText>
+        <apex:outputText rendered="{!PageController.matchConf.Engagement__r.In_Country__c=='No' || PageController.matchConf.Engagement__r.In_Country__c==null}">
+          They would like you to arrive to the United States on
+          <apex:outputText value=" {0,date,MM'/'dd'/'yyyy}" >
+            <apex:param value="{!PageController.matchConf.Arrival_Date__c}"/>
+          </apex:outputText>
+        </apex:outputText>
+      </p>
+      
+      
+      <div class="ap-teaser">
+        <div class="item ap-teaser-photo">
+          <apex:outputLink value="/apex/apc_hf_profile?id={!PageController.matchConf.Position_Name__c}" id="linkprofinfo3">
+            <apex:image url="{!sRetURL}" rendered="{!IF(sRetURL!='' && sRetURL!=null, true, false)}"/>
+          </apex:outputLink>
+        </div>
+        <div class="item ap-teaser-name" style="width:auto;"> {!PageController.matchConf.Position_Name__r.Host_Company_Id__r.Name} </div>
+        <div class="item ap-teaser-other urgent">
+          <label>Your Deadline to Respond</label>
+          <br/>
+          <apex:outputText value="{0,date, MMMM d, yyyy h:mm a}" >
+            <apex:param value="{!PageController.matchConf.Request_Expiration__c+PageController.offset}"/>
+          </apex:outputText>
+        </div>
+        <div class="item ap-teaser-other">
+          <label>Proposed Arrival Date</label>
+          <br/>
+          <apex:outputText value="{0,date,MM'/'dd'/'yyyy}" >
+            <apex:param value="{!PageController.matchConf.Arrival_Date__c}"/>
+          </apex:outputText>
+        </div>
+      </div>
+      <!-- end ap teaser -->
+      
+      <apex:outputLink id="respondbtn" styleClass="btn btn-primary btn-lg margin-t2" value="/apex/apc_ap_match_request">
+        <apex:outputText >Respond to Match Request</apex:outputText>
+      </apex:outputLink>
+      
+   </div> <!-- end hp block -->  
+    </apex:outputPanel>
+    
+    
+    <apex:outputPanel layout="block" rendered="{!If(PageController.matchConf.Status__c=='Requested' && PageController.matchConf.Offer_Status__c=='Accepted',true,false)}">
+    
+        <apex:variable var="hostAccGender" value="{!PageController.matchConf.Position_Name__r.Host_Company_Id__r.Gender__pc}" />
+        <apex:variable var="sRetURL" value="{!PageController.ReturnURL}"/>
+
+      <div class="hp-block orange-border padding-6">
+        <h2 class="margin-b1">You Have Accepted a Match Request</h2>
+        <p class="lead no-margin">We will let you know as soon as the
+          <apex:outputText rendered="{!NOt(PageController.matchConf.Position_Name__c == '')}">
+            <apex:outputLink value="/apex/apc_hf_profile?id={!PageController.matchConf.Position_Name__c}" id="linkprofinfo4"> {!PageController.matchConf.Position_Name__r.Host_Company_Id__r.Name} Family </apex:outputLink>
+          </apex:outputText>
+          finalizes their match with you.
+          <apex:outputText rendered="{!PageController.matchConf.Engagement__r.In_Country__c=='Yes'}">
+         <br/>They would like you to arrive to their home on
+            <apex:outputText value=" {0,date,MM'/'dd'/'yyyy}" >
+              <apex:param value="{!PageController.matchConf.Arrival_Date__c}"/>
+            </apex:outputText>
+        
+        </apex:outputText>
+        <apex:outputText rendered="{!PageController.matchConf.Engagement__r.In_Country__c=='No'}">
+         <br/>They would like you to arrive to the United States on
+            <apex:outputText value=" {0,date,MM'/'dd'/'yyyy}" >
+              <apex:param value="{!PageController.matchConf.Arrival_Date__c}"/>
+            </apex:outputText>
+        </apex:outputText>
+          </p>
+        
+      </div>
+    </apex:outputPanel>
+    
+    
+    <apex:outputPanel layout="block" rendered="{!If( PageController.matchConf.Status__c=='Confirmed' && PageController.matchConf.Offer_Status__c=='Accepted' && PageController.matchConf.Engagement__r.Status__c!='On Program' && PageController.currentApp.Application_Type__c <> 'Extension' && TODAY() <= PageController.matchConf.Start_Date__c,true,false)}">
+      <apex:variable var="hostAccGender" value="{!PageController.matchConf.Position_Name__r.Host_Company_Id__r.Gender__pc}" />
+      <apex:variable var="sRetURL" value="{!PageController.ReturnURL}"/>
+      <div class="hp-block padding-6 green-border">
+      <h2 class="margin-b1">You Are Going to {!PageController.matchConf.Position_Name__r.Host_Company_Id__r.BillingCity}, United States!</h2>
+
+      <p class="lead no-margin"><apex:outputLink value="/apex/apc_hf_profile?id={!PageController.matchConf.Position_Name__c}" id="linkprofinfo5"><b>{!PageController.matchConf.Position_Name__r.Host_Company_Id__r.Name} Family</b></apex:outputLink> has finalized your match by completing the remaining steps and will meet you on 
+       
+       <apex:outputText rendered="{!PageController.matchConf.Engagement__r.In_Country__c=='Yes'}">
+         <b>
+        <apex:outputText value="{0,date,MM'/'dd'/'yyyy}" >
+          <apex:param value="{!PageController.matchConf.Engagement__r.Engagement_Start__c}"/>
+        </apex:outputText>
+        </b>
+         </apex:outputText>
+         
+        <apex:outputText rendered="{!PageController.matchConf.Engagement__r.In_Country__c!='Yes'}">
+        <b><apex:outputText value=" {0,date,MM'/'dd'/'yyyy}" >
+          <apex:param value="{!PageController.matchConf.HF_Arrival_Date__c}"/>
+        </apex:outputText>
+        </b>
+         </apex:outputText>
+        . 
+        <apex:outputText rendered="{!PageController.matchConf.Engagement__r.In_Country__c!='Yes'}"> You will arrive at New Jersey on 
+        <b>
+        <apex:outputText value="{0,date,MM'/'dd'/'yyyy}" >
+          <apex:param value="{!PageController.matchConf.Engagement__r.Engagement_Start__c}"/>
+        </apex:outputText>
+        </b>
+       for your training at the Au pair Academy. 
+       </apex:outputText>
+       
+       </p>
+      </div><!-- end hp block -->
+    </apex:outputPanel>
+    
+    
+  </apex:outputpanel>
+  
+  
+  <!-- Begining CASE 2: Engagement has No Selection with futureInterview date -->
+  <apex:outputpanel layout="block" id="blockCase2" rendered="{!PageController.currentApp.Intrax_Program__c == 'AuPairCare' && 
+
+PageController.currentApp.Application_Stage__c == 'Accepted' &&
+PageController.currentApp.Application_Level__c == 'Main' &&
+(PageController.currentApp.Engagement__r.Status__c=='Processing' || PageController.currentApp.Engagement__r.Status__c=='Program Ready')
+ && PageController.matchList.size == 0}"> 
+    <!-- no future interviews  -->
+    <apex:outputPanel layout="block" id="blockCase2-2" rendered="{!PageController.selectionList.size>0}">
+      <div class="hp-block orange-border padding-6">
+        <h2 class="margin-b1">Your Interview(s)</h2>
+        <p class="lead">The following families would like to interview you! They will be able to reach out to you via email, skype or phone until the interview expiration dates listed below.</p>
+        <apex:variable value="{!0}" var="IntCount" id="IntCountid" />
+        <apex:repeat value="{!PageController.selectionList}" var="selection" >
+          <apex:outputtext rendered="{!IntCount < 3}" id="loop">
+          <hr class="margin-b1"/>
+         
+          <div class="ap-teaser">
+           
+            <div class="item ap-teaser-photo">
+              <apex:outputLink value="/apex/apc_hf_profile?id={!selection.Position__c}" rendered="{!selection.Position__c!=null}" id="linkprofinfo2">
+                <apex:image value="{!PageController.returnURLMap[selection.Position__c]}" rendered="{!PageController.returnURLMap[selection.Position__c]!=null && PageController.returnURLMap[selection.Position__c] != 'no-picture'}"/>
+              </apex:outputLink>
+            </div>
+             
+            <div class="item ap-teaser-name">
+              <apex:outputLink value="/apex/apc_hf_profile?id={!selection.Position__c}" id="linkprofinfo3">
+                <apex:outputText value=" {!selection.Position__r.Host_Company_Id__r.LastName}"/>
+                Family </apex:outputLink>
+            </div>
+            <div class="item ap-teaser-other">
+              <label>Interview Expires On</label>
+              <br/>
+              <apex:outputText rendered="{!selection.Interview_End_Date__c!=null}" value=" {0,date, MMMM d, yyyy h:mm a}">
+                <apex:param value="{!selection.Interview_End_Date__c+PageController.offset}"/>
+              </apex:outputText>
+            </div>
+            
+            <div class="item ap-teaser-other"> &nbsp; </div>
+          </div>
+          <!-- end ap teaser -->
+          
+          </apex:outputtext>
+          <apex:variable var="IntCount" value="{!IntCount + 1}" />
+        </apex:repeat>
+      </div>
+      <!-- end hp block -->
+    </apex:outputPanel>
+  </apex:outputpanel>
+
+  
+  
+  <!-- Begining CASE 1: PT Application Accepted -->
+  <apex:outputpanel layout="block" id="blockCase1" rendered="{!PageController.currentApp.Intrax_Program__c == 'AuPairCare' && 
+PageController.currentApp.Application_Type__c == 'Original' && PageController.currentApp.Application_Stage__c == 'Accepted' &&
+PageController.currentApp.Application_Level__c == 'Main' && PageController.currentApp.Engagement__r.Interview_Availability__c == null && 
+PageController.currentApp.Extension_Au_Pair_Agreed__c == null && (PageController.currentApp.Engagement__r.Status__c=='Processing' || PageController.currentApp.Engagement__r.Status__c=='Program Ready')
+&& PageController.ConfMatch.Id==null}">
+    <div class="hp-block padding-6">
+      <h2>What Is Your Interview Availability?</h2>
+      <p class="lead">Au pairs that have up to date contact information and respond within 24 hours to host families match faster! Make sure your interview availability and contact information is accurate.</p>
+      <apex:outputLink styleClass="btn btn-link btn-lg vs2" value="/apex/apc_hf_au_pair_profile?id={!PageController.currentApp.Engagement__c}" id="linkprofinfo1"><span>Update Your Profile</span></apex:outputLink>
+    </div>
+  </apex:outputpanel>
+  
+  <!-- No active interviews -->
+  <apex:outputpanel layout="block" id="blockCase0" rendered="{!PageController.currentApp.Intrax_Program__c == 'AuPairCare' && 
+PageController.currentApp.Application_Stage__c == 'Accepted' &&
+PageController.currentApp.Application_Level__c == 'Main' &&
+(PageController.currentApp.Engagement__r.Status__c=='Processing')
+ && PageController.matchList.size == 0}">
+    <apex:outputpanel layout="block" rendered="{!PageController.selectionList.size==0}">
+      <div class="hp-block padding-6">
+        <h2>Your Interviews</h2>
+        <p class="box gray lead no-margin">You have no active interviews at this time.&nbsp;
+          <apex:outputLink value="/apex/apc_ap_interviews?id={!PageController.currentApp.Engagement__c}" id="linkViewInterview5"><b>View All Interviews</b></apex:outputLink>
+        </p>
+      </div>
+    </apex:outputpanel>
+  </apex:outputpanel>
+  
+  
+  
+  <!-- Begining CASE 3: On program interviewing==> match break OR (on program eng with confirmed match && processing eng related to renewal application type) -->
+  <apex:outputpanel layout="block" id="blockCase3" rendered="{!PageController.currentApp.Intrax_Program__c == 'AuPairCare' && 
+ PageController.currentApp.Application_Level__c == 'Main' &&
+((PageController.currentApp.Application_Stage__c == 'Accepted' && PageController.currentApp.Engagement__r.Status__c=='On Program' 
+ && PageController.ConfMatch.Id==null) ||(PageController.checkForOnProgramInterviewing))}">
+    <div class="hp-block padding-6">
+      <h2>Your Interviews</h2>
+      <p class="box gray lead no-margin">You have no active interviews at this time.&nbsp;
+        <apex:outputLink value="/apex/apc_ap_interviews?id={!PageController.currentApp.Engagement__c}" id="linkViewInterview0"><b>View All Interviews</b></apex:outputLink>
+      </p>
+    </div>
+  </apex:outputpanel>
+  
+  
+  
+  
+</apex:component>

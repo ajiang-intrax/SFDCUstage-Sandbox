@@ -1,0 +1,45 @@
+<apex:page standardcontroller="Area__c" extensions="googleGeoHelper">
+<apex:stylesheet value="{!URLFOR($Resource.intrax_themes_standard_community, '/intrax_themes_standard_community/custom.css')}" />
+<head>
+  <style type="text/css">
+     .cmdBtn{
+         color:white !important;
+         background:#343d36 !important;
+      }
+      .col1{
+      	text-align:right;
+      	height:40px;
+      	width:45%;
+      	font-weight:bold;
+      }
+      .col2{
+      	text-align:left;
+      	height:40px;
+      	width:5%;
+      }
+      .col3{
+      	text-align:left;
+      	height:40px;
+      	width:50%;
+      }
+   </style>
+</head>
+<apex:form >
+<br/>
+<apex:messages />
+<br/>
+	<div class="h3"><apex:outputText value="Create New Area From Selected Zipcodes"/></div>
+	<apex:panelGrid columns="3" columnClasses="col1,col2,col3" rowClasses="col1,col2" style="width:30%">
+	<apex:outputText value="Area Name" /><apex:outputText value="" /> <apex:inputText value="{!newAreaName}" required="true" id="AreaName"/>
+	<apex:outputText value="Area Director" /><apex:outputText value="" /> <apex:outputText value="{!OldArea.Area_Director__r.Name}" />	
+	<apex:outputText value="Regional Manager" /><apex:outputText value="" /> <apex:outputText value="{!OldArea.Regional_Manager__r.Name}" />	
+	<apex:outputText value="Region Name" /><apex:outputText value="" /> <apex:outputText value="{!OldArea.Region_Name__c}" />
+	
+	<br/><br/>
+	<apex:commandButton value=" Save Area " styleClass="cmdBtn" action="{!SaveNewArea}"/>
+	</apex:panelGrid>
+	<!--selected zipcode Ids: {!selectedZipIds}  
+	<br/>
+	zips{!selZipNames}-->
+</apex:form>
+</apex:page>

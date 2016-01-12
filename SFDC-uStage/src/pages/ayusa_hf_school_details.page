@@ -1,0 +1,150 @@
+<apex:page id="ayusa_hf_school_details" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:includeScript value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/js/jquery-1.8.0.min.js')}"/>  
+
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper">
+           <apex:form id="form">
+          <div class="page-header clearfix">
+<h1 class="page-title">Ayusa Host Family Application</h1>
+<div class="back-to-main"><apex:outputLink value="apex/ayusa_hf_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+</div>
+      
+          <h2> Local High School - Continued</h2>
+          <div class="white-box clearfix">
+          <div class="panel two_thirds">
+             
+             <apex:Messages styleClass="custom-error-pagelevel"/>
+             <p><em> All fields marked with an asterisk (<span class="required no-padding">*</span>) are required</em></p><br/>
+               
+              <div class="form-row">
+                <div class="form-label left"> Approximate Size of Student Body </div>
+                <div class="form-field">
+                  <apex:inputField id="Size" value="{!SchoolInfo.Student_Census__c}" required="FALSE"/> 
+                </div>
+              </div>
+                  
+              <div class="form-row">
+                <div class="form-label left"> Approximate Distance Between School and Your Home  <span class="required">*</span> </div>
+                <div class="form-field">
+                  <apex:inputField id="Distance" value="{!ApplicantInfo.Distance_to_School__c}" required="TRUE"/>
+                </div>
+                <div class="dropt"> <i class="icon-question-sign"></i>
+                   <span>{!$ObjectType.Applicant_Info__c.Fields.Distance_to_School__c.inlineHelpText}</span>
+                </div>
+              </div>
+                  
+              <div class="form-row">
+                <div class="form-label left"> Approximate School Year Start Date </div>
+                <div class="form-field">
+                  <apex:inputField id="StartDate" value="{!SchoolInfo.Academic_Year_Start__c}" required="FALSE"/> 
+                </div>
+              </div>
+                  
+              <div class="form-row">
+                <div class="form-label left"> Please select how the exchange student will get to school:<span class="required">*</span> </div>
+                <div class="form-field">
+                  <apex:actionRegion >
+                  <apex:inputField id="Transport" value="{!ApplicantInfo.School_Transportation__c}" required="TRUE"> 
+                        <apex:actionSupport event="onchange" rerender="school-transportation" status="status"/> 
+                  </apex:inputField>
+                      </apex:actionRegion>
+                </div>
+              </div>
+              
+              <apex:pageBlock id="school-transportation">
+                 <apex:outputPanel layout="block" rendered="{!ApplicantInfo.School_Transportation__c == 'Other'}"> 
+              <div class="form-row">
+                <div class="form-label top"> If other, please describe: <span class="required">*</span> </div>
+                <div class="form-field">
+                  <apex:inputTextArea id="TransportDesc" value="{!ApplicantInfo.School_Transportation_Description__c}" required="TRUE"/> 
+                </div>
+              </div>
+                  </apex:outputPanel>
+            </apex:pageBlock>
+                  
+              <div class="form-row">
+                <div class="form-label left">Would transportation for extracurricular activities be provided? <span class="required">*</span></div>
+                <div class="form-field">
+                    <apex:selectRadio value="{!ApplicantInfo.Extracurricular_Transportation__c}" id="extra-transportation" required="true">
+                        <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                        <apex:selectOption itemValue="No" itemLabel="No"/>
+                    </apex:selectRadio>
+                    <apex:message for="extra-transportation" styleClass="custom-error-radio"/> 
+                </div>
+              </div>
+                  
+              <div class="form-row">
+                <div class="form-label left">Which, if any, of your family's children, presently attend the school in which the exchange student will be enrolled? </div>
+                <div class="form-field">
+                  <apex:inputField id="ChildrenEnrolled" value="{!ApplicantInfo.Children_Enrolled__c}" required="FALSE"/> 
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-label left">Does any member of the household work as a coach, teacher or administrator at the high school? <span class="required">*</span> </div>
+                <div class="form-field">
+                    <apex:selectRadio value="{!ApplicantInfo.School_Employee__c}" id="school-employee" required="true">
+                        <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                        <apex:selectOption itemValue="No" itemLabel="No"/>
+                    </apex:selectRadio>
+                    <apex:message for="school-employee" styleClass="custom-error-radio"/> 
+                </div>
+              </div>
+            
+              <div class="form-row">
+                <div class="form-label left"> Has any family member had contact with a coach regarding hosting an exchange student with particular athletic ability? <span class="required">*</span> </div>
+                <div class="form-field">
+                    <apex:actionRegion >
+                    <apex:selectRadio value="{!ApplicantInfo.School_Recruiting_Indicated__c}" id="school-recruit" required="true">
+                        <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                        <apex:selectOption itemValue="No" itemLabel="No"/>
+                        <apex:actionSupport event="onclick" rerender="school-recruiting" status="status"/>
+                    </apex:selectRadio>
+                    </apex:actionRegion>
+                    <apex:message for="school-recruit" styleClass="custom-error-radio"/>
+                </div>
+              </div>
+              
+               <apex:pageBlock id="school-recruiting">
+                    <apex:outputPanel layout="block" rendered="{!ApplicantInfo.School_Recruiting_Indicated__c == 'Yes'}"> 
+                          <div class="form-row">
+                            <div class="form-label top"> If yes, please describe:<span class="required">*</span> </div>
+                            <div class="form-field">
+                              <apex:inputTextarea id="schoolRecDesc" value="{!ApplicantInfo.School_Recruiting_Description__c}" required="TRUE" onkeyup="countChar(this, 128, 'schoolRecDescCount')"/>                               
+                            </div>
+                              <div class="char-limit"><span class="char-count-label">Characters left:</span>
+                              <span id="schoolRecDescCount" class="char-count">
+                              {!128-len(ApplicantInfo.School_Recruiting_Description__c)}
+                              </span> 
+                              </div>
+                          </div>
+                   </apex:outputPanel>
+              </apex:pageBlock>
+             
+            <div class="form-row">
+                                  
+              <div class="form-link">
+                    <apex:outputLink id="Back" styleClass="back" value="/apex/ayusa_hf_school_basics?id={!applicantInfo.Id}">
+                    <i class="icon-chevron-left"></i>
+                    <span>Back</span>
+                    </apex:outputLink>
+              </div>
+               
+              <div class="form-button">
+                <apex:commandlink styleClass="next" action="{!navigator}">
+                  <apex:param name="nextPage" value="/apex/ayusa_hf_home"/>
+                  <apex:param name="reDirectPage" value="false"/>
+                  <apex:commandButton id="Save" value="Save & Continue" />
+                  <i class="icon-chevron-right"></i>  
+                </apex:commandlink> 
+              </div>
+            </div>
+          
+         </div>
+       </div>
+                </apex:form>
+     </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

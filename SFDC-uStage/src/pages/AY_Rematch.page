@@ -1,0 +1,5 @@
+<apex:page StandardController="Match__c" extensions="FlowMatchController">
+ <flow:interview name="AY_Rematch" finishLocation="{!finishPageRematch}">
+     <apex:param name="vOldMatchId" value="{!match.Id}"/>  
+</flow:interview>  
+</apex:page>

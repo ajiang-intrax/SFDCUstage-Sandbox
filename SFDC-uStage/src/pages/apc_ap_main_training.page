@@ -1,0 +1,663 @@
+<apex:page docType="html-5.0" title="Education & Training" applyBodyTag="false" applyHtmlTag="false" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="false" showHeader="false" id="apc_ap_main_training">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_apc_ap_application />
+       <div id="app-page" class="row">
+        <div id="app-focus" class="col-md-8 col-md-push-3">
+          <c:block_app_completion ApplicantInfo="{!applicantInfo}" userProfileName="{!userProfileName}"  />
+          
+          <!-- Jose-Adding Tips for Partners  (Profile "OCPM Agent Portal")
+          <apex:outputPanel rendered="{!userProfileName == 'OCPM Agent Portal' && applicantInfo.Application_Level__c == 'Main'}" layout="block" id="blockTip">
+	          <div class="lead alert alert-warning clearfix">
+	          <b>Tip</b>&nbsp;&nbsp;
+	           Please check that the au pair's earliest program arrival date is after their date of graduation from Secondary School.
+	          </div>
+          </apex:outputPanel>
+          -->
+          
+          <h1>Education and Training</h1>
+          <p class="lead">All au pairs are required to graduate from secondary school before traveling as au pairs. Host families are also interested in any additional education, training or certifications you may have. Please answer all questions, select all skills that apply to you and upload at least one document as proof of completing secondary school or higher education. </p>
+          <apex:form styleClass="form-vertical ws-validate" id="webform" >
+            <apex:variable value="{!1}" var="rowNumf" id="rowCounterF"/>
+            <apex:variable value="{!1}" var="rowNumcert" id="rowcert"/>
+            <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">Secondary School</h4>
+                </div>
+                <div class="panel-body">
+                
+                <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label class="control-label">School Name</label>
+                    <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!educationInfo.Institution_Name__c}" required="TRUE" id="SchoolName" />
+                  </div>
+                  </div>
+                   <div class="col-sm-6">
+                  <div class="form-group">
+                    <label class="control-label">Graduation Date</label>
+                    <div class="datepicker" locale="{!user.localeSidKey}">
+                      <apex:inputField styleClass="form-control" html-placeholder="Graduation Date" value="{!personInfo.Graduation_Date__c}" required="TRUE" id="GraduationDate" />
+                    </div>
+                  </div>
+                  </div>
+                  </div><!--  end row -->
+                  
+                 <div class="row">
+                <div class="col-sm-6"> 
+                  <div class="form-group">
+                    <label class="control-label">Address 1</label>
+                    <apex:inputField html-placeholder="Street address" styleClass="form-control"  onblur="CapitalizeName(event.target);" value="{!educationInfo.Address_Street_1__c}" required="TRUE" id="Address" />
+                  </div>
+                  </div>
+                  <div class="col-sm-6">
+                  <div class="form-group">
+                    <label class="control-label">Address 2 <span class="info">(Optional)</span></label>
+                    <apex:inputField html-placeholder="Apartment, building, floor, etc." styleClass="form-control"  onblur="CapitalizeName(event.target);" value="{!educationInfo.Address_Street_2__c}" required="False" id="Address2" />
+                  </div>
+                  </div>
+                  </div><!--  end row -->
+                  
+                  
+                  <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label class="control-label">City</label>
+                    <apex:inputField styleClass="form-control"  onblur="CapitalizeName(event.target);" value="{!educationInfo.City__c}" required="TRUE" id="Schcity" />
+                  </div>
+                  </div>
+                  <div class="col-sm-6">
+                  <div class="form-group">
+                    <label class="control-label">State/Province/Region <span class="optional">(Optional)</span></label>
+                    <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!educationInfo.State__c}"  id="State" />
+                  </div>
+                  </div>
+                  </div><!--  end row -->
+                  
+                  <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label class="control-label">Postal Code</label>
+                    <apex:inputField styleClass="form-control"  value="{!educationInfo.Postal_Code__c}" required="TRUE" id="Schpostal" />
+                  </div>
+                  </div>
+                   <div class="col-sm-6">
+                  <div class="form-group">
+                    <label class="control-label">Country</label>
+                    <apex:inputField styleClass="form-control"  value="{!educationInfo.Country__c}" required="TRUE" id="Schcountry" />
+                  </div>
+                  </div>
+                  </div><!--  end row -->
+               
+                  
+                  <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label class="control-label">Phone Country Code</label>
+                    <apex:actionRegion >
+                      <apex:selectList styleClass="form-control" 
+                            value="{!educationInfo.Phone_Country_Code__c}" multiselect="false"
+                            required="TRUE" id="countrycode" size="1">
+                        <apex:selectOption itemValue="" itemLabel="Select Country Code" />
+                        <apex:selectOptions value="{!listCountryCodeOptions}" />
+                        <apex:actionSupport event="onchange" rerender="phonecode"
+                                status="showcode" />
+                      </apex:selectList>
+                    </apex:actionRegion>
+                    <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showcode" />
+                    <apex:message for="countrycode" styleClass="custom-error-radio" id="apexmess1" />
+                  </div>
+                  </div>
+                  <div class="col-sm-6">
+                  <div class="form-group">
+                    <label class="control-label">Phone Number</label>
+                    <apex:outputpanel id="phonecode" layout="block">
+                      <div class="input-group"> <span class="input-group-addon">{!educationInfo.Phone_Country_Code__c}</span>
+                        <apex:inputField styleClass="form-control onlynumber" value="{!educationInfo.Phone__c}" required="TRUE" id="phone" />
+                      </div>
+                    </apex:outputpanel>
+                  </div>
+                  </div>
+                  </div><!--  end row -->
+                  
+                  <!-- Upload Start  -->
+                  <apex:pageBlock id="Educational_Document"> 
+                  <p>Please upload a diploma if it is available. You can also upload it later by revisiting this page. AuPairCare will need your diploma in order to match you.</p>
+                    <div class="row">
+                      <div class="col-sm-12 margin-t">
+                        <apex:commandlink styleClass="btn btn-link btn-lg vs2 margin-r1" action="{!saveEducationapc}" immediate="false" reRender="webform" onComplete="popModal();rerunjs();" status="onsubmit">
+                          <apex:param name="edu_id" value="{!educationInfo.id}"/>
+                          <apex:param name="doctype2" value="Secondary-School-Diploma" />
+                         <i class="fa fa-graduation-cap"></i> <span>Upload Diploma</span>
+                        </apex:commandlink> 
+                        
+                      <i class="infobtn fa fa-question-circle" data-toggle="modal" data-target="#secdiploma"></i>
+                      <div id="secdiploma" class="modal vs1 fade in">
+                       <div class="modal-dialog modal-dialog-lg">
+                       <div class="modal-content">
+                       <a class="closebtn" data-dismiss="modal">
+                            <span class="fa-stack fa-lg ">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-times fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                       <div class="modal-body">
+                    <div class="row">
+                   <div class="col-lg-6"> 
+                     <h3 class="inline-block">Sample Document</h3> <a target="_blank" href="https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/documents/portals/apc/pt/app/graduation-date-certificate.jpg"><b>(See Full Size)</b></a>
+                     <div class="margin-b4">
+                     <img src="https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/documents/portals/apc/pt/app/graduation-date-certificate.jpg"/></div>  
+                       
+                   </div>
+                    <div class="col-lg-6"> 
+                     <h3>Tips for Photographing Documents</h3>
+
+<p>If you do not have access to a scanner you can use a digital camera or smartphone camera to capture the required documents. Please note that the copy must be clear with all text being readable. Below are a few tips for achieving this.</p>
+  <ul>
+<li>Do not use the flash when copying documents, as that will wash them out.</li>
+<li>The best source of light is sunlight as it is bright enough to get a sharp, readable image.</li>
+<li>Use a dark background for the image. You can place a piece of black or gray poster board or paper below the documents when you photograph them if you don't have dark surface.</li>
+    <li>Keep the images square and centered in the photograph.</li>
+</ul>
+                   </div>
+                     
+                    </div>  <!--  end row -->
+</div> <!--  end modal body -->
+</div> <!--  end modal content -->
+</div> <!--  end modal dialog -->
+</div> <!-- end modal -->
+                        
+                        
+                        
+                        
+                      </div>
+                    </div>
+                    <br/>
+                    <!-- end form group --> 
+                    <!--    </apex:outputPanel> -->
+                    <apex:outputPanel layout="block" rendered="{!IF(DocListSchool.Size > 0, true, false)}">
+                      <apex:pageBlock id="Block_Listschool">
+                        <div class="table-responsive">
+                          <apex:pageBlockTable styleClass="table vs2" value="{!DocmapEducation[educationInfo.id]}" var="item">
+                            <apex:column headerValue="Document Name">
+                              <apex:commandLink action="{!load}" rerender="" target="_blank">
+                                <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                <apex:outputText value="{!item.Document_Name__c}"/>
+                              </apex:commandLink>
+                            </apex:column>
+                            <apex:column headerValue="Remove" >
+                              <div class="btn-toolbar no-margin">
+                                <apex:commandLink action="{!iWantMyJSValues}" styleClass="btn-lg" oncomplete="confDelete();" immediate="true" rerender=""> <i class="fa fa-trash-o"></i>
+                                  <apex:param name="docGuid" value="{!item.Document_GUID__c}" assignTo="{!docGuid}"/>
+                                </apex:commandLink>
+                              </div>
+                            </apex:column>
+                          </apex:pageBlockTable>
+                        </div>
+                        <!--  end table responsive --> 
+                      </apex:pageBlock>
+                    </apex:outputPanel>
+                    <apex:outputText value="{!disableFileUploadText}" rendered="{!disableFileUpload}"/>
+                  </apex:pageBlock>
+                  <!--  end doc upload --> 
+                  
+                </div>
+                <!--  end panel body --> 
+              </div>
+              <!--  end panel --> 
+             <p>&nbsp;</p>
+            <div class="section-title">Have you attended or are you attending a university or college? </div>
+            
+            <!--  start University Block -->
+            
+            <apex:pageBlock id="University">
+                <apex:outputpanel layout="block" id="wrappertable" styleClass="panel-group group1">
+                  <apex:repeat id="wtable"  value="{!educationApcMap['university']}" var="universityRecord">
+                    <apex:variable value="{!IF(educationSizeMap['university']==rowNumf, 'in', '')}" var="rowLast" id="rowLast" />
+                    <!-- <apex:outputText value="{!educationSizeMap['university']}"/> -->
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h4 class="panel-title">
+                          <apex:outputLink styleClass="accordion-toggle" html-data-toggle="collapse" html-data-parent=".group1" value="#collapse1{!rowNumf}"> University/College {!rowNumf}:
+                            <apex:outputText rendered="{!IF(ISBLANK(universityRecord.Institution_Name__c), false, true)}" value="{!universityRecord.Institution_Name__c}"> </apex:outputText>
+                          </apex:outputLink>
+                        </h4>
+                      </div>
+                      <!--  end panel heading -->
+                      <div id="collapse1{!rowNumf}" class="panel-collapse collapse {!rowLast}">
+                        <div class="panel-body">
+                        
+                        <div class="row">
+                <div class="col-sm-6">
+                          <div class="form-group">
+                            <label class="control-label">University/College Name</label>
+                            <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);"  Value="{!universityRecord.Institution_Name__c}" required="TRUE" id="Instname" />
+                          </div>
+                          </div>
+                          <div class="col-sm-6">
+                          <div class="form-group">
+                            <label class="control-label">Graduation Date</label>
+                            <div class="datepicker" locale="{!user.localeSidKey}">
+                              <apex:inputField styleClass="form-control"  value="{!universityRecord.Graduation_Date__c}" required="TRUE" id="Gdate" />
+                            </div>
+                          </div>
+                          </div>
+                          </div><!--  end row -->
+                          
+                          <div class="row">
+                <div class="col-sm-6">
+                          <div class="form-group">
+                            <label class="control-label">Degree/Program Type</label>
+                            <apex:selectList styleClass="form-control"  value="{!universityRecord.Program_Type__c}" multiselect="false" required="TRUE" id="Inst" size="1">
+                              <apex:selectOption itemValue="" itemlabel="Please Select Program"/>
+                              <apex:selectOptions value="{!getProgramType}"/>
+                            </apex:selectList>
+                            <apex:message for="Inst" styleClass="custom-error-radio" id="errormsgtype"/>
+                          </div>
+                          </div>
+                           <div class="col-sm-6">
+                          <div class="form-group">
+                            <label class="control-label">Field Of Study</label>
+                            <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" Value="{!universityRecord.Field_of_Study__c}"  required="TRUE" id="fieldtype" />
+                          </div>
+                          </div>
+                          </div><!-- end row -->
+                          
+                          <div class="row">
+                <div class="col-sm-6">
+                          <div class="form-group">
+                            <label class="control-label">City</label>
+                            <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" Value="{!universityRecord.City__c}" required="TRUE" id="city" />
+                          </div>
+                          </div>
+                          <div class="col-sm-6">
+                          <div class="form-group">
+                            <label class="control-label">Country</label>
+                            <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" Value="{!universityRecord.Country__c}"  required="TRUE" id="country" />
+                          </div>
+                          </div>
+                          </div><!--  end row -->
+                          
+                          <!-- Upload Start  -->
+                           <!--
+                          <apex:pageBlock id="Educational_Document">
+                            <p>Please upload a diploma or transcript if it is available</p>
+                            <div class="row">
+                              <div class="col-sm-12 margin-t">
+                                <apex:commandlink styleClass="btn btn-link btn-lg vs2 margin-r1" action="{!saveEducationapc}" immediate="false" reRender="webform" onComplete="popModal2();rerunjs();" status="onsubmit">
+                                  <apex:param name="edu_id" value="{!universityRecord.id}"/>
+                                  <apex:param name="doctype2" value="University-Diploma"/>
+                                  <i class="fa fa-graduation-cap"></i> <span>Upload Diploma or Transcripts</span>
+                                </apex:commandlink>
+                                 <i class="infobtn fa fa-question-circle" data-toggle="modal" data-target="#univdiploma"></i>
+                      <div id="univdiploma" class="modal vs1 fade in">
+                       <div class="modal-dialog modal-dialog-lg">
+                       <div class="modal-content">
+                       <a class="closebtn" data-dismiss="modal">
+                            <span class="fa-stack fa-lg ">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-times fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                       <div class="modal-body">
+                    <div class="row">
+                    <div class="col-lg-6">
+                    <h3 class="inline-block">Sample Diploma</h3> <a target="_blank" href="https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/documents/portals/apc/pt/app/bachelors-diploma.jpg"><b>(See Full Size)</b></a>
+                    <div>
+                    <img src="https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/documents/portals/apc/pt/app/bachelors-diploma.jpg"/></div>   
+                    </div>
+                    <div class="col-lg-6">
+                    <h3 class="inline-block">Sample Transcripts</h3> <a target="_blank" href="https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/documents/portals/apc/pt/app/bachelors-evalulation.jpg"><b>(See Full Size)</b></a>
+                    <div>
+                    <img src="https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/documents/portals/apc/pt/app/bachelors-evalulation.jpg"/></div>   
+                    </div>
+                   </div>
+                    <div class="row">
+                    <div class="col-lg-12"> 
+                     <h3>Tips for Photographing Documents</h3>
+
+<p>If you do not have access to a scanner you can use a digital camera or smartphone camera to capture the required documents. Please note that the copy must be clear with all text being readable. Below are a few tips for achieving this.</p>
+  <ul>
+<li>Do not use the flash when copying documents, as that will wash them out.</li>
+<li>The best source of light is sunlight as it is bright enough to get a sharp, readable image.</li>
+<li>Use a dark background for the image. You can place a piece of black or gray poster board or paper below the documents when you photograph them if you don't have dark surface.</li>
+    <li>Keep the images square and centered in the photograph.</li>
+</ul>
+                   </div>                 
+                    </div>
+</div> 
+</div> 
+</div>
+</div>   
+                              </div>
+                            </div>
+                           <apex:outputPanel layout="block" rendered="{!IF(DocListUniversity.Size > 0, true, false)}">
+                              <apex:pageBlock id="Block_ListUni" >
+                                <div class="table-responsive margin-t">
+                                  <apex:pageBlockTable styleClass="table vs2" value="{!DocmapEducation[universityRecord.id]}" var="item">
+                                    <apex:column headerValue="Document Name">
+                                      <apex:commandLink action="{!load}" rerender="" target="_blank">
+                                        <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                        <apex:outputText value="{!item.Document_Name__c}"/>
+                                      </apex:commandLink>
+                                    </apex:column>
+                                    <apex:column headerValue="Remove">
+                                      <div class="btn-toolbar no-margin">
+                                        <apex:commandLink action="{!iWantMyJSValues}" styleClass="btn-lg" oncomplete="confDelete();" immediate="true" rerender=""> <i class="fa fa-trash-o"></i>
+                                          <apex:param name="docGuid" value="{!item.Document_GUID__c}" assignTo="{!docGuid}"/>
+                                        </apex:commandLink>
+                                      </div>
+                                    </apex:column>
+                                  </apex:pageBlockTable>
+                                </div>
+                              </apex:pageBlock>
+                            </apex:outputPanel>
+                            <apex:outputText value="{!disableFileUploadText}" rendered="{!disableFileUpload}"/>
+                          </apex:pageBlock> -->
+                        
+                          <apex:outputText id="outputpanel1">
+                            <apex:commandlink styleClass="btn btn-link btn-lg pull-right" action="{!removeEducationRecordApc}" rerender="wrappertable,rowCounterF" onComplete="dpInitiate();" immediate="true" id="linkdelWrapper" status="status"> <i class="fa fa-trash-o"></i> <span>Remove University/College</span>
+                              <apex:param name="delEducationRec" value="{!universityRecord.id}" assignTo="{!delEducationRec}"/>
+                              <apex:param name="educationType" value="university" assignTo="{!educationType}"/>
+                            </apex:commandlink>
+                          </apex:outputText>
+                        </div>
+                        <!--  end panel body --> 
+                      </div>
+                      <!-- end panel collapse --> 
+                    </div>
+                    <!--  panel panel-default -->
+                    <apex:variable var="rowNumf" value="{!rowNumf + 1}"/>
+                  </apex:repeat>
+                 
+                  <apex:outputPanel layout="block" id="addButtonP">
+                    <apex:outputPanel layout="block" id="outputpaneladd">
+                    <div class="row">
+                    <div class="col-sm-12">
+                      <apex:commandlink styleClass="btn btn-link btn-lg margin-b" action="{!addEducationRecordApc}" onComplete="restoreclass();dpInitiate();" immediate="false" rerender="webform,wrappertable,rowCounterF" id="linkaddlWrapper" status="status" onclick="disableSubmit();">
+                        <apex:param name="addEdu" value="university" assignTo="{!addEdu}"/>
+                        <apex:commandButton value="" id="addbutton"/>
+                        <i class="fa fa-plus-circle"></i> <span>Add University/College</span> 
+                        </apex:commandlink>
+                        </div>
+                        </div><!--  end row -->
+                    </apex:outputPanel>
+                  </apex:outputPanel>
+                  
+                </apex:outputpanel>
+                <!--  end panel group --> 
+              
+              <!--   </apex:outputPanel> --> 
+            </apex:pageBlock>
+            
+            <!--  end University Block -->
+            <p>&nbsp;</p>
+            <div class="section-title">Have you completed or are you in the process of attending additional training/certification? </div>
+            
+            <!--  start Certification Block -->
+            
+            <apex:pageBlock id="Certification">
+                <apex:outputpanel layout="block" id="wrappertableCert" styleClass="panel-group group1">
+                  <apex:repeat id="wtablecert"  value="{!educationApcMap['certification']}" var="certificationRecord">
+                    <apex:variable value="{!IF(educationSizeMap['certification']==rowNumcert, 'in', '')}" var="rowLastcert" id="rowLastcert" />
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h4 class="panel-title">
+                          <apex:outputLink styleClass="accordion-toggle" html-data-toggle="collapse" html-data-parent=".group1" value="#collapse2{!rowNumcert}"> Training/Certification {!rowNumcert}:
+                            <apex:outputText rendered="{!IF(ISBLANK(certificationRecord.Institution_Name__c), false, true)}" value="{!certificationRecord.Institution_Name__c}"> </apex:outputText>
+                          </apex:outputLink>
+                        </h4>
+                      </div>
+                      <!--  end panel heading -->
+                      <div id="collapse2{!rowNumcert}" class="panel-collapse collapse {!rowLastcert}">
+                        <div class="panel-body">
+                        
+                        <div class="row">
+                         <div class="col-sm-6">
+                          <div class="form-group">
+                            <label class="control-label">Institution Name</label>
+                            <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" Value="{!certificationRecord.Institution_Name__c}" required="TRUE" id="certname" />
+                          </div>
+                          </div>
+                            <div class="col-sm-6">
+                          <div class="form-group">
+                            <label class="control-label">Completion Date</label>
+                            <div class="datepicker" locale="{!user.localeSidKey}">
+                              <apex:inputField styleClass="form-control"  value="{!certificationRecord.Graduation_Date__c}" required="TRUE" id="date" />
+                            </div>
+                          </div>
+                          </div>
+                          </div><!--  end row -->
+                          
+                           <!-- B-02366 -->   
+                         
+                          <apex:outputPanel styleClass="row" layout="block" id="certPanelButton">
+                          <div class="col-sm-6">
+                          <div class="form-group">
+                          	<label class="control-label">Certification Type</label>
+                            <apex:actionRegion >
+                            <apex:selectList styleClass="form-control"  value="{!certificationRecord.Program_Type__c}" multiselect="false" required="TRUE" id="certtype" size="1">
+                            	<apex:selectOption itemValue="" itemlabel="Please Select Program"/>
+                            	<apex:selectOptions value="{!CertificationType}"/>
+                            	<apex:actionSupport event="onchange" rerender="certPanelButton" status="showbutton" />
+                            </apex:selectList>
+                            </apex:actionRegion>
+                            <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showbutton" />
+	                        <apex:message for="certtype" styleClass="custom-error-radio" id="errormsgtype05"/>
+                          </div>
+                          </div>
+                          
+                          
+                          <apex:outputPanel rendered="{!certificationRecord.Program_Type__c == 'Other'}">
+                          <div class="col-sm-6">
+                          <div class="form-group">
+                          	<label class="control-label">If other, please describe</label>
+                            <apex:inputField styleClass="form-control" Value="{!certificationRecord.Program_Type_Other__c}"  required="TRUE" id="progtypeother" />
+                          </div>
+                          </div>
+                          </apex:outputPanel>
+                          </apex:outputPanel>
+                          
+                           <div class="row">
+                           <div class="col-sm-12">
+                          <div class="form-group">
+                            <label class="control-label">Name of Certification/Class</label>
+                            <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" Value="{!certificationRecord.Certification__c}" required="TRUE" id="certification" />
+                          </div>
+                          </div>
+                          </div><!--  end row -->
+                          
+                         
+                           <div class="row">
+                           <div class="col-sm-6">
+                          <div class="form-group">
+                            <label class="control-label">City</label>
+                            <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" Value="{!certificationRecord.City__c}" required="TRUE" id="certcity" />
+                          </div>
+                          </div>
+                          
+                           <div class="col-sm-6">
+                          <div class="form-group">
+                            <label class="control-label">Country</label>
+                            <apex:inputField styleClass="form-control" Value="{!certificationRecord.Country__c}"  required="TRUE" id="certcountry" />
+                          </div>
+                          </div>
+                          </div><!--  end row -->
+                          
+                          
+                           
+                          
+                          <!-- Upload Start  -->
+                          <!--  
+                          <apex:pageBlock id="certification_Document">
+                            <p>Please upload a certificate if it is available</p>
+                            
+                            <div class="row">
+                            <div class="col-sm-12 margin-t">
+                                <apex:commandlink styleClass="btn btn-link vs2 btn-lg" action="{!saveEducationapc}" immediate="false" reRender="webform" onComplete="popModal2();rerunjs();" status="onsubmit">
+                                  <apex:param name="edu_id" value="{!certificationRecord.id}"/>
+                                  <apex:param name="doctype2" value="Certificate" assignTo="{!doctype}"/>
+                                  <i class="fa fa-certificate"></i> <span>Upload Certificate</span>
+                                </apex:commandlink>
+                              </div>
+                            </div>
+                            
+                           <apex:outputPanel layout="block" rendered="{!IF(DocListCertification.Size > 0, true, false)}">
+                            <apex:pageBlock id="LoadCertificationDoc">
+                              <div class="table-responsive margin-t">
+                                <apex:pageBlockTable styleClass="table vs2" value="{!DocmapEducation[certificationRecord.id]}" var="item">
+                                  <apex:column headerValue="Document Name">
+                                    <apex:commandLink action="{!load}" rerender="" target="_blank">
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                      <apex:outputText value="{!item.Document_Name__c}"/>
+                                    </apex:commandLink>
+                                  </apex:column>
+                                  <apex:column headerValue="Remove" >
+                                    <div class="btn-toolbar no-margin">
+                                      <apex:commandLink action="{!iWantMyJSValues}" styleClass="btn-lg" oncomplete="confDelete();" immediate="true" rerender=""> <i class="fa fa-trash-o"></i>
+                                        <apex:param name="docGuid" value="{!item.Document_GUID__c}" assignTo="{!docGuid}"/>
+                                      </apex:commandLink>
+                                    </div>
+                                  </apex:column>
+                                </apex:pageBlockTable>
+                              </div>
+                            </apex:pageBlock>
+                            </apex:outputPanel>
+                            <apex:outputText value="{!disableFileUploadText}" rendered="{!disableFileUpload}"/>
+                          </apex:pageBlock>
+                          -->
+                          
+                          <!-- Upload End-->
+                          <apex:outputText id="outputpanel2">
+                            <apex:commandlink styleClass="btn btn-link btn-lg pull-right" action="{!removeEducationRecordApc}" rerender="wrappertableCert,rowcert" onComplete="dpInitiate();" immediate="true" id="certlinkdelWrapper" status="status"> <i class="fa fa-trash-o"></i> <span>Remove Training/Certification</span>
+                              <apex:param name="delEducationRec" value="{!certificationRecord.id}" assignTo="{!delEducationRec}"/>
+                              <apex:param name="educationType" value="certification" assignTo="{!educationType}"/>
+                            </apex:commandlink>
+                          </apex:outputText>
+                        </div>
+                        <!--  end panel body --> 
+                      </div>
+                      <!-- end panel collapse --> 
+                    </div>
+                    <!--  panel panel-default -->
+                    <apex:variable var="rowNumcert" value="{!rowNumcert + 1}"/>
+                  </apex:repeat>
+                  
+                  <apex:outputPanel layout="block" id="certaddButtonP">
+                    <apex:outputPanel layout="block" id="certoutputpaneladd">
+                      <div class="row">
+                    <div class="col-sm-12">
+                      <apex:commandlink styleClass="btn btn-link btn-lg margin-b" action="{!addEducationRecordApc}" onComplete="restoreclass();dpInitiate();" immediate="false" rerender="webform,wrappertableCert,rowcert" id="certlinkaddlWrapper" status="status" onclick="disableSubmit();">
+                        <apex:param name="addEdu" value="certification" assignTo="{!addEdu}"/>
+                        <apex:commandButton value="" id="certaddbutton"/>
+                        <i class="fa fa-plus-circle"></i> <span>Add Training/Certification</span> 
+                        </apex:commandlink>
+                        </div>
+                        </div><!--  end row -->
+                    </apex:outputPanel>
+                  </apex:outputPanel>
+                </apex:outputpanel>
+                <!--  end panel group --> 
+              
+              <!--  </apex:outputPanel> --> 
+            </apex:pageBlock>
+            
+            <!--  End of Certification Block -->
+            <div class="row">
+              <div class="col-sm-12 margin-t">
+                <apex:outputLink styleClass="btn btn-link btn-lg" value="/apex/apc_ap_main_video?id={!applicantInfo.Id}&docType=Introductory-Video" id="backlink"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                <apex:commandlink styleClass="btn btn-primary btn-lg" action="{!navigator}" id="nextlink" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                  <apex:param name="nextPage"   value="/apex/apc_ap_main_experience"/>
+                  <apex:param name="reDirectPage" value="true" />
+                  <apex:param name="pageId" value="020"/>
+                  <apex:commandButton value="Save & Continue" id="continuebutton"/>
+                </apex:commandlink>
+              </div>
+            </div>
+            <div class="modal fade vs1" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                  <div class="modal-body">
+                    <p>Are you sure you want to remove this file?</p>
+                  </div>
+                  <div class="modal-footer">
+                    <apex:commandLink styleClass="btn btn-primary" action="{!deletefile}" immediate="true">
+                      <apex:param name="Transcriptsparam" value="true" assignTo="{!TranscriptsParam}" />
+                      <apex:commandButton value="Yes" id="button"/>
+                    </apex:commandLink>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--  end modal -->
+            
+            <div class="modal vs1 fade modal-widget" id="myModalUpload" tabindex="-1" role="dialog" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title">Upload Diploma</h4>
+                  </div>
+                  <div class="modal-body"> 
+                    <!-- <iframe width="100%" height="400" frameborder="0" scrolling="no" src="{!fileUploadUrl}pid={!ProgId}&edu_id={!$CurrentPage.parameters.edu_id}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType={!$CurrentPage.parameters.docType2}&retparam={!retParam}"></iframe> -->
+                    <iframe width="100%" height="400" frameborder="0" scrolling="no" src="{!fileUploadUrl}pid={!ProgId}&edu_id={!edu_id}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType={!$CurrentPage.parameters.docType2}&retparam={!retParam}"></iframe>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--  end modal -->
+            <div class="modal vs1 fade modal-widget" id="myModalUpload2" tabindex="-1" role="dialog" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title">Upload Certification</h4>
+                  </div>
+                  <div class="modal-body">
+                    <iframe width="100%" height="400" frameborder="0" scrolling="no" src="{!fileUploadUrl}pid={!ProgId}&edu_id={!$CurrentPage.parameters.edu_id}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType={!$CurrentPage.parameters.docType2}&retparam={!retParam}"></iframe>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--  end modal --> 
+            
+          </apex:form>
+        </div>
+        <!-- end column  -->
+        
+        <div id="app-side" class="col-md-3 col-md-pull-8">
+          <c:menu_side_apc_ap_basic ApplicantInfo="{!applicantInfo}" />
+        </div>
+        <!-- end column  --> 
+      </div>
+      <!-- end row --> 
+      
+      <script>
+var j$ = jQuery.noConflict();
+
+function confDelete(){
+j$('#myModal').modal();
+} 
+   
+function popModal(){
+var auxerr= j$('.custom-error-pagelevel').attr('role');
+//alert(auxerr);
+    if(auxerr=="alert"){
+    }else{
+        j$('#myModalUpload').modal();
+    }
+}
+
+function popModal2(){
+var auxerr= j$('.custom-error-pagelevel').attr('role');
+//alert(auxerr);
+    if(auxerr=="alert"){
+    }else{
+        j$('#myModalUpload2').modal();
+    }
+} 
+
+</script> 
+    </apex:define>
+  </apex:composition>
+</apex:page>

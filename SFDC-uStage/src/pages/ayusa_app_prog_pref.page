@@ -1,0 +1,97 @@
+<apex:page id="ayusa_app_prog_pref" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper">
+          <apex:form id="form"> 
+          <div class="page-header clearfix">
+            <h1 class="page-title"><apex:outputLink value="apex/ayusa_app_home">Ayusa Student Application</apex:outputLink></h1>
+            <div class="back-to-main"><apex:outputLink id="BacktoMain" value="apex/ayusa_app_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+          </div>
+
+          <h2>Program Preferences</h2>
+          <div class="white-box clearfix">
+           <div class="panel two_thirds">
+           
+           <apex:Messages styleClass="custom-error-pagelevel"/>
+              <p><em> All fields marked with an asterisk (<span class="required no-padding">*</span>) are required</em></p><br/>             
+                      
+              <div class="form-row">
+                <div class="form-label left ">What program are you interested in?<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="ProgramDuration" value="{!applicantInfo.Program_Duration__c}" required="TRUE"/>
+                </div>
+              </div>
+               
+              <div class="form-row">
+                <div class="form-label left ">Which academic year would you like to study abroad in?<span class="required">*</span></div>
+                <div class="form-field">
+                  <!--<apex:inputField id="EngStart" value="{!applicantInfo.Engagement_Start__c}" required="TRUE"/>-->
+                  <apex:inputField id="EngStart" value="{!applicantInfo.Program_Year__c}" required="TRUE"/>
+                </div>
+                <div class="dropt"> <i class="icon-question-sign"></i>  
+                   <span>{!$ObjectType.Applicant_Info__c.Fields.Engagement_Start__c.inlineHelpText}</span>
+                </div>
+                
+              </div>
+              
+              <div class="form-row">
+                <div class="form-label left">Preferred departure airport:<span class="required">*</span> </div>
+                <div class="form-field">
+                  <apex:inputField id="Airport" value="{!applicantInfo.Airport__c}" required="TRUE"/>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-label left ">Are you willing to pay tuition for private high school?<span class="required">*</span></div>
+                <div class="form-field">
+                <apex:actionRegion >
+                    <apex:selectRadio value="{!applicantInfo.Private_High_School_Indicated__c}" id="tuition-indicated" required="TRUE">
+                        <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                        <apex:selectOption itemValue="No" itemLabel="No"/>
+                        <apex:actionSupport event="onclick" rerender="tuition"/>
+                    </apex:selectRadio>
+                    <apex:message for="tuition-indicated" styleClass="custom-error-radio"/>
+                </apex:actionRegion>
+                </div>
+                <div class="dropt"> <i class="icon-question-sign"></i>
+                   <span>{!$ObjectType.Applicant_Info__c.Fields.Private_High_School_Indicated__c.inlineHelpText}</span>
+                </div>
+              </div>
+              
+              <apex:pageBlock id="tuition">
+                    <apex:outputPanel layout="block" rendered="{!ApplicantInfo.Private_High_School_Indicated__c == 'Yes'}">
+                      <div class="form-row">
+                        <div class="form-label left">Please, indicate the range of tuition costs that you are willing to pay:<span class="required">*</span> </div>
+                        <div class="form-field">
+                          <apex:inputField id="Private_High_School_Tuition" value="{!applicantInfo.Private_High_School_Tuition__c}" required="TRUE"/>
+                        </div>
+                      </div>
+                </apex:outputPanel>
+              </apex:pageBlock>
+              <div class="form-row continue">
+              
+                <div class="form-link">
+                    <apex:outputLink id="Back" styleClass="back" value="/apex/ayusa_app_home?id={!applicantInfo.Id}">
+                    <i class="icon-chevron-left"></i>
+                    <span>Back</span>
+                    </apex:outputLink>
+                </div>
+              
+              <div class="form-button next">
+                <apex:commandlink action="{!navigator}">
+                  <apex:param name="nextPage" value="/apex/ayusa_app_prog_agreements"/>
+                  <apex:param name="reDirectPage" value="true"/>
+                  <apex:param name="docType" value="Agreements" assignTo="{!docType}"/>
+                  <apex:param name="view" value="Both" assignTo="{!view}"/>
+                  <apex:commandButton id="Save" value="Save & Continue" />
+                  <i class="icon-chevron-right"></i> 
+                </apex:commandlink>
+              </div>
+          </div>
+               </div></div>
+         
+              </apex:form>
+      </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

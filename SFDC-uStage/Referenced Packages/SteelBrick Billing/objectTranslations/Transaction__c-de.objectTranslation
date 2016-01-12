@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>false</plural>
+        <value><!-- Transaction --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>true</plural>
+        <value><!-- Transaction --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>false</plural>
+        <value><!-- Transaction --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>true</plural>
+        <value><!-- Transaction --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>false</plural>
+        <value><!-- Transaction --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>true</plural>
+        <value><!-- Transaction --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>false</plural>
+        <value><!-- Transaction --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>true</plural>
+        <value><!-- Transaction --></value>
+    </caseValues>
+    <fields>
+        <label><!-- AVS Response Code --></label>
+        <name>AVS_Response_Code__c</name>
+    </fields>
+    <fields>
+        <label><!-- AVS Zip --></label>
+        <name>AVS_Zip__c</name>
+    </fields>
+    <fields>
+        <label>Betrag</label>
+        <name>Amount__c</name>
+    </fields>
+    <fields>
+        <label>Genehmigung</label>
+        <name>Authorization__c</name>
+    </fields>
+    <fields>
+        <help><!-- CVV/CVV2 has matched or not --></help>
+        <label>Karte Kodex Reaktionszeit</label>
+        <name>Card_Code_Response__c</name>
+    </fields>
+    <fields>
+        <label><!-- Card Expiration Month --></label>
+        <name>Card_Expiration_Month__c</name>
+        <picklistValues>
+            <masterLabel>01</masterLabel>
+            <translation><!-- 01 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>02</masterLabel>
+            <translation><!-- 02 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>03</masterLabel>
+            <translation><!-- 03 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>04</masterLabel>
+            <translation><!-- 04 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>05</masterLabel>
+            <translation><!-- 05 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>06</masterLabel>
+            <translation><!-- 06 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>07</masterLabel>
+            <translation><!-- 07 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>08</masterLabel>
+            <translation><!-- 08 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>09</masterLabel>
+            <translation><!-- 09 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>10</masterLabel>
+            <translation><!-- 10 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>11</masterLabel>
+            <translation><!-- 11 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>12</masterLabel>
+            <translation><!-- 12 --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Card Expiration Year --></label>
+        <name>Card_Expiration_Year__c</name>
+        <picklistValues>
+            <masterLabel>2013</masterLabel>
+            <translation><!-- 2013 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>2014</masterLabel>
+            <translation><!-- 2014 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>2015</masterLabel>
+            <translation><!-- 2015 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>2016</masterLabel>
+            <translation><!-- 2016 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>2017</masterLabel>
+            <translation><!-- 2017 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>2018</masterLabel>
+            <translation><!-- 2018 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>2019</masterLabel>
+            <translation><!-- 2019 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>2020</masterLabel>
+            <translation><!-- 2020 --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Card Type --></label>
+        <name>Card_Type__c</name>
+        <picklistValues>
+            <masterLabel>American Express</masterLabel>
+            <translation><!-- American Express --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Master</masterLabel>
+            <translation><!-- Master --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Visa</masterLabel>
+            <translation><!-- Visa --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label>Währung</label>
+        <name>Currency__c</name>
+        <relationshipLabel>Transaktionen</relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Exception Message
+When a transaction is created and payment is not created against invoice --></help>
+        <label><!-- Exception Message --></label>
+        <name>Exception_Message__c</name>
+    </fields>
+    <fields>
+        <label>Gateway-Datum</label>
+        <name>Gateway_Date__c</name>
+    </fields>
+    <fields>
+        <label>Response-Gateway-ID</label>
+        <name>Gateway_ID__c</name>
+    </fields>
+    <fields>
+        <help><!-- It determines whether the transaction has created payment and payment allocation.
+This is only for charged transactions. --></help>
+        <label>Zahlungs-Prozess erfolgreich?</label>
+        <name>Is_Payment_Processed_Successfully__c</name>
+    </fields>
+    <fields>
+        <label><!-- Payment Gateway --></label>
+        <name>Payment_Gateway__c</name>
+        <relationshipLabel>Transaktionen</relationshipLabel>
+    </fields>
+    <fields>
+        <label>Zahlungs-Methode</label>
+        <name>Payment_Method__c</name>
+        <relationshipLabel>Transaktionen</relationshipLabel>
+    </fields>
+    <fields>
+        <label>Zahllauf</label>
+        <name>Payment_Run__c</name>
+        <relationshipLabel>Transaktionen</relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Reason Code --></label>
+        <name>Reason_Code__c</name>
+    </fields>
+    <fields>
+        <label>Request - Kreditkarten-Nummer</label>
+        <name>Request_Credit_Card_Number__c</name>
+    </fields>
+    <fields>
+        <label>Anfrage - Rechnung</label>
+        <name>Request_Invoice__c</name>
+        <relationshipLabel>Transaktionen</relationshipLabel>
+    </fields>
+    <fields>
+        <label>Request - Art der Transaktion</label>
+        <name>Request_Transaction_Type__c</name>
+    </fields>
+    <fields>
+        <label>Request - Art der Zahlung</label>
+        <name>Request_Type_Of_Payment__c</name>
+    </fields>
+    <fields>
+        <label><!-- Response Code --></label>
+        <name>Response_Code__c</name>
+    </fields>
+    <fields>
+        <label>Antwortnachricht</label>
+        <name>Response_Message__c</name>
+    </fields>
+    <fields>
+        <label>Response-Status-</label>
+        <name>Response_Status__c</name>
+    </fields>
+    <fields>
+        <label>Antwort</label>
+        <name>Response__c</name>
+    </fields>
+    <fields>
+        <label>Übergeordnete Transaktion</label>
+        <name>Transaction__c</name>
+        <relationshipLabel>Transaktionen</relationshipLabel>
+    </fields>
+    <fields>
+        <label>Typ</label>
+        <name>Type__c</name>
+        <picklistValues>
+            <masterLabel>Authorization</masterLabel>
+            <translation><!-- Authorization --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Charge</masterLabel>
+            <translation><!-- Charge --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Refund</masterLabel>
+            <translation><!-- Refund --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Void</masterLabel>
+            <translation><!-- Void --></translation>
+        </picklistValues>
+    </fields>
+    <gender><!-- Neuter --></gender>
+    <layouts>
+        <layout>Transaction Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Gateway Response --></label>
+            <section>Gateway Response</section>
+        </sections>
+        <sections>
+            <label><!-- Payment Processing Details (Valid when Transaction Type is Charge) --></label>
+            <section>Payment Processing Details (Valid when Transaction Type is Charge)</section>
+        </sections>
+        <sections>
+            <label><!-- Request Parameters --></label>
+            <section>Request Parameters</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- Transaction Name --></nameFieldLabel>
+</CustomObjectTranslation>

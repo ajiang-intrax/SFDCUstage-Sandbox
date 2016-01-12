@@ -1,0 +1,435 @@
+<apex:page id="univ_your_groups" docType="html-5.0" applyBodyTag="false" applyHtmlTag="false"
+    controller="university_controller" action="{!checkLogin}"
+    standardStylesheets="false" showHeader="false"  title="Your Groups">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_igi_pt_application /> 
+        <div class="row margin-b4">
+          <div class="col-md-9 center-block center-text">
+            <h1>Your Student Groups</h1>
+            <p class="lead">Intrax faculty-led and customized internship groups give students the opportunity to complete social development projects or gain international business experience while experiencing a new culture abroad. Use this section to manage your groups and the students who participate with them. You can view each group's details, view current students, register new students and view important documents.</p>
+          </div>
+          </div><!--  end row -->
+      <hr class="margin-b6"/>
+      <div class="row">
+        <div class="col-md-12"> 
+          <apex:form styleClass="form-vertical ws-validate" id="webform">
+            <apex:repeat value="{!grList}" var="gr" id="groupRepeat" rendered="{!grList.SIZE > 0}">
+            <div class="modal fade modal-widget" id="myModalUpload" tabindex="-1" role="dialog" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title">Upload Document</h4>                        
+                  </div>
+                  <div class="modal-body">                 
+                    <iframe width="100%" height="400" frameborder="0" scrolling="no" src="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.Parameters.grId}&orgid={!$Organization.Id}&rType=grp&docType={!$CurrentPage.parameters.docType2}&retparam={!retParam}"></iframe>                     
+                  </div>
+                </div>
+              </div>
+            </div>
+                
+           <div class="row margin-b6">  
+          <div class="col-sm-3">  
+            <apex:image styleClass="hidden-xs" url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/gi/badges/countries/')}{!gr.Country__c}.jpg"  />
+          </div>    
+            
+            <div class="col-sm-9">  
+                <!--  Persistent elements -->
+            <div class="h2 no-margin-t"><apex:outputField value="{!gr.Name}" id="groupName"/></div>
+            <div class="icons">
+            <span class="margin-r"><i class="fa fa-map-marker data-label"></i> <apex:outputField value="{!gr.Location__c}" id="groupLocation"/>,&nbsp;<apex:outputField value="{!gr.Country__c}" id="groupCountry"/></span>
+            <span><i class="fa fa-calendar-o data-label"></i> <apex:outputField value="{!gr.Engagement_Start__c}" id="groupEngStart"/> to <apex:outputText value=" {!gr.Engagement_End__c}" id="groupEngEnd"/></span>
+            </div>
+            
+                 <apex:tabPanel styleClass="vs1 margin-t3"  switchType="client" selectedTab="name1" id="theTabPanel">
+        <apex:tab label="Overview" name="name1" id="tabOne">            
+                <apex:outputField value="{!gr.Description__c}" id="groupDesc"/>
+        </apex:tab>
+        
+        <apex:tab label="List of Students" name="name2" id="tabTwo">
+        <!-- List of Students Section -->
+              <div class="margin-b">
+                <apex:outputLink styleClass="btn btn-default" value="/apex/univ_create_application?grId={!gr.Id}&UniversityId={!gr.Account__r.Intrax_Id__c}">
+                    <i class="fa fa-plus"></i><span>Add a Student</span>
+                 </apex:outputLink>
+              </div>
+                <div class="table-responsive">
+                <table class="table vs2">
+                <thead>
+                <tr>
+                <th>Name of Student</th>
+                <th>Email</th>
+                <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <apex:repeat value="{!map_gr_app[gr]}" var="app" id="appRepeat">
+                <tr>
+                <td>
+                    <apex:commandLink html-data-toggle="modal" html-data-target="#studetails" action="{!update_applicant_info}" rerender="ApplicantDetails">
+                        <apex:param name="appInfo" value="{!app.Id}"/>
+                        <apex:param name="groupId" value="{!gr.Id}" />
+                        <apex:outputText value="{!map_app_person[app].First_Name__c} {!map_app_person[app].Last_Name__c}" id="appName"/>
+                    </apex:commandLink>
+                    </td>
+                    <td>
+                    <apex:outputField value="{!map_app_person[app].Email__c}" id="appEmail"/>
+                    </td>
+                    <td>
+                    <apex:outputText value="New" rendered="{!ISBLANK(app.Engagement__c)}"/>
+                    <apex:outputField value="{!app.Engagement__r.Status__c}" rendered="{!NOT(ISNULL(app.Engagement__c))}"/>                     
+                    </td>
+                    
+                </tr>
+                </apex:repeat>
+                </tbody>
+                </table>
+                </div>
+        </apex:tab>
+        
+         <apex:tab label="Important Documents" id="tabThree">         
+         <div class="row margin-b2">
+         <div class="col-sm-12">
+         
+         
+             <div class="btn-group inline-block">                  
+                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    Upload a Document
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" role="menu">
+                    <li>
+                        <apex:commandlink id="groupProposalLink" tabindex="-1"  html-role="menuitem" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit" >
+                            <apex:param name="doctype2" value="Group-Proposal"/>
+                            <apex:param name="grId" value="{!gr.Id}"/>
+                            <span>Upload Group Proposal</span> 
+                        </apex:commandlink>                     
+                    </li>
+                    <li>
+                        <apex:commandlink id="groupAgreeemtnLink" tabindex="-1" html-role="menuitem" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit" >
+                            <apex:param name="doctype2" value="Group-Agreement"/>
+                            <apex:param name="grId" value="{!gr.Id}"/>
+                            <span>Upload Group Agreement</span> 
+                        </apex:commandlink> 
+                    </li>
+                    <li>
+                        <apex:commandlink id="ItineraryLink" tabindex="-1" html-role="menuitem" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit" >
+                            <apex:param name="doctype2" value="Itinerary"/>
+                            <apex:param name="grId" value="{!gr.Id}"/>
+                            <span>Upload Itinerary</span> 
+                        </apex:commandlink> 
+                    </li>
+                    <li>
+                        <apex:commandlink id="InvoiceLink" tabindex="-1" html-role="menuitem" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit" >
+                            <apex:param name="doctype2" value="Invoice"/>
+                            <apex:param name="grId" value="{!gr.Id}"/>
+                            <span>Upload Invoice</span> 
+                        </apex:commandlink> 
+                    </li>
+                    <li>
+                        <apex:commandlink id="ReferenceLink" tabindex="-1" html-role="menuitem" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit" >
+                            <apex:param name="doctype2" value="Reference"/>
+                            <apex:param name="grId" value="{!gr.Id}"/>
+                            <span>Upload Reference</span> 
+                        </apex:commandlink> 
+                    </li>
+                    <li>
+                        <apex:commandlink id="ProofInsuranceLink" tabindex="-1" html-role="menuitem" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit" >
+                            <apex:param name="doctype2" value="Proof-of-Insurance"/>
+                            <apex:param name="grId" value="{!gr.Id}"/>
+                            <span>Upload Proof of Insurance</span> 
+                        </apex:commandlink> 
+                    </li>
+                    <li>
+                        <apex:commandlink id="WelcomeDocLink" tabindex="-1" html-role="menuitem" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit" >
+                            <apex:param name="doctype2" value="Welcome-Document"/>
+                            <apex:param name="grId" value="{!gr.Id}"/>
+                            <span>Upload Welcome Document</span> 
+                        </apex:commandlink> 
+                    </li>
+                    <li>
+                        <apex:commandlink id="CrisisPlanLink" tabindex="-1" html-role="menuitem" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit" >
+                            <apex:param name="doctype2" value="Crisis-Plan"/>
+                            <apex:param name="grId" value="{!gr.Id}"/>
+                            <span>Upload Crisis Plan</span> 
+                        </apex:commandlink> 
+                    </li>
+                    <li>
+                        <apex:commandlink id="PreDepartureLink" tabindex="-1" html-role="menuitem" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit" >
+                            <apex:param name="doctype2" value="Pre-Departure-Orientation-Info"/>
+                            <apex:param name="grId" value="{!gr.Id}"/>
+                            <span>Upload Pre-Departure Orientation</span> 
+                        </apex:commandlink> 
+                    </li>
+                    <li>
+                        <apex:commandlink id="programFeedbackLink" tabindex="-1" html-role="menuitem" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit" >
+                            <apex:param name="doctype2" value="Program-Feedback"/>
+                            <apex:param name="grId" value="{!gr.Id}"/>
+                            <span>Upload Program Feedback</span> 
+                        </apex:commandlink> 
+                    </li>   
+                    <li>
+                        <apex:commandlink id="groupUloadsLink" tabindex="-1" html-role="menuitem" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit" >
+                            <apex:param name="doctype2" value="University-Group-Uploads"/>
+                            <apex:param name="grId" value="{!gr.Id}"/>
+                            <span>Upload Other Group Documents</span> 
+                        </apex:commandlink> 
+                    </li>           
+                  </ul>
+                  </div>
+                  </div><!--  end column -->
+             </div><!--  end row -->
+             
+            
+             <div class="row"> 
+             <div class="col-sm-6 col-md-4">
+                 <div class="univdoclist margin-b">
+                     <label>Program Documents</label><br/>
+                     <apex:outputText value="No documents to display" rendered="{!NOT(mapdocTypesByGroup[gr.Id]['Group-Proposal']) && NOT(mapdocTypesByGroup[gr.Id]['Group-Agreement'])
+                                                                                    && NOT(mapdocTypesByGroup[gr.Id]['Itinerary']) && NOT(mapdocTypesByGroup[gr.Id]['Proof-of-Insurance'])
+                                                                                    && NOT(mapdocTypesByGroup[gr.Id]['Welcome-Document']) && NOT(mapdocTypesByGroup[gr.Id]['Crisis-Plan'])}" /> 
+                     <!-- repeat tag goes here -->
+                     <apex:commandLink action="{!load_by_doctype}" target="_blank" rendered="{!mapdocTypesByGroup[gr.Id]['Group-Proposal']}">
+                       <apex:param name="groupId" value="{!gr.Id}"/>
+                       <apex:param name="dType" value="Group-Proposal"/>
+                       <apex:outputText value="Program Proposal"/> <br/>
+                     </apex:commandLink>
+                     <apex:commandLink action="{!load_by_doctype}" target="_blank" rendered="{!mapdocTypesByGroup[gr.Id]['Program-Feedback']}">
+                       <apex:param name="groupId" value="{!gr.Id}"/>
+                       <apex:param name="dType" value="Program-Feedback"/>
+                       <apex:outputText value="Program Feedback"/> <br/>
+                     </apex:commandLink>
+                     <apex:commandLink action="{!load_by_doctype}" target="_blank" rendered="{!mapdocTypesByGroup[gr.Id]['Group-Agreement']}">
+                       <apex:param name="groupId" value="{!gr.Id}"/>
+                       <apex:param name="dType" value="Group-Agreement"/>
+                       <apex:outputText value="Program Agreement"/> <br/>
+                     </apex:commandLink>
+                     <apex:commandLink action="{!load_by_doctype}" target="_blank" rendered="{!mapdocTypesByGroup[gr.Id]['Itinerary']}">
+                       <apex:param name="groupId" value="{!gr.Id}"/>
+                       <apex:param name="dType" value="Itinerary"/>
+                       <apex:outputText value="Group Itinerary"/> <br/>
+                     </apex:commandLink>        
+                     <apex:commandLink action="{!load_by_doctype}" target="_blank" rendered="{!mapdocTypesByGroup[gr.Id]['Proof-of-Insurance']}">
+                       <apex:param name="groupId" value="{!gr.Id}"/>
+                       <apex:param name="dType" value="Proof-of-Insurance"/>
+                       <apex:outputText value="Certificate of Insurance"/> <br/>
+                     </apex:commandLink>
+                     <apex:commandLink action="{!load_by_doctype}" target="_blank" rendered="{!mapdocTypesByGroup[gr.Id]['Pre-Departure-Orientation-Info']}">
+                       <apex:param name="groupId" value="{!gr.Id}"/>
+                       <apex:param name="dType" value="Pre-Departure-Orientation-Info"/>
+                       <apex:outputText value="Pre-Departure Orientation"/> <br/>
+                     </apex:commandLink>
+                     <apex:commandLink action="{!load_by_doctype}" target="_blank" rendered="{!mapdocTypesByGroup[gr.Id]['Welcome-Document']}">
+                       <apex:param name="groupId" value="{!gr.Id}"/>
+                       <apex:param name="dType" value="Welcome-Document"/>
+                       <apex:outputText value="Welcome Packet"/> <br/>
+                     </apex:commandLink>
+                     <apex:commandLink action="{!load_by_doctype}" target="_blank" rendered="{!mapdocTypesByGroup[gr.Id]['Crisis-Plan']}">
+                       <apex:param name="groupId" value="{!gr.Id}"/>
+                       <apex:param name="dType" value="Crisis-Plan"/>
+                       <apex:outputText value="Crisis Management Plan"/> <br/>
+                     </apex:commandLink>
+                     <apex:commandLink action="{!load_by_doctype}" target="_blank" rendered="{!mapdocTypesByGroup[gr.Id]['Reference']}">
+                       <apex:param name="groupId" value="{!gr.Id}"/>
+                       <apex:param name="dType" value="Reference"/>
+                       <apex:outputText value="Reference"/> <br/>
+                     </apex:commandLink>                 
+                 </div>
+             </div>
+             
+             <div class="col-sm-6 col-md-4">
+                 <div class="univdoclist margin-b">
+                     <label>Invoices</label><br/>
+                     <!-- repeat tag goes here -->
+                     <apex:outputText value="No documents to display" rendered="{!NOT(mapdocTypesByGroup[gr.Id]['Invoice'])}"/>
+                      
+                     <apex:repeat value="{!mapInvoicesByGroup[gr.Id]}" var="item">
+                        <apex:commandLink action="{!load_by_docGuid}" target="_blank">
+                           <apex:param name="docGUID" value="{!item.Document_GUID__c}"/>
+                           <apex:outputText value="Invoice"/> <br/>
+                        </apex:commandLink>
+                     </apex:repeat>
+                </div>         
+             </div>
+         
+             <div class="col-sm-4">
+                <div class="univdoclist margin-b">
+                     <label>Other Documents</label><br/>
+                     <!-- repeat tag goes here -->
+                     <apex:outputText value="No documents to display" rendered="{!NOT(mapdocTypesByGroup[gr.Id]['University-Group-Uploads'])}"/>
+                     <apex:repeat value="{!mapOtherDocsByGroup[gr.Id]}" var="item">
+                        <apex:commandLink action="{!load_by_docGuid}" target="_blank">
+                           <apex:param name="docGUID" value="{!item.Document_GUID__c}"/>
+                           <apex:outputText value="{!item.Name}"/> <br/>
+                        </apex:commandLink>
+                     </apex:repeat>
+                 </div>
+             </div>
+         </div>
+         <!--  end row -->
+         
+         
+         </apex:tab>
+         
+            </apex:tabPanel>         
+            
+            <!-- Modal window -->
+            </div>
+            </div><!--  end row -->
+                
+                
+            </apex:repeat>   
+            
+           <div class="modal fade vs1" id="studetails" tabindex="-1" role="dialog" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-body">
+                      <apex:pageBlock id="ApplicantDetails">
+                <apex:outputPanel layout="block" rendered="{!$CurrentPage.parameters.appInfo != ''}"> 
+                      <div class="row margin-b3">
+                      
+                      <div class="col-sm-12">
+                      <div class="tcell">
+                     <apex:image styleClass="margin-r3" url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/female-profile-med.png')}" rendered="{!personInfo.Gender__c == 'Female'}"/>
+                     <apex:image styleClass="margin-r3" url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/male-profile-med.png')}" rendered="{!personInfo.Gender__c == 'Male'}"/>
+          
+                      </div>
+                      <div class="tcell">
+                       <div class="h2"><apex:outputText value="{!personInfo.First_Name__c} {!personInfo.Last_Name__c}" id="applicantName"/></div>
+                       <a href="mailto:{!personInfo.Email__c};"><apex:outputText value="{!personInfo.Email__c}" id="email"/></a>
+                      </div>
+                      </div>
+                      
+                      </div><!--  end row -->
+                      
+                        
+                        
+                       
+                    <div class="row margin-b3">
+                    <div class="col-xs-6 col-sm-4">
+                    <apex:outputLabel value="Phone"/><br/>              
+                    <apex:outputText value="{!personInfo.Phone_Country_Code__c} {!personInfo.Phone__c}" id="phone"/><br/>
+                    <apex:outputText rendered="{!personInfo.Other_Phone__c != null}"><apex:outputText value="{!personInfo.Phone_Country_Code_Other__c} {!personInfo.Other_Phone__c}" id="phoneOther"/><br/></apex:outputText>  
+                    <apex:outputLabel value="Skype"/><br/>
+                    <apex:outputField value="{!personInfo.Skype_Id__c}" id="skype"/>
+                    </div>
+                    <div class="col-xs-6 col-sm-4">
+                    <apex:outputLabel value="Address"/><br/>
+                    <apex:outputField value="{!applicantInfo.Home_Street_1__c}" id="street1"/><br/>  
+                    <apex:outputText rendered="{!applicantInfo.Home_Street_2__c != null}"><apex:outputField value="{!applicantInfo.Home_Street_2__c}" id="street2"/><br/></apex:outputText>  
+                    <apex:outputText value="{!applicantInfo.Home_City__c}, {!applicantinfo.Home_State__c} {!applicantInfo.Home_Postal_Code__c}" id="city"/><br/>  
+                    <apex:outputField value="{!applicantInfo.Home_Country__c}" id="country"/>
+                    </div>
+                    <div class="col-xs-12 col-sm-4">
+                    <apex:outputLabel value="Date of Birth"/><br/>
+                    <apex:outputField value="{!personInfo.Date_of_Birth__c}" id="birthDate"/><br/>
+                    <apex:outputLabel value="Language Skills"/><br/>
+                    <apex:outputText value="{!applicantInfo.Language_1__c} - {!applicantInfo.Language_1_Proficiency__c}" id="Language1"/><br/>
+                    <apex:outputLabel value="Passport Number"/><br/>
+                    <apex:outputField value="{!applicantInfo.Passport_Number__c}" id="passNumber"/>
+                    </div>
+                     </div><!--  end row -->
+                      <hr/>
+                     <div class="row margin-b3">
+                     <div class="col-sm-12">
+                     <apex:outputLabel value="Skills"/><br/>
+                         <apex:outputField value="{!applicantInfo.Resume__c}" id="skills"/>
+                     </div>
+                     </div><!--  end row -->
+                     <hr/>
+                     <div class="row margin-b3">
+                     <div class="col-sm-4">
+                     <apex:outputLabel value="Special Health Notes"/><br/>
+                     <apex:outputField value="{!personInfo.Health_Concerns__c}" id="healthConcern"/>
+                     </div>
+                     <div class="col-sm-8">
+                     <apex:outputLabel value="Emergency Contacts"/><br/>
+                     <apex:repeat value="{!emergencyList}" var="e" id="emergencyRepeat">
+                        <div class="margin-b">
+                        <apex:outputText value="{!e.First_Name__c} {!e.Last_Name__c}" id="emergencyName"/> - <em><apex:outputText value="{!personInfo.Role_Other__c}" id="emergencyRel"/></em><br/> 
+                        <a href="mailto:{!e.Email__c};"><apex:outputText value="{!e.Email__c}" id="emergencyEmail"/></a><br/> 
+                        <apex:outputText value="{!e.Mobile__c}" id="emergencyMobile"/>
+                        </div>
+                    </apex:repeat> 
+                    </div>
+                      </div><!--  end row -->
+                      
+                       <div class="row">
+                       <div class="col-sm-12">
+                       <div class="box gray">
+                       <apex:outputPanel layout="block" >
+                        <!--    <apex:outputText id="programAgreeIndicated" rendered="{!applicantInfo.Terms_Accepted__c}"><i class="fa fa-check"></i> Signed Intrax program agreement <br/></apex:outputText>                   
+                        -->
+                            <apex:outputText id="helathIndicated" rendered="{!isHealthInfoCompleted}"><i class="fa fa-check"></i> Submitted health information <br/></apex:outputText>                          
+                            <apex:outputText id="appFeeReceived" rendered="{!isAppFeeCompleted}"><i class="fa fa-check"></i> Paid program deposit <br/></apex:outputText>                           
+                            <apex:outputText id="fullPaymentReceived" rendered="{!isAppPaymentCompleted}"><i class="fa fa-check"></i> Paid full program fee <br/></apex:outputText>
+                            
+                        <!--    <apex:outputText id="NOTprogramAgreeIndicated" rendered="{!NOT(applicantInfo.Terms_Accepted__c)}">Has not signed Intrax program agreement <br/></apex:outputText> 
+                        -->
+                            <apex:outputText id="NOThealthIndicated" rendered="{!NOT(isHealthInfoCompleted)}">Has not submitted health information <br/></apex:outputText>
+                            <apex:outputText id="NOTappFeeReceived" rendered="{!NOT(isAppFeeCompleted)}">Has not paid program deposit <br/></apex:outputText>
+                            <apex:outputText id="NOTFullpaymentReceived" rendered="{!NOT(isAppPaymentCompleted)}"> Has not paid full program fee <br/></apex:outputText>
+                    </apex:outputPanel>
+                    </div>
+                    </div>
+                      </div><!--  end row -->
+                    
+                    
+                    
+                </apex:outputPanel>
+            </apex:pageBlock>
+                        </div>
+                        <a class="closebtn" data-dismiss="modal">
+                            <span class="fa-stack fa-lg ">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-times fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </div>
+                  </div>
+                </div>  
+            
+            <!-- This is the modal window !!! -->
+            <!-- 
+            <div class="modal fade modal-widget" id="myModalUpload" tabindex="-1" role="dialog" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title">Upload Document</h4>
+                    <apex:outputText value="{!fileUploadUrl}pid={!ProgId}&aid=&orgid={!$Organization.Id}&docType=group-documents&retparam={!retParam}"/>
+                  </div>
+                  <div class="modal-body">                     
+                    <!-- <iframe width="100%" height="400" frameborder="0" scrolling="no" src="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType={!$CurrentPage.parameters.docType2}&retparam={!retParam}"></iframe>
+                    <iframe width="100%" height="400" frameborder="0" scrolling="no" src="{!fileUploadUrl}pid={!ProgId}&aid=a2h180000008S9S&orgid={!$Organization.Id}&docType=group-documents&retparam={!retParam}"></iframe>
+                  </div>
+                </div>
+              </div>
+            </div>-->
+            
+            
+            
+          </apex:form>
+        </div>
+        
+       
+      </div>
+      <!-- end row --> 
+     <script>
+        var j$ = jQuery.noConflict();
+        
+        function confDelete(){
+        j$('#myModal').modal();
+        } 
+          
+        function popModal(){
+        var auxerr= j$('.custom-error-pagelevel').attr('role');
+        //alert(auxerr);
+            if(auxerr=="alert"){
+            }else{
+                j$('#myModalUpload').modal();
+            }
+        }           
+    </script> 
+    </apex:define>
+  </apex:composition>
+</apex:page>

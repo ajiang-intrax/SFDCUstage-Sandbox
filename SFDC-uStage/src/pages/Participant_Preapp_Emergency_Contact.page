@@ -1,0 +1,94 @@
+<apex:page id="Participant_PreApp_Emergency_Contact" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper">
+         <apex:form id="form"> 
+           <div class="page-header clearfix">
+      <h1>  
+              <apex:outputText value="Intrax Global Internship Application" rendered="{! IF(applicantInfo.Intrax_Program__c == 'Internship', true, false)}"/>
+              <apex:outputText value="Work and Travel Application" rendered="{! IF(applicantInfo.Intrax_Program__c == 'Work Travel' , true, false)}"/>
+              <!--  <apex:outputText value=" - {!personInfo.First_Name__c} {!personInfo.Last_Name__c}" rendered="{!IsPartner}" />-->
+           </h1>
+      
+      <div class="back-to-main"><apex:outputLink id="BackToMain" value="/apex/Participant_preapp_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+          </div>
+          <h2>Emergency Contact Info</h2>
+          <div class="white-box clearfix">
+   
+       
+          <div class="panel two_thirds">
+              <p>Please provide the contact information for anyone who can be notified in the case of an emergency.</p>
+            <apex:outputPanel styleClass="form-row" rendered="{!IF(EmergencyInfoList.Size > 0, false, true)}" >
+                <apex:outputLabel id="noRecords" ><span class="no-records">No record(s) to display.</span></apex:outputLabel>
+            </apex:outputPanel>
+            
+            
+                <apex:pageBlock id="Block_EmergencyInfoList" rendered="{!IF(EmergencyInfoList.Size > 0, true, false)}" >
+                     <apex:pageBlockTable id="Table_EmergencyInfoList" styleClass="pageblocktable" value="{!EmergencyInfoList}" var="item">
+                            <apex:column >
+                                <apex:outputLink id="EditLink" value="/apex/Participant_preapp_emergency_contact_new?id={!item.Applicant_Info__c}&perid={!item.id}&role={!item.Role__c}"> Edit</apex:outputLink>  
+                            </apex:column>
+                            <apex:column >
+                            <apex:commandLink value="Delete" action="{!deleteEmergencyContact}" immediate="true" onclick="return ConfirmDelete('Are You Sure ?');">
+                                <apex:param name="emergencyContactId" value="{!item.id}" assignTo="{!emergencyContactId}"/>
+                            </apex:commandLink>
+                          </apex:column>
+                           <apex:column value="{!item.First_Name__c} {!item.Last_Name__c}" headerValue="Name" /> 
+                           <apex:column value="{!item.Role__c}" headerValue="Relationship" rendered="{! IF(NOT(item.Role__c == 'Other'), true, false)}" />
+                           <apex:column value="{!item.Role_Other__c}" headerValue="Relationship" rendered="{! IF(NOT(item.Role__c == 'Other'), false, true)}" /> 
+                           <apex:column value="{!item.Email__c}"/>
+                     </apex:pageBlockTable>  
+                </apex:pageBlock>
+                
+                <apex:outputPanel styleClass="form-row" style="float:right;" rendered="{!IF(applicantInfo.Intrax_Program__c == 'Internship', true, false)}">
+                    <apex:inputField id="EmergencyContactComplete" value="{!applicantInfo.Emergency_Contact_Complete__c}" required="false"/>
+                    <apex:outputText id="AddedAll" value="I have added all of my emergency contacts" rendered="{!IF(EmergencyInfoList.Size > 0, true, false)}" />
+                    <apex:outputText id="NoEmergency" value="I do not have any emergency contacts" rendered="{!IF(EmergencyInfoList.Size > 0, false, true)}" />
+                </apex:outputPanel>
+                
+                
+                <div class="form-row">
+                    <div class="form-link">
+                        <apex:commandlink id="AddNew" styleClass="add" action="{!navigator}">
+                          <i class="icon-plus-sign"></i>  
+                          <apex:param name="nextPage" value="/apex/Participant_preapp_emergency_contact_new"/>
+                          <!-- <apex:param name="add" value="true" assignTo="{!add}"/> -->
+                          <!--  <apex:param name="prePopulation" value="false"/>-->
+                          <apex:param name="role" value="EmergencyContact" assignTo="{!role}"/>  
+                          <apex:param name="reDirectPage" value="true"/>
+                          <apex:commandButton value="Add new Emergency Contact"/>
+                        </apex:commandlink>
+                      </div>
+                </div>
+                <div class="form-row">
+                                      
+                    <div class="form-link">
+                        <apex:outputLink id="BackLink" styleClass="back" value="/apex/Participant_preapp_contact_details?id={!applicantInfo.Id}">
+                        <i class="icon-chevron-left"></i>
+                        <span>Back</span>
+                        </apex:outputLink>
+                    </div>
+                      <div class="form-button">
+                        <apex:commandlink id="Continue" styleClass="next" action="{!navigator}">
+                          <apex:param name="nextPage" value="/apex/Participant_preapp_education_details"/>
+                          <!-- <apex:param name="add" value="true" assignTo="{!add}"/> -->
+                          <apex:param name="reDirectPage" value="true"/>
+                          <apex:param name="pageId" value="005"/>
+                          <!--  <apex:param name="docType" value="Parent" assignTo="{!docType}"/> -->
+                          <apex:commandButton value="Continue" />
+                          <i class="icon-chevron-right"></i>   
+                        </apex:commandlink>
+                      </div>           
+                </div>
+            
+                </div>
+                 <div class="panel one_third last aside">
+                     <!-- <c:Badge_Centers_Contact />      -->
+                 </div>
+                
+                </div>
+          </apex:form>
+        </div>
+      </apex:define>
+    </apex:composition>
+</apex:page>

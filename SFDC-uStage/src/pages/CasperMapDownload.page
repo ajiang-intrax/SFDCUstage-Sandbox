@@ -1,0 +1,10 @@
+<apex:page sidebar="false" controller="CheckCasperId" cache="true" 
+        contentType="application/octet-stream#output.csv" 
+        >
+    
+       <apex:repeat value="{!AppId}" var="app" rendered="{!NOT(ISNULL(AppId))}">
+          {!app.applnid},{!app.casper},{!app.asset},{!app.applnName}
+      </apex:repeat>
+      
+
+</apex:page>

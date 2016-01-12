@@ -1,0 +1,214 @@
+<apex:page docType="HTML-5.0" id="Registration" showHeader="false" language="{!langFromURL}"
+    standardcontroller="User" standardStylesheets="false"
+    extensions="SiteRegisterController" title="Registration" action="{!checkLogin}">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+    <style>
+    .portal-entry{padding-top:30px;}
+    </style>
+      <div class="row margin-t">
+        <div class="col-sm-7 col-md-6 col-lg-5 no-float center-block">
+          <div class="portal-entry clearfix">
+            <div class="row">
+              <div class="col-md-10 col-md-offset-1">
+                <c:block_header_registration userAgentCheck="{!userAgentCheck}" uInParameter="{!uInParameter}"/>
+                <apex:variable value="last" var="lastfield" rendered="{!$Site.Name == 'AuPairCare'}" id="lastfield"/>
+                
+                <apex:outputPanel layout="block" rendered="{!isService = true}">
+                <apex:outputPanel layout="block" rendered="{!uInParameter != null || $CurrentPage.parameters.PartnerApp == 'true'}">
+               
+                <apex:outputText rendered="{!CONTAINS(uInParameter,'APCHF') && uInParameter != null}">
+                  <h1 class="no-margin">Find an Au Pair</h1>
+                  <p class="lead text-center"> Start your profile to view au pairs and more! </p>
+                </apex:outputText>
+                <apex:outputText rendered="{!CONTAINS(uInParameter,'APCPT') && uInParameter != null}">
+                  <h1 class="no-margin">Become an Au Pair</h1>
+                  <p class="lead text-center"> Start your application today! </p>
+                </apex:outputText>
+                <apex:outputText rendered="{!CONTAINS(uInParameter,'AYHF') && uInParameter != null}">
+                  <h1 class="margin-b">Create an Account</h1>
+                </apex:outputText>
+                <apex:outputText rendered="{!CONTAINS(uInParameter,'AYPT') && uInParameter != null}">
+                  <h1 class="margin-b">Create an Account</h1>
+                </apex:outputText>
+                <apex:outputText rendered="{!CONTAINS(uInParameter,'CNPT') && uInParameter != null}">
+                <h1 class="margin-b">
+                  <apex:outputText value="{!$Label.T_0266}" />
+                </h1>
+                </apex:outputText>
+                <apex:outputText rendered="{!CONTAINS(uInParameter,'IGIG') && uInParameter != null}">
+                  <h1 class="margin-b">Create an Account</h1>
+                </apex:outputText>
+                <apex:outputText rendered="{!CONTAINS(uInParameter,'IGIC') && uInParameter != null}">
+                  <h1 class="margin-b">Create an Account</h1>
+                </apex:outputText>
+                <apex:outputText rendered="{!CONTAINS(uInParameter,'WTPT') && uInParameter != null}">
+                  <h1 class="margin-b">Create an Account</h1>
+                </apex:outputText>
+              
+                <apex:form forceSSL="true" id="RegForm" styleClass="ws-validate form-nolabel register">
+                  <apex:pageMessages />
+                  <apex:outputPanel id="exUser">
+                    <apex:outputPanel styleClass="messageCell margin-b2" layout="block" rendered="{!existingUser}">
+                      <p>{!$Label.T_0358}</p>
+                      <ul class="no-margin">
+                        <li>
+                          <apex:outputLink value="{!$Site.Prefix}/AppEngine_SiteLoginPage?{!appendSet}" rendered="{!ISPICKVAL($User.UserType,'Guest')}" target="_self">
+                            <apex:outputText value="{!$Label.T_0270}" />
+                          </apex:outputLink>
+                        </li>
+                        <li>
+                          <apex:outputLink value="{!$Site.Prefix}/AppEngine_ForgotPassword?{!appendSet}" target="_self"><span>Forgot your password?</span></apex:outputLink>
+                        </li>
+                      </ul>
+                    </apex:outputPanel>
+                  </apex:outputPanel>
+                  <div class="form-group">
+                    <apex:inputText styleClass="form-control input-lg req first" id="firstname" onblur="CapitalizeName(event.target);" rendered="{!IF($CurrentPage.parameters.partnerApp == null, true, false)}" value="{!firstname}"  html-placeholder="{!$Label.T_0004}" />
+                    <apex:outputText styleClass="form-control input-lg req" id="firstname-output" value="{!firstname}"  rendered="{!IF($CurrentPage.parameters.partnerApp == null, false, true) }"/>
+                  </div>
+                  <div class="form-group">
+                    <apex:inputText styleClass="form-control input-lg req" onblur="CapitalizeName(event.target);" rendered="{!IF($CurrentPage.parameters.partnerApp == null, true, false)}"
+                                        id="lastname" value="{!lastname}" html-placeholder="{!$Label.T_0005}" />
+                    <apex:outputText styleClass="form-control input-lg req" id="lastname-output" value="{!lastname}" rendered="{!IF($CurrentPage.parameters.partnerApp == null, false, true) }"/>
+                  </div>
+                  <div class="form-group">
+                    <apex:inputText html-data-toggle="popover"
+                                        html-data-content="{!$Label.T_0267}"
+                                        styleClass="form-control input-lg req" id="email" value="{!email}" disabled="{!IF(uInParameter == 'IGIC', true, false)}" rendered="{!IF($CurrentPage.parameters.partnerApp == null, true, false)}"
+                                        html-placeholder="{!$Label.T_0006}" />
+                    <apex:outputText styleClass="form-control input-lg req" id="email-output" value="{!email}" rendered="{!IF($CurrentPage.parameters.partnerApp == null, false, true) }"/>
+                  </div>
+                  <div class="form-group">
+                    <apex:inputText styleClass="form-control input-lg req"
+                                        id="ConfEmail" value="{!confirmEmail}" 
+                                        html-placeholder="{!$Label.T_0268}"/>
+                  </div>
+                  <apex:outputPanel layout="block" styleClass="form-group"
+                                    rendered="{!NOT(isUserInterestinURL|| $CurrentPage.parameters.partnerApp != null)}">
+                    <apex:selectList onchange="selectplh(event.target);" styleClass="form-control input-lg req" id="interests"
+                                        value="{!User_Interests}" multiselect="false" size="1">
+                      <apex:selectOption itemValue="" itemLabel="{!$Label.T_0007}" />
+                      <apex:selectOptions value="{!Interests}" />
+                    </apex:selectList>
+                    <apex:message for="interests" styleclass="custom-error-radio" />
+                  </apex:outputPanel>
+                  <div class="form-group">
+                    <apex:inputSecret styleClass="form-control input-lg req"
+                                        html-data-toggle="popover"
+                                        html-data-content="{!$Label.T_0016}"
+                                        id="password" value="{!password}" html-placeholder="{!$Label.T_0009}" />
+                  </div>
+                  <div class="form-group">
+                    <apex:inputSecret styleClass="form-control input-lg req {!lastfield}"
+                                        id="confirmPassword" value="{!confirmPassword}"
+                                        html-placeholder="{!$Label.T_0010}" />
+                  </div>
+                  <apex:outputPanel layout="block" styleClass="form-group"
+                                    rendered="{!NOT(CONTAINS(uInParameter,'APCHF') || CONTAINS(uInParameter,'APCPT'))}">
+                    <apex:selectList styleClass="form-control input-lg req"
+                                        id="lc" value="{!Locale}" size="1">
+                      <apex:selectOption itemValue=" " itemLabel="Preferred Date Format" />
+                      <apex:selectOption itemValue="en_US" itemLabel="MM/DD/YYYY" />
+                      <apex:selectOption itemValue="en_GB" itemLabel="DD/MM/YYYY" />
+                    </apex:selectList>
+                  </apex:outputPanel>
+                  <apex:outputPanel layout="block" styleClass="form-group"
+                                    rendered="{!NOT(CONTAINS(uInParameter,'APCHF') || CONTAINS(uInParameter,'APCPT'))}">
+                    <apex:selectList onchange="selectplh(event.target);" styleClass="form-control input-lg last"
+                                         id="timezone" value="{!TimeZone}"
+                                        size="1">
+                      <apex:selectOption itemValue=" " itemLabel="{!$Label.T_0012}" />
+                      <apex:selectOptions value="{!TimeZones}" />
+                    </apex:selectList>
+                  </apex:outputPanel>
+                  <div class="form-group clearfix no-margin"> 
+                    <!-- <apex:commandLink styleClass="btn btn-primary btn-lg btn-block"
+                                        action="{!registerUser}" rerender="RegForm">
+                                        <apex:commandButton value="{!$Label.T_0269}" />
+                                    </apex:commandLink>  -->
+                    
+                    <apex:commandLink styleClass="btn btn-primary btn-lg btn-block"
+                                        action="{!registerUser}" >
+                      <apex:commandButton value="{!$Label.T_0269}" />
+                    </apex:commandLink>
+                    <apex:outputLink styleClass="btn btn-link btn-lg btn-block margin-t"
+                                        value="{!$Site.Prefix}/AppEngine_SiteLoginPage?{!appendSet}"
+                                        rendered="{!ISPICKVAL($User.UserType,'Guest')}" target="_self"> <span><strong>
+                      <apex:outputText value="{!$Label.T_0270}" />
+                      </strong></span> </apex:outputLink>
+                  </div>
+                </apex:form>
+                
+                </apex:outputPanel>
+                
+                <!--  <apex:outputPanel layout="block" rendered="{!uInParameter == null && $Site.Prefix == '/intraxappengine' && $CurrentPage.parameters.PartnerApp != 'true'}">
+                                   <h1 class="margin-b">Registration Not Available</h1>
+                                  <p class="lead text-center">
+                                Please ask your partner agency to provide you with the correct URL to register.
+                                </p>     
+                           </apex:outputpanel>  -->
+                           
+                           <apex:outputPanel layout="block" rendered="{!uInParameter == null && $Site.Prefix == '/intraxappengine' && $CurrentPage.parameters.PartnerApp != 'true'}">
+                                   <h1 class="margin-b">Registration Not Available</h1>
+                                  <p class="lead text-center">
+                                Looks like this link is no longer active. Please re-visit the website of the program you are interested in and apply again.
+                                </p>     
+                           </apex:outputpanel> 
+                           
+                           </apex:outputPanel>
+                           <apex:outputpanel layout="block" rendered="{!isService = false}"> 
+                                   <h1 class="margin-b">Thank You</h1>
+                                  <p class="lead text-center">
+                                    Thank you for your interest in our Intrax programs. We are sorry to inform you that we do not currently service you for {!notServiceUserInterest}. Please visit our website to see if Intrax has other programs for you. We apologize for the inconvenience and wish you good luck with your future endeavors.
+                                </p>
+                                <div class="lead text-center">
+                                  <apex:outputLink value="http://www.intraxinc.com/"  target="_self"><span><Strong>Find More About Intrax ></Strong></span></apex:outputLink>
+                                </div>
+                                                       <hr style="height:20px" />
+                                                       <p class="lead text-center">Entered Incorrect Information?</p>
+                                                       <div class="lead text-center"> 
+                                                              <apex:outputLink value="{!$Site.Prefix}/AppEngine_SiteRegister?{!appendSet}" target="_self"><span><Strong>Apply Again ></Strong></span></apex:outputLink>              
+                                                       </div>               
+                           </apex:outputpanel>
+                           
+                          
+                           
+                           
+            </div>
+            <!--  end column --> 
+          </div>
+          <!--  end  row --> 
+           </div>
+        </div>
+        <!--  end column --> 
+      </div>
+      <!--  end  row --> 
+      
+     
+      <style>
+select.form-control{color:#a7a7a7;}
+select{color:#a7a7a7;}
+select option{color:#202020;}
+</style>
+      <script>  
+var j$ = jQuery.noConflict();
+   
+function selectplh(target){ 
+j$(document).ready(function () {
+var svalue = j$('select option:selected').val();     
+    if(svalue == "") {
+    j$(target).css('color', '#a7a7a7');
+}    
+else {
+    j$(target).css('color', '#202020');
+}
+});
+};
+
+selectplh();
+</script> 
+<c:block_audience_router userAgentCheck="{!userAgentCheck}" uInParameter="{!uInParameter}"/> 
+    </apex:define>
+  </apex:composition>
+</apex:page>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Quote__c.Quote_Product__r.Quote_Rate_Plan__r.Quote_Rate_Plan_Charge__r$Name</field>
+    </columns>
+    <columns>
+        <field>Quote__c.Quote_Product__r$Product_Code__c</field>
+    </columns>
+    <columns>
+        <field>Quote__c.Quote_Product__r$Name</field>
+    </columns>
+    <columns>
+        <field>Quote__c.Quote_Product__r$Description__c</field>
+    </columns>
+    <columns>
+        <field>Quote__c.Quote_Product__r.Quote_Rate_Plan__r.Quote_Rate_Plan_Charge__r$Quantity__c</field>
+    </columns>
+    <columns>
+        <field>Quote__c.Quote_Product__r.Quote_Rate_Plan__r.Quote_Rate_Plan_Charge__r$Price_Type__c</field>
+    </columns>
+    <columns>
+        <field>Quote__c.Quote_Product__r.Quote_Rate_Plan__r.Quote_Rate_Plan_Charge__r$Price__c</field>
+    </columns>
+    <columns>
+        <field>Quote__c.Quote_Product__r.Quote_Rate_Plan__r.Quote_Rate_Plan_Charge__r$Tax__c</field>
+    </columns>
+    <columns>
+        <field>Quote__c.Quote_Product__r.Quote_Rate_Plan__r.Quote_Rate_Plan_Charge__r$VAT__c</field>
+    </columns>
+    <columns>
+        <field>Quote__c.Quote_Product__r.Quote_Rate_Plan__r.Quote_Rate_Plan_Charge__r$Discount_Value__c</field>
+    </columns>
+    <columns>
+        <field>Quote__c.Quote_Product__r.Quote_Rate_Plan__r.Quote_Rate_Plan_Charge__r$Row_Total__c</field>
+    </columns>
+    <description>Report for conga - pulls out quote charges that are of type recurring</description>
+    <filter>
+        <criteriaItems>
+            <column>Quote__c$Id</column>
+            <operator>equals</operator>
+            <value></value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Quote__c.Quote_Product__r.Quote_Rate_Plan__r.Quote_Rate_Plan_Charge__r$Price_Type__c</column>
+            <operator>notEqual</operator>
+            <value>One Time</value>
+        </criteriaItems>
+        <language>en_US</language>
+    </filter>
+    <format>Tabular</format>
+    <name>Quote Template-Recurring Charges</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Quote_with_quote_products_and_charges__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Quote__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

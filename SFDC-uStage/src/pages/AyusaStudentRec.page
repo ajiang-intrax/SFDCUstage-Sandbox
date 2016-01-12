@@ -1,0 +1,16 @@
+<apex:page docType="html-5.0" StandardController="Applicant_Info__c" extensions="AppEngine_Controller" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper" id="ayusa-student-preapp-academic-language-skills">
+          <h1>Ayusa School Recommendation Form</h1>
+          <div class="white-box clearfix">
+        <div class="flow two_thirds">
+                <flow:interview showHelp="false" buttonLocation="bottom" name="AY_Student_Recommendation" finishLocation="{!pageStuRecFin}">
+                <apex:param name="pApplicantInfoId" value="{!$CurrentPage.parameters.Id}"/> 
+            </flow:interview>  
+              </div>
+        </div>
+      </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

@@ -1,0 +1,124 @@
+<apex:page id="page" standardController="Applicant_Info__c"
+    extensions="AppEngine_Controller" docType="html-5.0"
+    standardStylesheets="false" showHeader="false">
+   
+        <apex:composition template="IntraxTemplate_Vs2">
+            <apex:define name="body">
+              <apex:form >
+                <!-- 
+                <div class="row-fluid">
+                <div class="span12">
+                <h1>Applications</h1>
+                </div>
+                </div>
+                -->
+                
+                <div class="row-fluid">
+
+                    <div class="span12">
+
+                        <div class="block">
+                        <div class="block-header"><h3>Create a New Application</h3></div>
+                            <div class="block-body">
+<p><em> All fields marked with an asterisk (<span class="required no-padding">*</span>) are required</em></p>
+                                    <apex:pageMessages />
+                                    <div class="form-row">
+                                        <div class="form-label left">
+                                            First Name<span class="required">*</span>
+                                        </div>
+                                        <div class="form-field">
+                                            <apex:inputField id="FirstName" value="{!applicantInfo.First_Name__c}"
+                                                required="true" />
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-label left ">
+                                            Last Name<span class="required">*</span>
+                                        </div>
+                                        <div class="form-field">
+                                            <apex:inputField id="LastName" value="{!applicantInfo.Last_Name__c}"
+                                                required="true" />
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-label left ">
+                                            Email<span class="required">*</span>
+                                        </div>
+                                        <div class="form-field">
+                                            <apex:inputField id="Email" value="{!applicantInfo.Email__c}"
+                                                required="true" />
+                                        </div>
+                                    </div>
+                                    
+                                    <p>Please use the dropdown below to select the type of application you would like to start.</p>
+
+                                <div class="clearfix">
+
+                                 
+                                    
+
+                                    <div class="form-link no-margin">
+                                        <apex:outputLink id="BackLink" styleClass="back"
+                                            value="/apex/pr_app_list">
+                                            <i class="icon-chevron-left"></i>
+                                            <span>Back</span>
+                                        </apex:outputLink>
+                                    </div>
+                                    
+                                    
+                                    <div class="btn-group margin-l float ">
+                                        <a class="btn btn-green dropdown-toggle"
+                                            data-toggle="dropdown" href="#"> Start a New Application
+                                            <span class="caret"></span>
+                                        </a>
+
+                                        <ul class="dropdown-menu">
+                                        
+                                          <li>  <apex:commandlink action="{!navigator}" rendered="{!IF(CONTAINS(PartnerIntraxPrograms, 'Internship'), true, false)}">
+                                                    <apex:param name="nextPage" value="/apex/igi_pt_app_personal_info" />
+                                                    <apex:param name="reDirectPage" value="true" />
+                                                    <apex:param name="app" value="IGI" assignTo="{!app}" />
+                                                    <apex:param name="role" value="Student" assignTo="{!role}" />
+                                                    <apex:param name="partnerApp" value="true" />
+                                                    <apex:commandButton value="Intrax Global Internship Application"
+                                                        onclick="disable_button(this);" />
+                                                </apex:commandlink>
+                                                </li>
+                                            <li><apex:commandlink action="{!navigator}" rendered="{!IF(CONTAINS(PartnerIntraxPrograms, 'Work Travel'), true, false)}">
+                                                    <apex:param name="nextPage"
+                                                        value="/apex/participant_preapp_home" />
+                                                    <apex:param name="reDirectPage" value="true" />
+                                                    <apex:param name="app" value="WT" assignTo="{!app}" />
+                                                    <apex:param name="role" value="Student" assignTo="{!role}" />
+                                                    <apex:param name="partnerApp" value="true" />
+                                                    <apex:commandButton value="Work and Travel Application"
+                                                        onclick="disable_button(this);" />
+                                                </apex:commandlink></li>
+
+
+                                        </ul>
+                                        
+
+                                    </div>
+                                    <!-- end btn group -->
+
+                                </div>
+                                    
+                                    
+                                </div> <!--  end span -->
+
+                                
+
+                        </div>
+
+
+                    </div>
+                    <!-- end span-->
+                </div>
+                <!-- end row -->
+                </apex:form>
+            </apex:define>
+        </apex:composition>
+  
+
+</apex:page>

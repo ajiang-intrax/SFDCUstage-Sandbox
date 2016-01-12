@@ -1,0 +1,20 @@
+<apex:page standardController="Sevis__c" extensions="SevisListActionController" recordSetVar="sevisRecs" standardStyleSheets="false" action="{!getPaymentData}" showheader="false" contentType="text/xml">
+        <transmission>
+        <apex:repeat value="{!selected}" var="sevisRec">
+        <student>
+          <sevisID><apex:outputText value="{!sevisRec.SEVIS_ID__c}"/></sevisID>
+          <firstName><apex:outputText value="{!sevisAccounts[sevisRec.Id].FirstName + ' ' + sevisAccounts[sevisRec.Id].Middle_Name__pc}"/></firstName>
+          <lastName><apex:outputText value="{!sevisAccounts[sevisRec.Id].LastName}"/></lastName>
+          <emailAddress><apex:outputText value="{!sevisAccounts[sevisRec.Id].PersonEmail}"/></emailAddress>
+          <birthDate><apex:outputText value="{0,date,yyyy-MM-dd}"><apex:param value="{!sevisAccounts[sevisRec.Id].PersonBirthDate}"/></apex:outputText></birthDate>
+          <evProgramNumber><apex:outputText value="{!sevisPaymentConstants[sevisRec.Id]['evProgramNumber']}"/></evProgramNumber>
+          <evCategory><apex:outputText value="{!sevisPaymentConstants[sevisRec.Id]['evCategory']}"/></evCategory>
+          <fee><apex:outputText value="{!sevisPaymentConstants[sevisRec.Id]['fee']}"/></fee>
+        </student>
+        </apex:repeat>
+        <controlRecord>
+            <totalRecords><apex:outputText value="{!selectedSevis.size}"/></totalRecords>
+            <totalFees><apex:outputText value="{!totalValue}"/></totalFees>
+        </controlRecord>
+        </transmission>
+</apex:page>

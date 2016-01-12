@@ -1,0 +1,149 @@
+<apex:page cache="false" controller="invoiceit_s.ControllerSitePaymentProcess" sidebar="false" showHeader="false" tabStyle="Account" title="PayInvoice">
+  <body >
+  <!-- Load the customer css -->
+  <apex:outputpanel rendered="{!sPaymentCss != null}">
+      <apex:stylesheet value="{!sBaseURL}{!$Site.Prefix}/resource/payment_defaultcss"/>
+  </apex:outputpanel>
+  
+  <!-- Load our default css -->
+  <apex:outputpanel rendered="{!sPaymentCss == null}">
+      <apex:stylesheet value="{!URLFOR($Resource.invoiceit_s__InvoiceIt, 'css/payment_css.css')}"/>
+  </apex:outputpanel>
+  
+  <div class="payment_MainFrame">
+    <div class="payment_InnerFrame">
+        <apex:image rendered="{!isLogoExist}" url="{!sBaseURL}{!$Site.Prefix}/resource/logo"/><br/><br/> 
+        <apex:pageMessages />
+        <!-- 
+        Modified By     : Rama Krishna
+        Modified Date   : 12 june 2013
+        JIRA Task       : INVOICEIT-194
+        Comments        : if the account id is null ,rendered the invoice detail
+        -->
+        <apex:outputPanel rendered="{! NOT(isAcountPayment) && amountToBeProcessed > 0 && $CurrentPage.parameters.Id != null && (invoice.Invoice_Status__c == 'Posted' || invoice.Invoice_State__c == 'Proforma' )}">
+            <apex:outputPanel rendered="{!invoice.invoiceit_s__Order__c != null}">
+                <h1>
+                    <apex:outputLabel value="{!$Label.Payment_Sales_Order}" />
+                    <apex:outputLabel value="{!invoice.Order__r.Name}"/>
+                </h1>    
+            </apex:outputPanel>
+            
+            <apex:variable value="{!invoice.Account__r}" var="AccountBilling" /> 
+            <apex:variable value="{!invoice.Billing_Contact__r}" var="InvoiceBilling" />
+            <br/><br/>
+            <h2>
+                <apex:outputLabel value="{!$Label.Payment_Account_Information}" />
+            </h2><br/>
+            <p>    
+                <apex:repeat var="api" value="{!$ObjectType.Account.FieldSets.invoiceit_s__Invoice_Payment_page_Account_Fields}">
+                    <apex:outputLabel value="{!account[api]}<br>"  rendered="{!account[api] != null}" escape="false"/>
+                </apex:repeat> 
+            </p> 
+            
+            <h2>
+                <apex:outputLabel value="{!$Label.Payment_Billing_Contact}" />
+            </h2><br/>
+            <p>
+                <apex:outputLabel value="{!InvoiceBilling.Name}<br>" escape="false" />
+                <apex:outputLabel value="{!InvoiceBilling.MailingStreet}<br>"  rendered="{!InvoiceBilling.MailingStreet != null}" escape="false" />
+                <apex:outputLabel value="{!InvoiceBilling.MailingCity}<br>" rendered="{!InvoiceBilling.MailingCity != null}" escape="false"/>
+                <apex:outputLabel value="{!InvoiceBilling.MailingState}<br>" rendered="{!InvoiceBilling.MailingState != null}" escape="false"/>
+                <apex:outputLabel value="{!InvoiceBilling.MailingCountry}<br>" rendered="{!InvoiceBilling.MailingCountry != null}" escape="false"/>
+                <apex:outputLabel value="{!InvoiceBilling.MailingPostalCode}<br>" rendered="{!InvoiceBilling.MailingPostalCode != null}" escape="false"/>  
+            </p>    
+            <br/>
+            
+            <h2>
+                <apex:outputLabel value="{!$Label.Payment_Invoice_Details}"  />
+            </h2><br/>
+            <p>
+                <apex:outputLabel value="{!$Label.Payment_Invoice} : {!invoice.Name}"  /><br/>
+                <h2>
+                    <apex:outputLabel value="{!$Label.Payment_Amount_Due}" /> 
+                    <apex:outputLabel value="{!invoice.CurrencyL__r.invoiceit_s__Currency_Symbol__c}" />
+                    <apex:outputField value="{!invoice.invoiceit_s__Payment_Request_Amount__c}" />
+                    &nbsp;
+                    (<apex:outputLabel value="{!invoice.CurrencyL__r.name}" />)
+                </h2>    
+            </p>
+            <apex:form >
+                <center>
+                    <apex:commandButton action="{!checkOut}" value="{!$Label.Button_Pay_Online}"  status="refreshContent" styleClass="button" rendered="{!gateWayToUse != ''}"/>
+                </center>
+            </apex:form>
+       </apex:outputPanel> 
+        
+        <!-- 
+        Modified By     : Rama Krishna
+        Created  Date   : 12 june 2013 (created Below Out panel)
+        Modified Date   : 19 june 2013
+        JIRA Task       : INVOICEIT-194
+        Comments        : displaying the account details for the Request Advance Payment.
+        -->      
+       <apex:outputPanel rendered="{!isAcountPayment}">
+           <apex:form >
+           <div class="payment_MainFrame">
+            <div class="payment_InnerFrame">
+            <table>
+              <tbody>
+               <tr>
+                  <td><h2><apex:outputLabel value="Account Detail" /></h2></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <br/>
+                  <td><h2><apex:outputLabel value="Please enter the Amount in the form below: " /></h2></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td><h2><apex:outputLabel value="Account Name :"/></h2></td>
+                  <td><apex:outputText value=" {!account.Name} "/></td>
+                </tr>
+                
+                 <tr>
+                  <td><h2><apex:outputLabel value="Advance Amount Requested" styleClass="labelCol"/></h2><br/></td>
+                  <br/><br/><td><apex:outputField value="{!account.invoiceit_s__Advance_Requested_Amount__c}"/>  (USD)</td>
+                </tr>                              
+                 <tr>
+                  <td> </td> <br/>
+                  <td><br/><center>
+                    <apex:commandButton action="{!checkOut}" value="Proceed For Payment" status="refreshContent" rendered="{!gateWayToUse != ''}"/>
+                 </center></td>
+                 </tr>
+              </tbody>
+           </table>
+           </div>  
+          </div>  
+           </apex:form>    
+       </apex:outputPanel>
+       <br/>
+             
+      <!-- (c) 2005, 2012. Authorize.Net is a registered trademark of CyberSource Corporation --> 
+      <apex:outputPanel rendered="{!sMerchantSealId != null && gateWayToUse.invoiceit_s__Gateway_Type__c == 'Authorize.net'}">
+          <center>
+          <div class="AuthorizeNetSeal"> 
+              <script type="javascript" language="javascript">var ANS_customer_id="{!sMerchantSealId}";</script> 
+              <script type="javascript" language="javascript" src="//verify.authorize.net/anetseal/seal.js"></script> 
+              <style type="text/css">
+                div.AuthorizeNetSeal{text-align:center;margin:0;padding:0;width:90px;font:normal 9px arial,helvetica,san-serif;line-height:10px;}
+                div.AuthorizeNetSeal a{text-decoration:none;color:black;}
+                div.AuthorizeNetSeal a:visited{color:black;}
+                div.AuthorizeNetSeal a:active{color:black;}
+                div.AuthorizeNetSeal a:hover{text-decoration:underline;color:black;}
+                div.AuthorizeNetSeal a img{border:0px;margin:0px;text-decoration:none;}
+              </style>
+              
+              <a href="{!sMerchantURL}" onclick="window.open('{!sMerchantURL}','AuthorizeNetVerification','width=600,height=430,dependent=yes,resizable=yes,scrollbars=yes,menubar=no,toolbar=no,status=no,directories=no,location=yes'); return false;" target="_blank">
+                 <img src="//verify.authorize.net/anetseal/images/secure90x72.gif" width="90" height="72" border="0" alt="Authorize.Net Merchant - Click to Verify"/>
+              </a>
+              <a href="http://www.authorize.net/" id="AuthorizeNetText" target="_blank">
+                  {!$Label.Payment_Accept_Credit_Cards_Online}
+              </a> 
+          </div>
+          </center>
+      </apex:outputPanel>
+    </div>
+  </div>   
+  </body>
+  <apex:iframe src="{!sBaseURL}{!$Site.Prefix}/resource/payment_footer" rendered="{!isFooterExist}"/>
+</apex:page>

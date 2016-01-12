@@ -1,0 +1,24 @@
+<apex:page standardController="invoiceit_s__Currency__c" extensions="invoiceit_s.CreateCurrecyController">
+ <apex:form >
+   <apex:sectionHeader title="{!$Label.NewCurrency}" subtitle="{!$Label.NewCurrency}" />
+   <apex:pageBlock mode="edit" id="mainSection">
+     <apex:pageBlockButtons >
+        <apex:commandButton action="{!save}" value="{!$Label.ButtonSave}" rendered="{!isViewMode}"/>
+        <apex:commandButton action="{!cancel}" value="{!$Label.ButtonCancel}" onclick="return confirmCancel()" immediate="true" rendered="{!isViewMode}"/>
+        <apex:commandButton action="{!edit}" value="{!$Label.ButtonEdit}" rendered="{!!isViewMode}"/>
+        <apex:commandButton action="{!delete}" value="{!$Label.ButtonDelete}" rendered="{!!isViewMode}"/>
+     </apex:pageBlockButtons>
+     <apex:pageMessages />
+     <apex:pageBlockSection title="Information" rendered="{!isViewMode}">
+        <apex:inputField value="{!currencyObject.Name}" required="true" />
+        <apex:inputField value="{!currencyObject.invoiceit_s__Currency_Symbol__c}"/>
+        <apex:inputField value="{!currencyObject.invoiceit_s__Currency_Name__c}"/>
+     </apex:pageBlockSection>
+     <apex:pageBlockSection title="Information" rendered="{!!isViewMode}">
+        <apex:outputField value="{!currencyObject.Name}"/>
+        <apex:outputField value="{!currencyObject.invoiceit_s__Currency_Symbol__c}"/>
+        <apex:outputField value="{!currencyObject.invoiceit_s__Currency_Name__c}"/>
+     </apex:pageBlockSection>
+    </apex:pageBlock>
+   </apex:form>
+</apex:page>

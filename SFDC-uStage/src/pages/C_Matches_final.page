@@ -1,0 +1,351 @@
+<apex:page id="IGI_HC_MyMatches_Final" docType="html-5.0" standardController="Engagement__c" extensions="IGI_HC_Controller" action="{!checkLoginWithConfirmMatchSearch}" standardStylesheets="false" showHeader="false">
+     
+        <apex:composition template="IntraxTemplate_Vs2" >
+            <apex:define name="body">
+            <apex:form >
+                 <apex:pageblock >
+                <apex:pageBlockSection >
+                 <apex:pageBlockSectionItem >
+                  <h1>Matches</h1>
+                 </apex:pageBlockSectionItem>
+                 
+                 <apex:pageBlockSectionItem >
+                  <apex:outputText > <h4>&nbsp; &nbsp;View profiles, contact details and travel information about the participants that have been placed at your company.</h4>
+                  </apex:outputText>
+                 </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+               </apex:pageblock>
+                
+                <div class="row-fluid">
+                
+                <div class="span3"> 
+                    <div class="block filter-group">
+                        <div class="block-header">
+                            <h3>Search Filters</h3>
+                        </div>
+                        <div class="block-body">
+                               
+                            <div class="filter">
+                                <div class="filter-name">Participant Name</div>
+                                <div class="filter-field">
+                                <apex:inputText value="{!participantSelected}"/>
+                                <div class="form-input no-float">
+                                <apex:commandButton action="{!doSearchConfirmedWithdraw}" rerender="pb" status="waitMsg" value="Search" id="GoButton"/>
+                                </div>
+                                </div>   
+                           </div>
+                            <div class="filter">
+                               <div class="filter-name">Only Show Confirmed Matches</div>
+                               <div class="filter-field">
+                                <apex:inputCheckbox id="CSelected" value="{!confirmselected}" >
+                                <apex:actionSupport event="onchange" rerender="AyusaFilters" status="waitMsg" onComplete="doSearch();return false;"/>
+                                </apex:inputCheckbox>
+                                </div>  
+                            </div> 
+                            
+                            <div class="filter">
+                               <div class="filter-name">Position</div>
+                               <div class="filter-field">
+                                <apex:selectList value="{!positionNameSelected}" multiselect="false" size="1"  >
+                               <apex:selectOption itemValue="" itemLabel="--None--"/>
+                               <apex:selectOptions value="{!positionsName}"/>
+                               <apex:actionSupport event="onchange" rerender="AyusaFilters" status="waitMsg" onComplete="doSearch();return false;"/>
+                               </apex:selectList>
+                                </div>  
+                            </div> 
+                            
+                            <div class="filter">
+                               <div class="filter-name">Program</div>
+                               <div class="filter-field">
+                                <apex:selectList value="{!IntProgramSelected}" multiselect="false" size="1"  >
+                               <apex:selectOption itemValue="" itemLabel="--None--"/>
+                               <apex:selectOptions value="{!MatchIntProgram}"/>
+                               <apex:actionSupport event="onchange" rerender="AyusaFilters" status="waitMsg" onComplete="doSearch();return false;"/>
+                               </apex:selectList>
+                                </div>  
+                            </div> 
+                            <apex:pageBlock id="MatchStatusFilters" >
+                                <apex:outputPanel id="InnerMatchStatusFilters" rendered="{!IF(confirmselected == false, true, false)}">
+                                    <div class="filter">
+                                       <div class="filter-name">Match Status</div>
+                                       <div class="filter-field">
+                                        <apex:selectList value="{!matchStatusSelected}" multiselect="false" size="1"  >
+                                       <apex:selectOption itemValue="" itemLabel="--None--"/>
+                                       <apex:selectOptions value="{!MatchStatus}"/>
+                                       <apex:actionSupport event="onchange" rerender="AyusaFilters" status="waitMsg" onComplete="doSearch();return false;"/>
+                                       </apex:selectList>
+                                        </div>  
+                                    </div> 
+                                    <div class="filter">
+                                       <div class="filter-name">Offer Status</div>
+                                       <div class="filter-field">
+                                        <apex:selectList value="{!offerStatusSelected}" multiselect="false" size="1"  >
+                                       <apex:selectOption itemValue="" itemLabel="--None--"/>
+                                       <apex:selectOptions value="{!MatchOfferStatus}"/>
+                                       <apex:actionSupport event="onchange" rerender="AyusaFilters" status="waitMsg" onComplete="doSearch();return false;"/>
+                                       </apex:selectList>
+                                        </div>  
+                                    </div> 
+                                </apex:outputPanel>
+                            </apex:pageBlock>
+                           <apex:outputPanel rendered="{!if(CONTAINS(ContactIP,'Work Travel'), true, false)}">
+                            <div class="filter">
+                               <div class="filter-name">Season</div>
+                               <div class="filter-field">
+                                <apex:selectList value="{!SeasonSelected}" multiselect="false" size="1"  >
+                               <apex:selectOption itemValue="" itemLabel="--None--"/>
+                               <apex:selectOptions value="{!MatchSeason}"/>
+                               <apex:actionSupport event="onchange" rerender="AyusaFilters" status="waitMsg" onComplete="doSearch();return false;"/>
+                               </apex:selectList>
+                                </div>  
+                            </div> 
+                           </apex:outputPanel>
+                            <div class="filter">
+                               <div class="filter-name">Program Year</div>
+                               <div class="filter-field">
+                                <apex:selectList value="{!ProgramYearSelected}" multiselect="false" size="1"  >
+                               <apex:selectOption itemValue="" itemLabel="--None--"/>
+                               <apex:selectOptions value="{!MatchProgramYear}"/>
+                               <apex:actionSupport event="onchange" rerender="AyusaFilters" status="waitMsg" onComplete="doSearch();return false;"/>
+                               </apex:selectList>
+                                </div>  
+                            </div> 
+                            <div class="filter">
+                               <div class="filter-name">Location</div>
+                               <div class="filter-field">
+                                <apex:selectList value="{!AccountSelected}" multiselect="false" size="1"  >
+                               <apex:selectOption itemValue="" itemLabel="--None--"/>
+                               <apex:selectOptions value="{!MatchAccount}"/>
+                               <apex:actionSupport event="onchange" rerender="AyusaFilters" status="waitMsg" onComplete="doSearch();return false;"/>
+                               </apex:selectList>
+                                </div>  
+                            </div> 
+                           
+                         </div>
+                         
+                    </div>
+                    
+               </div>
+            
+                <div class="span9">
+                    
+                    <apex:actionStatus id="waitMsg" startStyleClass="feedback">
+                            <apex:facet name="start" >
+                                <i class="no-float icon-spinner icon-spin icon-2x pull-left"></i>  <strong>Please Wait.....</strong>
+                            </apex:facet>
+                        </apex:actionStatus>
+                               
+                        <apex:pageBlock id="pb">
+                                    
+                            <apex:Messages styleClass="alert alert-error"/>
+                            <apex:outputPanel rendered="{!IF(listMatch.Size == 0, true, false)}" layout="block" styleClass="block">
+                                <div class="block-body">
+                                No record(s) to display.
+                                </div>
+                            </apex:outputPanel> 
+                                                   
+                                    
+                            <!-- <apex:actionFunction name="callAction" action="{!pageNavigation}" status="waitMsg" reRender="pb, validationMsg"/> -->
+                            <apex:actionFunction name="doSearch" action="{!doSearchConfirmForPageSize}" status="waitMsg" reRender="pb, validationMsg, MatchStatusFilters"/>
+                                 
+                    <!-- begin sorting fields -->
+                             
+                            <apex:outputPanel rendered="{!IF(listMatch.Size > 0, true, false)}" layout="block" styleClass="clearfix navbar">
+                                <div class="navbar-inner">
+                                    <div class="navbar-form">
+                                        <div class="pull-left margin-r">  
+                                            Sort By&nbsp;
+                                            <apex:selectList value="{!sortExpression}" styleClass="short" multiselect="false" size="1" onchange="doSearch();return false;">
+                                                <apex:selectOption itemValue="Name" itemLabel="--None--"/>
+                                                <apex:selectOptions value="{!SortBy_Match}"/>
+                                             </apex:selectList>
+                                        </div> 
+                        
+                                      
+                             
+        
+                                        <div class="pull-left margin-r">                                      
+                                             
+                                           <apex:pageBlock id="SortByDirectionBlock">
+                                      
+                                             <apex:commandLink action="{!doSearchConfirmedWithdraw}" value=" Reverse Order" reRender="pb,validationMsg" status="waitMsg" styleClass="navbar-link">
+                                                 <apex:param value="{!sortExpression}" ></apex:param>
+                                             </apex:commandLink>
+                                            
+                                            </apex:pageBlock>
+                                        </div> 
+                                    </div>  
+                                </div>  
+                                <br/>  
+                                <div class="row-fluid">  
+                                 <div >
+                                  <apex:outputText rendered="{!IF(confirmselected, false, true)}" value="Total No. of Records: {!total_Match}" />
+                                  <apex:outputText rendered="{!IF(confirmselected, true, false)}" value="Confirmed Match Records:{!total_Match}" /> 
+                                </div> 
+                                </div>
+                            </apex:outputPanel> 
+                            
+                            <!-- end sorting fields -->  
+                   <!--  <apex:pageBlock id="pb"> -->
+                   <div id="app-list" class="list-view" >
+                            <apex:repeat id="AppsList" value="{!listMatch}" var="item" rendered="{!IF(listMatch.Size > 0, true, false)}">
+                    <div class="block">
+                        <div class="block-body"> 
+                   <div class="row-fluid">
+                        
+                        <div class="span3">
+                        <apex:outputLink styleClass="ph-thumb sm" value="/apex/C_Match_Details?mId={!item.Id}" rendered="{!IF(((item.Engagement__c !=null) && (ProfilePhotoMap[item.Engagement__c] != 'no-picture')), true, false)}">
+                            <apex:image url="{!ProfilePhotoMap[item.Engagement__c]}"></apex:image> 
+                        </apex:outputLink>
+                       </div>
+                       <div class="span3"> 
+                      <label>Participant Name:</label>
+                      <apex:outputLink value="/apex/C_Participant_Details?PTId={!item.Engagement__c}"> <apex:outputText value="{!item.Participant_Id__r.LastName}, {!item.Participant_Id__r.FirstName}"/></apex:outputLink>
+                       
+                       <label>Position:</label>
+                        <apex:outputField value="{!item.Position_Name__r.Name}" />
+                      
+                </div>      
+                <div class="span3">
+                        <apex:outputPanel layout="block" rendered="{!(item.Intrax_Program__c = 'Internship')}">
+                           <label>Program Start:</label>
+                        </apex:outputPanel>
+                        <apex:outputPanel layout="block" rendered="{!(item.Intrax_Program__c != 'Internship')}">
+                           <label>Engagement Start:</label>
+                        </apex:outputPanel>
+                        <apex:outputField value="{!item.Engagement__r.Engagement_Start__c}" />
+                        <apex:outputPanel layout="block" rendered="{!(item.Intrax_Program__c != 'Internship')}">
+                            <label>Engagement End:</label>
+                        </apex:outputPanel>
+                        <apex:outputPanel layout="block" rendered="{!(item.Intrax_Program__c = 'Internship')}">
+                           <label>Program End:</label>
+                        </apex:outputPanel>
+                        <apex:outputField value="{!item.Engagement__r.Engagement_End__c}" />
+                        <!-- <label>Partner Agency:</label>
+                        <apex:outputField value="{!item.Engagement__r.Partner_Account__r.Name}" /> -->
+                        
+                            
+                        <apex:outputPanel layout="block" rendered="{!(item.Intrax_Program__c != 'Internship')}">
+                        <label>Partner Agency:</label>
+                        <apex:outputField value="{!item.Engagement__r.Partner_Account__r.Name }" />
+                        </apex:outputPanel>
+                        
+                </div> 
+                <div class="span3">
+                        <label>Match Status:</label>
+                        <apex:outputField value="{!item.Status__c}" />      
+                        <label>Offer Status:</label>
+                        <apex:outputField value="{!item.Offer_Status__c}" />
+                        <label>Citizenship:</label>
+                        <apex:outputField value="{!item.Participant_Id__r.Citizenship__pc}" />
+                </div> 
+                </div>
+   
+            </div><!-- end block body -->
+            
+                        <div class="block-footer">            
+                <div class="row-fluid no-padding">
+                    <div class="span12">
+                        <!-- <div class="float-r">
+                        <div class="form-link no-margin margin-r">
+                            
+                       </div>  
+                        <div class="form-link no-margin margin-r">
+                        
+                        </div>
+                    </div> -->
+                    <div class="float-l">
+                            <div style="padding:10px; font-family:'milowebbold';">
+                                <apex:outputText value="Internship" rendered="{!item.Intrax_Program__c == 'Internship'}"/>
+                                <apex:outputText value="Work Travel" rendered="{!item.Intrax_Program__c == 'Work Travel'}"/>
+                            </div>
+                        </div>
+                    
+                    </div>
+                 </div>
+               </div> <!-- end block footer --> 
+               
+               
+           </div><!-- end block --> 
+          </apex:repeat>
+        </div>
+                        
+                    <apex:outputPanel rendered="{!IF(listMatch.Size > 0, true, false)}" layout="block" styleClass="clearfix navbar">
+                                <div class="navbar-inner">
+                                    <div class="navbar-form">
+                                                
+                                        <div class="pull-left margin-r">  
+                                            Page&nbsp;
+                                            <apex:inputText id="pageNoBottom" value="{!itotalpageNumber}" size="3" onkeydown="return runScript(event);"/>
+                                            &nbsp;
+                                            <apex:outputLabel value="of {!iTotalPages}"/> 
+                                        </div>  
+        
+                                        <div class="pull-left margin-r">                                      
+                                             
+                                            List Size&nbsp;
+                                            <apex:selectList value="{!limits}" styleClass="short" size="1" onchange="doSearch();return false;">
+                                                <apex:selectOptions value="{!items}"/>
+                                            </apex:selectList>
+                                           
+                                        </div> 
+                                         
+                                        <div class="pagination pull-right">
+                                            <ul>
+                                                <li><apex:commandLink value="First" action="{!firstforMatch}" status="waitMsg" reRender="pb, validationMsg"/></li>
+                                                <li><apex:commandLink action="{!previousforMatch}" status="waitMsg" reRender="pb, validationMsg" rendered="{!IF(PreviousButtonDisabledForMatch  == true, false, true)}">
+                                                <apex:outputText value="Previous"/>
+                                                </apex:commandLink></li>
+                                                            
+                                                <li><apex:commandLink action="{!nextforMatch}" status="waitMsg" reRender="pb, validationMsg" rendered="{!IF(NextButtonDisabledForMatch == true, false, true)}">
+                                                <apex:outputText value="Next"/>
+                                                </apex:commandLink></li>
+                                                
+                                                <li><apex:commandLink value="Last" action="{!lastForMatch}" status="waitMsg" reRender="pb, validationMsg" rendered="{!IF(LastButtonDisabledForMatch == true, false, true)}"/></li>
+                                            </ul>   
+                                        </div>        
+                                    </div> 
+                                </div> 
+                                               
+                            </apex:outputPanel> 
+                    
+                    
+                    </apex:pageBlock> 
+                
+                
+                   
+                    
+                    
+                </div><!-- end span9 -->
+                </div><!-- end row -->
+                
+                
+                <div class="row">
+                    <div class="span12">
+            
+                    
+                         
+                    </div> <!-- end span12 -->
+                </div> <!-- end row -->
+                <script>
+        
+            function runScript(obj){
+                
+                //alert(obj.keyCode);
+                if(obj.keyCode == 13){
+                    callAction();   // call action function
+                    return false;
+                }else if((obj.keyCode > 34 && obj.keyCode < 40) || (obj.keyCode > 95 && obj.keyCode < 106) || (obj.keyCode > 47 && obj.keyCode < 58) || obj.keyCode == 8 || obj.keyCode == 46 ){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        </script>
+        
+    </apex:form>
+            </apex:define>
+        </apex:composition>
+        
+        
+</apex:page>

@@ -1,0 +1,388 @@
+<apex:page id="Participant_Preapp_View_PDF_Summary" standardController="Match__c"  extensions="IGI_HC_Controller" standardStylesheets="false" applyHTMLTag="false" applyBodyTag="false" showHeader="false" renderas="pdf">
+  <head>
+  <style type="text/css" media="print">
+@page { size: portrait; margin: 3cm 1cm 4cm 1cm; @top-left {
+content: element(header);
+width:3cm;
+}
+ @top-right {
+content: "Work Travel Hiring Profile | Page " counter(page) " of " counter(pages);
+vertical-align:top;
+line-height:1;
+font-weight: lighter;
+font-size:8pt;
+font-family: Dialog, Arial Unicode MS;
+}
+}
+div.header { display: block; position: running(header); }
+* { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
+html,
+body { margin: 0; padding: 0; font-family: Dialog, Arial Unicode MS; font-size: 8pt; line-height: 12pt; }
+h1 { font-size: 13pt; margin: 0 0 20pt 0; }
+h2 { margin: 20pt 0; }
+h3 { margin: 0 0 10pt 0; }
+h4,
+h5,
+h6 { margin: 0; }
+p { margin: 0 0 8pt 0; }
+strong { font-weight: bold; }
+img { display: block; }
+table { width: 100%; border: solid 1px #ccc; border-collapse: collapse; }
+td,
+th { vertical-align: top; text-align: left; border-spacing: 0; padding: 8pt; border-top: solid 1px #ccc; }
+tr { }
+th { vertical-align: bottom; border: none; }
+table.noborder td { border: none; padding: 4pt 8pt 4pt 0; }
+table.nopadding td { padding: 0; }
+table#logo td { vertical-align: top; }
+.row { margin-right: -15px; margin-left: -15px; }
+.col-inner { padding: 0 15px; }
+.col-md-1,
+.col-md-2,
+.col-md-3,
+.col-md-4,
+.col-md-5,
+.col-md-6,
+.col-md-7,
+.col-md-8,
+.col-md-9,
+.col-md-10,
+.col-md-11,
+.col-md-12 { float: left; position: relative; min-height: 1px; }
+.col-md-2 { width: 16.66666667%; }
+.col-md-3 { width: 25%; }
+.col-md-4 { width: 33.33333333%; }
+.col-md-6 { width: 50%; }
+.col-md-8 { width: 66.66666667%; }
+.col-md-9 { width: 75%; }
+.callout.box { padding: 20pt; border: #ccc solid 1pt; margin: 20pt 0;  }
+.pull-left { float: left; }
+.pull-right { float: right; }
+.margin-b { margin-bottom: 20pt; }
+.margin-t{ margin-top: 20pt;}
+.control:after,
+.row:after,
+.clearfix:after { visibility: hidden; content: "."; display: block; width: 1px; height: 1px; clear: both; }
+.no-pgbr-in { page-break-inside: avoid; }
+.no-pgbr-af { page-break-after: avoid; }
+.pgbr-bf { page-break-before: always; }
+label { font-weight: bold; margin-top: 5pt; display: block; }
+hr{border:1px solid #ccc;}
+.photo-container{ overflow:hidden; }
+.photo{text-align:center;}
+.nophoto{ display:block; border: #ccc solid 1pt; }
+.nophoto span{font-size:10pt; display:block; line-height:1; text-align:center; padding:10pt 0;}
+#notes-container{min-height:4cm;}
+</style>
+  </head>
+  
+  <body>
+  <div class="header">
+    <table class="noborder nopadding" id="logo">
+      <tr>
+        <td><apex:image width="100%" url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/pdf/pdf-logo-intrax.gif')}"
+				alt="Intrax" title="Intrax" /></td>
+      </tr>
+    </table>
+  </div>
+  <div class="content">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="col-inner">
+        
+              <apex:outputPanel styleClass="photo-container" layout="block" rendered="{!IF(returnURL == '', false, true)}"> 
+              <apex:image styleClass="photo" height="4cm" url="{!returnURL}" ></apex:image>
+              </apex:outputPanel>
+             <apex:outputPanel styleClass="nophoto" layout="block" rendered="{!IF(returnURL == '',true,false)}"> No Photo Available</apex:outputPanel>
+        
+         <apex:outputPanel layout="block">
+          
+            <apex:outputText >
+             <div class="callout box">
+             
+              <h3>How did your interview go?</h3>
+              
+              <table class="noborder ">
+             
+              <tr>
+              <td>(a)&nbsp;</td>
+              <td>
+              <strong>Hired for the following:</strong><br/>
+              <apex:outputField id="PositionName" value="{!matchInfo.Position_Name__r.Name}" />
+              </td>
+              </tr>
+              <tr>
+              <td>(b)&nbsp;</td>
+              <td><div class="margin-b"><strong>Hired for other position:</strong></div>
+              </td>
+              </tr>
+               <tr>
+              <td>(c)&nbsp;</td>
+              <td><strong>Not hired</strong></td>
+              </tr>
+              </table>
+               <hr/>  
+             
+               
+              <label class="margin-b">Match Start Date:</label>
+            
+             
+             <label class="margin-b">Match End Date:</label>
+
+              <hr/>
+              
+              <apex:outputPanel rendered="{!IF(NOT(ISBLANK(matchInfo.Id)) && NOT(ISBLANK(matchInfo.Interviewer_Notes__c)), true, false)}"> 
+	              <label>Notes:</label>
+	              <div id="notes-container">
+	              <apex:outputfield id="Intrax_Program_Options" value="{!matchInfo.Interviewer_Notes__c}" rendered="{!IF(activeUser.User_Interests__c == 'Becoming a Work Travel Participant' || ISPICKVAL($User.Type__c,'Partner'), false, true)}"/>
+	              </div>	              
+              </apex:outputPanel> 
+              <apex:outputPanel rendered="{!IF(NOT(ISBLANK(matchInfo.Id)) && ISBLANK(matchInfo.Interviewer_Notes__c), true, false)}"> 
+	              <label>Notes:</label>
+	              <div id="notes-container">
+	              <br/><br/><br/><br/><br/><br/><br/><br/>
+	              </div>	              
+              </apex:outputPanel> 
+                
+            </div> <!--  end callout -->
+            </apex:outputText>
+          </apex:outputPanel>
+       
+        </div>
+        <!--  end column inner --> 
+      </div>
+      <!--  end column -->
+      
+      <div class="col-md-8">
+        <div class="col-inner">
+        
+            <h1>Work Travel Hiring Profile</h1>
+             <h3 class="margin-t no-pgbr-af">Biographical Information</h3>
+             <hr/>
+          <table class="noborder nopadding">
+         <tr>
+         <td width="33%">
+         <apex:outputText rendered="{!IF(ISBLANK(matchInfo.Participant_Id__r.FirstName), false, true)}" >
+              <label>First Name</label>
+            </apex:outputText>
+            <apex:outputText id="First_Name" value="{!matchInfo.Participant_Id__r.FirstName}" />
+            <apex:outputText rendered="{!IF(ISBLANK(matchInfo.Participant_Id__r.Middle_Name__pc), false, true)}" >
+              <label>Middle Name</label>
+            </apex:outputText>
+            <apex:outputText id="Middle_Name" value="{!matchInfo.Participant_Id__r.Middle_Name__pc}" />
+            <apex:outputText rendered="{!IF(ISBLANK(matchInfo.Participant_Id__r.LastName), false, true)}" >
+            <label>Last Name</label>
+            </apex:outputText>
+            <apex:outputText id="Last_Name" value="{!matchInfo.Participant_Id__r.LastName}" />
+           
+            <apex:outputText rendered="{!IF(ISBLANK(matchInfo.Participant_Id__r.Nick_Name__pc), false, true)}" >
+            <label>Nickname</label>
+            </apex:outputText>
+            <apex:outputField id="Nickname" value="{!matchInfo.Participant_Id__r.Nick_Name__pc}" />
+          
+         </td>
+           <td width="33%">
+             <apex:outputText rendered="{!IF(ISBLANK(matchInfo.Participant_Id__r.Gender__pc), false, true)}" >
+              <label>Gender</label>
+            </apex:outputText>
+            <apex:outputField id="Gender" value="{!matchInfo.Participant_Id__r.Gender__pc}" />
+            <apex:outputText rendered="{!IF(ISBLANK(matchInfo.Participant_Id__r.PersonBirthDate), false, true)}" >
+              <label>Birth Date</label>
+            </apex:outputText>
+            <apex:outputField id="BirthDate" value="{!matchInfo.Participant_Id__r.PersonBirthDate}" /> 
+            <apex:outputText rendered="{!IF(ISBLANK(matchInfo.Participant_Id__r.Age__pc), false, true)}" >
+            (<apex:outputField id="Age" value="{!matchInfo.Participant_Id__r.Age__pc}" /> years old)
+            </apex:outputText>
+            
+            <apex:outputText rendered="{!IF(ISBLANK(matchInfo.Participant_Id__r.Citizenship__pc), false, true)}" >
+              <label>Country of Citizenship</label>
+            </apex:outputText>
+            <apex:outputField id="Citizenship" value="{!matchInfo.Participant_Id__r.Citizenship__pc}" />
+         
+         </td>
+         <td width="33%">
+            <apex:outputText rendered="{!IF(ISBLANK(matchInfo.Participant_Id__r.PersonEmail), false, true)}" >
+              <label>Email</label>
+            </apex:outputText>
+            <apex:outputField id="Email" value="{!matchInfo.Participant_Id__r.PersonEmail}" />
+            <apex:outputText rendered="{!IF(ISBLANK(matchInfo.Participant_Id__r.Skype_ID__pc), false, true)}" >
+              <label>Skype</label>
+            </apex:outputText>
+            <apex:outputField id="Skype" value="{!matchInfo.Participant_Id__r.Skype_ID__pc}" />
+         </td>
+         </tr>
+         </table>   
+           
+          <h3 class="margin-t no-pgbr-af">Program Preferences</h3>
+             <hr/>
+           <table class="noborder nopadding">
+           <tr>
+         <td width="33%">
+          <apex:outputPanel layout="block" rendered="{!IF(NOT(ISBLANK(engagementInfo.Program_Duration__c)), true, false)}">
+          <label>Program Duration</label>
+          <apex:outputField id="program_duration" value="{!engagementInfo.Program_Duration__c}" />
+        </apex:outputPanel>
+        <label>Has flexible dates?</label>
+        <apex:outputtext value="Yes" rendered="{!engagementInfo.Flexible_Dates__c}"/>
+        <apex:outputtext value="No" rendered="{! NOT(engagementInfo.Flexible_Dates__c)}"/>
+         </td>
+         <td width="33%">
+         <apex:outputText rendered="{!IF(ISBLANK(engagementInfo.Engagement_Start__c), false, true)}" >
+          <label>Earliest Start Date</label>
+        </apex:outputText>
+        <apex:outputField id="earliest_start_date" value="{!engagementInfo.Engagement_Start__c}" />
+        <apex:outputText rendered="{!IF(ISBLANK(engagementInfo.Engagement_End__c), false, true)}" >
+          <label>Latest End Date</label>
+        </apex:outputText>
+        <apex:outputField id="latest_end_date" value="{!engagementInfo.Engagement_End__c}" />
+         </td>
+         <td width="33%">
+         <apex:outputText rendered="{!IF(ISBLANK(matchInfo.Start_Date__c), false, true)}" >
+        <label>Preferred Start Date</label>
+        </apex:outputText>
+        <apex:outputField id="pref_start_date" value="{!matchInfo.Start_Date__c}" />
+        <apex:outputText rendered="{!IF(ISBLANK(matchInfo.End_Date__c), false, true)}" >
+          <label>Preferred End Date</label>
+        </apex:outputText>
+        <apex:outputField id="pref_end_date" value="{!matchInfo.End_Date__c}" />
+         </td>
+         </tr>
+           
+           </table>
+          
+          <h3 class="margin-t no-pgbr-af">Education &amp; Language Skills</h3>
+          <hr/>
+         <table class="noborder nopadding">
+         <tr>
+         <td width="33%">
+         
+          <apex:outputText rendered="{!IF(ISBLANK(engagementInfo.Primary_Activity__c), false, true)}" >
+            <label>Current Educational Status</label>
+            <apex:outputField id="Current_Educational_Status" value="{!engagementInfo.Primary_Activity__c}" />
+          </apex:outputText>
+          
+        
+          
+          <apex:outputText rendered="{!IF(ISBLANK(engagementInfo.School_Name__c), false, true)}" >
+            <label>College or University Name</label>
+            <apex:outputField id="Collegue" value="{!engagementInfo.School_Name__c}" />
+          </apex:outputText>
+          
+          
+          <apex:outputText rendered="{!IF(ISBLANK(engagementInfo.Major__c), false, true)}" >
+            <label>Field of Study</label>
+            <apex:outputField id="Major" value="{!engagementInfo.Major__c}" />
+          </apex:outputText>
+          
+          
+          <apex:outputText rendered="{!IF(NOT(ISBLANK(engagementInfo.Graduation_Date__c)), true, false)}" >
+            <label>Approximate Graduation Date</label>
+             <apex:outputField id="graducation_date" value="{!engagementInfo.Graduation_Date__c}" />
+          </apex:outputText>
+         
+         </td>
+         <td>
+         <apex:outputText rendered="{!IF(ISBLANK(engagementInfo.Language_1__c), false, true)}" >
+            <label>Language of the Destination Country</label>
+            <apex:outputField id="Language1" value="{!engagementInfo.Language_1__c}" />, Level&nbsp;
+            <apex:outputField id="Language1Level" value="{!engagementInfo.Language_1_Proficiency__c}" />
+          </apex:outputText>
+  
+          <label>Additional Language(s)</label>
+          <apex:outputText rendered="{!IF(ISBLANK(engagementInfo.Language_2__c), false, true)}" >   
+            <apex:outputField id="Language2" value="{!engagementInfo.Language_2__c}" />, Level&nbsp;
+            <apex:outputField id="Language2Level" value="{!engagementInfo.Language_2_Proficiency__c}" /><br/>
+          </apex:outputText> 
+          <apex:outputText rendered="{!IF(ISBLANK(engagementInfo.Language_3__c), false, true)}" >
+            <apex:outputField id="Language3" value="{!engagementInfo.Language_3__c}" />, Level&nbsp;
+            <apex:outputField id="Language3Level" value="{!engagementInfo.Language_3_Proficiency__c}" /><br/>
+          </apex:outputText>
+          
+          <apex:outputText rendered="{!IF(ISBLANK(engagementInfo.Other_Languages__c), false, true)}" >
+            <label>Other Languages</label>
+            <apex:outputField id="OtherLanguages" value="{!engagementInfo.Other_Languages__c}" />
+          </apex:outputText>
+         </td>
+         </tr>
+         
+         </table>
+          
+
+          
+         
+          <apex:outputPanel layout="block" rendered="{!IF(ExperienceInfoList.Size == 0 , true, false)}" >
+            <h3 class="margin-t no-pgbr-af">Work Experience(s)</h3>
+            <hr/>
+            <apex:outputText id="no_experience" value="No records to display." />
+          </apex:outputPanel>
+          
+          <apex:outputPanel layout="block" rendered="{!IF(ExperienceInfoList.Size == 0 , false, true)}" >
+            <h3 class="margin-t">Work Experience</h3>
+            <apex:repeat value="{!ExperienceInfoList}" var="item">
+           <div class=" no-pgbr-in">
+           <hr/> 
+           <table class="noborder nopadding">
+           <tr>
+           <td width="33%">
+             <apex:outputText rendered="{!IF(ISBLANK(item.Employer_Name__c), false, true)}" >
+              <label>Employer Name</label>
+              </apex:outputText>
+              <apex:outputField id="EmployerName" value="{!item.Employer_Name__c}" />
+            
+            <apex:outputText rendered="{!IF( ISBLANK(item.City__c) && ISBLANK(item.Country__c), false, true) }" >
+            <label>Employer Location</label>  
+            <apex:outputField id="EmployerCity" value="{!item.City__c}" />, &nbsp;<apex:outputField id="EmployerCountry" value="{!item.Country__c}" />
+            </apex:outputText>
+           </td>
+           <td>
+            <label>Position Dates</label>
+             <apex:outputField id="Emp_Start_Date" value="{!item.Start_Date__c}" /> -&nbsp; <apex:outputField id="Employer_End_Date" value="{!item.End_Date__c}" />
+             
+              <apex:outputText rendered="{!IF(ISBLANK(item.Position_Title__c), false, true)}" >
+                <label>Position Title</label>
+              </apex:outputText>
+              <apex:outputField id="Employer_pos_Title" value="{!item.Position_Title__c}" />
+           </td>
+           </tr>
+           <tr>
+           <td colspan="3">
+           <apex:outputText rendered="{!IF(ISBLANK(item.Position_Description__c), false, true)}" >
+                <label>Position Description</label>
+              </apex:outputText>
+              <apex:outputField id="Employer_pos_desc" value="{!item.Position_Description__c}" />
+           </td>
+           </tr>
+           </table>  
+           </div>
+            </apex:repeat>
+          </apex:outputPanel>
+          
+           <apex:outputPanel layout="block" rendered="{!IF(NOT(engagementInfo.Intrax_Program__c == 'Internship') && essayList.size > 0, true, false)}">
+           <h3 class="margin-t no-pgbr-af">Essays</h3>
+           <hr/>
+           <table class="noborder nopadding">
+           <tr>
+           <td>
+           <apex:repeat value="{!EssayList}" var="item" >
+            <label>{!item.Label__c}</label>
+            <apex:outputField id="essay_narrative" value="{!item.Narrative__c}" />
+          </apex:repeat>
+           </td>
+           </tr>
+           </table>
+      </apex:outputPanel>
+          
+           
+        
+          
+        </div>
+        <!--  end column inner --> 
+      </div>
+      <!--  end column --> 
+    </div>
+    <!--  end row -->
+    
+
+  </div>
+  </body>
+</apex:page>

@@ -1,0 +1,1823 @@
+<apex:page controller="apc_portal_controller" action="{!myProfile.saveVisit}" docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardStylesheets="false" showHeader="false" title="View Au Pairs" id="apc_hf_au_pair_profile">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <apex:includeScript value="{!URLFOR($Resource.module_videoJs, '/videojs/video.min.js')}"/>
+      <apex:stylesheet value="{!URLFOR($Resource.module_videoJs, '/videojs/video-js.css')}"/>
+      <script src="//www.google.com/jsapi"></script>
+      <apex:variable value="{!myProfile.ReturnURL}" var="vRetUrl" id="RetUrl" />      
+      <apex:variable value="{!myProfile.hasInterviewInProgress}" var="vIntProg" id="IntProg" />
+      <apex:variable value="{!myProfile.exceedHFInterviewLimit}" var="vExHFInt" id="ExHFInt" />
+      <apex:variable value="{!myProfile.exceedPTInterviewLimit}" var="vExPTInt" id="ExPTInt" />    
+      <apex:variable value="{!myprofile.incompleteHFapp.Profile_Complete__c}" var="vHFProfComp" id="HFProfComp" />  
+      <apex:variable value="{!myProfile.currentUser.User_Interests__c}" var="vUI" id="UI" />
+          
+      <apex:form id="webform" styleClass="form-vertical ws-validate">
+        <div id="profile-detail" class="vs1 row">
+          <div class="col-md-3 hidden-print">
+            <div class="row">
+              <div class="col-md-10 center-block">
+                <div class="item-image">
+                  <apex:image style="width:100%;" value="{!vRetUrl}" rendered="{!vRetUrl != 'no-picture'}"/>
+                  <apex:image style="width:100%;" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/male-profile-med.png')}" rendered="{!vRetUrl == 'no-picture' && myProfile.primary.Gender__c == 'Male'}"/>
+                  <apex:image style="width:100%;" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/female-profile-med.png')}" rendered="{!vRetUrl  == 'no-picture' && myProfile.primary.Gender__c == 'Female'}"/>
+                  <div class="media-actions">
+                  <apex:actionRegion >   
+                    <apex:commandLink oncomplete="popModalPhoto();" rendered="{!myProfile.num_photos > 0}"> <i class="fa fa-camera"></i> </apex:commandLink>
+                  </apex:actionRegion>
+                  <apex:actionRegion >   
+                    <apex:commandLink oncomplete="openvideo();" rendered="{!myProfile.num_videos > 0}"  action="{!myProfile.retrieveVideo}" rerender="modalvideo"> <i class="fa fa-video-camera"></i> </apex:commandLink>
+                  </apex:actionRegion>
+                  </div>
+                  
+                  
+                  <!--  end media actions --> 
+                </div>
+                <!--  end item image -->
+                
+                <div class="hidden-sm hidden-xs margin-t2" data-spy="affix" data-offset-top="600" id="profile-nav">
+                  <div id="profile-nav-inner">
+                    <apex:outputPanel layout="block" rendered="{!myprofile.hasInterviewInProgress == false && (myProfile.CurrentUser.User_Interests__c == 'Hosting an au pair')}">
+                      <div class="match-actions margin-t2 center-text">
+                        <apex:pageBlock id="icons-Menu">
+                          <apex:commandLink styleClass="match-action-item" action="{!myProfile.saveAsFavorite}" id="saveAsFavoriteMenu" rerender="icons-block, icons-Menu" rendered="{!NOT(myProfile.isFavorite)}"> <i data-toggle="tooltip" title="Save Profile" class="fa fa-heart" ></i> </apex:commandLink>
+                          <apex:commandLink styleClass="match-action-item" id="requestInterviewMenu" oncomplete="popModalInterview();" rendered="{!NOT(vIntProg)}"> <i data-toggle="tooltip" title="Request an Interview" class="fa fa-phone" ></i> </apex:commandLink>
+                          <apex:outputPanel styleClass="match-action-item" id="requestInterviewSelectedMenu" rendered="{!vIntProg}"> <i data-toggle="tooltip" title="Interview Requested" class="fa fa-phone selected" ></i> </apex:outputPanel>
+                          <apex:commandLink styleClass="match-action-item" action="{!myProfile.removeAsFavorite}" id="removeAsFavoriteMenu" rerender="icons-block,icons-Menu" rendered="{!myProfile.isFavorite}"> <i data-toggle="tooltip" title="Undo Save" class="fa fa-heart selected" ></i> </apex:commandLink>
+                          <apex:commandLink styleClass="match-action-item" action="{!myProfile.saveAsDismissed}" id="saveAsDismissedMenu" rerender="icons-block,icons-Menu" rendered="{!NOT(myProfile.isDismissed)}"> <i data-toggle="tooltip" title="Remove Au Pair" class="fa fa-times-circle" ></i> </apex:commandLink>
+                          <apex:commandLink styleClass="match-action-item" action="{!myProfile.removeAsDismissed}" id="removeAsDismissedMenu" rerender="icons-block,icons-Menu" rendered="{!myProfile.isDismissed}"> <i data-toggle="tooltip" title="Undo Remove" class="fa fa-times-circle selected" ></i> </apex:commandLink>
+                        </apex:pageBlock>
+                      </div>
+                    </apex:outputPanel>
+                    <ul class="nav nav-list vs1 margin-t1">
+                      <li> <a onclick="goOverview();" href="#over" id="linkOverview"><span>Overview</span></a> </li>
+                      <li> <a onclick="goChildCare();" href="#child" id="linkChildCare"><span>Childcare Experience</span></a> </li>
+                      <li> <a onclick="goEducation();" href="#education" id="linkEducation"><span>Education and Training</span></a> </li>
+                      <li> <a onclick="goDriving();" href="#driving" id="linkDriving"><span>Driving Experience</span></a> </li>
+                      <li> <a onclick="goPersonal();" href="#family-members" id="linkPersonal"><span>Personal Life</span></a> </li>
+                      <li> <a onclick="goHealth();" href="#health" id="linkHealth"><span>Overall Health</span></a> </li>
+                      <apex:outputText rendered="{!myProfile.listChildCareRef.size > 0 || myProfile.listPersonalRef.size > 0}">
+                        <li> <a onclick="goReference();" href="#reference" id="linkReference"><span>Reference Check</span></a> </li>
+                      </apex:outputText>
+                    </ul>
+                  </div>
+                  <!--  end profile-nav inner -->
+                  <div class="center-text margin-t2">
+                    <apex:outputpanel layout="block" id="blockNottheOwner0" rendered="{!vUI == 'Hosting an au pair'}">
+                      <apex:outputLink value="/apex/apc_hf_search_au_pairs"> <b class="sm">Return to Search Results</b> </apex:outputLink>
+                    </apex:outputpanel>
+                    <apex:outputPanel layout="block" id="block_partner_back_to_search_1" rendered="{!NOT(vUI == 'Hosting an au pair' || vUI = 'Becoming an au pair')}">
+                    <b><apex:outputLink value="/apex/pr_pt_profile?participantId={!myProfile.participant.Id}">Return to Participant Summary</apex:outputLink></b>
+                </apex:outputPanel>
+                  </div>
+                </div>
+                <!--  end profile-nav --> 
+                
+              </div>
+            </div>
+            <!--  end row --> 
+            
+          </div>
+          <!--  end col -->
+          
+          <div class="col-md-9">
+            <div class="row">
+              <div class="col-sm-4">
+                <apex:outputpanel layout="block" id="blockCaseIstheOwner1" rendered="{!vUI = 'Becoming an au pair'}">
+                  <apex:outputLink value="/apex/apc_ap_home"> <b class="sm">Return to Home Page</b> </apex:outputLink>
+                </apex:outputpanel>
+                <apex:outputpanel layout="block" id="blockNottheOwner" rendered="{!vUI == 'Hosting an au pair'}" >
+                  <apex:outputLink value="/apex/apc_hf_search_au_pairs"> <b class="sm">Return to Search Results</b> </apex:outputLink>
+                </apex:outputpanel>
+                <apex:outputPanel layout="block" id="block_partner_back_to_search_2" rendered="{!NOT(vUI == 'Hosting an au pair' || vUI = 'Becoming an au pair')}">
+                    <b><apex:outputLink value="/apex/pr_pt_profile?participantId={!myProfile.participant.Id}">Return to Participant Summary</apex:outputLink></b>
+                </apex:outputPanel>
+              </div>
+              <div class="col-sm-8">
+                <apex:pageBlock id="icons-block" rendered="{!vUI == 'Hosting an au pair'}">
+                  <apex:outputPanel layout="block" rendered="{!NOT(vIntProg)}">
+                    <div class="match-actions pull-right">
+                      <apex:actionStatus startStyleClass="feedback-st" startStyle="position:absolute; margin:0 0 0 -5px; z-index:100; width:100%; " startText="Loading. Please wait..." id="matchactionupdate"/>
+                      <apex:commandLink status="matchactionupdate" styleClass="match-action-item" action="{!myProfile.saveAsFavorite}" id="saveAsFavorite" rerender="icons-block,icons-Menu" rendered="{!NOT(myProfile.isFavorite)}"> <i class="fa fa-heart" ></i> <span>Save</span> </apex:commandLink>
+                      <apex:commandLink status="matchactionupdate" styleClass="match-action-item" action="{!myProfile.removeAsFavorite}" id="removeAsFavorite" rerender="icons-block,icons-Menu" rendered="{!myProfile.isFavorite}"> <i class="fa fa-heart selected" ></i> <span>Saved</span> </apex:commandLink>
+                      <apex:commandLink status="matchactionupdate" styleClass="match-action-item" id="requestInterview" oncomplete="popModalInterview();" rendered="{!NOT(vIntProg)}"> <i class="fa fa-phone" ></i> <span>Interview</span> </apex:commandLink>
+                      <apex:outputPanel styleClass="match-action-item" id="requestInterviewSelectedMenu" rendered="{!vIntProg}"> <i class="fa fa-phone selected" ></i> <span>Interview</span> </apex:outputPanel>
+                      <apex:commandLink status="matchactionupdate" styleClass="match-action-item" action="{!myProfile.saveAsDismissed}" id="saveAsDismissed" rerender="icons-block,icons-Menu" rendered="{!NOT(myProfile.isDismissed)}"> <i class="fa fa-times-circle" ></i> <span>Remove</span> 
+                        <!-- Rendering condition: rendered="{!hasInterviewInProgress} --> 
+                        <!-- Rendering condition: rendered="{!NOT(hasInterviewInProgress)} --> 
+                        <!-- Rendering condition: rendered="{!hadInterview} --> 
+                      </apex:commandLink>
+                      <apex:commandLink status="matchactionupdate" styleClass="match-action-item" action="{!myProfile.removeAsDismissed}" id="removeAsDismissed" rerender="icons-block,icons-Menu" rendered="{!myProfile.isDismissed}"> <i class="fa fa-times-circle selected" ></i> <span>Removed</span> </apex:commandLink>
+                    </div>
+                  </apex:outputPanel>
+                </apex:pageBlock>
+              </div>
+            </div>
+            <!--  end row -->
+            
+            <div id="over"></div>
+            <div class="row">
+              <div class="col-sm-12">
+                <h1 class="no-margin-t margin-b05">
+                  <apex:outputText value="{!myProfile.applicant.Account__r.FirstName}"/>
+                  <apex:outputText value=" '{!myProfile.primary.Nick_Name__c}' " rendered="{!NOT(ISBLANK(myProfile.primary.Nick_Name__c))}"/>
+                  <apex:outputText value=" {!myProfile.applicant.Account__r.LastName}"/>
+                </h1>
+              </div>
+            </div>
+            <!--  end row -->
+            
+            <div class="row">
+              <div class="col-sm-12">
+                <!-- <apex:outputText rendered="{!myProfile.participant.In_Country__c == 'Yes'&& NOT(ISNULL(myProfile.ExitInterv))}">  -->
+                <apex:outputText rendered="{!myProfile.participant.Engagement_Type__c == 'Rematch'}">
+                  <div class="item-subtitle"> <span class="item-subtitle-ic" data-placement="auto right" data-toggle="popover" data-content="In-country au pairs are already in the United States and available for placement. In-country au pair availability is dependent upon factors such as the au pair's current location, childcare qualifications and the end date of her most recent placement. The fees for in-country au pairs are calculated by months in placement and due in full upon matching.">In-Country Au Pair</span></div>
+                </apex:outputText>
+                <!--  <apex:outputText rendered="{!AND(myProfile.applicant.Application_Type__c == 'Renewal', myProfile.participant.In_Country__c == 'No')}"> -->
+                 <apex:outputText rendered="{!myProfile.participant.Engagement_Type__c == 'Renewal'}"> 
+                  <div class="item-subtitle"> <span class="item-subtitle-ext" data-placement="auto right" data-toggle="popover" data-content="Extension au pairs have completed their first placement with a family in the United States and have opted to extend their stay with a new family another 6, 9 or 12 months. Their availability is dependent upon the last working day in their current placement. The fee for an extension au pair au pairs are calculated by months in placement and due in full upon matching.">Extension Au Pair</span></div>
+                </apex:outputText>
+                <!-- <apex:outputText rendered="{!AND(myProfile.participant.Infant_Specialized_Circulated__c == true,myProfile.participant.In_Country__c == 'No')}">  -->
+                <apex:outputText rendered="{!myProfile.participant.Infant_Specialized_Circulated__c == true}">
+                  <div class="item-subtitle"> <span class="item-subtitle-is" data-placement="auto right" data-toggle="popover">Infant Specialized Au Pair</span>
+                    <div class="popover-html"> AuPairCare's unique Infant Specialized program provides host families with a specially trained au pair with a focus on infant care giving and development.  This five day infant orientation and training program is designed for au pairs caring for infants from 0-12 months and includes certification in Infant CPR and First Aid, baby massage and sign language. <em><b>There is an additional $950 charge at the time of matching with an Infant Specialized au pair, this designation cannot be removed.</b></em> Contact your matching expert or <a href="http://www.aupaircare.com/stories/infant-specialized-au-pairs" target="_blank">click here</a> to learn more about this unique program." </div>
+                  </div>
+                </apex:outputText>
+                <apex:outputText rendered="{!myProfile.participant.Special_Needs_Indicated__c == 'Yes' && (myProfile.participant.Special_Needs_Circulated__c == 'Circulate SN' || myProfile.participant.Special_Needs_Circulated__c == 'Circulate Both')}">
+                  <div class="item-subtitle"> <span class="item-subtitle-sn" data-placement="auto right" data-toggle="popover" data-content="Special Needs au pairs have indicated both experience and willingness to care for children with Special Needs under the childcare experience portion of their application. Per Department of State Exchange Visitor Regulation 62.31.e.4 AuPairCare will only place a Special Needs designated au pair in homes when a family indicates there is a child needing specialized care.">Special Needs Au Pair</span></div>
+                </apex:outputText>
+              </div>
+            </div>
+            <!--  end row -->
+            
+            <apex:outputPanel layout="block" rendered="{!vUI == 'Becoming an au pair'}" id="IntervAvailabilityBlock">
+                <div class="profile-section">
+                    <apex:outputPanel layout="block" styleClass="form-group {!IF(myProfile.participant.Interview_Availability__c == null, 'box yellow','')}">
+                      <apex:outputPanel rendered="{!myProfile.participant.Interview_Availability__c == null}" layout="block">
+                        <label class="control-label">When should families contact you?  Choose all that apply.</label>
+                      </apex:outputPanel>
+                      <apex:commandLink rendered="{!myProfile.participant.Interview_Availability__c == null}"  rerender="BlockModalInLine" oncomplete="openModalInLine();" status="pleasewait01"> <b>Answer This Question</b>
+                        <apex:param name="fieldId" value="1"/>
+                        <apex:param name="label" value="Interview Availability"/>
+                      </apex:commandLink>
+                      <apex:outputPanel styleClass="inline-block" rendered="{!myProfile.participant.Interview_Availability__c != null}" layout="block">
+                        <label class="control-label">Best Time(s) to Contact For Interviews </label>
+                      </apex:outputPanel>
+                      <apex:commandLink rendered="{!myProfile.participant.Interview_Availability__c != null}"  rerender="BlockModalInLine" oncomplete="openModalInLine();" status="pleasewait01"> <b>Edit</b>
+                        <apex:param name="fieldId" value="1"/>
+                        <apex:param name="label" value="Interview Availability"/>
+                      </apex:commandLink>
+                      <div>
+                        <apex:outputPanel id="InterBlock1" layout="block">
+                          <apex:outputText escape="false" value="{!SUBSTITUTE(myProfile.participant.Interview_Availability__c,';',', ')}"/>
+                        </apex:outputPanel>
+                      </div>
+                    </apex:outputPanel>
+                    <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st"  id="pleasewait01">
+                      <apex:facet name="start">
+                        <div>Loading. Please wait...</div>
+                      </apex:facet>
+                    </apex:actionStatus>
+                  </div>
+            </apex:outputPanel>
+            <apex:pageBlock id="InterviewAvailabilityBlock" rendered="{!vUI == 'Hosting an au pair'}">
+              <apex:outputPanel layout="block" styleClass="box alert alert-warning margin-t2 margin-b2" rendered="{!myprofile.hasInterviewInProgress}">
+                <h3 class="no-margin-t margin-b2">Interview Information</h3>
+                <apex:outputText rendered="{!NOT(ISBLANK(myProfile.participant.Interview_Availability__c))}">
+                <div class="row margin-b1"> 
+                  <div class="col-sm-12">
+                    <div>
+                      <label class="control-label">Interview Availability</label>
+                    </div>
+                    <div>
+                      <apex:outputText escape="false" value="{!SUBSTITUTE(myProfile.participant.Interview_Availability__c,';',', ')}"/>
+                    </div>
+                  </div>
+                  <!--  end col --> 
+                </div>
+                <!--  end row -->
+                
+                </apex:outputText>
+                <div class="row margin-b1">
+                  
+                 
+                  <apex:outputText rendered="{!NOT(ISBLANK(myProfile.applicant.Account__r.personEmail))}">
+                    <div class="col-sm-4">
+                      <div>
+                        <label class="control-label">Email</label>
+                      </div>
+                      <div>
+                        <apex:outputText value="{!myProfile.applicant.Account__r.personEmail}"/>
+                      </div>
+                    </div>
+                  </apex:outputText>
+                 
+                 
+                  <apex:outputText rendered="{!NOT(ISBLANK(myProfile.applicant.Account__r.Skype_ID__pc))}">
+                  <div class="col-sm-4">
+                    <div>
+                      <label class="control-label">Skype ID</label>
+                    </div>
+                    <div>
+                      <apex:outputText value="{!myProfile.applicant.Account__r.Skype_ID__pc}"/>
+                    </div>
+                  </div>
+                  </apex:outputText>
+                  
+                <!--   <apex:outputText rendered="{!NOT(ISBLANK(myProfile.primary.Phone_Country_Code__c))}">
+                  <div class="col-sm-4">
+                    <div>
+                      <label class="control-label">Phone Country Code</label>
+                    </div>
+                    <div>
+                      <apex:outputText value="{!myProfile.primary.Phone_Country_Code__c}"/>
+                    </div>
+                  </div>
+                  </apex:outputText> -->
+                  
+                  
+                  
+                  
+                  <apex:outputText rendered="{!NOT(ISBLANK(myProfile.applicant.Account__r.personHomePhone))}">
+                  <div class="col-sm-4">
+                  <div>
+                    <label class="control-label">Phone </label>
+                  </div>
+                  <div>
+                    <apex:outputText value="{!myProfile.primary.Phone_Country_Code__c + ' ' + myProfile.applicant.Account__r.personHomePhone} "/> 
+                   <!--  <apex:outputText value="{!myProfile.applicant.Account__r.personHomePhone}"/>  -->
+                  </div>
+                  <div>
+                    <apex:outputText value=" / {!myProfile.applicant.Account__r.personOtherPhone}" rendered="NOT(ISBLANK(myProfile.applicant.Account__r.personOtherPhone))"/>
+                  </div>
+                  </div>
+                  </apex:outputText>
+              
+              </div><!-- end row -->    
+                    
+             
+               <div class="row">       
+                    <apex:outputText rendered="{!NOT(ISBLANK(myProfile.selection.Interview_End_Date__c))}">
+                   
+                    <div class="col-sm-4">
+                    <div> 
+                      <label class="control-label">Your interview will expire on</label>
+                    </div>
+                     <div>
+                      <apex:outputText value="{0,date, MMMM d, yyyy h:mm a}" >
+                      <apex:param value="{!myProfile.selection.Interview_End_Date__c+offset}"/>
+                      </apex:outputText>
+                    </div> 
+                  </div> <!--  end col -->
+                   </apex:outputText>
+                  
+                  
+                  
+                </div>
+                <!--  end row -->                
+                
+                  <apex:pageBlock id="Req-Match" rendered="{!AND(myProfile.participant.Placement_Status__c != 'Pending', myProfile.participant.Placement_Status__c != 'Confirmed')}">
+                   
+                   <div class="margin-t2"><apex:outputLink value="/apex/apc_hf_interviews"> <b class="sm">Request a match, cancel your interview or provide feedback</b> </apex:outputLink></div>
+                  <!--<apex:commandlink styleClass="btn btn-primary btn-lg  margin-t2" rendered="{!myProfile.hadInterview}" id="Reqmatch" action="/apc_hf_match_request?id={!myProfile.selection.id}">
+                    <apex:commandButton value="Request Match" id="Reqbtn"  />
+                  </apex:commandlink>
+                  -->
+               
+                  
+                </apex:pageBlock>
+                
+                <apex:pageBlock id="Req-Match2" rendered="{!OR(myProfile.participant.Placement_Status__c == 'Pending', myProfile.participant.Placement_Status__c == 'Confirmed')}">
+                    <div class="margin-t2"><b class="sm"><apex:outputText value="This au pair is currently unavailable for a match request." /></b></div>
+                </apex:pageBlock>
+                
+              </apex:outputPanel>
+            </apex:pageBlock>
+            <div class="profile-section">
+              <h2>Overview</h2>
+              <div class="row">
+                <apex:outputText rendered="{!NOT(ISBLANK(myProfile.participant.Earliest_Match_Date__c))}">
+                  
+                      <apex:outputPanel layout="block" rendered="{!myProfile.Participant.In_Country__c == 'No'}">
+                      <div class="col-sm-4">
+                    <div class="form-group">
+                        <div><label>Arrives By</label></div>
+                        <div><apex:outputfield rendered='{!myProfile.participant.Earliest_Match_Date__c >= myProfile.firstAvailableArrivalDate}' value="{!myProfile.participant.Earliest_Match_Date__c}"/>
+                        <apex:outputText rendered="{!myProfile.participant.Earliest_Match_Date__c < myProfile.firstAvailableArrivalDate}"  value="{0,date,M/d/yyyy}">
+                          <apex:param value="{!myProfile.firstAvailableArrivalDate}" />
+                        </apex:outputText></div>
+                        </div>
+                        </div>
+                      </apex:outputPanel>
+                      
+                      
+                      <apex:outputPanel layout="block" rendered="{!AND(myProfile.Participant.In_Country__c == 'Yes', OR(myProfile.participant.Earliest_Match_Date__c == myProfile.participant.Latest_Match_Date__c, myProfile.participant.Latest_Match_Date__c == null))}">
+                        <div class="col-sm-4">
+                    <div class="form-group">
+                        <div><label>Available On</label></div>
+                        <div><apex:outputfield value="{!myProfile.participant.Earliest_Match_Date__c}"/></div>
+                        </div>
+                        </div>
+                      </apex:outputPanel>
+                      
+                </apex:outputText>
+                
+                
+                 <apex:outputPanel layout="block" rendered="{!AND(myProfile.participant.In_Country__c == 'Yes', myProfile.participant.Earliest_Match_Date__c != myProfile.participant.Latest_Match_Date__c, myProfile.participant.Latest_Match_Date__c != null)}">                        
+                    <div class="col-sm-4">
+                        <div class="form-group"> 
+                            <div><label>First Available to Match</label></div>
+                            <div><apex:outputfield value="{!myProfile.participant.Earliest_Match_Date__c}"/></div>
+                        </div>
+                    </div>   
+                                     
+                    <div class="col-sm-4">
+                        <div class="form-group">    
+                            <div><label>Last Available to Match</label></div>
+                            <div><apex:outputfield value="{!myProfile.participant.Latest_Match_Date__c}"/></div>
+                        </div>
+                    </div>                                     
+                 </apex:outputPanel>   
+                   
+                 <div class="col-sm-4">
+                    <div class="form-group">    
+                        <div>
+                        
+                        <label>
+                            <apex:outputText value="Duration of Match" rendered="{!OR(AND(myProfile.participant.In_Country__c == 'Yes', NOT(ISNULL(myProfile.exitInterv))),AND(myProfile.participant.In_Country__c == 'Yes', myProfile.Applicant.Application_Type__c = 'Renewal'))}"/>
+  							<apex:outputText value="Duration of Match" rendered="{!myProfile.participant.In_Country__c == 'No'}"/>
+                        </label>
+                            
+                            
+                            </div>
+                            
+                            
+                        <div>
+	                        <apex:outputText rendered="{!OR(AND(myProfile.participant.In_Country__c == 'Yes', NOT(ISNULL(myProfile.exitInterv))),AND(myProfile.participant.In_Country__c == 'Yes', myProfile.Applicant.Application_Type__c = 'Renewal'))}">
+	                        Until&nbsp;<apex:outputfield value="{!myProfile.participant.Engagement_End__c}"/>
+	                        </apex:outputText>
+                            <apex:outputText rendered="{!myProfile.participant.In_Country__c == 'No'}">
+                            12 months
+                            </apex:outputText>
+                        
+                        </div>
+                     
+                     </div>
+                 </div>             
+                 
+               
+                <div class="col-sm-4">
+                  <apex:outputText rendered="{!NOT(ISBLANK(myProfile.participant.Account_Id__r.Age__pc))}">
+                      <div class="form-group">
+                        <div><label>Age</label></div>
+                        <div><apex:outputText value="{!myProfile.participant.Account_Id__r.Age__pc}"/></div>
+                      </div>
+                  </apex:outputText>
+                </div>
+                
+                
+                <apex:outputText rendered="{!NOT(ISBLANK(myProfile.participant.Driving_Frequency__c))}">
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div><label>Driving</label> <i class=" infobtn fa fa-question-circle" data-placement="auto right" data-toggle="popover" data-content="There is a transition period for the au pair to learn the specific driving rules and regulations in your state and it is the host family's responsibility to help the au pair become acclimated to the vehicle, roads and car safety rules. Driving practice with the au pair is encouraged."></i>
+                      </div>
+                      <div><apex:outputField value="{!myProfile.participant.Driving_Frequency__c}"/> 
+                      
+                     
+                      </div>
+                    </div>
+                  </div>
+                </apex:outputText>
+                <apex:outputText rendered="{!NOT(ISBLANK(myProfile.participant.Nationality__c))}">
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div><label>Nationality</label></div>
+                      <div><apex:outputField value="{!myProfile.participant.Nationality__c}"/></div>
+                    </div>
+                  </div>
+                </apex:outputText>
+                
+                <apex:outputText rendered="{!myProfile.languages_indicated}">
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <div><label>Spoken Languages(s)</label></div>
+                    <div><apex:repeat id="repeatLang"  value="{!myProfile.mapLang}" var="lang"> <span>
+                      <apex:outputText value="{!lang}"/>
+                      <apex:outputText rendered="{!lang == 'English'}">
+                      <apex:outputText value=" (Conversational)"/>
+                      </apex:outputText>
+                      <apex:outputText rendered="{!lang != 'English'}">
+                      <apex:outputText value=" ({!myProfile.mapLang[lang]})" rendered="{!NOT(myProfile.mapLang[lang] == 'no-proficiency')}"/>
+                      </apex:outputText>
+                      </span> <br/>
+                    </apex:repeat>
+                    </div>
+                  </div>
+                </div>
+                </apex:outputText>
+                <apex:outputText rendered="{!NOT(ISBLANK(myProfile.participant.Swimming_Level__c))}">
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div><label>Swimming</label></div>
+                      <div><apex:outputField value="{!myProfile.participant.Swimming_Level__c}"/></div>
+                    </div>
+                  </div>
+                </apex:outputText>
+              </div>
+              <!--  end row -->
+              
+              <apex:outputPanel layout="block" rendered="{!myProfile.HLightList.size > 0}">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <label class="margin-r1">Au Pair Highlights</label>
+                    <apex:repeat id="repeatHLIghts"  value="{!myProfile.HLightList}" var="item">
+                      <apex:outputPanel styleClass="highlight" layout="block" rendered="{!item == 'Previous Au Pair'}"> <span class="icon ix-aupair"></span> <span class="highlight-label">{!item}</span> </apex:outputPanel>
+                      <apex:outputPanel styleClass="highlight" layout="block" rendered="{!item == 'Advanced Education'}"> <span class="icon ix-graduation"></span> <span class="highlight-label">{!item}</span> </apex:outputPanel>
+                      <apex:outputPanel styleClass="highlight" layout="block" rendered="{!item == 'Older Sibling'}"> <span class="icon ix-oldersibling"></span> <span class="highlight-label">{!item}</span> </apex:outputPanel>
+                      <apex:outputPanel styleClass="highlight" layout="block" rendered="{!item == 'Lifeguard'}"> <span class="icon ix-lifeguard"></span> <span class="highlight-label">{!item}</span> </apex:outputPanel>
+                      <apex:outputPanel styleClass="highlight" layout="block" rendered="{!item == 'Nursing experience'}"> <span class="icon ix-nurse"></span> <span class="highlight-label">{!item}</span> </apex:outputPanel>
+                      <apex:outputPanel styleClass="highlight" layout="block" rendered="{!item == 'Trained in First Aid'}"> <span class="icon ix-firstaid"></span> <span class="highlight-label">{!item}</span> </apex:outputPanel>
+                      <apex:outputPanel styleClass="highlight" layout="block" rendered="{!item == 'Teacher or Tutor'}"> <span class="icon ix-tutor"></span> <span class="highlight-label">{!item}</span> </apex:outputPanel>
+                      <apex:outputPanel styleClass="highlight" layout="block" rendered="{!item == 'Large Family'}"> <span class="icon ix-largefamily"></span> <span class="highlight-label">{!item}</span> </apex:outputPanel>
+                      <apex:outputPanel styleClass="highlight" layout="block" rendered="{!item == 'Multiples Experience'}"> <span class="icon ix-multiples"></span> <span class="highlight-label">{!item}</span> </apex:outputPanel>
+                      <apex:outputPanel styleClass="highlight" layout="block" rendered="{!item == 'Athletic'}"> <span class="icon ix-shoe"></span> <span class="highlight-label">{!item}</span> </apex:outputPanel>
+                      <apex:outputPanel styleClass="highlight" layout="block" rendered="{!item == 'Multi-lingual'}"> <span class="icon ix-translate"></span> <span class="highlight-label">{!item}</span> </apex:outputPanel>
+                      <apex:outputPanel styleClass="highlight" layout="block" rendered="{!item == 'Musical'}"> <span class="icon ix-music"></span> <span class="highlight-label">{!item}</span> </apex:outputPanel>
+                      <apex:outputPanel styleClass="highlight" layout="block" rendered="{!item == 'Lived Independently'}"> <span class="icon ix-independent"></span> <span class="highlight-label">{!item}</span> </apex:outputPanel>
+                      <apex:outputPanel styleClass="highlight" layout="block" rendered="{!item == 'Cooking skills'}"> <span class="icon ix-cooking"></span> <span class="highlight-label">{!item}</span> </apex:outputPanel>
+                      <apex:outputPanel styleClass="highlight" layout="block" rendered="{!item == 'Traveler'}"> <span class="icon ix-travel"></span> <span class="highlight-label">{!item}</span> </apex:outputPanel>
+                    </apex:repeat>
+                  </div>
+                </div>
+              </apex:outputPanel>
+            </div>
+            <!--  end profile section -->
+            
+            <apex:outputPanel layout="block" rendered="{!AND(myProfile.participant.In_Country__c == 'Yes', ISNULL(myProfile.exitInterv))}">
+              <div id="exitInterview" class="profile-section">
+                <h2>Extension Au Pair Information</h2>
+                <div class="row">
+                  <apex:outputText rendered="{!NOT(ISBLANK(myProfile.participant.Extension_Departure_Airport__c))}">
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label class="control-label">Extension Departure Airport</label>
+                        <apex:outputfield value="{!myProfile.participant.Extension_Departure_Airport__c}"/>
+                      </div>
+                    </div>
+                  </apex:outputText>
+                </div>
+              </div>
+              <!-- end profile section --> 
+            </apex:outputPanel>
+            <apex:pageBlock rendered="{!AND(myProfile.participant.In_Country__c == 'Yes', NOT(ISNULL(myProfile.exitInterv)))}">
+              <div id="exitInterview" class="profile-section">
+                <h2>In-Country Au Pair Information</h2>
+                <div class="row">
+                  <apex:outputText rendered="{!NOT(ISBLANK(myProfile.exitInterv.Match_Break_Reason_Detail__c))}">
+                    <div class="col-sm-12">
+                      <div class="form-group">
+                        <label class="control-label">Reason For Recent Match Break</label>
+                        <apex:outputfield value="{!myProfile.exitInterv.Match_Break_Reason_Detail__c}"/>
+                      </div>
+                    </div>
+                  </apex:outputText>
+                  </div>
+                  <div class="row">
+                  <apex:outputText rendered="{!NOT(ISBLANK(myProfile.exitInterv.Participant_Description__c))}">
+                    <div class="col-sm-12">
+                      <div class="form-group">
+                        <label class="control-label">More About This Au Pair</label>
+                        <span>
+                        <apex:outputfield value="{!myProfile.exitInterv.Participant_Description__c}"/>
+                        </span></div>
+                    </div>
+                  </apex:outputText>
+                </div>
+                <div class="row">
+                  <apex:outputText rendered="{!NOT(ISBLANK(myProfile.exitInterv.Vacation_Days_Taken__c))}">
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <label class="control-label">Vacation Days Remaining</label>
+                      <span>
+                      <apex:outputText value="{!CEILING(10 - myProfile.exitInterv.Vacation_Days_Taken__c)}"/>
+                      </span></div>
+                  </div>
+                  </apex:outputText>
+                  <apex:outputText >
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <label class="control-label">Education Stipend Remaining</label>
+                      <apex:outputText value="${!myProfile.Stipend_Owed_Amount}"/>
+                    </div>
+                  </div>
+                  </apex:outputText>
+                  
+                </div>
+                <!-- end row --> 
+              </div>
+              <!--  end profile section --> 
+            </apex:pageBlock>
+            <apex:outputPanel layout="block" rendered="{!myProfile.listExperience.size > 0}">
+              <div id="child" class="profile-section">
+                <h2>Childcare Experience</h2>
+                <apex:outputPanel layout="block" rendered="{!myProfile.participant.Childcare_Total_Hours__c != null && myProfile.participant.Childcare_Total_Hours__c > 0}">
+                  <div class="inline-block">
+                    <div class="stat vs1">
+                      <div class="tcell"><i class="fa fa-clock-o"></i></div>
+                      <div class="tcell">
+                        <label> Childcare Hours </label>
+                        <div class="stat-desc">
+                          <apex:outputField value="{!myProfile.participant.Childcare_Total_Hours__c}"/>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <apex:outputText rendered="{!NOT(OR(ISBLANK(myProfile.ChildrenAges), myProfile.ChildrenAges == ''))}">
+                  <div class="inline-block">
+                    <div class="stat vs1">
+                      <div class="tcell"><i class="fa fa-child"></i></div>
+                      <div class="tcell">
+                        <label>Ages of Children Cared For</label>
+                        <div class="stat-desc">
+                          <apex:outputText value="{!myProfile.ChildrenAges}"/>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  </apex:outputText>
+                </apex:outputPanel>
+                <apex:pageBlock rendered="{!myProfile.participant.In_Country__c == 'No'}">
+                  <apex:repeat id="repeatExperience" value="{!myProfile.listExperience}" var="experience">
+                    <hr class="margin-b3 margin-t3"/>
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <h3 class="no-margin">{!experience.Experience_Type__c} Experience </h3>
+                        <div> <em>for</em>
+                          <apex:outputText rendered="{!experience.Experience_Category__c =='Public/Group'}" value=" {!experience.Employer_Name__c}"/>
+                          <apex:outputText rendered="{!experience.Experience_Category__c =='Private/Individual'}" value=" {!experience.First_Name__c} {!experience.Last_Name__c}"/>
+                        </div>
+                      </div>
+                      <!-- end col -->
+                      
+                      <div class="col-sm-4">
+                        <div>
+                          <label class="control-label">Dates</label>
+                          <apex:outputfield value="{!experience.Start_Date__c}"/>
+                          - 
+                          &nbsp;
+                          <apex:outputfield value="{!experience.End_Date__c}"/>
+                        </div>
+                      </div>
+                      <!-- end col -->
+                      
+                      <div class="col-sm-4">
+                        <div>
+                        <label class="control-label">Childcare Hours</label>
+                          <apex:outputField value="{!experience.Amount_Hours__c}"/>
+                          <apex:outputText value=" ({!IF(experience.Amount_Hours_Under_2__c == null, 0, experience.Amount_Hours_Under_2__c)} with infants)"/>
+
+                           </div>
+                      </div>
+                      <!-- end col --> 
+                      
+                    </div>
+                    <!-- end row -->
+                    <apex:variable value="{!1}" var="rowNum" id="rowCounter"/>
+                    <div class="collapse" id="childcare{!experience.Id}">
+                      <div class=" box gray margin-t2 margin-b1">
+                        <apex:outputPanel styleClass="margin-b2" layout="block" rendered="{!experience.Experience_Category__c == 'Private/Individual'}">
+                          <label class="margin-b1">List of Children Cared For:</label>
+                          <apex:repeat id="repeatExperienceDet" value="{!myProfile.MapExperienceDet[experience.id]}" var="experienceDet">
+                            <div>
+                              <apex:outputText rendered="{!experienceDet.Gender__c == 'Male'}"> <span style="color:#202020; font-size:30px;" class="vmiddle icon ix-fam-brother-sm margin-r1"></span> </apex:outputText>
+                              <apex:outputText rendered="{!experienceDet.Gender__c == 'Female'}"> <span style="color:#202020; font-size:30px;" class="vmiddle icon ix-fam-sister-sm margin-r1"></span> </apex:outputText>
+                              <span class="padding-r1">
+                              <apex:outputText value="Child {!rowNum}"/>
+                              </span>
+                              <apex:outputText value="(" rendered="{!myProfile.ExpDetDOBStart[experienceDet.Id] != 'no-data'}"/>
+                          <!--<apex:outputText value="Less than 1 year" rendered="{!myProfile.ExpDetDOBStart[experienceDet.Id] == '0'}"/>
+                              <apex:outputText value="{!myProfile.ExpDetDOBStart[experienceDet.Id]}" rendered="{!AND(myProfile.ExpDetDOBEnd[experienceDet.Id] <> 'no-data', myProfile.ExpDetDOBStart[experienceDet.Id] != '0')}"/>                          
+                              <apex:outputText value=" - {!myProfile.ExpDetDOBEnd[experienceDet.Id]}" rendered="{!myProfile.ExpDetDOBEnd[experienceDet.Id] <> 'no-data' && myProfile.ExpDetDOBStart[experienceDet.Id] <> myProfile.ExpDetDOBEnd[experienceDet.Id] && myProfile.ExpDetDOBStart[experienceDet.Id] != '0' }"/>                             
+                              <apex:outputText value=" years old" rendered="{! AND(myProfile.ExpDetDOBEnd[experienceDet.Id] <> '0', myProfile.ExpDetDOBEnd[experienceDet.Id] <> 'no-data', myProfile.ExpDetDOBStart[experienceDet.Id] != '0')}"/>                              
+                            -->
+                              <apex:outputText value="Age at beginning: {!myProfile.ExpDetDOBStart[experienceDet.Id]}" rendered="{!myProfile.ExpDetDOBEnd[experienceDet.Id] <> 'no-data'}"/>                            
+                              <apex:outputText value=" - age at end: {!myProfile.ExpDetDOBEnd[experienceDet.Id]}" rendered="{!myProfile.ExpDetDOBEnd[experienceDet.Id] <> 'no-data' && myProfile.ExpDetDOBStart[experienceDet.Id] <> myProfile.ExpDetDOBEnd[experienceDet.Id]}"/>                               
+                              <apex:outputText value=")" rendered="{!myProfile.ExpDetDOBStart[experienceDet.Id] != 'no-data'}"/>
+                              <apex:outputText rendered="{!experienceDet.Special_Needs_Indicated__c == 'Yes'}"> - <a data-toggle="popover" data-content="{!experienceDet.Special_Needs_Description__c}"><b class="sm">Has special needs</b></a></apex:outputText>
+                             </div>
+                            <apex:variable var="rowNum" value="{!rowNum + 1}"/>
+                          </apex:repeat>
+                        </apex:outputPanel>
+                        <apex:outputPanel layout="block" rendered="{!experience.Experience_Category__c == 'Private/Individual'}">
+                          <apex:outputText rendered="{!NOT(ISBLANK(experience.Position_Responsibilities__c))}">
+                            <div class="row">
+                              <div class="col-sm-12">
+                                <div class="item-field vs1">
+                                  <label class="control-label">Responsibilities</label>
+                                  <span class="capitalize">
+                                  <apex:outputfield value="{!experience.Position_Responsibilities__c}"/>
+                                  </span> </div>
+                              </div>
+                            </div>
+                          </apex:outputText>
+                        </apex:outputPanel>
+                        <apex:outputText rendered="{!NOT(ISBLANK(experience.Position_Description__c))}">
+                          <div class="item-quote">
+                            <apex:image styleClass="img-circle" value="{!vRetUrl}" rendered="{!vRetUrl != 'no-picture'}"/>
+                            <span class="item-quote-text truncate">{!experience.Position_Description__c}</span> </div>
+                        </apex:outputText>
+                      </div>
+                    </div>
+                    <!--  end detail --> 
+                    <a class="sm" data-toggle="collapse" data-target="#childcare{!experience.Id}"><b>See Experience Details</b></a> </apex:repeat>
+                </apex:pageBlock>
+                <apex:pageBlock rendered="{!myProfile.participant.In_Country__c == 'Yes'}">
+                  <apex:repeat id="repeatExperience" value="{!myProfile.listICAPExperience}" var="experience">
+                    <hr class="margin-b3 margin-t3"/>
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <h3 class="no-margin">{!experience.Experience_Type__c} Experience </h3>
+                        <div> <em>for</em>
+                          <apex:outputText rendered="{!experience.Experience_Category__c =='Public/Group'}" value=" {!experience.Employer_Name__c}"/>
+                          <apex:outputText rendered="{!experience.Experience_Category__c =='Private/Individual'}" value="{!experience.First_Name__c} {!experience.Last_Name__c}"/>                          
+                        </div>
+                      </div>
+                      <!-- end col -->
+                      
+                      <div class="col-sm-4">
+                        <div>
+                          <label class="control-label">Dates</label>
+                          <apex:outputfield value="{!experience.Start_Date__c}"/>
+                          - 
+                          &nbsp;
+                          <apex:outputfield value="{!experience.End_Date__c}"/>
+                        </div>
+                      </div>
+                      <!-- end col -->
+                     
+                      <div class="col-sm-4">
+                        <div>
+                          <label class="control-label">Childcare Hours</label>
+                          <apex:outputField value="{!experience.Amount_Hours__c}"/>
+                          <apex:outputText value=" ({!IF(experience.Amount_Hours_Under_2__c == null, 0, experience.Amount_Hours_Under_2__c)} with infants)"/>
+                        </div>
+                      </div>
+                      <!-- end col --> 
+                      
+                    </div>
+                    <!-- end row -->
+                    <apex:variable value="{!1}" var="rowNum" id="rowCounter"/>
+                    <div class="collapse" id="childcare{!experience.Id}">
+                      <div class=" box gray margin-t2 margin-b1">
+                        <apex:outputPanel styleClass="margin-b2" layout="block" rendered="{!experience.Experience_Category__c == 'Private/Individual'}">
+                          <label class="margin-b1">List of Children Cared For:</label>
+                          <apex:repeat id="repeatExperienceDet" value="{!myProfile.MapExperienceDet[experience.id]}" var="experienceDet">
+                            <div>
+                              <apex:outputText rendered="{!experienceDet.Gender__c == 'Male'}"> <span style="color:#202020; font-size:30px;" class="vmiddle icon ix-fam-brother-sm margin-r1"></span> </apex:outputText>
+                              <apex:outputText rendered="{!experienceDet.Gender__c == 'Female'}"> <span style="color:#202020; font-size:30px;" class="vmiddle icon ix-fam-sister-sm margin-r1"></span> </apex:outputText>
+                              <span class="padding-r1">
+                              <apex:outputText value="Child {!rowNum}"/>
+                              </span> 
+                                <!--<apex:outputText value="Less than 1 year" rendered="{!myProfile.ExpDetDOBStart[experienceDet.Id] == '0'}"/>
+                              <apex:outputText value="{!myProfile.ExpDetDOBStart[experienceDet.Id]}" rendered="{!AND(myProfile.ExpDetDOBEnd[experienceDet.Id] <> 'no-data', myProfile.ExpDetDOBStart[experienceDet.Id] != '0')}"/>                          
+                              <apex:outputText value=" - {!myProfile.ExpDetDOBEnd[experienceDet.Id]}" rendered="{!myProfile.ExpDetDOBEnd[experienceDet.Id] <> 'no-data' && myProfile.ExpDetDOBStart[experienceDet.Id] <> myProfile.ExpDetDOBEnd[experienceDet.Id] && myProfile.ExpDetDOBStart[experienceDet.Id] != '0' }"/>                             
+                              <apex:outputText value=" years old" rendered="{! AND(myProfile.ExpDetDOBEnd[experienceDet.Id] <> '0', myProfile.ExpDetDOBEnd[experienceDet.Id] <> 'no-data', myProfile.ExpDetDOBStart[experienceDet.Id] != '0')}"/>                              
+                            -->
+                              <apex:outputText value="Age at beginning: {!myProfile.ExpDetDOBStart[experienceDet.Id]}" rendered="{!myProfile.ExpDetDOBEnd[experienceDet.Id] <> 'no-data'}"/>                            
+                              <apex:outputText value=" - Age at end: {!myProfile.ExpDetDOBEnd[experienceDet.Id]}" rendered="{!myProfile.ExpDetDOBEnd[experienceDet.Id] <> 'no-data' && myProfile.ExpDetDOBStart[experienceDet.Id] <> myProfile.ExpDetDOBEnd[experienceDet.Id]}"/>                               
+                              <apex:outputText value=")" rendered="{!myProfile.ExpDetDOBStart[experienceDet.Id] != 'no-data'}"/>
+                            </div>
+                            <apex:variable var="rowNum" value="{!rowNum + 1}"/>
+                          </apex:repeat>
+                        </apex:outputPanel>
+                        <apex:outputPanel layout="block" rendered="{!experience.Experience_Category__c == 'Private/Individual'}">
+                          <apex:outputText rendered="{!NOT(ISBLANK(experience.Position_Responsibilities__c))}">
+                            <div class="row">
+                              <div class="col-sm-12">
+                                <div class="item-field vs1">
+                                  <label class="control-label">Responsibilities</label>
+                                  <span class="capitalize">
+                                  <apex:outputfield value="{!experience.Position_Responsibilities__c}"/>
+                                  </span> </div>
+                              </div>
+                            </div>
+                          </apex:outputText>
+                        </apex:outputPanel>
+                        <apex:outputText rendered="{!NOT(ISBLANK(experience.Position_Description__c))}">
+                          <div class="item-quote">
+                            <apex:image styleClass="img-circle" value="{!vRetUrl}" rendered="{!vRetUrl != 'no-picture'}"/>
+                            <span class="item-quote-text truncate">{!experience.Position_Description__c}</span> </div>
+                        </apex:outputText>
+                      </div>
+                    </div>
+                    <!--  end detail --> 
+                    <a class="sm" data-toggle="collapse" data-target="#childcare{!experience.Id}"><b>See Experience Details</b></a> </apex:repeat>
+                </apex:pageBlock>
+              </div>
+              <!--  end childcare section --> 
+              
+            </apex:outputPanel>
+            <style>
+            #education .item + .item{margin-top:30px; padding-top:30px; border-top:#ccc solid 1px;}
+            
+            </style>
+            <div id="education" class="profile-section">
+              <h2>Education and Training</h2>
+              <apex:variable var="v2" value="'[]'"/>
+              <apex:variable var="v1u" value="'{!myProfile.MapEducation['University/College']}'"/>
+              <apex:outputText rendered="{!v1u != v2}">
+                <apex:repeat id="repeatUni" value="{!myProfile.MapEducation['University/College']}" var="college">
+                  <div class="item row margin-b2">
+                    <div class="col-sm-4">
+                      <h3 class="no-margin">
+                        <apex:outputText rendered="{!college.Program_Type__c == null}">College/University Degree</apex:outputText>
+                        <apex:outputText rendered="{!college.Program_Type__c != null}"><apex:outputfield value="{!college.Program_Type__c}"/>&nbsp;Degree</apex:outputText>
+                        </h3>
+                      <apex:outputfield value="{!college.Field_of_Study__c}"/>
+                    </div>
+                    <div class="col-sm-4">
+                      <apex:outputfield value="{!college.Institution_Name__c}"/>
+                      <br/>
+                      <apex:outputField value="{!college.Country__c}"/>
+                    </div>
+                    <div class="col-sm-4">
+                      <div>Graduated on&nbsp;
+                        <apex:outputField value="{!college.Graduation_Date__c}"/>
+                      </div>
+                    </div>
+                  </div>
+                  <!--  end row --> 
+                </apex:repeat>
+              </apex:outputText>
+              <apex:repeat id="repeatSchool" value="{!myProfile.MapEducation['High/Secondary School']}" var="school">
+                <div class="item row margin-b2">
+                  <div class="col-sm-4">
+                    <h3 class="no-margin">High School</h3>
+                  </div>
+                  <div class="col-sm-4">
+                    <apex:outputfield value="{!school.Institution_Name__c}"/>
+                    <br/>
+                    <apex:outputField value="{!school.Country__c}"/>
+                  </div>
+                  <div class="col-sm-4">
+                    <div>Graduated on&nbsp;
+                      <apex:outputField value="{!school.Graduation_Date__c}"/>
+                    </div>
+                  </div>
+                </div>
+                <!--  end row --> 
+              </apex:repeat>
+              <apex:variable var="v1v" value="'{!myProfile.MapEducation['Vocational Training']}'"/>
+              <apex:outputText rendered="{!v1v != v2}">
+                <apex:repeat id="repeatVocational" value="{!myProfile.MapEducation['Vocational Training']}" var="training">
+                  <div class="item row margin-b2">
+                    <div class="col-sm-4">
+                      <h3 class="no-margin">
+                        <apex:outputfield value="{!training.Program_Type__c}"/>
+                        Certificate</h3>
+                    </div>
+                    <div class="col-sm-4">
+                      <apex:outputfield value="{!training.Institution_Name__c}"/>
+                      <br/>
+                      <apex:outputField value="{!training.Country__c}"/>
+                    </div>
+                    <div class="col-sm-4">
+                      <div>Completed on&nbsp;
+                        <apex:outputField value="{!training.Graduation_Date__c}"/>
+                      </div>
+                    </div>
+                  </div>
+                  <!--  end row --> 
+                </apex:repeat>
+              </apex:outputText>
+            </div>
+            <!--  end profile section -->
+            
+            <div id="driving" class="profile-section">
+              <h2>Driving Experience</h2>
+              <apex:outputText rendered="{!NOT(ISBLANK(myProfile.participant.Engagement_Start__c))}"/>
+             
+             
+              
+              <apex:pageBlock rendered="{!myProfile.participant.In_Country__c == 'Yes'}">
+              
+              <div class="section-title margin-t3">Driving Experience in the U.S.</div>
+              
+            
+                
+                <div class="row">
+                  <apex:outputText rendered="{!NOT(ISBLANK(myProfile.participant.US_Drivers_Licence_Issued__c))}">
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <div>
+                          <label class="control-label">U.S. Driver's License</label>
+                        </div>
+                        <apex:outputfield value="{!myProfile.participant.US_Drivers_Licence_Issued__c}"/>
+                      </div>
+                    </div>
+                  </apex:outputText>
+                  <apex:outputText rendered="{!NOT(ISBLANK(myProfile.participant.US_Drivers_Licence_Expiry_Date__c))}">
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <div>
+                          <label class="control-label">U.S. License Expiration Date</label>
+                        </div>
+                        <apex:outputfield value="{!myProfile.participant.US_Drivers_Licence_Expiry_Date__c}"/>
+                      </div>
+                    </div>
+                  </apex:outputText>
+                  <apex:outputText rendered="{!NOT(ISBLANK(myProfile.participant.US_Drivers_Licence_State__c))}">
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <div>
+                          <label class="control-label">U.S. License State</label>
+                        </div>
+                        <apex:outputfield value="{!myProfile.participant.US_Drivers_Licence_State__c}"/>
+                      </div>
+                    </div>
+                  </apex:outputText>
+                </div>
+                <div class="row">
+                  <apex:outputText rendered="{!NOT(ISBLANK(myProfile.participant.US_Car_Type_Experience__c))}">
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div>
+                        <label class="control-label">Type of Cars Driven</label>
+                      </div>
+                      <apex:outputText value="{!SUBSTITUTE(myProfile.participant.US_Car_Type_Experience__c, ';', ', ')}"/>
+                    </div>
+                  </div>
+                  </apex:outputText>
+                  
+                  <apex:outputText rendered="{!NOT(ISBLANK(myProfile.participant.US_Drive_wChildren_Indicated__c))}">
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <div>
+                          <label class="control-label">Experience Driving With Children</label>
+                        </div>
+                        <apex:outputfield value="{!myProfile.participant.US_Drive_wChildren_Indicated__c}"/>
+                      </div>
+                    </div>
+                  </apex:outputText>
+                  
+                    <apex:outputText rendered="{!NOT(ISBLANK(myProfile.participant.US_Drivers_Accident_Indicated__c))}">
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <div>
+                          <label class="control-label">Any Accidents While Driving In U.S.</label>
+                        </div>
+                        <apex:outputfield value="{!myProfile.participant.US_Drivers_Accident_Indicated__c}"/>
+                      </div>
+                    </div>
+                  </apex:outputText>
+                </div>
+                <!-- end row --> 
+                
+                <div class="row">
+                  <apex:outputText rendered="{!AND(myProfile.participant.US_Drivers_Accident_Indicated__c == 'Yes', NOT(ISBLANK(myProfile.participant.US_Drivers_Accident_Detail__c)))}">
+                    <div class="col-sm-12">
+                      <div class="form-group">
+                        <label class="control-label">Details of Accident</label>
+                        <apex:outputfield value="{!myProfile.participant.US_Drivers_Accident_Detail__c}"/>
+                      </div>
+                    </div>
+                  </apex:outputText>
+                </div>
+              </apex:pageBlock>
+              
+              <div class="section-title margin-t2">Driving Experience in Home Country</div>
+              
+              <div class="row">
+                <apex:outputText rendered="{!NOT(ISBLANK(myProfile.participant.Drivers_Licence_Acquired__c))}">
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div>
+                        <label class="control-label">Received First License On</label>
+                      </div>
+                      <div>
+                        <apex:outputfield value="{!myProfile.participant.Drivers_Licence_Acquired__c}"/>
+                      </div>
+                    </div>
+                  </div>
+                </apex:outputText>
+               
+                <apex:outputPanel layout="block" rendered="{!myProfile.participant.In_Country__c == 'No'}"> 
+                <apex:outputText rendered="{!NOT(ISBLANK(myProfile.participant.Drivers_Licence_Expires__c))}">
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div>
+                        <label class="control-label">Current License Expires On</label>
+                      </div>
+                      <div>
+                        <apex:outputfield value="{!myProfile.participant.Drivers_Licence_Expires__c}"/>
+                      </div>
+                    </div>
+                  </div>
+                </apex:outputText>
+               </apex:outputPanel>
+                
+                <apex:outputText rendered="{!NOT(ISBLANK(myProfile.participant.Driving_Experience__c))}">
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <div>
+                      <label class="control-label">
+                        <apex:outputText value="Where {!IF(myProfile.primary.Gender__c =='Male', 'He', 'She')} Drives"/>
+                      </label>
+                    </div>
+                    <div>
+                      <apex:outputText value="{!SUBSTITUTE(myProfile.participant.Driving_Experience__c, ';', ', ')}"/>
+                    </div>
+                  </div>
+                </div>
+                </apex:outputText>
+              </div>
+              <!--  end row -->
+              
+              <div class="row">
+                <apex:outputText rendered="{!NOT(ISBLANK(myProfile.participant.Driving_Frequency__c))}">
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div>
+                        <label class="control-label">Driving Frequency</label>
+                      </div>
+                      <div>
+                        <apex:outputfield value="{!myProfile.participant.Driving_Frequency__c}"/>
+                      </div>
+                    </div>
+                  </div>
+                </apex:outputText>
+                <apex:outputText rendered="{!NOT(ISBLANK(myProfile.participant.Driving_Transmission__c))}">
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <div>
+                      <label class="control-label">Comfortable Driving</label>
+                    </div>
+                    <div>
+                      <apex:outputText value="{!SUBSTITUTE(myProfile.participant.Driving_Transmission__c, ';', ', ')}"/>
+                    </div>
+                  </div>
+                </div>
+                </apex:outputText>
+                <apex:outputText rendered="{!NOT(ISBLANK(myProfile.participant.Driving_Snow_Experience__c))}">
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div>
+                        <label class="control-label">Experience Driving in Snow</label>
+                      </div>
+                      <div>
+                        <apex:outputfield value="{!myProfile.participant.Driving_Snow_Experience__c}"/>
+                      </div>
+                    </div>
+                  </div>
+                </apex:outputText>
+              </div>
+              <!-- end row -->
+              
+              <apex:outputPanel layout="block" styleClass="row margin-t2" rendered="{!NOT(ISBLANK(myProfile.participant.Driving_Experience_Description__c))}">
+                <div class="col-sm-12">
+                  <div class="item-quote">
+                    <apex:image styleClass="img-circle" value="{!vRetUrl}" rendered="{!vRetUrl != 'no-picture'}"/>
+                    <span class="item-quote-text truncate">{!myProfile.participant.Driving_Experience_Description__c}</span> </div>
+                </div>
+              </apex:outputPanel>
+              <!--  end row --> 
+            </div>
+            <!--  end profile section -->
+            
+            <div class="profile-section" id="family-members">
+              <h2>
+                <apex:outputText value="{!myProfile.participant.Account_Id__r.FirstName}"/>
+                's Family</h2>
+              <div class="table-responsive">
+                <table class="table inline-block">
+                  <tr>
+                    <apex:repeat id="repeatFamily"  value="{!myProfile.familyList}" var="family">
+                      <th> <div class="item inline-block margin-r4">
+                          <div class="family-icon-wrapper">
+                            <apex:outputPanel styleClass="icon ix-fam-father" rendered="{!family['Role__c'] == 'Parent' && family['Gender__c'] == 'Male'}" layout="block"></apex:outputPanel>
+                            <apex:outputPanel styleClass="icon ix-fam-mother" rendered="{!family['Role__c'] == 'Parent' && family['Gender__c'] == 'Female'}" layout="block"></apex:outputPanel>
+                            <apex:outputPanel styleClass="icon ix-fam-brother-md" rendered="{!family['Role__c'] == 'Sibling' && family['Gender__c'] == 'Male' && family['Age__c'] > 14}" layout="block"></apex:outputPanel>
+                            <apex:outputPanel styleClass="icon ix-fam-sister-md" rendered="{!family['Role__c'] == 'Sibling' && family['Gender__c'] == 'Female' && family['Age__c'] > 14}" layout="block"></apex:outputPanel>
+                            <apex:outputPanel styleClass="icon ix-fam-brother-sm" rendered="{!family['Role__c'] == 'Sibling' && family['Gender__c'] == 'Male' && family['Age__c'] <= 14 && family['Age__c'] > 1}" layout="block"></apex:outputPanel>
+                            <apex:outputPanel styleClass="icon ix-fam-sister-sm" rendered="{!family['Role__c'] == 'Sibling' && family['Gender__c'] == 'Female' && family['Age__c'] <= 14 && family['Age__c'] > 1}" layout="block"></apex:outputPanel>
+                            <apex:outputPanel styleClass="icon ix-aupair" rendered="{!family['Role__c'] == 'Sibling' && family['Age__c'] <= 1 }" layout="block"></apex:outputPanel>
+                          </div>
+                        </div>
+                      </th>
+                    </apex:repeat>
+                  </tr>
+                  <tr>
+                    <apex:repeat id="repeatFamily2"  value="{!myProfile.familyList}" var="family">
+                      <td><div class="item inline-block margin-r4">
+                          <div class="family-detail-wrapper"> <b class="sm">
+                            <apex:outputText value="{!family['First_Name__c']}"/>
+                            </b>
+                            <div><em>
+                              <apex:outputText value="Parent" rendered="{!family['Role__c'] == 'Parent'}"/>
+                              </em></div>
+                            <apex:outputText rendered="{!family['Role__c'] == 'Sibling'}">
+                            <div><em>
+                              <apex:outputText value="{!IF(family['Gender__c'] == 'Male','Brother', 'Sister')}"/>
+                              </em></div>
+                            <div>
+                              <apex:outputText value="({!family['Age__c']} yrs old)" rendered="{!family['Age__c'] > 1}"/>
+                            </div>
+                            <div>
+                              <apex:outputText value="(1 yr old)" rendered="{!family['Age__c'] == 1}"/>
+                            </div>
+                            <div>
+                              <apex:outputText value="(Less than 1 yr old)" rendered="{!family['Age__c'] < 1}"/>
+                            </div>
+                            </apex:outputText>
+                            <apex:outputText rendered="{!NOT(ISBLANK(family['Profession__c']))}">
+                            <div>
+                              <apex:outputText value="{!family['Profession__c']}" rendered="{!NOT(ISBLANK(family['Profession__c']))}"/>
+                            </div>
+                            </apex:outputText>
+                          </div>
+                        </div></td>
+                    </apex:repeat>
+                  </tr>
+                </table>
+            
+            
+             
+            
+          
+               
+                <style>
+            .migrated-member{
+                height: 95px;
+    padding-top: 20px;
+    text-align: center;
+            }
+            </style>  
+            
+               <apex:outputText rendered="{!AND(NOT(myProfile.SiblingsIndicated), myProfile.applicant.Brothers_Indicated__c)}">
+                    <div class="inline-block vtop margin-r2">
+                    <div class="icon ix-fam-brother-md migrated-member" ></div>
+                    <div class="family-detail-wrapper">
+                    <b class="sm">Has Brother(s)</b>
+                    </div> 
+                  </div>
+                  </apex:outputText>
+                   
+                  <apex:outputText rendered="{!AND(NOT(myProfile.SiblingsIndicated), myProfile.applicant.Sisters_Indicated__c)}">
+                     <div class="inline-block vtop">
+                    <div class="icon ix-fam-sister-md  migrated-member"></div>
+                    <div class="family-detail-wrapper">
+                    <b class="sm">Has Sister(s)</b>
+                    </div>
+                    </div>
+                    </apex:outputText>
+                
+             
+                
+              </div>
+              
+              <div class="row margin-t3">
+                <div class="col-sm-12">
+                  <div class="item-quote">
+                    <apex:image styleClass="img-circle" value="{!vRetUrl}" rendered="{!vRetUrl != 'no-picture'}"/>
+                    <div class="item-quote-text truncate">{!myProfile.applicant.Family_Description__c} <a class="readmore">Read More</a></div>
+                  </div>
+                </div>
+              </div>
+              <!--  end row --> 
+            </div>
+            <div id="hobbies" class="profile-section">
+              <h2>Interests and Hobbies</h2>
+              <div class="row ">
+                <apex:outputText rendered="{!NOT(ISBLANK(myProfile.applicant.Interest_Sports__c))}">
+                <div class="col-sm-6 margin-b4">
+                  <div class="tcell">
+                    <div class="icon ix-hobby-bike margin-r2 margin-t2"></div>
+                  </div>
+                  <div class="form-group tcell">
+                    <label class="control-label">Sports</label>
+                    <span class="capitalize">
+                    <apex:outputText value="{!SUBSTITUTE(myProfile.applicant.Interest_Sports__c, ';', ', ')}"/>
+                    <apex:outputText value="--" rendered="{!ISBLANK(myProfile.applicant.Interest_Sports__c)}"/>
+                    </span> </div>
+                </div>
+                <!--  end col -->
+                </apex:outputText>
+                <apex:outputText rendered="{!NOT(ISBLANK(myProfile.applicant.Interests_Hobbies__c))}">
+                <div class="col-sm-6 margin-b4">
+                  <div class="tcell">
+                    <div class="icon ix-hobby-theatre margin-r2 margin-t2"></div>
+                  </div>
+                  <div class="form-group tcell">
+                    <label class="control-label">Crafts or Hobbies</label>
+                    <span class="capitalize">
+                    <apex:outputText value="{!SUBSTITUTE(myProfile.applicant.Interests_Hobbies__c, ';', ', ')}"/>
+                    <apex:outputText value="--" rendered="{!ISBLANK(myProfile.applicant.Interests_Hobbies__c)}"/>
+                    </span> </div>
+                </div>
+                <!--  end col -->
+                </apex:outputText>
+                <apex:outputText rendered="{!NOT(ISBLANK(myProfile.applicant.Interest_Fine_Arts__c))}">
+                <div class="col-sm-6 margin-b1">
+                  <div class="tcell">
+                    <div class="icon ix-hobby-photos margin-r2 margin-t2"></div>
+                  </div>
+                  <div class="form-group tcell">
+                    <label class="control-label">Fine Arts</label>
+                    <span class="capitalize">
+                    <apex:outputText value="{!SUBSTITUTE(myProfile.applicant.Interest_Fine_Arts__c, ';', ', ')}"/>
+                    <apex:outputText value="--" rendered="{!ISBLANK(myProfile.applicant.Interest_Fine_Arts__c)}"/>
+                    </span> </div>
+                </div>
+                <!--  end col -->
+                </apex:outputText>
+                <apex:outputText rendered="{!NOT(ISBLANK(myProfile.applicant.Interests_Leisure__c))}">
+                <div class="col-sm-6 margin-b1">
+                  <div class="tcell">
+                    <div class="icon ix-hobby-coffee margin-r2 margin-t2"></div>
+                  </div>
+                  <div class="form-group tcell">
+                    <label class="control-label">Other Activities</label>
+                    <span class="capitalize">
+                    <apex:outputText value="{!SUBSTITUTE(myProfile.applicant.Interests_Leisure__c, ';', ', ')}"/>
+                    <apex:outputText value="--" rendered="{!ISBLANK(myProfile.applicant.Interests_Leisure__c)}"/>
+                    </span> </div>
+                </div>
+                <!--  end col -->
+                </apex:outputText>
+              </div>
+              <!--  end row -->
+              <apex:outputText rendered="{!myProfile.applicant.Interests_Hobbies_Description__c != null}">
+                <div class="row margin-t2">
+                  <div class="col-sm-12">
+                    <div class="item-quote">
+                      <apex:image styleClass="img-circle" value="{!vRetUrl}" rendered="{!vRetUrl != 'no-picture'}"/>
+                      <span class="item-quote-text truncate">{!myProfile.applicant.Interests_Hobbies_Description__c}</span> </div>
+                  </div>
+                </div>
+                <!--  end row --> 
+              </apex:outputText>
+            </div>
+            <!--  end hobbies -->
+            
+            <apex:outputPanel styleClass="profile-section" layout="block" rendered="{!myProfile.essayList.size > 0}">
+              <h2>
+                <apex:outputText value="In {!IF(myProfile.primary.Gender__c == 'Male', 'His', 'Her')} Own Words" />
+              </h2>
+              <apex:repeat id="repeatEssay" value="{!myProfile.EssayList}" var="essay">
+                <apex:outputText rendered="{!essay.Narrative__c != null}">
+                  <div class="row margin-b3">
+                    <div class="col-sm-12">
+                      <label class="control-label">
+                        <apex:outputfield value="{!essay.Label__c}"/>
+                      </label>
+                      <div class="item-quote">
+                        <apex:image styleClass="img-circle" value="{!vRetUrl}" rendered="{!vRetUrl != 'no-picture'}"/>
+                        <div class="truncate item-quote-text"> {!essay.Narrative__c} <a class="readmore">Read More</a> </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!--  end row --> 
+                </apex:outputText>
+              </apex:repeat>
+            </apex:outputPanel>
+            <apex:outputPanel layout="block"  styleClass="profile-section" rendered="{!NOT(ISNULL(myProfile.discInfo.Id))}">
+              <h2>Personality Quiz</h2>
+              <div class="row">
+                <div class="col-sm-6">
+                  <div id="chart_div"></div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="margin-b2 margin-t4">{!myProfile.discInfo.Summary_of_Personality__c}</div>
+                  <apex:outputPanel layout="block" rendered="{!NOT(ISNULL(myProfile.discInfo.SDescription__c))}">
+                  <div><a data-toggle="collapse" data-target=".discbullets"><b class="sm">See Full Breakdown of Results</b></a></div>
+                  </apex:outputPanel>
+                </div>
+              </div>
+              <div class="discbullets collapse">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <p>
+                      <label style="background-color: #CE2220;" class="disc-label">Dominance</label>
+                    </p>
+                    <div class="capitalize">
+                      <apex:outputText value="{!myProfile.discInfo.DDescription__c}" escape="false"/>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <p>
+                      <label style="background-color: #F5AD1D;" class="disc-label">Influence</label>
+                    </p>
+                    <div class="capitalize">
+                      <apex:outputText value="{!myProfile.discInfo.IDescription__c}" escape="false"/>
+                    </div>
+                  </div>
+                </div>
+                <!--  end row -->
+                <div class="row">
+                  <div class="col-sm-6">
+                    <p>
+                      <label style="background-color: #ABBF20;" class="disc-label">Steadiness</label>
+                    </p>
+                    <div class="capitalize">
+                      <apex:outputText value="{!myProfile.discInfo.SDescription__c}" escape="false"/>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <p>
+                      <label style="background-color: #1F91DA;" class="disc-label">Compliance</label>
+                    </p>
+                    <div class="capitalize">
+                      <apex:outputText value="{!myProfile.discInfo.CDescription__c}" escape="false"/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </apex:outputPanel>
+            <!--  end DISC bullets -->
+            
+            <div id="health" class="profile-section">
+              <h2>Overall Health</h2>
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="row">
+                    <apex:outputText rendered="{!NOT(ISBLANK(myProfile.applicant.Height__c))}">
+                      <div class="col-sm-4">
+                        <label class="control-label">Au Pair's Height</label>
+                        <apex:outputField value="{!myProfile.applicant.Height__c}"/>
+                      </div>
+                    </apex:outputText>
+                    <apex:outputText rendered="{!NOT(ISBLANK(myProfile.applicant.Weight__c))}">
+                      <div class="col-sm-4">
+                        <label class="control-label">Au Pair's Weight</label>
+                        <apex:outputField value="{!myProfile.applicant.Weight__c}"/>
+                      </div>
+                    </apex:outputText>
+                  </div>
+                  <apex:outputText rendered="{!NOT(ISBLANK(myProfile.applicant.Weight__c) && ISBLANK(myProfile.applicant.Height__c))}"><hr class="margin-t3 margin-b3"/></apex:outputText>
+                  <div class="checklist vs1">
+                    <apex:outputPanel layout="block" rendered="{!NOT(ISBLANK(myProfile.participant.Pets_Allergy_Indicated__c))}">
+                      <div class="item margin-b2 {!myProfile.participant.Pets_Allergy_Indicated__c}">
+                        <div class="tcell">
+                          <div class="answer">
+                            <div class="icon ix-form-circled"></div>
+                            <div class="yes">Yes</div>
+                            <div class="no">No</div>
+                          </div>
+                        </div>
+                        <div class="tcell">
+                          <label class="margin-t1">Are you allergic to pets?</label>
+                          <apex:outputPanel layout="block" rendered="{!myProfile.participant.Pets_Allergy_Indicated__c == 'Yes'}">
+                            
+                            <apex:outputText rendered="{!NOT(ISBLANK(myProfile.participant.Pet_Allergy_Types__c) && ISBLANK(myProfile.participant.Pets_Allergy_Description__c))}">
+                            <div class="item-quote">
+                              <span class="item-quote-text truncate">
+                              <apex:outputText rendered="{!NOT(ISBLANK(myProfile.participant.Pet_Allergy_Types__c))}">
+                              I'm allergic to  <apex:outputText value=" {!SUBSTITUTE(myProfile.participant.Pet_Allergy_Types__c, ';', ', ')}"/>. </apex:outputText>
+                              {!myProfile.participant.Pets_Allergy_Description__c}
+                              </span> 
+                              </div>
+                           </apex:outputText>
+                           
+                              
+                          </apex:outputPanel>
+                        </div>
+                      </div>
+                    </apex:outputPanel>
+                    <apex:outputPanel layout="block" rendered="{!NOT(ISBLANK(myProfile.applicant.Allergies_Indicated__c))}">
+                      <div class="item margin-b2 {!myProfile.applicant.Allergies_Indicated__c}">
+                        <div class="tcell">
+                          <div class="answer">
+                            <div class="icon ix-form-circled"></div>
+                            <div class="yes">Yes</div>
+                            <div class="no">No</div>
+                          </div>
+                        </div>
+                        <div class="tcell">
+                          <label class="margin-t1">Do you have any other allergies?</label>
+                          <apex:outputPanel layout="block" rendered="{!myProfile.applicant.Allergies_Indicated__c == 'Yes'}">
+                            <div class="item-quote">
+                              <apex:image styleClass="img-circle" value="{!vRetUrl}" rendered="{!vRetUrl != 'no-picture'}"/>
+                              <span class="item-quote-text truncate">{!myProfile.applicant.Allergy_Description__c}</span> </div>
+                          </apex:outputPanel>
+                        </div>
+                      </div>
+                    </apex:outputPanel>
+                    <apex:outputPanel layout="block" rendered="{!NOT(ISBLANK(myProfile.participant.Special_Diet_Indicated__c))}">
+                      <div class="item margin-b2 {!myProfile.participant.Special_Diet_Indicated__c}">
+                        <div class="tcell">
+                          <div class="answer">
+                            <div class="icon ix-form-circled"></div>
+                            <div class="yes">Yes</div>
+                            <div class="no">No</div>
+                          </div>
+                        </div>
+                        <div class="tcell">
+                          <label class="margin-t1">Do you follow a special diet?</label>
+                          <apex:outputPanel layout="block" rendered="{!myProfile.participant.Special_Diet_Indicated__c == 'Yes'}">
+                            <div class="item-quote">
+                              <apex:image styleClass="img-circle" value="{!vRetUrl}" rendered="{!vRetUrl != 'no-picture'}"/>
+                              <span class="item-quote-text truncate">{!myProfile.participant.Special_Diet__c}</span> </div>
+                          </apex:outputPanel>
+                        </div>
+                      </div>
+                    </apex:outputPanel>
+                    <apex:outputPanel layout="block" rendered="{!NOT(ISBLANK(myProfile.primary.Physical_Disabilities_Indicated__c))}">
+                      <div class="item margin-b2 {!myProfile.primary.Physical_Disabilities_Indicated__c}">
+                        <div class="tcell">
+                          <div class="answer">
+                            <div class="icon ix-form-circled"></div>
+                            <div class="yes">Yes</div>
+                            <div class="no">No</div>
+                          </div>
+                        </div>
+                        <div class="tcell">
+                          <label class="margin-t1">Do you have any physical disabilities? </label>
+                          <apex:outputPanel layout="block" rendered="{!myProfile.primary.Physical_Disabilities_Indicated__c == 'Yes'}">
+                            <div class="item-quote">
+                              <apex:image styleClass="img-circle" value="{!vRetUrl}" rendered="{!vRetUrl != 'no-picture'}"/>
+                              <span class="item-quote-text truncate">{!myProfile.primary.Physical_Disabilities_Description__c}</span> </div>
+                          </apex:outputPanel>
+                        </div>
+                      </div>
+                    </apex:outputPanel>
+                    <apex:outputPanel layout="block" rendered="{!NOT(ISBLANK(myProfile.primary.Medication_Indicated__c))}">
+                      <div class="item margin-b2 {!myProfile.primary.Medication_Indicated__c}">
+                        <div class="tcell">
+                          <div class="answer">
+                            <div class="icon ix-form-circled"></div>
+                            <div class="yes">Yes</div>
+                            <div class="no">No</div>
+                          </div>
+                        </div>
+                        <div class="tcell">
+                          <label class="margin-t1">Do you take any medications prescribed by a doctor?</label>
+                          <apex:outputPanel layout="block" rendered="{!myProfile.primary.Medication_Indicated__c == 'Yes'}">
+                            <div class="item-quote">
+                              <apex:image styleClass="img-circle" value="{!vRetUrl}" rendered="{!vRetUrl != 'no-picture'}"/>
+                              <span class="item-quote-text truncate">{!myProfile.primary.Medication_Description__c}</span> </div>
+                          </apex:outputPanel>
+                        </div>
+                      </div>
+                    </apex:outputPanel>
+                    <apex:outputPanel layout="block" rendered="{!NOT(ISBLANK(myProfile.primary.Hospitalization_Indicated__c))}">
+                      <div class="item margin-b2 {!myProfile.primary.Hospitalization_Indicated__c}">
+                        <div class="tcell">
+                          <div class="answer">
+                            <div class="icon ix-form-circled"></div>
+                            <div class="yes">Yes</div>
+                            <div class="no">No</div>
+                          </div>
+                        </div>
+                        <div class="tcell">
+                          <label class="margin-t1">Have you been hospitalized in the last 12 months? </label>
+                          <apex:outputPanel layout="block" rendered="{!myProfile.primary.Hospitalization_Indicated__c == 'Yes'}">
+                            <div class="item-quote">
+                              <apex:image styleClass="img-circle" value="{!vRetUrl}" rendered="{!vRetUrl != 'no-picture'}"/>
+                              <span class="item-quote-text truncate">{!myProfile.primary.Hospitalization_Description__c}</span> </div>
+                          </apex:outputPanel>
+                        </div>
+                      </div>
+                    </apex:outputPanel>
+                    <apex:outputPanel layout="block" rendered="{!NOT(ISBLANK(myProfile.primary.Psychiatric_Treatment_Indicated__c))}">
+                      <div class="item margin-b2 {!myProfile.primary.Psychiatric_Treatment_Indicated__c}">
+                        <div class="tcell">
+                          <div class="answer">
+                            <div class="icon ix-form-circled"></div>
+                            <div class="yes">Yes</div>
+                            <div class="no">No</div>
+                          </div>
+                        </div>
+                        <div class="tcell">
+                          <label class="margin-t1">Have you ever received counseling or psychiatric treatment? </label>
+                          <apex:outputPanel layout="block" rendered="{!myProfile.primary.Psychiatric_Treatment_Indicated__c == 'Yes'}">
+                            <div class="item-quote">
+                              <apex:image styleClass="img-circle" value="{!vRetUrl}" rendered="{!vRetUrl != 'no-picture'}"/>
+                              <span class="item-quote-text truncate">{!myProfile.primary.Psychiatric_Treatment_Description__c}</span> </div>
+                          </apex:outputPanel>
+                        </div>
+                      </div>
+                    </apex:outputPanel>
+                    <apex:outputPanel layout="block" rendered="{!NOT(ISBLANK(myProfile.primary.Braces_Indicated__c))}">
+                      <div class="item margin-b2 {!myProfile.primary.Braces_Indicated__c}">
+                        <div class="tcell">
+                          <div class="answer">
+                            <div class="icon ix-form-circled"></div>
+                            <div class="yes">Yes</div>
+                            <div class="no">No</div>
+                          </div>
+                        </div>
+                        <div class="tcell">
+                          <label class="margin-t1">Do you have orthodontics/braces? </label>
+                        </div>
+                      </div>
+                    </apex:outputPanel>
+                  </div>
+                  <!--  end checklist --> 
+                  
+                </div>
+                <!--  end col --> 
+              </div>
+              <!--  end row --> 
+            </div>
+            <!--  end profile section -->
+            
+            <apex:outputPanel layout="block" styleClass="profile-section" rendered="{!NOT(ISNULL(myProfile.asseessmentInterv.Id))}">
+              <h2>Our Interview with
+                <apex:outputText value=" {!myProfile.applicant.Account__r.FirstName}"/>
+              </h2>
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="item-field vs1">
+                    <label class="control-label">
+                      <apex:outputText value="How will this applicant meet the responsibilities and challenges of their year with a host family in another country?"/>
+                    </label>
+                    <div>{!MyProfile.asseessmentInterv.PT_Suitability__c}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="item-field vs1">
+                    <label class="control-label">
+                      <apex:outputText value="Please describe the applicant's attitude, level of maturity and overall personality."/>
+                    </label>
+                    <div>{!MyProfile.asseessmentInterv.PT_Assessment__c}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="item-field vs1">
+                    <label class="control-label">
+                      <apex:outputText value="What skills and attributes make this person an ideal candidate for the au pair program?"/>
+                    </label>
+                    <apex:outputText escape="false" value="{!SUBSTITUTE(MyProfile.asseessmentInterv.Participant_Traits__c,';',', ')}"/>
+                  </div>
+                </div>
+              </div>
+            </apex:outputPanel>
+            <apex:outputPanel layout="block" rendered="{!myProfile.listChildCareRef.size > 0 && myProfile.listPersonalRef.size > 0}">
+              <div id="reference"  class="profile-section">
+                <h2>References</h2>
+                <apex:outputPanel layout="block" rendered="{!myProfile.listChildCareRef.size > 0}">
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <h3 class="no-margin-t">Childcare References</h3>
+                    </div>
+                  </div>
+                  <hr class="vs3"/>
+                  <apex:outputPanel layout="block" rendered="{!myProfile.listChildCareRef != null && myProfile.listChildCareRef.size > 0}">
+                    <apex:repeat id="repeatChildRef" value="{!myProfile.listChildCareRef}" var="personChild">
+                      <div class="row margin-b4">
+                        <div class="col-sm-4">
+                          <c:block_rating ratingScore="{!personChild.Rating__c}" read_only="true" extId="{!personChild.Id}" />
+                          <apex:outputPanel styleClass="margin-t1" layout="block" rendered="{!personChild.Participant_Traits__c != null}">"
+                            <apex:outputText escape="false" value="{!SUBSTITUTE(personChild.Participant_Traits__c,';',', ')}"/>
+                            " </apex:outputPanel>
+                        </div>
+                        <div class="col-sm-8">
+                          <label>{!myProfile.mapExperienceRef[personChild.id].Last_Name__c}
+                            <apex:outputText rendered="{!myProfile.mapExperienceRef[personChild.id].Experience_Category__c =='Private/Individual'}"> &nbsp;Family </apex:outputText>
+                          </label>
+                          <div> {!myProfile.applicant.Account__r.FirstName} took care of
+                            <apex:outputText rendered="{!myProfile.mapExperienceRef[personChild.id].Experience_Category__c =='Private/Individual'}"> {!myProfile.MapExpDetSize[myProfile.mapExperienceRef[personChild.id].Id]} </apex:outputText>
+                            <apex:outputText rendered="{!myProfile.mapExperienceRef[personChild.id].Experience_Category__c =='Public/Group'}"> {!myProfile.mapExperienceRef[personChild.id].Number_of_Children__c} </apex:outputText>
+                            child(ren) within the ages:
+                            <apex:outputText escape="false" value=" {!SUBSTITUTE(myProfile.mapExperienceRef[personChild.id].Children_Ages__c,';',', ')}"/>
+                          </div>
+                          <apex:outputPanel layout="block" rendered="{!myProfile.mapExperienceRef[personChild.id].Experience_Category__c =='Private/Individual'}">
+                            <apex:outputText rendered="{!myProfile.MapExpDetNeed[myProfile.mapExperienceRef[personChild.id].Id]}" value="At least one child has special needs"/>
+                          </apex:outputPanel>
+                          <apex:outputPanel layout="block" rendered="{!myProfile.mapExperienceRef[personChild.id].Experience_Category__c =='Public/Group'}">
+                            <apex:outputText rendered="{!myProfile.mapExperienceRef[personChild.id].Special_Needs_Indicated__c =='Yes'}"  value="At least one child has special needs"/>
+                          </apex:outputPanel>
+                        </div>
+                      </div>
+                    </apex:repeat>
+                  </apex:outputPanel>
+                </apex:outputPanel>
+                <apex:outputPanel layout="block" rendered="{!myProfile.listPersonalRef.size > 0}">
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <h3 class="no-margin-t">Personal Reference</h3>
+                    </div>
+                  </div>
+                  <hr class="vs3"/>
+                  <apex:repeat id="repeatPersonRef" value="{!myProfile.listPersonalRef}" var="personRef">
+                    <div class="row margin-b2">
+                      <div class="col-sm-4">
+                        <apex:outputPanel styleClass="margin-t1" layout="block" rendered="{!personRef.Participant_Traits__c != null}"> "
+                          <apex:outputText escape="false" value="{!SUBSTITUTE(personRef.Participant_Traits__c,';',', ')}"/>
+                          " </apex:outputPanel>
+                      </div>
+                      <div class="col-sm-8">
+                        <label>{!personRef.Name} (
+                          <apex:outputText value="{!personRef.Relation_To_Participant__c}"/>
+                          )</label>
+                        <div> Has known
+                          <apex:outputText value=" {!myProfile.applicant.Account__r.FirstName} "/>
+                          for {!personRef.Time_Known__c} </div>
+                      </div>
+                    </div>
+                  </apex:repeat>
+                </apex:outputPanel>
+              </div>
+            </apex:outputPanel>
+            
+            <!--  end modal window -->
+            <apex:outputPanel layout="block" id="modalvideo">
+              <div class="modal fade vs1" id="apvideo" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <apex:commandLink rerender="fliqz-block" styleClass="closebtn" onComplete="popModalVideoClose();"> <span class="fa-stack fa-lg "> <i class="fa fa-circle fa-stack-2x"></i> <i class="fa fa-times fa-stack-1x fa-inverse"></i> </span> </apex:commandLink>
+                    <div class="modal-body">
+                      <div class="h1">Au Pair Video</div>
+                      <div class="row">
+                        <div class="col-sm-12">
+                          <div class="embed-responsive embed-responsive-16by9">
+                            <apex:outputPanel layout="block" rendered="{!myProfile.MapVideoSize>0}">
+                              <apex:repeat id="AlbumPicKeyThumb"  value="{!myProfile.MapPTVideoThumb}" var="keyURLThumb">
+                                <apex:repeat id="AlbumPicKey"  value="{!myProfile.MapPTVideoThumb[keyURLThumb]}" var="keyURLVideo">
+                                  <apex:outputPanel layout="block" rendered="{!keyURLThumb != 'fliqz-video'}">
+                                    <apex:repeat id="AlbumPic"  value="{!myProfile.MapPTVideoThumb[keyURLThumb][keyURLVideo]}" var="item">
+                                      <video id="videoPt" class="embed-responsive-item video-js vjs-default-skin " controls="controls" height="300px" width="100%" preload="auto" poster="{!keyURLThumb}" data-setup='{"example_option":true}'>
+                                        <source src="{!keyURLVideo}" type='rtmp/mp4' />
+                                        <!--<source src="rtmp://your.streaming.provider.net/cfx/st/&mp4:path/to/video.mp4" type='rtmp/mp4' /> -->
+                                        <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a> </p>
+                                      </video>
+                                    </apex:repeat>
+                                  </apex:outputPanel>
+                                  <apex:outputPanel layout="block" rendered="{!keyURLThumb == 'fliqz-video'}" id="fliqz-block">
+                                    <iframe width="530" height="510" src="{!keyURLVideo}" scrolling="no"  frameborder="0" />
+                                  </apex:outputPanel>
+                                </apex:repeat>
+                              </apex:repeat>
+                            </apex:outputPanel>
+                            <apex:outputPanel layout="block" rendered="{!myProfile.MapVideoSize == 0}">
+                              <p>This au pair doesn't have a video yet</p>
+                            </apex:outputPanel>
+                          </div>
+                        </div>
+                        <!--  end column --> 
+                      </div>
+                      <!--  end row --> 
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--  end modal window --> 
+            </apex:outputPanel>
+            <div class="modal fade vs1" id="myModalInterview" tabindex="-1" role="dialog" aria-hidden="true">
+              <apex:pageBlock id="myModalInterviewBlock" rendered="{!AND(NOT(vExPTInt), NOT(vExHFInt), vHFProfComp)}">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-body">
+                      <div class="h1 no-margin-t">Request an Interview</div>
+                      <p class="lead margin-b4">You will have <em>{!myProfile.InterviewHours}</em> hours to interview this au pair.</p>
+                   
+                      <apex:commandLink styleClass="btn btn-primary btn-lg margin-r2" status="matchactionupdate" action="{!myProfile.requestInterview}" onclick="closeRequestInterview();" rerender="icons-block,icons-Menu,InterviewAvailabilityBlock,Req-Match" >
+                        <apex:commandButton value="Schedule Interview"/>
+                      </apex:commandLink>
+                      <apex:commandLink styleClass="btn btn-default btn-lg" value="Cancel" onclick="closeRequestInterview();" rerender="icons-Menu"/>
+                    </div>
+                  </div>
+                </div>
+              </apex:pageBlock>
+              <apex:pageBlock id="myModalLimitPTInterviewExceeded"  rendered="{!OR(vExPTInt, vExHFInt)}">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-body">
+                      <div class="h1 no-margin-t">Limit Exceeded</div>
+                      <apex:pageBlock id="limitExceedMsg1"  rendered="{!vExPTInt}">
+                        <p class="lead margin-b4">This participant is already interviewing with the maximum number of potential host families.<br/>
+                          Check back later to see if he or she is available to interview at another time.</p>
+                      </apex:pageBlock>
+                      <apex:pageBlock id="limitExceedMsg2"  rendered="{!vExHFInt}">
+                        <p class="lead margin-b4">Attention: You have exceeded the limit of candidates you can interview.</p>
+                      </apex:pageBlock>
+                      <apex:commandLink styleClass="btn btn-default btn-lg" value="Close" onclick="closeRequestInterview();" rerender="icons-Menu"/>
+                    </div>
+                  </div>
+                </div>
+              </apex:pageBlock>
+              <apex:pageBlock id="myModalInterviewIncomplete"  rendered="{!AND(NOT(vExPTInt), NOT(vExHFInt), NOT(vHFProfComp))}">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-body">
+                      <div class="h1 no-margin-t">Before You Interview</div>
+                      <p class="lead margin-b4">To facilitate the best matches possible, AuPairCare provides au pairs with a profile of potential host families upon interview. Please take a moment to complete your profile, then you can interview this au pair.</p>
+                      <apex:commandLink styleClass="btn btn-primary btn-lg margin-r2" status="matchactionupdate" action="{!myProfile.HFappCheck}" onclick="closeRequestInterview();" rerender="icons-block,icons-Menu, InterviewAvailabilityBlock" >
+                        <apex:commandButton value="Complete Profile"/>
+                      </apex:commandLink>
+                      <apex:commandLink styleClass="btn btn-default btn-lg" value="Cancel" onclick="closeRequestInterview();" rerender="icons-Menu"/>
+                    </div>
+                  </div>
+                </div>
+              </apex:pageBlock>
+            </div>
+          </div>
+          <!--  end column --> 
+          
+          <!--  INLINE EDITING / MODAL WINDOW -->
+        
+        <div class="modal vs1 fade" id="myModalInLine" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-body">
+                <apex:outputPanel id="BlockModalInLine" layout="block">
+                  <label>{!$CurrentPage.parameters.label}</label>
+                  <apex:inputField rendered="{!$CurrentPage.parameters.fieldId == null || $CurrentPage.parameters.fieldId == '1'}" id="interview" styleClass="form-control" value="{!myProfile.participant.Interview_Availability__c}"/>
+                  <!-- <apex:inputField rendered="{!$CurrentPage.parameters.fieldId == null || $CurrentPage.parameters.fieldId == '2'}" id="specidiet" styleClass="form-control" value="{!participant.Special_Diet__c}"/>  --> 
+                </apex:outputPanel>
+              </div>
+              <div class="modal-footer">
+                <apex:commandLink styleClass="btn btn-primary" action="{!myProfile.saveParticipant}" rerender="IntervAvailabilityBlock" onclick="closeModalInLine();" status="pleasewait01">
+                  <apex:commandButton value="Save" id="yesbutton"/>
+                </apex:commandLink>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+          
+        </div>
+        <!--  end row --> 
+        
+      </apex:form>
+      <script>
+      var j$ = jQuery.noConflict();
+      function popModalPhoto(){
+       j$.magnificPopup.open({
+        items: [
+        <apex:repeat value="{!myProfile.ParticipantPhotoList}" var="item">
+          {
+            src: '{!item}',
+            title: '{! JSINHTMLENCODE(myProfile.photoList[item])}'
+          },
+        </apex:repeat>
+        ],
+        gallery: {
+          enabled: true
+        },
+        type: 'image' 
+      });
+      }
+    </script> 
+    
+    <script>
+var j$ = jQuery.noConflict();
+j$('body').scrollspy({ target: '#profile-nav' })
+
+function popModalInterview(){
+    j$('#myModalInterview').modal();
+}
+
+function closeRequestInterview(){
+    j$('#myModalInterview').modal('hide');
+}
+
+function popModalInterviewClose(){
+    j$('#myModalInterview').modal('hide');
+}
+
+function popModalVideoClose(){
+    j$('#apvideo').modal('hide');
+}
+
+function goOverview(){
+    j$('html, body').animate({'scrollTop': j$('#over').offset().top});
+}
+function goChildCare(){
+    j$('html, body').animate({'scrollTop': j$('#child').offset().top});
+}
+
+function goEducation(){
+    j$('html, body').animate({'scrollTop': j$('#education').offset().top});
+}
+function goDriving(){
+    j$('html, body').animate({'scrollTop': j$('#driving').offset().top});
+}
+function goPersonal(){
+    j$('html, body').animate({'scrollTop': j$('#family-members').offset().top});
+}
+
+function goHealth(){
+    j$('html, body').animate({'scrollTop': j$('#health').offset().top});
+}
+
+function goReference(){
+    j$('html, body').animate({'scrollTop': j$('#reference').offset().top});
+}
+
+function openvideo(){
+    j$('#apvideo').modal();
+    videojs('#videoPt');
+}
+
+j$(document).on('hidden.bs.modal', '#apvideo', function (event) {
+   videojs('#videoPt').dispose();
+});
+
+
+/*popover funcionality
+function closePopover(){
+    var r = j$('.popover-content').html();
+    console.log(String(r));
+    console.log(String(j$('.popover-content').parent().next()));
+    j$('.popover-content').parent().next().html(r)
+    //j$('.popover-html').html(r);
+    j$('[data-toggle="popover"]').popover('destroy');
+    actpopover();
+}
+*/
+
+/*
+j$('[data-toggle="popover"]').click(function() {
+    
+    //j$(this).html(r);
+    //actpopover();
+    //j$(this).popover('show');
+})
+*/
+
+function openModalInLine(){
+j$('#myModalInLine').modal();
+} 
+
+function closeModalInLine(){
+j$('#myModalInLine').modal('toggle');
+} 
+
+
+</script> 
+      <script>
+
+/* DISC chart generator */
+
+   google.load('visualization', '1.1', {packages: ['corechart']});
+      google.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        //change values here
+        var dominance = {!myProfile.discInfo.D_Score__c};
+        var influence = {!myProfile.discInfo.I_Score__c};
+        var steadiness = {!myProfile.discInfo.S_Score__c};
+        var compliance = {!myProfile.discInfo.C_Score__c};        
+        
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', '');
+        data.addColumn('number', '');
+        data.addColumn({
+          type: 'string',
+          role: 'style'
+        });
+        data.addRows(4);
+
+        data.setValue(0, 0, 'Dominance');
+        data.setValue(0, 1, dominance);
+        data.setValue(0, 2, '#CE2220');
+
+        data.setValue(1, 0, 'Influence');
+        data.setValue(1, 1, influence);
+        data.setValue(1, 2, '#F5AD1D');
+
+        data.setValue(2, 0, 'Steadiness');
+        data.setValue(2, 1, steadiness);
+        data.setValue(2, 2, '#ABBF20');
+
+        data.setValue(3, 0, 'Compliance');
+        data.setValue(3, 1, compliance);
+        data.setValue(3, 2, '#1F91DA');
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+
+        chart.draw(data, {
+          bar: {
+            groupWidth: "85%" //100% = no width between bars
+          },
+          
+          height:300,
+          vAxis: {
+            minValue: 0,
+            maxValue: 28,
+            viewWindow: {
+              max: 28,
+              min: 0
+            },
+            ticks: [0, 4, 8, 12, 16, 20, 24, 28],
+            gridlines: {
+              color: '#eee',
+              count: 5
+            }
+          },
+          hAxis: {
+            //slantedText: true,
+            //slantedTextAngle: 60
+          },
+          legend: 'none'
+        });
+      }
+      
+    </script> 
+    </apex:define>
+  </apex:composition>
+</apex:page>

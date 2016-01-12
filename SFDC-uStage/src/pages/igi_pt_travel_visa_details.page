@@ -1,0 +1,272 @@
+<apex:page id="igi_pt_travel_visa_details" docType="html-5.0" applyBodyTag="false" applyHtmlTag="false"
+	controller="IGI_PT_Controller" action="{!checkLogin}"
+	standardStylesheets="false" showHeader="false">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <!-- <c:block_header_igi_pt_application userAgentCheck="{!userAgentCheck}"/> -->
+      <c:block_header_igi_pt_application />
+      <div class="row">
+        <div class="col-md-7 col-md-push-3">
+       	<h1>Travel Details</h1>
+          <apex:outputText rendered="{!IF($CurrentPage.parameters.editMode == 'true', true, false)}">
+	      <p class="lead">Please enter the details of your trip below.</p> 	
+	      </apex:outputText>
+	      
+          	<apex:form styleClass="form-vertical ws-validate" id="webform">            
+	        <apex:outputPanel layout="block" rendered="{!IF($CurrentPage.parameters.editMode == 'false', true, false)}">  
+	            <div class="row">
+		            <div class="col-sm-6">
+		            <div class="form-group">
+		              <label class="control-label">Departure Airport Code</label>
+		                <apex:outputField styleClass="form-control" value="{!trip.Departing_From__c}" id="departureAirportView" />
+		            </div>
+		            </div><!--  end col -->
+		            <div class="col-sm-6">
+		             <div class="form-group">
+		              <label class="control-label">Departure City </label>
+		                <apex:outputField styleClass="form-control" value="{!trip.Departing_City__c}" id="departureCityView" />
+		            </div>
+		            </div><!--  end col -->
+	            </div><!--  end row -->
+	            
+	            <div class="row">
+		            <div class="col-sm-6">
+		              <div class="form-group">
+		              <label class="control-label">Departure Date </label>
+		                <div class="datepicker dp-DOB wtime" locale="{!user.localeSidKey}">
+		                	<apex:outputField styleClass="form-control" value="{!trip.Departing_Date__c}"  id="departureDateView" />
+		                </div>
+		            </div>
+		            </div> <!--  end col -->
+		            <div class="col-sm-6">
+		            <div class="form-group">
+		              <label class="control-label">Airline </label>
+		                <apex:outputField styleClass="form-control" value="{!trip.Carrier__c}"  id="AirlineView" />
+		                
+		            </div>
+		            </div> <!--  end col -->
+	            </div> <!--  end row -->
+	            
+	            <div class="row">
+		            <div class="col-sm-6">
+		            <div class="form-group">
+		              <label class="control-label">Flight Number</label>
+		                <apex:outputField styleClass="form-control" value="{!trip.Carrier_Number__c}" id="flightNumberView" />
+		            </div>
+		            </div><!--  end col -->
+		            
+	            </div><!--  end row -->
+	            
+	            
+	            <hr/>
+	            
+	            <div class="row">
+		            <div class="col-sm-6">
+		            <div class="form-group">
+		              <label class="control-label">Arrival Airport Code</label>
+		                <apex:outputField styleClass="form-control" value="{!trip.Arriving_At__c}" id="arrivalAirportView" />
+		            </div>
+		            </div><!--  end col -->
+		            <div class="col-sm-6">
+		             <div class="form-group">
+		              <label class="control-label">Arrival City </label>
+		                <apex:outputField styleClass="form-control" value="{!trip.Arriving_City__c}"  id="arrivalCityView" />
+		            </div>
+		            </div><!--  end col -->
+	            </div><!--  end row -->
+	            
+	            <div class="row">
+		            <div class="col-sm-6">
+		              <div class="form-group">
+		              <label class="control-label"> Arrival Date </label>
+		              	<div class="datepicker dp-DOB wtime" locale="{!user.localeSidKey}">
+		                	<apex:outputField styleClass="form-control" value="{!trip.Arriving_Date__c}" id="arrivalDateView" />
+		                </div>
+		            </div>
+		            </div> <!--  end col -->
+		            
+	            </div> <!--  end row -->
+	            
+	            <apex:outputPanel layout="block" rendered="{! IF($CurrentPage.parameters.type == 'arrival', true, false)}" >
+		            <div class="row">
+			            <div class="col-sm-12">
+			              <div class="form-group">
+			              	<label class="control-label"> Address of your final trip destination (Street 1, Street 2, City, State, Postal Code) </label>
+			              	<apex:outputField styleClass="form-control" value="{!trip.Description__c}" id="finalAddressView" />                 				             
+			            </div>
+			            </div> <!--  end col -->
+			            
+		            </div>
+		        </apex:outputPanel>
+	            <hr/>
+	            
+	            <apex:outputPanel rendered="{!IF($CurrentPage.parameters.type == 'arrival' || trip.Arrival_to_Host_Community__c, true, false)}">
+		            <div class="row">
+			            <div class="col-sm-6">
+			              	<div class="form-group">
+				              	<label class="control-label"> Ground Transportation Type </label>
+				                <apex:outputField styleClass="form-control" value="{!trip.Ground_Transporation_Type__c}" id="transportationView" />
+			            	</div>
+			            </div> <!--  end col -->
+			            
+			            <div class="col-sm-6">
+			              	<div class="form-group">
+				              	<label class="control-label">Arrival to Host Community Date </label>
+				              	<div class="datepicker dp-DOB" locale="{!user.localeSidKey}">
+				                	<apex:outputField styleClass="form-control" value="{!trip.Arrival_to_Host_Community_Date__c}" id="arrivalToCommunityView" />
+			            		</div>
+			            	</div>
+			            </div> <!--  end col -->
+			            
+		            </div> <!--  end row -->
+		           
+	            </apex:outputPanel>
+	            <div class="form-group margin-t">          
+           			<apex:outputLink styleClass="btn btn-link btn-lg float"  value="/apex/igi_home" id="backlinkView"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+            		<apex:outputlink styleClass="btn btn-primary btn-lg"
+										value="/apex/igi_pt_travel_visa_details?tId={!trip.Id}&editMode=true" id="editlink" > Edit
+	                </apex:outputlink>
+            	</div>
+	        </apex:outputPanel>
+	            
+	        <apex:outputPanel layout="block" rendered="{!IF($CurrentPage.parameters.editMode == 'true', true, false)}">
+	        	
+	        	<apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />  
+	            <div class="section-title">Describe the last flight you will get on before arriving to your destination.</div>
+	            <div class="row">
+		            <div class="col-sm-6">
+		            <div class="form-group">
+		              <label class="control-label">Airline </label>
+		                <apex:inputField styleClass="form-control" value="{!trip.Carrier__c}" required="TRUE" id="nickname" />
+		                
+		            </div>
+		            </div> <!--  end col -->
+		            <div class="col-sm-6">
+		            <div class="form-group">
+		              <label class="control-label">Flight Number</label>
+		                <apex:inputField styleClass="form-control" value="{!trip.Carrier_Number__c}" required="TRUE" id="flightNumber" />
+		            </div>
+		            </div><!--  end col -->
+	            </div> <!--  end row -->
+	            <div class="row">
+	            <div class="col-sm-6">
+		             <div class="form-group">
+		              <label class="control-label">Departure City </label>
+		                <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!trip.Departing_City__c}" required="TRUE" id="departureCity" />
+		            </div>
+		            </div><!--  end col -->
+		            <div class="col-sm-6">
+		            <div class="row">
+		            <div class="col-sm-4 col-md-5 col-lg-4">
+		            <div class="form-group">
+		              <label class="control-label">Airport Code</label>
+		                <apex:inputField styleClass="form-control" value="{!trip.Departing_From__c}" required="TRUE" id="departureAirport" />
+		            </div>
+		            </div>
+		             <div class="col-sm-8 col-md-7 col-lg-8">
+		               <div class="form-group">
+		              <label class="control-label">Departure Date </label>
+		                <div class="datepicker dp-DOB wtime" locale="{!user.localeSidKey}">
+		                	<apex:inputField styleClass="form-control" value="{!trip.Departing_Date__c}" required="TRUE" id="departureDate" />
+		                </div>
+		            </div>
+		             </div>
+		              </div><!--  end row -->
+		            </div><!--  end col -->
+		            
+	            </div><!--  end row -->
+	            
+	            
+
+	            <div class="row">
+		            <div class="col-sm-6">
+		           <div class="form-group">
+		              <label class="control-label">Arrival City </label>
+		                <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!trip.Arriving_City__c}" required="TRUE" id="arrivalCity" />
+		            </div>
+		            </div><!--  end col -->
+		            <div class="col-sm-6">
+		            <div class="row">
+		             <div class="col-sm-4 col-md-5 col-lg-4">
+		              <div class="form-group">
+		              <label class="control-label">Airport Code</label>
+		                <apex:inputField styleClass="form-control" value="{!trip.Arriving_At__c}" required="TRUE" id="arrivalAirport" />
+		            </div>
+		            </div>
+		            <div class="col-sm-8 col-md-7 col-lg-8">
+		             <div class="form-group">
+		              <label class="control-label">Arrival Date </label>
+		              	<div class="datepicker dp-DOB wtime" locale="{!user.localeSidKey}">
+		                	<apex:inputField styleClass="form-control" value="{!trip.Arriving_Date__c}" required="TRUE" id="arrivalDate" />
+		                </div>
+		            </div>
+		            </div>
+		            </div><!--  end row -->
+		            </div><!--  end col -->
+		            
+		            
+		             
+		           
+	            </div><!--  end row -->
+	            
+	           
+	            
+	            <div class="section-title">Ground Transportation After the Flight</div>  
+	            
+	            <div class="row">
+		            <div class="col-sm-12">
+		              <div class="form-group">
+		              	<label class="control-label">What is your final destination?</label>
+		              	<apex:inputField html-placeholder="Street 1, Street 2, City, State, Postal Code" styleClass="form-control" value="{!trip.Description__c}" required="TRUE" id="finalAddressEdit" onkeyup="countChar(this, 255, 'hobbiesDescCount')" onfocus="countChar(this, 255, 'hobbiesDescCount')" />
+		              	<div class="char-limit bb"><span class="char-count-label">Characters left:</span> <span id="hobbiesDescCount" class="char-count"> {!255-len(trip.Description__c) }</span> </div>
+                		<apex:message for="finalAddressEdit" styleClass="custom-error-text" id="finalAddressError"/>		             
+		            </div>
+		            </div> <!--  end col -->
+		            
+	            </div>
+	              
+	         
+	            
+	            <apex:outputPanel rendered="{!IF($CurrentPage.parameters.type == 'arrival' || trip.Arrival_to_Host_Community__c, true, false)}">
+		            <div class="row">
+			            <div class="col-sm-6">
+			              	<div class="form-group">
+				              	<label class="control-label">How will you get there?</label>
+				                <apex:inputField styleClass="form-control" value="{!trip.Ground_Transporation_Type__c}" required="TRUE" id="transportation" />
+			            	</div>
+			            </div> <!--  end col -->
+			            
+			            <div class="col-sm-6">
+			              	<div class="form-group">
+				              	<label class="control-label">When will you get there?</label>
+				              	<div class="datepicker dp-DOB" locale="{!user.localeSidKey}">
+				                	<apex:inputField styleClass="form-control" value="{!trip.Arrival_to_Host_Community_Date__c}" required="TRUE" id="arrivalToCommunity" />
+			            		</div>
+			            	</div>
+			            </div> <!--  end col -->
+			            
+		            </div> <!--  end row -->
+		            
+	            </apex:outputPanel>
+	            
+	    <div class="form-group margin-t">          
+	    <apex:outputLink styleClass="btn btn-link btn-lg float"  value="/apex/igi_home" id="backlink"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+	    <apex:commandlink styleClass="btn btn-primary btn-lg" action="{!saveTrip}" id="nextlink"  onComplete="rerunjs();" reRender="webform" status="onsubmit">
+	    <apex:commandButton value="Save" id="continuebutton" />
+	    </apex:commandlink> 
+	    </div>
+          </apex:outputPanel> <!--  end edit mode -->  
+          </apex:form>
+        </div>
+        <!-- end column -->
+      
+        <div class="col-md-3 col-md-pull-7">
+          <c:block_notification_sidebar ApplicantInfo="{!applicantInfo}"/>   
+        </div>
+
+      </div>
+      <!-- end row --> 
+      
+    </apex:define>
+  </apex:composition>
+</apex:page>

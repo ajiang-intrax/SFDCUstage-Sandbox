@@ -1,0 +1,157 @@
+<apex:page docType="html-5.0" showHeader="false" standardStylesheets="false" id="SiteTemplate" controller="AppEngine_Controller">
+<html>
+    <head>    
+            <apex:includeScript value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/js/jquery-1.8.0.min.js')}"/>  
+            <apex:includeScript value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/js/jquery-ui-1.8.23.custom.min.js')}"/>
+ 
+            <apex:includeScript value="{!URLFOR($Resource.module_colorbox, '/module-colorbox/scripts/jquery.colorbox-min.js')}"/>
+            <apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/jquery-ui-1.8.23.custom.css')}"/>
+            <!--datepicker customization module-->
+            <apex:includeScript value="{!URLFOR($Resource.module_datepicker, '/module_datepicker/Timepicker.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.module_datepicker, '/module_datepicker/jQuery-ui.datetimepicker_localization.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.module_datepicker, '/module_datepicker/SFdatepicker_patch.js')}"/>
+            <!--end module-->
+            <apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/reset.css')}"/>
+            <apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/fonts.css')}"/> 
+            <apex:stylesheet value="{!URLFOR($Resource.module_colorbox, '/module-colorbox/css/colorbox.css')}"/>                        
+            
+            <apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/vs1.css')}" />      		
+    		
+    		<apex:variable var="sp" value="es_SP" rendered="{!lang = 'es_SP'}">
+            <apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/lang-es_SP.css')}" />  
+    		</apex:variable>
+    		
+    		<apex:variable var="pt" value="pt_BR" rendered="{!lang = 'pt_BR'}">
+            <apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/lang-pt_BR.css')}" />  
+    		</apex:variable>
+    		<!-- End module -->
+    		
+    		
+            <apex:outputText value="<" escape="false"/>!--[if IE]<apex:outputText value=">" escape="false"/>
+            <link rel="stylesheet" href="/intraxappengine/resource/intrax_themes/intrax_themes/styles/ie.css"/>  
+            <apex:outputText value="<" escape="false"/>![endif]--<apex:outputText value=">" escape="false"/>      
+     
+            <apex:outputText value="<" escape="false"/>!--[if lt IE 8]<apex:outputText value=">" escape="false"/>      
+            <link rel="stylesheet" href="/intraxappengine/resource/intrax_themes/intrax_themes/styles/ie-7.css"/>
+            <apex:outputText value="<" escape="false"/>![endif]--<apex:outputText value=">" escape="false"/>       
+            <c:IntraxTemplate_GoogleTracking />
+
+            <meta name="viewport" content="initial-scale=1.0,width=device-width"/>     
+        
+    </head>
+<body>
+<c:IntraxTemplate_GlobalHeader />    
+    <apex:insert name="body"/>
+    
+     <script>
+              var j$ = jQuery.noConflict(); 
+             
+              j$('.inform').bind('focus blur', function () {
+             //         console.log('toggle');
+                    j$(this).closest('.form-row').find('.dropt').toggleClass('active-help');
+              });
+              
+             
+              </script>
+
+
+</body> 
+ <c:IntraxTemplate_GlobalFooter />
+    
+    <script>
+        
+        var j$ = jQuery.noConflict();
+        var j$scaledWidth = j$(window).width()*0.8;
+        var j$scaledHeight = j$(window).width()*0.45;
+        
+        j$(document).ready(function(){
+            
+            //Examples of how to assign the Colorbox event to elements
+            j$(".youtube").colorbox({iframe:true, innerWidth:(j$scaledWidth), innerHeight:(j$scaledHeight)});
+        });
+    </script>
+    
+    
+ <script type="text/javascript">
+function openPopup(url) {
+    newwindow=window.open(url,'name','height=400,width=400,resizable=yes,toolbar=no,status=no,scrollbars=yes,menubar=no,directories=no,location=no,dependant=no');
+    if (window.focus) {newwindow.focus()}
+    return false;
+}
+function ConfirmDelete(strLabel)
+    {
+        if(!confirm(strLabel))
+        {
+            return false;
+        }                      
+    }
+</script>   
+
+ <script type="text/javascript">
+      var j$ = jQuery.noConflict(); 
+   
+     j$(document).ready(function(){
+        j$( ".accordion" ).accordion({
+            collapsible: true,
+            autoHeight: false,
+            active:false
+    });
+    });
+    </script>
+    
+    <script type="text/javascript"> 
+         var j$ = jQuery.noConflict(); 
+        j$(document).ready(function() { 
+            var startYear=1900;
+            var endYear=2020;  
+            var optionsString='';  
+            if(startYear<endYear){   
+                for(i=startYear;i<endYear+1;i++){  
+                optionsString += "<option value=\""+i+"\">"+i+"</option>";  
+                }  
+                j$('#calYearPicker').html(optionsString); 
+            }  
+            //Hide the home page component;  
+            j$('#sidebarDiv #hideMyParent').parent().parent().hide();  
+        });  
+    </script> 
+    
+    <script>
+      var j$ = jQuery.noConflict();
+     
+      function countChar(val, maxchars, elem) {
+        var len = val.value.length;
+        if (len > maxchars) {
+          val.value = val.value.substring(0, maxchars);
+        } else {
+            var elem1 = '#'+elem;
+          j$(elem1).text(maxchars - len);
+        }
+      };
+    </script>
+    
+     
+    
+    <script>
+    //datepicker
+        var j$ = jQuery.noConflict();
+        j$(document).ready(function () {
+            var tags = j$('.datepicker');
+            for (var i = tags.length - 1; i >= 0; i--) {
+                datetimepickerInitializer(tags[i]);
+            };
+        });
+    </script>
+           <!-- Marketo Munchkin code -->
+  <script type="text/javascript"> 
+    jQuery.ajax({ 
+      url: '//munchkin.marketo.net/munchkin.js', 
+      dataType: 'script', 
+      cache: true, 
+      success: function() { 
+        Munchkin.init('342-VXF-330',{cookieAnon: false}); 
+      } 
+    }); 
+  </script> 
+    </html>  
+</apex:page>

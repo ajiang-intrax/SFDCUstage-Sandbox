@@ -1,0 +1,12 @@
+<apex:page showHeader="false" standardStylesheets="false" id="SiteTemplate">
+<head>
+<apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/reset.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/vs1.css')}"/>
+</head>
+<body>
+
+    <apex:insert name="body"/>
+
+
+</body> 
+</apex:page>

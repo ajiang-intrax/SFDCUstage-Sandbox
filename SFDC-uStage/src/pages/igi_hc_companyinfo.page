@@ -1,0 +1,214 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" 
+                standardStylesheets="false" showHeader="false" controller="IGI_HC_Controller"
+                 title="Host Company Information" id="igi_hc_companyinfo" action="{!preload}">
+ <apex:composition template="intraxtemplate_vs3">
+  <apex:define name="body">
+ 
+<style>
+ #branding-zone, #footer-zone{display:none;}
+#content-zone {
+background: #f8f8f8;
+}
+.standalone{background: #fff;
+border:#ccc solid 1px;   
+border-radius: 5px;
+padding:60px;}
+a.c1 {color:black;}
+a.c1:link  {text-decoration: underline; color: black;}
+a.c1:visited {text-decoration: underline; color: black;}
+a.c1:hover {text-decoration: underline; color: black;}
+a.c1:active {text-decoration: underline; color: black;}
+</style>             
+    <div class="row">
+                <div class="col-md-8 center-block standalone"> 
+         <apex:image styleClass="center-block" url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/logos/medium-logo-intrax.png')}"/>
+            <br/><h1 class="center-text">Host Company Agreement</h1>
+             <p class="center-text" style="font-size:14pt">
+                 Please enter and/or verify some information about your organization.   
+             </p> 
+                 <apex:form styleClass="form-vertical ws-validate" id="webform">
+                   <apex:Messages rendered="{!if(customMessage,false,true)}" styleClass="custom-error-pagelevel" id="messageapex" />
+                   <apex:Messages rendered="{!if(customMessage,true,false)}" styleClass="errorMsg" style="list-style-type:none;" id="message1" /> 
+                  
+                                 
+             <div class="h2">Host Organization</div>
+             <hr class="margin-b3"/>    
+                  
+                <div class="row">
+                     <div class="col-sm-12">
+                      <div class="form-group">
+                             <label class="control-label"> Host Organization Name</label>
+                             <apex:inputField styleClass="form-control" value="{!Account.Name}" id="hname" required="true"/> 
+                         </div>    
+                      </div>
+                  </div> 
+                     
+               
+                   <div class="row">
+                     <div class="col-sm-10">
+                      <div class="form-group">
+                          <label class="control-label">Primary Street Address where Intern/Trainee will be</label>
+                             <apex:inputField styleClass="form-control" value="{!Account.BillingStreet}" id="street"  required="true"/> 
+                         </div>    
+                      </div>
+                    <!-- <div class="col-sm-6">
+                      <div class="form-group">
+                             <label class="control-label">City</label>
+                             <apex:inputField styleClass="form-control" value="{!Account.BillingCity}" id="city" required="true"/> 
+                         </div>    
+                      </div>-->
+                     
+                      </div> 
+                     <div class="row">
+                      <div class="col-sm-6">
+                      <div class="form-group">
+                             <label class="control-label">City</label>
+                             <apex:inputField styleClass="form-control" value="{!Account.BillingCity}" id="city" required="true"/> 
+                         </div>    
+                      </div>
+                      <div class="col-sm-6">
+                      <div class="form-group">
+                             <label class="control-label">State</label>
+                             <apex:inputField styleClass="form-control short" html-placeholder="XX" html-pattern="[A-Z]{2}" html-title="Enter Two Letter State Code" onblur="UpperCase(event.target);" value="{!Account.BillingState}" id="state" required="true"> 
+                          </apex:inputField>
+                          <apex:Message for="state" styleClass="custom-error-radio"/>
+                        </div>    
+                      </div>
+                     <!-- <div class="col-sm-6">
+                      <div class="form-group">
+                             <label class="control-label">Zip Code</label>
+                             <apex:inputField styleClass="form-control" html-pattern="[0-9]{5}" html-title="Enter 5 digit Zip" value="{!Account.BillingPostalcode}" id="zipcode" required="true"/> 
+                          
+                         </div>    
+                      </div> -->  
+                     </div> 
+                     <div class="row">
+                     
+                      <div class="col-sm-6">
+                      <div class="form-group">
+                             <label class="control-label">Zip Code</label>
+                             <apex:inputField styleClass="form-control" html-pattern="[0-9]{5}" html-title="Enter 5 digit Zip" value="{!Account.BillingPostalcode}" id="zipcode" required="true"/> 
+                          
+                         </div>    
+                      </div> 
+                       <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label"> Website URL <span class="optional">(Optional)</span></label>
+                                    <apex:inputField styleClass="form-control" value="{!Account.Website}" id="website"/>   
+                            </div>
+                        </div>
+                     </div>
+                     <div class="row">
+                        <div class="col-sm-6">
+                             <div class="form-group">
+                               <label class="control-label">Primary Organization Email</label>
+                              <apex:inputField styleClass="form-control" value="{!Account.Email_Business__c}" id="bus_email" required="true"/>   
+                            </div>
+                       </div>
+                     </div> 
+                    
+                 <div class="row">
+                      <div class="col-sm-6">
+                           <div class="form-group">
+                               <label class="control-label">Primary Organization Phone</label>
+                               <apex:inputField styleClass="form-control"  value="{!Account.Phone}" id="phone" required="true"/>   
+                           </div>
+                      </div>
+                 
+                      <div class="col-sm-6">
+                           <div class="form-group">
+                               <label class="control-label">Primary Organization Fax <span class="optional">(Optional)</span></label>
+                               <apex:inputField styleClass="form-control"  value="{!Account.Fax}" id="fax"  />   
+                           </div>
+                      </div>
+                    </div>
+                      <div class="row">
+                         <div class="col-sm-6">
+                           <div class="form-group">
+                             <label class="control-label">Employer ID Number (EIN) <i class="infobtn fa fa-question-circle" data-placement="auto" data-toggle="popover" data-content="Please enter without spaces or dashes"></i></label>
+                             <apex:inputField styleClass="form-control" value="{!Account.EIN__c}" id="ein" html-pattern="[0-9]{9}" html-title="Invalid EIN" required="true" /> 
+                         </div>    
+                      </div>
+                       <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">Business Sector</label>
+                                    <apex:inputField styleClass="form-control" value="{!Account.Company_Type__c}" id="cType" required="true"/>   
+                          </div>
+                        </div>
+                      </div>
+                      
+               <div class="row">
+                  <div class="col-sm-6">
+                           <div class="form-group">
+                             <label class="control-label">Annual Revenue</label>
+                             <apex:inputField styleClass="form-control" value="{!Account.Company_Annual_Revenue__c}" id="CA" required="true"/> 
+                         </div>    
+                      </div>
+                 
+                       <div class="col-sm-6">
+                           <div class="form-group">
+                             <label class="control-label">Number of Full Time Employees On Site
+                               <i class="infobtn fa fa-question-circle" data-placement="auto" data-toggle="popover" data-content="Please do not include third parties or independent contractors in this count"></i></label>
+                             
+                             <apex:inputField styleClass="form-control" value="{!Account.NumberOfEmployees}" id="no_emp" required="true"/> 
+                             <span class="info">Site Address:<apex:outputText value=" {!Account.BillingStreet}"/></span>
+                         </div>    
+                      </div>      
+                   </div>
+                   
+                    <div class="row">
+                         <div class="col-sm-12">
+                           <div class="form-group">
+                           <apex:actionRegion >
+                            <apex:inputField styleClass="form-control" value="{!Account.Has_Workers_Comp__c}" id="work_comp_policy"> 
+                              <apex:actionSupport event="onchange" rerender="worker_comp" status="pleasewait01" />
+                             </apex:inputField>
+                            <label>This company has a worker's compensation policy <i class="infobtn fa fa-question-circle" data-placement="auto" data-toggle="popover" data-content="Check this box if the host organization has a Worker's Compensation policy"></i></label>
+                           <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading..Please wait..." id="pleasewait01"/>
+                           </apex:actionRegion> 
+                         </div>    
+                      </div>
+                      </div>
+                 
+                  
+               <div class="row">
+                 <apex:pageBlock id="worker_comp">
+                   <apex:outputPanel layout="block" rendered="{!If(Account.Has_Workers_Comp__c,true,false)}">
+                         <div class="col-sm-6">
+                           <div class="form-group">
+                             <label class="control-label">Worker's Compensation Carrier</label>
+                             <apex:inputField styleClass="form-control" value="{!Account.Worker_Comp_Provider__c}" id="work_comp" required="true"/> 
+                         </div>    
+                      </div>
+                      <div class="col-sm-6">
+                           <div class="form-group">
+                             <label class="control-label">Worker's Compensation Policy Number</label>
+                             <apex:inputField styleClass="form-control" value="{!Account.Workers_Comp_Policy_Number__c}" id="work_comp_policy_no" required="true"/> 
+                         </div>    
+                      </div>
+                    </apex:outputPanel>  
+                    <apex:outputPanel layout="block" rendered="{!If(Account.Has_Workers_Comp__c,false,true)}">
+                       Please be sure to submit the <b>Worker’s Compensation Exemption Letter</b> as confirmation that your business is exempt from carrying coverage under state law. 
+                       A blank copy of the letter can be downloaded in <a href="/company/apex/resources" target="_blank" class="c1">Resources</a>
+                   </apex:outputPanel>
+                  </apex:pageBlock>
+                         
+                </div>
+               
+                <div class="form-group margin-t3" >
+                      <apex:commandlink styleClass="btn btn-primary btn-lg margin-r2" action="{!validatorhost}">  
+                           <apex:param name="nextPage" value="/apex/igi_hc_view_signer"/>
+                           <apex:param name="reDirectPage" value="true"/> 
+                           <apex:param name="Id" value="{!Account.Id}"/>
+                                     
+                         <apex:commandButton value="Save & Continue" />
+                     </apex:commandlink>
+                            
+                  </div> 
+              </apex:form>
+         
+          </div>
+        </div>
+        </apex:define> 
+    </apex:composition>
+</apex:page>

@@ -1,0 +1,46 @@
+<!--  
+Component: Head2_IntraxTemplateVs2
+
+Description: Inner component for Intrax Partner Portal Header Template.
+
+-->
+<!-- This component houses the core css and js files in the head on pages using IntraxTemplate_Vs2 -->
+<apex:component layout="none">
+    
+    <!--Base Intrax theme-->    
+    <apex:stylesheet value="{!URLFOR($Resource.intrax_themes_vs2, '/intrax_themes_vs2/styles/reset.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.intrax_themes_vs2, '/intrax_themes_vs2/styles/style.css')}"/>
+    <apex:stylesheet html-media="print" value="{!URLFOR($Resource.intrax_themes_vs2, '/intrax_themes_vs2/styles/print.css')}"/>
+
+    <!--jQuery basics-->    
+    <apex:includeScript value="{!URLFOR($Resource.module_jquery, '/module_jquery/scripts/jquery-1.8.0.min.js')}"/>  
+    <apex:includeScript value="{!URLFOR($Resource.module_jquery, '/module_jquery/scripts/jquery-ui-1.8.23.custom.min.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.module_jquery, '/module_jquery/styles/jquery-ui-1.8.23.custom.css')}"/>  
+        
+    <!--Bootstrap-->    
+    <apex:includeScript value="{!URLFOR($Resource.module_bootstrap, '/module_bootstrap/js/bootstrap.js')}"/>  
+    <apex:stylesheet value="{!URLFOR($Resource.module_bootstrap, '/module_bootstrap/css/bootstrap.css')}"/>  
+   
+    <!-- Fontawesome module for icons -->
+    <apex:stylesheet value="{!URLFOR($Resource.module_fontawesome, '/module_fontawesome/vs-3.2.1/fontawesome.css')}"/> 
+
+    <!--Colorbox module for popup windows-->
+    <apex:includeScript value="{!URLFOR($Resource.module_colorbox, '/module-colorbox/scripts/jquery.colorbox-min.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.module_colorbox, '/module-colorbox/css/colorbox.css')}"/>   
+  
+     <!-- Flexslider module for rotating images-->
+    <apex:includeScript value="{!URLFOR($Resource.module_flexslider, '/module_flexslider/js/jquery.flexslider-min.js')}"/>
+     <apex:stylesheet value="{!URLFOR($Resource.module_flexslider, '/module_flexslider/css/flexslider.css')}"/> 
+    
+     <!--Datepicker module for custom jQuery datepicker--> 
+    <apex:includeScript value="{!URLFOR($Resource.module_datepicker, '/module_datepicker/Timepicker.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.module_datepicker, '/module_datepicker/jQuery-ui.datetimepicker_localization.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.module_datepicker, '/module_datepicker/SFdatepicker_patch.js')}"/>
+    
+    <!-- Rating module -->
+    <apex:stylesheet value="{!URLFOR($Resource.module_ratings, '/module_ratings/raty-2.7-2.0/jquery.raty.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.module_ratings, '/module_ratings/raty-2.7-2.0/jquery.raty.js')}"/>
+ 
+<apex:stylesheet value="{!URLFOR($Resource.intrax_themes_vs2, '/intrax_themes_vs2/styles/module-overrides.css')}"/> 
+     
+</apex:component>

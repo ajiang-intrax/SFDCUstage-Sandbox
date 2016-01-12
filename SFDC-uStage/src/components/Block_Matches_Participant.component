@@ -1,0 +1,5 @@
+<apex:component layout="none" id="DefaultParticipantMatchInfo" >
+	<apex:attribute name="match" description="Contains the Engagament.IP for the match in context" type="Match__c" required="false" default=""/>
+	<c:Block_Position_Participant_IntershipWT rendered="{!IF(match.Engagement__r.Intrax_Program__c == 'Internship' || match.Engagement__r.Intrax_Program__c == 'Work Travel', true, false)}" />
+
+</apex:component>

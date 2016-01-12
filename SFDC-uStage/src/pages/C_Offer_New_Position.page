@@ -1,0 +1,130 @@
+<apex:page standardController="Match__c" extensions="IGI_HC_Controller" docType="html-5.0" standardStylesheets="false" showHeader="false">
+  
+    <apex:composition template="IntraxTemplate_Vs2" >
+      <apex:define name="body">
+      <apex:form >
+        <h1> Offer New Position </h1>
+        <apex:pageMessages />
+        <div class="row-fluid"> 
+          <!-- begin span9 -->
+          <div class="span12">
+            <div class="block">
+              <div class="block-body">
+            <div class="row-fluid"> 
+            <div class="span12">
+             <p>Please select the Position that you would like to offer:</p>
+              
+              <!--  <apex:selectRadio layout="pageDirection" value="{!CurrentPositionSelected}" >
+              	<apex:selectOptions value="{!HCPositions}"/>
+              </apex:selectRadio>
+              -->
+              
+             <!--  <apex:selectRadio value="{!currentPositionSelected}" layout="pageDirection">
+            	<apex:selectOptions value="{!HCPositions}"/>
+            	<apex:actionSupport event="onchange" action="{!reloadPosition}" rerender="out" status="status"/>
+            	<apex:param value="{!currentPositionSelected}" ID="posid" /> 
+            	</apex:selectRadio><p/> -->
+            	
+            	 <!--  <apex:commandButton value="Test" action="{!reload}" rerender="out" status="status"/>-->
+                 
+               
+              
+               <div class="form-row">
+               		<div class="form-label left">Position <span class="required">*</span></div>
+               		<div class="form-field">
+               			<apex:actionRegion >
+	               		<apex:selectList value="{!currentPositionSelected}" multiselect="false" size="1"  required="TRUE">
+						<!--  <apex:selectOption itemValue="" itemLabel="--None--"/> -->
+					    <apex:selectOptions value="{!HCPositions}"/>
+					    <apex:actionSupport event="onchange" rerender="out" status="waitMsg" action="{!reloadPosition}"/>
+					    <apex:param value="{!currentPositionSelected}" ID="posid" /> 
+						</apex:selectList>
+						</apex:actionRegion>
+					</div>	
+               		</div><!-- end form row -->
+               
+               <div class="dp-group margin-t">   
+               	  <div class="form-row">	
+                    <div class="form-label left">Start Date <span class="required">*</span></div>
+                    <div class="form-field datepicker start" locale="{! activeUser.LocaleSidKey}">
+                      <apex:inputField value="{!matchInfo.Start_Date__c}" required="TRUE"/>
+                    </div>
+                  </div> <!-- end form row -->
+                  
+                  <div class="form-row">
+                    <div class="form-label left ">End Date <span class="required">*</span></div>
+                    <div class="form-field datepicker end" locale="{! activeUser.LocaleSidKey}">
+                      <apex:inputField value="{!matchInfo.End_Date__c}" required="TRUE"/>
+                    </div>
+                  </div><!-- end form row -->
+                </div> <!-- end dp group -->
+                
+                
+                          
+                
+               
+                <apex:outputpanel layout="block" styleClass="list-view" id="out"  rendered="{!IF(positionnewlist.Size == 0, false, true)}"> 
+                
+                    <h3>Position Details</h3>
+                    
+                    <div class="row-fluid">
+                    <div class="span6">
+                    	<label>Position Name:&nbsp;</label>
+						<apex:outputField value="{!positionnew.Name}" /><br />
+                    	<label>Job Title</label>
+						<apex:outputLink id="nameLink"	value="/apex/C_position_details?pid={!positionnew.ID}" target="_blank"><apex:outputField value="{!positionnew.Title__c}" /></apex:outputLink>	
+						<label>Position Code:&nbsp;</label>
+						<apex:outputField value="{!positionnew.Code__c}" /><br />
+						<label>Gender Preference:&nbsp;</label>
+						<apex:outputField value="{!positionnew.Gender_Preference__c}" /><br />
+						<label>English Level:&nbsp;</label>&nbsp;&nbsp;
+						<apex:outputField value="{!positionnew.Language_1_Proficiency__c}" /><br />
+                    </div><!--  end span -->
+                    
+                     <div class="span6">
+                     <label>Earliest Start Date:&nbsp;</label>
+						<apex:outputField value="{!positionnew.Engagement_Start__c}" /><br />
+						<label>Latest Start Date:&nbsp;</label>
+						<apex:outputField value="{!positionnew.Engagement_Latest_Start__c}" /><br />
+						<label>Earliest End Date:&nbsp;</label>
+						<apex:outputField value="{!positionnew.Engagement_Earliest_End__c}" /><br />
+						<label>Latest End Date:&nbsp;</label>
+						<apex:outputField value="{!positionnew.Engagement_End__c}" /><br />
+                    </div><!--  end span -->
+                    </div><!--  end row -->	
+
+                </apex:outputpanel>
+                
+                <div class="form-link">
+				 	<apex:outputLink id="BackLink" styleClass="back" value="/apex/Hiring_Event" rendered="{!IF(fpage != null && fpage == 'hevents', true, false)}">
+						<i class="icon-chevron-left"></i>
+						<span>Back</span>
+					</apex:outputLink>
+					<apex:outputLink id="BackLink1" styleClass="back" value="/apex/C_Matches" rendered="{!IF(fpage != null && fpage == 'hevents', false, true)}">
+						<i class="icon-chevron-left"></i>
+						<span>Back</span>
+					</apex:outputLink>
+					<!--  <apex:outputLink id="BackLink" styleClass="back" value="/apex/C_Match_Details?mId={!matchInfo.Id}" rendered="{!IF(fpage != null && fpage == 'hevents', false, true)}">
+						<i class="icon-chevron-left"></i>
+						<span>Back</span>
+					</apex:outputLink> -->
+	  			</div>   
+                 <div class="form-button">
+                    <apex:commandlink action="{!offerPosition}"  >
+                      <apex:param name="mId" value="{!matchInfo.Id}" assignTo="{!mId}"/>
+                      <apex:commandButton value="Offer the Position" status="waitMsg" rerender="pb"/>
+                    </apex:commandlink>
+                    </div> 
+            </div> <!--  end span -->
+            </div><!--  end row -->  
+                 
+  
+              </div><!-- end block body -->  
+            </div><!-- end block -->  
+          </div><!-- end span--> 
+        </div><!-- end row --> 
+        </apex:form>
+      </apex:define>
+    </apex:composition>
+  
+</apex:page>

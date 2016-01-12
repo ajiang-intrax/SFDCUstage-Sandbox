@@ -1,0 +1,92 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardController="Applicant_Info__c"
+    extensions="AppEngine_Controller" action="{!checkLogin}"
+    standardStylesheets="false" showHeader="false"  title="Agreements" id="apc_ap_main_ext_agreements">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_apc_ap_application />
+       <div id="app-page" class="row">
+        <div id="app-focus" class="col-md-8 col-md-push-3">
+          
+          <apex:form >
+          <apex:outputPanel id="hotdog">
+          <c:block_app_completion ApplicantInfo="{!applicantInfo}"/>
+          </apex:outputPanel>
+          
+          </apex:form>
+          
+          <h1>Program Agreements</h1>
+          <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+          <apex:form styleClass="form-vertical" >
+          
+              <apex:outputPanel layout="block" id="agreement-wrap">
+                  <apex:outputPanel layout="block" rendered="{!applicantinfo.Terms_Accepted__c == false && NOT(($CurrentPage.parameters.event='SignComplete'))}">
+                      <p class="lead"> You have not yet signed AuPairCare Program Terms and Conditions. Please click the button below to view and sign the document.</p>
+                      <apex:outputLink styleClass="btn btn-default btn-lg" value="/apex/APCHF_TC_Agreement?id={!applicantInfo.Id}">
+                          Sign Terms and Conditions
+                      </apex:outputLink>
+                  </apex:outputPanel>
+                  
+                  <apex:outputPanel layout="block" rendered="{!applicantinfo.Terms_Accepted__c == true || ($CurrentPage.parameters.event='SignComplete')}">
+                      <p class="lead">Thank you for signing the AuPairCare Program Terms and Conditions. Please click the button below to view a copy of the agreement.</p> 
+                      <apex:outputLink target="_blank" styleClass="btn btn-link btn-lg" value="/apex/APCHF_TC_Agreement?id={!applicantInfo.Id}">
+                          <i class="fa fa-file"></i> <span>View Signed Terms and Conditions</span>
+                      </apex:outputLink>
+                  </apex:outputPanel>
+                  
+                  <apex:outputPanel layout="block" rendered="{!msgDisplay == 'Exception'}">
+                      <p class="alert alert-danger">{!msgDisplay}</p>
+                      <apex:outputLink target="_blank" styleClass="btn btn-default btn-lg" value="/apex/APCHF_TC_Agreement?id={!applicantInfo.Id}">
+                          Sign Terms and Conditions
+                      </apex:outputLink>
+                  </apex:outputPanel>                        
+                  <!--
+                  <apex:actionPoller action="{!checkDocuSign}" enabled="{!applicantinfo.Terms_Accepted__c == false}" reRender="hotdog, menuside, agreement-wrap, buttons" interval="5"/> 
+				-->
+              </apex:outputPanel>
+            
+            
+            <div class="row">
+              <div class="col-sm-12 margin-t6">
+              
+                <apex:outputLink styleClass="btn btn-link btn-lg"  rendered="{!applicantInfo.Application_Type__c=='Original'}" value="/apex/apc_ap_main_visa_info?id={!ApplicantInfo.Id}&docType=Passport" id="backlinkvisa"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                <apex:outputLink styleClass="btn btn-link btn-lg"  rendered="{!applicantInfo.Application_Type__c=='Renewal'}" value="/apex/apc_ap_main_video?id={!ApplicantInfo.Id}&docType=Introductory-Video" id="backlinkmedia"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>            
+                <apex:outputLink styleClass="btn btn-link btn-lg"  rendered="{!applicantInfo.Application_Type__c=='Extension'}" value="/apex/apc_ap_basic_contact_info?id={!applicantInfo.Id}" id="backlinpreferences"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+            
+            <apex:outputPanel id="buttons">    
+                <apex:outputText rendered="{!applicantInfo.Application_Level__c == 'Main' && applicantInfo.Application_Type__c == 'Extension' && (applicantinfo.Terms_Accepted__c == true || $CurrentPage.parameters.event=='SignComplete')}">
+                    <!-- value="{!IF(applicantInfo.Application_Type__c=='Original','/apex/apc_ap_main_completion',IF(ApplicantInfo.Extension_DOS_Fee_Indicated__c == 'Yes','/apex/apc_ap_main_payment','/apex/apc_ap_main_completion'))}"-->
+                    <apex:commandlink styleClass="btn btn-primary btn-lg" action="/apex/apc_ap_main_completion?id={!applicantInfo.id}" >
+                       <!-- <apex:param name="nextPage" value="/apex/apc_ap_main_completion"  />
+                        <apex:param name="reDirectPage" value="true" />-->
+                        <apex:commandButton id="Continue" value="Continue"/>
+                    </apex:commandlink>
+                </apex:outputText>
+               
+               <apex:outputText rendered="{!applicantInfo.Application_Level__c == 'Main' && applicantInfo.Application_Type__c == 'Renewal' && (applicantinfo.Terms_Accepted__c == true || ($CurrentPage.parameters.event=='SignComplete'))}">
+                    <apex:commandlink styleClass="btn btn-primary btn-lg" action="{!navigator}" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                     <apex:param name="nextPage" value="/apex/apc_ap_main_payment"  />
+                      <apex:param name="reDirectPage" value="true" />
+                      <apex:commandButton id="Continue1" value="Continue" />
+                    </apex:commandlink>
+               </apex:outputText>
+               
+           </apex:outputPanel>
+               
+              </div>
+            </div>
+          </apex:form>
+        </div>
+        <!-- end column -->
+        
+        <apex:outputPanel layout="block" id="menuside">
+        <div id="app-side" class="col-md-3 col-md-pull-8">
+          <c:menu_side_apc_ap_basic ApplicantInfo="{!applicantInfo}" />
+        </div>
+        </apex:outputPanel>
+        <!--  end column --> 
+      </div>
+      <!-- end row --> 
+      
+    </apex:define>
+  </apex:composition>
+</apex:page>

@@ -1,0 +1,349 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardController="Match__c"  extensions="IGI_TIPP_Controller" 
+                standardStylesheets="false" showHeader="false"
+                action="{!preLoad}" title="TIPP Information" id="igi_tipp_host_company_info">
+ <apex:composition template="intraxtemplate_vs3">
+  <apex:define name="body">
+ 
+<style>
+ #branding-zone, #footer-zone{display:none;}
+#content-zone {
+background: #f8f8f8;
+}
+.standalone{background: #fff;
+border:#ccc solid 1px;   
+border-radius: 5px;
+padding:60px;}
+</style>             
+    <div class="row">
+                <div class="col-md-8 center-block standalone"> 
+         <apex:image styleClass="center-block" url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/logos/medium-logo-intrax.png')}"/>
+             <h1 class="center-text">Training/Internship Placement Plan Application</h1>
+                 <apex:form styleClass="form-vertical ws-validate" id="webform">
+                   <apex:Messages rendered="{!if(customMessage,false,true)}" styleClass="custom-error-pagelevel" id="messageapex" />
+                    <apex:Messages rendered="{!if(customMessage,true,false)}" styleClass="errorMsg" style="list-style-type:none;" id="message1" /> 
+           
+                    <apex:outputPanel rendered="{!IF(PositionInfo.Status__c=='Declined', true, false)}" layout="block" styleClass="block">                                  
+                      <div class="row box yellow margin-b2"> 
+                           <div class="col-sm-12">
+                     <div class="form-group no-margin">
+                             <label class="control-label">Review Comments</label>
+                             <apex:outputField styleClass="form-control" value="{!PositionInfo.Review_Comments__c}"/>                                                     
+                       </div>
+                       </div>
+                        </div>
+      </apex:outputPanel>   
+            
+      
+         <div class="h2">Participant Info</div>
+         <hr class="margin-b3"/>                                 
+               <div class="row">
+               <div class="col-sm-4">
+                     <div class="form-group">
+                             <label class="control-label">Given Name</label>
+                              <apex:outputField styleClass="form-control" value="{!sMatch.Participant_Id__r.FirstName}"/> &nbsp;
+                               <apex:outputField styleClass="form-control" value="{!sMatch.Participant_Id__r.Middle_Name__pc}" />
+                       </div>
+                   </div>
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                             <label class="control-label">Last Name</label>
+                             <apex:outputField styleClass="form-control" value="{!sMatch.Participant_Id__r.LastName}" />
+                      </div>
+                     </div>
+                     
+                   <div class="col-sm-4">
+                      <div class="form-group">
+                             <label class="control-label">Program Category</label>
+                            <apex:outputText rendered="{!(CONTAINS(sMatch.Engagement__r.SEVIS_Program__c,'15-Intern'))}">
+                                <apex:outputText value="Intern" />
+                           </apex:outputText>   
+                          <apex:outputText rendered="{!(CONTAINS(sMatch.Engagement__r.SEVIS_Program__c,'14-Trainee'))}">
+                                <apex:outputText value="Trainee" />
+                           </apex:outputText>   
+                        </div>
+                     </div>
+               </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                             <label class="control-label">Program Start</label>
+                             <apex:outputField styleClass="form-control" value="{!sMatch.Engagement__r.Engagement_Start__c}"/>
+                        </div>
+                     </div>
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                             <label class="control-label">Program End</label>
+                             <apex:outputField styleClass="form-control" value="{!sMatch.Engagement__r.Engagement_End__c}"/>
+                        </div>
+                     </div>
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                             <label class="control-label">Field of Training/Internship</label>
+                             <apex:outputField styleClass="form-control" value="{!PositionInfo.Functional_Areas__c}"/>
+                        </div>
+                     </div>
+                </div>                             
+             <div class="h2">Host Organization</div>
+             <hr class="margin-b3"/>    
+                  
+                <div class="row">
+                     <div class="col-sm-12">
+                      <div class="form-group">
+                             <label class="control-label"> Host Organization Name</label>
+                             <apex:inputField styleClass="form-control" value="{!PositionInfo.Company_Name__c}" id="hname" required="true"/> 
+                         </div>    
+                      </div>
+                  </div> 
+                     
+               
+                   <div class="row">
+                     <div class="col-sm-6">
+                      <div class="form-group">
+                             <label class="control-label">Site Address</label>
+                             <apex:inputField styleClass="form-control" value="{!PositionInfo.Company_Street_1__c}" id="street1"  required="true"/> 
+                         </div>    
+                      </div>
+                     
+                     <div class="col-sm-6">
+                      <div class="form-group">
+                             <label class="control-label">Suite or Unit <span class="optional">(Optional)</span></label>
+                             <apex:inputField styleClass="form-control" value="{!PositionInfo.Company_Street_2__c}" id="street2"/> 
+                         </div>    
+                      </div> 
+                      </div> 
+                     <div class="row">
+                      <div class="col-sm-6">
+                      <div class="form-group">
+                             <label class="control-label">City</label>
+                             <apex:inputField styleClass="form-control" value="{!PositionInfo.Company_City__c}" id="city" required="true"/> 
+                         </div>    
+                      </div>
+                      <div class="col-sm-6">
+                      <div class="form-group">
+                             <label class="control-label">State</label>
+                             <apex:inputField styleClass="form-control short" html-placeholder="XX" html-pattern="[A-Z]{2}" html-title="Enter Two Letter State Code" onblur="UpperCase(event.target);" value="{!PositionInfo.Company_State__c}" id="state" required="true"> 
+                          </apex:inputField>
+                          <apex:Message for="state" styleClass="custom-error-radio"/>
+                          </div>    
+                      </div>
+                     </div> 
+                     <div class="row">
+                     
+                      <div class="col-sm-6">
+                      <div class="form-group">
+                             <label class="control-label">Zip Code</label>
+                             <apex:inputField styleClass="form-control" html-pattern="[0-9]{5}" html-title="Enter 5 digit Zip" value="{!PositionInfo.Company_Postal_Code__c}" id="zipcode" required="true"/> 
+                          
+                         </div>    
+                      </div>
+                       <div class="col-sm-6">
+                      <div class="form-group">
+                            <label class="control-label"> Website URL <span class="optional">(Optional)</span></label>
+                                    <apex:inputField styleClass="form-control" value="{!PositionInfo.Company_Website__c}" id="website"/>   
+                                </div>
+                            </div>
+                     </div>                       
+                      <div class="row">
+                         <div class="col-sm-6">
+                           <div class="form-group">
+                             <label class="control-label">Employer ID Number (EIN) <i class="infobtn fa fa-question-circle" data-placement="auto" data-toggle="popover" data-content="Please enter without spaces or dashes"></i></label>
+                             <apex:inputField styleClass="form-control" value="{!PositionInfo.EIN__c}" id="ein" html-pattern="[0-9]{9}" html-title="Invalid EIN" required="true" /> 
+                         </div>    
+                      </div>
+                      </div>
+                      
+                       <div class="row">
+                  <div class="col-sm-6">
+                           <div class="form-group">
+                             <label class="control-label">Annual Revenue</label>
+                             <apex:inputField styleClass="form-control" value="{!PositionInfo.Company_Annual_Revenue__c}" id="CA" required="true"/> 
+                         </div>    
+                      </div>
+                 
+                       <div class="col-sm-6">
+                           <div class="form-group">
+                             <label class="control-label">Number of Full Time Employees On Site</label>
+                             
+                             <apex:inputField styleClass="form-control" value="{!PositionInfo.Number_of_Employees__c}" id="no_emp" required="true"/> 
+                             <span class="info">Site Address:<apex:outputText value=" {!PositionInfo.Company_Street_1__c}"/></span>
+                         </div>    
+                      </div>      
+                   </div><!-- end row -->
+                   
+                     <div class="row">
+                         <div class="col-sm-12">
+                           <div class="form-group">
+                           <apex:actionRegion >
+                            <apex:inputField styleClass="form-control" value="{!PositionInfo.Has_Workers_Comp__c}" id="work_comp_policy"> 
+                              <apex:actionSupport event="onchange" rerender="worker_comp" status="pleasewait01" />
+                             </apex:inputField>
+                            <label>This company has a worker's compensation policy <i class="infobtn fa fa-question-circle" data-placement="auto" data-toggle="popover" data-content="Check this box if the host organization has a Worker's Compensation policy"></i></label>
+                           <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading..Please wait..." id="pleasewait01"/>
+                           </apex:actionRegion> 
+                         </div>    
+                      </div>
+                      </div>
+                 
+                  
+                  <div class="row">
+                 <apex:pageBlock id="worker_comp">
+                   <apex:outputPanel layout="block" rendered="{!If(PositionInfo.Has_Workers_Comp__c,true,false)}">
+                         <div class="col-sm-6">
+                           <div class="form-group">
+                             <label class="control-label">Worker's Compensation Carrier</label>
+                             <apex:inputField styleClass="form-control" value="{!PositionInfo.Worker_Comp_Provider__c}" id="work_comp" required="true"/> 
+                         </div>    
+                      </div>
+                  </apex:outputPanel>  
+                   </apex:pageBlock>
+                         <div class="col-sm-6">
+                           <div class="form-group">
+                             <label class="control-label">Will your policy cover the intern/trainee?</label>
+                             <apex:inputField styleClass="form-control" value="{!PositionInfo.Workers_Comp_Coverage__c}" id="work_comp_cov" required="true"/> 
+                         </div>    
+                      </div>
+                  </div>
+                   
+                   <div class="h2">Position Info</div>
+             <hr class="margin-b3"/>   
+                       <div class="row">
+                       <div class="col-sm-6">
+                         <div class="form-group">
+                            <label class="control-label">Average Intern/Trainee Hours Per Week</label>
+                                    <apex:inputField styleClass="form-control" value="{!PositionInfo.Hours_Per_Week__c}" id="emp_hours" required="true"/>   
+                         </div>
+                       </div>
+                       <div class="col-sm-6">
+                           <div class="form-group">  
+                             <label class="control-label">Stipend Type</label>
+                               <apex:actionRegion >
+                                <apex:inputField styleClass="form-control" value="{!PositionInfo.Compensation_Type__c}" id="sType" required="true" >
+                                 <apex:actionSupport event="onchange" rerender="comp_type" status="pleasewait02" />
+                                </apex:inputField>
+                                 <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading..Please wait..." id="pleasewait02"/>
+                             </apex:actionRegion>                
+                         </div>    
+                      </div>
+                      </div>
+                  <apex:pageBlock id="comp_type">
+                 <apex:outputPanel layout="block" rendered="{!If((PositionInfo.Compensation_Type__c!='Unpaid'),true,false)}">
+                   <div class="row">
+                      
+                         <div class="col-sm-6">
+                           <div class="form-group">
+                             <label class="control-label">Stipend Amount <i class="infobtn fa fa-question-circle" data-placement="auto" data-toggle="popover" data-content="Value in USD" ></i></label>
+                             <apex:inputField styleClass="form-control" value="{!PositionInfo.Pay_Rate__c}" id="sAmount"  required="true"/> 
+                         </div>    
+                      </div>
+                     <div class="col-sm-6">
+                           <div class="form-group">
+                             <label class="control-label">Stipend Basis</label>
+                                    <apex:inputField styleClass="form-control" value="{!PositionInfo.Pay_Rate_Basis__c}" id="sBasis"  required="true"/>   
+                                </div>
+                          </div>
+                  </div>
+                  </apex:outputPanel>
+                  </apex:pageBlock>
+                   <div class="row">
+                         <div class="col-sm-6">
+                           <div class="form-group">
+                             <label class="control-label">Non-Monetary Compensation Value <i class="infobtn fa fa-question-circle" data-placement="auto" data-toggle="popover" data-content="Value in USD for the entire placement"></i><br/><span class="optional">(Optional)</span></label>
+                             <apex:actionRegion >
+                               <apex:inputField styleClass="form-control" value="{!PositionInfo.Non_Monetary_Comp_Value__c}" id="nonmon_value"> 
+                             <apex:actionSupport event="onchange" rerender="comp_desc" status="pleasewait03" />
+                                </apex:inputField>
+                                 <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading..Please wait..." id="pleasewait03"/>
+                             </apex:actionRegion>      
+                         </div>    
+                      </div>
+                    
+                       <apex:pageBlock id="comp_desc">
+                      <apex:outputPanel layout="block" rendered="{!If((PositionInfo.Non_Monetary_Comp_Value__c!=null),true,false)}">
+                       <div class="col-sm-6">
+                           <div class="form-group">
+                             <label class="control-label">Non-Monetary Compensation Description  </label>
+                             <br/>
+                             <apex:inputField styleClass="form-control" value="{!PositionInfo.Non_Monetary_Comp_Description__c}" id="nonmon_comp" required="true"/> 
+                         </div>    
+                      </div>
+                      </apex:outputPanel>
+                     </apex:pageBlock>
+                  </div>
+              
+             <div class="h2">Primary Supervisor</div>
+             <hr class="margin-b3"/>  
+              
+                  <div class="row">
+                      <div class="col-sm-6">
+                           <div class="form-group">
+                               <label class="control-label">First Name</label>
+                               <apex:inputField styleClass="form-control"  value="{!PositionInfo.Supervisor_First_Name__c}" id="Sup_fname" required="true"/>   
+                           </div>
+                      </div>
+                      
+                      <div class="col-sm-6">
+                             <div class="form-group">
+                               <label class="control-label">Last Name</label>
+                              <apex:inputField styleClass="form-control" value="{!PositionInfo.Supervisor_Last_Name__c}" id="Sup_lname" required="true"/>   
+                            </div>
+                       </div>
+                  </div>
+                   <div class="row">
+                      <div class="col-sm-6">
+                           <div class="form-group">
+                                <label class="control-label">Job Title</label>
+                                 <apex:inputField styleClass="form-control" value="{!PositionInfo.Supervisor_Title__c}" id="sup_title" required="true"/>   
+                                </div>
+                         </div>
+                          <div class="col-sm-6">
+                             <div class="form-group">
+                               <label class="control-label">Email</label>
+                              <apex:inputField styleClass="form-control" value="{!PositionInfo.Supervisor_Email__c}" id="Sup_email" required="true"/>   
+                            </div>
+                       </div>
+                  </div>
+                 <div class="row">
+                      <div class="col-sm-6">
+                           <div class="form-group">
+                               <label class="control-label">Phone</label>
+                               <apex:inputField styleClass="form-control"  value="{!PositionInfo.Supervisor_Phone__c}" id="Sup_phone" required="true"/>   
+                           </div>
+                      </div>
+                 
+                      <div class="col-sm-6">
+                           <div class="form-group">
+                               <label class="control-label">Fax <span class="optional">(Optional)</span></label>
+                               <apex:inputField styleClass="form-control"  value="{!PositionInfo.Supervisor_Fax__c}" id="Sup_fax" />   
+                           </div>
+                      </div>
+                    </div>
+                   
+                   
+                
+                         <div class="form-group margin-t3" >
+                              <apex:commandlink styleClass="btn btn-primary btn-lg margin-r2" action="{!validatorhost}">  
+                                        <apex:param name="nextPage" value="/apex/igi_tipp_main"/>
+                                        <apex:param name="reDirectPage" value="true"/> 
+                                        <apex:param name="mId" value="{!hosmatchId}"/>
+                                        <apex:param name="pInfo" value="true"/>
+                                        <apex:commandButton value="Save & Continue" />
+                                    </apex:commandlink>
+                                    
+                             <apex:outputLink styleClass="btn btn-link btn-lg pull-right" value="/apex/igi_tipp_main">  
+                                      <apex:param name="val" assignto="{!validate}" value="n_v"/>
+                                      <apex:param name="mId" value="{!hosmatchId}"/>
+                                     <i class="fa fa-chevron-right"></i><span>Skip For Now</span>
+                                       
+                             </apex:outputLink>
+                          </div> 
+                 
+                   
+                      
+                          
+               </apex:form>
+         
+          </div>
+        </div>
+        </apex:define> 
+    </apex:composition>
+</apex:page>

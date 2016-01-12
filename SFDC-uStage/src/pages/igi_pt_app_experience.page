@@ -1,0 +1,178 @@
+<apex:page id="igi_pt_app_education" docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardController="Applicant_Info__c"
+	extensions="AppEngine_Controller" action="{!checkLogin}"
+	standardStylesheets="false" showHeader="false"  title="Work Experience Information">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_igi_pt_application userAgentCheck="{!userAgentCheck}"/>
+      <div class="row">
+        <div class="col-md-7 col-md-push-3">
+        
+          <c:block_app_completion_igi applicantInfo="{!applicantInfo}" isIGIMainReady="{!CheckMainIGIApp}"/>
+        	
+          <h1>Work Experience</h1>
+			<p class="lead">This information will help you get an interview with interested host companies.</p>
+          	<apex:form styleClass="form-vertical ws-validate" id="webform">
+            <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+            
+            <apex:outputPanel rendered="{!IF(applicantInfo.Application_Level__c == 'Main', true, false)}">
+            	<div class="row">
+		            <div class="col-sm-12">
+			            <div class="form-group">
+			              <label class="control-label">Do you have any work experience?</label>						                	
+			              <apex:actionRegion >
+				              <apex:selectRadio styleClass="radio"	 value="{!applicantInfo.Work_Experience_Indicated__c}" required="true" id="experienceIndicated">
+				              	<apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+				              	<apex:selectOption itemValue="No" itemLabel="No"/>
+				          		<apex:actionSupport event="onchange" onComplete="rerunjs();" rerender="experienceIndicatedBlock" status="pleasewait01"/>
+				              </apex:selectRadio>
+				              <apex:message styleClass="custom-error-radio" for="experienceIndicated"/>
+				          </apex:actionRegion>
+			            </div>
+		            </div>
+		            			            
+	            </div>
+	            <div class="row">
+		            <div class="col-sm-12">
+		            	<apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();"  startStyleClass="feedback-st" startText="Loading. Please wait..." id="pleasewait01"/>
+		            </div>	
+	           	</div>   
+	           	
+	           	<apex:pageBlock id="experienceIndicatedBlock">        
+		            <apex:outputpanel layout="block" id="wrappertable" styleClass="panel-group group1" rendered="{!applicantInfo.Work_Experience_Indicated__c == 'Yes'}">
+		                <apex:repeat id="wtable"  value="{!experienceMap}" var="wrapper">
+		                  <apex:variable var="rowLast" value="{!IF( experienceMapLast == wrapper, 'in','')}"/>	                  
+		                  <div class="panel panel-default">
+		                    <div class="panel-heading">
+		                      <h4 class="panel-title">
+		                        <!-- <apex:outputLink styleClass="accordion-toggle" html-data-toggle="collapse" html-data-parent=".group1" value="#collapse1{!rowNum}">record Num -->
+		                        <apex:outputLink styleClass="accordion-toggle" html-data-toggle="collapse" html-data-parent=".group1" value="#collapse1{!wrapper}">
+		                          <apex:outputText rendered="{!IF(ISBLANK(experienceMap[wrapper].Employer_Name__c), true, false)}" value=" Experience {!wrapper}"> </apex:outputText>
+		                          <apex:outputText rendered="{!IF(ISBLANK(experienceMap[wrapper].Employer_Name__c), false, true)}" value=" {!experienceMap[wrapper].Employer_Name__c}"> </apex:outputText>
+		                        </apex:outputLink>
+		                      </h4>
+		                    </div>
+		                    <!--  end panel heading -->
+		                    <div id="collapse1{!wrapper}" class="panel-collapse collapse {!rowLast}">
+			                    <div class="panel-body">
+			                        <div class="row">
+							            <div class="col-sm-12">
+								            <div class="form-group">
+								              <label class="control-label">Employer Name</label>						                	
+								              <apex:inputField styleClass="form-control" value="{!experienceMap[wrapper].Employer_Name__c}" required="true" id="employerName"/>
+								            </div>
+							            </div><!--  end col -->						            
+						            </div><!--  end row -->
+						            
+						            <div class="row">
+							            <div class="col-sm-6">
+								            <div class="form-group">
+								              <label class="control-label">City</label>						                	
+								              <apex:inputField styleClass="form-control" value="{!experienceMap[wrapper].City__c}" required="true" id="city"/>
+								            </div>
+							            </div><!--  end col -->	
+							            <div class="col-sm-6">
+								            <div class="form-group">
+								              <label class="control-label">Country</label>						                	
+								              <apex:inputField styleClass="form-control" value="{!experienceMap[wrapper].Country__c}" required="true" id="country"/>
+								            </div>
+							            </div><!--  end col -->						            
+						            </div><!--  end row -->
+						            
+						            <div class="row dp-group">
+							            <div class="col-sm-6">
+								            <div class="form-group">
+								              <label class="control-label">Start Date</label>						                	
+								              <div class="datepicker start" locale="{!user.localeSidKey}">
+				                            	<apex:inputField styleClass="form-control" value="{!experienceMap[wrapper].Start_Date__c}" required="true" id="startDate"/>
+				                          	  </div>
+								            </div>
+							            </div><!--  end col -->	
+							            <div class="col-sm-6">
+								            <div class="form-group">
+								              <label class="control-label">End Date</label>						                	
+								              <div class="datepicker end" locale="{!user.localeSidKey}">
+					                            	<apex:inputField styleClass="form-control" value="{!experienceMap[wrapper].End_Date__c}" required="true" id="endDate"/>
+					                          </div>
+								            </div>
+							            </div><!--  end col -->						            
+						            </div><!--  end row -->
+						            
+						            <div class="row">
+							            <div class="col-sm-12">
+								            <div class="form-group">
+								              <label class="control-label">Position Title</label>						                	
+								              <apex:inputField styleClass="form-control" value="{!experienceMap[wrapper].Position_Title__c}" required="true" id="positionTitle"/>
+								            </div>
+							            </div><!--  end col -->							            					            
+						            </div><!--  end row -->
+						            
+						            <div class="row">
+							            <div class="col-sm-12">
+								            <div class="form-group">
+								              <label class="control-label">Position Description</label>						                	
+								              <apex:inputField styleClass="form-control" value="{!experienceMap[wrapper].Position_Description__c}" required="true" id="positionDescription"/>
+								            </div>
+							            </div><!--  end col -->							            					            
+						            </div><!--  end row -->
+						                 
+				                    <apex:outputText id="outputpanel1">
+			                          <apex:commandlink styleClass="btn btn-link btn-lg pull-right" action="{!removeExperienceRecord}" rerender="wrappertable" onComplete="dpInitiate();" immediate="true" id="linkdelWrapper" status="status"> <i class="fa fa-trash-o"></i> <span>Remove</span>
+			                            <apex:param name="toDelIdent" value="{!wrapper}" assignTo="{!toDelIdent}"/>
+			                          </apex:commandlink>
+			                        </apex:outputText>
+		                        </div>
+		                    </div>
+		                    
+		                  </div>
+		                  <!--  end panel -->
+		                </apex:repeat>
+		                
+		                  <apex:outputPanel layout="block" id="outputpaneladd">
+		                    <apex:commandlink styleClass="btn btn-link btn-lg margin-b" action="{!addExperienceRecord}" onComplete="dpInitiate();" immediate="true" rerender="wrappertable, experienceblock, rowCounter" id="linkaddlWrapper" status="status">
+		                      <apex:commandButton value="" id="addbutton"/>
+		                            <i class="fa fa-plus-circle"></i>
+		                  			<span>Add Work Experience</span>
+		                    </apex:commandlink>
+		                  </apex:outputPanel>
+		               
+		              </apex:outputpanel>
+		          </apex:pageBlock>
+	              <!--  end panel group --> 
+	        
+	        </apex:outputPanel> <!-- END MAIN BLOCK -->
+           	
+            <div class="form-group margin-t">
+            	
+                <!-- <apex:outputLink styleClass="btn btn-link btn-lg float"  value="/apex/igi_pt_app_contact_Info?id={!applicantInfo.Id}" id="backlink"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                 -->
+                <apex:commandlink styleClass="btn btn-primary btn-lg margin-r"
+									action="{!navigator}" id="nextlink"  onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                  <apex:param name="nextPage" value="/apex/igi_pt_app_program_pref"/>
+                  <apex:param name="reDirectPage" value="true" />
+                  <apex:param name="pageId" value="058"/>
+                  <apex:commandButton value="Save & Continue" id="continuebutton" />
+                </apex:commandlink>
+                
+             
+
+            </div>
+            
+          </apex:form>
+          <apex:form >
+          	<c:block_app_coedit_authorization ApplicantInfo="{!applicantInfo}" pageController="{!AEC}" rendered="{!applicantInfo.Apply_on_Behalf_of_PT__c && applicantInfo.Application_Stage__c == 'Working'}"/>
+          </apex:form>
+        </div>
+        <!-- end column -->
+        
+        <div class="col-md-3 col-md-pull-7">
+          <apex:form >
+            <c:menu_igi_pt_app ApplicantInfo="{!applicantInfo}" personInfo="{!personInfo}" />
+          </apex:form>
+        </div>
+        <!-- end column  --> 
+      </div>
+      <!-- end row --> 
+      
+    </apex:define>
+  </apex:composition>
+</apex:page>

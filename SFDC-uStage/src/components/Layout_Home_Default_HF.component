@@ -1,0 +1,38 @@
+<apex:component >
+	<apex:form >
+		<h2>Hello,&nbsp; <apex:outputText value="{!$User.FirstName}" />
+		<!-- <apex:outputText value="{!hostContact.Name}"/>  -->
+		</h2>
+
+		<div class="row">
+			<!-- Panel to hold the page content components -->
+			<!-- 
+			<apex:outputPanel styleClass="span12">  
+				<c:Block_Notifications />
+			</apex:outputPanel>   
+			 -->
+		</div>  
+		 <!-- end row -->
+             
+        <div class="row">
+			<!-- Panel to hold the page content components -->
+			<apex:outputPanel styleClass="span4">  
+			<c:Block_HPContent />
+			<!-- <c:Ayusa_HF_Applications /> -->
+			</apex:outputPanel>  
+                  
+            <!-- Panel to hold the Page Quick Links --> 
+			<apex:outputPanel styleClass="span4"> 
+			<c:block_matches_teaser />
+			 <!-- <c:Block_PortalShortcuts /> -->	
+			</apex:outputPanel> 
+                  
+            <apex:outputPanel styleClass="span4">  
+			<c:block_app_status />-->
+			<!--  <c:Badge_Contact /> -->
+			</apex:outputPanel>   
+			  
+		</div>  
+		 <!-- end row -->
+	</apex:form>
+</apex:component>

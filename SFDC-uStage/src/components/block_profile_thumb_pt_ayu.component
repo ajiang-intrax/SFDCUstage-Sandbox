@@ -1,0 +1,37 @@
+<apex:component >
+
+<apex:attribute name="photoUrl" description="This is the value for the component." type="String" required="false" default=""/>
+<apex:attribute name="gender" description="This is the value for the component." type="String" required="false" default=""/>
+<apex:attribute name="HFStatus" description="this checks for to HF position to be in a 'Matching Status " type="boolean" required="false" default="true"/>
+<apex:attribute name="userType" description="This is the value for the current user type" type="String" required="false" default=""/>
+
+	<apex:outputPanel layout="block" styleClass="profile-thumbnail" rendered="{!IF(userType == 'Partner', true, false)}" >
+		<apex:outputPanel styleClass="ph-thumb default md" layout="block" rendered="{!IF(photoUrl == '' && gender == 'Male' ,true,false)}">
+	     <i class="icon-camera"></i>
+		</apex:outputPanel>
+		<apex:outputPanel styleClass="ph-thumb default md" layout="block" rendered="{!IF(photoUrl == '' && gender == 'Female' ,true,false)}">
+		     <i class="icon-camera"></i>
+		</apex:outputPanel>
+		<apex:outputPanel styleClass="ph-thumb md" layout="block" rendered="{!IF(photoUrl != '',true,false)}">
+		     <apex:image url="{!photoUrl}"></apex:image>
+		</apex:outputPanel>
+	</apex:outputPanel>
+	
+	<apex:outputPanel layout="block" styleClass="profile-thumbnail" rendered="{!IF(userType = 'Host Family', true, false)}" >
+		<apex:outputPanel styleClass="ph-thumb default md" layout="block" rendered="{!IF(photoUrl == '' && gender == 'Male' ,true,false)}">
+		     <i class="icon-camera"></i>
+		</apex:outputPanel>
+		<apex:outputPanel styleClass="ph-thumb default md" layout="block" rendered="{!IF(photoUrl == '' && gender == 'Female' ,true,false)}">
+		     <i class="icon-camera"></i>
+		</apex:outputPanel>
+		<apex:outputPanel styleClass="ph-thumb md" layout="block" rendered="{!IF(photoUrl != '' && (HFStatus || $CurrentPage.parameters.ConfMatch=='true'),true,false)}">
+		     <apex:image url="{!photoUrl}"></apex:image>
+		</apex:outputPanel>
+		<apex:outputPanel styleClass="ph-thumb default md" layout="block" rendered="{!IF(photoUrl != '' && NOT(HFStatus) && $CurrentPage.parameters.ConfMatch=='' && gender == 'Male',true,false)}">
+		     <i class="icon-camera"></i>
+		</apex:outputPanel>
+		<apex:outputPanel styleClass="ph-thumb default md" layout="block" rendered="{!IF(photoUrl != '' && NOT(HFStatus) && $CurrentPage.parameters.ConfMatch=='' && gender == 'Female',true,false)}">
+		    <i class="icon-camera"></i>
+		</apex:outputPanel>
+	</apex:outputPanel>
+</apex:component>

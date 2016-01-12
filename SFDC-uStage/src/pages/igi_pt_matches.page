@@ -1,0 +1,187 @@
+<apex:page id="igi_pt_matches" docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" 
+	controller="IGI_PT_Controller" action="{!checkLogin}"
+	standardStylesheets="false" showHeader="false"  title="Your Matches">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_igi_pt_application />
+      <div class="row">
+        <div class="col-md-12">
+          <style>
+        i{
+	        color: #87b64f;
+			font-size: 32px;
+			text-align: right;
+			margin-right: 15px;
+			width: 30px;
+         }
+        
+        </style>
+          <div class="row">
+          <div class="col-md-9 center-block center-text">
+          <apex:outputpanel rendered="{!applicantInfo.Engagement__r.Placement_Status__c == 'Confirmed'}" >
+            <h1>Your Internship</h1>
+            <p class="lead"> View your Internship placement information, download Training Plan Summaries and more!</p>
+          </apex:outputpanel>
+          <apex:outputpanel rendered="{!applicantInfo.Engagement__r.Placement_Status__c != 'Confirmed'}" >
+          <h1>Find an Internship</h1>
+          <p class="lead">The Intrax Global Internships team will work closely with you to match your skill levels, professional goals, and cultural interests with the unique needs of our host companies. Use this page to explore your internship opportunities.</p>
+         <apex:outputpanel layout="block" rendered="{!$CurrentPage.parameters.vstate == ''}" >
+         <p>&nbsp;</p>
+         </apex:outputpanel>
+         </apex:outputpanel>
+         <apex:outputpanel styleClass="alert alert-warning" layout="block" rendered="{!$CurrentPage.parameters.vstate == 'rejoffer'}" >
+         You have rejected an internship offer. You will no longer see this position.
+         </apex:outputpanel>
+         <apex:outputpanel styleClass="alert alert-success" layout="block" rendered="{!$CurrentPage.parameters.vstate == 'accoffer'}" >
+         Congratulations! You have accepted an internship offer.
+         </apex:outputpanel>
+         </div>
+         </div><!--  end row -->   
+         
+         
+         <div class="h2">Your Internship Matches</div>
+         <hr class="margin-b3"/> 
+          <apex:form styleClass="form-vertical ws-validate" id="webform">
+            <apex:pageBlock id="matchesBlock">
+              <apex:outputpanel layout="block" id="wrappertableNoMatch" rendered="{!matchInfoList.size == 0  && applicantInfo.Application_Stage__c == 'Accepted'}">
+               	<div class="row">
+	              	<div class="col-sm-8">
+	             		<p>You currently do not have any internship matches. Please check this space frequently for updates.</p>
+	            	</div>
+            	</div>
+              </apex:outputpanel>
+             
+             <apex:outputPanel layout="block" rendered="{!applicantInfo.Application_Stage__c != 'Accepted'}">
+             	<div class="row">
+              		<div class="col-sm-8">
+             			<p>You currently do not have any internship matches. We will start recommending companies for you once your internship application is reviewed and accepted. In the meantime please check Your Program page for next steps.</p>
+            		</div>
+            	</div>
+             </apex:outputPanel>
+            
+              <apex:outputpanel layout="block" id="wrappertable" rendered="{!matchInfoList.size > 0}">
+                <apex:repeat id="wtable" value="{!matchInfoList}" var="match">
+                  <apex:outputPanel layout="block" rendered="{!NOT(match.Hide_From_PT__c)}">
+	                  <div class="row">
+	                    <div class="col-sm-6">
+	                      <div class="h3 no-margin-t">{!match.Position_Name__r.Title__c}</div>
+	                      <p>
+	                        <apex:outputText value="{!LEFT(match.Position_Name__r.Description__c, 400)}" id="matchDescription"/>
+	                      </p>
+	                      <apex:outputLink styleClass="margin-b3" value="/apex/igi_pt_match_details?mId={!match.Id}" id="linkEditWrapper"><strong>View Full Position ></strong></apex:outputLink><br/>
+	                     <apex:outputLink styleClass="margin-b3" value="/apex/igi_tipp_pdf_view?id={!match.Id}" target="_blank" rendered="{!IF(((match.Engagement__r.Intrax_Program__c == 'Internship')&&(PosInfo_Status[match.id]=='Accepted' || PosInfo_Status[match.id]=='In-Review')), true, false)}"><strong>View TIPP Info ></strong></apex:outputLink>
+	                    </div>
+	                    <div class="col-sm-3">
+	                      <div class="margin-b">
+	                        <div class="tcell"><i class="fa fa-building-o center-text"></i></div> 
+	                        <div class="tcell">
+	                          <label>Company</label><br/>
+	                          <apex:outputText value=" {!match.Position_Name__r.Host_Company_Id__r.Name}" rendered="{!ISBLANK(match.Position_Name__r.Host_Company_Id__r.Website)}"/>
+	                          <apex:outputLink target="_blank" value="http://{!match.Position_Name__r.Host_Company_Id__r.Website}" rendered="{!NOT(ISBLANK(match.Position_Name__r.Host_Company_Id__r.Website))}">
+	                            <apex:outputField styleClass="form-control" value=" {!match.Position_Name__r.Host_Company_Id__r.Name}" id="companyName"/>
+	                          </apex:outputLink>
+	                        </div>
+	                      </div>
+	                      <div class="margin-b">
+	                        <div class="tcell"><i class="fa fa-map-marker center-text"></i></div>
+	                        <div class="tcell">
+	                          <label>Location</label><br/>
+	                          {!match.Position_Name__r.City__c}
+	                          <apex:outputText value=", {!match.Position_Name__r.State__c}" rendered="{!NOT(ISBLANK(match.Position_Name__r.State__c))}, "/>
+	                          , {!match.Position_Name__r.Country__c}</div>
+	                      </div>
+	                      <div class="margin-b">
+	                        <div class="tcell"><i class="fa fa-calendar-o"></i></div>
+	                        <div class="tcell">
+	                          <label>Position Dates</label><br/>
+	                          <apex:outputPanel layout="block" rendered="{!match.Status__c == 'Confirmed'}" >
+	                          <apex:outputField value="{!match.Start_Date__c}" />&nbsp; to &nbsp;<span class="w-break"><apex:outputField value=" {!match.End_Date__c}"/></span>
+	                          </apex:outputPanel>
+	                          <apex:outputPanel layout="block" rendered="{!match.Status__c != 'Confirmed'}" >
+	                          <apex:outputField value="{!match.Position_Name__r.Engagement_Start__c}" />&nbsp; to &nbsp;<span class="w-break"><apex:outputField value=" {!match.Position_Name__r.Engagement_End__c}"/></span>
+	                        </apex:outputPanel>
+	                        </div>
+	                      </div>
+	                    </div>
+	                    <div class="col-sm-3">
+	                     
+	                      <apex:outputPanel styleClass="box gray" layout="block" rendered="{! match.Status__c == 'Applied' && ISBLANK(match.Interview_Status__c) && ISBLANK(match.Offer_Status__c) }">
+	                      	<p> <strong>You applied to this position</strong><br/> You will be notified if the company is interested in interviewing you.</p>
+	                      </apex:outputPanel>
+	                      <apex:outputPanel styleClass="box gray" layout="block" rendered="{! match.Hide_From_Host__c && match.Status__c == 'Withdrawn' && ISBLANK(match.Interview_Status__c) && ISBLANK(match.Offer_Status__c) }">
+	                        <p><strong>Application Declined</strong><br/>Sorry, the company chose not to interview you.</p>
+	                        <apex:commandlink action="{!navigator}" >
+					            <apex:param name="nextPage" value="/apex/igi_pt_matches"/>
+					            <apex:param name="mId" value="{!match.Id}" assignTo="{!mId}" />
+					            <apex:param name="PTDeclined" value="true" assignTo="{!PTDeclined}"/>
+					            <strong>Remove Match ></strong>
+					        </apex:commandlink>
+	                      </apex:outputPanel>
+	                      <apex:outputPanel styleClass="box yellow" layout="block" rendered="{! match.Status__c == 'Requested' && match.Interview_Status__c == 'Initiated'  && ISBLANK(match.Offer_Status__c) }">
+	                        <p><strong>New Interview Request!</strong><br/>The company wants to interview you.</p>
+	                        <apex:outputLink styleClass="margin-b3" value="/apex/igi_pt_match_details?mId={!match.Id}" id="linkViewMatch4"><strong>Select a Date/Time ></strong></apex:outputLink>
+	                      </apex:outputPanel>
+	                      <apex:outputPanel styleClass="box green" layout="block" rendered="{! match.Status__c == 'Requested' && match.Interview_Status__c == 'Scheduled'  && ISBLANK(match.Offer_Status__c) && NOT(ISNULL(match.Interview_Date__c)) && (TODAY() < DATEVALUE(match.Interview_Date__c))}">
+	                        <p>Upcoming Interview!</p>
+	                        <p>
+		                        <label>Date/Time:</label>&nbsp;<apex:outputField value="{!match.Interview_Date__c}"/><br/>		                        
+		                        <label>Interviewer:</label>&nbsp;{!match.Position_Name__r.Position_Supervisor__r.Name},&nbsp;{!match.Position_Name__r.Supervisor_Role__c}<br/>
+		                        <label>Skype ID:</label>&nbsp;{!match.Position_Name__r.Position_Supervisor__r.Skype_ID__c}<br/>
+	                        </p>
+	                      </apex:outputPanel>
+	                      <apex:outputPanel styleClass="box gray" layout="block" rendered="{! match.Status__c == 'Withdrawn' && match.Interview_Status__c == 'Completed' && ISBLANK(match.Offer_Status__c) && match.Hide_From_Host__c }">
+	                        <p><strong>Sorry</strong><br/> The company is no longer considering you for this internship position.</p>
+	                      	<apex:commandlink action="{!navigator}" >
+					            <apex:param name="nextPage" value="/apex/igi_pt_matches"/>
+					            <apex:param name="mId" value="{!match.Id}" assignTo="{!mId}" />
+					            <apex:param name="PTDeclined" value="true" assignTo="{!PTDeclined}"/>
+					            <strong>Remove Match ></strong>
+					        </apex:commandlink>					        
+	                      </apex:outputPanel>
+	                      <apex:outputPanel styleClass="box gray" layout="block" rendered="{! match.Status__c == 'Requested' && match.Interview_Status__c == 'Needs Assistance' && ISBLANK(match.Offer_Status__c) && ISBLANK(match.Interview_Date__c)}">
+	                       <p><strong>On Hold</strong><br/>You requested a different interview time. We will get in touch with you.</p>
+	                       </apex:outputPanel>
+	                      <apex:outputPanel styleClass="box gray" layout="block" rendered="{! match.Status__c == 'Requested' && OR(match.Interview_Status__c == 'Participant No Show', match.Interview_Status__c == 'Company No Show') && ISBLANK(match.Offer_Status__c) && NOT(ISNULL(match.Interview_Date__c)) && (TODAY() >= DATEVALUE(match.Interview_Date__c))}">
+	                       <p><strong>Pending New Interview</strong><br/> Looks like the interview did not take place. We will notify you if the company chooses to propose a new date/time.</p>
+	                      </apex:outputPanel>
+	                      <apex:outputPanel styleClass="box gray" layout="block" rendered="{! match.Status__c == 'Requested' && match.Interview_Status__c == 'Needs Assistance' && NOT(ISBLANK(match.Interview_Date__c))}">
+	                      <p><strong>Interview Cancelled</strong><br/> We will notify you if the company chooses to propose a new date/time.</p></apex:outputPanel>
+	                      <apex:outputPanel styleClass="box gray" layout="block" rendered="{! match.Status__c == 'Requested' && match.Interview_Status__c == 'Cancelled' && ISBLANK(match.Offer_Status__c)}">
+	                       <p><strong>Interview Cancelled</strong><br/> The company cancelled the interview. We will notify you if they choose to propose a new date/time.</p>
+	                      </apex:outputPanel>
+	                      <apex:outputPanel styleClass="box gray" layout="block" rendered="{! match.Status__c == 'Requested' && match.Interview_Status__c == 'Scheduled' && ISBLANK(match.Offer_Status__c) && NOT(ISNULL(match.Interview_Date__c)) && (TODAY() >= DATEVALUE(match.Interview_Date__c))}">
+	                       <p><strong>How did it go?</strong><br/>Hope your interview went well! If it did not take place please contact Intrax.</p>
+	                       </apex:outputPanel>
+	                      <apex:outputPanel styleClass="box gray" layout="block" rendered="{! match.Status__c == 'Requested' && match.Interview_Status__c == 'Completed' && ISBLANK(match.Offer_Status__c)}" >
+	                       <p><strong>Interview Complete!</strong><br/> Awaiting decision from the company.</p>
+	                       </apex:outputPanel>
+	                      <apex:outputPanel styleClass="box yellow" layout="block" rendered="{! match.Status__c == 'Requested' && match.Interview_Status__c == 'Completed' && match.Offer_Status__c == 'Offered'}" >
+	                        <p> <strong>New Job Offer!</strong><br/>The company wants to work with you. What do you think? </p>
+	                        <apex:outputLink styleClass="margin-b3" value="/apex/igi_pt_match_details?mId={!match.Id}" id="linkViewMatch13"><strong>Respond to Offer ></strong></apex:outputLink>
+	                      </apex:outputPanel>
+	                      <apex:outputPanel styleClass="box gray" layout="block" rendered="{! match.Status__c == 'Withdrawn' && match.Interview_Status__c == 'Completed' && match.Offer_Status__c == 'Not Offered'}" >
+	                         <p><strong>Sorry</strong><br/>The company did not offer this job to you.</p>
+	                         <apex:commandlink action="{!navigator}" >
+					            <apex:param name="nextPage" value="/apex/igi_pt_matches"/>
+					            <apex:param name="mId" value="{!match.Id}" assignTo="{!mId}" />
+					            <apex:param name="PTDeclined" value="true" assignTo="{!PTDeclined}"/>
+					            <strong>Remove Match ></strong>
+					        </apex:commandlink>
+	                      </apex:outputPanel>
+	                      <apex:outputPanel styleClass="box green" layout="block" rendered="{! match.Status__c == 'Confirmed' && match.Interview_Status__c == 'Completed' && match.Offer_Status__c == 'Accepted'}" >
+	                         <p><strong>Congratulations!</strong><br/>This internship position is yours.</p>
+	                      </apex:outputPanel>
+	                    </div>
+	                  </div>
+	                  <hr class="margin-b3"/>
+	                </apex:outputPanel>
+                </apex:repeat>
+              </apex:outputpanel>
+              
+            </apex:pageBlock>
+          </apex:form>
+        </div>
+      </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

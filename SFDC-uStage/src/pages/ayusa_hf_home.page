@@ -1,0 +1,220 @@
+<apex:page id="ayusa_hf_home" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}"  standardStylesheets="true" showHeader="false">
+    <apex:includeScript value="{!URLFOR($Resource.MJQuery, 'jquery-ui-1.9.2.custom/js/jquery-1.8.3.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.MJQuery, 'jquery-ui-1.9.2.custom/js/jquery-ui-1.9.2.custom.min.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.MJQuery, 'jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css')}"/>
+    
+     <script type="text/javascript">
+         var j$ = jQuery.noConflict();
+ 
+        j$(document).ready(function(){
+            j$("#nosubmit").click(function() {
+                 $( '<div id="dialog" title="Ayusa Application"><p>Please complete all sections (excepting those marked optional) before submitting your application. If a section does not have a green tick <i class="icon-ok"></i>, then you should go back and provide further details.</p></div>' ).dialog({
+                  resizable: false,
+                  height:220,width:350,
+                  modal: true,
+                  buttons: {
+                    "Continue": function() {
+                      $( this ).dialog( "close" );
+                    }
+                  }
+                });
+            });
+        });
+     </script> 
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper">
+          <apex:form id="form" >              
+              <h1>Ayusa Host Family Application</h1>
+              <div class="white-box clearfix">
+             
+              <div class="panel two_thirds" >
+                  <p>Thank you for your interest in hosting an Ayusa student. We believe that one connection has the power to change the world. Welcoming an exchange student into your home has the power to not only impact your family, but to change attitudes on a global scale. The Host Family Application is the next step toward achieving that goal.</p>
+                  <p>The U.S. Department of State requires Ayusa to collect specific information from potential host families. Please complete the Host Family Application to the best of your ability.</p>
+                  <p>&nbsp;</p>
+                  <div class="pane">
+                <div class="app-summary-section">
+               <div class="app-summary-section-header">About Your Family</div>
+               <div class="app-summary-section-body">
+                    <div class="app-summary-section-link">
+                      <apex:commandlink id="Primary_Contact_Link" action="{!navigator}">
+                      <apex:param name="nextPage" value="/apex/ayusa_hf_fam_primary"/>
+                         <apex:param name="role" value="Host" assignTo="{!role}"/>
+                      <apex:param name="reDirectPage" value="true"/>
+                      <apex:outputLabel >The Primary Contact</apex:outputLabel>
+                      <apex:outputPanel layout="inline" styleClass="finished" rendered="{! IF(NOT(ISBLANK(applicantInfo.Years_in_Home__c)), true, false)}"><i class="icon-ok"></i></apex:outputPanel>
+                      </apex:commandlink>
+                   </div>
+                   <div class="app-summary-section-link">
+                      <apex:commandlink id="Additional_Add_Link" action="{!navigator}">
+                      <apex:param name="nextPage" value="/apex/ayusa_hf_fam_prev_address"/>
+                      <apex:param name="reDirectPage" value="false"/>
+                          <apex:outputLabel >Additional Addresses</apex:outputLabel>
+                          <apex:outputPanel layout="inline" styleClass="finished" rendered="{!CheckPreviousAddress}"><i class="icon-ok"></i></apex:outputPanel>
+                      </apex:commandlink>
+                   </div>
+                   <div class="app-summary-section-link">
+                       <apex:commandlink id="Other_Family_Members_Link" action="{!navigator}">
+                      <apex:param name="nextPage" value="/apex/ayusa_hf_fam_other"/>
+                      <apex:param name="reDirectPage" value="false"/>
+                      <apex:outputLabel >Other Family Members</apex:outputLabel>
+                      <apex:outputPanel layout="inline" styleClass="finished" rendered="{!CheckFamilyMembers}"><i class="icon-ok"></i></apex:outputPanel>
+                    </apex:commandlink>
+                     </div>
+                   <div class="app-summary-section-link">
+                        <apex:commandlink id="About_Household_Link" action="{!navigator}">
+                      <apex:param name="nextPage" value="/apex/ayusa_hf_fam_household_basics"/>
+                      <apex:param name="reDirectPage" value="false"/>
+                      <apex:outputLabel >About Your Household</apex:outputLabel>
+                      <apex:outputPanel layout="inline" styleClass="finished" rendered="{! IF(NOT(ISBLANK(applicantInfo.Home_Type__c)), true, false)}"><i class="icon-ok"></i></apex:outputPanel>
+                    </apex:commandlink>
+                   </div>
+                   <div class="app-summary-section-link"> 
+                       <apex:commandlink id="About_Household_Conti_Link" action="{!navigator}">
+                      <apex:param name="nextPage" value="/apex/ayusa_hf_fam_household_details"/>
+                      <apex:param name="reDirectPage" value="false"/>
+                           <apex:outputLabel >About Your Household - <em>Cont.</em></apex:outputLabel>
+                           <apex:outputPanel layout="inline" styleClass="finished" rendered="{! IF(NOT(ISBLANK(applicantInfo.Primary_Language__c)), true, false)}"><i class="icon-ok"></i></apex:outputPanel>
+                    </apex:commandlink>
+                   </div> 
+                   <div class="app-summary-section-link">
+                      <apex:commandlink id="Family_Ref_Link" action="{!navigator}">
+                      <apex:param name="nextPage" value="/apex/ayusa_hf_fam_references"/>
+                      <apex:param name="reDirectPage" value="true"/>
+                     <apex:outputLabel >Family References</apex:outputLabel>
+                     <apex:outputPanel layout="inline" styleClass="finished" rendered="{!CheckHFReferences}"><i class="icon-ok"></i></apex:outputPanel>
+                    </apex:commandlink>
+                   </div>
+                  
+                  <!-- AYII story 72 -->
+                   <div class="app-summary-section-link">
+                      <apex:commandlink id="Family_Letter_Link" action="{!navigator}">
+                      <apex:param name="nextPage" value="/apex/ayusa_hf_fam_letter"/>
+                      <apex:param name="reDirectPage" value="true"/>
+                      <apex:param name="EssayType" value="Host Family" assignTo="{!EssayType}"/>
+                      <apex:param name="docType" value="HostFamily" assignTo="{!docType}"/>
+                     <apex:outputLabel >Family Letter to Student</apex:outputLabel>
+                     <apex:outputPanel layout="inline" styleClass="finished" rendered="{!CheckFamilyLetter}"><i class="icon-ok"></i></apex:outputPanel>
+                    </apex:commandlink>
+                   </div>
+                   <!-- AYII story 72 -->
+                    <div class="app-summary-section-link">
+                      <apex:commandlink id="Family_Photo_Link" action="{!navigator}">
+                      <apex:param name="nextPage" value="/apex/ayusa_hf_photos_videos"/>
+                      <apex:param name="reDirectPage" value="true"/>
+                      <apex:param name="docType" value="HostFamily" assignTo="{!docType}"/>
+                      <apex:outputLabel > Family Photo Album (optional)</apex:outputLabel>
+                    </apex:commandlink></div>
+              </div> 
+              </div> <!-- end of section -->
+                     
+              </div>  
+                  
+               <div class="pane last">
+                <div class="app-summary-section">
+               <div class="app-summary-section-header">Your Community</div>
+               <div class="app-summary-section-body">
+                    <div class="app-summary-section-link">
+                        <apex:commandlink id="Community_Overview_Link" action="{!navigator}">
+                      <apex:param name="nextPage" value="/apex/ayusa_hf_comm_basics"/>
+                      <apex:param name="reDirectPage" value="false"/>
+                      <apex:outputLabel >Community Overview</apex:outputLabel>
+                      <apex:outputPanel layout="inline" styleClass="finished" rendered="{! IF(NOT(ISBLANK(applicantInfo.Community_Type__c)), true, false)}"><i class="icon-ok"></i></apex:outputPanel>
+                    </apex:commandlink></div>
+                   <div class="app-summary-section-link"> 
+                       <apex:commandlink id="Local_High_School_Link" action="{!navigator}">
+                      <apex:param name="nextPage" value="/apex/ayusa_hf_school_basics"/>
+                      <apex:param name="reDirectPage" value="false"/>
+                      <apex:outputLabel >Local High School</apex:outputLabel>
+                      <apex:outputPanel layout="inline" styleClass="finished" rendered="{! IF(NOT(ISBLANK(SchoolInfo.Name__c)), true, false)}"><i class="icon-ok"></i></apex:outputPanel>
+                    </apex:commandlink></div>
+                   <div class="app-summary-section-link"> 
+                     <apex:commandlink id="Local_High_School_Conti_Link" action="{!navigator}">
+                      <apex:param name="nextPage" value="/apex/ayusa_hf_school_details"/>
+                      <apex:param name="reDirectPage" value="false"/>
+                           <apex:outputLabel >Local High School - <em>Cont.</em></apex:outputLabel>
+                           <apex:outputPanel layout="inline" styleClass="finished" rendered="{! IF(NOT(ISBLANK(ApplicantInfo.School_Transportation__c)), true, false)}"><i class="icon-ok"></i></apex:outputPanel>
+                     </apex:commandlink></div>
+              </div>  
+              </div> <!-- end of section -->
+              
+                   <div class="app-summary-section">
+                       <div class="app-summary-section-header">Your Program</div>
+                       <div class="app-summary-section-body">
+                        <div class="app-summary-section-link">
+                          <apex:commandlink id="Hosting_Preferences_Link" action="{!navigator}">
+                          <apex:param name="nextPage" value="/apex/ayusa_hf_host_pref"/>                          
+                          <apex:param name="reDirectPage" value="false"/>
+                          <apex:outputLabel >Hosting Preferences</apex:outputLabel>
+                          <apex:outputPanel layout="inline" styleClass="finished" rendered="{! IF(NOT(ISBLANK(applicantInfo.Gender_Preference__c)), true, false)}"><i class="icon-ok"></i></apex:outputPanel>
+                        </apex:commandlink></div>
+                       <div class="app-summary-section-link">
+                           <apex:commandlink id="Program_Agreement_Link" action="{!navigator}">
+                              <apex:param name="nextPage" value="/apex/ayusa_hf_prog_agree"/>
+                              <apex:param name="reDirectPage" value="true"/>
+                              <apex:param name="docType" value="HostAgreements" assignTo="{!docType}" />
+                              <apex:outputLabel >Program Agreements</apex:outputLabel>
+                              <apex:outputPanel layout="inline" styleClass="finished" rendered="{!(checkHFAgreementsUpload || CheckHFAgreementsDSSent || checkHFAgreementsDS)}"><i class="icon-ok"></i></apex:outputPanel>                    
+                        </apex:commandlink></div>
+                    </div>
+              </div> <!-- end of section -->
+              <div class="app-summary-section" style="padding:0 10%; width:80%;">
+              
+                   <p style="text-align:center; width:100%;"><strong>Have you completed your application?</strong></p>
+                   
+                   <apex:outputPanel styleClass="form-button no-float" style="width:100%;" layout="block" rendered="{!NOT(checkHFApp)}">
+                    <!--apex:outputLink style="text-align:center;" styleClass="no-submit">Submit Application</apex:outputLink-->
+                    <a id="nosubmit" href="" class="no-submit" style="cursor: pointer;text-align:center;">Submit Application</a>
+                   </apex:outputPanel>   
+                   
+                   <div class="form-button no-float" style="width:100%;">
+                        <apex:commandlink style="text-align:center;" styleClass="submit" action="{!navigator}" rendered="{!checkHFApp}">
+                          <apex:param name="nextPage" value="/apex/Ayusa_PT_App_Submitted"/>
+                          
+                           <apex:param name="SubmitApp" value="HF"/>
+                          <apex:param name="reDirectPage" value="false"/>
+                          <apex:commandButton value="Submit Application" />
+                        </apex:commandlink>
+                      </div>
+                      <div class="form-link no-float">
+                    <apex:commandlink action="{!navigator}" target="_blank" > 
+                        <i class="icon-file"></i>
+                      <apex:param name="nextPage" value="/apex/ayusa_hf_fam_view_pdf_summary"/>
+                      <apex:param name="reDirectPage" value="true"/>
+                      <apex:param name="role" value="Host" assignTo="{!role}"/>
+                      <apex:commandButton value="View PDF Summary" />
+                    </apex:commandlink>
+                  </div>
+              </div>     <!-- end of section -->       
+              
+              </div> 
+            </div>      
+                  
+                <div class="panel one_third last aside">
+           <div class="badge">
+                   <h3 class="badge-title">About Ayusa</h3>
+                   <div class="badge-content">Ayusa is designated by the U.S. Department of State as an Exchange Visitor Program Sponsor, enabling all Ayusa participants to travel on J-1 visas. For over 30 years, we have provided students and host families with an invaluable perspective on other cultures and a more global perspective about the world around us.</div>
+                   </div> 
+                   <div class="badge">
+                   <div class="badge-content"><apex:image url="{!URLFOR($Resource.intrax_themes, '/intrax_themes/images/ayusa-accreditations.gif')}" alt="Ayusa" title="Ayusa"/></div>
+                   </div> 
+              </div> 
+                  
+              <div class="panel one_third last aside">  
+                <div class="badge">
+                <div class="badge-content">
+                <a href="https://www.youtube.com/embed/FG_yR4Tl4js" title="Navigation and Help" class="youtube cboxElement"><img src="{!URLFOR($Resource.ayusa_help_videos,'ayusa-help-videos/nav_help.jpg')}"/></a>
+                </div>
+                </div> 
+              </div>
+              
+              
+              </div>  
+                
+                              
+             
+          </apex:form>
+      </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

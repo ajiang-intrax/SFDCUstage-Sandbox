@@ -1,0 +1,16 @@
+<apex:component layout="none">
+<apex:attribute description="" name="photoUrl" type="String" required="false" default=""/>
+<apex:attribute description="" name="gender" type="String" required="false" default=""/>
+<div class="pr-pt-profile ">
+<apex:image style="width: 150px;" rendered="{!photoUrl!=null}" url="{!photoUrl}"/>
+<apex:outputText rendered="{!photoUrl==null}" >
+<apex:image url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/female-profile-med.png')}" rendered="{!gender == 'Female'}"/>
+<apex:image url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/male-profile-med.png')}" rendered="{!gender == 'Male'}"/>
+</apex:outputText>
+</div>
+<!--  test image src="https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/themes/demos/demo-images/pr_pt_profile.jpg" -->
+
+
+
+
+</apex:component>

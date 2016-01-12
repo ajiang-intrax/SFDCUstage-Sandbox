@@ -1,0 +1,183 @@
+<apex:page id="apc_hf_contact" docType="html-5.0" applyHtmlTag="false" applyBodyTag="false" title="Contact AuPairCare" standardStylesheets="false" showHeader="false" controller="apc_portal_controller">
+<apex:composition template="intraxtemplate_vs3">
+<apex:define name="body">
+
+<style>
+.contact-icon{height:80px; font-size:80px; line-height:1; color:#BABABA;}
+.contact-box{}
+.contact-box-inner{vertical-align:top; height:380px;  padding:20px; border:#ccc solid 1px;}
+.contact-img{text-align:center; border-bottom:#ccc solid 1px; padding-bottom:20px;}
+</style>
+
+<apex:form id="webform">
+
+<div class="row margin-b2">
+<div class="col-sm-8 center-block center-text">
+<h1 class="no-margin-t">Contact AuPairCare</h1>
+</div>
+</div>
+
+<div class="row">
+<div class="col-lg-9 col-md-10 center-block">
+<div class="row">
+
+<div class="col-sm-4 margin-b3">
+
+<apex:outputText rendered="{!MatchingExpert.ME_First_Name__c == null}">
+<div class="contact-box-inner box gray">
+<apex:image styleClass="img-circle margin-b2 center-block" style="width:111px;" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/female-profile-med.png')}"/>               
+<hr/>
+<h3>Matching Questions</h3>
+<div class="lead">You currently do not have an matching expert assigned to you.</div>
+</div>
+</apex:outputText>
+
+<apex:outputText rendered="{!MatchingExpert.ME_First_Name__c != null}">
+<div class="contact-box-inner">
+<div class="contact-img"><div class="contact-icon fa fa-users margin-t2 margin-b1"></div></div>
+<h3>Matching Questions</h3> 
+<div><label>Ask {!MatchingExpert.ME_First_Name__c} {!MatchingExpert.ME_Last_Name__c}</label></div>
+<div><em>Your Matching Expert</em></div>
+<div>{!MatchingExpert.ME_Phone__c}</div>
+<div class="margin-b2"><a href="{!MatchingExpert.ME_Email__c}">{!MatchingExpert.ME_Email__c}</a></div>
+<div><a data-toggle="modal" data-target="#matchInquiry"><b>Submit a Question Online</b></a></div> 
+</div>
+</apex:outputText>
+
+</div> 
+
+<div class="col-sm-4 margin-b3">
+<div class="contact-box-inner">
+<div class="contact-img "><div class="contact-icon fa fa-credit-card margin-t2 margin-b1"></div></div>
+<h3>Billing Questions</h3>
+<div><label>Ask {!BillingInfo.Contact_Person__c}</label></div>
+<div>{!BillingInfo.Phone__c}</div>
+<div>{!BillingInfo.Additional_Notes__c}</div>
+<div class="margin-b2"><a href="mailto:billing@aupaircare.com">{!BillingInfo.Email__c}</a></div>
+</div>
+</div>
+
+<div class="col-sm-4 margin-b3">
+
+<apex:outputText rendered="{!ADUserProf.User_Name__c == null}">
+<div class="contact-box-inner box gray">
+<apex:image styleClass="img-circle margin-b2 center-block" rendered="{!photoADUrl == 'no picture'}" style="width:111px;" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/female-profile-med.png')}"/>               
+<hr/>
+<h3>Your Area Director</h3>
+<div class="lead">You currently do not have an area director assigned to you.</div>
+</div>
+</apex:outputText>
+
+<apex:outputText rendered="{!ADUserProf.User_Name__c != null}">
+<div class="contact-box-inner">
+<div class="contact-img">
+<apex:image styleClass="img-circle" style="width:111px;" rendered="{!photoADUrl != 'no picture'}" id="theImage1" value="{!photoADUrl}"/>
+<apex:image styleClass="img-circle" rendered="{!photoADUrl == 'no picture'}" id="theImageDefault1" value=""/>
+</div>
+<h3>Local Program Support</h3>
+<div><label>Ask {!ADUserProf.User_Name__c}</label></div>
+<div><em>Your Area Director</em></div>
+<div>{!ADUserProf.User_Phone__c}</div>
+<div class="margin-b2"><a href="{!ADUserProf.User_Email__c}">{!ADUserProf.User_Email__c}</a></div>
+</div>
+</apex:outputText>
+
+</div>
+
+</div><!--  end row -->
+</div><!-- end column -->
+</div><!--  end row -->
+
+<div class="row">
+<div class="col-lg-9 col-md-10 center-block">
+<div class="row">
+<div class="col-sm-4 margin-b3">
+<div class="contact-box-inner">
+<div class="contact-img"><div class="contact-icon icon ix-map-wpin"></div></div>
+<h3>Our Headquarters</h3>
+<div><label>AuPairCare</label></div>
+<div>{!HQInfo.Address_Line_1__c}</div>
+<div>{!HQInfo.Address_Line_2__c}</div>
+<div>{!HQInfo.Address_City__c}</div>
+<div>{!HQInfo.Address_State__c} {!HQInfo.Address_Zipcode__c}</div>
+<div>{!HQInfo.Phone__c}</div>
+<div class="margin-b2"><a href="mailto:customercare@aupaircare.com">{!HQInfo.Email__c}</a></div>
+</div>
+</div>
+<div class="col-sm-4 margin-b3">
+<div class="contact-box-inner">
+<div class="contact-img"><div class="contact-icon fa fa-hospital-o"></div></div>
+<h3>Au Pair Insurance</h3>
+<div>{!InsuranceInfo.Phone__c}</div>
+<div>{!InsuranceInfo.Additional_Notes__c}</div>
+<div class="margin-b2"><a href="{!InsuranceInfo.Website_URL__c}" target="_blank">{!InsuranceInfo.Website_URL__c}</a></div>
+</div>
+</div>
+<div class="col-sm-4 margin-b3">
+<div class="contact-box-inner margin-b3">
+<div class="contact-img"><div style="font-size:70px;" class="contact-icon icon ix-phone-ringing"></div></div>
+<h3>Emergency Calls</h3>
+<div><label>24-hour Answering Service</label></div>
+<div class="margin-b1">{!EmergencyLine.Phone__c}</div>
+<div>{!EmergencyLine.Additional_Notes__c}</div>
+</div>
+</div>
+</div><!--  end row -->
+</div><!-- end column -->
+</div><!--  end row -->
+
+        <div id="matchInquiry" class="modal vs1 fade in">
+            
+            <div class="modal-dialog">
+            
+            <div class="modal-content">
+            <a class="closebtn" data-dismiss="modal"> <span class="fa-stack fa-lg "> <i class="fa fa-circle fa-stack-2x"></i> <i class="fa fa-times fa-stack-1x fa-inverse"></i> </span> </a>
+            
+            <div class="modal-header">
+                <h4 class="modal-title">Submit a Question Online</h4>
+            </div>
+            
+            <div class="modal-body">
+                
+                
+                <apex:outputpanel id="panel1" layout="block">
+                <div class="row">
+                <div class="col-sm-12">
+                <div class="form-group">
+                    <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Subject</label>
+                    <apex:inputText styleClass="form-control" required="true" id="subj" value="{!Subject}"/>
+                    <apex:message for="subj" styleClass="custom-error-text" id="errormess3"/>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Description</label>
+                    <apex:inputTextarea styleClass="form-control" id="BodyEmail" value="{!MessageBody}" required="TRUE" onkeyup="countChar(this, 510, 'BodyEmailCount')" onfocus="countChar(this, 510, 'BodyEmailCount')"/>
+                    <div class="char-limit bb"><span class="char-count-label">Characters left:</span> <span id="BodyEmailCount" class="char-count"> {!510-len(MessageBody) }</span> </div>
+                    <apex:message for="BodyEmail" styleClass="custom-error-text" id="errorBodyEmail"/>
+                </div>
+                <div class="form-group">
+                    <apex:commandlink styleClass="btn btn-primary btn-lg" action="{!sendEmailToExpert}" id="nextlink" onComplete="rerunjs();" reRender="panel1" status="onsubmit">
+                    <apex:commandButton value="Submit Question" id="continuebutton"/>
+                    </apex:commandlink>
+                </div>
+                </div>
+                </div><!--  end row -->
+                </apex:outputpanel>
+                
+            </div>
+            <!--  end modal body --> 
+            
+            </div>
+            <!--  end modal content --> 
+            </div>
+            <!--  end modal dialog --> 
+        </div>
+        <!-- end modal -->
+
+</apex:form>
+
+</apex:define>
+</apex:composition>
+</apex:page>

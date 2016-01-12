@@ -1,0 +1,14 @@
+<apex:component layout="none" >
+<script>
+var j$ = jQuery.noConflict();  
+ function disableFields(){
+j$(document).ready(function () {
+j$("input[type=text].locked, input[type=password].locked, input[type=submit].locked, textarea.locked, select.locked, input[type=checkbox].locked, input[type=radio].locked").attr('disabled', 'disabled');
+
+});
+};
+ disableFields(); 
+setTimeout(disableFields,800);
+</script>
+
+</apex:component>

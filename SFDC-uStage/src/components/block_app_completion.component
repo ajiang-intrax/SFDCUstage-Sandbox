@@ -1,0 +1,133 @@
+<apex:component layout="none" id="completioncomp" allowDML="true">
+<apex:attribute name="ApplicantInfo" description="This is the value for the Applicant_Info__c object." type="Applicant_Info__c" required="false" default=""/>
+<apex:attribute name="userProfileName" description="This is the value for current User profile." type="String" required="false" default=""/>
+<!-- <apex:attribute name="AppEngineCtrl" description="This is the value for AppEngine Controller Instance." type="AppEngine_Controller" required="false" default=""/>  -->
+
+
+<apex:outputText rendered="{!applicantInfo.Type__c=='Host Family'}">
+
+<!--  Main APC HF Submit Label 'ORIGINAL' 
+<apex:outputPanel rendered="{!ApplicantInfo.Terms_Accepted__c==true 
+                                && IF(CONTAINS(applicantinfo.PageStatus_Complete__c,'001'),true,false) && IF(CONTAINS(applicantinfo.PageStatus_Complete__c,'002'),true,false)
+                                && IF(CONTAINS(applicantinfo.PageStatus_Complete__c,'003'),true,false) && IF(CONTAINS(applicantinfo.PageStatus_Complete__c,'004'),true,false)
+                                && IF(CONTAINS(applicantinfo.PageStatus_Complete__c,'005'),true,false) && IF(CONTAINS(applicantinfo.PageStatus_Complete__c,'006'),true,false)
+                                && IF(CONTAINS(applicantinfo.PageStatus_Complete__c,'007'),true,false) && IF(CONTAINS(applicantinfo.PageStatus_Complete__c,'009'),true,false)
+                                && ApplicantInfo.Application_Type__c=='Original' && ApplicantInfo.Application_level__c=='Main'}" layout="block">
+          
+
+          <apex:outputLink styleClass="noline" value="/apex/apc_hf_app_completion?id={!applicantInfo.Id}" id="completionHFlinkOriginal">
+          <span class="alert alert-warning clearfix">
+          <span>Your application is ready for submission. Please follow this link if you are happy with your answers.</span> 
+          <i class="fa fa-chevron-right pull-right hidden-xs"></i>
+          </span>
+          </apex:outputLink>
+
+</apex:outputPanel>
+ -->
+
+<!-- Main APC HF Submit Label 'RENEWAL' -->
+<apex:outputText rendered="{!(ApplicantInfo.Terms_Accepted__c==true || $CurrentPage.parameters.event='SignComplete')
+                                && IF(CONTAINS(applicantinfo.PageStatus_Complete__c,'001'),true,false) && IF(CONTAINS(applicantinfo.PageStatus_Complete__c,'002'),true,false)
+                                && IF(CONTAINS(applicantinfo.PageStatus_Complete__c,'003'),true,false) && IF(CONTAINS(applicantinfo.PageStatus_Complete__c,'004'),true,false)
+                                && IF(CONTAINS(applicantinfo.PageStatus_Complete__c,'005'),true,false) && IF(CONTAINS(applicantinfo.PageStatus_Complete__c,'006'),true,false)
+                                && IF(CONTAINS(applicantinfo.PageStatus_Complete__c,'007'),true,false) && (ApplicantInfo.Application_Type__c=='Renewal' || ApplicantInfo.Application_Type__c=='Rematch')}">
+          
+          <apex:outputLink styleClass="noline" value="/apex/apc_hf_app_completion?id={!applicantInfo.Id}&SubmitApp=APCHFEXT" id="completionHFlinkRenewal">
+          <div class="lead alert alert-warning clearfix">
+          <b>Your application is ready for submission.</b><br/>
+          Follow this link if you are happy with your answers.
+          </div>
+          </apex:outputLink>
+</apex:outputText>
+    
+    
+<!-- Main APC HF Submit Label 'Extension' -->
+<apex:outputText rendered="{!(ApplicantInfo.Terms_Accepted__c==true  || $CurrentPage.parameters.event=='SignComplete')
+                                && IF(CONTAINS(applicantinfo.PageStatus_Complete__c,'001'),true,false) && IF(CONTAINS(applicantinfo.PageStatus_Complete__c,'002'),true,false)
+                                && IF(CONTAINS(applicantinfo.PageStatus_Complete__c,'003'),true,false) && IF(CONTAINS(applicantinfo.PageStatus_Complete__c,'044'),true,false)
+                                && IF(CONTAINS(applicantinfo.PageStatus_Complete__c,'007'),true,false) && IF(CONTAINS(applicantinfo.PageStatus_Complete__c,'008'),true,false)&& (ApplicantInfo.Application_Type__c=='Extension')}">
+          
+          <apex:outputLink styleClass="noline" value="/apex/apc_hf_app_completion?id={!applicantInfo.Id}" id="completionHFlinkExtension">
+          <div class="lead alert alert-warning clearfix">
+          <b>Your application is ready for submission.</b><br/>
+          Follow this link if you are happy with your answers.
+          </div>
+          </apex:outputLink>
+</apex:outputText>
+
+</apex:outputText>
+
+<!-- PARTICIPANT APC -->
+<apex:outputPanel rendered="{!applicantInfo.Type__c=='Participant'}" layout="block">
+
+<!-- APC PT Submit Label 'BASIC' -->
+<apex:outputPanel rendered="{!CONTAINS(applicantinfo.PageStatus_Complete__c,'012') && CONTAINS(applicantinfo.PageStatus_Complete__c,'013') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'014') && CONTAINS(applicantinfo.PageStatus_Complete__c,'015') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'016') && applicantInfo.Application_Type__c=='Original' &&
+								applicantInfo.Application_Level__c=='Basic' && applicantInfo.Application_Stage__c=='Working'}" layout="block">
+          
+          <apex:outputLink styleClass="noline" value="/apex/apc_ap_basic_completion?id={!applicantInfo.Id}" id="completionlinkbasic">
+          <div class="lead alert alert-warning clearfix">
+         <div class="pull-left"><b>Your pre-application is ready for submission.</b><br/>
+           Follow this link if you are happy with your answers.</div>
+  <div class="pull-right margin-r"><i class="fa fa-chevron-right" style="font-size:2em;"></i></div>
+  
+          </div>
+          </apex:outputLink>
+</apex:outputPanel>
+
+<!-- APC PT Submit Label 'MAIN' -->
+<!-- CONTAINS(applicantinfo.PageStatus_Complete__c,'038') && CONTAINS(applicantinfo.PageStatus_Complete__c,'027')-->
+<apex:outputPanel rendered="{!CONTAINS(applicantinfo.PageStatus_Complete__c,'012') && CONTAINS(applicantinfo.PageStatus_Complete__c,'013') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'014') && CONTAINS(applicantinfo.PageStatus_Complete__c,'015') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'016') && CONTAINS(applicantinfo.PageStatus_Complete__c,'017') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'018') && CONTAINS(applicantinfo.PageStatus_Complete__c,'019') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'020') && CONTAINS(applicantinfo.PageStatus_Complete__c,'021') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'024') && CONTAINS(applicantinfo.PageStatus_Complete__c,'025') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'026') && CONTAINS(applicantinfo.PageStatus_Complete__c,'038') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'028') && CONTAINS(applicantinfo.PageStatus_Complete__c,'029') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'031') && CONTAINS(applicantinfo.PageStatus_Complete__c,'034') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'036') && CONTAINS(applicantinfo.PageStatus_Complete__c,'037') &&
+								applicantInfo.Application_Type__c=='Original' &&
+								applicantInfo.Application_Level__c=='Main' &&
+								applicantInfo.Application_Stage__c=='Working' &&
+								userProfileName !='OCPM Agent Portal'}" layout="block">
+								<!-- ApplicantInfo.Terms_Accepted__c==True && -->
+          
+         <apex:outputLink html-data-toggle="modal" html-data-target="#appsubmitconfirm" styleClass="noline" value="#" id="completionlinkmain">
+         <div class="lead alert alert-warning clearfix">
+         <div class="tcell">
+         Looks like you have completed all sections of your application. Proceed to submit if you are happy with your answers
+        
+         </div>
+         <div style="width:50px;" class="tcell"><i class="fa fa-chevron-right pull-right margin-r2" style="font-size:2em;"></i></div>
+         </div>
+         </apex:outputLink>
+          
+<div id="appsubmitconfirm" class="modal vs1 fade in">
+<div class="modal-dialog">
+<div class="modal-content">
+<a class="closebtn" data-dismiss="modal">
+<span class="fa-stack fa-lg ">
+<i class="fa fa-circle fa-stack-2x"></i>
+<i class="fa fa-times fa-stack-1x fa-inverse"></i>
+</span>
+</a>
+<div class="modal-body">
+<p class="lead">This will complete your application and you will not be able to return to it for further edits.</p>
+<div class="margin-t4">
+<apex:outputLink styleClass="btn btn-ultimate btn-lg margin-r1" value="/apex/apc_ap_main_submit?id={!applicantInfo.Id}" id="understandbutton">I understand</apex:outputLink>           
+<a class="btn btn-default btn-lg" href="#" data-dismiss="modal">Go Back</a>
+</div>
+</div> <!--  end modal body -->
+</div> <!--  end modal content -->
+</div> <!--  end modal dialog -->
+</div> <!-- end modal -->
+          
+          
+</apex:outputPanel> 
+
+
+</apex:outputPanel>
+
+</apex:component>

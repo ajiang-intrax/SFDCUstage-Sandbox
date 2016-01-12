@@ -1,0 +1,30 @@
+<apex:component >
+<apex:attribute name="theWidget" type="ZMG.ZMG_Widget_Renderer" required="true" description="the widget being rendered" />
+
+<style>
+#mainWidgetArea {
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+}
+</style>
+
+<apex:outputPanel layout="block">
+
+    <div id="surveyTitle">
+        <a class="survey" title="Edit & Review" href="{!theWidget.editUrl}" target="_top"><apex:outputText value="{!theWidget.surveyTitle}" /></a>
+        <br/>
+        <a class="survey" target="_top" style="font-size: 12px; font-weight: bold;" title="Analyze Results" href="{!theWidget.resultsUrl}">Likelihood to Recommend</a>
+    </div>
+
+    <iframe src="{!theWidget.widget.Script_Tag_URL__c}" 
+                    id="mainWidgetArea"
+                    frameBorder="0" 
+                    border="0" 
+                    style="border: 0px none; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px; width: 100%;"></iframe>
+
+    
+    <c:ZMG_PoweredBy theWidget="{!theWidget}" />
+
+</apex:outputPanel>
+
+</apex:component>

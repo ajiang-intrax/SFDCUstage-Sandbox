@@ -1,0 +1,117 @@
+<apex:page id="ayusa_hf_school_basics" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper">
+          <apex:form id="form">
+           <div class="page-header clearfix">
+<h1 class="page-title">Ayusa Host Family Application</h1>
+<div class="back-to-main"><apex:outputLink value="apex/ayusa_hf_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+</div>
+          <h2> Local High School</h2>
+          <div class="white-box clearfix">
+          <div class="panel two_thirds">
+              
+              <apex:Messages styleClass="custom-error-pagelevel"/>
+              <p><em> All fields marked with an asterisk (<span class="required no-padding">*</span>) are required</em></p><br/>
+               
+              <div class="form-row">
+                <div class="form-label left">High School Name<span class="required">*</span> </div>
+                <div class="form-field">
+                  <apex:inputField id="SchoolName" value="{!SchoolInfo.Name__c}" required="TRUE"/> 
+                </div>
+              </div>
+                  
+              <div class="form-row">
+                <div class="form-label left">Street Address 1</div>
+                <div class="form-field">
+                  <apex:inputField id="Street" value="{!SchoolInfo.Street__c}" required="FALSE"/> 
+                </div>
+              </div>
+             
+              <div class="form-row">
+                <div class="form-label left">City </div>
+                <div class="form-field">
+                  <apex:inputField id="City" value="{!SchoolInfo.City__c}" required="FALSE"/> 
+                </div>
+              </div>
+                  
+              <div class="form-row">
+                <div class="form-label left">State </div>
+                <div class="form-field">
+                  <apex:inputField id="State" value="{!SchoolInfo.State__c}" required="FALSE"/> 
+                </div>
+              </div>
+                  
+              <div class="form-row">
+                <div class="form-label left">Zip Code </div>
+                <div class="form-field">
+                  <apex:inputField id="Zip" value="{!SchoolInfo.Postal_Code__c}" required="FALSE"/> 
+                </div>
+              </div>
+                  
+              <div class="form-row">
+                <div class="form-label left">Is this a private or public school?</div>
+                <div class="form-field">
+                  <apex:inputField id="Category" value="{!SchoolInfo.Category__c}" required="FALSE"/> 
+                </div>
+              </div>
+                  
+              <div class="form-row">
+                <div class="form-label left">School Administrator Name </div>
+                <div class="form-field">
+                  <apex:inputField id="ContactName" value="{!SchoolInfo.Contact_Name__c}" required="FALSE"/> 
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-label left">School Administrator Title </div>
+                <div class="form-field">
+                  <apex:inputField id="AdminTitle" value="{!SchoolInfo.Contact_Title__c}" required="FALSE"/> 
+                </div>
+              </div>
+            
+              <div class="form-row">
+                <div class="form-label left">Phone</div>
+                <div class="form-field">
+                  <apex:inputField id="Phone" value="{!SchoolInfo.Phone__c}" required="FALSE"/> 
+                </div>
+                       <div class="dropt"> <i class="icon-question-sign"></i>
+                   <span>{!$ObjectType.School__c.Fields.Phone__c.inlineHelpText}</span>
+                </div> 
+              </div>
+              
+              <div class="form-row">
+                <div class="form-label left">Email </div>
+                <div class="form-field">
+                  <apex:inputField id="Email" value="{!SchoolInfo.Email__c}" required="FALSE"/> 
+                </div>
+              </div>
+              
+             
+            <div class="form-row">
+                              
+              <div class="form-link">
+                    <apex:outputLink id="Back" styleClass="back" value="/apex/ayusa_hf_comm_basics?id={!applicantInfo.Id}">
+                    <i class="icon-chevron-left"></i>
+                    <span>Back</span>
+                    </apex:outputLink>
+              </div>
+              
+              <div class="form-button">
+                <apex:commandlink styleClass="next" action="{!navigator}">
+                  <apex:param name="nextPage" value="/apex/ayusa_hf_school_details"/>
+                  <apex:param name="reDirectPage" value="false"/>
+               
+                  <apex:commandButton id="Save" value="Save & Continue"/>
+                    <i class="icon-chevron-right"></i>
+                </apex:commandlink> 
+              </div>
+            </div>
+          
+         </div>
+       </div>
+               </apex:form>
+     </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

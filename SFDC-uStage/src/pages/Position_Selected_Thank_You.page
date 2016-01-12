@@ -1,0 +1,167 @@
+<apex:page id="Position_Selected_Thank_You" standardController="Applicant_Info__c" extensions="Positions_Controller" docType="html-5.0" standardStylesheets="false" showHeader="false" action="{!checkLogin}">
+  
+    <apex:composition template="IntraxTemplate_Vs2" >
+      <apex:define name="body">
+      <apex:form >
+          <script>
+			j$(function(){
+			
+			j$(".hide-next").click(function(){
+			j$(this).parent().next(".block-body").toggleClass('hide');
+			
+			});
+			
+			});
+			
+			function close_window() {
+				var win = window.open("","_self"); /* url = "" or "about:blank"; target="_self" */
+				
+				win.close();
+	        }
+	        
+         </script>
+        <h1>
+          <apex:outputText value="Thank You!" />
+        </h1>
+        <div class="row-fluid">
+        	<!--  
+          <apex:outputPanel styleClass="span3" layout="block">
+            <c:Badge_Participant_Photo />
+          </apex:outputPanel> <!-- end span 
+          --> 
+          
+          <div class="span12">
+                 
+                 <apex:outputPanel rendered="{!IF(ISBLANK(positionInfo.Id), false, true)}" layout="block" styleClass="block">
+                  	<div class="block-body">
+                  <div class="list-view container-fluid">
+                    <div class="row-fluid">
+                      <div class="span8">
+                        
+                          <p><apex:outputText value="Thank you for your interest in {!positionInfo.Host_Company_Id__r.Name}.  This does not guarantee you an interview slot with this company, but we look forward to meeting you soon!"/></p>
+                          
+                     <div class="dotted-box clearfix">     
+                         
+                          <p>
+                              <apex:inputField value="{!matchInfo.Consider_Other_Positions__c}"/>&nbsp; <strong><apex:outputText value="I am willing to accept another position with this company."/></strong>
+                          </p>
+                          
+                          
+                          <div class="form-button no-margin">
+		                    <apex:commandlink action="{!updateMatchInfo}"  >
+		                      <apex:commandButton value="Save" status="waitMsg" rerender="pb"/>
+		                    </apex:commandlink>
+		                    </div> 
+                         
+                          </div>  
+                      </div> <!-- end span -->
+                       </div><!-- end row -->
+                      </div><!-- end list view -->  
+                    </div> <!-- end block body -->
+                  
+                  
+                  
+                     <div class="block-header"><h3>Position Details</h3> </div>
+                 <div class="block-body">
+                  <div class="list-view container-fluid">
+                    <div class="row-fluid">
+                      <div class="span6">
+                        <div class="list-field">
+                          <label><strong>
+                            <apex:outputText value="Position Name"/>
+                            </strong></label>
+                          <apex:outputField value="{!positionInfo.Name}"/>
+                          &nbsp; 
+                        </div>
+                      </div>
+                      
+                      <div class="span6">
+                      	<div class="list-field">
+                          <label><strong>
+                            <apex:outputText value="Company Name"/>
+                            </strong></label>
+                          <apex:outputField value="{!positionInfo.Host_Company_Id__r.Name}"/>
+                          &nbsp; 
+                        </div>
+                      </div> <!-- end span -->
+                      
+                      
+                    </div><!-- end row -->
+                   </div>
+                  </div>
+                    
+                  <div class="block-header"><h3>Partner Information</h3> </div>
+                   <div class="block-body">
+                  	<div class="list-view container-fluid">
+                    
+                    <apex:outputText value="For more information, please contact your Partner:" />
+                    
+                    <div class="row-fluid"> 
+                    	
+                      <div class="span6">
+                        <div class="list-field">
+                          <label><strong>
+                            <apex:outputText value="Partner Name"/>
+                            </strong></label>
+                          <apex:outputField value="{!partnerInfo.Name}"/>
+                          &nbsp; 
+                        </div>
+                        <div class="list-field">
+                          <label><strong>
+                            <apex:outputText value="Phone"/>
+                            </strong></label>
+                          <apex:outputField value="{!partnerInfo.Phone}"/>
+                          &nbsp; 
+                        </div>
+                        <div class="list-field">
+                          <label><strong>
+                            <apex:outputText value="Fax"/>
+                            </strong></label>
+                          <apex:outputField value="{!partnerInfo.Fax}"/>
+                          &nbsp; 
+                        </div>
+                      </div>
+                      
+                      <div class="span6">
+                      	<div class="list-field">
+                          <label><strong>
+                            <apex:outputText value="Email"/>
+                            </strong></label>
+                          <apex:outputField value="{!partnerInfo.Email_Business__c}"/>
+                          &nbsp; 
+                        </div>
+                        <div class="list-field">
+                          <label><strong>
+                            <apex:outputText value="Website"/>
+                            </strong></label>
+                          <apex:outputField value="{!partnerInfo.website}"/>
+                          &nbsp; 
+                        </div>
+                      </div> <!-- end span -->
+                      
+                      
+                    </div><!-- end row -->
+                   </div><!-- end list view -->  
+                   </div> <!-- end block body -->
+                    
+                   <div class="block-body">
+              			<!-- 
+              			<div class="form-link">
+	                    	<apex:commandLink onclick="close_window();" >
+                                <i class="icon-remove"></i> <span>Close Page</span>
+	                    	</apex:commandLink>
+                    	</div> 
+                    	 -->
+                    	 <div class="form-link">
+                        	<apex:outputLink id="BackLink" value="/apex/Positions?id={!applicantInfo.Id}"><i class="icon-chevron-left"></i> <span>Back To Positions</span></apex:outputLink>
+                    	</div>
+                   </div>
+          </apex:outputPanel>
+          </div> <!-- end span9 --> 
+        </div>
+        <!-- end row --> 
+        </apex:form>
+      </apex:define>
+    </apex:composition>
+  
+</apex:page>

@@ -1,0 +1,70 @@
+<apex:page id="Participant_Preapp_Essays" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper">
+          <apex:form >
+         <div class="page-header clearfix">
+       		<h1>  
+              <apex:outputText value="Intrax Global Internship Application" rendered="{! IF(applicantInfo.Intrax_Program__c == 'Internship', true, false)}"/>
+              <apex:outputText value="Work and Travel Application" rendered="{! IF(applicantInfo.Intrax_Program__c == 'Work Travel' , true, false)}"/>
+              <!--  <apex:outputText value=" - {!personInfo.First_Name__c} {!personInfo.Last_Name__c}" rendered="{!IsPartner}" />-->
+             </h1>
+			 <div class="back-to-main"><apex:outputLink id="backToMain" value="apex/Participant_Preapp_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+		</div>
+          <h2>Essay Questions</h2>
+          <div class="white-box clearfix">
+           <!-- <a class="page-help" title="Help for this Page (New Window)" onclick="return openPopup('{!derivedbaseUrl}/Help_ayusa_app_essays')" >
+			<span>Help For This Page</span><i class="icon-info-sign"></i></a>  
+       		-->  
+            <div class="panel two_thirds"> 
+              <apex:pageBlock id="essayBlock">
+                 <apex:pageBlockTable id="essayTable" styleClass="no-table" value="{!EssayList}" var="item">
+                       <apex:column > 
+                        <div class="form-link no-margin" style="width:60px;">
+			                <apex:outputLink id="startLink" styleClass="no-padding" value="/apex/Participant_Preapp_essay_details?id={!item.Applicant_Info__c}&essayId={!item.id}" rendered="{! IF((ISBLANK(item.Narrative__c)), true, false)}"><i class="icon-pencil"></i> Start</apex:outputLink>
+			                <apex:outputLink id="editLink" styleClass="no-padding" value="/apex/Participant_Preapp_essay_details?id={!item.Applicant_Info__c}&essayId={!item.id}" rendered="{! IF(NOT(ISBLANK(item.Narrative__c)), true, false)}"><i class="icon-pencil"></i> Edit</apex:outputLink>
+                   		</div>
+                       </apex:column> 
+                       
+                       <apex:column > 
+                           <apex:outputText id="essayLabel" styleClass="essay-question block" value="{!item.Label__c}" />
+                           <apex:outputText id="essayNarrative" styleClass="essay-teaser block" value="{!LEFT(item.Narrative__c, 103)} {!IF(LEN(item.Narrative__c)> 100, '...', '')}" rendered="{!IF(NOT(ISBLANK(item.Narrative__c)), true, false)}" /> 
+                       </apex:column> 
+                   
+                 </apex:pageBlockTable>  
+            </apex:pageBlock>
+           
+               
+               
+                <div class="form-row">
+                 
+	                <div class="form-link">
+	            		<apex:outputLink id="BackLink" styleClass="back" value="/apex/Participant_Preapp_Experience?id={!applicantInfo.Id}">
+	            		<i class="icon-chevron-left"></i>
+			            <span>Back</span>
+			            </apex:outputLink>
+	          		</div>
+                         
+              
+	                <div class="form-button submit">
+	                    <apex:commandlink id="ContinueButtonIGI" action="{!navigator}" rendered="{!IF(applicantInfo.Intrax_Program__c == 'Work Travel' && applicantInfo.Service_Level__c == 'Independent' , true, false)}">
+	                      <apex:param name="nextPage" value="/apex/Participant_Preapp_Placement_Information"/>
+	                      <apex:param name="reDirectPage" value="true"/>
+	                      <apex:commandButton value="Continue" />
+	                      <i class="icon-chevron-right"></i> 
+	                    </apex:commandlink>
+	                    <apex:commandlink id="ContinueButtonWT" action="{!navigator}" rendered="{!IF(applicantInfo.Intrax_Program__c == 'Work Travel' && applicantInfo.Service_Level__c == 'Premium', true, false )}">
+	                      <apex:param name="nextPage" value="/apex/Participant_Preapp_Home"/>
+	                      <apex:param name="reDirectPage" value="true"/>
+	                      <apex:commandButton value="Continue" />
+	                      <i class="icon-chevron-right"></i> 
+	                    </apex:commandlink>
+	                </div>        
+            </div>
+    </div>
+                </div>
+      </apex:form>
+          </div>
+    </apex:define>
+ </apex:composition>
+</apex:page>

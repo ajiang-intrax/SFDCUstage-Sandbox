@@ -1,0 +1,75 @@
+<apex:page docType="HTML-5.0"  showHeader="false" standardStylesheets="false" title="System Announcement">
+
+<meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+    <style>
+    body, #content-zone, .portal-entry{background-color:#6B9C31!important;}
+    </style>
+    
+ <apex:outputPanel style="text-align:center; padding-top:40px;" layout="block" rendered="{!$Site.Name == 'AuPairCare'}">    
+<img style="max-width:100%;" src="https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/themes/sfdc-maintenance-styles/apc-systemdown.png"/>
+</apex:outputPanel>
+
+ <apex:outputPanel style="text-align:center; padding-top:40px;" layout="block" rendered="{!$Site.Name != 'AuPairCare'}">    
+<img style="max-width:100%;" src="https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/themes/sfdc-maintenance-styles/intrax-systemdown.png"/>   
+</apex:outputPanel>
+    
+    
+    
+    
+    <!--  
+    
+      <apex:composition template="intrax_template_static">
+    <apex:define name="body">
+      <div class="row margin-t">
+        <div class="col-sm-7 col-md-6 col-lg-5 no-float center-block">  
+          <div class="portal-entry clearfix padding-t3">
+            <div class="row">
+              <div class="col-md-12">
+            
+            <apex:outputText rendered="{!$Site.Name == 'AuPairCare'}">
+<apex:image width="228" height="45" styleClass="center-block margin-b" url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/logos/myaupaircare-logo.svg')}" alt="AuPairCare" title="AuPairCare" />
+</apex:outputText>
+						
+<apex:outputText rendered="{!$Site.Name != 'AuPairCare'}">
+<apex:image width="161" height="54" styleClass="center-block margin-b" url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/logos/myintrax-logo.svg')}" alt="Intrax" title="Intrax" />
+</apex:outputText>		
+ 
+              
+
+<apex:outputText rendered="{!$Site.Name != 'AuPairCare'}">
+<h1 class="center-text">Our System Is Currently Under Maintenance</h1>
+              <p class="lead center-text">Your account information will not be affected during this downtime. We apologize for the inconvenience.</p> 
+</apex:outputText>
+
+ <apex:outputText rendered="{!$Site.Name == 'AuPairCare'}">
+<h1 class="center-text">Our System Is Currently Taking a Bubble Bath</h1>
+              <p class="lead center-text">Your account information will not be affected during this downtime. We apologize for the inconvenience.</p> 
+</apex:outputText>
+
+
+<apex:outputText rendered="{!$Site.Name != 'AuPairCare'}">
+<apex:image styleClass="center-block margin-b" url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/maintenance1.png')}"  />
+</apex:outputText>
+
+ <apex:outputText rendered="{!$Site.Name == 'AuPairCare'}">
+<apex:image styleClass="center-block margin-b" url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/maintenance-apc2.png')}"  />
+</apex:outputText>
+
+              </div>
+       
+            </div>
+
+          </div>
+
+        </div>
+ 
+      </div>
+       </apex:define>
+  </apex:composition>
+    -->
+      
+      
+      
+      
+   
+</apex:page>

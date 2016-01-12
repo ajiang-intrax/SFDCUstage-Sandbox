@@ -1,0 +1,30 @@
+<apex:page standardController="invoiceit_s__Invoice__c" extensions="invoiceit_s.ControllerCancelInvoice"  sidebar="true">
+    <apex:pageMessages id="messages"/>
+    <apex:outputText value="{!invoiceit_s__Invoice__c.invoiceit_s__Invoice_Status__c}" rendered="false"/>
+    <apex:outputText value="{!invoiceit_s__Invoice__c.invoiceit_s__Number_Of_Invoice_Lines__c}" rendered="false"/>
+    <apex:form >
+        <apex:pageBlock title="{!$Label.CancelInvoice}">
+        <apex:pageBlockSection rendered="{!!bDisplayNoteMessage}" columns="1">
+            {!$Label.startHere_Note}: {!$Label.CancelInvoiceConfirmation}<br/>                        
+        </apex:pageBlockSection>
+        
+         <!--
+                    Modified By     : Devender M
+                    Modified Date   : 28 Nov 2013
+                    JIRA Task       : INVOICEIT-280
+                    Comments        : CLONE - Unpost Invoices - capture unpost/cancellation reason
+        -->
+    
+        <apex:pageBlockSection rendered="{!!bDisplayNoteMessage}" columns="1" title="Invoice Cancellation Fields" collapsible="false">
+            <apex:repeat value="{!$ObjectType.invoiceit_s__Invoice__c.FieldSets.invoiceit_s__Cancellation_Reason_Fields}" var="fieldAPI" >
+                <apex:inputField value="{!invoice [fieldAPI]}" required="{!OR(fieldAPI.required, fieldAPI.dbrequired)}" rendered="{!OR(fieldAPI.required, fieldAPI.dbrequired)}"/>
+                <apex:inputField value="{!invoice [fieldAPI]}" rendered="{!Not (OR(fieldAPI.required, fieldAPI.dbrequired))}"/>   
+            </apex:repeat> 
+        </apex:pageBlockSection>
+            
+        </apex:pageBlock>
+        <apex:commandButton action="{!cancelInvoice}" value="{!$Label.ButtonConfirm}"  rendered="{!!bDisplayNoteMessage}"/>
+        <apex:commandButton action="{!cancel}" value="{!$Label.ButtonCancel}"  rendered="{!!bDisplayNoteMessage}"/>
+        <apex:commandButton value="{!$Label.ButtonBackToInvoice}" action="{!backToInvoice}" rendered="{!bDisplayNoteMessage}"/>
+    </apex:form>
+</apex:page>

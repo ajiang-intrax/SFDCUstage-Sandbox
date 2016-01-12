@@ -1,0 +1,205 @@
+<apex:page title="Participant's Profile | Intrax" standardStylesheets="false" showHeader="false" controller="IntraxPartnerPortalEngineController" action="{!checkLoginWithMatchSearch}">
+    
+        <apex:composition template="IntraxTemplate_Vs2" >
+            <apex:define name="body">
+            <apex:form >
+            <script>
+                j$(function(){
+                
+                j$(".hide-next").click(function(){
+                j$(this).parent().next(".block-body").toggleClass('hide');
+                
+                });
+                
+                });
+             </script>
+                <div class="row">
+                    <apex:outputPanel styleClass="span9" layout="block">
+                        <h1>
+                            <apex:outputText rendered="{!IF($CurrentPage.parameters.participantId == null, false, true)}" value="{!participant.Name}"/>
+                            <apex:outputText rendered="{!IF($CurrentPage.parameters.participantId == null, true, false)}" value="No Individual Participant Selected"/>
+                        </h1>
+                    </apex:outputPanel>
+                    <apex:outputPanel styleClass="span3" layout="block">
+                    </apex:outputPanel>
+                </div>    
+                
+                <div class="row">
+                    <apex:outputPanel styleClass="span3" layout="block">
+                        <c:Badge_Participant_Photo photoUrl="{!returnURL}"/>
+                        <c:Menu_Partner_Participant_Details participant="{!participant}" applicationRecord="{!applicationRecord}" />
+                    </apex:outputPanel>
+                    <!-- end span3 -->
+          
+                    <!-- begin span9 -->  
+                    <div class="span9">
+                        
+                    <apex:outputPanel rendered="{!IF(participant.Intrax_Program__c =='Internship' || participant.Intrax_Program__c =='Work Travel' ,true,false)}" layout="block" styleClass="block"> 
+                            <div class="block-header"><h3>Biographical Information</h3></div>
+                                 <div class="block-body">
+                                  <div class="list-view container-fluid">
+                                    <div class="row-fluid">
+                                      <div class="span4">
+                                        <div class="list-field">
+                                           <label><strong><apex:outputText value="First Name"/></strong></label>
+                                           <apex:outputField value="{!participant.Account_Id__r.FirstName}"/>&nbsp;
+                                        </div>
+                                        <div class="list-field">
+                                           <label><strong><apex:outputText value="Intrax ID"/></strong></label>
+                                           <apex:outputField value="{!participant.Account_Id__r.Intrax_Id__c}"/>&nbsp;
+                                        </div>
+                                        <div class="list-field">
+                                           <label><strong><apex:outputText value="Country of Citizenship"/></strong></label>
+                                           <apex:outputField value="{!participant.Account_Id__r.Citizenship__pc}"/>&nbsp;
+                                        </div>
+                                        <div class="list-field">
+                                           <label><strong><apex:outputText value="Country of Legal Residence"/></strong></label>
+                                           <apex:outputField value="{!participant.Account_Id__r.Legal_Residence__pc}"/>&nbsp;
+                                        </div> 
+                                       </div> <!-- span 4 -->
+                                       
+                                       <div class="span4">
+                                        <div class="list-field">
+                                           <label><strong><apex:outputText value="Middle Name"/></strong></label>
+                                           <apex:outputField value="{!participant.Account_Id__r.Middle_Name__pc}"/>&nbsp;
+                                        </div>                                                         
+                                        <div class="list-field">
+                                           <label><strong><apex:outputText value="Gender"/></strong></label>
+                                           <apex:outputField value="{!participant.Account_Id__r.Gender__pc}"/>&nbsp;
+                                        </div> 
+                                        <div class="list-field">
+                                           <label><strong><apex:outputText value="City of Birth"/></strong></label>
+                                           <apex:outputField value="{!participant.Account_Id__r.Birth_City__pc}"/>&nbsp;
+                                        </div> 
+                                        
+                                      </div> <!-- span 3 -->
+                                        
+                                      <div class="span4">
+                                        <div class="list-field">
+                                           <label><strong><apex:outputText value="Last Name"/></strong></label>
+                                           <apex:outputField value="{!participant.Account_Id__r.LastName}"/>&nbsp;
+                                        </div>  
+                                        <div class="list-field">
+                                           <label><strong><apex:outputText value="Date of Birth"/></strong></label>
+                                           <apex:outputField value="{!participant.Account_Id__r.PersonBirthdate}"/>&nbsp;
+                                        </div>
+                                        <div class="list-field">
+                                           <label><strong><apex:outputText value="Country of Birth"/></strong></label>
+                                           <apex:outputField value="{!participant.Account_Id__r.Birth_Country__pc}"/>&nbsp;
+                                        </div>
+                                      </div> <!-- end span4 -->
+                                      
+                                   </div><!-- end row -->
+                                      </div><!-- end list view -->  
+                                    </div> <!-- end block body -->
+                                  <div class="block-header"><h3>Program Dates</h3></div>  
+                                   <div class="block-body"> 
+                                   <div class="list-view container-fluid">
+                                    <div class="row-fluid">
+                                      <div class="span4">
+                                        <div class="list-field">
+                                           <label><strong><apex:outputText value="Engagement Start"/></strong></label>
+                                           <apex:outputField value="{!participant.Engagement_Start__c}"/>&nbsp;
+                                        </div>
+                                      </div> <!-- end span -->
+                                      <div class="span4">
+                                        <div class="list-field">
+                                           <label><strong><apex:outputText value="Engagement End"/></strong></label>
+                                           <apex:outputField value="{!participant.Engagement_End__c}"/>&nbsp;
+                                        </div>
+                                      </div> <!-- end span -->
+                                     </div>
+                                    </div>
+                                   </div>
+                                   
+                          </apex:outputPanel>
+                          
+                          
+                          <apex:outputPanel rendered="{!IF(participant.Intrax_Program__c =='Ayusa',true,false)}" layout="block" styleClass="block"> 
+                            <div class="block-header"><h3>Biographical Information</h3></div>
+                                 <div class="block-body">
+                                  <div class="list-view container-fluid">
+                                    <div class="row-fluid">
+                                      <div class="span4">
+                                        <div class="list-field">
+                                           <label><strong><apex:outputText value="Name"/></strong></label>
+                                           <apex:outputText value="{!participant.Account_Id__r.FirstName} {!participant.Account_Id__r.Middle_Name__pc} {!participant.Account_Id__r.LastName}"/>&nbsp;
+                                        </div>
+                                        
+                                      </div>
+                                      <div class="span4">
+                                        <div class="list-field">
+                                           <label><strong><apex:outputText value="Home Country"/></strong></label>
+                                           <apex:outputField value="{!participant.Account_Id__r.PersonMailingCountry}"/>&nbsp;
+                                        </div>
+                                      </div>
+                                      <div class="span4">
+                                        <div class="list-field">
+                                           <label><strong><apex:outputText value="Nationality"/></strong></label>
+                                           <apex:outputField value="{!participant.Account_Id__r.Nationality__pc}"/>&nbsp;
+                                        </div>
+                                       </div>
+                                      
+                                   </div><!-- end row -->
+                                  </div><!-- end list view -->  
+                                 </div> <!-- end block body -->
+                                 
+                                   
+                                  <div class="block-header"><h3>Program Information</h3></div>  
+                                   <div class="block-body"> 
+                                   <div class="list-view container-fluid">
+                                    <div class="row-fluid">
+                                      <div class="span4">
+                                        <div class="list-field">
+                                           <label><strong><apex:outputText value="Program Year"/></strong></label>
+                                           <apex:outputField value="{!participant.Program_Year__c}"/>&nbsp;
+                                        </div>
+                                        <div class="list-field">
+                                           <label><strong><apex:outputText value="Open to Private School?"/></strong></label>
+                                           <apex:outputField value="{!participant.Private_High_School_Indicated__c}"/>&nbsp;
+                                        </div>
+                                        <div class="list-field">
+                                           <label><strong><apex:outputText value="Interests Top"/></strong></label>
+                                           <apex:outputField value="{!participant.Interests_Top__c}"/>&nbsp;
+                                        </div>
+                                        
+                                      </div> <!-- end span -->
+                                      
+                                      <div class="span4">
+                                        <div class="list-field">
+                                           <label><strong><apex:outputText value="Program Duration"/></strong></label>
+                                           <apex:outputField value="{!participant.Program_Duration__c}"/>&nbsp;
+                                        </div>
+                                        <div class="list-field">
+                                           <label><strong><apex:outputText value="Live With Pets"/></strong></label>
+                                           <apex:outputField value="{!participant.Live_With_Pets__c}"/>&nbsp;
+                                        </div>
+                                      </div> <!-- end span -->
+                                      
+                                      <div class="span4">
+                                        <div class="list-field">
+                                           <label><strong><apex:outputText value="Engagement Status"/></strong></label>
+                                           <apex:outputField value="{!participant.Status__c}"/>&nbsp;
+                                        </div>
+                                        <div class="list-field">
+                                           <label><strong><apex:outputText value="Will Accept Double Placement?"/></strong></label>
+                                           <apex:outputField value="{!participant.Single_No_Children_Indicated__c}"/>&nbsp;
+                                        </div>
+                                      </div>
+                                      
+                                    
+                                    </div>
+                                    </div>
+                                   </div>
+                                 
+                          </apex:outputPanel>
+                 
+                          
+                    </div>  
+                </div>
+                <!-- end row -->
+                </apex:form>
+            </apex:define>
+        </apex:composition>
+    
+</apex:page>

@@ -1,0 +1,148 @@
+<apex:page docType="html-5.0" title="Secondary School Review" applyBodyTag="false" applyHtmlTag="false" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="false" showHeader="false" id="apc_ap_main_secondary_review">
+<apex:composition template="intraxtemplate_vs3">
+        
+        <apex:define name="body">
+            
+            <c:block_header_apc_ap_application />
+             
+             <div id="app-page" class="row">
+        		<div id="app-focus" class="col-md-8 col-md-push-3">
+                    
+                    <c:block_app_completion ApplicantInfo="{!applicantInfo}" userProfileName="{!userProfileName}"  />
+                     
+                    <h1>Secondary School Review</h1>
+                    <p class="lead">
+                    Please review the au pair’s secondary school education record and proof.
+                    If the au pair has graduated, review her proof of graduation and verify the integrity of the institution by phone or email.
+                    If au pair has not graduated, please call institution to verify that she is on track to graduate.
+                    Au pair should have uploaded a letter from institution or copy of transcripts.
+                    Au pairs on track to graduate will be permitted to match, however au pair will hold DS 2019 forms until au pair has 
+                    provided final proof of graduation.
+                    </p>
+                    <apex:form styleClass="form-vertical ws-validate" id="webform">
+                    <apex:pageMessages />
+                      	
+                       	<apex:outputPanel styleClass="margin-t3" layout="block" rendered="{!IF(DocList.Size == 0, true, false)}">
+                       	<p>This au pair has not uploaded the secondary school certificate yet</p>
+                       	</apex:outputPanel>
+                       	
+		                <div class="row">
+		                <div class="col-sm-6">
+		                  <div class="form-group">
+		                    <label class="control-label">School Name</label>
+		                    <apex:outputField styleClass="form-control" value="{!educationInfo.Institution_Name__c}" id="SchoolName" />
+		                  </div>
+		                </div>
+		               
+		                <div class="col-sm-6"> 
+		                  <div class="form-group">
+		                	<label class="control-label">Date of graduation or expected graduation</label>
+		                    <apex:outputField styleClass="form-control" value="{!educationInfo.Graduation_Date__c}" id="graduation" />
+		                  </div>
+		                </div> 
+		                
+		                
+		                </div><!--  end row -->
+		                  
+		                <div class="row">
+		                <div class="col-sm-6"> 
+		                  	<div class="form-group">
+		                    <label class="control-label">Address 1</label>
+		                    <apex:outputField html-placeholder="Street address" styleClass="form-control" value="{!educationInfo.Address_Street_1__c}" id="Address" />
+		                	</div>
+		                </div>
+		                
+		                <div class="col-sm-6"> 
+		                  	<div class="form-group">
+		                    <label class="control-label">Address 2</label>
+		                    <apex:outputField html-placeholder="Street address" styleClass="form-control" value="{!educationInfo.Address_Street_2__c}" id="Address2" />
+		                	</div>
+		                </div>
+		               
+		                 
+		                 </div><!--  end row -->
+		                 
+		                <div class="row">
+		                <div class="col-sm-6"> 
+		                  <div class="form-group">
+		                	<label class="control-label">Phone Number</label>
+		                    <span>{!educationInfo.Phone_Country_Code__c}&nbsp;</span>
+		                    <apex:outputField styleClass="form-control" value="{!educationInfo.Phone__c}" id="phone" />
+		                  </div>
+		                </div> 
+		                 
+		               </div><!--  end row -->
+                       	
+                        <apex:outputPanel styleClass="margin-t3" layout="block" rendered="{!IF(DocList.Size > 0, true, false)}">
+                            <apex:pageBlock id="Block_ListExperience" >
+                                <div class="table-responsive margin-t4">
+                                    <apex:pageBlockTable styleClass="table vs2" value="{!DocList}" var="item">
+                                        <apex:column headerValue="Uploaded Documents">
+                                            <apex:commandLink action="{!load}" rerender="" target="_blank">
+                                                <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                                <apex:outputText value="{!item.Document_Name__c}"/>
+                                            </apex:commandLink>
+                                        </apex:column>
+                                        <!-- 
+                                        <apex:column headerValue="Remove" >
+                                            <div class="btn-toolbar no-margin">
+                                                <apex:commandLink action="{!iWantMyJSValues}" styleClass="btn-lg" oncomplete="confDelete();" rerender=""> <i class="fa fa-trash-o"></i>
+                                                    <apex:param name="docGuid" value="{!item.Document_GUID__c}" assignTo="{!docGuid}"/>
+                                                </apex:commandLink>
+                                            </div>
+                                        </apex:column>
+                                         -->
+                                    </apex:pageBlockTable>
+                                </div>
+                            </apex:pageBlock>
+                        </apex:outputPanel>
+                        <apex:outputText value="{!disableFileUploadText}" rendered="{!disableFileUpload}"/>
+                        
+                        <apex:outputPanel styleClass="margin-t3" layout="block" >
+                        <div class="row">
+							<div class="col-sm-12">			
+							<div class="well">		        
+								<div class="form-group no-margin">				                    				                    			                      
+			                      <apex:inputCheckbox styleClass="form-control" required="FALSE" value="{!SecondaryFormReviewed}" id="bgcReviewed"/>
+			                      <label>I confirm that I have verified this au pairs graduation or proof of expected graduation.</label>			                      
+				                </div>
+				                </div>
+							</div>					
+						</div><!--  end row -->
+						</apex:outputPanel>
+                        
+                        <div class="row margin-t6">
+                            <div class="col-sm-12">
+                                <apex:outputLink styleClass="btn btn-link btn-lg" value="/apex/apc_ap_main_health_review?id={!applicantInfo.Id}&docType=Doctor-Partner" id="backlink"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                                <apex:commandlink rendered="{!applicantInfo.Application_Type__c=='Original' && userProfileName == 'OCPM Agent Portal'}" styleClass="btn btn-primary btn-lg" action="{!navigator}" id="nextpage10" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+				                  <apex:param name="nextPage" value="/apex/apc_ap_main_misc_review" />
+				                  <apex:param name="reDirectPage" value="true" />
+				                  <apex:param name="pageId" value="047"/>
+				                  <apex:commandButton value="Save & Continue" id="continuebutton10" />
+				                </apex:commandlink>
+				            </div>
+                        </div>
+                        
+                          
+                        <script>
+                        var j$ = jQuery.noConflict();
+                        function confDelete(){
+                            j$('#myModal').modal();
+                        } 
+                        
+                        //activate tooltip
+                        j$('.linkpdf').tooltip();
+                        
+                        </script> 
+                    </apex:form>
+                </div>
+                <!-- end column -->
+                
+                 <div id="app-side" class="col-md-3 col-md-pull-8">
+                    <c:menu_side_apc_ap_basic ApplicantInfo="{!applicantInfo}" />
+                </div>
+            </div>
+            <!-- end row --> 
+        </apex:define>
+    </apex:composition>
+</apex:page>

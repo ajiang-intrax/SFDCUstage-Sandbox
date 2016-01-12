@@ -1,0 +1,127 @@
+<apex:page docType="html-5.0" title="Health Information Release" applyBodyTag="false" applyHtmlTag="false" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="false" showHeader="false" id="apc_ap_main_physician_form">
+<apex:composition template="intraxtemplate_vs3">
+        <apex:define name="body">
+            <c:block_header_apc_ap_application />
+             <div id="app-page" class="row">
+        <div id="app-focus" class="col-md-8 col-md-push-3">
+                    
+                    <c:block_app_completion ApplicantInfo="{!applicantInfo}" userProfileName="{!userProfileName}"  />
+                    
+                    <!-- Jose-Adding Tips for Partners  (Profile "OCPM Agent Portal")
+			          <apex:outputPanel rendered="{!userProfileName == 'OCPM Agent Portal' && applicantInfo.Application_Level__c == 'Main'}" layout="block" id="blockTip">
+				            <div class="lead alert alert-warning clearfix">
+							<div class="margin-b1"><b>Tips</b></div>
+							<ul>
+							<li>Did you verify that the Physician Review form does not indicate any condition that the au pair
+						  did not mention, or vice versa?</li>
+							<li>Did you verify that every question on the form is answered?</li>
+							</ul>
+							</div>
+				      </apex:outputPanel>
+				      -->
+			          
+                    
+                    <h1>Physician Verified Health Form</h1>
+                    <p class="lead">Please download and print the form below and bring it to your physician. 
+                        Your physician will need to verify that all your health info and medical conditions are accurate. 
+                        Once the form is completed and signed by your physician, scan the document and upload to your application.
+                    </p>
+                    <apex:form styleClass="form-vertical ws-validate" id="webform">
+                        <div class="row">
+                        <div class="col-sm-12">
+                                
+                                 <a class="btn btn-link btn-lg margin-r" href="https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/documents/portals/apc/pt/app/Physician-Verified-Medical-History.pdf" target="_blank"><i class="fa fa-download"></i> <span>Download Physician Form</span>
+                                </a> 
+                                
+                                <apex:outputLink html-data-toggle="modal" html-data-backdrop="static" html-data-target=".modal-widget" styleClass="btn btn-link vs2 btn-lg"><i class="fa fa-plus"></i> <span>Upload Completed Form</span></apex:outputLink>
+                            </div>
+                        </div><!--  end row -->
+                        <apex:outputPanel layout="block" rendered="{!IF(DocList.Size > 0, true, false)}">
+                            <apex:pageBlock id="Block_ListExperience" >
+                                <div class="table-responsive margin-t4"> 
+                                    <apex:pageBlockTable styleClass="table vs2" value="{!DocList}" var="item">
+                                        <apex:column headerValue="Uploaded Documents">
+                                            <apex:commandLink action="{!load}" rerender="" target="_blank">
+                                                <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                                <apex:outputText value="{!item.Document_Name__c}"/>
+                                            </apex:commandLink>
+                                        </apex:column>
+                                        <apex:column headerValue="Remove" >
+                                            <div class="btn-toolbar no-margin">
+                                                <apex:commandLink rendered="{!NOT(userProfileName == 'OCPM Agent Portal' && item.Document_Type__c == 'Doctor' )}" action="{!iWantMyJSValues}" styleClass="btn-lg" oncomplete="confDelete();" rerender=""> <i class="fa fa-trash-o"></i>
+                                                    <apex:param name="docGuid" value="{!item.Document_GUID__c}" assignTo="{!docGuid}"/>
+                                                </apex:commandLink>
+                                            </div>
+                                        </apex:column>
+                                    </apex:pageBlockTable>
+                                </div>
+                            </apex:pageBlock>
+                        </apex:outputPanel>
+                        <apex:outputText value="{!disableFileUploadText}" rendered="{!disableFileUpload}"/>
+                        
+                        
+                        <div class="row margin-t6">
+                            <div class="col-sm-12">
+                                <apex:outputLink styleClass="btn btn-link btn-lg" value="/apex/apc_ap_main_health_info?id={!applicantInfo.Id}" id="backlink"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                                <apex:commandlink styleClass="btn btn-primary btn-lg" action="{!navigator}" id="nextlink" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                                    <apex:param name="nextPage"	value="/apex/apc_ap_basic_eligibility" />
+                                    <apex:param name="reDirectPage" value="true" />
+                                    <apex:commandButton value="Save & Continue" id="continuebutton"/>
+                                </apex:commandlink>
+                            </div>
+                        </div>
+                        
+                        <div class="modal fade vs1" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-sm">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <p>Are you sure you want to remove this file?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <apex:commandLink styleClass="btn btn-primary" action="{!deletefile}" immediate="true">
+                                            <apex:param name="phyparam" value="true" assignTo="{!phyparam}" />
+                                            <apex:commandButton value="Yes" id="yesbutton"/>
+                                        </apex:commandLink>
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--  end modal -->
+                        
+                        <div class="modal fade modal-widget vs1" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Upload Medical Form</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <iframe width="100%" height="400" frameborder="0" scrolling="no" src="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType={!$CurrentPage.parameters.docType}&retparam={!retParam}"></iframe>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--  end modal --> 
+                        
+                        <script>
+                        var j$ = jQuery.noConflict();
+                        function confDelete(){
+                            j$('#myModal').modal();
+                        } 
+                        
+                        //activate tooltip
+                        j$('.linkpdf').tooltip();
+                        
+                        </script> 
+                    </apex:form>
+                </div>
+                <!-- end column -->
+                
+                 <div id="app-side" class="col-md-3 col-md-pull-8">
+                    <c:menu_side_apc_ap_basic ApplicantInfo="{!applicantInfo}" />
+                </div>
+            </div>
+            <!-- end row --> 
+        </apex:define>
+    </apex:composition>
+</apex:page>

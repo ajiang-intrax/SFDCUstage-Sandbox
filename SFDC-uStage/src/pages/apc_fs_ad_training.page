@@ -1,0 +1,276 @@
+<apex:page tabStyle="Area_Director_Training__tab" controller="CommunityApcController"
+    showHeader="true" id="ad_training" action="{!generateResult}">
+
+    <!--jQuery basics-->
+<style>
+.apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader .showListButton,
+.apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader .hideListButton{background-color: #A1CE53;}
+.dataCol a{
+color: #428bca;
+font-weight: bold;
+}
+.grey{
+color: grey!important;
+}
+.blue{
+color: #428bca!important;
+font-weight: bold;
+text-decoration:underline;
+}
+.red{
+color: red!important;
+font-weight: bold;
+text-decoration:underline;
+}
+
+</style>
+
+    <script
+        src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <link rel="stylesheet"
+        href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" />
+    <script
+        src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+
+    <!-- Fontawesome module for icons -->
+    <apex:stylesheet value="{!URLFOR($Resource.module_fontawesome, '/module_fontawesome/vs-4.0.3/css/font-awesome.min.css')}" />
+
+    <apex:form id="myForm">
+		<apex:pageMessage summary="Please do not use Internet Explorer to complete your courses. If you experience an error trying to print your certificate, file a help desk ticket. We are aware of this error and working to resolve. You do not need to attempt to complete the course again." severity="warning" strength="3"/>
+        <apex:sectionHeader title="Training" subtitle="{!user.Name}" />
+        
+        <apex:repeat value="{!scormMultiCoursetList}" var="parent">
+            <div style="margin-bottom:30px;">
+             <apex:pageBlock rendered="{!If(parent.Is_Parent__c ==True ,true,false)}" mode="inlineEdit">
+                        <!-- Parent Name -->
+                        <apex:outputPanel rendered="{!If(parent.Is_Parent__c ==True,true,false)}" layout="block"> 
+                        <b>{!parent.Name}</b> 
+                        </apex:outputPanel>
+                            
+                            <!-- Multi-Step Result Block -->
+                                
+                                <apex:outputPanel style="margin-top:10px;" layout="block" id="resultpgBlockmulriScorm" rendered="{!(parent.Complete_Status__c == 'Completed')}">
+                                    <apex:OutputText rendered="{!(parent.Result__c == 'Passed')}" value="Completed On {!parent.Passed_Date__c} |   Score of {!parent.Score__c}%   |  # Of Attempts: {!parent.Attempt_Count__c}   |  " />
+                                    <apex:OutputText rendered="{!(parent.Result__c == 'Failed')}" value="Failed On {!parent.Failed_Date__c} |   Score of {!parent.Score__c}%   |  # Of Attempts: {!parent.Attempt_Count__c}   |  " />
+                                        
+                                        <apex:commandLink styleClass="blue" rendered="{!(parent.Result__c == 'Passed' && parent.Has_Certificate__c == True)}" action="{!generateScormCertificate}" target="_blank">
+                                            <apex:param name="ScomIdCertificate" value="{!parent.Id}" />
+                                            <apex:outputText value="View & Print Certificate" id="resultscrommultiprint"/>
+                                        </apex:commandLink>
+                                
+                                
+                                <apex:repeat value="{!parent.scorm__r}" var="itemresult"> 
+                                        <apex:outputLink styleClass="red" rendered="{!(itemresult.Result__c == 'Failed' && itemresult.Is_this_a_quiz__c==True )}" Value="/apex/apc_fs_ad_training?">
+                                            <apex:param name="utype" value="{!userlog.Profile.id}"/>
+                                            <apex:param name="ScormID" value="{!itemresult.id}"/>
+                                            <apex:outputText value="Retake Quiz"/>
+                                        </apex:outputLink>
+                                </apex:repeat>
+                            </apex:outputPanel>
+                            <!-- Multi-Step Result Block End-->
+                            
+                            <!-- Single-Step Result Block -->
+                            <apex:outputPanel style="margin-top:10px;" layout="block" id="resultpgBlockScorm" rendered="{!(parent.Complete_Status__c == 'Completed' && parent.Is_this_a_quiz__c==True && parent.Multi_Step_Course__c==False)}">
+                                <apex:OutputText rendered="{!(parent.Result__c == 'Passed')}" value="Completed On {!parent.Passed_Date__c} |   Score of {!parent.Score__c}%   |  # Of Attempts: {!parent.Attempt_Count__c}   |  " />
+                                <apex:OutputText rendered="{!(parent.Result__c == 'Failed')}" value="Failed On {!parent.Failed_Date__c} |   Score of {!parent.Score__c}%   |  # Of Attempts: {!parent.Attempt_Count__c}   |  " />
+                                <apex:commandLink styleClass="blue" rendered="{!(parent.Result__c == 'Passed')}" action="{!generateScormCertificate}" target="_blank">
+                                    <apex:param name="ScomIdCertificate" value="{!parent.Id}" />
+                                    <apex:outputText value="View & Print Certificate" id="resultscromprint"/>
+                                </apex:commandLink>
+                                <apex:outputLink styleClass="red" rendered="{!(parent.Result__c == 'Failed')}" Value="/apex/apc_fs_ad_training?">
+                                     <apex:param name="utype" value="{!userlog.Profile.id}"/>
+                                     <apex:param name="ScormID" value="{!parent.id}"/>
+                                    <apex:outputText value="Retake Quiz"/>
+                                </apex:outputLink>
+                            </apex:outputPanel>
+                            <!-- Single-Step Result Block End-->
+                            
+                            <!-- Parent Course Description -->
+                            <apex:outputPanel layout="block" style="margin:10px 0; max-width:500px;">
+                            <apex:outputText rendered="{!If(parent.Is_Parent__c ==True,true,false)}" Value="{!parent.Course_Description__c}"/>
+                            </apex:outputPanel>
+                        <!-- Single-Step Result Block -->
+                        
+                <!-- ---------------Multi-Step Course Block----------------->   
+            <apex:outputPanel layout="block" id="pgblkmultistep">
+                <apex:pageBlock rendered="{!If(parent.Is_Parent__c ==True && parent.Multi_Step_Course__c==True,true,false)}" mode="inlineEdit" >
+                        <apex:variable value="False" var="ActiveLesson" id="ActiveLesson"/>
+                        <apex:variable value="True" var="InactiveLesson" id="InactiveLesson"/>
+                        <apex:pageblocksection title="Training Details" columns="2" collapsible="True">
+                            <apex:repeat value="{!parent.scorm__r}" var="item">
+                    
+                                <apex:pageBlockSectionItem >
+                                    <apex:outputLabel value="{!item.Course_Name__c}" />
+                                
+                                        <apex:outputPanel layout="block" id="blockIduser">
+                                    
+                                        <apex:outputPanel rendered="{!(item.Complete_Status__c == 'Not Started' && ActiveLesson=='True')}" >
+                                                    <apex:outputText value="-" id="scromTbegin"/>
+                                        </apex:outputPanel>
+                                    
+                                        <apex:outputPanel rendered="{!(item.Complete_Status__c == 'Not Started' && ActiveLesson=='False')}">
+                                            <apex:outputLink value="/apex/apc_fs_ad_training?" styleClass="blue">
+                                                <apex:param name="utype" value="{!userlog.Profile.id}"/>
+                                                <apex:param name="ScormID" value="{!item.id}"/>
+                                                    <apex:outputText value="Begin Training" id="scrombegin" />
+                                                     <apex:variable rendered="{!(item.Step_Number__c != null)}" value="True" var="ActiveLesson"/>
+                                            </apex:outputLink>
+                                        </apex:outputPanel>
+                                    
+                                        <apex:outputPanel rendered="{!(item.Result__c == '' && item.Complete_Status__c == 'In Progress' && ActiveLesson=='False')}">
+                                            <apex:outputLink styleClass="blue" value="/apex/apc_fs_ad_training?">
+                                              <apex:param name="utype" value="{!userlog.Profile.id}"/>
+                                              <apex:param name="ScormID" value="{!item.id}"/>
+                                                    <apex:outputText value="Continue Training"/>
+                                                     <apex:variable rendered="{!(item.Step_Number__c != null)}" value="True" var="ActiveLesson"/>                                           
+                                            </apex:outputLink>
+                                        </apex:outputPanel>
+                                        
+                                        <apex:outputPanel rendered="{!(item.Result__c == 'Passed' && item.Complete_Status__c == 'Completed' && ActiveLesson=='False')}">
+                                            <apex:outputText value="Completed - "/> 
+                                            <apex:outputLink styleClass="blue" value="/apex/apc_fs_ad_training?">
+                                                 <apex:param name="utype" value="{!userlog.Profile.id}"/>
+                                                 <apex:param name="ScormID" value="{!item.id}"/>
+                                                <apex:outputText value="View Lesson"/>
+                                            </apex:outputLink>
+                                        </apex:outputPanel>
+                                    
+                                        
+                                        <apex:outputPanel rendered="{!(item.Complete_Status__c == 'Completed' && item.Result__c == 'Failed')}">
+                                            <apex:outputLink styleClass="red" value="/apex/apc_fs_ad_training?">
+                                             <apex:param name="utype" value="{!userlog.Profile.id}"/>
+                                             <apex:param name="ScormID" value="{!item.id}"/>
+                                                    <apex:outputText value="Retake Quiz"/>
+                                                 <apex:variable rendered="{!(item.Step_Number__c != null)}" value="True" var="ActiveLesson"/>
+                                            </apex:outputLink>
+                                        </apex:outputPanel>
+                                    
+                                    </apex:outputPanel>
+                                </apex:pageBlockSectionItem> 
+                                
+                                <apex:pageBlockSectionItem >
+                                    <apex:outputLabel value="Training status" />
+                                    
+                                    <apex:outputPanel layout="block">
+                                        <apex:outputText rendered="{!item.Complete_Status__c=='In Progress' || item.Complete_Status__c='Not Started'}"  value="{!item.Complete_Status__c}"/>
+    
+                                        <apex:outputText rendered="{!item.Complete_Status__c=='Completed' && item.Result__c=='Passed'}">
+                                            <apex:outputText value="{!item.Result__c}" /> on <em><apex:outputText value=" {!item.Passed_Date__c}"/></em>
+                                            
+                                        </apex:outputText>
+                                            
+                                        <apex:outputText rendered="{!item.Complete_Status__c=='Completed' && item.Result__c=='Failed'}">
+                                            <apex:outputText value="{!item.Result__c}" /> on <em><apex:outputText value=" {!item.Failed_Date__c}"/>
+                                            </em>
+                                        </apex:outputText>
+                                        
+                                    </apex:outputPanel>
+    
+                                </apex:pageBlockSectionItem>
+    
+                            </apex:repeat>
+                        </apex:pageblocksection>
+                        
+                    </apex:pageBlock>   
+                </apex:outputPanel>
+                <!-- ---------------Multi-Step Course End ----------------->                
+                        
+                        <!-- Single Step Course Start-->
+                        
+                    <apex:outputPanel layout="block" id="pgblksinglestep">
+                    <apex:pageBlock rendered="{!If(parent.Is_Parent__c ==True && parent.Multi_Step_Course__c==false,true,false)}" mode="inlineEdit" >
+                        <apex:pageblocksection title="Training Details" columns="2" collapsible="True">
+                                
+                                <apex:pageBlockSectionItem >
+                                    <apex:outputLabel value="{!parent.Course_Name__c}" />
+                                    
+                                    <apex:outputPanel layout="block" id="blockIduser">
+                                    
+                                        <apex:outputLink value="/apex/apc_fs_ad_training?">
+                                         <apex:param name="utype" value="{!userlog.Profile.id}"/>
+                                         <apex:param name="ScormID" value="{!parent.id}"/>
+                                            <apex:outputText rendered="{!(parent.Complete_Status__c == 'Not Started')}" value="Begin Training" id="scrombegin" />
+                                            <apex:outputText rendered="{!(parent.Result__c == '' && parent.Complete_Status__c == 'In Progress')}" value="Continue Training" id="scromcontinue" />
+                                            <apex:outputText styleClass="red" rendered="{!(parent.Complete_Status__c == 'Completed' && parent.Result__c == 'Failed')}"  value="Retake Quiz" id="scromretake" />
+                                        </apex:outputLink>
+                                        
+                                    <apex:outputPanel rendered="{!(parent.Result__c == 'Passed' && parent.Complete_Status__c == 'Completed')}">
+                                        <apex:outputText value="Completed - " />
+                                        <apex:outputLink styleClass="blue" value="/apex/apc_fs_ad_training?">
+                                            <apex:outputText value="View Lesson" id="scromview" />
+                                            <apex:param name="utype" value="{!userlog.Profile.id}"/>
+                                            <apex:param name="ScormID" value="{!parent.id}"/>
+                                        </apex:outputLink>
+                                    </apex:outputPanel>
+                                    
+                                    </apex:outputPanel>
+                                    
+                                </apex:pageBlockSectionItem>
+                                
+                                <apex:pageBlockSectionItem >
+                                    <apex:outputLabel value="Training status" />
+                                    
+                                    <apex:outputPanel layout="block">
+                                        <apex:outputText rendered="{!parent.Complete_Status__c=='In Progress' || parent.Complete_Status__c='Not Started'}"  value="{!parent.Complete_Status__c}"/>
+    
+                                        <apex:outputText rendered="{!parent.Complete_Status__c=='Completed' && parent.Result__c=='Passed'}">
+                                            <apex:outputText value="{!parent.Result__c}" /> on <em><apex:outputText value=" {!parent.Passed_Date__c}"/></em>
+                                        </apex:outputText>
+    
+                                        <apex:outputText rendered="{!parent.Complete_Status__c=='Completed' && parent.Result__c=='Failed'}">
+                                            <apex:outputText value="{!parent.Result__c}" /> on <em><apex:outputText value=" {!parent.Failed_Date__c}" /></em>
+                                        </apex:outputText>
+                                        
+                                    </apex:outputPanel>
+    
+                                </apex:pageBlockSectionItem>
+    
+                            
+                        </apex:pageblocksection>
+                        
+                    </apex:pageBlock>
+                    </apex:outputPanel>
+                    
+            </apex:pageBlock>
+                    <!--  Single Step Course End -->
+                    </div>  
+        </apex:repeat>
+
+    </apex:form>
+
+    <script>
+var j$ = jQuery.noConflict();
+
+// Text field character counter 
+    function countChar(val, maxchars, elem) {
+        var len = val.value.length;
+        if (len > maxchars) {
+            val.value = val.value.substring(0, maxchars);
+        } else {
+            var elem1 = '#'+elem;
+            j$(elem1).text(maxchars - len);
+        }
+    };
+
+
+j$(function() {
+    j$( "#dialog" ).dialog({
+      autoOpen: false,
+      height:460,
+      width:450,
+      modal:true
+    });
+ 
+    j$( "#opener" ).click(function() {
+      j$( "#dialog" ).dialog( "open" );
+    });
+});
+
+
+ function setResult(){
+    document.getElementById('thePage:theForm:theBlock:theSec:accName').readOnly=true;
+           }
+ window.onload = setResult;
+ 
+</script>
+</apex:page>

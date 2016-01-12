@@ -1,0 +1,165 @@
+<apex:page applyHtmlTag="false" applyBodyTag="false" id="Page" title="Participant's Assessments" standardStylesheets="false" showHeader="false" controller="IntraxPartnerPortalEngineController" action="{!checkLoginWithParticipantSearch}">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">      
+      <apex:form styleClass="form-vertical ws-validate" id="webForm">
+        <div class="row margin-b2">
+          <div class="col-sm-9 center-text center-block">
+                 <c:block_pr_pt_profile_thumb photoUrl="{!returnUrl}" gender="{!participant.Account_Id__r.Gender__pc}"/> 
+            <h1>
+              <apex:outputText rendered="{!IF($CurrentPage.parameters.participantId == null, false, true)}" value="{!participant.Name}"/>
+              <apex:outputText rendered="{!IF($CurrentPage.parameters.participantId == null, true, false)}" value="No Individual Participant Selected"/>
+            </h1>
+          </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="center-text">
+              <c:menu_pr_pt participant="{!participant}" applicationRecord="{!applicationRecord}" />
+            </div>
+          </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+        <hr class="margin-b4"/>
+        <div class="row margin-b2">
+          <div class="col-sm-12 center-text">
+            <h2>Assessments</h2>
+          </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+      <apex:actionStatus id="waitMsg" >
+          <apex:facet name="start">
+            <div class="alert alert-info"><i class="fa fa-refresh fa-spin"></i> <strong>Please Wait.....</strong> </div>
+          </apex:facet>
+        </apex:actionStatus>
+   
+        <apex:outputPanel rendered="{!IF(listAssessment.Size > 0, true, false)}" layout="block">
+        <div class="row">
+          <div class="col-sm-12">
+           <div class="box gray" style="padding-bottom:15px;">
+            <div class="form-group filter vs1" style="vertical-align:top; max-width:200px;">
+              <label class="control-label">Filter by Name</label>
+              <div class="input-group">
+              <apex:inputfield styleClass="form-control" id="Name" value="{!assessment.Name}" onblur="doSearch();return false;"/>
+              <apex:commandLink styleClass="input-group-addon" action="{!doSearchForParticipant}" rerender="pb" status="waitMsg" id="GoButton">
+              Search
+              </apex:commandLink>
+            </div>
+            </div>
+            </div>
+          </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+        </apex:outputPanel>
+        
+       
+        <apex:pageBlock id="pb">
+          <apex:pageMessages id="validationMsg"/>
+          
+          <apex:outputPanel rendered="{!IF(listAssessment.Size == 0, true, false)}" layout="block" styleClass="box gray h3 center-text">No record(s) to display.</apex:outputPanel>
+          
+          <apex:actionFunction name="callAction" action="{!pageNavigationForAssessment}" status="waitMsg" reRender="pb, validationMsg"/>
+          <apex:actionFunction name="doSearch" action="{!doSearchOnTheBasisOfPageSizeForParticipant}" status="waitMsg" reRender="pb, validationMsg"/>
+          
+          
+          <apex:outputPanel id="myPanel1" layout="block">
+            <apex:pageBlock id="pb1" rendered="{!IF(listAssessment.Size > 0, true, false)}">
+              <div class="row margin-b2">
+              <div class="col-sm-12">
+              <div class="table-responsive vs3">
+                <apex:pageBlockTable styleClass="table vs3" value="{!listAssessment}" var="item" rendered="{!IF(listAssessment.Size > 0, true, false)}">
+                  <apex:column headerValue="">
+                    <apex:outputLink value="/apex/pr_pt_assessment_details?isAssessments=true&AssessmentId={!item.id}&&participantId={!item.Engagement__r}&isInputType=false&isPhotoAvaialable=true">
+                      <apex:outputText value="{!item.Name}"/>
+                    </apex:outputLink>
+                  </apex:column>
+                  <apex:column headerValue="Overall Assessment">
+                    <apex:outputField id="Overall_Assessment" value="{!item.Overall_Assessment__c}"/>
+                  </apex:column>
+                  <apex:column headerValue="Assessment Date">
+                    <apex:outputField id="Assessment_Date" value="{!item.Assessment_Date__c}"/>
+                  </apex:column>
+                  <apex:column headerValue="Time Period">
+                    <apex:outputField id="Time_Period" value="{!item.Time_Period__c}"/>
+                  </apex:column>
+                </apex:pageBlockTable>
+              </div>
+                </div>
+              <!-- end column --> 
+            </div>
+            <!--  end row --> 
+            
+              <div class="row margin-t4">
+              <div class="col-sm-12">
+                <div class="box">
+                  
+                  <div class="sort vs1"> 
+                    Page&nbsp;
+                    <apex:inputText styleClass="form-control" id="pageNo" value="{!totalpageNumber}" size="3" onkeydown="return runScript(event);"/>
+                    <apex:outputText value=" of {!listoflistAssessment.size}"/> 
+                  </div>
+                  
+                  <div class="sort vs1"> Listing&nbsp;
+                    <apex:selectList value="{!limits}" styleClass="form-control" size="1" onchange="doSearch();return false;">
+                      <apex:selectOptions value="{!items}"/>
+                    </apex:selectList>
+                    &nbsp;per Page </div>
+                 
+                 
+                   <div class="sort vs1 no-margin pull-right">
+                     <ul class="pagination">
+                        <li>
+                          <apex:commandLink id="First" value="First" action="{!first}" status="waitMsg" reRender="pb, validationMsg"/>
+                        </li>
+                        <li>
+                          <apex:commandLink action="{!previous}" status="waitMsg" reRender="pb, validationMsg" rendered="{!IF(PreviousButtonDisabledForAssessments == true, false, true)}">
+                            <apex:outputText value="Previous"/>
+                          </apex:commandLink>
+                        </li>
+                        <li>
+                          <apex:commandLink id="Next" action="{!next}" status="waitMsg" reRender="pb, validationMsg" rendered="{!IF(NextButtonDisabledForAssessments == true, false, true)}">
+                            <apex:outputText value="Next"/>
+                          </apex:commandLink>
+                        </li>
+                        <li>
+                          <apex:commandLink id="Last" value="Last" action="{!lastForAssessment}" status="waitMsg" reRender="pb, validationMsg"/>
+                        </li>
+                      </ul>
+                    </div>
+                    <!-- end pagination --> 
+                </div>
+              </div>
+              <!-- end column --> 
+            </div>
+            <!--  end row --> 
+              
+            </apex:pageBlock>
+          </apex:outputPanel>
+          
+     
+          
+        </apex:pageBlock>
+        <script>
+        
+		            function runScript(obj){
+		                
+		                //alert(obj.keyCode);
+		                if(obj.keyCode == 13){
+		                    callAction();   // call action function
+		                    return false;
+		                }else if((obj.keyCode > 34 && obj.keyCode < 40) || (obj.keyCode > 95 && obj.keyCode < 106) || (obj.keyCode > 47 && obj.keyCode < 58) || obj.keyCode == 8 || obj.keyCode == 46 ){
+		                    return true;
+		                }else{
+		                    return false;
+		                }
+		            }
+		        </script> 
+      </apex:form>
+      <!-- end row --> 
+    </apex:define>
+  </apex:composition>
+</apex:page>

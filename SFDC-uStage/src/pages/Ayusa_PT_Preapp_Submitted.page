@@ -1,0 +1,41 @@
+<apex:page id="Ayusa_PT_Preapp_Submitted" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" title="Home | Intrax" standardStylesheets="false" showHeader="false" action="{!checkLogin}">
+<apex:composition template="IntraxTemplate_Vs1">
+<apex:define name="body">
+<apex:form id="form">
+
+        <div  class="wrapper">
+          
+<div class="page-header clearfix">
+<h1 class="page-title">Thank You!</h1></div>
+            
+<h2>Basic Section - Complete</h2>
+         
+            <div  class="white-box clearfix">
+             
+<div class="panel two_thirds">
+    <p>
+      Thank you for completing the Ayusa Basic Application. By filling out your basic information you have completed a necessary step to go abroad!
+    </p>
+    <p>
+  During the Main Application we will be gathering some detailed information that is essential to completing your application.
+    </p>
+    <p> Go ahead and begin the Main Application!</p>
+                
+               
+<div class="form-link no-float inline-block">
+                        <apex:commandlink styleClass="next" action="{!navigator}">
+                          <i class="icon-chevron-right"></i> 
+                            <apex:param name="nextPage" value="/apex/ayusa_app_home"/>
+                          <apex:param name="reDirectPage" value="true"/>
+                          <apex:commandButton id="Continue" value="Continue to the Main Application" />
+                            
+                        </apex:commandlink>
+ </div>              
+                </div>         
+            </div>
+     </div>
+  
+    </apex:form>
+    </apex:define>
+    </apex:composition>
+</apex:page>

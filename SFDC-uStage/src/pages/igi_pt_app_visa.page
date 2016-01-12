@@ -1,0 +1,124 @@
+<apex:page id="igi_pt_app_personal_info" docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardController="Applicant_Info__c"
+    extensions="AppEngine_Controller" action="{!checkLogin}"
+    standardStylesheets="false" showHeader="false"  title="Supplemental Visa Information">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_igi_pt_application userAgentCheck="{!userAgentCheck}"/>
+      <div class="row">
+        <div class="col-md-7 col-md-push-3">
+            <c:block_app_completion_igi applicantInfo="{!applicantInfo}" isIGIMainReady="{!CheckMainIGIApp}"/>
+            <h1>Visa Information</h1>
+            <p class="lead">Government regulations require that we collect this information in order for you to participate in your selected program.</p>
+            <apex:form styleClass="form-vertical ws-validate" id="webform">
+            <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+            
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">City of Birth</label>
+                      <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!personInfo.Birth_City__c}" required="TRUE" id="birthCity" />
+                    </div>
+                </div><!--  end col -->
+                <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Country of Birth </label>
+                      <apex:inputField styleClass="form-control" value="{!personInfo.Birth_Country__c}" required="TRUE" id="birthCountry" />
+                    </div>
+                </div><!--  end col -->
+            </div><!--  end row -->
+            
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group restoreclass">
+                        <label class="control-label">Have you obtained a visa for the United States before, other than a B-1 or B-2?</label>
+                        
+                        <apex:actionRegion >
+                            <!--                       
+                            <apex:selectRadio styleClass="radio" value="{!applicantInfo.Prior_Exchange_Experience__c}" id="priorExchange" required="true" >
+                              <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                              <apex:selectOption itemValue="No" itemLabel="No"/>
+                              <apex:actionSupport event="onchange" onComplete="rerunjs();" rerender="set-priorExchange" status="pleasewait01" />                            
+                            </apex:selectRadio>
+                            <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="pleasewait01"/>
+                      		-->                           
+                            
+                            <apex:inputField styleClass="form-control" value="{!applicantInfo.Prior_Exchange_Experience__c}" required="TRUE" id="priorExchange" >
+                                <apex:actionSupport event="onchange" onComplete="rerunjs();" rerender="set-priorExchange" status="pleasewait01" />
+                            </apex:inputField>
+                            <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="pleasewait01"/>
+                           
+                        </apex:actionRegion>
+                        <apex:message for="priorExchange" styleClass="custom-error-radio" id="errormessage1"/>
+                    </div>
+                </div><!--  end col -->                 
+            </div><!--  end row -->
+            
+           
+            <apex:pageBlock id="set-priorExchange">
+                <apex:outputPanel rendered="{!applicantInfo.Prior_Exchange_Experience__c == 'Yes'}" layout="block">
+                   
+                    <div class="row">
+                        <div class="col-sm-6">
+                           <div class="form-group restoreclass">
+                              <label class="control-label">What type of visa did you obtain?</label>
+                              <apex:inputField styleClass="form-control" value="{!applicantInfo.Prior_Exchange_Visa__c}" required="TRUE" id="priorVisa"/>
+                           </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row dp-group">
+                        <div class="col-sm-6">
+                           <div class="form-group">
+                              <label class="control-label">Start Date</label>
+                              <div class="datepicker start" locale="{!user.localeSidKey}">
+                                <apex:inputField styleClass="form-control" value="{!applicantInfo.Prior_Visa_Start_Date__c}" required="TRUE" id="startDate"/>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="col-sm-6">
+                           <div class="form-group">
+                              <label class="control-label">End Date</label>
+                              <div class="datepicker end" locale="{!user.localeSidKey}">
+                                <apex:inputField styleClass="form-control" value="{!applicantInfo.Prior_Visa_End_Date__c}" required="TRUE" id="endDate"/>
+                              </div>
+                           </div>
+                        </div>
+                      
+                    </div>  
+                                    
+                
+                </apex:outputPanel>
+            </apex:pageBlock>
+           
+            
+            <div class="form-group margin-t">    
+                <apex:commandlink styleClass="btn btn-primary btn-lg"
+                                    action="{!navigator}" id="nextlink"  onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                  <apex:param name="nextPage" value="/apex/igi_pt_app_dependents"/>
+                   <apex:param name="docType" value="igi-documents" assignTo="{!docType}"/>
+                  <apex:param name="reDirectPage" value="true" />
+                  <apex:param name="pageId" value="054"/>
+                  <apex:commandButton value="Save & Continue" id="continuebutton" />
+                </apex:commandlink>
+            </div>
+            
+          </apex:form>
+          
+          <apex:form >
+          	<c:block_app_coedit_authorization ApplicantInfo="{!applicantInfo}" pageController="{!AEC}" rendered="{!applicantInfo.Apply_on_Behalf_of_PT__c && applicantInfo.Application_Stage__c == 'Working'}"/>
+          </apex:form>
+        </div>
+        <!-- end column -->
+        
+        <div class="col-md-3 col-md-pull-7">
+          <apex:form >
+            <c:menu_igi_pt_app ApplicantInfo="{!applicantInfo}" personInfo="{!personInfo}" />
+          </apex:form>
+        </div>
+        <!-- end column  --> 
+      </div>
+      <!-- end row --> 
+      
+    </apex:define>
+  </apex:composition>
+</apex:page>

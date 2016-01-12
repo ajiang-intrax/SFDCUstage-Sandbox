@@ -1,0 +1,52 @@
+<apex:page tabStyle="Scheduled_Payments__tab" id="apc_hf_schedule_payment_confirmation" docType="html-5.0" applyHtmlTag="True" applyBodyTag="True" 
+           title="Payment Confirmation" standardStylesheets="True" showHeader="True" 
+           controller="payment_controller">
+<!--<apex:composition template="intraxtemplate_vs3">-->
+
+<style>
+    .important-text { color: red; }
+    .normal-text { color: black; }
+</style>
+    
+ <apex:define name="body">
+
+     <div class="row">
+        <div class="col-md-6">
+		</div>
+         <apex:outputPanel id="PaySuccess" rendered="{!$CurrentPage.parameters.paymentError==null}">
+             <p> <apex:sectionHeader title="Payment was completed successfully"></apex:sectionHeader></p>
+         
+           <div class="col-md-6">
+           
+           <div class="well lead margin-t">
+            <p> Transaction ID: <strong>{!$CurrentPage.parameters.paymentTxId}</strong> </p>
+             <!--  <p> Charged Amount: <strong>$
+                                           <apex:outputText value=" {0, number, #,##0.00}">
+                                                     <apex:param value="{!$CurrentPage.parameters.paymentAmount}"/>
+                                            </apex:outputText>
+                                           
+                   				   </strong>
+               </p> -->
+            <p> Transaction date: <strong>{!$CurrentPage.parameters.paymentDate}</strong> </p>
+               
+               
+          </div>
+          <!--  end well --> 
+          </div> 
+         </apex:outputPanel>   
+ 
+         
+      <apex:outputPanel id="PayFailed" rendered="{!$CurrentPage.parameters.paymentError!=null}">
+             <p> <apex:sectionHeader title="Transaction Failed."></apex:sectionHeader></p>
+             <p> <h1 style="text-align:center;color:red;"> {!$CurrentPage.parameters.paymentError}</h1></p>
+     </apex:outputPanel>
+      <apex:outputLink value="/apex/apc_hf_payments"><b>Return to Scheduled Payment Report ></b></apex:outputLink>    
+          <!--  end column -->
+          </div> <!--  end row -->
+       
+
+</apex:define>
+
+    
+ <!--</apex:composition>-->
+</apex:page>

@@ -1,0 +1,17 @@
+<apex:component layout="none" controller="TemplateController"> 
+    <apex:variable var="groups" value="active" rendered="{! IF($CurrentPage.Name=='univ_your_groups' || $CurrentPage.Name=='univ_create_application', true, false)}"/>
+    <apex:variable var="home" value="active" rendered="{! IF($CurrentPage.Name=='univ_home', true, false)}"/>  
+
+    <ul class="clearfix pull-right">
+      	
+      	<li class="{!home}">
+            <apex:outputLink value="univ_home?{!appendset}">Home</apex:outputLink>
+        </li>
+        
+        <li class="{!groups}">
+            <apex:outputLink value="univ_your_groups?{!appendset}&docType=group-documents">Your Groups</apex:outputLink>
+        </li>
+
+    </ul>
+    
+</apex:component>

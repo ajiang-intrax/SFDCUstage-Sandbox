@@ -1,0 +1,479 @@
+<apex:page applyHtmlTag="false" applyBodyTag="false" title="Hiring Profile" standardController="Match__c" extensions="IGI_HC_Controller" docType="html-5.0" standardStylesheets="false" showHeader="false" action="{!checkLogin}">
+  <apex:composition template="intraxtemplate_vs3" >
+    <apex:define name="body">
+      <apex:form styleClass="form-vertical ws-validate">
+      
+      <apex:outputPanel rendered="{!IF(ISBLANK(matchInfo.Id), false, true)}" layout="block" >
+      
+       <div class="row">
+          <div class="col-sm-9 center-text center-block">
+            <h1>
+              Hiring Profile
+            </h1>
+          </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+        
+         <div class="row margin-b4">
+          <div class="col-sm-9 center-text center-block">
+           <apex:outputLink id="printPDF" styleClass="btn btn-link btn-lg vs2 view-pdf" value="/apex/match_details_pdf_summary?mId={!matchInfo.Id}" target="_blank"><i class="fa fa-file-pdf-o"></i> <span>View PDF Summary</span></apex:outputLink>       
+          </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+        
+        <hr class="margin-b2"/>
+     
+              		 	
+              		 
+        
+        
+        
+        <div class="row margin-b2">
+          <div class="col-sm-7 center-block">
+          
+         <div class="row">
+         <div class="col-sm-6">
+          <div class="form-group">
+          <label class="control-label">First Name</label>
+          <apex:outputField value="{!matchInfo.Participant_Id__r.FirstName}"/>
+           <apex:outputText rendered="{!IF(ISBLANK(matchInfo.Participant_Id__r.FirstName), true, false)}" value="-"/>
+          </div>
+          </div> 
+          <div class="col-sm-6">
+          <div class="form-group">
+          <label class="control-label">Middle Name</label>
+          <apex:outputField value="{!matchInfo.Participant_Id__r.Middle_Name__pc}"/>
+           <apex:outputText rendered="{!IF(ISBLANK(matchInfo.Participant_Id__r.Middle_Name__pc), true, false)}" value="-"/>
+          </div>
+          </div>
+          </div><!--  end row -->
+           
+         <div class="row">
+          <div class="col-sm-6">
+          <div class="form-group">
+          <label class="control-label">Last Name</label>
+          <apex:outputField value="{!matchInfo.Participant_Id__r.LastName}"/>
+           <apex:outputText rendered="{!IF(ISBLANK(matchInfo.Participant_Id__r.LastName), true, false)}" value="-"/>
+           </div>
+           </div>
+          <div class="col-sm-6">
+          <div class="form-group">
+            <label class="control-label">Nickname</label>
+            <apex:outputField value="{!matchInfo.Participant_Id__r.Nick_Name__pc}"/>
+             <apex:outputText rendered="{!IF(ISBLANK(matchInfo.Participant_Id__r.Nick_Name__pc), true, false)}" value="-"/>
+          </div>
+          </div>
+           </div><!--  end row -->
+           
+         <div class="row">  
+          <div class="col-sm-6">
+          <div class="form-group">
+          <label class="control-label">Gender</label>
+          <apex:outputField value="{!matchInfo.Participant_Id__r.Gender__pc}"/>
+           <apex:outputText rendered="{!IF(ISBLANK(matchInfo.Participant_Id__r.Gender__pc), true, false)}" value="-"/>
+           </div>
+           </div>
+          <div class="col-sm-6">
+           <div class="form-group">
+          <label class="control-label">Age</label>
+          <apex:outputField value="{!matchInfo.Participant_Id__r.Age__pc}"/>
+           <apex:outputText rendered="{!IF(ISBLANK(matchInfo.Participant_Id__r.Age__pc), true, false)}" value="-"/>
+          </div>
+          </div>
+           </div><!--  end row -->
+          
+          <div class="row"> 
+          <div class="col-sm-6">
+          <div class="form-group">
+          <label class="control-label">Birth Date</label>
+          <apex:outputField value="{!matchInfo.Participant_Id__r.PersonBirthDate}"/>
+           <apex:outputText rendered="{!IF(ISBLANK(matchInfo.Participant_Id__r.PersonBirthDate), true, false)}" value="-"/>
+           </div>
+           </div>
+          <div class="col-sm-6">
+          <div class="form-group">
+          <label class="control-label">Country of Citizenship</label>
+          <apex:outputField value="{!matchInfo.Participant_Id__r.Citizenship__pc}"/>
+           <apex:outputText rendered="{!IF(ISBLANK(matchInfo.Participant_Id__r.Citizenship__pc), true, false)}" value="-"/>
+           </div>
+           </div>
+           </div><!--  end row -->
+           
+           <div class="row"> 
+            <div class="col-sm-6">
+             <div class="form-group">
+          <label class="control-label">Email</label>
+          <apex:outputField value="{!matchInfo.Participant_Id__r.PersonEmail}"/>
+           <apex:outputText rendered="{!IF(ISBLANK(matchInfo.Participant_Id__r.PersonEmail), true, false)}" value="-"/>
+           </div>
+           </div>
+            <div class="col-sm-6">
+          <div class="form-group">
+           <label class="control-label">Skype</label>
+          <apex:outputField value="{!matchInfo.Participant_Id__r.Skype_ID__pc}"/>
+           <apex:outputText rendered="{!IF(ISBLANK(matchInfo.Participant_Id__r.Skype_ID__pc), true, false)}" value="-"/>
+           </div>
+           </div>
+          </div><!--  end row -->
+          
+        </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+        <hr/>
+        
+        
+        <div class="row margin-b2">
+          <div class="col-sm-7 center-block">
+           <h3>Education Details</h3>
+        </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+        
+         <div class="row margin-b2">
+          <div class="col-sm-7 center-block">
+          
+           <div class="row"> 
+            <div class="col-sm-6">
+          <div class="form-group">
+           <label class="control-label">Current Educational Status</label>
+          <apex:outputField value="{!engagementInfo.Primary_Activity__c}"/>
+           <apex:outputText rendered="{!IF(ISBLANK(engagementInfo.Primary_Activity__c), true, false)}" value="-"/>
+          </div>
+          </div>
+          
+           <div class="col-sm-6">
+           <div class="form-group">
+           <label class="control-label">Approximate Graduation Date</label>
+          <apex:outputField value="{!engagementInfo.Graduation_Date__c}"/>
+           <apex:outputText rendered="{!IF(ISBLANK(engagementInfo.Graduation_Date__c), true, false)}" value="-"/>
+           </div>
+            </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+        
+         <div class="row"> 
+            <div class="col-sm-6">   
+          <div class="form-group">
+           <label class="control-label">Field of Study</label>
+          <apex:outputField value="{!engagementInfo.Major__c}"/>
+           <apex:outputText rendered="{!IF(ISBLANK(engagementInfo.Major__c), true, false)}" value="-"/>
+           </div>
+           </div>
+           <div class="col-sm-6">
+          <div class="form-group"> 
+           <label class="control-label">College or University Name</label>
+          <apex:outputField value="{!engagementInfo.School_Name__c}"/>
+           <apex:outputText rendered="{!IF(ISBLANK(engagementInfo.School_Name__c), true, false)}" value="-"/>
+           </div>
+            </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+        </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+        <hr/>
+        <div class="row margin-b2">
+          <div class="col-sm-7 center-block">
+          <h3>Language Skills</h3>
+        </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+        
+        <div class="row margin-b2">
+          <div class="col-sm-7 center-block">
+         
+           <div class="row"> 
+            <div class="col-sm-6">
+          <div class="form-group">
+           <label class="control-label">Destination Country Language</label>
+          <apex:outputField value="{!engagementInfo.Language_1__c}"/>
+           <apex:outputText rendered="{!IF(ISBLANK(engagementInfo.Language_1__c), true, false)}" value="-"/>
+           </div>
+            </div>
+          <div class="col-sm-6">
+          <div class="form-group">
+           <label class="control-label">Destination Country Language Level</label>
+          <apex:outputField value="{!engagementInfo.Language_1_Proficiency__c}"/>
+           <apex:outputText rendered="{!IF(ISBLANK(engagementInfo.Language_1_Proficiency__c), true, false)}" value="-"/>
+           </div>
+           </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+           
+           
+           <div class="row"> 
+            <div class="col-sm-6">  
+          <div class="form-group">
+           <label class="control-label">Additional Language</label>
+          <apex:outputField value="{!engagementInfo.Language_2__c}"/>
+           <apex:outputText rendered="{!IF(ISBLANK(engagementInfo.Language_2__c), true, false)}" value="-"/>
+           </div>
+           </div>
+          <div class="col-sm-6">
+          <div class="form-group">
+           <label class="control-label">Additional Language Level</label>
+          <apex:outputField value="{!engagementInfo.Language_2_Proficiency__c}"/>
+           <apex:outputText rendered="{!IF(ISBLANK(engagementInfo.Language_2_Proficiency__c), true, false)}" value="-"/>
+           </div>
+           </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+        
+        
+           
+            <div class="row"> 
+            <div class="col-sm-6"> 
+          <div class="form-group">
+           <label class="control-label">Additional Language</label>
+          <apex:outputField value="{!engagementInfo.Language_3__c}"/>
+           <apex:outputText rendered="{!IF(ISBLANK(engagementInfo.Language_3__c), true, false)}" value="-"/>
+           </div>
+           </div>
+          <div class="col-sm-6">
+          <div class="form-group">
+           <label class="control-label">Additional Language Level</label>
+          <apex:outputField value="{!engagementInfo.Language_3_Proficiency__c}"/>
+           <apex:outputText rendered="{!IF(ISBLANK(engagementInfo.Language_3_Proficiency__c), true, false)}" value="-"/>
+           </div>
+           </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+           
+         
+         <div class="row"> 
+            <div class="col-sm-6">
+          <div class="form-group">
+           <label class="control-label">Other Languages</label>
+          <apex:outputField value="{!engagementInfo.Other_Languages__c}"/>
+           <apex:outputText rendered="{!IF(ISBLANK(engagementInfo.Other_Languages__c), true, false)}" value="-"/>
+           </div>
+           </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+           
+           
+           
+        </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+        <hr/>
+        
+      
+        <div class="row margin-b2">
+          <div class="col-sm-7 center-block">
+          <h3>Experience</h3>
+        </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+        
+         <div class="row margin-b2">
+          <div class="col-sm-7 center-block">
+          
+          <apex:outputText value="No experience(s) to display." rendered="{!IF(ExperienceInfoList.Size == 0, true, false)}"/>
+
+          <apex:pageBlock rendered="{!IF(ExperienceInfoList.Size > 0, true, false)}">
+            <div class="table-responsive vs3">
+            <apex:pageBlockTable styleClass="table vs3" value="{!ExperienceInfoList}" var="item"> 
+       
+       <apex:column headerValue="Position Title">
+            <apex:outputField value="{!item.Position_Title__c}"/>
+           </apex:column>
+ 
+         <apex:column headerValue="Employer Name">
+              <apex:outputField value="{!item.Employer_Name__c}"/>
+        </apex:column>
+        
+         <apex:column headerValue="City"> 
+              <apex:outputField value="{!item.City__c}"/>
+         </apex:column>
+         
+         <apex:column headerValue="Country">
+              <apex:outputField value="{!item.Country__c}"/>
+         </apex:column>
+         
+         <apex:column headerValue="Start Date">
+              <apex:outputField value="{!item.Start_Date__c}"/>
+         </apex:column>
+         
+          <apex:column headerValue="End Date"> 
+              <apex:outputField value="{!item.End_Date__c}"/>
+          </apex:column>
+
+            <apex:column style="max-width:300px;" headerValue="Position Description">
+              <apex:outputField value="{!item.Position_Description__c}"/>
+              </apex:column>
+              
+           </apex:pageBlockTable>
+           </div>
+         </apex:pageBlock>
+        
+        </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+        
+        <hr/>
+        <div class="row margin-b2">
+          <div class="col-sm-7 center-block">
+          <h3>Documents</h3>
+        </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+        
+          <div class="row margin-b2">
+          <div class="col-sm-7 center-block">
+        <apex:outputPanel layout="block" rendered="{!IF(ExperienceInfoList.Size > 0 , true, false)}">
+            <apex:pageBlock rendered="{!if(DocListPTResume.Size > 0, true, false)}">
+            <div class="table-responsive vs3">
+              <apex:pageBlockTable styleClass="table vs3" value="{!DocListPTResume}" var="item">
+                <apex:column headerValue="File Name">
+                  <apex:commandlink target="_blank" action="{!load}">
+                    <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                   <apex:outputText value="{!item.Document_Name__c}"/>
+                  </apex:commandlink>
+                </apex:column>
+                <apex:column headerValue="Document Type">
+                  <apex:outputText value="{!item.Document_Type__c}"/>
+                </apex:column>
+                <apex:column headerValue="Description">
+                  <apex:outputText value="{!item.Description__c}"/>
+                </apex:column>
+              </apex:pageBlockTable>
+              </div>
+            </apex:pageBlock>
+            
+          </apex:outputPanel>
+        </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+        
+        <hr/>
+        <div class="row margin-b2">
+          <div class="col-sm-7 center-block">
+          <h3>Program Preferences</h3>
+        </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+        
+        <div class="row margin-b2">
+          <div class="col-sm-7 center-block">
+         
+           <div class="row"> 
+            <div class="col-sm-6">
+          <div class="form-group">
+          <label class="control-label">Do you have flexible dates?</label>
+          <apex:outputtext value="Yes" rendered="{! engagementInfo.Flexible_Dates__c}"/>
+          <apex:outputtext value="No" rendered="{! NOT(engagementInfo.Flexible_Dates__c)}"/>
+          </div>
+           </div>
+          <!--  end column --> 
+            <div class="col-sm-6">
+           <div class="form-group">
+            <label class="control-label">Program Duration</label>
+            <apex:outputField value="{!engagementInfo.Program_Duration__c}"/>
+            <apex:outputText rendered="{!IF(ISBLANK(engagementInfo.Program_Duration__c), true, false)}" value="-"/>
+          </div>
+          </div>
+        </div>
+        <!--  end row -->
+        
+        
+           <div class="row"> 
+            <div class="col-sm-6">
+           <div class="form-group">
+          <label class="control-label">Earliest Start Date</label>
+          <apex:outputField value="{!engagementInfo.Engagement_Start__c}"/>
+           <apex:outputText rendered="{!IF(ISBLANK(engagementInfo.Engagement_Start__c), true, false)}" value="-"/>
+          </div>
+          </div>
+          <div class="col-sm-6">
+           <div class="form-group">
+          <label class="control-label">Latest End Date</label>
+          <apex:outputField value="{!engagementInfo.Engagement_End__c}"/>
+           <apex:outputText rendered="{!IF(ISBLANK(engagementInfo.Engagement_End__c), true, false)}" value="-"/>
+          </div>
+           </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+          
+           <div class="row"> 
+            <div class="col-sm-6">
+           <div class="form-group">
+          <label class="control-label">Preferred Start Date</label>
+          <apex:outputField value="{!matchInfo.Start_Date__c}"/>
+           <apex:outputText rendered="{!IF(ISBLANK(matchInfo.Start_Date__c), true, false)}" value="-"/>
+          </div>
+          </div>
+          <div class="col-sm-6">
+           <div class="form-group">
+          <label class="control-label">Preferred End Date</label>
+          <apex:outputField value="{!matchInfo.End_Date__c}"/>
+           <apex:outputText rendered="{!IF(ISBLANK(matchInfo.End_Date__c), true, false)}" value="-"/>
+          </div>
+           </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+        
+           
+        </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+        <hr/>
+        
+        <apex:outputText rendered="{!IF(NOT(engagementInfo.Intrax_Program__c == 'Internship') && essayList.size > 0, true, false)}"> 
+        <div class="row margin-b2">
+          <div class="col-sm-7 center-block">
+          <h3>Essays</h3>
+        </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+         <div class="row margin-b2">
+          <div class="col-sm-7 center-block">
+            <apex:repeat value="{!EssayList}" var="item" >
+              <p><label><apex:outputText value="{!item.Label__c}"/></label></p>
+              <div><apex:outputField value="{!item.Narrative__c}"/></div>
+            </apex:repeat>
+            
+        </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+         <hr/>
+         </apex:outputText>
+         
+         <div class="row margin-b2">
+          <div class="col-sm-7 center-block center-text">
+           <apex:outputLink id="BackLink3" styleClass="btn btn-link btn-lg margin-t4" value="/apex/pr_pt_matches?participantId={!engagementInfo.Id}&isInputType=false" rendered="{!IF(fpage != null && fpage == 'prtmatches', true, false)}"><i class="fa fa-chevron-left"></i> <span>Back To Matches</span></apex:outputLink>
+      
+         </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+          
+         </apex:outputPanel>
+        
+      </apex:form>
+    </apex:define>
+  </apex:composition>
+</apex:page>

@@ -1,0 +1,252 @@
+<apex:component layout="none" controller="MenuApplication_Controller" allowDML="true">
+  <apex:attribute name="ApplicantInfo" description="This is the value for the Applicant_Info__c object." type="Applicant_Info__c" required="false" default="" />
+  <apex:attribute name="PersonInfo" description="This is the value for the Person_Info__c object." type="Person_Info__c" required="false" default="" />
+  
+  <apex:variable var="personal_info" value="active" rendered="{! IF($CurrentPage.Name=='apc_hf_app_personal_info', true, false)}" />
+  <apex:variable var="eligibility" value="active" rendered="{! IF($CurrentPage.Name=='apc_hf_app_eligibility', true, false)}" />
+  <apex:variable var="your_household" value="active" rendered="{! IF($CurrentPage.Name=='apc_hf_app_family_profile', true, false)}" />
+  <apex:variable var="program_pref" value="active" rendered="{! IF($CurrentPage.Name=='apc_hf_app_program_pref', true, false)}" />
+  <apex:variable var="references" value="active" rendered="{! IF($CurrentPage.Name=='apc_hf_app_references', true, false)}" />
+  <apex:variable var="paymentpage" value="active" rendered="{! IF($CurrentPage.Name=='apc_hf_app_payment', true, false)}" />
+  <apex:variable var="interests" value="active" rendered="{! IF($CurrentPage.Name=='apc_hf_app_interests', true, false)}" />
+  <apex:variable var="essays" value="active" rendered="{! IF($CurrentPage.Name=='apc_hf_app_essays', true, false)}" />
+  <apex:variable var="employer" value="active" rendered="{! IF($CurrentPage.Name=='apc_hf_app_employer', true, false)}" />
+  <apex:variable var="Photo_Uploads" value="active" rendered="{! IF($CurrentPage.Name=='apc_hf_app_media', true, false)}"/>
+  <apex:variable var="Reference_Inter" value="active" rendered="{! IF($CurrentPage.Name=='apc_hf_app_interview_status', true, false)}"/>
+  <apex:variable var="agreements" value="active" rendered="{! IF($CurrentPage.Name=='apc_hf_app_agreements', true, false)}" />
+  <apex:variable var="extension" value="active" rendered="{! IF($CurrentPage.Name=='apc_hf_app_extension_pref', true, false)}" />
+  
+ 
+  <apex:outputText rendered="{!ApplicantInfo.Application_Level__c == 'Basic'}">
+    <!-- Basic App Menu "ORIGINAL"  -->
+    <div class="h3 center-text margin-t3 margin-b3">Your Childcare Application</div>
+    <hr/>
+    
+    <ul class="nav nav-list vs1 linear">
+      <li>
+        <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '001'), 'complete', '')} {!personal_info}" 
+            value="/apex/apc_hf_app_personal_info?id={!ApplicantInfo.Id}"> <i class="fa"></i> <span>Personal Information</span> </apex:outputLink>
+      </li>
+      <li>
+        <apex:outputLink disabled="{! IF(contains(applicantinfo.PageStatus_Complete__c, '001'), 'false', 'true')}" 
+            styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '002'), 'complete', '')} {!eligibility}" 
+            value="/apex/apc_hf_app_eligibility?id={!ApplicantInfo.Id}"> <i class="fa"></i> <span>Eligibility</span> </apex:outputLink>
+      </li>
+      <li>
+        <apex:outputLink disabled="{! IF(contains(applicantinfo.PageStatus_Complete__c, '002'), 'false', 'true')}" 
+            styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '003'), 'complete', '')} {!your_household}" 
+            value="/apex/apc_hf_app_family_profile?id={!ApplicantInfo.Id}"> <i class="fa"></i> <span>Your Household</span> </apex:outputLink>
+      </li>
+      <li>
+        <apex:outputLink disabled="{! IF(contains(applicantinfo.PageStatus_Complete__c, '003'), 'false', 'true')}" 
+            styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '006'), 'complete', '')} {!program_pref}" 
+                value="/apex/apc_hf_app_program_pref?id={!ApplicantInfo.Id}"> <i class="fa"></i> <span>Childcare Needs</span> </apex:outputLink>
+      </li>
+      <li>
+        <apex:outputLink disabled="{! IF(contains(applicantinfo.PageStatus_Complete__c, '006'), 'false', 'true')}" 
+            styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '048'), 'complete', '')} {!references}" 
+                value="/apex/apc_hf_app_references?id={!ApplicantInfo.Id}"> <i class="fa"></i> <span>References</span> </apex:outputLink>
+      </li>
+      <li>
+        <apex:outputLink disabled="{! IF(contains(applicantinfo.PageStatus_Complete__c, '048'), 'false', 'true')}" 
+            styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '048'), 'complete', '')} {!paymentpage}" 
+                value="/apex/apc_hf_app_payment?id={!ApplicantInfo.Id}"> <span>Application Fee</span> </apex:outputLink>
+      </li>
+    </ul>
+    </apex:outputText>
+    
+     <!-- Main App Menu "ORIGINAL"  -->
+    
+    <apex:outputText rendered="{!ApplicantInfo.Application_Level__c == 'Main' && ApplicantInfo.Application_Type__c=='Original'}">
+    
+  <!--  <div class="h3 center-text margin-t3 margin-b1">{!personInfo.Last_Name__c} Family Profile</div>
+ <div class="margin-b2 center-text"><apex:outputLink value="/apex/apc_hf_app_home?id={!ApplicantInfo.Id}"><b>Back to Main Page</b></apex:outputLink></div> --> 
+       <ul class="sidenav vs2 non-linear margin-t3">
+       
+        <li class="first-tier">
+        <div class="title">Your Family Profile</div>
+        <ul class="sec-tier">
+        <li>
+          <apex:outputLink value="/apex/apc_hf_app_personal_info?id={!ApplicantInfo.Id}" styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '001'), 'complete', '')} {!IF(contains(applicantinfo.PageStatus_Started__c, '001'), 'started', '')} {!personal_info}"> <i class="fa"></i> <span>Personal Information</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink value="/apex/apc_hf_app_family_profile?id={!ApplicantInfo.Id}" styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '003'), 'complete', '')} {!IF(contains(applicantinfo.PageStatus_Started__c, '003'), 'started', '')} {!your_household}"> <i class="fa"></i> <span>Your Household</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink value="/apex/apc_hf_app_interests?id={!ApplicantInfo.Id}" styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '004'), 'complete', '')} {!IF(contains(applicantinfo.PageStatus_Started__c, '004'), 'started', '')} {!interests}"> <i class="fa"></i> <span>Hobbies and Interests</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink value="/apex/apc_hf_app_essays?id={!ApplicantInfo.Id}" styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '005'), 'complete', '')} {!IF(contains(applicantinfo.PageStatus_Started__c, '005'), 'started', '')} {!essays}"> <i class="fa"></i> <span>Match Questions</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink value="/apex/apc_hf_app_employer?id={!ApplicantInfo.Id}" styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '007'), 'complete', '')} {!IF(contains(applicantinfo.PageStatus_Started__c, '007'), 'started', '')} {!employer}"> <i class="fa"></i> <span>Work Information</span> </apex:outputLink>
+        </li>
+         <li>
+          <apex:outputLink value="/apex/apc_hf_app_media?id={!ApplicantInfo.Id}&docType=Participant-Photo" styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '044'), 'complete', '')} {!IF(contains(applicantinfo.PageStatus_Started__c, '044'), 'started', '')} {!Photo_Uploads}"> <i class="fa"></i> <span>Photo Album</span> </apex:outputLink>
+        </li>
+        </ul>
+        </li>
+        
+         <li class="first-tier">
+        <div class="title">Additional Information</div>
+        <ul class="sec-tier ">
+        <li>
+          <apex:outputLink value="/apex/apc_hf_app_eligibility?id={!ApplicantInfo.Id}" styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '002'), 'complete', '')} {!IF(contains(applicantinfo.PageStatus_Started__c, '002'), 'started', '')} {!eligibility}"> <i class="fa"></i> <span>Eligibility</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink value="/apex/apc_hf_app_program_pref?id={!ApplicantInfo.Id}" styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '006'), 'complete', '')} {!IF(contains(applicantinfo.PageStatus_Started__c, '006'), 'started', '')} {!program_pref}"> <i class="fa"></i> <span>Childcare Needs</span> </apex:outputLink>
+        </li>
+        <apex:outputText rendered="{!ApplicantInfo.Application_Type__c=='Original'}">
+          <li>
+            <apex:outputLink value="/apex/apc_hf_app_references?id={!ApplicantInfo.Id}" styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '009'), 'complete', '')} {!IF(contains(applicantinfo.PageStatus_Started__c, '009'), 'started', '')} {!references}"> <i class="fa"></i> <span>References</span> </apex:outputLink>
+          </li>
+        </apex:outputText>
+         <li>
+          <apex:outputLink value="/apex/apc_hf_app_interview_status?id={!ApplicantInfo.Id}" styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '045'), 'complete', '')} {!IF(contains(applicantinfo.PageStatus_Started__c, '045'), 'started', '')} {!Reference_Inter}"> <i class="fa"></i> <span>In-Home Interview</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink value="/apex/apc_hf_app_agreements?id={!ApplicantInfo.Id}" styleClass="{!IF(ApplicantInfo.Terms_Accepted__c==True || $CurrentPage.parameters.event='SignComplete', 'complete', '')} {!agreements}"> <i class="fa"></i> <span>Program Agreements</span> </apex:outputLink>
+        </li>
+        </ul>
+        </li>
+      </ul>
+    </apex:outputText>
+    
+    
+     <!-- Main App Menu "RENEWAL"  -->
+    
+   <apex:outputText rendered="{!ApplicantInfo.Application_Level__c == 'Main' && ( ApplicantInfo.Application_Type__c=='Renewal' || ApplicantInfo.Application_Type__c=='Rematch')}">
+      <ul class="nav nav-list vs1 non-linear">
+        <li>
+          <apex:outputLink value="/apex/apc_hf_app_personal_info?id={!ApplicantInfo.Id}" styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '001'), 'complete', '')} {!IF(contains(applicantinfo.PageStatus_Started__c, '001'), 'started', '')} {!personal_info}"> <i class="fa"></i> <span>Personal Information</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink value="/apex/apc_hf_app_family_profile?id={!ApplicantInfo.Id}" styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '003'), 'complete', '')} {!IF(contains(applicantinfo.PageStatus_Started__c, '003'), 'started', '')} {!your_household}"> <i class="fa"></i> <span>Your Household</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink value="/apex/apc_hf_app_interests?id={!ApplicantInfo.Id}" styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '004'), 'complete', '')} {!IF(contains(applicantinfo.PageStatus_Started__c, '004'), 'started', '')} {!interests}"> <i class="fa"></i> <span>Hobbies and Interests</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink value="/apex/apc_hf_app_essays?id={!ApplicantInfo.Id}" styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '005'), 'complete', '')} {!IF(contains(applicantinfo.PageStatus_Started__c, '005'), 'started', '')} {!essays}"> <i class="fa"></i> <span>Match Questions</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink value="/apex/apc_hf_app_employer?id={!ApplicantInfo.Id}" styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '007'), 'complete', '')} {!IF(contains(applicantinfo.PageStatus_Started__c, '007'), 'started', '')} {!employer}"> <i class="fa"></i> <span>Work Information</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink value="/apex/apc_hf_app_media?id={!ApplicantInfo.Id}&docType=Participant-Photo" styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '044'), 'complete', '')} {!IF(contains(applicantinfo.PageStatus_Started__c, '044'), 'started', '')} {!Photo_Uploads}"> <i class="fa"></i> <span>Photo Album</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink value="/apex/apc_hf_app_eligibility?id={!ApplicantInfo.Id}" styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '002'), 'complete', '')} {!IF(contains(applicantinfo.PageStatus_Started__c, '002'), 'started', '')} {!eligibility}"> <i class="fa"></i> <span>Eligibility</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink value="/apex/apc_hf_app_program_pref?id={!ApplicantInfo.Id}" styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '006'), 'complete', '')} {!IF(contains(applicantinfo.PageStatus_Started__c, '006'), 'started', '')} {!program_pref}"> <i class="fa"></i> <span>Childcare Needs</span> </apex:outputLink>
+        </li>
+        <apex:outputText rendered="{!ApplicantInfo.Application_Type__c=='Original'}">
+          <li>
+            <apex:outputLink value="/apex/apc_hf_app_references?id={!ApplicantInfo.Id}" styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '009'), 'complete', '')} {!IF(contains(applicantinfo.PageStatus_Started__c, '009'), 'started', '')} {!references}"> <i class="fa"></i> <span>References</span> </apex:outputLink>
+          </li>
+        </apex:outputText>
+        <li>
+          <apex:outputLink value="/apex/apc_hf_app_agreements?id={!ApplicantInfo.Id}" styleClass="{!IF(ApplicantInfo.Terms_Accepted__c==True || $CurrentPage.parameters.event='SignComplete', 'complete', '')} {!agreements}"> <i class="fa"></i> <span>Program Agreements</span> </apex:outputLink>
+        </li>
+      </ul>
+    </apex:outputText>    
+    
+    <!-- Main App Menu "EXTENSION" -->
+    
+    <apex:outputText rendered="{!ApplicantInfo.Application_Level__c == 'Main' && (ApplicantInfo.Application_Type__c=='Extension')}">
+      <ul class="nav nav-list vs1 linear">
+        <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '008'), 'complete', '')} {!extension}" value="/apex/apc_hf_app_extension_pref?id={!ApplicantInfo.Id}">
+            <apex:outputText rendered="{!IF(CONTAINS(applicantinfo.PageStatus_Complete__c,'008'),'true','false')}"> <i class="fa"></i> </apex:outputText>
+            <span>Extension Preferences</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '001'), 'complete', '')} {!personal_info}" 
+            disabled="{! IF(contains(applicantinfo.PageStatus_Complete__c, '008'), 'false', 'true')}" value="/apex/apc_hf_app_personal_info?id={!ApplicantInfo.Id}">
+            <apex:outputText rendered="{!IF(CONTAINS(applicantinfo.PageStatus_Complete__c,'001'),'true','false')}"> <i class="fa"></i> </apex:outputText>
+            <span>Personal Information</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '003'), 'complete', '')} {!your_household}" 
+            disabled="{! IF(contains(applicantinfo.PageStatus_Complete__c, '001'), 'false', 'true')}" value="/apex/apc_hf_app_family_profile?id={!ApplicantInfo.Id}">
+            <apex:outputText rendered="{!IF(CONTAINS(applicantinfo.PageStatus_Complete__c,'003'),'true','false')}"> <i class="fa"></i> </apex:outputText>
+            <span>Your Household</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '007'), 'complete', '')} {!employer}" 
+                disabled="{! IF(contains(applicantinfo.PageStatus_Complete__c, '003'), 'false', 'true')}" value="/apex/apc_hf_app_employer?id={!ApplicantInfo.Id}">
+            <apex:outputText rendered="{!IF(CONTAINS(applicantinfo.PageStatus_Complete__c,'007'),'true','false')}"> <i class="fa"></i> </apex:outputText>
+            <span>Work Information</span> </apex:outputLink>
+        </li>
+           <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '044'), 'complete', '')} {!Photo_Uploads}" 
+                disabled="{! IF(contains(applicantinfo.PageStatus_Complete__c, '007'), 'false', 'true')}" value="/apex/apc_hf_app_media?id={!ApplicantInfo.Id}&docType=Participant-Photo">
+            <apex:outputText rendered="{!IF(CONTAINS(applicantinfo.PageStatus_Complete__c,'044'),'true','false')}"> <i class="fa"></i> </apex:outputText>
+            <span>Photo Album</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '002'), 'complete', '')} {!eligibility}" 
+             disabled="{! IF(contains(applicantinfo.PageStatus_Complete__c, '044'), 'false', 'true')}" value="/apex/apc_hf_app_eligibility?id={!ApplicantInfo.Id}">
+            <apex:outputText rendered="{!IF(CONTAINS(applicantinfo.PageStatus_Complete__c,'002'),'true','false')}"> <i class="fa"></i> </apex:outputText>
+            <span>Eligibility</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink disabled="{! IF(contains(applicantinfo.PageStatus_Complete__c, '002'), 'false', 'true')}" styleClass="{!IF(ApplicantInfo.Terms_Accepted__c==True || $CurrentPage.parameters.event='SignComplete', 'complete', '')} {!agreements}" value="/apex/apc_hf_app_agreements?id={!ApplicantInfo.Id}"> <i class="fa"></i> <span>Program Agreements</span> </apex:outputLink>
+        </li>
+        
+        <apex:outputText rendered="{!ApplicantInfo.Extension_DOS_Fee_Indicated__c == 'Yes'}">
+        <li>
+            <apex:outputLink disabled="{! IF(ApplicantInfo.Terms_Accepted__c==True, 'false', 'true')}" styleClass="{!paymentpage}"
+            value="/apex/apc_hf_app_payment?id={!ApplicantInfo.Id}"> <span>Payment</span> </apex:outputLink>
+            <!-- 
+            <apex:outputLink disabled="{! IF(contains(applicantinfo.PageStatus_Complete__c, '002'), 'false', 'true')}" styleClass="{!paymentpage}"
+            value="/apex/apc_hf_app_payment?id={!ApplicantInfo.Id}"> <span>Payment</span> </apex:outputLink>
+             -->
+          </li>
+         </apex:outputText>
+          
+      </ul>
+    </apex:outputText>
+    
+       <!-- 
+    <apex:outputPanel layout="block" rendered="{!(ApplicantInfo.Terms_Accepted__c==true || $CurrentPage.parameters.event='SignComplete')
+                                && IF(CONTAINS(applicantinfo.PageStatus_Complete__c,'001'),true,false) && IF(CONTAINS(applicantinfo.PageStatus_Complete__c,'002'),true,false)
+                                && IF(CONTAINS(applicantinfo.PageStatus_Complete__c,'003'),true,false) && IF(CONTAINS(applicantinfo.PageStatus_Complete__c,'004'),true,false)
+                                && IF(CONTAINS(applicantinfo.PageStatus_Complete__c,'005'),true,false) && IF(CONTAINS(applicantinfo.PageStatus_Complete__c,'006'),true,false)
+                                && IF(CONTAINS(applicantinfo.PageStatus_Complete__c,'007'),true,false) && IF(CONTAINS(applicantinfo.PageStatus_Complete__c,'009'),true,false)
+                                && ApplicantInfo.Application_Type__c=='Original' }"> 
+            <apex:commandlink styleClass="btn btn-primary btn-block btn-lg" style="background-color: #C80000; border-color: #C80000;" action="{!SubmitApp}" id="nextlink" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+            <apex:param name="nextPage" value="/apex/apc_hf_app_completion" />
+            <apex:param name="reDirectPage" value="true" />
+            <apex:param name="viewpage" value="true" />
+            <apex:commandButton value="Submit Application" id="continueButton" /> 
+            </apex:commandlink>         
+    </apex:outputPanel>
+    
+    
+    <apex:outputPanel layout="block" rendered="{!(ApplicantInfo.Terms_Accepted__c==true || $CurrentPage.parameters.event='SignComplete') && checkReference && NOT(ISBLANK(applicantInfo.Aupair_Preferences__c))
+                                && NOT(ISBLANK(personInfo.Citizenship_Resident_Indicated__c)) && NOT(ISBLANK(applicantInfo.AuPairsResponsibilities__c))
+                                && checkEssay && NOT(ISBLANK(applicantInfo.Interest_Sports__c)) && NOT(ISBLANK(personInfo.Marital_Status__c))
+                                && NOT(ISBLANK(applicantInfo.Home_State__c)) && ApplicantInfo.Application_Type__c=='Original' }"> 
+            <apex:commandlink styleClass="btn btn-primary btn-block btn-lg" style="background-color: #C80000; border-color: #C80000;" action="{!SubmitApp}" id="nextlink" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+            <apex:param name="nextPage" value="/apex/apc_hf_app_completion" />
+            <apex:param name="reDirectPage" value="true" />
+            <apex:param name="viewpage" value="true" />
+            <apex:commandButton value="Submit Application" id="continueButton" /> 
+            </apex:commandlink>         
+    </apex:outputPanel>
+     --> 
+      <!--
+    <apex:outputPanel layout="block" rendered="{!NOT(ApplicantInfo.Terms_Accepted__c==true && checkReference && NOT(ISBLANK(applicantInfo.Aupair_Preferences__c))
+                                && NOT(ISBLANK(personInfo.Citizenship_Resident_Indicated__c)) && NOT(ISBLANK(applicantInfo.AuPairsResponsibilities__c))
+                                && checkEssay && NOT(ISBLANK(applicantInfo.Interest_Sports__c)) && NOT(ISBLANK(personInfo.Marital_Status__c))
+                                && NOT(ISBLANK(applicantInfo.Home_State__c)) && ApplicantInfo.Application_Type__c=='Original' ) }">
+    <button class="btn btn-block btn-default btn-lg" id="nosubmit" disabled="disabled">Submit Application</button>
+    </apex:outputPanel>  
+      --> 
+      
+    
+    
+    
+</apex:component>

@@ -1,0 +1,1031 @@
+<apex:page docType="html-5.0" title="Documents Checklist" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" 
+        id="igi_pt_app_documents" standardStylesheets="false" showHeader="false">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_igi_pt_application userAgentCheck="{!userAgentCheck}"/>
+      <div class="row">
+        <div class="col-md-7 col-md-push-3">
+        
+        	<c:block_app_completion_igi applicantInfo="{!applicantInfo}" isIGIMainReady="{!CheckMainIGIApp}"/>
+        	
+          <h1>Document Checklist</h1>
+          <p class="lead">If you do not upload required items before submitting the application, you will need to do so before we can accept it.</p>
+          <apex:form id="webform" styleClass="form-vertical ws-validate" >
+            <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+            <apex:variable var="passport" value="{!IF(DocTypeList != NULL && DocTypeList['Passport'] == '1', 'complete', 'incomplete')}" />
+            <apex:variable var="resume"  value="{!IF(DocTypeList != NULL && DocTypeList['Resume'] == '1', 'complete', 'incomplete')}" />
+            <apex:variable var="joboffer"  value="{!IF(DocTypeList != NULL && DocTypeList['Offer-Document'] == '1', 'complete', 'incomplete')}" />
+            <!-- <apex:variable var="tplanHC"  value="{!IF(DocTypeList != NULL && DocTypeList['DS-7002-(Company-Signature)'] == '1', 'complete', 'incomplete')}" />
+            <apex:variable var="tplanPT"  value="{!IF(DocTypeList != NULL && DocTypeList['DS-7002-(Participant-Signature)'] == '1', 'complete', 'incomplete')}" />
+            -->
+            <apex:variable var="tplanComplete"  value="{!IF(DocTypeList != NULL && DocTypeList['DS-7002-(Complete)'] == '1', 'complete', 'incomplete')}" />
+            <apex:variable var="financial"  value="{!IF(DocTypeList != NULL && DocTypeList['FinancialResponsibility'] == '1', 'complete', 'incomplete')}" />
+            <apex:variable var="eligibility"  value="{!IF(DocTypeList != NULL && DocTypeList['Participant-Eligibility-Form'] == '1', 'complete', 'incomplete')}" />
+            <apex:variable var="orientation"  value="{!IF(DocTypeList != NULL && DocTypeList['Pre-Departure-Orientation-Agreement'] == '1', 'complete', 'incomplete')}" />
+            <apex:variable var="diploma"  value="{!IF(DocTypeList != NULL && DocTypeList['University-Diploma'] == '1', 'complete', 'incomplete')}" />
+            <apex:variable var="language"  value="{!IF(DocTypeList != NULL && DocTypeList['Proof-of-Language-Level'] == '1', 'complete', 'incomplete')}" />
+            <apex:variable var="transcript"  value="{!IF(DocTypeList != NULL && DocTypeList['Transcripts'] == '1', 'complete', 'incomplete')}" />
+            <apex:variable var="interview"  value="{!IF(DocTypeList != NULL && DocTypeList['Interview-Document'] == '1', 'complete', 'incomplete')}" />
+            <apex:variable var="ds7002"  value="{!IF(DocTypeList != NULL && DocTypeList['DS-7002-(Complete)'] == '1', 'complete', 'incomplete')}" />
+            <apex:variable var="priorVisa"  value="{!IF(DocTypeList != NULL && DocTypeList['Previous-Visa'] == '1', 'complete', 'incomplete')}" />
+            <apex:variable var="university"  value="{!IF(DocTypeList != NULL && DocTypeList['University-Letter'] == '1', 'complete', 'incomplete')}" />
+            <apex:variable var="universityTrans"  value="{!IF(DocTypeList != NULL && DocTypeList['University-Letter-Translation'] == '1', 'complete', 'incomplete')}" />
+            <apex:variable var="recommendation"  value="{!IF(DocTypeList != NULL && DocTypeList['Letter-of-Recommendation'] == '1', 'complete', 'incomplete')}" />
+            <apex:variable var="termsConditions"  value="{!IF(DocTypeList != NULL && DocTypeList['Terms-and-Conditions'] == '1', 'complete', 'incomplete')}" />
+            <apex:variable var="business_inbound" value="{!IF(OR(applicantInfo.Intrax_Program_Category__c == 'Business', applicantInfo.Intrax_Program_Category__c == 'Engineering', applicantInfo.Intrax_Program_Category__c == 'Information Media & Communications',applicantInfo.Intrax_Program_Category__c == 'Public Administration & Law') && applicantInfo.Visa_Type__c = 'J-1', true, false)}"/>
+            <apex:variable var="business_outbound" value="{!IF(OR(applicantInfo.Intrax_Program_Category__c == 'Business', applicantInfo.Intrax_Program_Category__c == 'Engineering', applicantInfo.Intrax_Program_Category__c == 'Information Media & Communications',applicantInfo.Intrax_Program_Category__c == 'Public Administration & Law') && applicantInfo.Visa_Type__c = 'F-1', true, false)}"/>
+            <div id="uploadlist">
+             
+              <apex:outputPanel styleClass="{!passport} panel panel-default" layout="block" rendered="{! IF(OR(applicantInfo.Intrax_Program_Category__c == 'Hospitality & Tourism', business_inbound), TRUE, FALSE)}">
+                <div class="panel-body">
+                  <div class="docupload-top">
+                    <apex:commandlink id="passportLink"	styleClass="btn btn-link btn-lg" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit" >
+                      <apex:param name="doctype2" value="Passport"/>
+                      <i class="fa fa-plus-circle"></i> <span>Upload Passport</span> </apex:commandlink>
+                    <apex:outputPanel layout="block" rendered="{!passport == 'complete'}" styleClass="docupload-complete" > <span>Completed <i class="fa fa-check"></i></span><a data-toggle="collapse" data-target=".passport">View Uploads</a> </apex:outputPanel>
+                  </div>
+                  <!--  end docupload top -->
+                  <div class="docupload-bttm">
+                    <apex:outputPanel layout="block" styleClass="passport margin-t collapse" rendered="{!passport == 'complete'}">
+                      <apex:pageBlock id="Block_ListPassport">
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>File Name</th>
+                                <th>Remove</th>
+                              </tr>
+                            </thead>
+                            <apex:repeat value="{!DocList}" var="item">
+                              <apex:outputPanel rendered="{!IF(item.Document_Type__c == 'Passport', true, false)}">
+                                <tr>
+                                  <td><apex:commandLink action="{!load}" target="_blank" >
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                      <apex:outputText value="{!item.Document_Name__c}"/>
+                                    </apex:commandLink></td>
+                                  <td><apex:commandLink action="{!iWantMyJSValues}" styleClass="btn-lg" oncomplete="confDelete();" immediate="true" > <i class="fa fa-trash-o"></i>
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}" assignTo="{!docGuid}"/>
+                                    </apex:commandLink></td>
+                                </tr>
+                              </apex:outputPanel>
+                            </apex:repeat>
+                          </table>
+                        </div>
+                        <!--  end table responsive --> 
+                      </apex:pageBlock>
+                    </apex:outputPanel>
+                    <!--  table of uploads --> 
+                    
+                  </div>
+                  <!--  end docupload bttm --> 
+                </div>
+                <!--  end panel body --> 
+              </apex:outputPanel>
+              <!--  end passport upload section -->
+              
+              <apex:outputPanel layout="block" styleClass="{!resume} panel panel-default" rendered="{! IF(OR(applicantInfo.Intrax_Program_Category__c == 'Social Development', applicantInfo.Intrax_Program_Category__c == 'Hospitality & Tourism', business_inbound), TRUE, FALSE)}">
+                <div class="panel-body">
+                  <div class="docupload-top">
+                    <apex:commandlink id="resumeLink" styleClass="btn btn-link btn-lg" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit">
+                      <apex:param name="doctype2" value="Resume"/>
+                      <i class="fa fa-plus-circle"></i> <span>Upload Your Resume</span> </apex:commandlink>
+                    <apex:outputPanel layout="block" rendered="{!resume == 'complete'}" styleClass="docupload-complete" > <span>Completed <i class="fa fa-check"></i></span><a data-toggle="collapse" data-target=".resume">View Uploads</a> </apex:outputPanel>
+                  </div>
+                  <!--  doc upload top -->
+                  <div class="docupload-bttm">
+                    <apex:outputPanel styleClass="resume margin-t collapse" layout="block" rendered="{!resume == 'complete'}">
+                      <apex:pageBlock id="Block_ListResume">
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>File Name</th>
+                                <th>Remove</th>
+                              </tr>
+                            </thead>
+                            <apex:repeat value="{!DocList}" var="item">
+                              <apex:outputPanel rendered="{!IF(item.Document_Type__c == 'Resume', true, false)}">
+                                <tr>
+                                  <td><apex:commandLink action="{!load}" target="_blank" >
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                      <apex:outputText value="{!item.Document_Name__c}"/>
+                                    </apex:commandLink></td>
+                                  <td><apex:commandLink action="{!iWantMyJSValues}" styleClass="btn-lg" oncomplete="confDelete();" immediate="true" > <i class="fa fa-trash-o"></i>
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}" assignTo="{!docGuid}"/>
+                                    </apex:commandLink></td>
+                                </tr>
+                              </apex:outputPanel>
+                            </apex:repeat>
+                          </table>
+                        </div>
+                        <!--  end table responsive --> 
+                      </apex:pageBlock>
+                    </apex:outputPanel>
+                    <!--  table of uploads --> 
+                    
+                  </div>
+                  <!--  end docupload bttm --> 
+                </div>
+                <!--  end panel body --> 
+              </apex:outputPanel>
+              <!--  end panel -->
+              
+              
+              <!--  end panel -->
+               
+              <apex:outputPanel layout="block" styleClass="{!diploma} panel panel-default" rendered="{! IF(applicantInfo.Intrax_Program_Category__c == 'Hospitality & Tourism', TRUE, FALSE)}">
+                <div class="panel-body">
+                  <div class="docupload-top">
+                    <apex:commandlink id="diplomaLink" 
+                      						styleClass="btn btn-link btn-lg" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit">
+                      <apex:param name="doctype2" value="University-Diploma"/>
+                      <i class="fa fa-plus-circle"></i> <span>Upload Diploma/Certificate of Graduation</span> </apex:commandlink>
+                    <apex:outputPanel layout="block" rendered="{!diploma == 'complete'}" styleClass="docupload-complete" > <span>Completed <i class="fa fa-check"></i></span><a data-toggle="collapse" data-target=".diploma">View Uploads</a> </apex:outputPanel>
+                  </div>
+                  <!--  doc upload top -->
+                  <div class="docupload-bttm">
+                    <apex:outputPanel styleClass="diploma margin-t collapse" layout="block" rendered="{!diploma == 'complete'}">
+                      <apex:pageBlock id="Block_ListUnivDiploma">
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>File Name</th>
+                                <th>Remove</th>
+                              </tr>
+                            </thead>
+                            <apex:repeat value="{!DocList}" var="item">
+                              <apex:outputPanel rendered="{!IF(item.Document_Type__c == 'University-Diploma', true, false)}">
+                                <tr>
+                                  <td><apex:commandLink action="{!load}" target="_blank" >
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                      <apex:outputText value="{!item.Document_Name__c}"/>
+                                    </apex:commandLink></td>
+                                  <td><apex:commandLink action="{!iWantMyJSValues}" styleClass="btn-lg" oncomplete="confDelete();" immediate="true" > <i class="fa fa-trash-o"></i>
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}" assignTo="{!docGuid}"/>
+                                    </apex:commandLink></td>
+                                </tr>
+                              </apex:outputPanel>
+                            </apex:repeat>
+                          </table>
+                        </div>
+                        <!--  end table responsive --> 
+                      </apex:pageBlock>
+                    </apex:outputPanel>
+                    <!--  table of uploads --> 
+                  </div>
+                  <!--  end docupload bttm --> 
+                </div>
+                <!--  end panel body --> 
+              </apex:outputPanel>
+              <!--  end panel -->
+              
+              <apex:outputPanel layout="block" styleClass="{!language} panel panel-default" rendered="{! IF(OR(applicantInfo.Intrax_Program_Category__c == 'Hospitality & Tourism', business_inbound), TRUE, FALSE)}">
+                <div class="panel-body">
+                  <div class="docupload-top">
+                    <apex:commandlink id="languageReqLink" 
+                      						styleClass="btn btn-link btn-lg" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit">
+                      <apex:param name="doctype2" value="Proof-of-Language-Level"/>
+                      <i class="fa fa-plus-circle"></i> <span>Upload Proof of Language Level</span> </apex:commandlink>
+                    <apex:outputPanel layout="block" rendered="{!language == 'complete'}" styleClass="docupload-complete" > <span>Completed <i class="fa fa-check"></i></span><a data-toggle="collapse" data-target=".language">View Uploads</a> </apex:outputPanel>
+                  </div>
+                  <!--  doc upload top -->
+                  <div class="docupload-bttm">
+                    <apex:outputPanel styleClass="language margin-t collapse" layout="block" rendered="{!language == 'complete'}">
+                      <apex:pageBlock id="Block_ListProofLanguageReq">
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>File Name</th>
+                                <th>Remove</th>
+                              </tr>
+                            </thead>
+                            <apex:repeat value="{!DocList}" var="item">
+                              <apex:outputPanel rendered="{!IF(item.Document_Type__c == 'Proof-of-Language-Level', true, false)}">
+                                <tr>
+                                  <td><apex:commandLink action="{!load}" target="_blank" >
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                      <apex:outputText value="{!item.Document_Name__c}"/>
+                                    </apex:commandLink></td>
+                                  <td><apex:commandLink action="{!iWantMyJSValues}" styleClass="btn-lg" oncomplete="confDelete();" immediate="true" > <i class="fa fa-trash-o"></i>
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}" assignTo="{!docGuid}"/>
+                                    </apex:commandLink></td>
+                                </tr>
+                              </apex:outputPanel>
+                            </apex:repeat>
+                          </table>
+                        </div>
+                        <!--  end table responsive --> 
+                      </apex:pageBlock>
+                    </apex:outputPanel>
+                    <!--  table of uploads --> 
+                  </div>
+                  <!--  end docupload bttm --> 
+                </div>
+                <!--  end panel body --> 
+              </apex:outputPanel>
+              <!--  end panel -->
+              
+              
+           
+           <div class="section-title">Optional Documents</div>
+           
+           <apex:outputPanel layout="block" styleClass="{!resume} panel panel-default" rendered="{! IF(OR(applicantInfo.Intrax_Program_Category__c == 'Practical Training', business_outbound), TRUE, FALSE)}">
+                <div class="panel-body">
+                  <div class="docupload-top">
+                    <apex:commandlink id="resumeOptLink" styleClass="btn btn-link btn-lg" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit">
+                      <apex:param name="doctype2" value="Resume"/>
+                      <i class="fa fa-plus-circle"></i> <span>Upload Your Resume</span> </apex:commandlink>
+                    <apex:outputPanel layout="block" rendered="{!resume == 'complete'}" styleClass="docupload-complete" > <span>Completed <i class="fa fa-check"></i></span><a data-toggle="collapse" data-target=".resume">View Uploads</a> </apex:outputPanel>
+                  </div>
+                  <!--  doc upload top -->
+                  <div class="docupload-bttm">
+                    <apex:outputPanel styleClass="resume margin-t collapse" layout="block" rendered="{!resume == 'complete'}">
+                      <apex:pageBlock id="Block_ListResumeOpt">
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>File Name</th>
+                                <th>Remove</th>
+                              </tr>
+                            </thead>
+                            <apex:repeat value="{!DocList}" var="item">
+                              <apex:outputPanel rendered="{!IF(item.Document_Type__c == 'Resume', true, false)}">
+                                <tr>
+                                  <td><apex:commandLink action="{!load}" target="_blank" >
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                      <apex:outputText value="{!item.Document_Name__c}"/>
+                                    </apex:commandLink></td>
+                                  <td><apex:commandLink action="{!iWantMyJSValues}" styleClass="btn-lg" oncomplete="confDelete();" immediate="true" > <i class="fa fa-trash-o"></i>
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}" assignTo="{!docGuid}"/>
+                                    </apex:commandLink></td>
+                                </tr>
+                              </apex:outputPanel>
+                            </apex:repeat>
+                          </table>
+                        </div>
+                        <!--  end table responsive --> 
+                      </apex:pageBlock>
+                    </apex:outputPanel>
+                    <!--  table of uploads --> 
+                    
+                  </div>
+                  <!--  end docupload bttm --> 
+                </div>
+                <!--  end panel body --> 
+              </apex:outputPanel>
+              
+              <!--  end panel -->
+           <apex:outputPanel layout="block" styleClass="{!joboffer} panel panel-default" rendered="{! IF(OR(applicantInfo.Intrax_Program_Category__c == 'Hospitality & Tourism', business_inbound), TRUE, FALSE)}">
+                <div class="panel-body">
+                  <div class="docupload-top">
+                    <apex:commandlink id="offerDocLink" styleClass="btn btn-link btn-lg" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit">
+                      <apex:param name="doctype2" value="Offer-Document"/>
+                      <i class="fa fa-plus-circle"></i> <span>Upload Job Offer Document</span> </apex:commandlink>
+                    <apex:outputPanel layout="block" rendered="{!joboffer == 'complete'}" styleClass="docupload-complete" > <span>Completed <i class="fa fa-check"></i></span><a data-toggle="collapse" data-target=".joboffer">View Uploads</a> </apex:outputPanel>
+                  </div>
+                  <!--  doc upload top -->
+                  <div class="docupload-bttm">
+                    <apex:outputPanel styleClass="joboffer margin-t collapse" layout="block" rendered="{!joboffer == 'complete'}">
+                      <apex:pageBlock id="Block_ListOfferDocs">
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>File Name</th>
+                                <th>Remove</th>
+                              </tr>
+                            </thead>
+                            <apex:repeat value="{!DocList}" var="item">
+                              <apex:outputPanel rendered="{!IF(item.Document_Type__c == 'Offer-Document', true, false)}">
+                                <tr>
+                                  <td><apex:commandLink action="{!load}" target="_blank" >
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                      <apex:outputText value="{!item.Document_Name__c}"/>
+                                    </apex:commandLink></td>
+                                  <td><apex:commandLink action="{!iWantMyJSValues}" styleClass="btn-lg" oncomplete="confDelete();" immediate="true" > <i class="fa fa-trash-o"></i>
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}" assignTo="{!docGuid}"/>
+                                    </apex:commandLink></td>
+                                </tr>
+                              </apex:outputPanel>
+                            </apex:repeat>
+                          </table>
+                        </div>
+                        <!--  end table responsive --> 
+                      </apex:pageBlock>
+                    </apex:outputPanel>
+                    <!--  table of uploads --> 
+                  </div>
+                  <!--  end docupload bttm --> 
+                  
+                </div>
+                <!--  end panel body --> 
+              </apex:outputPanel>
+                           
+           <apex:outputPanel layout="block" styleClass="{!financial} panel panel-default" rendered="{! IF(OR(applicantInfo.Intrax_Program_Category__c == 'Hospitality & Tourism', business_inbound), TRUE, FALSE)}">
+                <div class="panel-body">
+                  <div class="docupload-top">
+                    <apex:commandlink id="financialLink" 
+                      						styleClass="btn btn-link btn-lg" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit">
+                      <apex:param name="doctype2" value="FinancialResponsibility"/>
+                      <i class="fa fa-plus-circle"></i> <span>Upload Proof of Financial Responsibility</span> </apex:commandlink>
+                    <apex:outputPanel layout="block" rendered="{!financial == 'complete'}" styleClass="docupload-complete" > <span>Completed <i class="fa fa-check"></i></span><a data-toggle="collapse" data-target=".financial">View Uploads</a> </apex:outputPanel>
+                  </div>
+                  <!--  doc upload top -->
+                  <div class="docupload-bttm">
+                    <apex:outputPanel styleClass="financial margin-t collapse" layout="block" rendered="{!financial == 'complete'}">
+                      <apex:pageBlock id="Block_ListFinancialResponsibility">
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>File Name</th>
+                                <th>Remove</th>
+                              </tr>
+                            </thead>
+                            <apex:repeat value="{!DocList}" var="item">
+                              <apex:outputPanel rendered="{!IF(item.Document_Type__c == 'FinancialResponsibility', true, false)}">
+                                <tr>
+                                  <td><apex:commandLink action="{!load}" target="_blank" >
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                      <apex:outputText value="{!item.Document_Name__c}"/>
+                                    </apex:commandLink></td>
+                                  <td><apex:commandLink action="{!iWantMyJSValues}" styleClass="btn-lg" oncomplete="confDelete();" immediate="true" > <i class="fa fa-trash-o"></i>
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}" assignTo="{!docGuid}"/>
+                                    </apex:commandLink></td>
+                                </tr>
+                              </apex:outputPanel>
+                            </apex:repeat>
+                          </table>
+                        </div>
+                        <!--  end table responsive --> 
+                      </apex:pageBlock>
+                    </apex:outputPanel>
+                    <!--  table of uploads --> 
+                  </div>
+                  <!--  end docupload bttm --> 
+                </div>
+                <!--  end panel body --> 
+              </apex:outputPanel>
+              <!--  end panel -->
+              
+              <apex:outputPanel layout="block" styleClass="{!interview} panel panel-default" rendered="{! IF(OR(applicantInfo.Intrax_Program_Category__c == 'Social Development', applicantInfo.Intrax_Program_Category__c == 'Hospitality & Tourism', business_inbound), TRUE, FALSE)}">
+                <div class="panel-body">
+                  <div class="docupload-top">
+                    <apex:commandlink id="interviewLink" 
+                      						styleClass="btn btn-link btn-lg" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit">
+                      <apex:param name="doctype2" value="Interview-Document"/>
+                      <i class="fa fa-plus-circle"></i> <span>Interview Document</span> </apex:commandlink>
+                    <apex:outputPanel layout="block" rendered="{!interview == 'complete'}" styleClass="docupload-complete" > <span>Completed <i class="fa fa-check"></i></span><a data-toggle="collapse" data-target=".interview">View Uploads</a> </apex:outputPanel>
+                  </div>
+                  <!--  doc upload top -->
+                  <div class="docupload-bttm">
+                    <apex:outputPanel styleClass="interview margin-t collapse" layout="block" rendered="{!interview == 'complete'}">
+                      <apex:pageBlock id="Block_InterviewResponsibility">
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>File Name</th>
+                                <th>Remove</th>
+                              </tr>
+                            </thead>
+                            <apex:repeat value="{!DocList}" var="item">
+                              <apex:outputPanel rendered="{!IF(item.Document_Type__c == 'Interview-Document', true, false)}">
+                                <tr>
+                                  <td><apex:commandLink action="{!load}" target="_blank" >
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                      <apex:outputText value="{!item.Document_Name__c}"/>
+                                    </apex:commandLink></td>
+                                  <td><apex:commandLink action="{!iWantMyJSValues}" styleClass="btn-lg" oncomplete="confDelete();" immediate="true" > <i class="fa fa-trash-o"></i>
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}" assignTo="{!docGuid}"/>
+                                    </apex:commandLink></td>
+                                </tr>
+                              </apex:outputPanel>
+                            </apex:repeat>
+                          </table>
+                        </div>
+                        <!--  end table responsive --> 
+                      </apex:pageBlock>
+                    </apex:outputPanel>
+                    <!--  table of uploads --> 
+                  </div>
+                  <!--  end docupload bttm --> 
+                </div>
+                <!--  end panel body --> 
+              </apex:outputPanel>
+              <!--  end panel -->
+              
+              <apex:outputPanel layout="block" styleClass="{!ds7002} panel panel-default" rendered="{! IF( business_inbound, TRUE, FALSE)}">
+                <div class="panel-body">
+                  <div class="docupload-top">
+                    <apex:commandlink id="ds7002Link" 
+                      						styleClass="btn btn-link btn-lg" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit">
+                      <apex:param name="doctype2" value="DS-7002-(Complete)"/>
+                      <i class="fa fa-plus-circle"></i> <span>Upload Completed DS-7002</span> </apex:commandlink>
+                    <apex:outputPanel layout="block" rendered="{!ds7002 == 'complete'}" styleClass="docupload-complete" > <span>Completed <i class="fa fa-check"></i></span><a data-toggle="collapse" data-target=".ds7002">View Uploads</a> </apex:outputPanel>
+                  </div>
+                  <!--  doc upload top -->
+                  <div class="docupload-bttm">
+                    <apex:outputPanel styleClass="ds7002 margin-t collapse" layout="block" rendered="{!ds7002 == 'complete'}">
+                      <apex:pageBlock id="Block_ds7002">
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>File Name</th>
+                                <th>Remove</th>
+                              </tr>
+                            </thead>
+                            <apex:repeat value="{!DocList}" var="item">
+                              <apex:outputPanel rendered="{!IF(item.Document_Type__c == 'DS-7002-(Complete)', true, false)}">
+                                <tr>
+                                  <td><apex:commandLink action="{!load}" target="_blank" >
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                      <apex:outputText value="{!item.Document_Name__c}"/>
+                                    </apex:commandLink></td>
+                                  <td><apex:commandLink action="{!iWantMyJSValues}" styleClass="btn-lg" oncomplete="confDelete();" immediate="true" > <i class="fa fa-trash-o"></i>
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}" assignTo="{!docGuid}"/>
+                                    </apex:commandLink></td>
+                                </tr>
+                              </apex:outputPanel>
+                            </apex:repeat>
+                          </table>
+                        </div>
+                        <!--  end table responsive --> 
+                      </apex:pageBlock>
+                    </apex:outputPanel>
+                    <!--  table of uploads --> 
+                  </div>
+                  <!--  end docupload bttm --> 
+                </div>
+                <!--  end panel body --> 
+              </apex:outputPanel>
+              <!--  end panel -->
+              
+              <apex:outputPanel layout="block" styleClass="{!eligibility} panel panel-default" rendered="{! IF(OR(applicantInfo.Intrax_Program_Category__c == 'Hospitality & Tourism', business_inbound), TRUE, FALSE)}">
+                <div class="panel-body">
+                  <div class="docupload-top">
+                    <apex:commandlink id="eligibiltyLink" 
+                      						styleClass="btn btn-link btn-lg" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit">
+                      <apex:param name="doctype2" value="Participant-Eligibility-Form"/>
+                      <i class="fa fa-plus-circle"></i> <span>Upload Eligibility Form</span></apex:commandlink>
+                    <apex:outputPanel layout="block" rendered="{!eligibility == 'complete'}" styleClass="docupload-complete" > <span>Completed <i class="fa fa-check"></i></span><a data-toggle="collapse" data-target=".eligibility">View Uploads</a> </apex:outputPanel>
+                  </div>
+                  <!--  doc upload top -->
+                  <div class="docupload-bttm">
+                    <apex:outputPanel styleClass="eligibility margin-t collapse" layout="block" rendered="{!eligibility == 'complete'}">
+                      <apex:pageBlock id="Block_ListEligibilityForm">
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>File Name</th>
+                                <th>Remove</th>
+                              </tr>
+                            </thead>
+                            <apex:repeat value="{!DocList}" var="item">
+                              <apex:outputPanel rendered="{!IF(item.Document_Type__c == 'Participant-Eligibility-Form', true, false)}">
+                                <tr>
+                                  <td><apex:commandLink action="{!load}" target="_blank" >
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                      <apex:outputText value="{!item.Document_Name__c}"/>
+                                    </apex:commandLink></td>
+                                  <td><apex:commandLink action="{!iWantMyJSValues}" styleClass="btn-lg" oncomplete="confDelete();" immediate="true" > <i class="fa fa-trash-o"></i>
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}" assignTo="{!docGuid}"/>
+                                    </apex:commandLink></td>
+                                </tr>
+                              </apex:outputPanel>
+                            </apex:repeat>
+                          </table>
+                        </div>
+                        <!--  end table responsive --> 
+                      </apex:pageBlock>
+                    </apex:outputPanel>
+                    <!--  table of uploads --> 
+                  </div>
+                  <!--  end docupload bttm --> 
+                </div>
+                <!--  end panel body --> 
+              </apex:outputPanel>
+              <!--  end panel -->
+            
+            <apex:outputPanel styleClass="{!orientation} panel panel-default" layout="block" rendered="{! IF(business_inbound, TRUE, FALSE)}">
+                <div class="panel-body">
+                  <div class="docupload-top">
+                    <apex:commandlink id="orientationLink"
+                      						styleClass="btn btn-link btn-lg" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit" >
+                      <apex:param name="doctype2" value="Pre-Departure-Orientation-Agreement"/>
+                      <i class="fa fa-plus-circle"></i> <span>Upload Pre-Departure Orientation Agreement</span> </apex:commandlink>
+                    <apex:outputPanel layout="block" rendered="{!orientation == 'complete'}" styleClass="docupload-complete" > <span>Completed <i class="fa fa-check"></i></span><a data-toggle="collapse" data-target=".orientation">View Uploads</a> </apex:outputPanel>
+                  </div>
+                  <!--  end docupload top -->
+                  <div class="docupload-bttm">
+                    <apex:outputPanel layout="block" styleClass="orientation margin-t collapse" rendered="{!orientation == 'complete'}">
+                      <apex:pageBlock id="Block_Orientation">
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>File Name</th>
+                                <th>Remove</th>
+                              </tr>
+                            </thead>
+                            <apex:repeat value="{!DocList}" var="item">
+                              <apex:outputPanel rendered="{!IF(item.Document_Type__c == 'Pre-Departure-Orientation-Agreement', true, false)}">
+                                <tr>
+                                  <td><apex:commandLink action="{!load}" target="_blank" >
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                      <apex:outputText value="{!item.Document_Name__c}"/>
+                                    </apex:commandLink></td>
+                                  <td><apex:commandLink action="{!iWantMyJSValues}" styleClass="btn-lg" oncomplete="confDelete();" immediate="true" > <i class="fa fa-trash-o"></i>
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}" assignTo="{!docGuid}"/>
+                                    </apex:commandLink></td>
+                                </tr>
+                              </apex:outputPanel>
+                            </apex:repeat>
+                          </table>
+                        </div>
+                        <!--  end table responsive --> 
+                      </apex:pageBlock>
+                    </apex:outputPanel>
+                    <!--  table of uploads --> 
+                    
+                  </div>
+                  <!--  end docupload bttm --> 
+                </div>
+                <!--  end panel body --> 
+              </apex:outputPanel>
+              <!--  end orientation upload section --> 
+              
+              <apex:outputPanel styleClass="{!priorVisa} panel panel-default" layout="block" rendered="{! IF(OR(applicantInfo.Intrax_Program_Category__c == 'Business', applicantInfo.Intrax_Program_Category__c == 'Hospitality & Tourism'), TRUE, FALSE)}">
+                <div class="panel-body">
+                  <div class="docupload-top">
+                    <apex:commandlink id="priorVisaLink"
+                      						styleClass="btn btn-link btn-lg" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit" >
+                      <apex:param name="doctype2" value="Previous-Visa"/>
+                      <i class="fa fa-plus-circle"></i> <span>Upload Prior Visa</span> </apex:commandlink>
+                    <apex:outputPanel layout="block" rendered="{!priorVisa == 'complete'}" styleClass="docupload-complete" > <span>Completed <i class="fa fa-check"></i></span><a data-toggle="collapse" data-target=".priorVisa">View Uploads</a> </apex:outputPanel>
+                  </div>
+                  <!--  end docupload top -->
+                  <div class="docupload-bttm">
+                    <apex:outputPanel layout="block" styleClass="priorVisa margin-t collapse" rendered="{!priorVisa == 'complete'}">
+                      <apex:pageBlock id="Block_priorVisa">
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>File Name</th>
+                                <th>Remove</th>
+                              </tr>
+                            </thead>
+                            <apex:repeat value="{!DocList}" var="item">
+                              <apex:outputPanel rendered="{!IF(item.Document_Type__c == 'Previous-Visa', true, false)}">
+                                <tr>
+                                  <td><apex:commandLink action="{!load}" target="_blank" >
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                      <apex:outputText value="{!item.Document_Name__c}"/>
+                                    </apex:commandLink></td>
+                                  <td><apex:commandLink action="{!iWantMyJSValues}" styleClass="btn-lg" oncomplete="confDelete();" immediate="true" > <i class="fa fa-trash-o"></i>
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}" assignTo="{!docGuid}"/>
+                                    </apex:commandLink></td>
+                                </tr>
+                              </apex:outputPanel>
+                            </apex:repeat>
+                          </table>
+                        </div>
+                        <!--  end table responsive --> 
+                      </apex:pageBlock>
+                    </apex:outputPanel>
+                    <!--  table of uploads --> 
+                    
+                  </div>
+                  <!--  end docupload bttm --> 
+                </div>
+                <!--  end panel body --> 
+              </apex:outputPanel>
+              
+              <apex:outputPanel styleClass="{!university} panel panel-default" layout="block" rendered="{! IF(OR(business_inbound, applicantInfo.Intrax_Program_Category__c == 'Hospitality & Tourism', applicantInfo.Intrax_Program_Category__c == 'Social Development'), TRUE, FALSE)}">
+                <div class="panel-body">
+                  <div class="docupload-top">
+                    <apex:commandlink id="universityLink"
+                      						styleClass="btn btn-link btn-lg" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit" >
+                      <apex:param name="doctype2" value="University-Letter"/>
+                      <i class="fa fa-plus-circle"></i> <span>Upload University Letter / Transcript</span> </apex:commandlink>
+                    <apex:outputPanel layout="block" rendered="{!university == 'complete'}" styleClass="docupload-complete" > <span>Completed <i class="fa fa-check"></i></span><a data-toggle="collapse" data-target=".university">View Uploads</a> </apex:outputPanel>
+                  </div>
+                  <!--  end docupload top -->
+                  <div class="docupload-bttm">
+                    <apex:outputPanel layout="block" styleClass="university margin-t collapse" rendered="{!university == 'complete'}">
+                      <apex:pageBlock id="Block_university">
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>File Name</th>
+                                <th>Remove</th>
+                              </tr>
+                            </thead>
+                            <apex:repeat value="{!DocList}" var="item">
+                              <apex:outputPanel rendered="{!IF(item.Document_Type__c == 'University-Letter', true, false)}">
+                                <tr>
+                                  <td><apex:commandLink action="{!load}" target="_blank" >
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                      <apex:outputText value="{!item.Document_Name__c}"/>
+                                    </apex:commandLink></td>
+                                  <td><apex:commandLink action="{!iWantMyJSValues}" styleClass="btn-lg" oncomplete="confDelete();" immediate="true" > <i class="fa fa-trash-o"></i>
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}" assignTo="{!docGuid}"/>
+                                    </apex:commandLink></td>
+                                </tr>
+                              </apex:outputPanel>
+                            </apex:repeat>
+                          </table>
+                        </div>
+                        <!--  end table responsive --> 
+                      </apex:pageBlock>
+                    </apex:outputPanel>
+                    <!--  table of uploads --> 
+                    
+                  </div>
+                  <!--  end docupload bttm --> 
+                </div>
+                <!--  end panel body --> 
+              </apex:outputPanel>
+              
+              <apex:outputPanel styleClass="{!universityTrans} panel panel-default" layout="block" rendered="{! IF(OR(business_inbound, applicantInfo.Intrax_Program_Category__c == 'Hospitality & Tourism'), TRUE, FALSE)}">
+                <div class="panel-body">
+                  <div class="docupload-top">
+                    <apex:commandlink id="universityTransLink"
+                      						styleClass="btn btn-link btn-lg" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit" >
+                      <apex:param name="doctype2" value="University-Letter-Translation"/>
+                      <i class="fa fa-plus-circle"></i> <span>Upload University Letter Translation</span> </apex:commandlink>
+                    <apex:outputPanel layout="block" rendered="{!universityTrans == 'complete'}" styleClass="docupload-complete" > <span>Completed <i class="fa fa-check"></i></span><a data-toggle="collapse" data-target=".universityTrans">View Uploads</a> </apex:outputPanel>
+                  </div>
+                  <!--  end docupload top -->
+                  <div class="docupload-bttm">
+                    <apex:outputPanel layout="block" styleClass="universityTrans margin-t collapse" rendered="{!universityTrans == 'complete'}">
+                      <apex:pageBlock id="Block_universityTrans">
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>File Name</th>
+                                <th>Remove</th>
+                              </tr>
+                            </thead>
+                            <apex:repeat value="{!DocList}" var="item">
+                              <apex:outputPanel rendered="{!IF(item.Document_Type__c == 'University-Letter-Translation', true, false)}">
+                                <tr>
+                                  <td><apex:commandLink action="{!load}" target="_blank" >
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                      <apex:outputText value="{!item.Document_Name__c}"/>
+                                    </apex:commandLink></td>
+                                  <td><apex:commandLink action="{!iWantMyJSValues}" styleClass="btn-lg" oncomplete="confDelete();" immediate="true" > <i class="fa fa-trash-o"></i>
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}" assignTo="{!docGuid}"/>
+                                    </apex:commandLink></td>
+                                </tr>
+                              </apex:outputPanel>
+                            </apex:repeat>
+                          </table>
+                        </div>
+                        <!--  end table responsive --> 
+                      </apex:pageBlock>
+                    </apex:outputPanel>
+                    <!--  table of uploads --> 
+                    
+                  </div>
+                  <!--  end docupload bttm --> 
+                </div>
+                <!--  end panel body --> 
+              </apex:outputPanel>
+              
+              <apex:outputPanel styleClass="{!diploma} panel panel-default" layout="block" rendered="{! IF(OR(business_inbound, applicantInfo.Intrax_Program_Category__c == 'Social Development'), TRUE, FALSE)}">
+                <div class="panel-body">
+                  <div class="docupload-top">
+                    <apex:commandlink id="diplomaOptLink"
+                      						styleClass="btn btn-link btn-lg" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit" >
+                      <apex:param name="doctype2" value="University-Diploma"/>
+                      <i class="fa fa-plus-circle"></i> <span>Upload Diploma/Certicate of Graduation</span> </apex:commandlink>
+                    <apex:outputPanel layout="block" rendered="{!diploma == 'complete'}" styleClass="docupload-complete" > <span>Completed <i class="fa fa-check"></i></span><a data-toggle="collapse" data-target=".diploma">View Uploads</a> </apex:outputPanel>
+                  </div>
+                  <!--  end docupload top -->
+                  <div class="docupload-bttm">
+                    <apex:outputPanel layout="block" styleClass="diploma margin-t collapse" rendered="{!diploma == 'complete'}">
+                      <apex:pageBlock id="Block_DiplomaOpt">
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>File Name</th>
+                                <th>Remove</th>
+                              </tr>
+                            </thead>
+                            <apex:repeat value="{!DocList}" var="item">
+                              <apex:outputPanel rendered="{!IF(item.Document_Type__c == 'University-Diploma', true, false)}">
+                                <tr>
+                                  <td><apex:commandLink action="{!load}" target="_blank" >
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                      <apex:outputText value="{!item.Document_Name__c}"/>
+                                    </apex:commandLink></td>
+                                  <td><apex:commandLink action="{!iWantMyJSValues}" styleClass="btn-lg" oncomplete="confDelete();" immediate="true" > <i class="fa fa-trash-o"></i>
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}" assignTo="{!docGuid}"/>
+                                    </apex:commandLink></td>
+                                </tr>
+                              </apex:outputPanel>
+                            </apex:repeat>
+                          </table>
+                        </div>
+                        <!--  end table responsive --> 
+                      </apex:pageBlock>
+                    </apex:outputPanel>
+                    <!--  table of uploads --> 
+                    
+                  </div>
+                  <!--  end docupload bttm --> 
+                </div>
+                <!--  end panel body --> 
+              </apex:outputPanel>
+              
+              <apex:outputPanel layout="block" styleClass="{!language} panel panel-default" rendered="{! IF(applicantInfo.Intrax_Program_Category__c == 'Social Development', TRUE, FALSE)}">
+                <div class="panel-body">
+                  <div class="docupload-top">
+                    <apex:commandlink id="languageOptLink" 
+                      						styleClass="btn btn-link btn-lg" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit">
+                      <apex:param name="doctype2" value="Proof-of-Language-Level"/>
+                      <i class="fa fa-plus-circle"></i> <span>Upload Proof of Language Level</span> </apex:commandlink>
+                    <apex:outputPanel layout="block" rendered="{!language == 'complete'}" styleClass="docupload-complete" > <span>Completed <i class="fa fa-check"></i></span><a data-toggle="collapse" data-target=".language">View Uploads</a> </apex:outputPanel>
+                  </div>
+                  <!--  doc upload top -->
+                  <div class="docupload-bttm">
+                    <apex:outputPanel styleClass="language margin-t collapse" layout="block" rendered="{!language == 'complete'}">
+                      <apex:pageBlock id="Block_ListProofLanguageOpt">
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>File Name</th>
+                                <th>Remove</th>
+                              </tr>
+                            </thead>
+                            <apex:repeat value="{!DocList}" var="item">
+                              <apex:outputPanel rendered="{!IF(item.Document_Type__c == 'Proof-of-Language-Level', true, false)}">
+                                <tr>
+                                  <td><apex:commandLink action="{!load}" target="_blank" >
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                      <apex:outputText value="{!item.Document_Name__c}"/>
+                                    </apex:commandLink></td>
+                                  <td><apex:commandLink action="{!iWantMyJSValues}" styleClass="btn-lg" oncomplete="confDelete();" immediate="true" > <i class="fa fa-trash-o"></i>
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}" assignTo="{!docGuid}"/>
+                                    </apex:commandLink></td>
+                                </tr>
+                              </apex:outputPanel>
+                            </apex:repeat>
+                          </table>
+                        </div>
+                        <!--  end table responsive --> 
+                      </apex:pageBlock>
+                    </apex:outputPanel>
+                    <!--  table of uploads --> 
+                  </div>
+                  <!--  end docupload bttm --> 
+                </div>
+                <!--  end panel body --> 
+              </apex:outputPanel>
+              <!--  end panel -->
+              
+              <apex:outputPanel layout="block" styleClass="{!recommendation} panel panel-default">
+                <div class="panel-body">
+                  <div class="docupload-top">
+                    <apex:commandlink id="recommendationLink" 
+                      						styleClass="btn btn-link btn-lg" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit">
+                      <apex:param name="doctype2" value="Letter-of-Recommendation"/>
+                      <i class="fa fa-plus-circle"></i> <span>Upload Recommendation Letter</span> </apex:commandlink>
+                    <apex:outputPanel layout="block" rendered="{!recommendation == 'complete'}" styleClass="docupload-complete" > <span>Completed <i class="fa fa-check"></i></span><a data-toggle="collapse" data-target=".recommendation">View Uploads</a> </apex:outputPanel>
+                  </div>
+                  <!--  doc upload top -->
+                  <div class="docupload-bttm">
+                    <apex:outputPanel styleClass="recommendation margin-t collapse" layout="block" rendered="{!recommendation == 'complete'}">
+                      <apex:pageBlock id="Block_recommendation">
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>File Name</th>
+                                <th>Remove</th>
+                              </tr>
+                            </thead>
+                            <apex:repeat value="{!DocList}" var="item">
+                              <apex:outputPanel rendered="{!IF(item.Document_Type__c == 'Letter-of-Recommendation', true, false)}">
+                                <tr>
+                                  <td><apex:commandLink action="{!load}" target="_blank" >
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                      <apex:outputText value="{!item.Document_Name__c}"/>
+                                    </apex:commandLink></td>
+                                  <td><apex:commandLink action="{!iWantMyJSValues}" styleClass="btn-lg" oncomplete="confDelete();" immediate="true" > <i class="fa fa-trash-o"></i>
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}" assignTo="{!docGuid}"/>
+                                    </apex:commandLink></td>
+                                </tr>
+                              </apex:outputPanel>
+                            </apex:repeat>
+                          </table>
+                        </div>
+                        <!--  end table responsive --> 
+                      </apex:pageBlock>
+                    </apex:outputPanel>
+                    <!--  table of uploads --> 
+                  </div>
+                  <!--  end docupload bttm --> 
+                </div>
+                <!--  end panel body --> 
+              </apex:outputPanel>
+              <!--  end panel -->
+              
+              
+              <apex:outputPanel layout="block" styleClass="{!transcript} panel panel-default" rendered="{! IF(OR(applicantInfo.Intrax_Program_Category__c == 'Practical Training', applicantInfo.Intrax_Program_Category__c == 'Hospitality & Tourism', business_inbound, business_outbound), TRUE, FALSE)}">
+                <div class="panel-body">
+                  <div class="docupload-top">
+                    <apex:commandlink id="transcriptsLink" 
+                      						styleClass="btn btn-link btn-lg" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit">
+                      <apex:param name="doctype2" value="Transcripts"/>
+                      <i class="fa fa-plus-circle"></i> <span>Upload Transcripts</span> </apex:commandlink>
+                    <apex:outputPanel layout="block" rendered="{!transcript == 'complete'}" styleClass="docupload-complete" > <span>Completed <i class="fa fa-check"></i></span><a data-toggle="collapse" data-target=".transcript">View Uploads</a> </apex:outputPanel>
+                  </div>
+                  <!--  doc upload top -->
+                  <div class="docupload-bttm">
+                    <apex:outputPanel styleClass="transcript margin-t collapse" layout="block" rendered="{!transcript == 'complete'}">
+                      <apex:pageBlock id="Block_ListTranscripts">
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>File Name</th>
+                                <th>Remove</th>
+                              </tr>
+                            </thead>
+                            <apex:repeat value="{!DocList}" var="item">
+                              <apex:outputPanel rendered="{!IF(item.Document_Type__c == 'Transcripts', true, false)}">
+                                <tr>
+                                  <td><apex:commandLink action="{!load}" target="_blank" >
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                      <apex:outputText value="{!item.Document_Name__c}"/>
+                                    </apex:commandLink></td>
+                                  <td><apex:commandLink action="{!iWantMyJSValues}" styleClass="btn-lg" oncomplete="confDelete();" immediate="true" > <i class="fa fa-trash-o"></i>
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}" assignTo="{!docGuid}"/>
+                                    </apex:commandLink></td>
+                                </tr>
+                              </apex:outputPanel>
+                            </apex:repeat>
+                          </table>
+                        </div>
+                        <!--  end table responsive --> 
+                      </apex:pageBlock>
+                    </apex:outputPanel>
+                    <!--  table of uploads --> 
+                  </div>
+                  <!--  end docupload bttm --> 
+                </div>
+                <!--  end panel body --> 
+              </apex:outputPanel>
+              <!--  end panel --> 
+              
+              <apex:outputPanel layout="block" styleClass="{!termsConditions} panel panel-default" >
+                <div class="panel-body">
+                  <div class="docupload-top">
+                    <apex:commandlink id="conditionsLink" 
+                      						styleClass="btn btn-link btn-lg" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit">
+                      <apex:param name="doctype2" value="Terms-and-Conditions"/>
+                      <i class="fa fa-plus-circle"></i> <span>Upload Terms and Conditions</span> </apex:commandlink>
+                    <apex:outputPanel layout="block" rendered="{!termsConditions == 'complete'}" styleClass="docupload-complete" > <span>Completed <i class="fa fa-check"></i></span><a data-toggle="collapse" data-target=".termsConditions">View Uploads</a> </apex:outputPanel>
+                  </div>
+                  <!--  doc upload top -->
+                  <div class="docupload-bttm">
+                    <apex:outputPanel styleClass="termsConditions margin-t collapse" layout="block" rendered="{!termsConditions == 'complete'}">
+                      <apex:pageBlock id="Block_ListConditions">
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>File Name</th>
+                                <th>Remove</th>
+                              </tr>
+                            </thead>
+                            <apex:repeat value="{!DocList}" var="item">
+                              <apex:outputPanel rendered="{!IF(item.Document_Type__c == 'termsConditions', true, false)}">
+                                <tr>
+                                  <td><apex:commandLink action="{!load}" target="_blank" >
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                      <apex:outputText value="{!item.Document_Name__c}"/>
+                                    </apex:commandLink></td>
+                                  <td><apex:commandLink action="{!iWantMyJSValues}" styleClass="btn-lg" oncomplete="confDelete();" immediate="true" > <i class="fa fa-trash-o"></i>
+                                      <apex:param name="docGuid" value="{!item.Document_GUID__c}" assignTo="{!docGuid}"/>
+                                    </apex:commandLink></td>
+                                </tr>
+                              </apex:outputPanel>
+                            </apex:repeat>
+                          </table>
+                        </div>
+                        <!--  end table responsive --> 
+                      </apex:pageBlock>
+                    </apex:outputPanel>
+                    <!--  table of uploads --> 
+                  </div>
+                  <!--  end docupload bttm --> 
+                </div>
+                <!--  end panel body --> 
+              </apex:outputPanel>
+              <!--  end panel --> 
+              
+            </div>
+            <!--  end of upload list -->
+            
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                  <div class="modal-body">
+                    <p>Are you sure you want to remove this file?</p>
+                  </div>
+                  <div class="modal-footer">
+                    <apex:commandLink styleClass="btn btn-primary" action="{!deletefile}" immediate="true">
+                      <apex:param name="igiDocsParam" value="true" assignTo="{!igiDocsParam}" />
+                      <apex:commandButton value="Yes" id="yesbutton"/>
+                    </apex:commandLink>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--  end modal -->
+            
+            <div class="modal fade modal-widget" id="myModalUpload" tabindex="-1" role="dialog" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title">Upload Document</h4>
+                  </div>
+                  <div class="modal-body">                     
+                    <iframe width="100%" height="400" frameborder="0" scrolling="no" src="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType={!$CurrentPage.parameters.docType2}&retparam={!retParam}"></iframe>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--  end modal --> 
+            
+            
+              <div class="form-group margin-t4">
+                <apex:outputText rendered="{!IF(applicantInfo.Application_Level__c == 'Main' && applicantInfo.Application_Stage__c == 'Working',  true, false)}">
+                  <apex:commandlink styleClass="btn btn-primary btn-lg margin-r"  action="{!navigator}" id="nextlink2" onComplete="rerunjs();hwsize();" reRender="webform" status="onsubmit">
+                    <apex:param name="nextPage" value="/apex/igi_pt_app_media" />
+                    <apex:param name="reDirectPage" value="true" />
+                    <apex:param name="docType" value="Participant-Photo" assignTo="{!docType}"/>
+                    <apex:param name="pageId" value="061"/>
+                    <apex:commandButton value="Save & Continue" id="continuebutton2"/>
+                  </apex:commandlink>
+                  <apex:commandlink styleClass="btn btn-link btn-lg" rendered="{!NOT(CONTAINS(applicantInfo.PageStatus_Complete__c,'061'))}"
+                                    action="{!setPageIdStarted}" id="skipLink" reRender="webform" status="onsubmit">
+                    <apex:param name="pageId" value="061"/>
+                    <apex:commandButton value="" id="skipButton"/>
+                    <span>Skip this page</span> </apex:commandlink>
+                </apex:outputText>
+              </div>
+          
+            
+            
+          </apex:form>
+          
+          <apex:form >
+          	<c:block_app_coedit_authorization ApplicantInfo="{!applicantInfo}" pageController="{!AEC}" rendered="{!applicantInfo.Apply_on_Behalf_of_PT__c && applicantInfo.Application_Stage__c == 'Working'}"/>
+          </apex:form>
+         
+        </div>
+        <!-- end column  -->
+         
+          
+        <div class="col-md-3 col-md-pull-7">
+          <c:block_notification_sidebar ApplicantInfo="{!applicantInfo}" isPartner="{!isPartner}"/>
+          <c:menu_igi_pt_app ApplicantInfo="{!applicantInfo}" personInfo="{!personInfo}" />
+        </div>
+        <!-- end column  --> 
+      </div>
+      <!-- end row --> 
+      <script>
+var j$ = jQuery.noConflict();
+
+function confDelete(){
+j$('#myModal').modal();
+} 
+  
+function popModal(){
+var auxerr= j$('.custom-error-pagelevel').attr('role');
+//alert(auxerr);
+    if(auxerr=="alert"){
+    }else{
+        j$('#myModalUpload').modal();
+    }
+} 
+    
+</script> 
+    </apex:define>
+  </apex:composition>
+</apex:page>

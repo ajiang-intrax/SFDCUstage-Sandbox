@@ -1,0 +1,294 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" title="Personal Information" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="false" showHeader="false" id="apc_ap_basic_personal_info">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_apc_ap_application />
+      <div id="app-page" class="row">
+         <div id="app-focus" class="col-md-8 col-md-push-3">
+          
+          
+          <c:block_app_completion ApplicantInfo="{!applicantInfo}" userProfileName="{!userProfileName}" /> 
+         
+          <!-- AUDIT BLOCK PARTNER -->
+          
+          <c:block_apc_pr_audit flaggedList="{!flaggedList}" rendered="{!userProfileName == 'OCPM Agent Portal' && applicantInfo.Application_Level__c == 'Basic' && applicantInfo.Application_Stage__c == 'Submitted'}"/>
+          
+          <!-- Jose-Adding Tips for Partners  (Profile "OCPM Agent Portal")
+          <apex:outputPanel rendered="{!userProfileName == 'OCPM Agent Portal' && applicantInfo.Application_Level__c == 'Main'}" layout="block" id="blockTip">
+	          <div class="lead alert alert-warning clearfix">
+	          <b>Tip</b>&nbsp;&nbsp;
+	          Does the au pair's name and date of birth match their passport?
+	          </div>
+          </apex:outputPanel>
+          -->
+          
+          <h1>Personal Information</h1>
+          <p class="lead"> Welcome to your AuPairCare online application! We can't wait to get to know you.
+           The information below will help us get in contact with you so we can help you match with the perfect host family.</p>
+          <apex:form styleClass="form-vertical ws-validate" id="webform" >
+          <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+            
+            <div class="row">
+             <div class="col-sm-6">
+            <div class="form-group">
+              <label class="control-label">First Name <span class="info">(as it appears on your passport)</span></label>
+                <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!personInfo.First_Name__c}" required="TRUE" id="fname"  />
+              </div>
+              </div>
+           
+           <div class="col-sm-6">
+            <div class="form-group">
+              <label class="control-label">Last Name <span class="info">(as it appears on your passport)</span></label>
+                <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!personInfo.Last_Name__c}" required="TRUE" id="lname"  />
+              </div> 
+              </div>  
+              
+              </div><!--  end row -->
+             
+           
+               <div class="row">   
+               <div class="col-sm-6">
+             <div class="form-group">
+              <label class="control-label">Nickname <span class="info">(Optional)</span></label>
+              <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!personInfo.Nick_Name__c}" required="FALSE" id="nickname"  />
+              </div>
+              </div>
+               <div class="col-sm-6">
+            <div class="form-group">
+              <label class="control-label">Date of Birth</label>
+                <div class="datepicker dp-DOB" locale="{!user.localeSidKey}">
+                  <apex:inputField styleClass="form-control" value="{!personInfo.Date_of_Birth__c}" required="TRUE" id="dob" />
+                </div>
+                </div>
+            </div>
+               </div><!--  end row -->
+               
+             <div class="row">   
+              <div class="col-sm-6"> 
+            <div class="form-group">
+              <label class="control-label">Gender</label>
+                <apex:inputField styleClass="form-control" value="{!personInfo.Gender__c}" required="TRUE" id="gender" />
+              </div>
+              </div>
+               <div class="col-sm-6">
+             <div class="form-group">
+              <label class="control-label">What is your marital status?</label>
+                <apex:inputField styleClass="form-control" value="{!personInfo.Marital_Status__c}" required="TRUE" id="marital"/>
+              </div>
+              </div>
+              </div><!--  end row -->
+              
+              <div class="row">   
+            <div class="col-sm-6">
+            <div class="form-group">
+              <label class="control-label">Do you have children?</label>
+              	 	<apex:inputField styleClass="form-control" value="{!applicantInfo.Children_Indicated__c}" required="TRUE" id="ChildIndicated" /> 
+              </div>
+              </div>
+             </div><!--  end row -->
+       
+              <hr/>
+              
+            <div class="row">   
+            <div class="col-sm-6">  
+            <div class="form-group">
+              <label class="control-label">Country of Citizenship 
+              <i data-toggle="popover" data-content="Most likely the country where you were born and/or are authorized to vote." class="infobtn fa fa-question-circle"></i>
+              </label>
+                <apex:inputField styleClass="form-control" value="{!personInfo.Citizenship__c}" required="TRUE" id="countryCiti" />
+              </div>
+              </div>
+               <div class="col-sm-6">
+            <div class="form-group">
+              <label class="control-label">Country of Legal Residence
+              <i data-toggle="popover" data-content="The country where you live." class="infobtn fa fa-question-circle"></i>
+              </label><apex:inputField styleClass="form-control" value="{!personInfo.Country_of_Residence__c}" required="TRUE" id="countryLegal" />
+              </div>
+              </div>
+               </div><!--  end row -->
+        
+              
+            <div class="row">   
+             <div class="col-sm-12">
+            <div class="form-group">
+              <label class="control-label">Nationality</label>
+                <apex:inputField styleClass="form-control" value="{!personInfo.Nationality__c}" required="TRUE" id="nation" />
+              </div>
+              </div>
+             </div><!--  end row -->
+             
+    <!--         <div class="row">   
+            <div class="col-sm-12">
+            <div class="form-group">
+              <label class="control-label">In what country are you interested in being an au pair?</label>
+              	 	<apex:inputField styleClass="form-control" value="{!applicantInfo.Country_of_Interest__c}" required="TRUE" id="countryInter" /> 
+              </div>
+              </div>
+             </div> end row -->
+             
+             
+             
+            <p>&nbsp;</p>     
+            <div class="section-title">
+            Please indicate the languages you speak and your skill level. 
+            </div>
+           
+            
+            <div class="row">   
+            <div class="col-sm-12">
+            <div class="form-group">
+              <label class="control-label">Native Language</label>
+                 <apex:actionRegion >
+	                  <apex:inputField styleClass="form-control" value="{!applicantInfo.Language_1__c}" required="TRUE" id="lang1">
+	                  <apex:actionSupport event="onchange" rerender="lang2,lang3,label2,label3, lang3panel, languageblock, itself" status="statuslang" />
+	                  </apex:inputField>
+	                 <!-- 
+	                 <apex:selectList styleClass="form-control" id="lang1" value="{!applicantInfo.Language_spoken_1__c}" multiselect="false" size="1" required="true">
+		                 <apex:selectOption itemValue="" itemLabel="--None--" />
+		                 <apex:selectOptions value="{!Languages1}"/>
+		                 <apex:actionSupport event="onchange" rerender="lang2,lang3,label2,label3" status="statuslang" />
+	                </apex:selectList>
+	                 -->
+                </apex:actionRegion>
+                <apex:message for="lang1" styleClass="custom-error-radio"  id="msgNativeLan" />             
+                <!-- <apex:inputField styleClass="form-control" id="Language_spoken1" value="{!applicantInfo.Language_spoken_1__c}" required="TRUE"/> -->
+              </div>
+              </div>
+            </div><!--  end row -->
+            
+           
+           <apex:outputPanel layout="block" id="languageblock">
+           <apex:outputPanel rendered="{!addlanguage==1 || addlanguage==2 }" layout="block">
+            <div class="row"> 
+            <div class="col-sm-12">
+            <div class="form-group">
+              <apex:outputPanel id="label2" layout="block">
+	              <label class="control-label">Language 2 
+		              <i data-toggle="popover" data-content="What other languages do you speak besides {!applicantInfo.Language_1__c}?" class="infobtn fa fa-question-circle"></i>
+			              <apex:outputText rendered="{!addlanguage==1}">
+			                <apex:commandlink action="{!deletelanguages}" onComplete="dpInitiate();" immediate="true" rerender="languageblock, itself,lang1" id="buttonlanguageDel2" status="statuslang">
+			                <span>(Remove)</span>
+			                </apex:commandlink>
+			              </apex:outputText>
+	              </label>
+              </apex:outputPanel> 
+             <div class="row">
+             <div class="col-sm-6"> 
+	          <apex:outputPanel id="lang2" layout="block">
+	             <apex:actionRegion >
+		              <apex:inputField styleClass="form-control" value="{!applicantInfo.Language_2__c}" required="TRUE" id="lang2field">
+	                  <apex:actionSupport event="onchange" rerender="lang2,lang3,label2,label3, itself" status="statuslang" />
+	                  </apex:inputField>
+		             <!-- 
+		             <apex:selectList styleClass="form-control" value="{!applicantInfo.Language_spoken_2__c}" multiselect="false" size="1" required="true">
+		                <apex:selectOption itemValue="" itemLabel="--None--" />
+		                 <apex:selectOptions value="{!Languages2}"/>
+		                 <apex:actionSupport event="onchange" rerender="lang1,lang3,label3" status="statuslang"/>
+		             </apex:selectList>
+		              -->
+	              </apex:actionRegion>
+	                <apex:message for="lang2" styleClass="custom-error-radio"  id="msgLan2" />
+	           </apex:outputPanel> 
+           <!-- <apex:inputField id="Language_spoken2" styleClass="form-control" value="{!applicantInfo.Language_spoken_2__c}" required="TRUE"/> -->
+             
+             </div>
+              <div class="col-sm-6"> 
+              <apex:selectList styleClass="form-control" value="{!applicantInfo.Language_2_Proficiency__c}" multiselect="false"  required="TRUE" id="Language_prof_yrs2" size="1">
+                        <apex:selectOption itemValue="" itemLabel="--Select Level--" />
+                        <apex:selectOptions value="{!LanguageLevel}" />
+                </apex:selectList>
+                <apex:message for="Language_prof_yrs2" styleClass="custom-error-radio"  id="messlang2" /></div>
+             </div> <!--  end row -->
+            </div>     
+            </div>
+            </div><!--  end row -->
+            </apex:outputPanel>
+            
+            <apex:outputPanel rendered="{!addlanguage==2}" layout="block" id="lang3panel">
+            <div class="row"> 
+             <div class="col-sm-12">
+            <div class="form-group">
+              <apex:outputPanel id="label3" layout="block">
+	              <label class="control-label">Language 3
+	              <i data-toggle="popover" data-content="What other languages do you speak besides {!applicantInfo.Language_1__c} and {!applicantInfo.Language_2__c}" class="infobtn fa fa-question-circle"></i>
+	                <apex:commandlink action="{!deletelanguages}" onComplete="dpInitiate();" immediate="true" rerender="languageblock, itself,lang1,lang2" id="buttonlanguageDel3" status="statuslang">
+	                <span>(Remove)</span>
+	                </apex:commandlink>
+	              </label>
+              </apex:outputPanel>
+               <div class="row">
+               <div class="col-sm-6">
+                <apex:outputPanel id="lang3" layout="block">
+	                <apex:actionRegion >
+		              <apex:inputField styleClass="form-control" value="{!applicantInfo.Language_3__c}" required="TRUE" id="lang3field">
+	                  <apex:actionSupport event="onchange" rerender="lang2,lang3,label2,label3" status="statuslang" />
+	                  </apex:inputField>
+		                <!-- 
+		                <apex:selectList styleClass="form-control"  value="{!applicantInfo.Language_spoken_3__c}" multiselect="false" size="1" required="true">
+			                <apex:selectOption itemValue="" itemLabel="--None--" />
+			                 <apex:selectOptions value="{!Languages3}"/>
+			                 <apex:actionSupport event="onchange" rerender="lang1,lang2" status="statuslang"/>
+		                </apex:selectList>
+		                 -->
+	                </apex:actionRegion>
+	                 <apex:message for="lang3" styleClass="custom-error-radio"  id="msgLan3" />
+                 </apex:outputPanel>
+                <!-- <apex:inputField id="Language_spoken3" styleClass="form-control" value="{!applicantInfo.Language_spoken_3__c}" required="TRUE"/> -->
+               </div>
+               <div class="col-sm-6">
+                <apex:selectList styleClass="form-control"  value="{!applicantInfo.Language_3_Proficiency__c}" multiselect="false"  required="TRUE" id="Language_spoken_yrs3" size="1">
+                        <apex:selectOption itemValue="" itemLabel="--Select Level--" />
+                        <apex:selectOptions value="{!LanguageLevel}" />
+                </apex:selectList>
+                <apex:message for="Language_spoken_yrs3" styleClass="custom-error-radio"    id="messlang3" />
+                </div>
+                </div> <!--  end row -->
+            </div>
+            </div>
+            </div><!--  end row -->
+            </apex:outputPanel>
+            </apex:outputPanel>
+            
+            
+            <!-- add new lenguage up to 3--> 
+            <apex:outputPanel layout="block" id="itself">
+            
+            <apex:outputPanel rendered="{!addlanguage < 2}" layout="block">
+             <div class="row">
+                <div class="col-sm-12">
+            <apex:commandlink styleClass="btn btn-link btn-lg margin-b" action="{!addlanguages}" onComplete="dpInitiate();" immediate="true" rerender="languageblock, itself ,lang1, lang3panel" id="buttonlanguage" status="statuslang">
+            <apex:commandButton value="" id="addLanguages"/> 
+            <i class="fa fa-plus-circle"></i>
+            <span>Add Another Language</span>
+            </apex:commandlink>
+              </div>
+            </div><!--  end row -->
+            </apex:outputPanel>
+            </apex:outputPanel>
+            
+            <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="statuslang"/>
+
+              <div class="row">
+                <div class="col-sm-12 margin-t">
+                  <apex:commandlink styleClass="btn btn-primary btn-lg" action="{!navigator}" id="nextpage" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                    <apex:param name="nextPage" value="/apex/apc_ap_basic_contact_info"/>
+                    <apex:param name="reDirectPage" value="true" />
+                    <apex:param name="pageId" value="012"/>
+                    <apex:commandButton value="Save & Continue" id="continuebutton" />
+                  </apex:commandlink>
+                </div>
+              </div>
+
+          
+          </apex:form>
+        </div>
+        <!-- end column  -->
+        
+         <div id="app-side" class="col-md-3 col-md-pull-8">
+          <c:menu_side_apc_ap_basic ApplicantInfo="{!applicantInfo}" />
+        </div>
+        <!-- end column  --> 
+      </div>
+      <!-- end row -->
+    </apex:define>
+  </apex:composition>
+</apex:page>

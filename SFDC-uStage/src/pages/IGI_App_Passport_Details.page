@@ -1,0 +1,90 @@
+<apex:page docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+    <apex:composition template="IntraxTemplate_Vs1">
+        <apex:define name="body">
+            <div class="wrapper">
+                <apex:form >      
+                    
+                    <div class="page-header clearfix">
+                        <h1>Intrax Global Internship Application</h1>
+                        <div class="back-to-main">
+                            <apex:outputLink value="apex/ayusa_app_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink>
+                        </div>
+                    </div>
+                    
+                    <!-- Section Header -->  
+                    <div class="section-header clearfix">
+                         <h2>Biographical Details</h2>
+                    </div>
+                  
+                    <div class="white-box clearfix">
+                        <div class="panel two_thirds">
+                            <p>Please upload the biographical page of your passport here.</p>
+                            <div class="form-row">
+                                <apex:outputLabel rendered="{!IF((DocList.Size > 0 && docType == 'Passport'), false, true)}"><span class="no-records">No record(s) to display.</span></apex:outputLabel>
+                            </div>        
+                   
+                            <apex:pageBlock rendered="{!if(DocList.Size > 0, true, false)}" >
+                                <apex:pageBlockTable styleClass="pageblocktable" value="{!DocList}" var="item">
+                                    
+                                    <apex:column headerValue="File Name">
+                                        <apex:outputText value="{!item.Document_Name__c}"/>
+                                    </apex:column>
+                                    
+                                    <apex:column headerValue="Description">
+                                        <apex:outputText value="{!item.Description__c}"/>
+                                    </apex:column>
+                                        
+                                    <apex:column >
+                                        
+                                        <apex:commandlink styleClass="inline-link" action="{!load}" target="_blank">
+                                            <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                            <apex:commandButton value="View" />
+                                        </apex:commandlink>
+                                        
+                                        <apex:outputText value=" | " />
+                                        <apex:commandlink styleClass="inline-link" action="{!deletefile}"  onclick="return ConfirmDelete('Are You Sure ?');">
+                                            <apex:param name="docGuid"  value="{!item.Document_GUID__c}"/>
+                                            <apex:commandButton value="Delete" />
+                                        </apex:commandlink>
+                                        
+                                    </apex:column>
+                                    
+                                </apex:pageBlockTable>
+                            </apex:pageBlock>
+                            
+                            <apex:outputText value="{!disableFileUploadText}" rendered="{!disableFileUpload}"/>
+                            <div class="form-row">
+                                <div class="form-link">
+                                    <apex:outputLink value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType={!$CurrentPage.parameters.docType}&env={!env}" id="theLink" target="_self" disabled="{!disableFileUpload}"><i class="icon-plus-sign"></i><span>Add Passport Biographical Page Copy</span></apex:outputLink>
+                                </div>
+                            </div>
+                  
+                            <!-- Back Button -->
+                            <div class="form-row">
+                                <div class="form-link">
+                                    <apex:outputLink styleClass="back" value="/apex/IGI_App_Photo_Album">
+                                    <apex:param name="id" value="{!applicantInfo.Id}" />
+                                    <apex:param name="docType" value="Media" assignTo="{!docType}" />
+                                    <i class="icon-chevron-left"></i>
+                                    <span>Back</span>
+                                    </apex:outputLink>
+                                </div>
+    
+                                <!-- Save and Continue -->
+                                <div class="form-button">
+                                    <apex:commandlink styleClass="next" action="{!navigator}">
+                                        <apex:param name="nextPage" value="/apex/IGI_App_Visa_Details?id={!applicantInfo.Id}"/>
+                                        <apex:param name="reDirectPage" value="false"/>
+                                        <apex:param name="docType" value="Passport" assignTo="{!docType}" />
+                                        <apex:commandButton value="Continue" />
+                                        <i class="icon-chevron-right"></i> 
+                                    </apex:commandlink>
+                                </div>                    
+                            </div>
+                        </div>
+                    </div>
+                </apex:form>
+            </div>
+        </apex:define>
+    </apex:composition>
+</apex:page>

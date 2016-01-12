@@ -1,0 +1,91 @@
+<apex:page id="igi_pt_app_completion" docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardController="Applicant_Info__c"
+	extensions="AppEngine_Controller" action="{!checkLogin}"
+	standardStylesheets="false" showHeader="false"  title="Application Confirmation">
+	<apex:composition template="intraxtemplate_vs3">
+		<apex:define name="body">
+			<c:block_header_igi_pt_application userAgentCheck="{!userAgentCheck}"/>
+			<apex:form styleClass="form-vertical ws-validate" id="webform">
+			
+				
+				<apex:outputpanel layout="block" rendered="{!applicantInfo.Application_Level__c == 'Basic' && applicantInfo.Application_Stage__c == 'Working'}">	
+				<div class="row">
+				
+					<div class="col-md-9 col-md-push-3">
+						<h1>You are almost there!</h1>		
+						<apex:outputText rendered="{!applicantInfo.Application_Level__c == 'Basic' && applicantInfo.Application_Stage__c == 'Working'}" 
+							styleClass="lead" value="You are about to submit your pre-application. 
+													Please make sure that all the information you have provided is correct. 
+													You can review and/or change your answers using the links on the left." />
+				 
+				 					
+						<div class="margin-t">
+		                  <apex:commandlink styleClass="btn btn-lg btn-primary" rendered="{!ValidateIGIBasicApp}"  action="{!navigator}" id="gotoqualified" reRender="webform" status="onsubmit">
+		                    <apex:param name="nextPage" value="/apex/igi_pt_app_home" />
+		                    <apex:param name="reDirectPage" value="true" />
+		                    <apex:param name="viewpage" value="true" />
+		                    <apex:param name="vstate" value="newprf" />
+		                     <apex:param name="SubmitApp" value="PA" />
+		                    <apex:commandButton value="Submit Pre-application" id="continuebuttonqualified"/>
+		                  </apex:commandlink>
+		                  
+		                  <apex:commandlink styleClass="btn btn-lg btn-primary" rendered="{!NOT(ValidateIGIBasicApp)}"  action="{!navigator}" id="gotononqualified" reRender="webform" status="onsubmit">
+		                    <apex:param name="nextPage" value="/apex/igi_pt_app_completion" />
+		                    <apex:param name="reDirectPage" value="true" />
+		                    <apex:param name="view" value="true" assignTo="{!view}"/>
+		                    <!-- <apex:param name="vstate" value="newprf" /> -->
+		                     <apex:param name="SubmitApp" value="BS" />
+		                    <apex:commandButton value="Submit Pre-application" id="continuebuttonNotqualified"/>
+		                  </apex:commandlink>
+					  	</div>	
+								
+					</div><!-- end column -->
+					
+					<div class="col-md-3 col-md-pull-9">
+				    	<c:menu_igi_pt_app ApplicantInfo="{!applicantInfo}" personInfo="{!personInfo}" />
+				    </div>
+			    </div><!--  end row -->
+				</apex:outputpanel>
+				
+				
+				<apex:outputpanel layout="block" rendered="{!applicantInfo.Application_Level__c == 'Basic' && applicantInfo.Application_Stage__c == 'Submitted'}">		
+				<div class="row">
+				<div class="col-md-2 hidden-xs hidden-sm">
+					<i class="fa fa-check-circle pull-right" style="font-size: 100px;"></i>
+				</div>
+				<!-- end column -->
+				<div class="col-md-8">
+					<h1>Thank You</h1>		
+					<p class="lead">Your application is being reviewed by the Intrax team. We will keep you posted!</p>
+				</div>
+				<!-- end column -->
+				</div>
+				<!-- end row -->
+				</apex:outputpanel>	
+				
+				
+				<apex:outputpanel layout="block" rendered="{!applicantInfo.Application_Level__c == 'Main' && applicantInfo.Application_Stage__c == 'Submitted'}">	
+				<div class="row">
+				<div class="col-md-2 hidden-xs hidden-sm">
+					<i class="fa fa-check-circle pull-right" style="font-size: 100px;"></i>
+				</div>
+				<!-- end column -->
+				<div class="col-md-8">
+					<h1>Thank You</h1>		
+					<p class="lead">Your application is being reviewed by the Intrax team. We will keep you posted!</p>
+					
+				</div>
+				<!-- end column -->
+				</div>
+				<!-- end row -->
+				</apex:outputpanel>	
+				
+				
+			
+				
+				
+			
+				
+			</apex:form>
+		</apex:define>
+	</apex:composition>
+</apex:page>

@@ -1,0 +1,433 @@
+<apex:page docType="html-5.0" title="Photo Album" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" id="apc_ap_main_media" standardStylesheets="false" showHeader="false">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_apc_ap_application />
+     <div id="app-page" class="row">
+        <div id="app-focus" class="col-md-8 col-md-push-3">
+          
+          <c:block_app_completion ApplicantInfo="{!applicantInfo}" userProfileName="{!userProfileName}"  />
+          
+          <!-- Jose-Adding Tips for Partners  (Profile "OCPM Agent Portal")
+          <apex:outputPanel rendered="{!userProfileName == 'OCPM Agent Portal' && applicantInfo.Application_Level__c == 'Main'}" layout="block" id="blockTip">
+	          <div class="lead alert alert-warning clearfix">
+	          <b>Tip</b>&nbsp;&nbsp;
+	          Has the au pair provided an adequate number of clear high quality images that show the au
+			  pair's face, children they interact with, and activities they participate in?
+	          </div>
+          </apex:outputPanel>
+          -->
+          
+          <h1>Photo Album</h1>
+          <p class="lead">Photographs are a wonderful way for host families to get to know you. Quality photos will increase interest in your profile and help you match quickly.</p>
+          
+          <apex:form id="webform" styleClass="form-vertical ws-validate" >
+          
+          <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+          
+          <style>
+          .pho-pre-wrapper{position:relative; display:inline-block; margin:0 20px 20px 0;}
+          .pho-pre-img{display: block;
+           height: 128px;}
+          .pho-pre-img.small{height:80px;}
+          .pho-pre-del{position:absolute; right:-14px; top:-10px;}
+          .pho-pre-del .fa-stack-2x:before{color:#000;}
+          .pho-pre-del .fa-stack-1x:before{color:#fff;}i
+          </style>
+           
+            <hr class="margin-b4"/> 
+          <apex:pageBlock id="media">
+                  
+                 <div class="h3">Upload a Profile Photo <a data-toggle="modal" data-target="#profilephotos">(See Examples)</a></div>
+                 <p class="margin-b3">This is the first photo host families will see when viewing your profile. 
+                 Please select a quality photo of yourself with children, where you are smiling directly at the camera and your face is clearly visible.</p>
+                 
+                 
+                  <apex:outputPanel layout="block" id="blockNoPhoto" rendered="{!IF(DocList.Size < 1, true, false)}">
+                      <div class="row">
+                      <div class="col-sm-12">
+                      <apex:commandlink styleClass="btn btn-link btn-lg vs2 margin-t1" immediate="TRUE" reRender="webform" onComplete="popModal();" status="onsubmit" onclick="disableSubmit();">
+                      <apex:param name="doctype2" value="Participant-Photo"/>
+                      <i class="fa fa-user-plus"></i> <span>Upload Profile Photo</span>
+                      </apex:commandlink>
+                      </div>
+                      </div><!--  end row -->
+                  </apex:outputPanel>
+                  
+                  <apex:outputPanel layout="block" id="blockYesPhoto" rendered="{!IF(DocList.Size > 0, true, false)}">
+                        <apex:repeat id="profilePic" value="{!DocList}" var="item">
+                            <div class="pho-pre-wrapper">
+                            <apex:commandLink action="{!iWantMyJSValues}" oncomplete="confDelete();" immediate="true" rerender=""> 
+                            <apex:param name="docGuid" value="{!item.Document_GUID__c}" assignTo="{!docGuid}"/>
+                            <span class="pho-pre-del fa-stack " data-toggle="tooltip" data-placement="top" title="Remove">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-times fa-stack-1x"></i>
+                            </span>
+                            </apex:commandLink>
+                            <apex:image styleClass="pho-pre-img" url="{!returnURL}" >
+                            </apex:image>
+                            </div>
+                        </apex:repeat>
+                  </apex:outputPanel>
+                  
+                  <apex:outputText value="{!disableFileUploadText}" rendered="{!disableFileUpload}"/>
+ 
+                </apex:pageBlock> <!--  end media doc upload -->
+            
+                
+                <hr class="margin-b4 margin-t4"/>
+                <apex:pageBlock id="mediaAlbum">
+                 <div id="anchorPhoto">
+                 </div>
+                 <div class="h3">Create an Album <a data-toggle="modal" data-target="#examplephotos">(See Examples)</a></div>
+                 <p>Photos should be of you and children and you and your natural family.</p>
+  
+                  <apex:outputPanel layout="block" rendered="{!IF(MapAlbumSize == 0, true, false)}">
+                  <p class="margin-b3">You do not have any photos in your album. <strong>Please upload a minimum of 10 photos.</strong></p>
+                  </apex:outputPanel>
+                  <apex:outputPanel layout="block" rendered="{!IF(MapAlbumSize > 0 && MapAlbumSize < 10 , true, false)}">
+                  <p class="margin-b3">You have uploaded <strong>{!MapAlbumSize}</strong> photos.  <strong>Please upload a minimum of 10 photos.</strong></p>
+                  </apex:outputPanel>
+                  <apex:outputPanel layout="block" rendered="{!IF(MapAlbumSize >= 10 , true, false)}">
+                  <p class="margin-b3">Your album now has the minimum number of photos needed. However, you can still upload more photos.</p>
+                  </apex:outputPanel>
+                  
+                  
+                  <div class="row">
+                      <div class="col-sm-12">
+                      
+                      <div class="margin-b4">
+                      <apex:commandlink styleClass="btn btn-link btn-lg vs2 margin-t1" immediate="TRUE" reRender="webform" onComplete="popModal2();" status="onsubmit" onclick="disableSubmit();">
+                      <apex:param name="doctype2" value="Participant-Album"/>
+                      <i class="fa fa-photo"></i> <span>Upload Album Photo</span>
+                      </apex:commandlink>
+                      </div>
+                      
+                      <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showspass01"/>
+                      
+                      
+                      <apex:outputText id="blockYesPhoto" rendered="{!IF(MapAlbumSize > 0, true, false)}">
+                        
+                        <apex:repeat id="AlbumPicKey"  value="{!MapPhotoAlbum}" var="keyURL">
+                           <apex:repeat id="AlbumPic"  value="{!MapPhotoAlbum[keyURL]}" var="item">
+                           <div class="row margin-b1">
+                        	<div class="col-sm-3">
+                           	<div class="pho-pre-wrapper">    
+                           	   <apex:commandLink action="{!iWantMyJSValues}" oncomplete="confDelete();" immediate="true" rerender=""> 
+		                           <apex:param name="docGuid" value="{!item.Document_Guid__c}" assignTo="{!docGuid}"/>
+		                           <span class="pho-pre-del fa-stack" data-toggle="tooltip" data-placement="top" title="Remove">
+		                           <i class="fa fa-circle fa-stack-2x"></i>
+		                           <i class="fa fa-times fa-stack-1x"></i>
+		                            </span>
+	                           </apex:commandLink>
+	                           
+	                           <apex:commandLink action="{!RetrieveIPU}" oncomplete="popModalEdit();" immediate="true" rerender="EditPicBlock"> 
+	                                <!--  <apex:param name="keyURLModal" value="{!keyURL}" assignTo="{!keyURLModal}"/>-->
+	                               <apex:param name="IdIPU" value="{!item.id}" assignTo="{!IdIPU}"/>
+	                               <apex:image styleClass="pho-pre-img small" url="{!keyURL}" >
+	                               </apex:image>
+	                           </apex:commandLink>
+	                        </div><!--  end pho-re-wrapper -->
+	                        </div><!--  end column -->
+	                         
+                            <div class="col-sm-9">
+                            <apex:inputText styleClass="form-control margin-b1" html-placeholder="Add a Caption" value="{!item.Description__c}" id="photoDescriptiontext" />
+                            
+                            <apex:commandLink styleclass="btn btn-default" id="update1" action="{!saveMapPhotoAlbum}" reRender="webform" status="showspass01">
+                            	<apex:param name="keyPhoto" value="{!keyURL}" />
+                            	<apex:commandButton value="Update" />
+                            </apex:commandLink> 
+                            </div><!--  end column -->
+                            </div><!--  end row --> 
+                            </apex:repeat>
+                        </apex:repeat>
+                  
+		                <!--  UPDATE ALL CAPTIONS ONLY IN MAP SIZE > 1 -->
+		                <apex:outputText id="blockYesPhotoAll" rendered="{!IF(MapAlbumSize > 1, true, false)}">
+				            <apex:commandLink styleclass="btn btn-default" id="updateAll" action="{!saveMapPhotoAlbumAll}" reRender="webform" status="showspass01">
+				            <apex:commandButton value="Update All Captions" />
+				            </apex:commandLink>
+		                </apex:outputText>
+                        
+                  </apex:outputText>
+                      
+                      </div>
+                  </div>  <!-- end row -->
+                  
+                  <apex:outputText value="{!disableFileUploadText}" rendered="{!disableFileUpload}"/>
+ 				
+               </apex:pageBlock> <!--  end media-album doc upload -->
+               
+               
+                <div class="modal vs1 fade" id="profilephotos" tabindex="-1" role="dialog" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content"> 
+                        <a class="closebtn" data-dismiss="modal">
+                            <span class="fa-stack fa-lg ">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-times fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                         <div class="modal-body">
+                         <h2 class="margin-b3 center-text">Profile Photo Examples</h2>
+                         <div class="row margin-b3">
+                          <div class="col-sm-6">
+                       <p><apex:image url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/apc/misc/app-examples/profile-1.jpg')}" alt="Profile Photo Example 1" title="Profile Photo Example 1" /></p>
+ </div>
+<div class="col-sm-6">
+                      <p><apex:image url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/apc/misc/app-examples/profile-2.jpg')}" alt="Profile Photo Example 2" title="Profile Photo Example 2" /></p>
+</div>
+</div><!--  end row -->
+
+                         
+                            </div>
+                        </div>
+                      </div>
+                </div>  <!--  end modal -->
+               
+               
+               
+                <div class="modal vs1 fade" id="examplephotos" tabindex="-1" role="dialog" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content"> 
+                        <a class="closebtn" data-dismiss="modal">
+                            <span class="fa-stack fa-lg ">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-times fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                         <div class="modal-body">
+                         <h2 class="margin-b3 center-text">Good Album Photos</h2>
+                         <div class="row margin-b3">
+                          <div class="col-sm-6">
+                       <p><apex:image url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/apc/misc/app-examples/good-1.jpg')}" alt="Good Photo Example 1" title="Good Photo Example 1" /></p>
+ <p class="center-text"><label>Good Description:</label><br/><em>Having fun with Nata and Sami</em></p>
+ </div>
+<div class="col-sm-6">
+                      <p><apex:image url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/apc/misc/app-examples/good-2.jpg')}" alt="Good Photo Example 2" title="Good Photo Example 2" /></p>
+ <p class="center-text"><label>Good Description:</label><br/><em>Volunteering at Gaby and Sofi's School</em></p>
+</div>
+</div><!--  end row -->
+
+                          
+                         
+                          <h2 class="margin-b3 center-text margin-t5">Bad Album Photos</h2>
+                          
+                         
+                         <div class="row">
+                          <div class="col-sm-6">
+                       <p><apex:image url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/apc/misc/app-examples/bad-1.jpg')}" alt="Bad Photo Example 1" title="Bad Photo Example 1" /></p>
+ <p class="center-text">Collages are hard to see when online because the individual pictures are very small, and it looks cluttered.</p>
+ </div>
+<div class="col-sm-6">
+                      <p><apex:image url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/apc/misc/app-examples/bad-2.jpg')}" alt="Bad Photo Example 2" title="Bad Photo Example 2" /></p>
+ <p class="center-text">The editing on this photo makes it confusing to the eye.</p>
+</div>
+</div><!--  end row -->
+                         
+                            </div>
+                        </div>
+                      </div>
+                </div>  <!--  end modal -->
+               
+                
+                           <div class="modal vs1 fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                              <div class="modal-dialog modal-sm">
+                                <div class="modal-content"> 
+                                 <div class="modal-body">
+                                 <p>Are you sure you want to remove this photo?</p>
+                                 </div>
+                                  <div class="modal-footer">
+                                    <apex:commandLink styleClass="btn btn-primary" action="{!deletefile}" immediate="true">       
+                                    <apex:param name="mediaparam" value="true" assignTo="{!mediaparam}" />
+                                    <apex:commandButton value="Yes" id="yesbutton"/>
+                                    </apex:commandLink>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>  <!--  end modal -->
+
+                <div class="modal vs1 fade modal-widget" id="myModalUpload" tabindex="-1" role="dialog" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content"> 
+                         <div class="modal-header">
+                            <h4 class="modal-title">Choose a Profile Photo</h4>
+                            <p>Please select a quality photo of yourself with children, where you are smiling directly at the camera and your face is clearly visible.</p>
+                          </div>
+                         <div class="modal-body">
+                                <iframe width="100%" height="450" frameborder="0" scrolling="no" src="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType={!$CurrentPage.parameters.doctype2}&retparam={!retParam}&desc=no"></iframe>
+                         </div>
+                        </div>
+                      </div>
+                </div>  <!--  end modal -->
+                
+                <div class="modal vs1 fade modal-widget" id="myModalUpload2" tabindex="-1" role="dialog" aria-hidden="true">
+               
+                      <div class="modal-dialog">
+                          <div class="modal-content"> 
+                          <a class="closebtn" data-dismiss="modal">
+                            <span class="fa-stack fa-lg ">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-times fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                              <div class="modal-header">
+                                  <h4 class="modal-title">Upload Photos</h4>
+                                  <p>Photos should be of you and children and you and your natural family.</p>
+                              </div>
+                              <div class="modal-body">
+                                   <iframe width="100%" height="400" frameborder="0" scrolling="no" src="{!fileUploadUrl}pid={!ProgId}&anchor=anchorPhoto&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType={!$CurrentPage.parameters.doctype2}&retparam={!retParam}"></iframe>
+                              </div>
+                          </div>
+                      </div>
+                </div>  <!--  end modal -->
+                
+               
+                 <apex:outputpanel layout="block" id="EditPicBlock">
+                 <div class="modal vs1 fade modal-widget" id="myModalUploadEdit" tabindex="-1" role="dialog" aria-hidden="true">
+               
+                      <div class="modal-dialog">
+                          <div class="modal-content"> 
+                              <div class="modal-body">
+                                   <div class="row">
+                                   <div class="col-sm-12">
+                                   <apex:image url="{!keyURLModal}" id="mediumImage">
+                                   </apex:image>
+                                   </div>
+                                   </div><!--  end row -->
+                                   
+                                   <div class="row">
+                                   <div class="col-sm-12 margin-t">
+                                   <div class="form-group">
+                                   <!--
+                                   <label class="control-label">Caption</label>
+                                   <apex:inputField styleClass="form-control" html-placeholder="Enter a description" value="{!ipuPhoto.Description__c}" required="TRUE" id="SchoolName" />
+                                   -->
+                                   </div>
+                                   </div>
+                                   </div><!--  end row -->
+                                   
+                                   <div class="row">
+                                   <div class="col-sm-12">
+                                  <!-- 
+                                  <apex:commandLink styleclass="btn btn-primary" id="update" action="{!saveRetrieveIPU}" rerender="EditPicBlock" html-data-dismiss="modal">
+                                  <apex:commandButton value="Update Caption" />
+                                  </apex:commandLink>
+                                   -->
+                                  <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close Window</button>
+                                   </div>
+                                   </div><!--  end row -->
+                                  
+                                    
+                              </div>
+                              <a class="closebtn" data-dismiss="modal">
+                            <span class="fa-stack fa-lg ">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-times fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                          </div>
+                      </div>
+                </div>  <!--  end modal -->
+                </apex:outputpanel>
+          
+                
+                
+         <apex:outputpanel layout="block" rendered="{!applicantInfo.Application_Level__c == 'Main'}">
+              <div class="row">
+                <div class="col-sm-12 margin-t6">
+                  <apex:outputLink styleClass="btn btn-link btn-lg"  rendered="{!applicantInfo.Application_Type__c=='Original'}" value="/apex/apc_ap_main_essays?id={!applicantInfo.Id}" id="backlinkviisa"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                  <apex:outputLink styleClass="btn btn-link btn-lg"  rendered="{!applicantInfo.Application_Type__c=='Extension' || applicantInfo.Application_Type__c=='Renewal'}" value="/apex/apc_ap_main_essays?id={!applicantInfo.Id}" id="backlinkessay"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                  
+                  <apex:commandlink rendered="{!applicantInfo.Application_Type__c=='Original'}"  styleClass="btn btn-primary btn-lg"  immediate="TRUE" action="{!navigator}" id="nextlink2" onComplete="rerunjs();hwsize();" reRender="webform" status="onsubmit">
+                     <apex:param name="nextPage" value="/apex/apc_ap_main_video" />
+                    <apex:param name="reDirectPage" value="true" />
+                    <!--
+                    <apex:param name="docType" value="Participant-Photo" assignTo="{!docType}"/>
+                    <apex:param name="pageId" value="031"/>
+                    -->
+                    <apex:commandButton value="Continue" id="continuebutton2"/>
+                  </apex:commandlink>
+                  
+                  <apex:commandlink rendered="{!(applicantInfo.Application_Type__c=='Extension' || applicantInfo.Application_Type__c=='Renewal') }"  styleClass="btn btn-primary btn-lg"  immediate="TRUE" action="{!navigator}" id="nextlink3" onComplete="rerunjs();hwsize();" reRender="webform" status="onsubmit">
+                     <apex:param name="nextPage" value="/apex/apc_ap_main_video" />
+                    <apex:param name="reDirectPage" value="true" />
+                      <apex:param name="pageId" value="031"/>
+                    <!--
+                    <apex:param name="docType" value="Participant-Photo" assignTo="{!docType}"/>
+                    <apex:param name="pageId" value="031"/>
+                    -->
+                    <apex:commandButton value="Continue" id="continuebutton3"/>
+                  </apex:commandlink>
+                </div> 
+              </div>
+          </apex:outputpanel>
+            
+        </apex:form>
+        </div>
+        <!-- end column  -->
+        
+        <div id="app-side" class="col-md-3 col-md-pull-8">
+          <c:menu_side_apc_ap_basic ApplicantInfo="{!applicantInfo}" />
+        </div>
+        <!-- end column  --> 
+      </div>
+      <!-- end row -->
+      
+       <script>
+var j$ = jQuery.noConflict();
+window.addEventListener( "message",
+    function (e) {
+        if(e.origin == '{!awsWebBaseUrl}'){
+            var hash=  window.top.location.hash;
+            if(hash == null || hash == ''){
+                var d = window.top.location + '#'+e.data;
+                 window.location.href = d ;
+                 window.top.location.reload();
+            }else{
+                window.top.location.reload();
+                window.top.location.hash = hash;
+            }                               
+        } 
+        
+},false);    
+function closeModalEdit(){
+j$('#myModalUploadEdit').modal('hide');
+} 
+
+
+function confDelete(){
+j$('#myModal').modal();
+} 
+  
+function popModal(){
+var auxerr= j$('.custom-error-pagelevel').attr('role');
+//alert(auxerr);
+    if(auxerr=="alert"){
+    }else{
+        j$('#myModalUpload').modal();
+    }
+} 
+
+function popModal2(){
+var auxerr= j$('.custom-error-pagelevel').attr('role');
+//alert(auxerr);
+    if(auxerr=="alert"){
+    }else{
+        j$('#myModalUpload2').modal();
+    }
+}
+function popModalEdit(){
+var auxerr= j$('.custom-error-pagelevel').attr('role');
+//alert(auxerr);
+    if(auxerr=="alert"){
+    }else{
+        j$('#myModalUploadEdit').modal();
+    }
+}  
+    
+</script>          
+       
+    </apex:define>
+  </apex:composition>
+</apex:page>

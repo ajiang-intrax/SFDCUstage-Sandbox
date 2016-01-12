@@ -1,0 +1,99 @@
+<apex:page standardController="invoiceit_s__Payment__c" extensions="invoiceit_s.ControllerAllocatePayments" tabStyle="invoiceit_s__Payment__c">
+   <script>
+    function confirmCancel() {
+        if (confirm("{!$Label.CancellingthiswoulddiscardthechangesPleaseconfirm}")) 
+        {
+            return true;
+        }
+        return false;
+    }
+    
+    function confirmDelete(paymentAllocationId, invoice, Amount) {
+        if (confirm("{!$Label.PaymentPageCancel_Message}")) 
+        {
+            cancelPaymentAllocation(paymentAllocationId);
+            return true;
+        }
+       
+        return false;
+    }
+   </script>     
+   <apex:sectionHeader title="{!$Label.PaymentPageHeader}" subtitle="{!$Label.PaymentPageSubTitle}" />
+   <apex:outputField value="{!payment.Account__r.Id}" rendered="false" />
+   <apex:form >
+   <apex:actionFunction action="{!getSelectedInvoice}" name="getSelectedInvoice" reRender="allocationSection,allocationSection2">
+       <apex:param value="" name="selectedCounter"/>
+   </apex:actionFunction>    
+   <apex:actionFunction action="{!cancelPaymentAllocation}" name="cancelPaymentAllocation" reRender="mainBlock">
+    <apex:param name="paymentAllocationId" value=""/>
+   </apex:actionFunction>
+   <apex:pageBlock id="mainBlock">
+     <apex:pageBlockButtons >
+        <apex:commandButton value="{!$Label.ButtonSave}" action="{!savePaymentAllocations}" rendered="{!payment.invoiceit_s__Unallocated_Amount__c != 0}"/>
+        <apex:commandButton value="{!$Label.ButtonCancel}" onclick="return confirmCancel()" immediate="true" action="{!cancel}" rendered="{!payment.invoiceit_s__Unallocated_Amount__c != 0}"/>
+        <apex:commandButton value="{!$Label.ButtonBackToPayment}" action="{!backToPayment}" rendered="{!payment.invoiceit_s__Unallocated_Amount__c == 0}"/>
+     </apex:pageBlockButtons>
+     <apex:pageMessages />
+     <apex:pageBlockSection title="{!$Label.PaymentPagePBTitleDetails}" columns="2" >
+        <apex:outputField value="{!payment.invoiceit_s__Account__c}"/>
+        <apex:outputField value="{!payment.invoiceit_s__Amount__c}"/>
+        <apex:outputField value="{!payment.invoiceit_s__Currency__c}"/>
+        <apex:outputField value="{!payment.invoiceit_s__Status__c}"/>
+        <apex:outputField value="{!payment.invoiceit_s__Allocated_Amount__c}"/>
+        <apex:outputField value="{!payment.invoiceit_s__Unallocated_Amount__c}"/>
+      </apex:pageBlockSection><br/>
+      
+      <apex:pageBlockSection title="{!$Label.PaymentPagePBTitleAllocations}" columns="1" collapsible="false" rendered="{!isPaymentAllocationsExists}">
+      <apex:pageBlockTable value="{!listOfPaymentAllocationsInDb}" var="paymentAllocation" rendered="{!isPaymentAllocationsExists}">    
+        <apex:column >
+          <apex:commandLink styleClass="btn" value="{!$Label.ButtonCancel}" rendered="{!paymentAllocation.invoiceit_s__Status__c == 'Completed'}" reRender="mainBlock" onclick="return confirmDelete('{!paymentAllocation.Id}','{!paymentAllocation.invoiceit_s__Invoice__c}','{!paymentAllocation.invoiceit_s__Amount__c}');" />  
+        </apex:column>
+        <apex:column headerValue="Payment Allocation Number">
+           <apex:outputField value="{!paymentAllocation.Name}"/> 
+        </apex:column>
+        <apex:column headerValue="Invoice">
+           <apex:outputField value="{!paymentAllocation.invoiceit_s__Invoice__c}"/> 
+        </apex:column>
+        <apex:column headerValue="Amount Paid">
+           <apex:outputField value="{!paymentAllocation.invoiceit_s__Amount__c}"/> 
+        </apex:column>
+        <apex:column headerValue="Status">
+           <apex:outputField value="{!paymentAllocation.invoiceit_s__Status__c}"/> 
+        </apex:column>
+      </apex:pageBlockTable><br/>
+      </apex:pageBlockSection>
+       
+      <apex:pageBlockSection title="{!$Label.PaymentPagePBTitleUnpaidInvoices}" columns="1" collapsible="false" >
+      <apex:pageBlockTable value="{!map_Counter_allocationClass}" var="counter" id="allocationSection2" rendered="{!isUnpaidInvoicesExists}">    
+        <apex:column >
+            <apex:inputCheckbox value="{!map_Counter_allocationClass[counter].isChecked}" onclick="getSelectedInvoice('{!map_Counter_allocationClass[counter].counter}')"/>
+        </apex:column>
+        <apex:column headerValue="Invoice Name">
+           <a href="/{!map_Counter_allocationClass[counter].invoice.Id}" target="_blank">{!map_Counter_allocationClass[counter].invoice.Name}</a>
+        </apex:column>
+        <apex:column headerValue="Invoice Date">
+           <apex:outputField value="{!map_Counter_allocationClass[counter].invoice.Invoice_Date__c}" />
+        </apex:column>
+        <apex:column headerValue="Due Date">
+           <apex:outputField value="{!map_Counter_allocationClass[counter].invoice.Due_Date__c}" />
+        </apex:column>
+        <apex:column headerValue="Invoice Amount">
+           <apex:outputField value="{!map_Counter_allocationClass[counter].invoice.Total_Invoice_Value__c}" />
+        </apex:column>
+        <apex:column headerValue="Paid Amount">
+           <apex:outputField value="{!map_Counter_allocationClass[counter].invoice.Paid_Amount__c}" />
+        </apex:column>
+        <apex:column headerValue="Unpaid Amount">
+           <apex:outputField value="{!map_Counter_allocationClass[counter].invoice.Unpaid_Amount__c}" />
+        </apex:column>
+        <apex:column headerValue="Payment Amount">
+            <apex:outputField value="{!map_Counter_allocationClass[counter].paymentAllocation.Amount__c}" rendered="{!!map_Counter_allocationClass[counter].isChecked}"/>
+            <apex:inputField value="{!map_Counter_allocationClass[counter].paymentAllocation.Amount__c}" rendered="{!map_Counter_allocationClass[counter].isChecked}"/>
+        </apex:column>       
+      </apex:pageBlockTable> 
+      
+      <apex:outputText rendered="{!!isUnpaidInvoicesExists}" value="{!$Label.PaymentPagePaymentDoneInfo}"/>
+      </apex:pageBlockSection>   
+    </apex:pageBlock>
+    </apex:form>  
+</apex:page>

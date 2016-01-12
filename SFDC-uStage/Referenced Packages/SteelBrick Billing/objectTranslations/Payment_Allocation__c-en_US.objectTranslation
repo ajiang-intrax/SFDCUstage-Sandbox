@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Payment Allocation</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Payment Allocations</value>
+    </caseValues>
+    <fields>
+        <label><!-- Amount --></label>
+        <name>Amount__c</name>
+    </fields>
+    <fields>
+        <help><!-- The invoice against which this payment is made. --></help>
+        <label><!-- Invoice --></label>
+        <name>Invoice__c</name>
+        <relationshipLabel><!-- Payment Allocations --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Payment --></label>
+        <name>Payment__c</name>
+        <relationshipLabel><!-- Payment Allocations --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Status --></label>
+        <name>Status__c</name>
+        <picklistValues>
+            <masterLabel>Cancelled</masterLabel>
+            <translation><!-- Cancelled --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Completed</masterLabel>
+            <translation><!-- Completed --></translation>
+        </picklistValues>
+    </fields>
+    <layouts>
+        <layout>Payment Allocation Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

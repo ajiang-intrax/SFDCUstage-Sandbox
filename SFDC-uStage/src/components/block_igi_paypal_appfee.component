@@ -1,0 +1,30 @@
+<apex:component layout="none">
+  <apex:attribute name="ApplicantInfo" description="This is the value for the Applicant_Info__c object." type="Applicant_Info__c" required="false" default="" />
+  <apex:attribute name="personInfo" description="This is the value for the Person_Info__c object." type="Person_Info__c" required="false" default="" />
+<hr class="margin-b3"/>
+                  <h2 class="margin-b3">Your application payment is due </h2>
+                  <p>Simply click on the secure PayPal link below to submit your online payment. 
+                  Applications are subject to cancellation if the application fee is not received within 7 days of acceptance.</p>
+                  <p class="margin-b3">Applications are subject to cancellation if the application fee is not received within 7 days of acceptance.</p>
+                  <div class="h3 margin-b">Application Fee: <strong>$300</strong></div>
+                  
+                          
+<form class="form-vertical centered-xs ws-validate" action="https://www.paypal.com/cgi-bin/webscr" id="paypal" method="post" target="_blank">
+<input name="cmd" type="hidden" value="_s-xclick"/> 
+<input name="hosted_button_id" type="hidden" value="JVTAY45KDHAKN"/>
+<input name="on0" type="hidden" value="Participant Name (Last, First)"/>
+<input name="os0" id="participant_name" maxlength="200" type="hidden" value="{!personInfo.First_Name__c }, {!personInfo.Last_Name__c }"/>
+<input name="on1" type="hidden" value="Intrax ID"/>
+<input name="os1" id="participant_name" maxlength="200" type="hidden" value="{!applicantInfo.Account__r.Intrax_Id__c}"/>
+<input name="item_name" type="hidden" value="Internship Application Fee"/>
+<input value="" name="submit" type="image" target="_blank" src="{!URLFOR($Resource.intrax_themes_vs3, '/intrax_themes_vs3/images/paypal.gif')}"/> 
+</form>
+
+<p class="margin-t3">Thank you for choosing Intrax Global Internships, please contact us should you have any questions:</p>
+<p>
+Billing Inquiries: <a href="mailto:billing@globalinternships.com?subject=Re%3A%20IIA%20Deposit">billing@globalinternships.com</a><br/>
+Program Inquiries: <a href="mailto:participants@globalinternships.com">info@globalinternships.com</a><br/>
+Phone Inquiries: 1 (877) 429-6753</p>
+<p>&nbsp;</p>
+              
+</apex:component>

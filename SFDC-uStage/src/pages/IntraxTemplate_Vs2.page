@@ -1,0 +1,66 @@
+<!--  
+Page: IntraxTemplate_Vs2
+
+Description: Intrax Partner Portal Header Template
+
+-->
+<apex:page docType="HTML-5.0" showHeader="false" standardStylesheets="false" id="SiteTemplate">
+	
+	<html>
+		
+		<!-- Template Header -->
+		<head>
+			<c:Head1_IntraxTemplateVs2 />
+			<c:Head2_IntraxTemplateVs2 />
+			<c:Head3_IntraxTemplateVs2 />
+		</head>
+		
+		<!-- Template Body -->
+		<body>
+			
+			<c:Body1_IntraxTemplateVs2 />
+			<c:Region_Branding_IntraxTemplateVs2 />   
+			<c:Region_Menu_IntraxTemplateVs2 /> 
+			
+			<div id="content-zone">
+				<div id="content-zone-inner" class="container">    
+					<apex:insert name="body"/>
+				</div>
+			</div>
+			
+			<!-- Template Footer -->      
+			<c:Region_Footer_IntraxTemplateVs2 />    
+			<c:Body2_IntraxTemplateVs2 />
+            <script>
+            //datepicker script
+            var j$ = jQuery.noConflict();
+            j$(window).load(function () {
+                if(j$('.dp-standard').parent().length) {
+                    var attrib = {changeMonth: true,
+                                  changeYear: true,
+                                  showTimepicker: false,
+                                  currentText: 'Today',};
+                    var tags = j$('.dp-standard');
+                    for (var i = tags.length - 1; i >= 0; i--) {
+                        datetimepickerInitializer(tags[i], attrib);
+                    };
+                }
+                if(j$('.dp-wtime').parent().length){
+                    var attrib = {changeMonth: true,
+                                  changeYear: true,
+                                  showTimepicker: true,
+                                  stepMinute: 5,
+                                  controlType: 'select',
+                                  showTime: false,};
+                    var tags = j$('.dp-wtime');
+                    for (var i = tags.length - 1; i >= 0; i--) {
+                        datetimepickerInitializer(tags[i], attrib);
+                    };
+                }
+                
+            });
+            </script>
+		</body>
+		 
+	</html>  
+</apex:page>

@@ -1,0 +1,225 @@
+<apex:page id="Positions" docType="html-5.0" standardController="Applicant_Info__c" extensions="Positions_Controller" action="{!checkLogin}" standardStylesheets="false" showHeader="false">
+     
+        <apex:composition template="IntraxTemplate_Vs2" >
+            <apex:define name="body">
+            <apex:form >
+            	<h1>Available Positions</h1>
+            	
+                <div class="row-fluid">
+                <!-- DO WE NEED FILTERS HERE?
+                <div class="span3"> 
+                    <div class="block filter-group">
+                        <div class="block-header">
+                            <h3>Search Filters</h3>
+                        </div>
+                        <div class="block-body">
+                        	   
+		                    <div class="filter">
+			                    <div class="filter-name">Position Name</div>
+			                    <div class="filter-field">
+			                    <apex:inputText value="{!positionSelected}"/>
+						        <div class="form-input no-float">
+						        <apex:commandButton action="{!doSearch}" rerender="pb" status="waitMsg" value="Search" id="GoButton"/>
+						        </div>
+			                    </div>   
+		                   </div>
+					        
+		       			 </div>
+                    </div>
+               </div>-->
+			
+				<div class="span12">
+                    
+                    <apex:actionStatus id="waitMsg" startStyleClass="feedback">
+	                        <apex:facet name="start" >
+	                            <i class="no-float icon-spinner icon-spin icon-2x pull-left"></i>  <strong>Please Wait.....</strong>
+	                        </apex:facet>
+	                    </apex:actionStatus>
+	                           
+                        <apex:pageBlock id="pb">
+	                                
+	                        <apex:pageMessages id="validationMsg"/>
+	                        <apex:outputPanel rendered="{!IF(positionlist.Size == 0, true, false)}" layout="block" styleClass="block">
+                                <div class="block-body">
+	                           	No record(s) to display.
+                                </div>
+                            </apex:outputPanel>	                        
+	                            	
+                           	<!-- <apex:actionFunction name="callAction" action="{!pageNavigation}" status="waitMsg" reRender="pb, validationMsg"/> -->
+                            <!--  <apex:actionFunction name="doSearch" action="{!doSearchForPageSize}" status="waitMsg" reRender="pb, validationMsg"/> -->
+	                             
+                    <!-- begin sorting fields -->
+                    		<!--  
+     						<apex:outputPanel rendered="{!IF(PositionList.Size > 0, true, false)}" layout="block" styleClass="clearfix navbar">
+						    	<div class="navbar-inner">
+						    		<div class="navbar-form">
+	          							<div class="pull-left margin-r">  
+	          								Sort By&nbsp;
+	          								<apex:selectList value="{!sortExpression}" styleClass="short" multiselect="false" size="1" onchange="doSearch();return false;">
+						                    	<apex:selectOption itemValue="Name" itemLabel="--None--"/>
+						                    	<apex:selectOptions value="{!SortBy}"/>
+									         </apex:selectList>
+	   									</div>  
+	    
+									    <div class="pull-left margin-r">                                      
+									         
+			                               <apex:pageBlock id="SortByDirectionBlock">
+							          
+									         <apex:commandLink action="{!doSearch}" value=" Reverse Order" reRender="pb,validationMsg" status="waitMsg">
+		                                         <apex:param value="{!sortExpression}" ></apex:param>
+		                                     </apex:commandLink>
+                                     		  
+                                     		<apex:outputText value=" Records retrieved: {!MatchRecords.size}" />
+				             				
+		                             		</apex:pageBlock>
+							    		</div> 
+	        						</div>  
+	        					</div>       
+        	                </apex:outputPanel> 
+        	                -->
+            	            <!-- end sorting fields -->  
+                   <!--  <apex:pageBlock id="pb"> -->
+                   <div id="app-list" class="list-view" >
+                            <apex:repeat id="AppsList" value="{!positionlist}" var="item" rendered="{!IF(positionlist.Size > 0, true, false)}">
+                    <div class="block">
+                        <div class="block-body"> 
+	               <div class="row-fluid">
+                       <div class="span4"> 
+                      <label>Company Name:</label>
+                      <apex:outputText value="{!item.Company_Name__c}"/>	                   
+                     <apex:outputText value="-" rendered="{!ISBLANK(item.Company_Name__c)}"/>
+                      <label>Position Title: </label>
+                        <apex:outputField value="{!item.Position__r.Title__c}" />
+                        <apex:outputText value="-" rendered="{!(ISBLANK(item.Position__r.Title__c))}"/>
+                      <label>Position ID: </label>
+                        <apex:outputField value="{!item.Position__r.Code__c}" />
+                        <apex:outputText value="-" rendered="{!(ISBLANK(item.Position__r.Code__c))}"/>
+                </div>      
+                <div class="span4">
+                	
+                        <label>Earliest Start Date:</label>
+                        <apex:outputField value="{!item.Position__r.Engagement_Start__c}" />
+                        <apex:outputText value="-" rendered="{!(ISBLANK(item.Position__r.Engagement_Start__c))}"/>
+                        <label>Latest Start Date:</label>
+                        <apex:outputField value="{!item.Position__r.Engagement_Latest_Start__c}" />
+                   		<apex:outputText value="-" rendered="{!(ISBLANK(item.Position__r.Engagement_Latest_Start__c))}"/>
+                   		
+                </div> 
+                
+                <div class="span4">
+                        
+                        <label>Earliest End Date:</label>
+                        <apex:outputField value="{!item.Position__r.Engagement_Earliest_End__c}" />
+                        <apex:outputText value="-" rendered="{!(ISBLANK(item.Position__r.Engagement_Earliest_End__c))}"/>
+                        <label>Latest End Date:</label>
+                        <apex:outputField value="{!item.Position__r.Engagement_End__c}" />
+                   		<apex:outputText value="-" rendered="{!(ISBLANK(item.Position__r.Engagement_End__c))}"/>
+                   		
+                </div> 
+                
+                </div>
+   
+            </div><!-- end block body -->
+                        <div class="block-footer">            
+                <div class="row-fluid no-padding">
+                	<div class="span12">
+                        <div class="float-r">
+                        <div class="form-link no-margin margin-r">
+                        	<apex:outputLink value="/apex/Position_Details?id={!applicantInfo.Id}&pid={!item.Position__c}"><i class="icon-chevron-right"></i> <span>View details</span> </apex:outputLink>
+			           </div> 	
+			           <!--   
+                        <div class="form-link no-margin margin-r">
+                		<apex:commandlink action="{!rejectCandidate}" >
+				            <i class="icon-thumbs-down"></i>
+				            <apex:param name="mId" value="{!item.Id}" assignTo="{!mId}" />
+				            <apex:commandButton value="Reject the Candidate"/>
+			            </apex:commandlink>
+                        </div>
+                        -->
+                    </div>
+                	</div>
+                 </div>
+               </div> <!-- end block footer --> 
+           </div><!-- end block --> 
+          </apex:repeat>
+        </div>
+                	<!--  
+                	<apex:outputPanel rendered="{!IF(listMatch.Size > 0, true, false)}" layout="block" styleClass="clearfix navbar">
+						    	<div class="navbar-inner">
+						    		<div class="navbar-form">
+						    					
+	          							<div class="pull-left margin-r">  
+	          								Page&nbsp;
+	          								<apex:inputText id="pageNoBottom" value="{!totalpageNumber}" size="3" onkeydown="return runScript(event);"/>
+	          								&nbsp;
+			  								<apex:outputLabel value="of {!listOflistMatch.size}"/> 
+	   									</div>  
+	    
+									    <div class="pull-left margin-r">                                      
+									         
+			                                List Size&nbsp;
+			                                <apex:selectList value="{!limits}" styleClass="short" size="1" onchange="doSearch();return false;">
+			                                	<apex:selectOptions value="{!items}"/>
+			                                </apex:selectList>
+			                               
+							    		</div> 
+							    		 
+	          							<div class="pagination pull-right">
+	                                    	<ul>
+	                                       		<li><apex:commandLink value="First" action="{!first}" status="waitMsg" reRender="pb, validationMsg"/></li>
+		                                        <li><apex:commandLink action="{!previous}" status="waitMsg" reRender="pb, validationMsg" rendered="{!IF(PreviousButtonDisabled  == true, false, true)}">
+	                                            <apex:outputText value="Previous"/>
+	                                            </apex:commandLink></li>
+	                                                        
+	                                            <li><apex:commandLink action="{!next}" status="waitMsg" reRender="pb, validationMsg" rendered="{!IF(NextButtonDisabled == true, false, true)}">
+	                                            <apex:outputText value="Next"/>
+	                                            </apex:commandLink></li>
+	                                            
+	                                         	<li><apex:commandLink value="Last" action="{!last}" status="waitMsg" reRender="pb, validationMsg"/></li>
+	                                        </ul>   
+	       								</div>        
+	        						</div> 
+	        					</div> 
+	                                           
+        	                </apex:outputPanel> 
+                	-->
+                	
+                   	</apex:pageBlock> 
+              	
+              	
+              	   
+                    
+                    
+                </div><!-- end span9 -->
+                </div><!-- end row -->
+                
+                
+                <div class="row">
+					<div class="span12">
+        	
+                    
+                    	 
+    				</div> <!-- end span12 -->
+    			</div> <!-- end row -->
+    			<script>
+	    
+	        function runScript(obj){
+	            
+	            //alert(obj.keyCode);
+	            if(obj.keyCode == 13){
+	                callAction();   // call action function
+	                return false;
+	            }else if((obj.keyCode > 34 && obj.keyCode < 40) || (obj.keyCode > 95 && obj.keyCode < 106) || (obj.keyCode > 47 && obj.keyCode < 58) || obj.keyCode == 8 || obj.keyCode == 46 ){
+	                return true;
+	            }else{
+	                return false;
+	            }
+	        }
+	    </script>
+	    
+    </apex:form>
+        	</apex:define>
+    	</apex:composition>
+        
+	    
+</apex:page>

@@ -1,0 +1,85 @@
+<apex:page id="Home" title="Home" docType="html-5.0" controller="User_Controller" standardStylesheets="false" showHeader="false" applyBodyTag="false" applyHtmlTag="false" action="{!CheckLogin}">
+        <apex:composition template="intraxtemplate_vs3">
+            <apex:define name="body">
+            
+			<apex:form > 
+			<apex:actionFunction name="callAction" action="{!GoSearch}" status="waitMsg"/>
+			<div class="row">
+			<div class="col-sm-9 center-block center-text">	
+			<h1>Your<apex:outputText value=" {!DefaultIP} " />Workspace</h1>
+			<p class="lead">Hello<apex:outputText value=" {!activeUser.FirstName}"/>, here you will be able to track and process your applications, follow your participants' match progress, view match details, monitor your participants' program assessments, and interact directly with us to communicate travel information and upload relevant program related forms.</p>
+		  </div><!--  end column -->
+		  </div><!--  end row -->
+	
+	
+	
+		 <hr class="margin-t4 margin-b4"/>
+		 
+		 
+			<div class="row">
+			<div class="col-sm-8">	 
+	 <c:block_pr_quick_links />	
+		
+		
+		
+		
+		
+		<div class="row margin-b4">
+			<div class="col-sm-12">	
+		   <h2 class="no-margin-t">Quick Search</h2>
+		   <p>Looking for an application or a participant? Enter the name of the person and we will retrieve it for you.</p>
+		   <div class="row margin-t2">
+			<div class="col-sm-6">	
+		    <div class="input-group input-group-lg">
+		      <apex:inputtext styleClass="form-control" html-placeholder="Name of Applicant or Participant" onkeydown="return runScript(event);" value="{!inputValue}" id="theTextInput"/>			      	
+		        <apex:commandLink styleClass="input-group-addon" id="GoButton" action="{!GoSearch}" >		
+		        Search        
+                </apex:commandLink>
+		    </div>
+	</div><!--  end column -->
+	</div> <!-- end row -->
+	</div><!--  end column -->
+	</div> <!-- end row end quick search-->
+	</div><!--  end column -->
+	
+	
+	<div class="col-sm-4">	 
+	 <c:block_pr_announcements />	
+	</div><!--  end column -->
+	</div> <!-- end row -->
+	
+		 
+		
+	
+	
+		
+		 
+			
+			
+			
+			
+			 
+			
+		
+	
+		 
+			 		
+		
+		
+	 
+		
+	
+	
+        <script>               
+             function runScript(obj){                        
+                 //alert(obj.keyCode);
+                 if(obj.keyCode == 13){
+                     callAction();   // call action function
+                     return false;
+                 }
+             }
+        </script>
+</apex:form>
+            </apex:define>
+        </apex:composition>
+</apex:page>

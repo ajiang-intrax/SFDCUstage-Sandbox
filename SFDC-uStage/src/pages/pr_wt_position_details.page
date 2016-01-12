@@ -1,0 +1,566 @@
+<apex:page applyBodyTag="false" applyHtmlTag="false" title="Campaign - Position Details | Intrax"
+	standardStylesheets="false" showHeader="false"
+	controller="IntraxPartnerPortalEngineController" action="{!checkLogin}">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      
+      <apex:form styleClass="form-vertical ws-validate">
+     
+      
+        <!-------------------------   START WORK TRAVEL POSITIONS   ---------------------------------------->
+        
+        <apex:outputPanel layout="block" rendered="{!IF(CONTAINS(positionInfo.Intrax_Program__c, 'Work Travel'), true, false )}">
+          <div class="row margin-b4">
+            <div class="col-sm-9 center-text center-block">
+              
+              <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Title__c), true, false)}" >
+              <h1><apex:outputText value="{!positionInfo.Host_Company_Id__r.Name}" /></h1>
+              </apex:outputText>
+              
+              <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Title__c), false, true)}">
+              <h1><apex:outputText value="{!positionInfo.Title__c}" /></h1>
+              <h2 class="no-margin-t"><em>at</em>&nbsp;<apex:outputText value="{!positionInfo.Host_Company_Id__r.Name}" /></h2>
+              </apex:outputText>
+              
+            <div class="margin-b4">
+             <apex:outputField value="{!positionInfo.City__c}" />,&nbsp;<apex:outputField value="{!positionInfo.State__c}" />,&nbsp;<apex:outputField value="{!positionInfo.Country__c}" /> | <label>Position Code</label>&nbsp;<apex:outputField value="{!positionInfo.Code__c}" />
+            </div>      
+                  
+            <apex:outputLink styleClass="btn btn-link btn-lg vs2 margin-r2" target="_blank" value="/apex/pr_camp_position_details_pdf?pId={!positionInfo.Id}"><i class="fa fa-file-o"></i> <span>View as PDF</span></apex:outputLink>
+            	<apex:outputText rendered="{!IF(CONTAINS(hostCompany.Intrax_Programs__c, 'Work Travel'), true, false )}">
+		        <apex:outputLink styleClass="btn btn-link btn-lg vs2" id="createMatch" value="/apex/pr_camp_match_new?pId={!positionInfo.Id}&mOrigin=pos&CampID={!CampStrURL}"><i class="fa fa-edit"></i> <span>Create New Match</span> </apex:outputLink>
+                </apex:outputText>    
+                 
+              
+            </div>
+            <!--  end column --> 
+          </div>
+          <!--  end row -->
+          
+     
+                
+          <hr class="margin-b4"/>
+          <div class="row margin-b6">
+            <div class="col-md-8 center-block center-text">
+              <h2>Position Details</h2>
+              <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Marketing_Notes__c), false, true)}">
+              <p><apex:outputField value="{!positionInfo.Marketing_Notes__c}"/></p>
+              </apex:outputText>
+              <a data-toggle="modal" data-target="#pos-desc">Full position description</a>
+    
+   
+              
+              
+            </div>
+            <!--  end column --> 
+          </div>
+          <!--  end row -->
+   
+   <div class="modal fade vs1" id="pos-desc"> 
+    <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+      
+     <div><apex:outputField value="{!positionInfo.Description__c}" /></div>
+     <div><apex:outputField value="{!positionInfo.Required_Duties__c}" /></div>  
+     <div><apex:outputField value="{!positionInfo.Skills_Required__c}" /></div> 
+     <div><apex:outputField value="{!positionInfo.Host_Company_Id__r.Company_Policies__c}" /></div>
+     <div><apex:outputField value="{!positionInfo.Special_Notes__c}" /></div>
+     
+     
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+          <div class="row margin-b4">
+            <div class="col-md-8 center-block">
+            <div class="row">
+            <div class="col-sm-6">
+            
+             <div class="margin-b3">
+            <div class="tcell">
+            <i class="fa fa-edit data-label vs2 margin-r2"></i>
+            </div>
+            <div class="tcell">
+            <label>Requirements and Qualifications</label>
+          
+          <div> 
+           <apex:outputText rendered="{!positionInfo.Requires_Interview__c == true}">
+              This position requires an interview.
+              </apex:outputText>
+              <apex:outputText rendered="{!positionInfo.Requires_Interview__c == false}">
+              This position does not require an interview.
+              </apex:outputText>
+           </div>   
+          
+            <div>     
+               <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Minimum_Age__c), false, true)}"> 
+               Only for candidates above&nbsp;<apex:outputField value="{!positionInfo.Minimum_Age__c}" /> years old. 
+               </apex:outputText>
+             </div>
+            <div>
+                <apex:outputText value="Male candidates only" rendered="{!positionInfo.Gender_Preference__c == 'Male'}"/>
+                <apex:outputText value="Female candidates only" rendered="{!positionInfo.Gender_Preference__c == 'Female'}"/>
+            </div>
+            <div>         
+               <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Language_1_Proficiency__c), false, true)}"> 
+               Only for candidates with&nbsp;<apex:outputField value="{!positionInfo.Language_1_Proficiency__c}" /> English skills. 
+               </apex:outputText>
+              </div>  
+            <div> 
+                <apex:outputText value="Couples are allowed" rendered="{!positionInfo.Accepts_Couples__c == true}"/>
+                <apex:outputText value="Couples are not allowed" rendered="{!positionInfo.Accepts_Couples__c == false}"/>
+             </div>
+            <div>   
+                <apex:outputText value="Second job is allowed" rendered="{!positionInfo.Second_Job_Allowed__c == 'Yes'}"/>
+                <apex:outputText value="Second job is not allowed" rendered="{!positionInfo.Second_Job_Allowed__c == 'No'}"/>
+             </div>
+            <div>  
+                <apex:outputText value="Groups are allowed" rendered="{!positionInfo.Accepts_Groups__c == true}"/>
+                <apex:outputText value="Groups are not allowed" rendered="{!positionInfo.Accepts_Groups__c == false}"/>
+             </div>
+             </div>
+            </div>
+            <div class="margin-b3">
+            
+            <div class="tcell">
+            <i class="fa fa-calendar data-label vs2 margin-r2"></i>
+            </div>
+            
+            <div class="tcell">
+            <div>
+            <label>Start Date</label><br/>
+            <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Engagement_Start__c), false, true)}"><apex:outputField value="{!positionInfo.Engagement_Start__c}" /></apex:outputText>
+            <apex:outputText rendered="{!IF((ISBLANK(positionInfo.Engagement_Start__c) || ISBLANK(positionInfo.Engagement_Latest_Start__c)), false, true)}"> to&nbsp;</apex:outputText>
+            <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Engagement_Latest_Start__c), false, true)}"><apex:outputField value="{!positionInfo.Engagement_Latest_Start__c}" /> (Latest)</apex:outputText>
+            </div>
+            <div>
+            <label>End Date</label><br/>
+            <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Engagement_Earliest_End__c), false, true)}"><apex:outputField value="{!positionInfo.Engagement_Earliest_End__c}" /> (Earliest)</apex:outputText>
+            <apex:outputText rendered="{!IF((ISBLANK(positionInfo.Engagement_Earliest_End__c) || ISBLANK(positionInfo.Engagement_End__c)), false, true)}"> to&nbsp;</apex:outputText>
+            <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Engagement_End__c), false, true)}"><apex:outputField value="{!positionInfo.Engagement_End__c}" /></apex:outputText>
+            </div>
+            <apex:outputText rendered="{!positionInfo.Days_Before_Work__c != 0}">
+            <div class="margin-t1">Candidates are allowed&nbsp;<apex:outputField value="{!positionInfo.Days_Before_Work__c}" /> days before work starts.</div>
+            </apex:outputText>
+            </div>
+            </div>
+            
+            
+            
+          
+            </div>
+            <div class="col-sm-6">
+           <div class="margin-b3">
+           <div class="tcell">
+          <i class="fa fa-money data-label vs2 margin-r2"></i>
+          </div>
+           <div class="tcell">
+           <label>Compensation</label><br/>
+           <apex:outputField value="{!positionInfo.Pay_Rate__c}" /> 
+           <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Pay_Frequency__c), false, true)}"> (paid&nbsp;<span class="lwcase"><apex:outputField value="{!positionInfo.Pay_Frequency__c}" /></span>)</apex:outputText>
+           <apex:outputText rendered="{!positionInfo.Tipped_Position__c == 'Yes'}">
+           <div>This is a tipped position.</div>
+           </apex:outputText>
+           <apex:outputText rendered="{!positionInfo.Tipped_Position__c == 'No'}">
+           <div>This is not a tipped position.</div>
+           </apex:outputText>
+           <apex:outputText rendered="{!positionInfo.Overtime_Available__c == true}">
+           <div>Overtime is available at&nbsp;<apex:outputField value="{!positionInfo.Overtime_Rate__c}" /> per hour.</div>
+           </apex:outputText>
+           <apex:outputText rendered="{!positionInfo.Overtime_Available__c == false}">
+           <div>Overtime is not available.</div>
+           </apex:outputText>
+           
+           <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Pay_Notes__c), false, true)}">
+           <a data-toggle="popover" data-content="{!positionInfo.Pay_Notes__c}">More payment notes</a>
+           </apex:outputText>
+           </div>
+           </div> 
+          
+          <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Company_Provided_Housing__c), false, true)}">     
+          <div class="margin-b3">
+          <div class="tcell">
+          <i class="fa fa-home data-label vs2 margin-r2"></i>
+          </div> 
+          <div class="tcell">
+          <label>Housing</label><br/>
+          <apex:outputText rendered="{!positionInfo.Company_Provided_Housing__c == 'Yes'}">Provided by company.</apex:outputText>
+          <apex:outputText rendered="{!positionInfo.Company_Provided_Housing__c == 'No'}">Not provided by company.</apex:outputText>
+          </div>
+          </div>
+          </apex:outputText>
+                
+          <div class="margin-b3">
+          <div class="tcell">
+          <i class="fa fa-clock-o data-label vs2 margin-r2"></i>
+          </div>
+          <div class="tcell">
+          <div>
+          <label>Work Schedule</label><br/>
+          <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Employment_Hrs_Wk__c), false, true)}"> 
+          <apex:outputField value="{!positionInfo.Employment_Hrs_Wk__c}" /> hours per week
+          </apex:outputText>
+          </div> 
+          
+          <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Typical_Schedule__c), false, true)}"> 
+          <div><apex:outputField value="{!positionInfo.Typical_Schedule__c}" /></div>
+          </apex:outputText>
+          </div>
+          </div>   
+          
+          <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Supplies_Required__c), false, true)}"> 
+          <div class="margin-b3">
+          
+          <div class="tcell">
+          <i class="fa fa-archive data-label vs2 margin-r2"></i>
+          </div>
+          
+          <div class="tcell">
+          
+          <div>
+          <label>Required Supplies</label><br/>
+          <apex:outputField value="{!positionInfo.Supplies_Required__c}" />
+          <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Supplies_Cost__c), false, true)}"> 
+          <br/>(Cost estimate - <apex:outputField value="{!positionInfo.Supplies_Cost__c}" />)
+          </apex:outputText>
+          </div>
+          
+          </div>
+          
+          </div>
+         </apex:outputText>   
+            
+            </div><!--  end column -->
+            </div><!--  end row -->
+            
+              
+             
+            </div>
+            <!--  end column --> 
+          </div>
+          <!--  end row -->
+          
+          <hr class="margin-b4"/>
+          <div class="row margin-b4">
+            <div class="col-md-8 center-block center-text">
+              <h2>About the Company</h2>
+              <p class="margin-b">
+                <apex:outputField value="{!positionInfo.Host_Company_Id__r.Description}" />
+                <apex:outputText value="No company description available" rendered="{!IF(ISBLANK(positionInfo.Host_Company_Id__r.Description), true, false)}" />
+              </p>
+              <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Host_Company_Id__r.Website), false, true)}">
+             <div class="margin-b">
+             <apex:outputField value="{!positionInfo.Host_Company_Id__r.Website}" />
+             </div>
+             </apex:outputText>
+            </div>
+            <!--  end column --> 
+          </div>
+          <!--  end row -->
+          
+          <hr class="margin-b4"/>
+          <div class="row margin-b4">
+            <div class="col-md-8 center-block center-text">
+              <h2>Accommodation Options</h2>
+            </div>
+            <!--  end column --> 
+          </div>
+          <!--  end row -->
+          
+          <div class="row margin-b4">
+            <div class="col-sm-12">
+              <apex:outputText rendered="{!IF(accOptionInfoList.Size == 0, true, false)}"> 
+              <p class="center-text">No accommodation options to display.</p>
+              </apex:outputText>
+              
+              <apex:pageBlock rendered="{!IF(accOptionInfoList.Size == 0, false, true)}">
+                <div class="table-responsive vs3">
+                  <apex:pageBlockTable styleClass="table vs3" id="accOptionInfoList1" value="{!accOptionInfoList}" var="item">
+                    <apex:column width="25%"  headerValue="">
+                     
+                      <div><label><apex:outputField value="{!item.Name}" /></label></div>
+                      
+                      <!--  <apex:outputText value="{!item.Accommodation_Site__r.Business_Name__c}" />-->
+                      
+                      <apex:outputText rendered="{!IF(ISBLANK(item.Accommodation_Site__r.Street__c), false, true)}">
+                      <div><apex:outputField value="{!item.Accommodation_Site__r.Street__c}"/></div>
+                      </apex:outputText>
+                      
+                      <apex:outputText rendered="{!IF(ISBLANK(item.Accommodation_Site__r.Street_2__c), false, true)}">
+                      <div><apex:outputField value="{!item.Accommodation_Site__r.Street_2__c}"/></div>
+                      </apex:outputText>
+                      
+                      <div>
+                      <apex:outputText rendered="{!IF(ISBLANK(item.Accommodation_Site__r.City__c), false, true)}">
+                       <apex:outputField value="{!item.Accommodation_Site__r.City__c}"/>,&nbsp;
+                      </apex:outputText>
+                      
+                      <apex:outputText rendered="{!IF(ISBLANK(item.Accommodation_Site__r.State__c), false, true)}">
+                      <apex:outputField value="{!item.Accommodation_Site__r.State__c}"/>
+                      </apex:outputText>
+                      </div>
+                      
+                      <div>
+                      <apex:outputText rendered="{!IF(ISBLANK(item.Accommodation_Site__r.Postal_Code__c), false, true)}">
+                      <apex:outputField value="{!item.Accommodation_Site__r.Postal_Code__c}"/>,&nbsp;
+                      </apex:outputText>
+                      
+                      <apex:outputText rendered="{!IF(ISBLANK(item.Accommodation_Site__r.Country__c), false, true)}">
+                      <apex:outputField value="{!item.Accommodation_Site__r.Country__c}"/>
+                      </apex:outputText>
+                      </div>
+                      
+                      <apex:outputlink rendered="{!IF(NOT(ISBLANK(item.Accommodation_Site__r.Street__c)) && NOT(ISBLANK(item.Accommodation_Site__r.City__c)) && NOT(ISBLANK(item.Accommodation_Site__r.State__c)), true, false)}" value="http://maps.google.com/maps?f=q&hl=en&q={!item.Accommodation_Site__r.Street__c}+{!item.Accommodation_Site__r.City__c}+{!item.Accommodation_Site__r.State__c}&om=1" target="_blank">View in Google Maps</apex:outputlink>
+                     
+                    </apex:column>
+                    
+                    
+                    <apex:column width="25%"  headerValue="Description">
+                      <ul>
+                        <apex:outputText rendered="{!IF(ISBLANK(item.Accommodation_Site__r.Type__c), false, true)}">
+                        <li>
+                          <apex:outputText value="{!item.Accommodation_Site__r.Type__c}" />
+                        </li>
+                        </apex:outputText>
+                        
+                        <apex:outputText rendered="{!IF(ISBLANK(item.Gender_Restriction__c), false, true)}">
+                        <li>
+                          <apex:outputText value="Mixed/unisex" rendered="{!item.Gender_Restriction__c == 'None'}"/>
+                          <apex:outputText value="For males only" rendered="{!item.Gender_Restriction__c == 'Male Only'}"/>
+                          <apex:outputText value="For females only" rendered="{!item.Gender_Restriction__c == 'Female Only'}"/>
+                        </li>
+                        </apex:outputText>
+                        
+                        <apex:outputText rendered="{!item.Host_Arranged__c == true}">
+                          <li>Arranged by company</li>
+                        </apex:outputText>
+                        
+                        <apex:outputText rendered="{!item.Host_Recommended__c == true}">
+                          <li>Recommended by company</li>
+                        </apex:outputText>
+                        
+                        <apex:outputText rendered="{!item.Transportation_Provided__c == true}" >
+                          <li>Transportation provided by company</li>
+                        </apex:outputText>
+                      </ul>
+<apex:outputText rendered="{!IF(ISBLANK(item.Accommodation_Site__r.Features__c), false, true)}">
+<div class="margin-b">
+<label>Available Features</label><br/>       
+<apex:outputText value="{!item.Accommodation_Site__r.Features__c}" />
+</div>
+        </apex:outputText>
+
+<apex:outputText rendered="{!IF(ISBLANK(item.Description__c), false, true)}">
+                      <a data-toggle="modal" data-target="#full-description{!item}">More Information</a>
+                      <div class="modal fade vs1" id="full-description{!item}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+      <h2><apex:outputField value="{!item.Name}" /></h2>
+      <apex:outputText rendered="{!IF(ISBLANK(item.Description__c), false, true)}">
+        <div class="margin-b2"><apex:outputField value="{!item.Description__c}" /></div>
+       </apex:outputText>
+        
+        <apex:outputText rendered="{!IF(ISBLANK(item.Accommodation_Site__r.Features_Description__c), false, true)}">
+       <div class="margin-b2"><apex:outputText value="{!item.Accommodation_Site__r.Features_Description__c}" /></div>
+        </apex:outputText>
+        
+        <apex:outputText rendered="{!IF(ISBLANK(item.Accommodation_Site__r.Additional_Information__c), false, true)}">
+                      <div class="margin-b2"><apex:outputText value="{!item.Accommodation_Site__r.Additional_Information__c}" /></div>
+                      </apex:outputText>
+        
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+                      </apex:outputText>
+                    </apex:column>
+                    
+                    <apex:column width="25%"  headerValue="Costs">
+                      <apex:outputText rendered="{!IF(ISBLANK(item.Estimated_Cost__c), false, true)}">
+                      <div>
+                        <label>Estimated housing cost</label>
+                        <br/>
+                        <apex:outputField value="{!item.Estimated_Cost__c}" />
+                      </div>
+                      </apex:outputText>
+                      <apex:outputText rendered="{!IF(ISBLANK(item.Commute_Cost__c), false, true)}">
+                      <div>
+                        <label>Commute cost</label>
+                        <br/>
+                        <apex:outputField value="{!item.Commute_Cost__c}" />
+                      </div>
+                      </apex:outputText>
+                      <apex:outputText rendered="{!IF(ISBLANK(item.Additional_Costs__c), false, true)}">
+                      <p class="margin-t wrap">
+                        <apex:outputField value="{!item.Additional_Costs__c}" />
+                      </p>
+                      </apex:outputText>
+                      <apex:outputText rendered="{!IF(ISBLANK(item.Additional_Costs_Description__c), false, true)}">
+                      <p class="margin-t wrap">
+                        <apex:outputText value="{!item.Additional_Costs_Description__c}" />
+                      </p>
+                      </apex:outputText>
+                    </apex:column>
+                    <apex:column width="25%" headerValue="Transportation">
+                      <apex:outputText rendered="{!IF(ISBLANK(item.Estimated_Distance__c), false, true)}">
+                      <div>
+                        <label>Distance to company</label>
+                        <br/>
+                        <apex:outputText value="{!item.Estimated_Distance__c}" />
+                      </div>
+                      </apex:outputText>
+                      <apex:outputText rendered="{!IF(ISBLANK(item.Commute_Options__c), false, true)}">
+                      <div>
+                        <label>Transportation options</label>
+                        <br/>
+                        <apex:outputText value="{!item.Commute_Options__c}" />
+                      </div>
+                      </apex:outputText>
+                      
+                    </apex:column>
+                  </apex:pageBlockTable>
+                </div>
+              </apex:pageBlock>
+            </div>
+            <!--  end column --> 
+          </div>
+          <!--  end row -->
+          <hr class="margin-b4"/>
+              <div class="row margin-b1">
+                <div class="col-md-8 center-block center-text">
+                  <h2>Arrival Information</h2>
+                </div>
+                <!--  end column --> 
+              </div>
+              <!--  end row --> 
+          <div class="row margin-b4">
+            <div class="col-md-8 center-block">
+             
+             <div class="margin-b4 center-text">
+              <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Host_Company_Id__r.Travel_Instructions__c), false, true)}">
+              <p><apex:outputField value="{!positionInfo.Host_Company_Id__r.Travel_Instructions__c}" /></p>
+              </apex:outputText>
+              
+               <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Host_Company_Id__r.Reporting_Instructions__c), false, true)}"> 
+                <div class="margin-t2">
+                <em><apex:outputField value="{!positionInfo.Host_Company_Id__r.Reporting_Instructions__c}" /></em>
+                </div>
+             </apex:outputText> 
+             </div>
+        
+        
+        <div class="row margin-t6">     
+        <div class="col-sm-6">
+        <h3>Transportation the Company</h3>
+             
+              <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Host_Company_Id__r.Transportation_to_Company__c), false, true)}"> 
+                <p><apex:outputField value="{!positionInfo.Host_Company_Id__r.Transportation_to_Company__c}" /></p>
+           </apex:outputText>     
+             
+             <div class="margin-b2">
+             <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Host_Company_Id__r.Nearest_Bus_Station__c), false, true)}"> 
+             <label>Nearest Bus Station</label><br/>
+             <apex:outputField value="{!positionInfo.Host_Company_Id__r.Nearest_Bus_Station__c}" />
+             </apex:outputText>
+             </div>
+             
+             <div class="margin-b2">
+             <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Host_Company_Id__r.Nearest_Train_Station__c), false, true)}"> 
+             <label>Nearest Train Station</label><br/>
+             <apex:outputField value="{!positionInfo.Host_Company_Id__r.Nearest_Train_Station__c}" />
+             </apex:outputText>
+             </div>
+             
+             <div class="margin-b2">
+              <label>Recommended Airport</label><br/>
+              <apex:outputField value="{!positionInfo.Host_Company_Id__r.Recommended_Airport__c}" />
+            </div>
+           </div>
+            <!--  end column --> 
+  <div class="col-sm-6">
+   <h3>Social Security</h3>
+
+             <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Host_Company_Id__r.Nearest_Work_Authorization_Office__c), false, true)}"> 
+               <div class="margin-b2">
+                <label>Nearest Social Security Office</label><br/>
+                <apex:outputField value="{!positionInfo.Host_Company_Id__r.Nearest_Work_Authorization_Office__c}" />
+             </div>
+             </apex:outputText>
+             
+             <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Host_Company_Id__r.Work_Authorization_Instructions__c), false, true)}"> 
+                <div class="margin-b2">
+                <label>Social Security Instructions</label><br/>
+                <apex:outputField value="{!positionInfo.Host_Company_Id__r.Work_Authorization_Instructions__c}" />
+                </div>
+              </apex:outputText>
+              
+             </div>
+            <!--  end column -->  
+             </div>
+          <!--  end row -->  
+            </div>
+            <!--  end column --> 
+          </div>
+          <!--  end row -->
+         
+          
+           <hr class="margin-b4"/>
+               
+               <div class="row margin-b1">
+                <div class="col-md-8 center-block center-text">
+                  <h2>More Information</h2>
+                </div>
+                <!--  end column --> 
+              </div>
+              <!--  end row --> 
+              
+              
+          <div class="row margin-b4">
+            <div class="col-md-8 center-block">
+             <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Host_Company_Id__r.Area_Information__c), false, true)}">
+             <div class="margin-b">
+             <h3>About the Area</h3>
+              <p><apex:outputField value="{!positionInfo.Host_Company_Id__r.Area_Information__c}" /></p>
+              </div>
+              </apex:outputText>
+              
+             <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Host_Company_Id__r.Cultural_Opportunities__c), false, true)}">
+             <div class="margin-b margin-t6">
+             <h3>Cultural Opportunities</h3>
+             <p><apex:outputField value="{!positionInfo.Host_Company_Id__r.Cultural_Opportunities__c}" /></p>
+             </div>
+            </apex:outputText>
+
+            <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Host_Company_Id__r.Websites_Additional__c), false, true)}">
+            <div class="margin-b">
+            <label>Additional Company Websites</label><br/>
+            <apex:outputField value="{!positionInfo.Host_Company_Id__r.Websites_Additional__c}" />
+            </div>
+            </apex:outputText>  
+              
+            </div>
+            <!--  end column --> 
+          </div>
+          <!--  end row -->
+            <hr class="margin-b4"/>
+        
+          <div class="row margin-b4">
+            <div class="col-md-8 center-block center-text">
+              <apex:outputLink styleClass="btn btn-link btn-lg" value="/apex/pr_camp_list"> <i class="fa fa-chevron-left"></i> <span>Back To Campaigns</span> </apex:outputLink>
+            </div>
+            <!--  end column --> 
+          </div>
+          <!--  end row --> 
+        </apex:outputPanel>
+        <!-------------------------   END WORK TRAVEL POSITIONS   ------------------------------------------> 
+        
+        
+  
+        
+      </apex:form>
+    </apex:define>
+  </apex:composition>
+</apex:page>

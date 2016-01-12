@@ -1,0 +1,39 @@
+<apex:page standardController="Intrax_Program_Upload__c" recordSetVar="IPURecs" extensions="IPUListActionController">
+<apex:form >
+        <script>
+            function getConfirmation(){
+                return confirm('Are you sure to send all document for Printing');
+            }
+        </script> 
+        
+     <apex:pageBlock title="Selected Intrax Program Upload Records for Printing">
+     <apex:pageMessages /> 
+       <apex:outputText value="You have selected the following records for Printing."/>
+         <apex:pageBlockTable value="{!selectedIPU}" var="IPU">
+         
+         <apex:column headerValue="SEVIS ARO Name">
+         <apex:outputLink value="/{!IPU.Sevis__c}" target="_blank">{!IPU.Sevis__r.SEVIS_ARO_Name__c}</apex:outputLink>
+         </apex:column>
+         
+         <apex:column value="{!IPU.Engagement__r.Partner_Account__c}"/>
+         
+         <apex:column headerValue="Participant Last Name">
+         <apex:outputLink value="/{!IPU.Engagement__r.Account_Id__r}" target="_blank">{!IPU.Engagement__r.Account_Id__r.LastName}</apex:outputLink>         
+         </apex:column>
+         
+         <apex:column headerValue="Document Name">
+         <apex:outputLink value="/{!IPU.Id}" target="_blank">{!IPU.Name}</apex:outputLink>
+         </apex:column>
+         
+         <apex:column value="{!IPU.Document_GUID__c}"/>
+         
+        </apex:pageBlockTable>
+       
+       <apex:pageBlockButtons >
+         <apex:commandButton action="{!Confirm}" value="Confirm" immediate="true" onClick="return getConfirmation();"/>
+         <apex:commandButton value="Cancel" action="{!doCancel}"/>
+       </apex:pageBlockButtons>
+     
+     </apex:pageBlock>
+  </apex:form>
+ </apex:page>

@@ -1,0 +1,52 @@
+<apex:page id="iwt_notification_history" docType="html-5.0" controller="User_Controller" standardStylesheets="false" showHeader="false" action="{!ConfirmNotificationlist}">
+    <style>
+                  table.pageblk { border-collapse:collapse !important; margin-bottom:10px !important; width:100% !important; }
+                     .pageblk th, .pageblk td { padding:10px 5px !important; border: 1px solid #ccc !important; }
+                     .pageblk th { background: none repeat scroll 0 0 #efefef !important; border:none !important; }
+                }
+     </style>
+  <apex:composition template="IntraxTemplate_Vs2" >
+   <apex:define name="body">
+   <apex:form >
+   <div class="span9">            
+              <div class="block-header">
+                <h3>Completed and Confirmed Notifications</h3>
+              </div>                        
+                    <div class="white-box clearfix">                        
+                        
+                         <div class="form-row">
+                                    <apex:outputLabel id="no-records" rendered="{!if((confirmlist==null || confirmlist.size < 0), true,false)}"> <span class="no-records">No record(s) to display.</span></apex:outputLabel>
+                          </div>  
+                         
+                                <apex:pageBlock id="Block_DocList" rendered="{!if((confirmlist!=null && confirmlist.Size > 0), true, false)}">
+                                    <apex:pageBlockTable id="Table_DocList" styleClass="pageblk" value="{!confirmlist}" var="item">
+                                        
+                                        <apex:column headerValue="Type">
+                                            <apex:outputText id="Type" value="{!item.Type__c}"/>
+                                        </apex:column>
+                                        
+                                        <apex:column headerValue="Status">
+                                            <apex:outputText id="Status" value="{!item.Status__c}"/>
+                                        </apex:column>
+                                        <apex:column headerValue="Created Date">
+                                            <apex:outputText value="{0, date, MM'/'dd'/'yyyy}">
+                                               <apex:param value="{!item.CreatedDate}"/> 
+                                            </apex:outputText>
+                                        </apex:column>
+                                        <apex:column headerValue="Completed Date">
+                                         <apex:outputText value="{0, date, MM'/'dd'/'yyyy}">                                            
+                                            <apex:param value="{!item.Completed_Date__c}"/>  
+                                          </apex:outputText>
+                                        </apex:column>                                        
+                                    </apex:pageBlockTable>
+                                </apex:pageBlock>                                
+                        </div>                                                                         
+               
+           <div class="form-link">
+            <apex:outputLink value="/apex/Home"><i class="icon-chevron-left"></i>Back</apex:outputLink>   
+          </div> 
+        </div>
+       </apex:form>
+      </apex:define>
+    </apex:composition>
+</apex:page>

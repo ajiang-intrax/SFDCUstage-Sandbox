@@ -1,0 +1,89 @@
+<apex:page id="ayusa_hf_fam_references" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}"  standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+    <div class="wrapper">
+ <apex:form id="form" > 
+           <div class="page-header clearfix">
+            <h1 class="page-title">Ayusa Host Family Application</h1>
+            <div class="back-to-main"><apex:outputLink id="BacktoMain" value="apex/ayusa_hf_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+            </div>
+          <h2>Family References</h2>
+          <div class="white-box clearfix">
+            <div class="panel two_thirds">    
+         
+              <p>Please provide five references. References may not be relatives or Ayusa staff members. Two of them must have known you at least one year, and one must live in your community and/or have been inside your home.</p>
+
+            <div class="form-row">
+                <apex:outputLabel rendered="{!IF(RefererInfoList.Size > 0, false, true)}"> <span class="no-records">No record(s) to display.</span></apex:outputLabel>
+            </div>
+            
+            <div class="form-row">
+                <apex:pageBlock >
+                     <apex:pageBlockTable styleClass="pageblocktable" value="{!RefererInfoList}" var="item" rendered="{!IF(RefererInfoList.Size > 0, true, false)}">
+                        <apex:column >
+                                <B><apex:outputLink value="/apex/ayusa_hf_fam_references_new?id={!item.Applicant_Info__c}&rid={!item.id}&role={!item.Role__c}">Edit</apex:outputLink></B>
+                            </apex:column>
+                            
+                            <!-- Output link for Delete -->
+                            <apex:column >
+                                <apex:commandLink id="Delete" value="Delete" action="{!deleteReference}" immediate="true" onclick="return ConfirmDelete('Are You Sure ?');">
+                                    <apex:param name="referenceId" value="{!item.id}" assignTo="{!referenceId}"/>
+                                </apex:commandLink>
+                            </apex:column>
+                            
+                           <apex:column id="FirstName" value="{!item.First_Name__c} {!item.Last_Name__c}" headerValue="Name"/> 
+                           <apex:column id="Email" value="{!item.Email__c}"/>
+                           <apex:column id="Phone" value="{!item.Mobile__c}" headerValue="Phone"/>
+                     </apex:pageBlockTable>  
+                </apex:pageBlock>
+                
+                <div class="form-link">
+                    <apex:commandlink action="{!navigator}">
+                      <i class="icon-plus-sign"></i>  
+                      <apex:param name="nextPage" value="/apex/ayusa_hf_fam_references_new"/>
+                      <apex:param name="add" value="true" assignTo="{!add}"/>
+                      <apex:param name="prePopulation" value="false"/>
+                      <apex:param name="reDirectPage" value="true"/>
+                      <apex:commandButton id="AddReference" value="Add a Reference"/>
+                   </apex:commandlink>
+                </div>
+            </div>
+                      
+            <div class="form-row">
+                        
+            <div class="form-link">
+                    <apex:outputLink id="Back" styleClass="back" value="/apex/ayusa_hf_fam_household_details?id={!applicantInfo.Id}">
+                    <i class="icon-chevron-left"></i>
+                    <span>Back</span>
+                    </apex:outputLink>
+              </div>
+            
+            <div class="form-button">
+              <apex:commandlink styleClass="next" action="{!navigator}">
+                <!--<apex:param name="nextPage" value="/apex/ayusa_hf_photos_videos?docType=HostFamily"/> -->
+                <!--  AYII: story 72 -->
+                <apex:param name="nextPage" value="/apex/ayusa_hf_fam_letter"/>
+                <apex:param name="EssayType" value="Host Family" assignTo="{!EssayType}"/>
+                <!--  AYII: story 72 -->
+                <apex:param name="reDirectPage" value="true"/>
+                <apex:commandButton id="Continue" value="Next" />
+                  <i class="icon-chevron-right"></i> 
+              </apex:commandlink>
+            </div>
+            </div>
+                </div>
+             
+              <div class="panel one_third last aside">  
+                <div class="badge">
+                <div class="badge-content">
+                <a href="https://www.youtube.com/embed/27Ef8Nfi8Ss" title="About Your Family - Family References" class="youtube cboxElement"><img src="{!URLFOR($Resource.ayusa_help_videos,'ayusa-help-videos/family_ref.jpg')}"/></a>
+                </div>
+                </div> 
+              </div>
+             
+          </div> 
+     </apex:form>
+      </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

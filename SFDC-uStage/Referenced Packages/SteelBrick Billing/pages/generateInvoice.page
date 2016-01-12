@@ -1,0 +1,12 @@
+<apex:page standardController="invoiceit_s__Job__c" extensions="invoiceit_s.ControllerGenerateInvoice">
+  <apex:pageMessages id="messages"/>
+  <apex:outputField value="{!invoiceit_s__Job__c.invoiceit_s__Account__c}" rendered="false"/>
+  <apex:form >
+  <apex:pageBlock title="{!$Label.GenerateInvoice}">
+     {!$Label.PleaseNote}: {!$Label.invoiceConfirmationMessage}&nbsp;&nbsp; 
+  </apex:pageBlock>
+  <apex:commandButton action="{!generateInvoice}" value="{!$Label.ButtonConfirm}"/>
+  <apex:commandButton action="{!cancel}" value="{!$Label.ButtonCancel}"/>
+  </apex:form>
+  
+</apex:page>

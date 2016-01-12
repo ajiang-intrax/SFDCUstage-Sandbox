@@ -1,0 +1,62 @@
+<apex:page id="ayusa_app_essays" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper">
+          <apex:form id="form">
+         <div class="page-header clearfix">
+ <h1>Ayusa Student Application</h1>
+<div class="back-to-main"><apex:outputLink id="BacktoMain" value="apex/ayusa_app_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+</div>
+          <h2>Essay Questions</h2>
+          <div class="white-box clearfix">
+         <a class="page-help" title="Help for this Page (New Window)" onclick="return openPopup('./Help_ayusa_app_essays')" >
+<span>Help For This Page</span><i class="icon-info-sign"></i></a>    
+            <div class="panel two_thirds"> 
+              <apex:pageBlock id="pageBlock">
+                 <apex:pageBlockTable id="PageBlockTable" styleClass="no-table" value="{!EssayList}" var="item">
+                       <apex:column id="column"> 
+                        <div class="form-link no-margin" style="width:60px;">
+                              
+                                <apex:outputLink id="Start1" styleClass="no-padding" value="/apex/ayusa_app_essay_detail?id={!item.Applicant_Info__c}&essayId={!item.id}" rendered="{! IF((ISBLANK(item.Narrative__c)), true, false)}"><i class="icon-pencil"></i> Start</apex:outputLink>
+                                <apex:outputLink id="Edit1" styleClass="no-padding" value="/apex/ayusa_app_essay_detail?id={!item.Applicant_Info__c}&essayId={!item.id}" rendered="{! IF(NOT(ISBLANK(item.Narrative__c)), true, false)}"><i class="icon-pencil"></i> Edit</apex:outputLink>
+                        </div>
+                       </apex:column> 
+                       
+                       <apex:column > 
+                           <apex:outputText styleClass="essay-question block" value="{!item.Label__c}" />
+                           <apex:outputText styleClass="essay-teaser block" value="{!LEFT(item.Narrative__c, 103)} {!IF(LEN(item.Narrative__c)> 100, '...', '')}" rendered="{!IF(NOT(ISBLANK(item.Narrative__c)), true, false)}" /> 
+                       </apex:column> 
+                   
+                 </apex:pageBlockTable>  
+            </apex:pageBlock>
+           
+               
+               
+                <div class="form-row">
+                     
+                    <div class="form-link">
+                        <apex:outputLink id="Back" styleClass="back" value="/apex/ayusa_app_household_basics?id={!applicantInfo.Id}">
+                        <i class="icon-chevron-left"></i>
+                        <span>Back</span>
+                        </apex:outputLink>
+                    </div>
+                             
+              
+                      <div class="form-button submit">
+                        <apex:commandlink action="{!navigator}">
+                          <apex:param name="nextPage" value="/apex/ayusa_app_stu_photos_videos"/>
+                          <apex:param name="reDirectPage" value="true"/>
+                          <apex:param name="docType" value="Media" assignTo="{!docType}"/>
+                          <apex:commandButton id="Continue" value="Continue" />
+                          <i class="icon-chevron-right"></i> 
+                        </apex:commandlink>
+                      </div>
+                                          
+                </div>
+    </div>
+                </div>
+      </apex:form>
+          </div>
+    </apex:define>
+ </apex:composition>
+</apex:page>

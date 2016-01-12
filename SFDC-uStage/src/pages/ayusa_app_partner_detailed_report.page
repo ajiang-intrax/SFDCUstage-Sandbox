@@ -1,0 +1,102 @@
+<apex:page docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper">
+          <apex:form >      
+            <div class="page-header clearfix">
+ <h1>Ayusa Student Application</h1>
+<div class="back-to-main"><apex:outputLink value="apex/ayusa_app_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+</div>
+              <h2>For Partners Only - Document Uploads</h2> 
+                  
+            <div class="white-box clearfix">
+ <a class="page-help" title="Help for this Page (New Window)" onclick="return openPopup('./Help_ayusa_app_partner_detailed_report')" >
+<span>Help For This Page</span><i class="icon-info-sign"></i></a>    
+               <div class="panel two_thirds">
+               <h3 class="data-block-title">Steps to Upload</h3>
+                    <ul class="no-bullets no-indent">
+                    <li><i class="icon-print green inline"></i>Please download the following templates:
+                        <ul>
+                            <li style="margin-left:35px!important;"><apex:outputLink target="_blank" value="http://www.intraxinc.com/assets/myintrax/ayusa/Partner_program_signatures.pdf">Partner Agreement</apex:outputLink></li>
+                                <li style="margin-left:35px!important;"><apex:outputLink target="_blank" value="http://www.intraxinc.com/assets/myintrax/ayusa/Partner_assessment_interview_fillable.pdf">Student Interview</apex:outputLink></li>
+                                    <li style="margin-left:35px!important;"><apex:outputLink target="_blank" value="http://resources.intraxinc.com/all/documents/portals/ayu/pt/partner-assessment-grade-conversion-form.pdf">Grade Conversion Chart</apex:outputLink></li> 
+                       					<li style="margin-left:35px!important;"><apex:outputLink target="_blank" value="http://resources.intraxinc.com/all/documents/portals/ayu/pt/medical-release-form.pdf">Medical Release Form</apex:outputLink></li> </ul></li>   
+                       
+                        <li><i class="icon-file green inline" ></i>Fill out the PDF using Adobe Acrobat and save it.</li>
+                        <li><i class="icon-file green inline" ></i>You can also print the document, fill it out, scan/convert it to JPG or PNG format. </li>
+                        <li><i class="icon-upload green inline"></i>Upload Documents:</li>
+                        <!-- <apex:commandlink styleClass="inline-link" action="{!navigator}">
+                          <apex:param name="nextPage" value="/apex/ayusa_app_doc_upload"/>
+                          <apex:param name="reDirectPage" value="true"/>
+                          <apex:param name="docType" value="Partner" assignTo="{!docType}"/>
+                            <apex:commandButton value="Upload Documents" />
+                        </apex:commandlink>-->
+                       <li style="margin-left:35px!important;"> <apex:outputLink value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType=Partner-Agreement&retparam={!retParam}" id="theLink1" target="_self" disabled="{!disableFileUpload}">Partner Agreement</apex:outputLink>
+                        </li>
+                        <li style="margin-left:35px!important;"> <apex:outputLink value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType=Interview-Document&retparam={!retParam}" id="theLink2" target="_self" disabled="{!disableFileUpload}">Student Interview</apex:outputLink>
+                        </li>
+                        <li style="margin-left:35px!important;"> <apex:outputLink value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType=Grade-Conversion-Chart&retparam={!retParam}" id="theLink3" target="_self" disabled="{!disableFileUpload}">Grade Conversion Chart</apex:outputLink>
+                        </li>
+                        <li style="margin-left:35px!important;"> <apex:outputLink value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType=Medical-Release&retparam={!retParam}" id="theLink4" target="_self" disabled="{!disableFileUpload}">Medical Release</apex:outputLink>
+                        </li>
+                        <li style="margin-left:35px!important;"> <apex:outputLink value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType=English-Test&retparam={!retParam}" id="theLink5" target="_self" disabled="{!disableFileUpload}">English Test</apex:outputLink>
+                        </li>
+
+                    </ul>
+              <apex:outputText value="{!disableFileUploadText}"
+                          rendered="{!disableFileUpload}"/>                   
+              <div class="form-row">
+                        <apex:outputLabel rendered="{!IF((DocList.Size > 0 && docType == 'Partner'), false, true)}"><span class="no-records">No record(s) to display.</span></apex:outputLabel>
+                   </div>     
+              <apex:pageBlock rendered="{!if(DocList.Size > 0, true, false)}">
+                <apex:pageBlockTable styleClass="pageblocktable" value="{!DocList}" var="item">
+                <apex:column headerValue="Document Name">
+                    <apex:outputText value="{!item.Document_Name__c}"/>
+                </apex:column>
+                <apex:column headerValue="Description">
+                    <apex:outputText value="{!item.Description__c}"/>
+                </apex:column>
+                                        
+                <apex:column headerValue="Document Action">
+                    <apex:commandlink styleClass="inline-link" action="{!load}" target="_blank">
+                        <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                        <apex:commandButton value="View" />
+                    </apex:commandlink>
+                    <apex:outputText value=" | " />
+                    <apex:commandlink styleClass="inline-link" action="{!deletefile}"  onclick="return ConfirmDelete('Are You Sure ?');">
+                        <apex:param name="docGuid"  value="{!item.Document_GUID__c}"/>
+                        
+                        <apex:commandButton value="Delete" />
+                    </apex:commandlink>
+                </apex:column>
+                </apex:pageBlockTable>
+                </apex:pageBlock>
+               
+                <div class="form-row">
+                                      
+            
+                    
+              <div class="form-link">
+                        <apex:outputLink styleClass="back" value="/apex/ayusa_app_partner_stu_overview?id={!applicantInfo.Id}">
+                        <i class="icon-chevron-left"></i>
+                        <span>Back</span>
+                        </apex:outputLink>
+                    </div>      
+
+              <div class="form-button">
+                <apex:commandlink styleClass="next" action="{!navigator}">
+                  <apex:param name="nextPage" value="/apex/ayusa_partner_school_reco"/>
+                  <apex:param name="reDirectPage" value="true"/>
+                  <apex:commandButton value="Continue" />
+                  <i class="icon-chevron-right"></i>   
+                </apex:commandlink>
+              </div>                      
+                </div>
+            </div>
+                </div>
+             
+          </apex:form>
+      </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

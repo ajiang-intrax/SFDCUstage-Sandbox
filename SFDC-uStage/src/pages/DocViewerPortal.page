@@ -1,0 +1,33 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" title="DocViewerPortal" action="{!load}" Controller="AppEngine_Controller"  standardStylesheets="false" showHeader="false">
+<!-- action="{!load}" -->
+<apex:composition template="intraxtemplate_vs3">
+<apex:define name="body">
+
+<apex:includeScript value="{!URLFOR($Resource.module_videoJs, '/videojs/video.min.js')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.module_videoJs, '/videojs/video-js.css')}"/>
+
+<div id="app-page" class="row">
+<div id="app-focus" class="col-md-8 col-md-push-3">
+<apex:form styleClass="form-vertical ws-validate" id="webform">
+  
+ 
+  <apex:Messages styleClass="errorMsg" style="list-style-type:none;" rendered="{!customMessage = true}"/>
+
+	   <apex:outputPanel layout="block" id="streamingVideo" rendered="{!customMessage = false}">
+            <apex:pageBlock >
+         		<div class="embed-responsive embed-responsive-16by9">
+				<video id="videoPt" class="embed-responsive-item video-js vjs-default-skin " controls="true" height="300px" width="100%" preload="auto" poster="http://video-js.zencoder.com/oceans-clip.png" data-setup='{"example_option":true}'>
+				<source src="{!rtmpUrlVideo}" type='rtmp/mp4' />
+			    <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that 
+			    <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+			    </p>
+			    </video> 
+			    </div> 
+            </apex:pageBlock>
+       </apex:outputPanel>
+</apex:form>
+</div>
+</div>
+            </apex:define>
+    </apex:composition>
+</apex:page>

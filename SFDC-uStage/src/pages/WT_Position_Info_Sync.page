@@ -1,0 +1,26 @@
+<!-- <apex:page docType="html-5.0" standardController="Position_Info__c"  standardStylesheets="true" showHeader="false"> -->
+<apex:page docType="html-5.0" standardController="Position_Info__c" >
+  <!-- <apex:composition template="FlowTemplate_Vs1"> -->
+  
+    <apex:define name="body">
+              
+      <div class="wrapper" id="ayusa-student-preapp-academic-language-skills">
+        <apex:messages />
+        <h1>Intrax Work Travel Position Info Sync</h1>
+            <div class="white-box clearfix">
+            <div class="flow two_thirds">
+          <flow:interview buttonLocation="bottom" name="WT_New_Position_Info_Sync" finishLocation="/{!Position_Info__c.Id}" rendered="{!Position_Info__c.Engagement__c != NULL && Position_Info__c.Engagement__r.Intrax_Program__c == 'Work Travel'}">
+            <apex:param name="PosID" value="{!Position_Info__c.Id}"/>
+          </flow:interview>
+          
+          <flow:interview buttonLocation="bottom" name="AppSync_IGI_Position_Info_Subflow" finishLocation="/{!Position_Info__c.Id}" rendered="{!Position_Info__c.Applicant_Info__c != NULL && Position_Info__c.Applicant_Info__r.Intrax_Program__c == 'Internship'}">
+            <apex:param name="AppInfoID" value="{!Position_Info__c.Applicant_Info__r.Id}"/>
+            <apex:param name="PosInfoId" value="{!Position_Info__c.Id}"/>
+          </flow:interview>
+          
+            </div>
+        </div> 
+      </div>
+    </apex:define>
+ <!--  </apex:composition> -->
+</apex:page>

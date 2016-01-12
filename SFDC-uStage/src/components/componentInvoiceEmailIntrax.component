@@ -1,0 +1,390 @@
+<!-- This component is part of Invoice IT Deployment -->
+<apex:component controller="ControllerEmailInvoice" access="global">
+
+ 
+    <apex:attribute name="invoiceId" description="Invoice Id" type="String" required="required" assignTo="{!sInvoiceId}"/>
+    
+    <apex:stylesheet value="{!URLFOR($Resource.invoiceit_s__InvoiceIt,'pdf/web/css/style.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.invoiceit_s__InvoiceIt,'pdf/web/css/codainvoiceprint.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.Intrax_Invoice_Themes,'/intrax_invoice_themes/styles/vs1.css')}"/>
+
+    <apex:variable value="{!invoice.invoiceit_s__Shipping_Contact__r}" var="InvoiceShip" /> 
+    <apex:variable value="{!invoice.invoiceit_s__Billing_Contact__r}" var="InvoiceBill" />
+    <apex:outputText value="{!invoice.invoiceit_s__Invoice_Date__c}" rendered="false" /> 
+    <apex:outputText value="{!invoice.invoiceit_s__Due_Date__c}" rendered="false" /> 
+    <apex:outputText value="{!invoice.invoiceit_s__VAT__c}" rendered="false" /> 
+    
+    <table>
+        <tr>
+            <td>
+                <div><apex:image value="{!IF(invoice.invoiceit_s__Order__r.Opportunity__r.Intrax_Programs__c = "Ayusa", URLFOR($Resource.Intrax_Invoice_Themes,'/intrax_invoice_themes/images/pdf-ayusa.gif'), URLFOR($Resource.Intrax_Invoice_Themes,'/intrax_invoice_themes/images/pdf-intrax.gif'))}"  width="120" />
+                </div>
+
+
+            </td>
+            <td class="alignright title">{!mapLabelConversion['Invoice']}
+            </td>
+        </tr>
+    </table>
+    <div class="hspacer"></div>
+    <div class="hspacer"></div>
+    <div class="hspacer"></div>
+    <div class="hspacer"></div>
+    <div class="hspacer"></div>
+    <div class="hspacer"></div>
+    <div class="hspacer"></div>
+    <table>
+        <tr>
+            <td class="strong">{!mapLabelConversion['InvoiceAddress']}</td>
+            <td class="strong"><apex:outputText value="{!$Label.invoiceit_s__ShippingAddress}" rendered="false" /></td>
+            <td class="aligntop" rowspan="2" style="padding-right:0;width:42%;"><span>
+                <table>   
+                    <tr>
+                        <td class="strong alignright bgcolor boxed boxedtop" style="width:62%">
+                            <nobr>{!mapLabelConversion['InvoiceNumber']}</nobr>
+                        </td>
+                        <td class="boxed boxedtop"><apex:outputField value="{!invoice.invoiceit_s__Invoice_Reference__c}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="strong alignright bgcolor boxed" height="10" style="width:62%">
+                            <nobr>{!mapLabelConversion['InvoiceDate']}</nobr>
+                        </td>
+                        <td class="boxed"><apex:outputField value="{!invoice.invoiceit_s__Invoice_Date__c}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:0;" colspan="2">
+                            <apex:outputPanel rendered="{!invoice.invoiceit_s__Account__r.invoiceit_s__VAT_No__c != null}">
+                             <table>
+                                <tr>
+                                    <td class="strong alignright bgcolor boxed" height="10" style="width:62%">
+                                    <nobr>{!mapLabelConversion['Customer']}</nobr>
+                                    </td>
+                                    <td class="boxed"><apex:outputField value="{!invoice.invoiceit_s__Account__r.invoiceit_s__VAT_No__c}" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </apex:outputPanel>
+                        </td>
+                     </tr>
+                </table></span>        
+            </td>
+        </tr>
+        <tr>
+            <td class="aligntop"> {!InvoiceBill.Salutation}{!InvoiceBill.Name}
+                <br /><table class="nopadding" border="0" cellpadding="0" cellspacing="0"><colgroup span="1"></colgroup><tbody><tr class=""><td class="" colspan="1"></td></tr></tbody></table>
+              <apex:outputPanel rendered="{!InvoiceBill.MailingCountry = 'United States' || InvoiceBill.MailingCountry = 'Canada' || InvoiceBill.MailingCountry = 'Japan'}">
+                <apex:outputLabel value="{!InvoiceBill.MailingStreet}<br>"  rendered="{!InvoiceBill.MailingStreet != null}" escape="false" />
+                <apex:outputLabel value="{!InvoiceBill.MailingCity}, " rendered="{!InvoiceBill.MailingCity != null}" escape="false"/>
+                <apex:outputLabel value="{!InvoiceBill.MailingState}, " rendered="{!InvoiceBill.MailingState != null}" escape="false"/>
+                <apex:outputLabel value="{!InvoiceBill.MailingPostalCode}<br>" rendered="{!InvoiceBill.MailingPostalCode != null}" escape="false"/> 
+                <apex:outputLabel value="{!InvoiceBill.MailingCountry}<br>" rendered="{!InvoiceBill.MailingCountry != null}" escape="false"/>
+              </apex:outputPanel>
+
+              <apex:outputPanel rendered="{!InvoiceBill.MailingCountry = 'United Kingdom'}">
+                 <apex:outputLabel value="{!InvoiceBill.MailingStreet}<br>"  rendered="{!InvoiceBill.MailingStreet != null}" escape="false" />
+                 <apex:outputLabel value="{!InvoiceBill.MailingCity}<br>" rendered="{!InvoiceBill.MailingCity != null}" escape="false"/>
+                 <apex:outputLabel value="{!InvoiceBill.MailingPostalCode}<br>" rendered="{!InvoiceBill.MailingPostalCode != null}" escape="false"/> 
+                 <apex:outputLabel value="{!InvoiceBill.MailingCountry}<br>" rendered="{!InvoiceBill.MailingCountry != null}" escape="false"/>
+              </apex:outputPanel>    
+
+              <apex:outputPanel rendered="{!InvoiceBill.MailingCountry = 'null' || (NOT(InvoiceBill.MailingCountry = 'Canada') && NOT(InvoiceBill.MailingCountry = 'Japan') && NOT(InvoiceBill.MailingCountry = 'United Kingdom'))}">
+                 <apex:outputLabel value="{!InvoiceBill.MailingStreet}<br>"  rendered="{!InvoiceBill.MailingStreet != null}" escape="false" />
+                 <apex:outputLabel value="{!InvoiceBill.MailingPostalCode} " rendered="{!InvoiceBill.MailingPostalCode != null}" escape="false"/> <apex:outputLabel value="{!InvoiceBill.MailingCity}<br>" rendered="{!InvoiceBill.MailingCity != null}" escape="false"/>
+                 <apex:outputLabel value="{!InvoiceBill.MailingCountry}<br>" rendered="{!InvoiceBill.MailingCountry != null}" escape="false"/>
+              </apex:outputPanel>   
+                            </td>
+            <td class="aligntop">
+            </td>
+        </tr>
+    </table>
+    <div class="hspacer"></div>
+    <table class="boxedtable">
+        <thead>
+            <tr>
+                <td class="aligncenter">{!mapLabelConversion['CustomerReference']}
+                </td>
+                <td class="aligncenter">{!mapLabelConversion['InvoiceCurrency']}
+                </td>
+                <td class="aligncenter rightline">{!mapLabelConversion['DueDate']}
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                 <td class="aligncenter bottomline"><apex:outputField value="{!invoice.invoiceit_s__Account__r.LastName}"/>&nbsp;-&nbsp;<apex:outputField value="{!invoice.invoiceit_s__Invoice_Reference__c}"/>
+                </td>
+                <td class="aligncenter bottomline"><apex:outputText value="{!invoice.invoiceit_s__CurrencyL__r.Name}({!invoice.invoiceit_s__CurrencyL__r.invoiceit_s__Currency_Symbol__c})" />
+                </td>
+                <td class="aligncenter rightline bottomline"><apex:outputField value="{!invoice.invoiceit_s__Due_Date__c}" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="hspacer"></div>
+    
+      <table class="boxedtable" border="0" cellpadding="0" cellspacing="0" width="100%">
+    <colgroup span="7"></colgroup>
+    <thead class="rich-table-thead">
+    <tr class="">
+        <th class="" scope="col" colspan="1">
+            <div>&nbsp;</div>
+        </th>
+    
+        <th class="" scope="col" colspan="1"><div><div class="alignleft headerpadding">&nbsp;{!mapLabelConversion['ProductName']}</div></div>
+        </th>
+    
+        <th class="" scope="col" colspan="1"><div><div class="alignleft headerpadding">&nbsp;{!mapLabelConversion['Quantity']}</div></div>
+        </th>
+        
+        <apex:repeat value="{!$ObjectType.invoiceit_s__Invoice_Lines__c.FieldSets.invoiceit_s__Invoice_Email_Fields}" var="fieldAPI">
+          <th class="" scope="col" colspan="1"><div><div class="alignleft headerpadding">&nbsp;{!mapLabelConversion[fieldAPI.Label]}</div></div>
+          </th>
+        </apex:repeat>
+    
+        <th class="" scope="col" colspan="1"><div><div class="alignleft rightline headerpadding">&nbsp;{!mapLabelConversion['NetValue']}</div></div>
+        </th>
+    </tr>
+    </thead>
+    
+    <tbody>
+    <!-- this is used for displaying the sequence numbers -->
+    <apex:variable value="{!1}" var="rowNum"/>
+    <apex:repeat value="{!listOfInvoiceLines}" var="iLines">
+        
+      <tr class="">
+      <td class="aligntop widthsupersmall aligncenter bottomline" colspan="1">
+      <span><apex:outputText value="{!FLOOR(rowNum)}"/></span>
+      </td>
+    
+      <td class="aligntop bottomline" colspan="1">{!iLines.invoiceit_s__Product_Name__c}
+          <span class="description">
+            <apex:outputText value="{!iLines.invoiceit_s__Job_Rate_Plan_Charge__r.Product_Description__c}"/>
+          </span>
+      </td>
+    
+      <td class="alignright aligntop widthsmall bottomline" colspan="1">
+         <span>
+            <apex:outputText value="{0, number, 0}">
+                <apex:param value="{!iLines.invoiceit_s__Quantity__c}" />
+            </apex:outputText>
+          </span>
+      </td>
+      
+       <apex:repeat value="{!$ObjectType.invoiceit_s__Invoice_Lines__c.FieldSets.invoiceit_s__Invoice_Email_Fields}" var="fieldAPI">
+        <td class="alignright aligntop widthsmall bottomline" colspan="1">
+         <span>
+             <apex:outputField value="{!iLines[fieldAPI]}" />
+          </span>
+        </td>
+      </apex:repeat>
+    
+      <td class="alignright alignright aligntop widthmedium rightline bottomline" colspan="1">
+       <apex:outputField value="{!iLines.invoiceit_s__Line_Amount__c}" />
+      </td>
+     </tr>
+    
+    <apex:variable var="rowNum" value="{!rowNum + 1}"/>
+    </apex:repeat>
+    </tbody>
+  </table>
+  
+      <apex:outputPanel rendered="{!invoice.invoiceit_s__Discount_Value__c > 0}">
+    <table>
+        <tr>
+            <td class="aligntop generalnopadding">
+                <table>
+                    <tr>
+                        <td class="strong alignright">{!mapLabelConversion['NetTotal']}
+                        </td>
+                        <td class="widthmedium boxed boxedtopnone alignright"><apex:outputText value="{!invoice.invoiceit_s__CurrencyL__r.invoiceit_s__Currency_Symbol__c}" />&nbsp;
+                            <apex:outputField value="{!invoice.invoiceit_s__Amount__c}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="strong alignright">{!mapLabelConversion['Discount']}
+                        </td>
+                        <td class="widthmedium boxed boxedtopnone alignright"><apex:outputText value="{!invoice.invoiceit_s__CurrencyL__r.invoiceit_s__Currency_Symbol__c}" />&nbsp;
+                            <apex:outputField value="{!invoice.invoiceit_s__Discount_Value__c}" />
+                        </td>
+                    </tr>
+                    <apex:outputPanel rendered="{!invoice.invoiceit_s__VAT__c != 0}">
+                    <tr>
+                        <td class="strong alignright">{!mapLabelConversion['Vat']}
+                        </td>
+                        <td class="widthmedium boxed alignright"><apex:outputText value="{!invoice.invoiceit_s__CurrencyL__r.invoiceit_s__Currency_Symbol__c}" />&nbsp;
+                             <apex:outputField value="{!invoice.invoiceit_s__VAT__c}" />
+                        </td>
+                    </tr>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!invoice.invoiceit_s__Tax__c != 0}">
+                    <tr>
+                        <td class="strong alignright">{!mapLabelConversion['Tax']}
+                        </td>
+                        <td class="widthmedium boxed alignright"><apex:outputText value="{!invoice.invoiceit_s__CurrencyL__r.invoiceit_s__Currency_Symbol__c}" />&nbsp;
+                             <apex:outputField value="{!invoice.invoiceit_s__Tax__c}" />
+                        </td>
+                    </tr>
+                    </apex:outputPanel>
+                    <tr>
+                        <td class="strong alignright">{!mapLabelConversion['InvoiceTotal']}
+                        </td>
+                        <td class="widthmedium boxed alignright"><apex:outputText value="{!invoice.invoiceit_s__CurrencyL__r.invoiceit_s__Currency_Symbol__c}" />&nbsp;
+                            <apex:outputField value="{!invoice.invoiceit_s__Total_Invoice_Value__c}" />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    </apex:outputPanel>
+
+    <apex:outputPanel rendered="{!invoice.invoiceit_s__Discount_Value__c <= 0}">
+    <table>
+        <tr>
+            <td class="aligntop generalnopadding">
+                <table>
+                    <tr>
+                        <td class="strong alignright">{!mapLabelConversion['NetTotal']}
+                        </td>
+                        <td class="widthmedium boxed boxedtopnone alignright"><apex:outputText value="{!invoice.invoiceit_s__CurrencyL__r.invoiceit_s__Currency_Symbol__c}" />&nbsp;
+                            <apex:outputField value="{!invoice.invoiceit_s__Amount__c}" />
+                        </td>
+                    </tr>
+                    <apex:outputPanel rendered="{!invoice.invoiceit_s__VAT__c != 0}">
+                    <tr>
+                        <td class="strong alignright">{!mapLabelConversion['Vat']}
+                        </td>
+                        <td class="widthmedium boxed alignright"><apex:outputText value="{!invoice.invoiceit_s__CurrencyL__r.invoiceit_s__Currency_Symbol__c}" />&nbsp;
+                             <apex:outputField value="{!invoice.invoiceit_s__VAT__c}" />
+                        </td>
+                    </tr>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!invoice.invoiceit_s__Tax__c != 0}">
+                    <tr>
+                        <td class="strong alignright">{!mapLabelConversion['Tax']}
+                        </td>
+                        <td class="widthmedium boxed alignright"><apex:outputText value="{!invoice.invoiceit_s__CurrencyL__r.invoiceit_s__Currency_Symbol__c}" />&nbsp;
+                             <apex:outputField value="{!invoice.invoiceit_s__Tax__c}" />
+                        </td>
+                    </tr>
+                    </apex:outputPanel>
+                    <tr>
+                        <td class="strong alignright">{!mapLabelConversion['InvoiceTotal']}
+                        </td>
+                        <td class="widthmedium boxed alignright"><apex:outputText value="{!invoice.invoiceit_s__CurrencyL__r.invoiceit_s__Currency_Symbol__c}" />&nbsp;
+                            <apex:outputField value="{!invoice.invoiceit_s__Total_Invoice_Value__c}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="strong alignright">{!mapLabelConversion['InvoicePaidAmount']}
+                        </td>
+                        <td class="widthmedium boxed alignright"><apex:outputText value="{!invoice.invoiceit_s__CurrencyL__r.invoiceit_s__Currency_Symbol__c}" />&nbsp;
+                            <apex:outputField value="{!invoice.invoiceit_s__Paid_Amount__c}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="strong alignright">{!mapLabelConversion['InvoiceBalance']}
+                        </td>
+                        <td class="widthmedium boxed alignright"><apex:outputText value="{!invoice.invoiceit_s__CurrencyL__r.invoiceit_s__Currency_Symbol__c}" />&nbsp;
+                            <apex:outputField value="{!invoice.invoiceit_s__Unpaid_Amount__c}" />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    </apex:outputPanel>
+    
+    <div class="hspacer"></div>
+    <div class="hspacer"></div>
+    <div class="hspacer"></div>
+    <div class="hspacer"></div>
+    <div class="hspacer"></div>
+
+    <!-- Payment Instructions Text-->
+    <apex:outputPanel rendered="{!invoice.invoiceit_s__Order__r.Opportunity__r.Sys_Invoice_Language__c = 'English'}">
+    <p> <strong>Payment Instructions</strong><br/>
+    Please ensure your customer reference number (<apex:outputField value="{!invoice.invoiceit_s__Account__r.LastName}"/>&nbsp;-&nbsp;<apex:outputField value="{!invoice.invoiceit_s__Invoice_Reference__c}"/>) is included in your payment data and that the payment is made as soon as possible.<br/> 
+    Please note - as you are transfering the fee to an account abroad, the normal account number and sort code won’t work. You will need to use the international account number (= IBAN) and sort code (= BIC) for international wire transfer. Thank you.<br/>
+    Any bank charges that might occur must be paid by the participant.</p>
+    </apex:outputPanel>
+
+    <apex:outputPanel rendered="{!invoice.invoiceit_s__Order__r.Opportunity__r.Sys_Invoice_Language__c = 'French'}">
+    <p> <strong>Instructions de Paiement</strong><br/>
+    Merci d’effectuer un virement sur le compte suivant dès la réception de cette facture. Assurez vous que votre numéro de référence client est précisé (<apex:outputField value="{!invoice.invoiceit_s__Account__r.LastName}"/>&nbsp;-&nbsp;<apex:outputField value="{!invoice.invoiceit_s__Invoice_Reference__c}"/>) dans l’intitulé du virement. Tous les frais de virement sont à vos frais.</p>
+    </apex:outputPanel>
+    
+    <apex:outputPanel rendered="{!invoice.invoiceit_s__Order__r.Opportunity__r.Sys_Invoice_Language__c = 'Spanish'}">
+    <p> <strong>Instrucciones de Pago</strong><br/>
+    Por favor transfiera el importe total a la siguiente cuenta tan pronto como posible. Por favor asegurese de que su número de Referéncia cliente (<apex:outputField value="{!invoice.invoiceit_s__Account__r.LastName}"/>&nbsp;-&nbsp;<apex:outputField value="{!invoice.invoiceit_s__Invoice_Reference__c}"/>) está incluído en los datos de su transferencia.<br/> 
+    Cualquier comisión bancária que pueda ocurrir deberá ser cubierta por el participante.</p>
+    </apex:outputPanel>
+ 
+    <apex:outputPanel rendered="{!invoice.invoiceit_s__Order__r.Opportunity__r.Sys_Invoice_Language__c = 'German'}">
+    <p> <strong>Zahlungshinweise</strong><br/>
+    Die persönliche Kundenreferenz-Nummer (<apex:outputField value="{!invoice.invoiceit_s__Account__r.LastName}"/>&nbsp;-&nbsp;<apex:outputField value="{!invoice.invoiceit_s__Invoice_Reference__c}"/>) muss bei jeder Überweisung angegeben werden.
+Sollten Gebühren für die Überweisung anfallen, muss diese immer vom Programmteilnehmer bezahlt werden.</p>
+    
+    </apex:outputPanel>
+       
+    <!-- Payment Instructions Bank Details, Etc-->
+    <table>
+        <tr>
+            <td class="zeropadding" style="padding:0">{!mapLabelConversion['BankName']}:&nbsp;{!bankAccount.Bank_Name__c}</td>
+        </tr>
+        <tr>
+            <td class="zeropadding" style="padding:0">{!mapLabelConversion['SWIFTCode']}:&nbsp;{!bankAccount.SWIFT_Code__c}</td>
+        </tr>
+        <tr>
+            <td class="zeropadding" style="padding:0">{!mapLabelConversion['IBANNumber']}:&nbsp;{!bankAccount.IBAN_Number__c}</td>
+        </tr>
+        <tr>
+            <td class="zeropadding" style="padding:0">{!mapLabelConversion['BankStreet']}:&nbsp;{!bankAccount.Bank_Street__c}</td>
+        </tr>
+        <tr>
+            <td class="zeropadding" style="padding:0">{!mapLabelConversion['BankCity']}:&nbsp;{!bankAccount.Bank_City__c}</td>
+        </tr>
+        <tr>
+            <td class="zeropadding" style="padding:0">{!mapLabelConversion['BankPostalCode']}:&nbsp;{!bankAccount.Bank_Postal_Code__c}</td>
+        </tr>
+        <tr>
+            <td class="zeropadding" style="padding:0">{!mapLabelConversion['BankCountry']}:&nbsp;{!bankAccount.Bank_Country__c}</td>
+        </tr>
+    </table>
+
+    <div class="eop">
+        <table cellpadding="0" cellspacing="0">
+             <tr>
+                <td class="zeropadding">&nbsp;</td>
+            </tr>
+                  <tr>
+                <td class="zeropadding">&nbsp;</td>
+            </tr>
+            <apex:outputPanel >
+             <tr>
+                <td><div><apex:image value="{!URLFOR($Resource.Intrax_Invoice_Themes,'/intrax_invoice_themes/images/pdf-boiler-plate-generic.png')}" width="100%" />
+                    </div>
+                </td>
+            </tr> 
+            <tr>
+                <td class="zeropadding footer" style="white-space:nowrap;"><span class="strong">{!legalEntity.Legal_Name__c}</span>&nbsp;|&nbsp;{!legalEntity.invoiceit_s__Street_Name__c}&nbsp;|&nbsp;{!legalEntity.invoiceit_s__Zip_Postal_Code__c}&nbsp;{!legalEntity.invoiceit_s__City__c}&nbsp;|&nbsp;{!legalEntity.invoiceit_s__Country__c}&nbsp;|&nbsp;&nbsp;p.&nbsp;{!legalEntity.Phone__c}&nbsp;|&nbsp;f.&nbsp;{!legalEntity.Fax__c}&nbsp;|&nbsp;{!legalEntity.Email__c}&nbsp;|&nbsp;{!legalEntity.Website__c}
+              </td>
+            </tr>
+            <tr>
+                <td class="zeropadding footer">Registration Number&nbsp;{!legalEntity.Registration_Number__c}&nbsp;|&nbsp;VAT&nbsp;ID:&nbsp;{!legalEntity.VAT_ID__c}
+                </td>
+            </tr>
+            </apex:outputPanel>
+             
+            <tr>
+                <td class="zeropadding">&nbsp;</td>
+            </tr>
+       
+                 <tr>
+                <td class="zeropadding">&nbsp;</td>
+            </tr>
+        </table>
+    </div>
+</apex:component>

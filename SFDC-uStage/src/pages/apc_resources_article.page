@@ -1,0 +1,16 @@
+<apex:page id="apc_resources_article" docType="html-5.0" applyHtmlTag="false" applyBodyTag="false" title="Family Resources" standardStylesheets="false" showHeader="false" controller="apc_resource_controller" action="{!showResourceDetails}">
+<apex:composition template="intraxtemplate_vs3">
+<apex:define name="body">
+
+<div class="row">
+<div class="col-sm-8 center-block ">
+<apex:outputPanel layout="block" >
+ 	<div class="margin-b1"><a href="apc_resources">Back to All Resources</a> <!--  / <a href="apc_resources_category?cat={!ResourceDetail.Category__c}">{!ResourceDetail.Category__c}</a>--></div>                       
+	<h1 class="no-margin-t">{!ResourceDetail.Subject__c}</h1>
+	<div class="sfdc_richtext"><apex:outputtext escape="false" value="{!ResourceDetail.Body__c}" /></div>
+</apex:outputPanel>
+</div><!-- end col -->
+</div><!-- end row -->
+</apex:define>
+</apex:composition>
+</apex:page>

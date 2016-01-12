@@ -1,0 +1,25 @@
+<apex:page id="Help_ayusa_preapp_stu_skills" docType="html-5.0" standardStylesheets="true" showHeader="false">
+
+    <apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/reset.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/fonts.css')}"/> 
+    <apex:stylesheet value="{!URLFOR($Resource.module_colorbox, '/module-colorbox/css/colorbox.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/vs1.css')}"/> 
+    <apex:outputText value="<" escape="false"/>!--[if IE]<apex:outputText value=">" escape="false"/>
+    <link rel="stylesheet" href="/intraxappengine/resource/intrax_themes/intrax_themes/styles/ie.css"/>  
+    <apex:outputText value="<" escape="false"/>![endif]--<apex:outputText value=">" escape="false"/>      
+     
+    <apex:outputText value="<" escape="false"/>!--[if lt IE 8]<apex:outputText value=">" escape="false"/>      
+    <link rel="stylesheet" href="/intraxappengine/resource/intrax_themes/intrax_themes/styles/ie-7.css"/>
+    <apex:outputText value="<" escape="false"/>![endif]--<apex:outputText value=">" escape="false"/>
+    
+    <apex:define name="body">
+      <div class="wrapper">
+        <apex:form >
+        <h2>Academic and Language Skills Help</h2>
+        <div class="white-box">
+            <p>Grades, English ability and past participation in an exchange program to the United States determine your eligibility for the Ayusa program. You are asked to report your grades and English level at this step.  The self-reported information in this section is not intended to take the place of your official records. You will be asked to provide official grades and English test scores later in the main application. </p>
+        </div>
+    </apex:form>
+    </div>
+    </apex:define>
+</apex:page>

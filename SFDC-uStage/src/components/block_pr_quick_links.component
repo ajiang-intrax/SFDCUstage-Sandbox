@@ -1,0 +1,221 @@
+<apex:component layout="none" controller="IntraxPartnerPortalEngineController">
+<style>
+.quicklink-container.vs1{ 
+    border: #ccc solid 1px;
+    width: 100%;
+    padding-bottom:20px;
+    min-height:240px;}
+.quicklink-container.vs1 h3{    
+    margin-top: 0;
+    background-color: #efefef;
+    padding: 15px 20px;}  
+.quicklink.vs1{    padding: 5px 20px;
+    display: table;}
+.quicklink.vs1 .quicklink-stat{  color: #202020;
+  font-size: 20px;
+  font-family: 'milowebbold';
+  padding-right: 10px;
+  display: table-cell;}
+.quicklink.vs1 .quicklink-label{display: table-cell; text-align:left;}
+
+.quicklink.vs1.disabled {pointer-events: none; cursor: default; color:#202020;}
+ 
+ 
+</style>
+
+
+<apex:outputPanel layout="block" rendered="{! IF($CurrentPage.Name=='pr_home', true, false)}" id="QuickLinksBlock">
+
+    <div class="row">
+        <div class="col-sm-12 ">
+        <h2 class="no-margin-t">Quick Links</h2>
+        </div>
+    </div>
+    
+      <apex:outputPanel layout="block" rendered="{!activeUser.Contact.PTR_Portal_Intrax_Program_Default__c!='AuPairCare'}">
+ <div class="row">
+        <div class="col-sm-6 margin-b2">                 
+                                   
+                <apex:outputPanel styleClass="vs1 quicklink-container" layout="block">
+                
+                <h3>Applications Summary</h3>
+                
+                <apex:commandlink styleClass="vs1 quicklink {!IF(FlagAppsCount == 0, 'disabled', '')}" action="/apex/pr_app_list?ApplicationLevelSelected=Basic&ApplicationStageSelected=Submitted" id="FlaggedApps0" rendered="{!activeUser.Contact.PTR_Portal_Intrax_Program_Default__c=='AuPairCare'}">				                                                    
+                <span class="quicklink-stat">{!FlagAppsCount}</span> <span class="quicklink-label">Flagged Applications</span>
+                </apex:commandlink> 
+               
+                <apex:commandlink styleClass="vs1 quicklink {!IF(DecAppsCount == 0, 'disabled', '')}" action="/apex/pr_app_list?ApplicationStageSelected=Declined" id="RejectedApps0" >				                                                    
+                <span class="quicklink-stat">{!DecAppsCount}</span> <span class="quicklink-label">Rejected Applications</span>
+                </apex:commandlink>
+                
+                <apex:commandlink styleClass="vs1 quicklink {!IF(SubAppsCount == 0, 'disabled', '')}" action="/apex/pr_app_list?ApplicationLevelSelected=Main&ApplicationStageSelected=Submitted" id="SubmittedApps0" >				                                                    
+                <span class="quicklink-stat">{!SubAppsCount}</span> <span class="quicklink-label">Submitted Applications</span>
+                </apex:commandlink>
+             
+                <apex:commandlink styleClass="vs1 quicklink {!IF(AccAppsCount == 0, 'disabled', '')}" action="/apex/pr_app_list?ApplicationStageSelected=Accepted" id="AcceptedApps0" >				                                                    
+                <span class="quicklink-stat">{!AccAppsCount}</span> <span class="quicklink-label">Accepted Applications</span>
+                </apex:commandlink>
+                  
+                
+                </apex:outputPanel>
+             
+        </div><!--  end column -->
+        </div>
+        
+    
+    </apex:outputPanel>
+    
+   
+   
+   
+   
+    <apex:outputPanel layout="block" rendered="{!activeUser.Contact.PTR_Portal_Intrax_Program_Default__c=='AuPairCare'}">
+    <div class="row">
+        <div class="col-sm-6 margin-b2">                 
+                                   
+                <apex:outputPanel styleClass="vs1 quicklink-container" layout="block">
+                
+                <h3>Applications Summary</h3>
+                
+                <apex:commandlink styleClass="vs1 quicklink {!IF(FlagAppsCount == 0, 'disabled', '')}" action="/apex/pr_app_list?ApplicationLevelSelected=Basic&ApplicationStageSelected=Submitted" id="FlaggedApps" rendered="{!activeUser.Contact.PTR_Portal_Intrax_Program_Default__c=='AuPairCare'}">				                                                    
+                <span class="quicklink-stat">{!FlagAppsCount}</span> <span class="quicklink-label">Flagged Applications</span>
+                </apex:commandlink> 
+               
+                <apex:commandlink styleClass="vs1 quicklink {!IF(DecAppsCount == 0, 'disabled', '')}" action="/apex/pr_app_list?ApplicationStageSelected=Declined" id="RejectedApps" >				                                                    
+                <span class="quicklink-stat">{!DecAppsCount}</span> <span class="quicklink-label">Rejected Applications</span>
+                </apex:commandlink>
+                
+                <apex:commandlink styleClass="vs1 quicklink {!IF(SubAppsCount == 0, 'disabled', '')}" action="/apex/pr_app_list?ApplicationLevelSelected=Main&ApplicationStageSelected=Submitted" id="SubmittedApps" >				                                                    
+                <span class="quicklink-stat">{!SubAppsCount}</span> <span class="quicklink-label">Submitted Applications</span>
+                </apex:commandlink>
+             
+                <apex:commandlink styleClass="vs1 quicklink {!IF(AccAppsCount == 0, 'disabled', '')}" action="/apex/pr_app_list?ApplicationStageSelected=Accepted" id="AcceptedApps" >				                                                    
+                <span class="quicklink-stat">{!AccAppsCount}</span> <span class="quicklink-label">Accepted Applications</span>
+                </apex:commandlink>
+                  
+                
+                </apex:outputPanel>
+             
+        </div><!--  end column -->
+  
+        <div class="col-sm-6 margin-b2">             
+                <apex:outputPanel styleClass="vs1 quicklink-container" layout="block" id="APLinks" >              
+    
+                <h3>Main Working Applications</h3>
+                
+                <apex:commandlink styleClass="vs1 quicklink {!IF(notStartedAssAppsSize == 0, 'disabled', '')}" action="/apex/pr_app_list?notStartedAssApps=yes" id="InterviewStart" >				                                                    
+                <span class="quicklink-stat">{!notStartedAssAppsSize}</span> <span class="quicklink-label">Interviews to Start</span>
+                </apex:commandlink>
+                    
+                <apex:commandlink styleClass="vs1 quicklink {!IF(inCompleteAssAppsSize == 0, 'disabled', '')}" action="/apex/pr_app_list?inCompleteAssApps=yes" id="InterviewComplete" >				                                                    
+                <span class="quicklink-stat">{!inCompleteAssAppsSize}</span> <span class="quicklink-label">Interviews to Complete</span>
+                </apex:commandlink>
+
+                </apex:outputPanel>
+     </div>
+     </div>           
+                
+     <div class="row">
+        <div class="col-sm-6 margin-b2">              
+                <apex:outputPanel styleClass="vs1 quicklink-container" layout="block" id="APLinksReview" >              
+    			<h3>Partner Audit of Submitted Applications</h3>
+    			<apex:commandlink styleClass="vs1 quicklink {!IF(summaryReviewAppsList.Size == 0, 'disabled', '')}" action="/apex/pr_app_summary_review" id="Summary" >				                                                    
+                <span class="quicklink-stat">{!summaryReviewAppsList.Size}</span> <span class="quicklink-label">Summary Review</span>
+                </apex:commandlink>
+                    
+                <apex:commandlink styleClass="vs1 quicklink {!IF(bgCheckReviewAppsSize == 0, 'disabled', '')}" action="/apex/pr_app_list?bgCheckReviewApps=yes" id="BGCheckReviewCount" >				                                                    
+                <span class="quicklink-stat">{!bgCheckReviewAppsSize}</span> <span class="quicklink-label">BG Checks to Review</span>
+                </apex:commandlink>
+                
+				<apex:commandlink styleClass="vs1 quicklink {!IF(toHealthReviewAppsSize == 0, 'disabled', '')}" action="/apex/pr_app_list?toHealthReviewApps=yes" id="HealthReviewCount" >				                                                    
+                <span class="quicklink-stat">{!toHealthReviewAppsSize}</span> <span class="quicklink-label">Health Forms to Review</span>
+                </apex:commandlink>
+                
+                <apex:commandlink styleClass="vs1 quicklink {!IF(referenceListCheck.Size == 0, 'disabled', '')}" action="/apex/pr_app_references_to_review" id="References" >				                                                    
+                <span class="quicklink-stat">{!referenceListCheck.Size}</span> <span class="quicklink-label">References to Review</span>
+                </apex:commandlink>
+                
+                <apex:commandlink styleClass="vs1 quicklink {!IF(schoolDetailsVerifyAppsSize == 0, 'disabled', '')}" action="/apex/pr_app_list?schoolDetailsVerifyApps=yes" id="SchoolDetailsVerifyCount" >				                                                    
+                <span class="quicklink-stat">{!schoolDetailsVerifyAppsSize}</span> <span class="quicklink-label">School Details to Verify</span>
+                </apex:commandlink>
+    			
+    			</apex:outputPanel>
+    </div>
+   
+        <div class="col-sm-6 margin-b2">   	
+    			<apex:outputPanel styleClass="vs1 quicklink-container" layout="block" id="Available_Au"  >              
+    			<h3>Available Au Pairs</h3>
+    			<apex:commandlink styleClass="vs1 quicklink {!IF(AwaitingCount == 0, 'disabled', '')}" action="/apex/pr_pt_list?awaitingEngs=yes" id="Awaiting" >				                                                    
+                <span class="quicklink-stat">{!AwaitingCount}</span> <span class="quicklink-label">Awaiting Placement</span>
+                </apex:commandlink>
+                    
+                <apex:commandlink styleClass="vs1 quicklink {!IF(ActiInterviewsCount == 0, 'disabled', '')}" action="/apex/pr_pt_list?actInterEngs=yes" id="ActiveInter" >				                                                    
+                <span class="quicklink-stat">{!ActiInterviewsCount}</span> <span class="quicklink-label">Active Interviews</span>
+                </apex:commandlink>
+                
+				<apex:commandlink styleClass="vs1 quicklink {!IF(InCountryCount == 0, 'disabled', '')}" action="/apex/pr_pt_list?inCountryEngs=yes" id="InCountry" >				                                                    
+                <span class="quicklink-stat">{!InCountryCount}</span> <span class="quicklink-label">In-Country</span>
+                </apex:commandlink>
+                
+                <apex:commandlink styleClass="vs1 quicklink {!IF(InterviewFeedCount == 0, 'disabled', '')}" action="/apex/pr_pt_list?interFeedEngs=yes" id="InterviewFeed" >				                                                    
+                <span class="quicklink-stat">{!InterviewFeedCount}</span> <span class="quicklink-label">Interview Feedback</span>
+                </apex:commandlink>
+                
+    			</apex:outputPanel>
+    		</div>
+    		</div>	
+    			
+    		<div class="row">
+        <div class="col-sm-6 margin-b2">   	
+    			<apex:outputPanel styleClass="vs1 quicklink-container" layout="block" id="PlacedAuPairs" >              
+    			
+    			<h3>Placed Au Pairs</h3>
+    			<apex:commandlink styleClass="vs1 quicklink {!IF(NewMatch30Count == 0, 'disabled', '')}" action="/apex/pr_pt_list?newMatchesEngs=yes" id="newMatches" >				                                                    
+                <span class="quicklink-stat">{!NewMatch30Count}</span> <span class="quicklink-label">New Matches (last 30 days)</span>
+                </apex:commandlink>
+                    
+                <apex:commandlink styleClass="vs1 quicklink {!IF(ExtensionEngCount == 0, 'disabled', '')}" action="/apex/pr_pt_list?extensionEngs=yes" id="Extension" >				                                                    
+                <span class="quicklink-stat">{!ExtensionEngCount}</span> <span class="quicklink-label">Extensions</span>
+                </apex:commandlink>
+                
+				<apex:commandlink styleClass="vs1 quicklink {!IF(PreArrivalCount == 0, 'disabled', '')}" action="/apex/pr_pt_list?preArrivalEngs=yes" id="PreArrival" >				                                                    
+                <span class="quicklink-stat">{!PreArrivalCount}</span> <span class="quicklink-label">Pre-Arrival</span>
+                </apex:commandlink>
+                
+                <apex:commandlink styleClass="vs1 quicklink {!IF(OnProgramCount == 0, 'disabled', '')}" action="/apex/pr_pt_list?ProgramUSAEngs=yes" id="ProgramUSA" >				                                                    
+                <span class="quicklink-stat">{!OnProgramCount}</span> <span class="quicklink-label">On Program (In USA)</span> 
+                </apex:commandlink>
+                
+    			</apex:outputPanel>
+    		</div>
+    		
+        <div class="col-sm-6 margin-b2">   		 
+    			<apex:outputPanel styleClass="vs1 quicklink-container" layout="block" id="yearDate">              
+    			
+    			<h3>Year-to-Date Summary</h3>
+    			<apex:commandlink styleClass="vs1 quicklink {!IF(AppSubLastYearCount == 0, 'disabled', '')}" action="/apex/pr_app_list?submittedApps=yes" id="appsubmitted" >				                                                    
+                <span class="quicklink-stat">{!AppSubLastYearCount}</span> <span class="quicklink-label">Applications Submitted</span>
+                </apex:commandlink>
+                    
+                <apex:commandlink styleClass="vs1 quicklink {!IF(AppAcceptedLastYearCount == 0, 'disabled', '')}" action="/apex/pr_app_list?acceptedApps=yes" id="appaccepted" >				                                                    
+                <span class="quicklink-stat">{!AppAcceptedLastYearCount}</span> <span class="quicklink-label">Applications Accepted</span>
+                </apex:commandlink>
+                
+                 
+				<apex:commandlink styleClass="vs1 quicklink disabled" action="/apex/pr_app_list?toHealthReviewApps=yes" id="goal" >				                                                    
+                <span class="quicklink-stat">{!accParntner.APC_Recruitment_Goal__c}</span> <span class="quicklink-label">Goal</span>
+                </apex:commandlink> 
+
+    			</apex:outputPanel>
+    			
+    			</div>
+    			</div>
+
+                
+       
+    </apex:outputPanel>
+     
+<hr class="margin-b6 margin-t6"/>
+</apex:outputPanel>
+
+</apex:component>

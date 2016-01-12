@@ -1,0 +1,320 @@
+<apex:page id="apc_cc_update" docType="html-5.0" applyHtmlTag="false" applyBodyTag="false" title="Billing and Payments Update" 
+           standardStylesheets="false" showHeader="false" controller="MyProfilePageController" >
+     <style>
+        .btn-primary1 {
+        background-color: #7CB040;
+        border-color: #72a23b;
+        color: #FFFFFF;
+        }
+         
+    </style>
+    
+    <apex:composition template="intraxtemplate_vs3">
+        <apex:define name="body">
+            <div class="row">
+                <div class="col-md-7 col-md-push-3">
+                    <apex:form styleClass="form-vertical ws-validate" id="webform">
+                        
+                        <apex:outputPanel layout="block" id="failpayment" rendered="{!NOT(apcBillingEditPage.isPaymentSuccessful)}">
+                            <p class="alert alert-danger"><button data-dismiss="alert" class="close" type="button">x</button>{!apcBillingEditPage.paymentError}</p>
+                        </apex:outputPanel>
+                        <apex:outputPanel layout="block" id="paymentfirst">
+                            <h1>Update Credit Card Detail</h1>
+                            
+                            <apex:outputPanel id="paymentfields" styleClass="paymentfields" layout="block">
+                                
+                                <apex:outputPanel id="paymentpanel" >
+                                    
+                                    <p>&nbsp;</p>
+                                    <div class="section-title">Credit Card Details</div>
+                                    
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="control-label">First Name</label>
+                                                <apex:inputField styleClass="form-control fname" value="{!apcBillingEditPage.personInfo.First_Name__c}"
+                                                                 required="true"  id="billingFirstName" />
+                                                <apex:message for="billingFirstName"
+                                                              styleClass="custom-error-text" />
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="control-label">Last Name</label>
+                                                <apex:inputField styleClass="form-control lname" value="{!apcBillingEditPage.personInfo.Last_Name__c}"
+                                                                 required="true" id="billingLastName" />
+                                                <apex:message for="billingLastName" styleClass="custom-error-text" />
+                                            </div>
+                                        </div>
+                                        
+                                    </div><!--  end row -->
+                                    
+                                    <div class="row">
+                                        
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Credit Card Number
+                                                </label>
+                                                <apex:inputText styleClass="form-control text" value="{!apcBillingEditPage.payWrapper.ccNumber}"
+                                                                required="true" id="cardnumber" />
+                                                <apex:message for="cardnumber"
+                                                              styleClass="custom-error-text" />
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="control-label">CV code</label>
+                                                <apex:inputText styleClass="form-control short" value="{!apcBillingEditPage.payWrapper.cvvNumber}"
+                                                                required="true" id="cvcode" />
+                                                <apex:message for="cvcode" styleClass="custom-error-text" />
+                                            </div>
+                                        </div>
+                                        
+                                        
+                                        
+                                        
+                                    </div><!--  end row -->
+                                    
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="control-label">Type of Card</label>
+                                                <apex:selectList styleClass="form-control cctype req" value="{!apcBillingEditPage.TypeCreditCardSelected}" multiselect="false" size="1" id="listcardtypes" required="true">
+                                                    <apex:selectOption itemValue="" itemLabel=" --Please Choose-- " />
+                                                    <apex:selectOptions value="{!apcBillingEditPage.TypeCard}" />
+                                                </apex:selectList>
+                                                <div><a id="visabtn" name="Visa" class="creditc-icon">Visa</a>
+                                                    <a name="MasterCard" id="mastercardbtn" class="creditc-icon">MasterCard</a>
+                                                    <a name="AmericanExpress" id="amexbtn" class="creditc-icon">American Express</a>
+                                                      <a name="Discover" id="discbtn" class="creditc-icon">Discover Card</a>
+                                                    </div>
+                                                <apex:message for="listcardtypes" styleClass="custom-error-text" />
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    Expiration Date
+                                                </label>
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <apex:selectList styleClass="form-control req" value="{!apcBillingEditPage.monthSelected}"
+                                                                         multiselect="false" size="1"
+                                                                         id="monthlist" required="true" >
+                                                            <apex:selectOption itemValue="" itemLabel=" --Month-- " />
+                                                            <apex:selectOptions value="{!apcBillingEditPage.Month}" />
+                                                        </apex:selectList>
+                                                        <apex:message for="monthlist" styleClass="custom-error-text" /> 
+                                                    </div>
+                                                    <div class="col-sm-6" style="padding-left:0;">
+                                                        <apex:selectList styleClass="form-control req" value="{!apcBillingEditPage.yearSelected}" 
+                                                                         multiselect="false" size="1" id="yearlist" required="true" >
+                                                            <apex:selectOption itemValue="" itemLabel=" --Year-- " />
+                                                            <apex:selectOptions value="{!apcBillingEditPage.year}" />
+                                                        </apex:selectList>
+                                                        <apex:message for="yearlist" styleClass="custom-error-text" />  
+                                                    </div>
+                                                </div><!--  end row -->
+                                            </div>
+                                        </div>
+                                        
+                                    </div><!--  end row -->
+                                    
+                                    <apex:outputPanel layout="block" id="addressfieldsPanel">
+                                        <p>&nbsp;</p>
+                                        <div class="section-title">Billing Address</div>
+                                        
+                                        <div class="row">
+                                            <div class="col-sm-12 margin-b">            
+                                                <div>   <apex:actionRegion >
+                                                    <apex:inputCheckbox styleClass="no-margin-t" value="{!apcBillingEditPage.useCurrentBillingAddressInfo}" id="billingAddress">
+                                                        <apex:actionSupport event="onchange" reRender="addressfieldsPanel" action="{!apcBillingEditPage.blankOutAddressDetailsOnPaymentPage}" onComplete="restoreclass();" status="addinfoload"/>
+                                                    </apex:inputCheckbox>
+                                                    </apex:actionRegion>
+                                                    
+                                                    <label>Check if same as physical address</label></div>
+                                                <apex:message for="billingAddress" styleClass="custom-error-text" />
+                                                <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="addinfoload"/>
+                                                
+                                            </div>
+                                        </div> 
+                                        <!--  end row -->
+                                        
+                                        
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label class="control-label">
+                                                        Email
+                                                    </label>
+                                                    <apex:inputText styleClass="form-control" value="{!apcBillingEditPage.PaySubsWrapper.BillingEmail}"
+                                                                    required="true"   id="billingEmail" />
+                                                    <apex:message for="billingEmail"
+                                                                  styleClass="custom-error-text" />
+                                                </div>
+                                            </div> 
+                                        </div><!--  end row -->
+                                        
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label class="control-label">Street Address 1</label>
+                                                    <apex:inputText styleClass="form-control" html-placeholder="Street address" onblur="CapitalizeName(event.target);" value="{!apcBillingEditPage.PaySubsWrapper.BillingStreet}"
+                                                                    required="true"  id="street1" />
+                                                    <apex:message for="street1" styleClass="custom-error-text" />
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label class="control-label">Street Address 2 <span class="info">(Optional)</span></label>
+                                                    <apex:inputText styleClass="form-control" html-placeholder="Apartment, building, floor, etc." onblur="CapitalizeName(event.target);" value="{!apcBillingEditPage.PaySubsWrapper.BillingStreet2}"
+                                                                    required="False" id="street2" />
+                                                </div>
+                                            </div>
+                                        </div><!--  end row -->
+                                        
+                                        
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label class="control-label">City</label>
+                                                    <apex:inputText styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!apcBillingEditPage.PaySubsWrapper.BillingCity}"
+                                                                    required="TRUE" id="city" />
+                                                    <apex:message for="city" styleClass="custom-error-text" />
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label class="control-label">State</label>
+                                                    <apex:inputText styleClass="form-control short" html-placeholder="XX" html-pattern="[A-Z]{2}"  onblur="UpperCase(event.target);"
+                                                                    value="{!apcBillingEditPage.PaySubsWrapper.BillingState}"
+                                                                    required="TRUE" id="state" />
+                                                    <apex:message for="state" styleClass="custom-error-text" />
+                                                </div>
+                                            </div>
+                                        </div><!--  end row -->
+                                        
+                                        
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label class="control-label">Country</label>
+                                                    <apex:inputText styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!apcBillingEditPage.PaySubsWrapper.BillingCountry}"
+                                                                    required="TRUE" id="country" />
+                                                    <apex:message for="country" styleClass="custom-error-text" />
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label class="control-label">
+                                                        Postal Code
+                                                    </label>
+                                                    <apex:inputText styleClass="form-control" value="{!apcBillingEditPage.PaySubsWrapper.BillingPostalCode}"
+                                                                    required="TRUE" id="zip" />
+                                                    <apex:message for="zip" styleClass="custom-error-text" />
+                                                </div>
+                                            </div>
+                                        </div><!--  end row -->
+                                        
+                                    </apex:outputPanel>
+                                    
+                                    <apex:outputPanel layout="block" rendered="True" id="authorized">
+                                        <div class="well"> 
+                                            <div class="tcell"> 
+                                                <apex:actionRegion >
+                                                    <apex:inputCheckBox id="ccauthorized" styleClass="form-control ccauthorized" required="true"/>
+                                                </apex:actionRegion>
+                                            </div>     
+                                            <div class="tcell">I authorize AuPairCare to automatically charge the credit card provided per the due date(s) reflected on the invoice(s) associated with the requested match.</div>  
+                                        </div>  
+                                    </apex:outputPanel>
+                                    
+                                    <div class="row">
+                                        <div class="col-sm-12 margin-t">
+                                            
+                                            <apex:outputLink id="BackBasic" styleClass="btn btn-link btn-lg" value="/apex/apc_billing_payments?id={!apcBillingEditPage.applicantInfo.Id}"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                                            <apex:commandlink styleClass="btn btn-primary1 btn-lg" action="{!apcBillingEditPage.UpdateCCDetails}" id="nextlink"
+                                                               onComplete="restoreclass();" reRender="webform" status="onsubmit1">
+                                                <apex:commandButton value="Save and Continue" id="paybutton" immediate="true"/>
+                                                <!-- <apex:param name="nextPage" value="/apex/apc_billing_payments" /> -->
+                                                <apex:param name="reDirectPage" value="true" />
+                                            </apex:commandlink>
+                                        </div>      
+                                    </div>
+                                </apex:outputPanel>
+                            </apex:outputPanel>
+                            
+                            
+                            
+                        </apex:outputPanel> <!--  end paymentfirst -->
+                            
+                        </apex:form>
+                    </div>
+                    
+                    
+                    <div class="col-md-3 col-md-pull-7">
+                        <c:menu_side_account_settings />
+                    </div>     
+                    
+                    <script>
+                    var j$ = jQuery.noConflict(); 
+                    
+                    j$('.creditc-icon').bind('click', function () {
+                        var cc = j$(this).attr("name");
+                        j$('.cctype option[value="' + cc + '"]').prop('selected', true);
+                    });
+                    
+                    
+                    
+                    //move to the top of the page
+                    function goToTheTop(){
+                        j$('html, body').animate({ scrollTop: 0 }, 'slow');
+                    }
+                    
+                    
+                    var submitted = false;
+                    
+                    function doSubmit(form) {
+                        if (!submitted) {
+                            submitted = true;
+                            form.submit();
+                        }
+                    }
+                
+                
+                j$(document).ready(function() {
+                checkingBool();
+                });
+                
+                j$('input.ccauthorized:checkbox').click(function(){
+                   checkingBool();
+                });
+                
+                function checkingBool(){
+                    if(j$('input.ccauthorized:checkbox').is(':checked')){
+                        j$('.btn-primary1').removeAttr('disabled');
+                    }else{
+                        j$('.btn-primary1').attr('disabled', 'disabled');
+                    }
+                }
+             
+                    
+                function enableLoading1(){
+                    j$('.btn-primary1').button('loading');
+                }
+                
+                function disableLoading1(){
+                    j$('.btn-primary1').button('reset');
+                    j$('html, body').animate({ scrollTop: 0 }, 'slow');
+                }
+                
+                       </script>
+                   <apex:actionstatus id="onsubmit1" onstart="enableLoading1();" onstop="disableLoading1();"/>
+                    
+                </div>      
+                <!-- end row -->
+            </apex:define>
+        </apex:composition>
+    </apex:page>

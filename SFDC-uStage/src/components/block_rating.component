@@ -1,0 +1,50 @@
+<apex:component controller="Rating_Controller" allowDML="true">
+
+	 <apex:attribute name="read_only" type="String" description="Sets the rating to read-only mode" required="false"/>
+	 <apex:attribute name="extId" type="String" description="Necessary to set unique IDs" required="false"/>
+	 <apex:attribute name="ratingScore" type="String" description="Set the score in case there is alrealy a Rating__c record" required="false"/>
+	
+	<script>
+	jQuery(document).ready(function() {
+  		jQuery('#rating{!extId}').raty({
+			starType : 'i',
+			{!IF(read_only == "true", "readOnly: true", "readOnly:false")},
+			hints: ['','','','','',''],
+			halfShow : true,
+			half:true,  
+			cancel:true,
+			cancelHint : '',
+			score: function() {
+				return jQuery(this).attr('data-score');
+  			},
+  			click: function(score, evt) {
+    			//alert('ID: ' + this.id + "\nscore: " + score +" / {!extId} \nevent: " + evt);
+    			jQuery('[id$=scorehidden]').val(score);
+    			jQuery('[id$=matchIdhidden]').val("{!extId}");
+    			save();
+  			}  			
+		});
+	});
+  	</script>
+
+	<style>
+		.list-view .rating-stars{
+			padding:12px 0;
+		}
+		.star-on-png, .star-off-png, .star-half-png, .cancel-on-png, .cancel-off-png{
+			color:orange;
+			font-size:24px;
+		}	
+	</style>
+	
+	<!--  <apex:form > -->
+	<apex:actionFunction action="{!saveRating}" name="save" rerender="scorehidden,matchIdhidden">
+	</apex:actionFunction>
+		
+	<div id="rating{!extId}" class="rating-stars" data-score="{!IF((ratingScore != '' || NOT(ISNULL(ratingScore))), ratingScore, currentRating)}">
+	</div>	
+	
+	<apex:inputHidden id="scorehidden" value="{!score}"/>
+	<apex:inputHidden id="matchIdhidden" value="{!matchId}"/>
+	<!--  </apex:form>  -->	
+</apex:component>

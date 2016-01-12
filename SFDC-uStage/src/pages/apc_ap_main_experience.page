@@ -1,0 +1,187 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" title="Experience" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="false" showHeader="false" id="apc_ap_main_experience">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_apc_ap_application />
+       <div id="app-page" class="row">
+        <div id="app-focus" class="col-md-8 col-md-push-3">
+          <c:block_app_completion ApplicantInfo="{!applicantInfo}" userProfileName="{!userProfileName}"  />
+          
+          <!-- Jose-Adding Tips for Partners  (Profile "OCPM Agent Portal")
+          <apex:outputPanel rendered="{!userProfileName == 'OCPM Agent Portal' && applicantInfo.Application_Level__c == 'Main'}" layout="block" id="blockTip">
+	          <div class="lead alert alert-warning clearfix">
+	          <b>Tip</b>&nbsp;&nbsp;
+	          Remember, all hours that occurred previous to an au pairs? 14th birthday will not be included in
+			  the calculation of childcare hours.
+	          </div>
+          </apex:outputPanel>
+          -->
+          
+          <h1>Childcare Experience</h1>
+          <p class="lead">Telling future host families about your childcare experience is one of the most important parts to your application. 
+            Be sure to list all of your experience and at least two experiences caring for children outside of your family.</p>
+          <apex:form id="webform" styleClass="form-vertical ws-validate"  >
+            <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+            <apex:commandlink styleClass="btn btn-link vs2 btn-lg margin-r2 addchildb" action="{!navigator}" id="add_childcareexp" status="ondropbutton" onComplete="rerunjs();" reRender="webform">
+              <apex:param name="nextPage" value="/apex/apc_ap_main_add_childcare_experience" />
+              <apex:param name="reDirectPage" value="true" />
+              <i class="fa fa-plus"></i> <span>Add Childcare Experience</span>
+               </apex:commandlink>
+            <p class="visible-xs">&nbsp;</p>
+            <span>You can also
+            <apex:commandlink action="{!navigator}" id="add_workexp" status="ondropbutton" onComplete="rerunjs();" reRender="webform">
+              <apex:param name="nextPage" value="/apex/apc_ap_main_add_work_experience" />
+              <apex:param name="reDirectPage" value="true" />
+              <strong>add non-childcare work experiences</strong></apex:commandlink>
+            </span>
+            <apex:actionstatus id="ondropbutton" onstart="enableDropLoading();" onstop="disableDropLoading();"/>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <h3>Your Experience Summary</h3>
+            <hr class="no-margin"/>
+            <div class="row">
+              <div class="col-sm-12" >
+                <div class="stats">
+                  <div class="stat vs1">
+                    <div class="stat-high">
+                      <apex:outputField value="{!applicantInfo.Childcare_Total_Hours__c}" id="totalhours"/>
+                    </div>
+                    <div class="stat-desc">Total Childcare Hours</div>
+                  </div>
+                  <!--  end stat -->
+                  <div class="stat vs1">
+                    <div class="stat-high">
+                      <apex:outputField value="{!applicantInfo.Under_2_Total_Hours__c}" id="totalhoursunder2"/>
+                    </div>
+                    <div class="stat-desc">Hours with children<br/>
+                      under 2 years old</div>
+                  </div>
+                  <!--  end stat --> 
+                  <div class="stat vs1">
+                    <div class="stat-high">
+                      <apex:outputText value="{!ideisRef}" id="totalRefReq"/>
+                    </div>
+                   	<apex:outputText rendered="{!ideisRef < 2}">
+                    <div class="stat-desc">Reference Requested<br/><em>({!2 - ideisRef} more needed)</em></div>
+                    </apex:outputText>
+                    <apex:outputText rendered="{!ideisRef > 1}">
+                    <div class="stat-desc">References Requested</div>
+                    </apex:outputText>
+                  </div>
+                </div>
+                <!--  end stats --> 
+              </div>
+            </div>
+            <apex:outputPanel layout="block" rendered="{!IF(listExperience.Size > 0, true, false)}">
+              <apex:pageBlock id="Block_ListExperience" >
+                <div class="table-responsive">
+                  <apex:pageBlockTable styleClass="table vs2" value="{!listExperience}" var="item">
+                    <apex:column headerValue="Employer" value="{!item.Name}"/>
+                    <apex:column headerValue="Experience Detail" value="{!item.Details_Name__c}"/>
+                    <apex:column headerValue="Reference Request">
+                    	
+                    	<apex:outputPanel layout="block" rendered="{!item.Experience_Type__c != 'Work' && item.Experience_Type__c != 'Sibling/Family' && item.Reference_Received__c == false}">
+                    		<apex:outputText value="{!IF(item.IsReference__c,'Request sent to: ', 'Not Requested')}"/><br/>
+                    		<apex:outputText value="{!IF(item.IsReference__c,item.Email__c,'')}"/>
+                    	</apex:outputPanel>
+                    	
+                    	<apex:outputPanel layout="block" rendered="{!item.Experience_Type__c != 'Work' && item.Experience_Type__c != 'Sibling/Family' && item.Reference_Received__c == true}">
+                    		<apex:outputText value="Reference received from:"/><br/>
+                    		<apex:outputText value="{!item.Email__c}"/>
+                    	</apex:outputPanel>
+                    	
+                    	<apex:outputText rendered="{!item.Experience_Type__c == 'Work' || item.Experience_Type__c == 'Sibling/Family'}" value="No reference needed"/>
+                    
+                    </apex:column>
+                    <apex:column headerValue="Action" >
+                      <div class="btn-toolbar no-margin">
+                        <apex:outputLink html-data-toggle="tooltip" html-data-placement="top" title="Edit" styleClass="editb margin-r" id="EditLinkChildren" rendered="{!NOT(item.Experience_Type__c =='Work')}"  value="/apex/apc_ap_main_add_childcare_experience?id={!item.Applicant_Info__c}&eid={!item.id}"><i class="fa fa-pencil"></i> </apex:outputLink>
+                        <apex:outputLink html-data-toggle="tooltip" html-data-placement="top" title="Edit" styleClass="editb margin-r" id="EditLinkWork" rendered="{!item.Experience_Type__c =='Work'}"  value="/apex/apc_ap_main_add_work_experience?id={!item.Applicant_Info__c}&eid={!item.id}"><i class="fa fa-pencil"></i> </apex:outputLink>
+                        <apex:commandLink html-data-toggle="tooltip" html-data-placement="top" title="Remove" action="{!iWantMyJSValues}" styleClass="removeb" oncomplete="confDelete();" rerender=""> <i class="fa fa-trash-o"></i>
+                          <apex:param name="experienceId" value="{!item.id}" assignTo="{!experienceId}"/>
+                        </apex:commandLink>
+                      </div>
+                    </apex:column>
+                  </apex:pageBlockTable>
+                </div>
+              </apex:pageBlock>
+            </apex:outputPanel>
+            <div class="form-group ">
+              <div class="col-sm-12 margin-t">
+                <apex:outputLink styleClass="btn btn-link btn-lg"  rendered="{!applicantInfo.Application_Type__c=='Original'}" value="/apex/apc_ap_main_training?id={!applicantInfo.Id}&docType=Transcripts" id="backlinktraining"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                <apex:outputLink styleClass="btn btn-link btn-lg"  rendered="{!applicantInfo.Application_Type__c=='Extension'}" value="/apex/apc_ap_main_driving_experience?id={!applicantInfo.Id}&docType=Drivers-License" id="backlinkdriving"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                <apex:outputLink styleClass="btn btn-link btn-lg"  rendered="{!applicantInfo.Application_Type__c=='Renewal'}" value="/apex/apc_ap_main_driving_experience?id={!applicantInfo.Id}&docType=Drivers-License" id="backlinkdriving1"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                
+                <apex:commandlink rendered="{!applicantInfo.Application_Type__c=='Original' || applicantInfo.Application_Type__c=='Extension'}" styleClass="btn btn-primary btn-lg" action="{!navigator}" id="nextlink" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                  <apex:param name="nextPage" value="{!IF(applicantInfo.Application_Type__c='Original','/apex/apc_ap_main_swimming_experience','/apex/apc_ap_main_interests')}" />
+                  <apex:param name="reDirectPage" value="true" />
+                  <apex:commandButton value="Continue" id="continuebutton"/>
+                  <apex:param name="docType" value="Lifeguard" assignTo="{!docType}"/>
+                </apex:commandlink>
+                
+                <apex:commandlink rendered="{!applicantInfo.Application_Type__c=='Renewal' && contains(applicantinfo.PageStatus_Complete__c, '021')}" styleClass="btn btn-primary btn-lg" action="{!navigator}" id="nextlink1" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                  <apex:param name="nextPage" value="/apex/apc_ap_main_interests" />
+                  <apex:param name="reDirectPage" value="true" />
+                  <apex:commandButton value="Continue" id="continuebutton1"/>
+                  <apex:param name="docType" value="Lifeguard" assignTo="{!docType}"/>
+                </apex:commandlink>
+                
+              </div>
+            </div>
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                  <div class="modal-body">
+                    <p>Are you sure you want to remove this record?</p>
+                  </div>
+                  <div class="modal-footer">
+                    <apex:commandLink styleClass="btn btn-primary" action="{!deleteExperienceAPC}" style="text-decoration: none;" immediate="true">
+                      <apex:param name="pageId" value="021"/>
+                      <apex:commandButton value="Yes" id="yesbutton"/>
+                    </apex:commandLink>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--  end modal window --> 
+            
+          </apex:form>
+        </div>
+        <!-- end column  -->
+        
+        <div id="app-side" class="col-md-3 col-md-pull-8">
+          <c:menu_side_apc_ap_basic ApplicantInfo="{!applicantInfo}" />
+        </div>
+        <!-- end column  --> 
+      </div>
+      <!-- end row --> 
+      
+      <script>
+var j$ = jQuery.noConflict();
+
+function confDelete(){
+     j$('#myModal').modal();
+} 
+
+//Enable and Disable Button loading
+function enableDropLoading(){
+    disableSubmit();
+    setLoadingText();
+    j$('.addchildb').button('loading');
+}
+
+function disableDropLoading(){
+    enableSubmit();
+    j$('.addchildb').button('reset');
+    j$('html, body').animate({ scrollTop: 0 }, 'slow');
+}
+
+//Change attribute to save button
+function setLoadingText(){
+    j$('.addchildb').attr('data-loading-text','Loading...');
+}
+
+</script> 
+    </apex:define>
+  </apex:composition>
+</apex:page>

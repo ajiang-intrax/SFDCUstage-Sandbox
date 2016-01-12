@@ -1,0 +1,191 @@
+<apex:page docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+    
+    <!-- UI Blocker component for Background processing -->
+    <c:BlockUI />
+    
+    <apex:composition template="IntraxTemplate_Vs1">
+        <apex:define name="body">
+            <div class="wrapper" id="IGI_PreApp_Experience">    
+                <apex:form >
+                
+                    <!-- Heading -->
+                    <div class="page-header clearfix">
+                        <h1 class="page-title">Intrax Global Internship Application</h1>
+                        
+                        <!-- Back To Main Page Link -->
+                        <div class="back-to-main"><div class="form-link no-margin">
+                            <apex:outputLink styleClass="no-padding" value="apex/IGI_App_Home?id={!applicantInfo.Id}"><i class="icon-chevron-left no-padding"></i><i class="icon-chevron-left"></i> <span>Back to Main Page</span></apex:outputLink></div></div>
+                        </div>
+                       
+                       <!-- Section Header -->  
+                       <div class="section-header clearfix">
+                            <h2>Placement Information</h2>
+                       </div> 
+                        
+                       <!-- Panel -->   
+                       <div class="white-box clearfix">   
+                            <div class="panel two_thirds">                      
+                            
+                            <!-- Company Name -->
+                            <div class="form-row">
+                                <div class="form-label left ">Company Name<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!positionInfo.Company_Name__c}" required="TRUE"/>
+                                </div>
+                            </div>
+                            
+                            <!-- Company Address -->
+                            <div class="form-row">
+                                <div class="form-label left ">Company Address<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!positionInfo.Company_Street_1__c}" required="TRUE"/>
+                                </div>
+                            </div>
+                            
+                            <!-- Address 2 -->
+                            <div class="form-row">
+                                <div class="form-label left ">Address 2</div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!positionInfo.Company_Street_2__c}" required="FALSE"/>
+                                </div>
+                            </div>
+                            
+                            <!-- City -->
+                            <div class="form-row">
+                                <div class="form-label left ">City<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!positionInfo.Company_City__c}" required="TRUE"/>
+                                </div>
+                            </div>
+                            
+                            <!-- State -->
+                            <div class="form-row">
+                                <div class="form-label left ">State<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!positionInfo.Company_State__c}" required="TRUE"/>
+                                </div>
+                            </div>
+                            
+                            <!-- Postal Code -->
+                            <div class="form-row">
+                                <div class="form-label left ">Postal Code<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!positionInfo.Company_Postal_Code__c}" required="TRUE"/>
+                                </div>
+                            </div>
+                            
+                             <!-- Country -->
+                            <div class="form-row">
+                                <div class="form-label left ">Country<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!positionInfo.Company_Country__c}" required="TRUE"/>
+                                </div>
+                            </div>
+                            
+                             <!-- Company Web Site-->
+                            <div class="form-row">
+                                <div class="form-label left ">Company Web Site<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!positionInfo.Company_Website__c}" required="TRUE"/>
+                                </div>
+                            </div>
+                            
+                             <!-- Host Company Description -->
+                            <div class="form-row">
+                                <div class="form-label left ">Host Company Description<span class="required">*</span></div>
+                                <div class="form-field" >
+                                    <apex:inputField value="{!positionInfo.Company_Description__c}" required="TRUE"/>
+                                </div>
+                            </div>
+                            
+                             <!-- Company Phone Number -->
+                            <div class="form-row">
+                                <div class="form-label left ">Company Phone Number<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!positionInfo.Company_Phone__c}" required="TRUE"/>
+                                </div>
+                            </div>
+                            
+                            <!-- Supervisor's First Name -->
+                            <div class="form-row">
+                                <div class="form-label left ">Supervisor's First Name<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!positionInfo.Supervisor_First_Name__c}" required="TRUE"/>
+                                </div>
+                            </div>
+                            
+                            <!-- Supervisor's Last Name -->
+                            <div class="form-row">
+                                <div class="form-label left ">Supervisor's Last Name<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!positionInfo.Supervisor_Last_Name__c}" required="TRUE"/>
+                                </div>
+                            </div>
+                            
+                            <!-- Supervisor's Email -->
+                            <div class="form-row">
+                                <div class="form-label left ">Supervisor's Email<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!positionInfo.Supervisor_Email__c}" required="TRUE"/>
+                                </div>
+                            </div>
+                            
+                            <!-- Supervisor Phone -->
+                            <div class="form-row">
+                                <div class="form-label left ">Supervisor Phone<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!positionInfo.Supervisor_Phone__c}" required="TRUE"/>
+                                </div>
+                            </div>
+                            
+                            <!-- Brief Description of Internship Position -->
+                            <div class="form-row">
+                                <div class="form-label left ">Brief Description of Internship Position<span class="required">*</span></div>
+                                <div class="form-field" >
+                                    <apex:inputField value="{!positionInfo.Position_Description__c}" required="TRUE"/>
+                                </div>
+                            </div>
+                            
+                            <!-- Position Title -->
+                            <div class="form-row">
+                                <div class="form-label left ">Position Title<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!positionInfo.Position_Title__c}" required="TRUE"/>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+          						<div class="form-link">
+				              		<apex:outputLink value="/apex/IGI_App_Experience?id={!applicantInfo.Id}"><i class="icon-chevron-left"></i> <span>Back</span></apex:outputLink>
+				                </div>
+                                <!-- Back Command Link 
+                                <div class="form-link">
+                                    <apex:commandlink action="{!navigator}" immediate="true">
+                                        <apex:param name="nextPage" value="/apex/IGI_App_Program_Determination"/>
+                                        <apex:param name="reDirectPage" value="true"/> 
+                                        <i class="icon-chevron-left"></i>
+                                        <apex:commandButton value="Back" immediate="true"/>
+                                    </apex:commandlink>
+                                </div>
+                                -->
+                                <!-- Next Command Link -->      
+                                <div class="form-button">
+                                    <apex:commandlink styleClass="next" action="{!navigator}">
+                                        <apex:param name="nextPage" value="/apex/IGI_App_Program_Preferences"/>
+                                        <apex:param name="reDirectPage" value="true"/> 
+                                        <apex:commandButton value="Save & Continue" />
+                                        <i class="icon-chevron-right"></i>
+                                    </apex:commandlink>
+                                </div>    
+                            </div>  
+                        </div>
+                            
+                        <div class="panel one_third last aside">
+                            <c:Badge_Centers_Contact />     
+                        </div>
+                    </div>
+                </apex:form>
+            </div>
+        </apex:define>
+    </apex:composition>
+</apex:page>

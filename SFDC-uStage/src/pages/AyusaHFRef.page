@@ -1,0 +1,62 @@
+<apex:page docType="html-5.0" standardController="Reference__c" extensions="FlowPersonInfoHFRefController" standardStylesheets="true" showHeader="false">
+  <apex:composition template="FlowTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper" id="ayusahfref">
+        <apex:messages />
+        <h1>Ayusa Host Family Reference Request</h1>
+          <div class="white-box clearfix">
+            <div class="flow two_thirds">
+              <flow:interview buttonLocation="bottom" name="AY_HF_Ref" finishLocation="{!finishPage}">
+                <apex:param name="pReferenceId" value="{!$CurrentPage.parameters.Id}"/>
+                <apex:param name="pCurrentUserId" value="{!$User.Id}"/>
+              </flow:interview>
+            </div>
+        </div>
+      </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>
+                    
+
+
+<!--
+<apex:page StandardController="Person_Info__c" extensions="FlowPersonInfoHFRefController">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper" id="ayusa-student-preapp-academic-language-skills">
+        <apex:messages />
+        <h1>Host Family Reference</h1>
+        <h2>Audit Form</h2>
+        <div class="white-box clearfix">
+            <div class="flow two_thirds">
+          <flow:interview buttonLocation="bottom" name="HF_References" finishLocation="{!finishPage}" >
+            <apex:param name="pPersonInfoId" value="{!$CurrentPage.parameters.Id}"/>
+            <apex:param name="pType" value="Ayusa HF Ref"/>
+          </flow:interview>
+            </div>
+        </div>
+      </div>
+    </apex:define>
+  </apex:composition> 
+</apex:page>
+-->
+
+
+<!--  
+<apex:page docType="html-5.0" StandardController="Person_Info__c" extensions="FlowPersonInfoHFRefController" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper" id="AyusaHFRef">
+          <h1>Ayusa Host Family Reference Request</h1>
+          <div class="white-box clearfix">
+        <div class="flow two_thirds">
+                <flow:interview name="AY_HF_Ref"  buttonLocation="bottom" finishLocation="{!FinishPage}">
+                     <apex:param name="pPersonInfoId" value="{!$CurrentPage.parameters.Id}"/>   
+                 </flow:interview>
+              </div>
+        </div>
+      </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>
+-->

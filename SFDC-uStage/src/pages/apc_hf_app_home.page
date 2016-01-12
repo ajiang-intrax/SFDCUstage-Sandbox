@@ -1,0 +1,104 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardController="Applicant_Info__c"
+	extensions="AppEngine_Controller" action="{!CloseApplicationOpp}"
+	standardStylesheets="false" showHeader="false"
+	title="Your Family Profile" id="HF_Home">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_apc_hf_application userAgentCheck="{!userAgentCheck}"/>
+      <div id="app-page" class="row">
+        <div id="app-focus" class="col-md-8 col-md-push-3">
+          <c:block_app_completion ApplicantInfo="{!applicantInfo}" />
+          <style>
+   td{vertical-align:top;}
+   .circ-numb{font-size:60px;}
+   .circ-numb.last i:before{color:#d2eab6;}
+   .circ-numb.last i.fa-check:before{color:#87b64f;}
+   .circ-numb i:before{color:#e5e5e5; }
+   .circ-numb .numb{color: #202020; font-family:'milolight';}
+   </style>
+          <apex:outputText rendered="{!ApplicantInfo.Application_Type__c=='Original'}">
+            <h1>What's Next?</h1>
+            
+            <apex:outputpanel layout="block" rendered="{!applicantInfo.Application_Level__c == 'Main' && applicantInfo.Application_Type__c == 'Original' && applicantInfo.Application_Stage__c == 'Working' && applicantInfo.Position__r.Profile_Complete__c == true }">
+            <p class="alert alert-warning">
+			Thank you, your family profile is now complete. This will allow you to request interviews with au pairs.&nbsp;  
+			<apex:outputLink value="/apex/apc_hf_search_au_pairs" id="searchLink"><b class="sm">Search for au pairs now</b></apex:outputLink>
+			</p>
+			</apex:outputpanel>
+			
+            <table>
+              <tr>
+                <td>
+                <span class="fa-stack circ-numb margin-r"> <i class="fa fa-circle fa-stack-2x"></i> <span class="fa-stack-1x numb">1</span> </span></td>
+                <td><h2>Complete your Family Profile</h2>
+                  <p>You may search for au pairs right away, however in order to interview, please complete your profile. Au pairs will see this profile when you select them.<br/> <a data-content="Your family profile shows au pairs your: Hobbies/interests, match questions, city, state, email, Skype and family members' name/age" data-toggle="popover">Learn More</a>
+  </p>
+            <p>&nbsp;</p>      
+                
+                 
+                  
+                  </td>
+              </tr>
+              <!--  end row -->
+              
+              <tr>
+                <td>
+                
+                <span class="fa-stack circ-numb margin-r"> <i class="fa fa-circle fa-stack-2x"></i> <span class="fa-stack-1x numb">2</span> </span></td>
+                <td><h2>Finish Your Application</h2>
+                  <p>Before you can match, AuPairCare will verify your references and complete an in-home interview. You will also need to sign the Host Family Agreement.</p>
+                  <p>&nbsp;</p></td>
+              </tr>
+              <!--  end row -->
+              
+              <tr>
+                <td><span class="fa-stack circ-numb last margin-r"> <i class="fa fa-circle fa-stack-2x"></i> <i class="fa fa-check fa-stack-1x"></i> </span></td>
+                <td><h2>Match!</h2>
+                  <p>When you see a checkmark next to all the topics on the left, that means you profile and application are complete and you are ready to match! You can request a match from any au pair listed as available on your list of interviews.</p>
+                  <p>&nbsp;</p></td>
+              </tr>
+              <!--  end row -->
+              
+            </table>
+          </apex:outputText>
+        </div>
+        <!-- end column  -->
+        
+        <div id="app-side" class="col-md-3 col-md-pull-8">
+          <apex:form >
+            <c:menu_apc_hf_app PersonInfo="{!personInfo}" ApplicantInfo="{!applicantInfo}" />
+          </apex:form>
+        </div>
+        
+        <!-- end column  --> 
+      </div>
+      <!-- end row --> 
+      
+      <apex:outputpanel layout="block" id="modalSubmit" rendered="{!$CurrentPage.parameters.vstate == 'newprf'}" >
+          <div class="modal fade vs1" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-body">
+                <div class="h1">What's Next?</div>
+<p>You have successfully submitted your application to host an au pair.</p>
+<p>We have started your family profile using the information you provided. You will need a complete profile before you can match with an au pair.</p>
+              </div>
+              <div class="modal-footer">
+                  
+                <button type="button" class="btn btn-default" data-dismiss="modal">Continue</button>
+                                
+              </div>
+            </div>
+          </div>
+        </div> 
+        </apex:outputpanel> <!--  end modal window -->
+<script>
+var j$ = jQuery.noConflict();
+j$(window).load(function() {
+  j$('#myModal').modal();
+});
+</script>      
+      
+    </apex:define>
+  </apex:composition>
+</apex:page>

@@ -1,0 +1,53 @@
+<apex:page docType="html-5.0" id="account_overview_edit_msg"
+    controller="MyProfileEditPageController" standardStylesheets="false"
+    showHeader="false" title="Account Overview">
+    <apex:composition template="intraxtemplate_vs3">
+        <apex:define name="body">
+
+
+            <div class="row">
+
+                <div class="col-md-9 col-md-push-3">
+
+                    <apex:pageBlock id="viewUserDetail">
+                        <apex:form styleClass="form-horizontal">
+                            <h1>Important Message</h1>
+                            <apex:outputPanel layout="block" styleClass="lead" rendered="true"> 
+                            <p>Updating your email address will also update your username.</p> 
+                            <p>Your previous username  <strong>{!TrimUserName}</strong> will no longer available. To Improve your experience we will update your username to be the same as your email address.</p>
+                            <p> Your new username will : <span class="highlighted"><strong>{!$CurrentPage.parameters.DbUserEmail}</strong></span></p>
+                            <p>Please update your account settings if this email address is not correct.</p>
+                            </apex:outputPanel>
+                            
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                <apex:commandLink id="confirm" styleClass="btn btn-primary btn-lg"
+                                    action="{!Confirm}">
+                                    <apex:commandButton value="Confirm" />
+                                </apex:commandLink>
+                                
+                                <apex:commandLink styleClass="btn btn-link btn-lg" id="cancel" action="{!cancel}"
+                                        rerender="UserDetail" immediate="true">
+                                        <span>Back to Account Settings</span>
+                                </apex:commandLink>
+                                        
+                                </div>
+                            </div>
+
+                        </apex:form>
+
+                    </apex:pageBlock>
+                </div>
+                <!--  end column -->
+
+                <div class="col-md-3 col-md-pull-9">
+                    <c:menu_side_account_settings />
+                </div>
+                <!--  end column -->
+
+            </div>
+            <!--  end row -->
+
+        </apex:define>
+    </apex:composition>
+</apex:page>

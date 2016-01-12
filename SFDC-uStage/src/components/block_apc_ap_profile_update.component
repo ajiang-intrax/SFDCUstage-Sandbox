@@ -1,0 +1,30 @@
+<apex:component layout="none" id="block_apc_ap_profile_update" allowDML="true">
+  <apex:attribute name="PageController" description="Instance of home_controller class" type="home_controller" required="false" default="" />
+  <!-- Begining CASE 2: RETURNING HOME (User has  On Program Engagement and Today is less than 90 days prior to Engagement End Date.) -->
+  <apex:outputpanel layout="block" id="blockCase2" rendered="{!PageController.currentApp.Intrax_Program__c == 'AuPairCare' && PageController.currentApp.Application_Stage__c == 'Accepted' &&
+PageController.currentApp.Application_Level__c == 'Main' && PageController.currentApp.Engagement__r.Profile_Update_Required__c == true 
+&& PageController.currentApp.Engagement__r.Engagement_Type__c =='Rematch' && (PageController.currentApp.Engagement__r.Status__c=='Processing' || PageController.currentApp.Engagement__r.Status__c=='On Program')}">
+  
+    <style>
+  i.fa.fa-pencil-square-o.margin-r2.margin-l2 {
+    font-size: 80px;
+    color: #8FD5F1;
+}
+  </style>
+    <div class="hp-block ">
+        <div class="row">
+  <div class="col-sm-8">
+      <div class="tcell"><i class="fa fa-pencil-square-o margin-r2 margin-l2"></i>
+  </div>
+       <div class="tcell"><h3 class="margin-t1 margin-b1">Your Matching Profile</h3>
+<p class="lead">Tell families about your experience as an au pair in the U.S. and more.</p>
+  </div>
+  </div>
+  <div class="col-sm-4">
+  <a class="btn btn-primary btn-lg margin-t2" href="apc_ap_profile_update?Id={!PageController.currentApp.Engagement__c}" id="linkUpdateProfile" target="_blank">Update Now</a> 
+  </div>
+</div>
+                
+    </div>
+  </apex:outputpanel>
+</apex:component>

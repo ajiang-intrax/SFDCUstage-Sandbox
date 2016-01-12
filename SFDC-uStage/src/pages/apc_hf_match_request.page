@@ -1,0 +1,153 @@
+<apex:page id="apc_hf_match_request" docType="html-5.0" applyHtmlTag="false" applyBodyTag="false" title="New Match Request" standardStylesheets="false" showHeader="false" controller="apc_match_controller">
+<apex:composition template="intraxtemplate_vs3">
+<apex:define name="body">
+    
+<c:block_header_apc_hf_application />
+           
+<apex:form styleClass="form-vertical ws-validate" id="webform">
+<div class="row margin-b2">
+<div class="col-sm-8 center-block ">
+<h1 class="no-margin-t center-text">Match Request Form</h1>
+<div class="alert alert-warning ">Please keep in mind that requesting a match with {!matchSelection.Engagement__r.Account_Id__r.Name} will cancel  any other current interviews you may have.</div>
+</div>
+</div>   
+
+
+
+<div class="row">
+    
+<div class="col-sm-6 center-block">
+
+      
+    <div class="row">
+        <div class="col-sm-12" >
+            <!--
+            <apex:outputPanel rendered="{!matchSelection.Engagement__r.In_Country__c=='Yes'}">
+                <apex:selectList value="{!ReqmatchObj.Arrival_Date__c}" title="Record Type of new record" size="1">
+                    <apex:selectOptions value="{!getOSAPArrivalDates}"/>
+                </apex:selectList>
+            </apex:outputPanel>
+            -->
+           
+            <!-- OSAP Arrival Dates-->
+            <apex:outputPanel rendered="{!matchSelection.Engagement__r.In_Country__c=='No'}">
+                <div class="form-group">
+                    <label class="control-label">Which date did you and {!matchSelection.Engagement__r.Account_Id__r.Name} decide on for his/her arrival to the United States?<br/> 
+                        <span class="optional">This is the date {!matchSelection.Engagement__r.Account_Id__r.Name} will arrive at the Au Pair Academy Training in New Jersey. Changes to finalized arrival dates will be subject to a $200 Arrival Date Change fee and applicable airfare ticket change fees.</span>
+                    </label>
+                    
+                    <div class="row">
+                        <div class="col-sm-6" >
+                            <apex:selectList styleClass="form-control" value="{!OSAPArrivalDate}" title="OSAP Arrival Date" size="1">
+                                <apex:selectOptions value="{!getOSAPArrivalDates}"/>
+                            </apex:selectList>
+                            <!--<apex:message for="arrival" styleClass="custom-error-text" id="errorArrival" />-->
+                        </div>
+                    </div><!--  end row -->
+                </div>
+            </apex:outputPanel>  
+            
+            <!-- ICAP Arrival Dates-->
+            <apex:outputPanel rendered="{!matchSelection.Engagement__r.In_Country__c=='Yes'}">
+                <div class="form-group">
+                    <label class="control-label">What date did you and {!matchSelection.Engagement__r.Account_Id__r.Name} agree on for your start date?<br/> 
+                        <span class="optional">This is the date that {!matchSelection.Engagement__r.Account_Id__r.Name} will arrive at your home.</span>
+                    </label>
+                    
+                    <div class="row">
+                        <div class="col-sm-6" >
+                            <div class="datepicker" locale="{!user.localeSidKey}">
+                                <apex:inputField styleClass="form-control" value="{!ReqmatchObj.Arrival_Date__c}" required="true" id="arrival" />
+                                <!--<apex:message for="arrival" styleClass="custom-error-text" id="errorArrival" />-->
+                            </div>
+                        </div>
+                    </div><!--  end row -->
+                </div>
+            </apex:outputPanel>  
+        </div>
+    </div><!--  end row -->
+    
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="form-group">
+                <label class="control-label">Add a personal Note for {!matchSelection.Engagement__r.Account_Id__r.Name} <span class="info"> (Optional)</span></label> 
+                <apex:inputTextarea styleClass="form-control" id="fedbk" value="{!ReqmatchObj.Request_Notes__c}"/>
+            </div>                            
+        </div>
+    </div><!--  end row -->
+    
+
+    
+    <div class="row">
+        <div class="col-sm-12">
+            <apex:commandLink styleClass="btn btn-primary btn-lg" action="{!matchRequest}" id="sendreq" reRender="webform" status="onsubmit">
+                <apex:commandButton value="Send Match Request" id="sendreqbtn" > </apex:commandButton>
+            </apex:commandLink>
+        </div>
+    </div><!--  end row -->
+
+</div><!-- end col -->
+</div><!-- end row -->  
+</apex:form>
+    
+   <script>
+   
+   //Set Min day to Earliest_Match_Date__c
+var dayEndE = {!DAY(matchSelection.Engagement__r.Earliest_Match_Date__c)};
+var monthEndE = {!MONTH(matchSelection.Engagement__r.Earliest_Match_Date__c)}-1;
+var yearEndE = {!YEAR(matchSelection.Engagement__r.Earliest_Match_Date__c)};
+console.log("Earliest_Match_Date__c: " + dayEndE + "/"+ monthEndE + "/"+ yearEndE);
+
+//Set MAx day to Latest_Match_Date__c
+var dayEndL = {!DAY(matchSelection.Engagement__r.Latest_Match_Date__c)};
+var monthEndL = {!MONTH(matchSelection.Engagement__r.Latest_Match_Date__c)}-1;
+var yearEndL = {!YEAR(matchSelection.Engagement__r.Latest_Match_Date__c)};
+console.log("Latest_Match_Date__c: " + dayEndL + "/"+ monthEndL + "/"+ yearEndL);
+
+function datetimepickerInitializer(tag) {
+    var locale = j$(tag).attr('locale');
+    var classes = j$(tag).attr('class');
+    //console.log(locale);
+    //default
+    var endYear = (new Date).getFullYear() + 10;
+
+    var attrib = {
+        changeMonth: true,
+        changeYear: true,
+        yearRange: (new Date).getFullYear() + ":" + endYear,
+       
+        minDate: new Date(yearEndE, monthEndE, dayEndE),
+        maxDate: new Date(yearEndL, monthEndL, dayEndL),
+    };
+    
+    attrib['currentText'] = 'Today';
+    attrib['showTimepicker'] = false;
+    
+    attrib['onSelect'] = function() {
+    }
+    
+    j$.timepicker.setDefaults(j$.timepicker.regional[locale]);
+    j$.datepicker.setDefaults(j$.datepicker.regional[locale]);
+
+    var inputbox = j$(tag).find('input');
+    inputbox.attr('onfocus', ' ');
+    //console.log(attrib);
+    inputbox.datetimepicker(attrib);
+}
+
+function dpInitiate(){
+   j$(document).ready(function () {
+    var tags = j$('.datepicker');
+    for (var i = tags.length - 1; i >= 0; i--) {
+                datetimepickerInitializer(tags[i]);
+    };
+   });
+};
+
+dpInitiate();
+ 
+   </script> 
+   
+</apex:define>
+</apex:composition>
+</apex:page>

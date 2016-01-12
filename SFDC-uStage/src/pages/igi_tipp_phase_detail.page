@@ -1,0 +1,233 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardController="Development_Plan__c"  extensions="IGI_TIPP_Controller" 
+                standardStylesheets="false" showHeader="false"
+                title="TIPP Information" id="igi_tipp_phase_detail" action="{!LoadSelectedPlan}" >
+<apex:composition template="intraxtemplate_vs3">
+  <apex:define name="body">
+    <style>
+    #branding-zone, #footer-zone{display:none;}
+    #content-zone {
+    background: #f8f8f8;
+    }
+   .standalone{background: #fff;
+   border:#ccc solid 1px;   
+   border-radius: 5px;
+   padding:60px;}
+  </style>       
+      
+       <div class="row">
+        <div class="col-md-8 center-block standalone"> 
+        
+         <apex:image styleClass="center-block" url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/logos/medium-logo-intrax.png')}"/>
+           <h1 class="center-text">Phase Detail</h1>
+             <apex:form styleClass="form-vertical ws-validate" id="webform">  
+             <apex:Messages rendered="{!if(customMessage,false,true)}" styleClass="custom-error-pagelevel" id="messageapex" />
+                 <apex:Messages rendered="{!if(customMessage,true,false)}" styleClass="errorMsg" style="list-style-type:none;" id="message1" />
+             <apex:outputPanel rendered="{!IF(Plan.Position_Info__r.Status__c=='Declined', true, false)}" layout="block">
+                  <div class="row box yellow margin-b2">
+                     <div class="col-sm-6">
+                      <div class="form-group no-margin">
+                             <label class="control-label">Phase Feedback</label>                             
+                                <apex:outputField value="{!Plan.Review_Comments__c}" id="rcomments"/>
+                           </div>
+                         </div>    
+                      </div>
+                       </apex:outputPanel>     
+             
+             
+              <div class="row">
+                     <div class="col-sm-6">
+                      <div class="form-group">
+                             <label class="control-label">Phase Name</label>
+                             <apex:inputField styleClass="form-control" value="{!Plan.Name}" id="pname" required="true"/> 
+                         </div>    
+                      </div>
+                      <div class="col-sm-4">
+                      <div class="form-group">
+                             <label class="control-label"> Phase Number</label>
+                             <apex:outputField styleClass="form-control" value="{!Plan.Phase__c}" id="phname" /> 
+                         </div>    
+                      </div>
+                  </div> 
+                 <div class="row">
+                     <div class="col-sm-6">
+                      <div class="form-group">
+                             <label class="control-label">Phase Start Date</label>
+                        <apex:actionRegion >
+                              <div class="datepicker" locale="{!user.localeSidKey}">
+                               <apex:inputField styleClass="form-control" value="{!Plan.Start__c}" id="start" required="true" >
+                                 <apex:actionSupport event="onchange" rerender="start_v" status="pleasewait01" />
+                                </apex:inputField>
+                              </div>
+                          <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Validating..Please wait.." id="pleasewait01"/>
+                         </apex:actionRegion>
+                         
+                      <apex:pageBlock id="start_v">
+                        <apex:outputPanel layout="block" rendered="{!If(checkstartdate &&(Plan.Start__c !=null),true,false)}" >
+                         <span class="info" style="color:red"> Phase Start Date: Must be on or after Engagement Start date AND before Engagement End Date
+                          </span>
+                         </apex:outputPanel>
+                      </apex:pageBlock>
+                       </div>  
+                     </div>
+            
+                     <div class="col-sm-6">
+                      <div class="form-group">
+                             <label class="control-label">Phase End Date </label>
+                          <apex:actionRegion >   
+                          <div class="datepicker" locale="{!user.localeSidKey}" >
+                             <apex:inputField styleClass="form-control" value="{!Plan.End__c}"  id="End"  required="true">
+                              <apex:actionSupport event="onchange" rerender="End_v" status="pleasewait02" />
+                              </apex:inputField>
+                           </div>
+                            <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Validating..Please wait.." id="pleasewait02"/>
+                         </apex:actionRegion>
+                         
+                      <apex:pageBlock id="End_v">
+                        <apex:outputPanel layout="block" rendered="{!If(checkEnddate &&(Plan.End__c !=null),true,false)}" >
+                         <span class="info" style="color:red"> Phase End Date: Must be after Engagement Start Date AND after Phase Start Date AND on or before Engagement End Date
+                          </span>
+                         </apex:outputPanel>
+                      </apex:pageBlock>
+                         </div>    
+                      </div>
+                  </div>  
+                                                       
+                  <div class="h2">Phase Supervisor </div>
+             <hr class="margin-b3"/>    
+                     
+                  <div class="row">
+                     <div class="col-sm-6">
+                        <div class="form-group">
+                             <label class="control-label">Supervisor First Name</label>
+                             <apex:inputField styleClass="form-control" value="{!Plan.Supervisor_First_Name__c}" id="pfname" required="true"/> 
+                         </div>  
+                      </div>
+                     <div class="col-sm-6">
+                      <div class="form-group">
+                             <label class="control-label">Supervisor Last Name</label>
+                             <apex:inputField styleClass="form-control" value="{!Plan.Supervisor_Last_Name__c}" id="plname" required="true"/> 
+                         </div> 
+                    </div>
+                  </div> 
+                  
+                 <div class="row">
+                     <div class="col-sm-12">
+                      <div class="form-group">
+                             <label class="control-label">Supervisor Title</label>
+                             <apex:inputField styleClass="form-control" value="{!Plan.Supervisor_Title__c}" id="ptitle" required="true"/> 
+                         </div>    
+                      </div>
+                  </div> 
+                 <div class="row">
+                     <div class="col-sm-6">
+                      <div class="form-group">
+                             <label class="control-label">E-mail</label>
+                             <apex:inputField styleClass="form-control" value="{!Plan.Supervisor_Email__c}" id="pemail" required="true"/> 
+                         </div>    
+                      </div>
+                  
+                     <div class="col-sm-6">
+                      <div class="form-group">
+                             <label class="control-label">Phone Number</label>
+                             <apex:inputField styleClass="form-control" value="{!Plan.Supervisor_Phone__c}" id="pphone" required="true"/> 
+                         </div>    
+                      </div>
+                  </div> 
+                 
+
+   <div class="h2">Phase Details</div>                           
+                 <div class="row">
+                     <div class="col-sm-12">
+                      <div class="form-group">
+                             <label class="control-label"> Brief Description of Trainee/Intern's Role for this Phase</label>
+                             <apex:inputField styleClass="form-control" value="{!Plan.Description__c}" id="pdesc" /> 
+                         </div>    
+                      </div>
+                  </div> 
+                 <div class="row">
+                     <div class="col-sm-12">
+                      <div class="form-group">
+                             <label class="control-label"> Specific Goals and Objectives for this Phase</label>
+                             <apex:inputField styleClass="form-control" value="{!Plan.Goal__c}" id="pgoal" /> 
+                         </div>    
+                      </div>
+                  </div> 
+                 <div class="row">
+                     <div class="col-sm-12">
+                      <div class="form-group">
+                             <label class="control-label">Please list the names and titles of those who will provide continuous (for example, daily) supervision of the Trainee/Intern, including the primary supervisor. What are these persons' qualifications to teach the planned learning?</label>
+                             <apex:inputField styleClass="form-control" value="{!Plan.Supervision__c}" id="psuper" /> 
+                         </div>    
+                      </div>
+                  </div> 
+                  <div class="row">
+                     <div class="col-sm-12">
+                      <div class="form-group">
+                             <label class="control-label">What plans are in place for the trainee/intern to participate in American cultural activities?</label>
+                             <apex:inputField styleClass="form-control" value="{!Plan.Cultural_Component__c}" id="pcultural" /> 
+                         </div>    
+                      </div>
+                  </div> 
+                  <div class="row">
+                     <div class="col-sm-12">
+                      <div class="form-group">
+                             <label class="control-label"> What specific knowledge, skills or techniques will be learned?</label>
+                             <apex:inputField styleClass="form-control" value="{!Plan.Learning_Outcome__c}" id="pskills" /> 
+                         </div>    
+                      </div>
+                  </div> 
+                  <div class="row">
+                     <div class="col-sm-12">
+                      <div class="form-group">
+                             <label class="control-label">How, specifically, will these knowledge, skills or techniques be taught? Include the specific tasks and activities (Interns) and/or 
+ methodology of training and chronology/syllabus (Trainees)</label>
+                             <apex:inputField styleClass="form-control" value="{!Plan.Instructional_Methods__c}" id="pInst" /> 
+                         </div>    
+                      </div>
+                  </div> 
+                   <div class="row">
+                     <div class="col-sm-12">
+                      <div class="form-group">
+                             <label class="control-label"> How will the trainee or intern's acquisition of new skills and competencies be measured during this phase?</label>
+                             <apex:inputField styleClass="form-control" value="{!Plan.Evaluation_Methods__c}" id="peval" /> 
+                         </div>    
+                      </div>
+                  </div> 
+                <div class="row">
+                     <div class="col-sm-12">
+                      <div class="form-group">
+                             <label class="control-label">Additional Remarks (Optional)</label>
+                             <apex:inputField styleClass="form-control" value="{!Plan.Additional_Remarks__c}" id="addrem"/> 
+                         </div>    
+                      </div>
+                  </div> 
+                 <div class="margin-t3">
+                                     <apex:commandlink styleClass="btn btn-primary btn-lg margin-r2" action="{!validate_phasedate}" onComplete="rerunjs();" reRender="webform" status="onsubmit">  
+                                        <apex:param name="nextPage" value="/apex/igi_tipp_main"/>
+                                        <apex:param name="reDirectPage" value="true"/>
+                                         <apex:param name="mId" value="{!Plan.Match_Name__r.Id}"/> 
+                                         <apex:param name="val" assignto="{!validate}" value="{!validate}"/>
+                                         <apex:param name="up_Plan" value="true"/>
+                                        <apex:commandButton value="Update" />
+                                    </apex:commandlink>
+               
+                 
+                                     <apex:commandlink styleClass="btn btn-link btn-lg" action="{!navigator}">  
+                                        <apex:param name="nextPage" value="/apex/igi_tipp_main"/>
+                                        <apex:param name="reDirectPage" value="true"/> 
+                                        <apex:param name="mId" value="{!Plan.Match_Name__r.Id}"/> 
+                                         <apex:param name="val" assignto="{!validate}" value="{!validate}"/>
+                                        <i class="fa fa-chevron-left"></i> <span>Back</span>
+                                    </apex:commandlink>
+                 </div>
+           
+            </apex:form>
+           
+           
+           </div><!--  end col -->
+        </div><!--  end row -->
+      
+      
+    </apex:define>
+ </apex:composition>
+</apex:page>

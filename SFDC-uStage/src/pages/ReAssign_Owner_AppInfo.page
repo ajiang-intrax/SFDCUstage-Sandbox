@@ -1,0 +1,44 @@
+<!-- 
+    Purpose         :   ReAssign Owner.
+                
+    Created Date    :   03/01/2014
+    
+    Current Version :   v1.0
+    
+    Revision Log    :   Created
+ -->
+<apex:page standardController="Applicant_Info__c" extensions="ReAssign_Owner_AppInfo_Controller" id="ReAssign_Owner_AppInfo">
+<div class="wrapper"><script>    
+  
+  
+  
+
+</script>
+    <!-- Form -->
+     
+    <apex:form >
+        
+        <apex:pageBlock >
+            <apex:pageMessages id="validationMsg" />
+            
+         <apex:pageBlockSection columns="1" title="Assigned Owner" collapsible="false" id="pbs1">
+         <apex:outputText value="{!applicant.Owner.Name}"  />
+
+    		</apex:pageBlockSection>
+         
+             <apex:pageBlockSection columns="1" title="Choose New Owner" collapsible="false" id="pbs">
+              
+                 <apex:inputfield value="{!DummyObj.Dummy_LookUp__c}"/>                    
+                 
+                 
+                 
+             </apex:pageBlockSection>         </apex:pageBlock>
+        
+        <apex:commandButton value="ReAssign"  action="{!save}" id="btn1"  onComplete="Window.close();">
+		</apex:commandButton>
+		<apex:commandButton id="cancel" value="{!$Label.site.cancel}" action="{!Cancel}" immediate="true"/>
+         
+
+    </apex:form>
+</div>
+</apex:page>

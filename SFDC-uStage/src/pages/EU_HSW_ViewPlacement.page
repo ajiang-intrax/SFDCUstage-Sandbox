@@ -1,0 +1,834 @@
+<apex:page standardController="Engagement__c" showHeader="false" renderAs="pdf" extensions="EUViewPlacement"  applyBodyTag="false" applyHtmlTag="false" language="{!code}" >
+
+<html>
+        <head>
+                <style type="text/css" media="print">
+                @page{
+                size:portrait;
+                padding:0 0 1em 0;
+                margin-top: 10px;
+                margin-bottom: 1.0 in;
+                margin-left: 4px;
+                margin-right: 0.5cm;   
+                @top-left {
+                    content: element(header);
+                }
+                @bottom-right{
+                    
+                    content:element(footer);
+                }
+               .break{
+               page-break-after:always;
+              }
+               }
+                div.footer {
+                  display: block;
+                  padding: 5px;
+                  position: running(footer);
+                 }
+ 
+              .pagenumber:before {
+                content: counter(page);
+                }
+              
+               
+          </style>
+          <style type="text/css">
+              html, body {
+
+            margin:0; 
+
+            padding:0;
+
+            font-family: sans serif, Arial Unicode MS;
+            
+            font-size:10pt;
+
+            }       
+            #content1{
+                        font-weight:normal;font-color:black;word-wrap: break-word;
+                   }
+            #heading,#heading1
+            {
+                font-size:12pt;font-color:black;font-weight:bold;
+            }
+            
+            td.second
+            {
+             padding:10px 1px 0.4cm 0px;  
+            }
+            td.right
+            {
+              padding:10px 1.5cm 0.4cm 0px;  
+            }
+            
+           </style>
+        </head>
+
+
+  <body>
+   <div align="right" class="footer">
+       <div style="font-size:8pt;"><apex:outputText value="{!$Label.E_0051}" />&nbsp;<span class="pagenumber"/></div>
+   </div>
+   <div id="heading" class="header">
+         <p style="position:fixed;top:3px;
+                        left:30px;"><apex:image url="{!$Resource.Ayusa_Intrax}" title="Intrax" alt="Intrax" /></p>
+         <p style="position:fixed;top:30px;
+                       left:380px;"><apex:outputText value="{!$Label.E_0001}" /></p>
+         <p style="position:fixed;left:530px;top:30px;">
+              <apex:outputText value="{!Engagement__c.Opportunity_Id__r.Countries_of_Interest_Local__c}" /></p>
+         <p style="position:fixed;top:50px;
+                       left:380px;"><apex:outputText value="{!$Label.E_0052}" /></p>
+        <p style="position:fixed;left:530px;top:50px;">       
+               <apex:outputfield value="{!Engagement__c.Account_Id__r.FirstName}"/> &nbsp; 
+               <apex:outputfield value="{!Engagement__c.Account_Id__r.LastName}"/> <br/>
+         </p>
+        
+           
+   </div>
+                  
+   <p style="position:fixed;top:75px; left:25px;">
+     <apex:outputText id="Error" rendered="{!IF(hasMatch, false, true)}" value="Error in Confirmed Match"/>
+   </p>
+   <apex:outputPanel rendered="{!IF(hasMatch , true, false)}"> 
+   <p style="position:fixed;top:90px; left:25px;">
+     <apex:outputText id="Error1" rendered="{!IF((appCount>1), true, false)}" value="Position is linked to more than one accepted 
+                                                                             application, Please ask your Administrator for help."/>
+   </p>
+    <p style="position:fixed;top:90px; left:25px;">
+     <apex:outputText id="Error2" rendered="{!IF((appCount<1), true, false)}" value="There is no accepted application linked to the Position
+                                                                           , Please ask your Administrator for help."/>
+   </p>
+   </apex:outputPanel>
+   <apex:outputPanel rendered="{!IF((hasMatch && (appCount==1)), true, false)}">   
+   <div id="heading1"> 
+    <table >
+    
+      <tr>
+        <td><p style="position:absolute;top:90px;left:32px;"><apex:outputText value="{!$Label.E_0002}" /></p>
+        </td>
+          <hr style="position:relative;top:113px;right:6px;width:90%;"/>
+      </tr>  
+   </table>
+   </div>
+   <div id="content1">
+   <table >
+      <tr>
+        <td><p style="position:absolute;left:35px;top:120px;"><apex:outputText value="{!$Label.E_0003}" /></p>
+        </td>
+        <td><p style="position:absolute;top:120px;left:240px;">
+                 <apex:outputText value="{!confirm_match.Position_Name__r.Host_Company_Id__r.LastName}" />
+        </p>
+        </td>
+      </tr>  
+       <tr>
+        <td><p style="position:absolute;left:35px;top:150px;"><apex:outputText value="{!$Label.E_0004}" /></p>
+        </td>
+        <td><p style="position:absolute;left:240px;top:150px;">
+                 <apex:outputText value="{!confirm_match.Position_Name__r.Street__c} " /></p></td></tr>
+         <tr><td><p style="position:absolute;left:240px;top:165px;">
+                <apex:outputText value="{!confirm_match.Position_Name__r.Postal_Code__c} {!confirm_match.Position_Name__r.City__c}, {!confirm_match.Position_Name__r.State__c}" />
+        </p>
+        </td>
+      </tr>  
+      <tr><td><p style="position:absolute;left:240px;top:180px;">
+                <apex:outputText value="{!confirm_match.Position_Name__r.Country__c}" />
+        </p>
+        </td>
+      </tr> 
+       <tr>
+        <td><p style="position:absolute;left:35px;top:210px;"><apex:outputText value="{!$Label.E_0005}" /></p>
+        </td>
+        <td><p style="position:absolute;left:240px;top:210px;"><apex:outputText value="{!$Label.E_0053}" /> &nbsp;
+                 <apex:outputText value="{!confirm_match.Position_Name__r.Host_Company_Id__r.Phone}  "/>
+         </p>
+        </td>
+      </tr> <tr><td><p style="position:absolute;left:240px;top:225px;"> <apex:outputText value="{!$Label.E_0054}" /> &nbsp;
+                 <apex:outputText value="{!confirm_match.Position_Name__r.Host_Company_Id__r.PersonMobilePhone}" />
+           </p> </td></tr>
+        <tr>
+        <td><p style="position:absolute;top:250px;left:35px;"><apex:outputText value="{!$Label.E_0006}" /></p>
+        </td>
+        <td><p style="position:absolute;top:250px;left:240px;">
+                 <apex:outputText value="{!confirm_match.Position_Name__r.Host_Company_Id__r.PersonEmail}" />
+        </p>
+        </td>
+      </tr>  
+      <tr>
+        <td><p style="position:absolute;top:280px;left:35px;width: 25%;"><apex:outputText value="{!$Label.E_0007}" /></p>
+        </td>
+       
+          <td><p style="position:absolute;top:280px;left:240px;">
+            <apex:datatable value="{!Parent}" var="p" id="ParentTable" rows="10">
+            
+             <apex:column width="110px">
+                 <apex:outputText value="{!p.First_Name__c}" />
+              </apex:column>
+              <apex:column width="110px">
+                  <apex:outputText value="{!p.Last_Name__c}" />
+              </apex:column>
+              <apex:column width="75px">
+                   <apex:outputText value="{!$Label.E_0055}" />
+                 </apex:column>
+                <apex:column width="180px">
+                    <apex:outputText value="{!p.Profession__c}"/>
+                </apex:column>
+
+            </apex:datatable>
+        </p>
+        </td>
+      </tr> 
+     <tr>
+      <td><p style="position:absolute;top:345px;left:35px;width: 25%;"><apex:outputText value="{!$Label.E_0008}" /></p>
+        </td>
+      <td><p style="position:absolute;top:345px;left:240px;">
+       <apex:datatable value="{!NotParent}" var="NP" id="memberTable" rows="20">
+                <apex:column width="90px">
+                    <apex:outputText value="{!NP.First_Name__c}"/>
+                  </apex:column>
+                <apex:column width="110px" >
+                    <apex:outputText value="{!NP.Last_Name__c}"/>
+                </apex:column>
+                <apex:column width="110px">
+                   <apex:outputField value="{!NP.Role__c}"> </apex:outputField>
+                 </apex:column>
+                 <apex:column width="40px">
+                  <apex:outputText rendered="{!IF((NP.Gender__c='Male'),true,false)}" >
+                    <apex:outputText value="{!$Label.E_0058}" />
+                  </apex:outputText>
+                  <apex:outputText rendered="{!IF((NP.Gender__c='Female'),true,false)}" >
+                    <apex:outputText value="{!$Label.E_0057}" />
+                  </apex:outputText>
+                </apex:column>
+                <apex:column width="40px">
+                   <apex:outputText value="{!$Label.E_0056}" /> 
+                </apex:column> 
+                 <apex:column width="10px">
+                   <apex:outputText value="{!NP.Age__c}"/>
+                </apex:column> 
+            </apex:datatable>
+           </p>
+        </td>
+      </tr>
+      <tr>
+      <td style="width:15%;"><p style="position:absolute;top:475px;left:35px;"><apex:outputText value="{!$Label.E_0009}" /></p>
+        </td> 
+      <td style="width:85%;word-wrap:break-word;"><p style="position:absolute;top:475px;left:240px;">
+        <apex:outputText rendered="{!If(ISBLANK(applndetail.Family_Activities__c),false,true)}" >
+       <apex:outputText rendered="{!IF(code='en-US',true,false)}" >
+           &quot;
+        </apex:outputText>
+       <apex:outputText rendered="{!IF(code='de',true,false)}" >
+            &bdquo;
+        </apex:outputText>
+         <apex:outputText value=" {!applndetail.Family_Activities__c}" />
+        <apex:outputText rendered="{!IF(code='en-US',true,false)}" >
+           &quot;
+        </apex:outputText>
+       <apex:outputText rendered="{!IF(code='de',true,false)}" >
+            &ldquo;
+       </apex:outputText>
+        </apex:outputText>
+      </p>
+      </td>
+     </tr>
+     <tr>
+      <td><p style="position:absolute;top:587px;left:35px;width: 20%;"><apex:outputText value="{!$Label.E_0010}" /></p>
+        </td> 
+        <td><p style="position:absolute;top:587px;left:240px;width: 80%;">
+                 
+            <apex:outputText rendered="{!IF((confirm_match.Position_Name__r.Pets__c=='Yes'),true,false)}" >
+            <apex:outputText value="{!$Label.E_0039}" />
+           </apex:outputText>
+            
+            <apex:outputText rendered="{!IF((confirm_match.Position_Name__r.Pets__c=='No'),true,false)}" >
+            <apex:outputText value="{!$Label.E_0040}" />
+           </apex:outputText>
+            
+        </p>
+        </td>
+       </tr>
+      <tr>
+      <td><p style="position:absolute;top:603px;left:240px;width: 80%;">
+      <apex:outputField value="{!applndetail.Pet_Types__c}"> </apex:outputField>   
+      </p>
+      </td>
+     </tr>
+     <tr>
+      <td style="width:80%;word-wrap:break-word;"><p style="position:absolute;top:620px;left:240px;">
+         <apex:outputText value="{!confirm_match.Position_Name__r.Pets_Description__c}" />
+      </p>
+      </td>
+     </tr>
+    <tr>
+      <td style="width:40%;"><p style="position:absolute;top:657px;left:35px;"><apex:outputText value="{!$Label.E_0011}" /></p>
+        </td> 
+       
+       <td><p style="position:absolute;top:657px;left:240px;width: 75%;">
+          <apex:outputText value="{!Engagement__c.Account_Id__r.FirstName} "/>  
+          
+          <apex:outputText rendered="{!IF((applndetail.Bedroom_Shared_Indicated__c=='Yes'),true,false)}" >
+            <apex:outputText value="{!$Label.E_0045}" />
+         </apex:outputText>
+            
+          <apex:outputText rendered="{!IF((applndetail.Bedroom_Shared_Indicated__c=='No'),true,false)}" >
+            <apex:outputText value="{!$Label.E_0046}" />
+         </apex:outputText>     
+        </p>   
+        
+        </td>
+       </tr>
+       
+        <tr>
+        <td><p style="position:absolute;top:674px;left:240px;width: 75%;">
+           <apex:outputText rendered="{!IF((confirm_match.Position_Name__r.Smoker_in_Family__c=='Yes'),true,false)}" >
+            <apex:outputText value="{!$Label.E_0043}" />
+           </apex:outputText>    
+        </p>
+        </td>
+       </tr>
+       
+      
+       <tr>
+       <td><p style="position:absolute;top:692px;left:240px;width: 75%;">
+          <apex:outputText rendered="{!IF((applndetail.Special_Diet_Indicated__c=='Yes'),true,false)}" >
+            <apex:outputText value="{!$Label.E_0047}" />
+         </apex:outputText>     
+        </p>
+        </td>
+       </tr>
+       <tr>
+       <td style="width:80%;word-wrap: break-word;"><p style="position:absolute;top:710px;left:240px;">
+       <apex:outputText rendered="{!If(ISBLANK(applndetail.Special_Diet_Description__c),false,true)}" >    
+       <apex:outputText rendered="{!IF(code='en-US',true,false)}" >
+           &quot;
+        </apex:outputText>
+        <apex:outputText rendered="{!IF(code='de',true,false)}" >
+            &bdquo;
+        </apex:outputText>
+             <apex:outputText value=" {!applndetail.Special_Diet_Description__c }" />     
+        <apex:outputText rendered="{!IF(code='en-US',true,false)}" >
+           &quot;
+        </apex:outputText>
+       <apex:outputText rendered="{!IF(code='de',true,false)}" >
+            &ldquo;
+        </apex:outputText>
+        </apex:outputText>
+        </p>
+        </td>
+       </tr>
+      
+       
+       <tr>
+        <td><p style="position:absolute;top:760px;left:240px;width: 75%;">
+            <apex:outputText rendered="{!IF((confirm_match.Position_Name__r.Double_Placement_Indicated__c=='Yes'),true,false)}" >
+            <apex:outputText value="{!$Label.E_0042}" />
+           </apex:outputText>
+            
+             
+        </p>
+        </td>
+       </tr>
+       <tr>
+        <td><p style="position:absolute;top:780px;left:240px;width: 75%;">
+         <apex:outputText rendered="{!IF((confirm_match.Position_Name__r.Single_No_Children_Indicated__c=='Yes'),true,false)}" >
+            <apex:outputText value="{!$Label.E_0041}" />
+         </apex:outputText>     
+        </p>
+        </td>
+       </tr>
+        
+        <tr>
+      <td><p style="position:absolute;top:820px;left:35px;width: 25%;"><apex:outputText value="{!$Label.E_0012}" /></p>
+        </td> 
+        <td><p style="position:absolute;top:820px;left:240px;width: 75%;">
+             <apex:outputField value="{!applndetail.Community_Type__c}" />     
+        </p>
+        </td>
+       </tr>
+        <apex:outputText rendered="{!If(ISBLANK(applndetail.Community_Population__c),false,true)}" >  
+        <tr>
+       <td><p style="position:absolute;top:840px;left:240px;width: 75%;">
+          <apex:outputText value="{!confirm_match.Position_Name__r.City__c} {!$Label.E_0048} {!applndetail.Community_Population__c}  {!$Label.E_0050} "/>  
+        </p>
+        </td>
+       </tr>
+       </apex:outputText>
+       <tr>
+       <td style="width:80%;word-wrap:break-word;"><p style="position:absolute;top:860px;left:240px;">
+        <apex:outputText rendered="{!If(ISBLANK(applndetail.Community_Description__c),false,true)}" >  
+          <apex:outputText rendered="{!IF(code='en-US',true,false)}" >
+           &quot;
+          </apex:outputText>
+          <apex:outputText rendered="{!IF(code='de',true,false)}" >
+            &bdquo;
+          </apex:outputText>
+          <apex:outputText value=" {!applndetail.Community_Description__c}" />   
+           <apex:outputText rendered="{!IF(code='en-US',true,false)}" >
+             &quot;
+          </apex:outputText>
+          <apex:outputText rendered="{!IF(code='de',true,false)}" >
+              &ldquo;
+           </apex:outputText>
+          </apex:outputText>  
+        </p>
+        </td>
+       </tr>
+       <tr>
+       <td><p style="position:absolute;top:930px;left:35px;width: 40%;"><apex:outputText value="{!$Label.E_0013}" /></p>
+        </td>
+       <td><p style="position:absolute;top:928px;left:240px;width: 60%;">
+          <apex:outputText value="{!applndetail.Nearest_City__c}" />     
+        </p>
+        </td>
+       </tr>
+      
+       
+   </table>    
+    <table  class="break">
+        <tr>
+       <td><p id="heading1" style="position:relative;top:940px;left:25px;"><apex:outputText value="{!$Label.E_0026}" /></p>
+        </td>
+            <hr style="position:relative;top:910px;right:10px;width:90%;"/>
+      </tr>  
+    </table>
+    </div>
+     <div id="content1" class="break" >
+     <p id="heading1" style="position:absolute;top:34.5cm;left:28px;"><apex:outputText value="{!$Label.E_0034}" /></p>
+         <hr style="position:absolute;top:35.3cm;right:50px;width:90%;" />
+       <p id="heading1" style="position:absolute;top:43.6cm;left:28px;"><apex:outputText value="{!$Label.E_0027}" /></p>
+         <hr style="position:absolute;top:44.4cm;right:50px;width:90%;"/ >
+       <p id="heading1" style="position:absolute;top:54.2cm;left:28px;"><apex:outputText value="{!$Label.E_0014}" /></p>
+         <hr style="position:absolute;top:55.1cm;right:50px;width:90%;"/ >
+     <table  style="position:absolute;top:28.9cm;padding-left:27px;" >
+      
+      <tr >
+        <td style="padding:0.8cm 3cm 0.4cm 0px;"><apex:outputText value="{!$Label.E_0015}" />
+        </td>
+        <td style="padding:0.8cm 3cm 0.4cm 0px;">
+                 <apex:outputText value="{!confirm_match.School_Id__r.Name}" />
+        </td>
+      </tr>  
+     
+      <tr >
+        <td style="padding:1px 1px 0.1cm 0px;"><apex:outputText value="{!$Label.E_0004}" />
+        </td>
+        <td style="padding:1px 1px 0cm 0px;">
+                 <apex:outputText value="{!confirm_match.School_Id__r.BillingStreet}" />     
+         </td></tr>
+        <tr><td> </td>
+        <td style="padding:1px 1px 0cm 0px;" >
+                <apex:outputText value="{!confirm_match.School_Id__r.BillingPostalCode} {!confirm_match.School_Id__r.BillingCity}, {!confirm_match.School_Id__r.BillingState}" />
+        </td>
+      </tr>  
+      <tr><td> </td><td style="padding:1px 1px 0.1cm 0px;">
+                <apex:outputText value="{!confirm_match.School_Id__r.BillingCountry}" />
+        
+        </td>
+      </tr>  
+       <tr>
+        <td class="second"><apex:outputText value="{!$Label.E_0016}" />
+        </td>
+        <td class="second">
+                 <apex:outputText value="{!confirm_match.School_Id__r.Website}  " />
+       
+        </td>
+      </tr> 
+       
+       <apex:outputText rendered="{!IF((Engagement__c.Intrax_Program_Options__c =='Ayusa High School'),true,false)}" >   
+       <tr>
+        <td style="padding:1px 1px 0cm 0px;">      
+            <apex:outputText value="{!$Label.E_0017}" />       
+        </td>
+        <td style="padding:1px 1px 0cm 0px;">
+        <apex:outputText value="{0, date, dd'.'MM'.'yyyy}">
+                 <apex:param value="{!confirm_match.End_Date__c}" />
+       </apex:outputText> 
+   
+        </td>
+      </tr> 
+     </apex:outputText>
+      <apex:outputText rendered="{!IF((Engagement__c.Pre_Program_Trip_Indicated__c =='Yes'),false,true)}" >
+      <tr >
+        <td style="padding:2cm 1px 0.4cm 0px;">
+            <apex:outputText value="{!$Label.E_0019}" />
+          
+        </td>
+        <td style="padding:2cm 1px 0.4cm 0px;">
+            <apex:outputText value="{0, date, dd'.'MM'.'yyyy}">
+                 <apex:param value="{!confirm_match.Start_Date__c}" />
+          </apex:outputText> 
+                
+        </td>
+      </tr>  
+     </apex:outputText>
+      <apex:outputText rendered="{!IF((Engagement__c.Pre_Program_Trip_Indicated__c =='Yes'),true,false)}" >
+      <tr >
+        <td style="padding:1.8cm 1px 0.4cm 0px;">
+            <apex:outputText value="{!$Label.E_0019}" />
+          
+        </td>
+        <td style="padding:1.8cm 1px 0.4cm 0px;">
+          <apex:outputText value="{0, date, dd'.'MM'.'yyyy}">
+                 <apex:param value="{!Engagement__c.Pre_Program_Trip_Start__c}" />
+          </apex:outputText> 
+                 
+        </td>
+      </tr>  
+      <tr >
+        <td class="second">
+            <apex:outputText value="{!$Label.E_0020}" />
+          
+        </td>
+        <td class="second">
+        <apex:outputText value="{0, date, dd'.'MM'.'yyyy}">
+                 <apex:param value="{!confirm_match.Start_Date__c}" />
+          </apex:outputText> 
+                
+        </td>
+      </tr>  
+      <tr >
+        <td style="padding:1px 2cm 0.4cm 0px;">
+            <apex:outputText value="{!$Label.E_0021}" />
+          
+        </td>
+        <td style="padding:1px 2cm 0.4cm 0px;">
+           <apex:outputText value="{0, date, dd'.'MM'.'yyyy}">
+                 <apex:param value="{!Engagement__c.Pre_Program_Trip_Start__c}" />
+          </apex:outputText> 
+                 
+                 &nbsp;&nbsp; <apex:outputText value="{!$Label.E_0035}" />
+                 &nbsp;&nbsp; 
+         <apex:outputText value="{0, date, dd'.'MM'.'yyyy}">
+                 <apex:param value="{!Engagement__c.Pre_Program_Trip_End__c}" />
+          </apex:outputText> 
+         
+        </td>
+      </tr>  
+     </apex:outputText>
+     <tr >
+        <td class="second">
+            <apex:outputText value="{!$Label.E_0022}" />
+          
+        </td>
+        <td class="second">
+           <apex:outputText rendered="{!IF((Engagement__c.Intrax_Program_Options__c =='Ayusa High School'),true,false)}" >   
+            <apex:outputText value="{!PTapplndetail.Airport__c}" />          
+           </apex:outputText> 
+          <apex:outputText rendered="{!IF((Engagement__c.Intrax_Program_Options__c =='Ayusa High School'),false,true)}" >  
+           <apex:outputText value="{!Engagement__c.Departing_City__c}"/ >
+          </apex:outputText> 
+           
+        </td>      
+      </tr>  
+       
+      <tr >
+        <td class="right" >
+            <apex:outputText value="{!$Label.E_0023}" />
+          
+        </td>
+        <td class="second">
+            <apex:outputText value="{!applndetail.Airport__c}" >
+          </apex:outputText> 
+                
+        </td>
+      </tr>  
+       
+      <apex:outputText rendered="{!IF((Engagement__c.Engagement_Country__c =='United Kingdom' || Engagement__c.Engagement_Country__c == 'Ireland'),true,false)}" >
+      <tr >
+        <td class="second">
+            <apex:outputText value="{!$Label.E_0024}" />
+          
+        </td>
+        <td class="second">
+            <apex:outputText value="{0, date, dd'.'MM'.'yyyy}">
+                 <apex:param value="{!Engagement__c.Holiday_Break_Start__c}" />
+          </apex:outputText> 
+                
+        </td>
+      </tr>  
+       <tr >
+        <td style="padding:1px 1px 0.8cm 0px;">
+            <apex:outputText value="{!$Label.E_0025}" />
+          
+        </td>
+        <td style="padding:1px 1px 0.8cm 0px;">
+            <apex:outputText value="{0, date, dd'.'MM'.'yyyy}">
+                 <apex:param value="{!Engagement__c.Holiday_Break_End__c}" />
+          </apex:outputText> 
+                
+        </td>
+      </tr>  
+    </apex:outputText>
+    
+    <apex:outputText rendered="{!IF((Engagement__c.Intrax_Program_Options__c =='High School Worldwide'),true,false)}" >   
+       <tr>
+        <td class="second" >      
+            <apex:outputText value="{!$Label.E_0018}" />     
+        </td>
+        <td class="second">
+        <apex:outputText value="{0, date, dd'.'MM'.'yyyy}">
+                 <apex:param value="{!confirm_match.End_Date__c}" />
+       </apex:outputText> 
+   
+        </td>
+      </tr> 
+     </apex:outputText>
+     
+    </table>
+    <table  style="position:absolute;top:43cm;padding-left:25px;">
+     <apex:outputText rendered="{!IF((Engagement__c.Intrax_Program_Options__c =='Ayusa High School'),false,true)}" >
+     <apex:outputText rendered="{!IF(code='de',true,false)}" >
+      <tr >
+        <td style="padding:70px 2cm 0.4cm 0px;">
+            <apex:outputText value="{!$Label.E_0028}" />
+          
+        </td>
+        <td style="padding:70px 2cm 0.4cm 0px;">
+            <apex:outputText value="{!Engagement__c.Partner_Account__r.Name}" >
+          </apex:outputText> 
+                
+        </td>
+      </tr>  
+       </apex:outputText> 
+       <apex:outputText rendered="{!IF(code='en-US',true,false)}" >
+      <tr >
+        <td style="padding:70px 3cm 0.4cm 0px;">
+            <apex:outputText value="{!$Label.E_0028}" />
+          
+        </td>
+        <td style="padding:70px 3cm 0.4cm 0px;">
+            <apex:outputText value="{!Engagement__c.Partner_Account__r.Name}" >
+          </apex:outputText> 
+                
+        </td>
+      </tr>  
+       </apex:outputText> 
+       <tr >
+        <td style="padding:10px 1px 0cm 0px;">
+            <apex:outputText value="{!$Label.E_0004}" />
+          
+        </td>
+        <td style="padding:10px 1px 0cm 0px;">
+            <apex:outputText value="{!Engagement__c.Partner_Account__r.BillingStreet} {!Engagement__c.Partner_Account__r.BillingCity} " /> 
+                
+        </td>
+      </tr>  
+      <tr><td> </td>
+        <td >
+                <apex:outputText value="{!Engagement__c.Partner_Account__r.BillingState} {!Engagement__c.Partner_Account__r.BillingCountry} " />
+        </td>
+      </tr>  
+       <tr><td> </td><td style="padding:1px 1px 0.4cm 0px;">
+                <apex:outputText value="{!Engagement__c.Partner_Account__r.BillingPostalCode}" />
+        
+        </td>
+      </tr>  
+       <tr >
+        <td class="second">
+            <apex:outputText value="{!$Label.E_0005}" />
+          
+        </td>
+        <td class="second">
+            <apex:outputText value="{!Engagement__c.Partner_Account__r.Phone}" >
+          </apex:outputText> 
+                
+        </td>
+      </tr>  
+      
+       <tr >
+        <td class="second">
+            <apex:outputText value="{!$Label.E_0016}" />
+          
+        </td>
+        <td class="second">
+            <apex:outputText value="{!Engagement__c.Partner_Account__r.Website}">
+          </apex:outputText> 
+                
+        </td>
+      </tr>  
+      
+      <tr>
+          <td class="right">
+            <apex:outputText value="{!$Label.E_0033}" />
+          
+        </td>
+        <td class="second">
+            <apex:outputText value="{!EmerPartAcc}" >
+          </apex:outputText> 
+                
+        </td>
+      </tr>  
+     
+     </apex:outputText>
+     
+     <apex:outputText rendered="{!IF((Engagement__c.Intrax_Program_Options__c =='Ayusa High School'),true,false)}" >
+        <tr>
+          <td  style="padding:90px 45px 0.4cm 0px;">
+            <apex:outputText value="{!$Label.E_0029}" />
+          
+        </td>
+        <td style="padding:90px 45px 0.4cm 0px;">
+            <apex:outputText value="{!USAPartAcc}" >
+          </apex:outputText> 
+                
+        </td>
+      </tr>  
+      <tr>
+          <td class="right">
+            <apex:outputText value="{!$Label.E_0030}" />
+          
+        </td>
+        <td class="second">
+            <apex:outputText value="{!PartAcc}" >
+          </apex:outputText> 
+                
+        </td>
+      </tr>  
+      <tr>
+          <td class="second">
+            <apex:outputText value="{!$Label.E_0031}" />
+          
+        </td>
+        <td class="second">
+            <apex:outputText value="{!RM.Name}" >
+          </apex:outputText> 
+                
+        </td>
+      </tr> 
+      
+      <tr>
+          <td >
+            
+          
+        </td>
+        <td style="padding:1px 1px 0.4cm 0px;">
+            <apex:outputText value="{!RM.Title}" >
+          </apex:outputText> 
+                
+        </td>
+      </tr>  
+      
+      <tr>
+          <td class="second">
+            <apex:outputText value="{!$Label.E_0005}" />
+          
+        </td>
+        <td class="second">
+            <apex:outputText value="{!RM.Phone}" >
+          </apex:outputText> 
+                
+        </td>
+      </tr>  
+      
+      <tr>
+          <td class="second">
+            <apex:outputText value="{!$Label.E_0006}" />
+          
+        </td>
+        <td class="second">
+            <apex:outputText value="{!RM.Email}" >
+          </apex:outputText> 
+                
+        </td>
+      </tr> 
+    </apex:outputText>
+      
+      
+    </table>
+    <table  class="break" style="position:absolute;top:55cm;padding-left:25px;">
+    
+     <apex:outputText rendered="{!IF((Engagement__c.Intrax_Program_Options__c =='Ayusa High School'),false,true)}" >
+        
+      <tr>
+          <td style="padding:0.8cm 3cm 0.4cm 0px;">
+            <apex:outputText value="{!$Label.E_0032}" />
+          
+        </td>
+        <td style="padding:0.8cm 3cm 0.4cm 0px;">
+            <apex:outputText value="{!confirm_match.Local_Staff_Contact__r.Name}" >
+          </apex:outputText> 
+                
+        </td>
+      </tr>  
+      
+       <tr>
+          <td class="second">
+            <apex:outputText value="{!$Label.E_0005}" />
+          
+        </td>
+        <td class="second">
+            <apex:outputText value="{!confirm_match.Local_Staff_Contact__r.Phone}" >
+          </apex:outputText> 
+                
+        </td>
+      </tr>  
+      
+      <tr>
+          <td class="second">
+            <apex:outputText value="{!$Label.E_0006}" />
+          
+        </td>
+        <td class="second">
+            <apex:outputText value="{!confirm_match.Local_Staff_Contact__r.Email}" >
+          </apex:outputText> 
+                
+        </td>
+      </tr>  
+     
+        
+     
+     </apex:outputText>
+     
+    <apex:outputText rendered="{!IF((Engagement__c.Intrax_Program_Options__c =='Ayusa High School'),true,false)}" >
+      
+       <tr>
+          <td style="padding:0.8cm 3cm 0.4cm 0px;">
+            <apex:outputText value="{!$Label.E_0032}" />
+          
+        </td>
+        <td style="padding:0.8cm 3cm 0.4cm 0px;">
+            <apex:outputText value="{!confirm_match.Owner_Name__c}" >
+          </apex:outputText> 
+                
+        </td>
+      </tr>  
+     
+      
+      <tr>
+          <td class="second">
+            <apex:outputText value="{!$Label.E_0005}" />
+          
+        </td>
+        <td class="second">
+            <apex:outputText value="{!confirm_match.Owner_Phone__c}" >
+          </apex:outputText>  
+                
+        </td>
+      </tr>  
+      
+      <tr>
+          <td class="second">
+            <apex:outputText value="{!$Label.E_0006}" />
+          
+        </td>
+        <td class="second">
+            <apex:outputText value="{!confirm_match.Owner_Email__c}" >
+          </apex:outputText> 
+                
+        </td>
+      </tr>  
+     </apex:outputText> 
+
+
+    </table>
+    
+  </div>
+
+ </apex:outputPanel>  
+
+ </body>
+         
+ </html>
+
+</apex:page>

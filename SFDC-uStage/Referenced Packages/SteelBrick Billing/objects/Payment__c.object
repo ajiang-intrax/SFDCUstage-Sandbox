@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <customHelpPage>support</customHelpPage>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <deprecated>false</deprecated>
+    <enableActivities>true</enableActivities>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <fields>
+        <fullName>Account__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The account/customer who has made this payment</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The account/customer who has made this payment</inlineHelpText>
+        <label>Account</label>
+        <referenceTo>Account</referenceTo>
+        <relationshipLabel>Payments</relationshipLabel>
+        <relationshipName>Payments</relationshipName>
+        <relationshipOrder>0</relationshipOrder>
+        <reparentableMasterDetail>false</reparentableMasterDetail>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>MasterDetail</type>
+        <writeRequiresMasterRead>false</writeRequiresMasterRead>
+    </fields>
+    <fields>
+        <fullName>Allocated_Amount__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The amount that has already been allocated.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The amount that has already been allocated.</inlineHelpText>
+        <label>Allocated Amount</label>
+        <summarizedField>Payment_Allocation__c.Amount__c</summarizedField>
+        <summaryFilterItems>
+            <field>Payment_Allocation__c.Status__c</field>
+            <operation>equals</operation>
+            <value>Completed</value>
+        </summaryFilterItems>
+        <summaryForeignKey>Payment_Allocation__c.Payment__c</summaryForeignKey>
+        <summaryOperation>sum</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Amount__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Amount</label>
+        <precision>12</precision>
+        <required>true</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Bank_Name__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Bank Name</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Cheque_Date__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Cheque Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Cheque_Number__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Cheque Number</label>
+        <length>15</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Currency__c</fullName>
+        <deleteConstraint>Restrict</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>The payment currency</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The payment currency</inlineHelpText>
+        <label>Currency</label>
+        <referenceTo>Currency__c</referenceTo>
+        <relationshipLabel>Payments</relationshipLabel>
+        <relationshipName>Payments</relationshipName>
+        <required>true</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Exchange_Rate_Applied__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Exchange Rate Applied</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>6</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Paid_by__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>Optionally choose the contact who made this payment. This contact must belong to the same Account.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Optionally choose the contact who made this payment. This contact must belong to the same Account.</inlineHelpText>
+        <label>Paid by</label>
+        <referenceTo>Contact</referenceTo>
+        <relationshipLabel>Payments</relationshipLabel>
+        <relationshipName>Payments</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Payment_Date__c</fullName>
+        <defaultValue>TODAY()</defaultValue>
+        <deprecated>false</deprecated>
+        <description>The date this payment was made.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The date this payment was made.</inlineHelpText>
+        <label>Payment Date</label>
+        <required>true</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Payment_Description__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Payment Description</label>
+        <length>32768</length>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Payment_Type__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Payment Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>ACH</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Bank Transfer</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Cash</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Cheque</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Credit Card</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Status__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Status</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Initiated</fullName>
+                <color>#F3D904</color>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Completed</fullName>
+                <color>#78C953</color>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Cancelled</fullName>
+                <color>#FF0000</color>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Transaction__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Transaction</label>
+        <referenceTo>Transaction__c</referenceTo>
+        <relationshipLabel>Payments</relationshipLabel>
+        <relationshipName>Payments</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Unallocated_Amount__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The amount that is un-allocated and can be used.</description>
+        <externalId>false</externalId>
+        <formula>IF( ISPICKVAL(Status__c, &apos;Cancelled&apos;), 0, Amount__c  -  Allocated_Amount__c)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>The amount that is un-allocated and can be used.</inlineHelpText>
+        <label>Unallocated Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <label>Payment</label>
+    <listViews>
+        <fullName>All_Payments</fullName>
+        <columns>NAME</columns>
+        <columns>Account__c</columns>
+        <columns>Paid_by__c</columns>
+        <columns>Amount__c</columns>
+        <columns>Currency__c</columns>
+        <columns>Payment_Type__c</columns>
+        <columns>Payment_Date__c</columns>
+        <columns>Allocated_Amount__c</columns>
+        <columns>Unallocated_Amount__c</columns>
+        <columns>Status__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>All Payments</label>
+        <language>en_US</language>
+    </listViews>
+    <listViews>
+        <fullName>Cancelled_Payments</fullName>
+        <columns>NAME</columns>
+        <columns>Account__c</columns>
+        <columns>Paid_by__c</columns>
+        <columns>Amount__c</columns>
+        <columns>Currency__c</columns>
+        <columns>Payment_Type__c</columns>
+        <columns>Payment_Date__c</columns>
+        <columns>Allocated_Amount__c</columns>
+        <columns>Unallocated_Amount__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>Cancelled Payments</label>
+        <language>en_US</language>
+    </listViews>
+    <listViews>
+        <fullName>Completed_Payments</fullName>
+        <columns>NAME</columns>
+        <columns>Account__c</columns>
+        <columns>Paid_by__c</columns>
+        <columns>Amount__c</columns>
+        <columns>Currency__c</columns>
+        <columns>Payment_Type__c</columns>
+        <columns>Payment_Date__c</columns>
+        <columns>Allocated_Amount__c</columns>
+        <columns>Unallocated_Amount__c</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Status__c</field>
+            <operation>equals</operation>
+            <value>Completed</value>
+        </filters>
+        <label>Completed Payments</label>
+        <language>en_US</language>
+    </listViews>
+    <nameField>
+        <displayFormat>P-{000}</displayFormat>
+        <label>Payment Number</label>
+        <trackHistory>false</trackHistory>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Payments</pluralLabel>
+    <searchLayouts>
+        <customTabListAdditionalFields>Account__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Currency__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Status__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Amount__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Allocated_Amount__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Unallocated_Amount__c</customTabListAdditionalFields>
+    </searchLayouts>
+    <sharingModel>ControlledByParent</sharingModel>
+    <validationRules>
+        <fullName>Cannot_change_status_from_Cancelled</fullName>
+        <active>true</active>
+        <errorConditionFormula>ISPICKVAL(PRIORVALUE
+(Status__c), 
+&quot;Cancelled&quot;) &amp;&amp; ISCHANGED(Status__c)</errorConditionFormula>
+        <errorDisplayField>Status__c</errorDisplayField>
+        <errorMessage>You cannot change the status of a cancelled payment</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Cannot_change_the_Amount</fullName>
+        <active>true</active>
+        <errorConditionFormula>ISCHANGED( Amount__c )</errorConditionFormula>
+        <errorDisplayField>Amount__c</errorDisplayField>
+        <errorMessage>You cannot change the amount of payments. Alternately you can cancel this payment and create a new payment with a different amount.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Cheque_Details_valid_for_cheque_payments</fullName>
+        <active>true</active>
+        <description>The cheque details can be populated only for cheque payments</description>
+        <errorConditionFormula>AND(!ISPICKVAL( Payment_Type__c , &quot;Cheque&quot;), OR( Cheque_Number__c != Null,  Cheque_Date__c  != null,  Bank_Name__c != null))</errorConditionFormula>
+        <errorMessage>Cheque Number, Cheque Date and Bank Name can be populated only for the payment type &quot;Cheque&quot;</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Cheque_Number_Req_For_Cheque_Payment</fullName>
+        <active>true</active>
+        <description>Cheque Number Required For Cheque Payment</description>
+        <errorConditionFormula>IF( (ISPICKVAL( Payment_Type__c , &quot;Cheque&quot;)) &amp;&amp; (Cheque_Number__c == null) , true, false)</errorConditionFormula>
+        <errorDisplayField>Cheque_Number__c</errorDisplayField>
+        <errorMessage>Enter the Cheque number</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Payment_status_cannot_be_Cancelled</fullName>
+        <active>true</active>
+        <errorConditionFormula>ISNEW()  &amp;&amp;  ISPICKVAL(Status__c, &quot;Cancelled&quot;)</errorConditionFormula>
+        <errorMessage>You cannot insert the payment status as Cancelled</errorMessage>
+    </validationRules>
+    <webLinks>
+        <fullName>Payment_Allocation</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Payment Allocation</masterLabel>
+        <openType>sidebar</openType>
+        <page>allocatePayments</page>
+        <protected>false</protected>
+    </webLinks>
+</CustomObject>

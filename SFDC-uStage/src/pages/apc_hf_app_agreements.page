@@ -1,0 +1,76 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardController="Applicant_Info__c"
+    extensions="AppEngine_Controller" action="{!checkLogin}"
+    standardStylesheets="false" showHeader="false"  title="Agreements" id="apc_hf_app_agreements">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_apc_hf_application userAgentCheck="{!userAgentCheck}"/>
+      <div id="app-page" class="row">
+        <div id="app-focus" class="col-md-8 col-md-push-3">
+        
+         <apex:outputPanel layout="block" id="hotdog">
+         	<c:block_app_completion ApplicantInfo="{!applicantInfo}"/>
+         </apex:outputPanel>
+         
+       <!-- <apex:form > 
+        <apex:actionPoller enabled="{!docusignRefresh}" action="{!checkDocuSign}" reRender="hotdog, menuside, contbutton, agreement-wrap" interval="5"/>
+        </apex:form> -->
+        
+          <h1>Program Agreement</h1>
+          <apex:Messages styleClass="custom-error-pagelevel"
+                                id="messageapex" />
+          <apex:form styleClass="form-vertical" >
+          
+           <apex:outputPanel layout="block" id="agreement-wrap">
+          
+          <apex:outputPanel layout="block" rendered="{!docusUserRec2AD.dsfs__Recipient_Status__c =='Completed' || applicantinfo.Terms_Accepted__c == True ||($CurrentPage.parameters.event='SignComplete')}">
+              <p class="lead">Thank you for signing the AuPairCare Program Terms and Conditions. Please click the button below to view a copy of the agreement.</p> 
+               <apex:outputLink target="_blank" styleClass="btn btn-link btn-lg" value="/apex/APCHF_TC_Agreement?id={!applicantInfo.Id}"><i class="fa fa-file-o"></i> <span>View Signed Terms and Conditions</span> </apex:outputLink>
+          </apex:outputPanel>
+            
+            <apex:outputPanel layout="block" rendered="{!applicantinfo.Terms_Accepted__c == False && NOT(($CurrentPage.parameters.event='SignComplete'))}"> 
+            
+              <p class="lead"> You have not yet signed AuPairCare Program Terms and Conditions. Please click the button below to sign now.</p>
+              <apex:outputLink styleClass="btn btn-default btn-lg" value="/apex/APCHF_TC_Agreement?id={!applicantInfo.Id}"> View and Sign Agreement </apex:outputLink>
+            </apex:outputPanel>
+             
+            <apex:outputPanel layout="block" rendered="{!msgDisplay == 'Exception'}">
+              <p class="alert alert-danger">{!msgDisplay}</p>
+              <apex:outputLink target="_blank" styleClass="btn btn-default btn-lg" value="/apex/APCHF_TC_Agreement?id={!applicantInfo.Id}">Sign Terms and Conditions </apex:outputLink>
+            </apex:outputPanel>
+           </apex:outputPanel> 
+         
+            <div class="row">
+              <div class="col-sm-12 margin-t">
+                <apex:outputLink id="BackOrigin" styleClass="btn btn-link btn-lg" rendered="{!ApplicantInfo.Application_Level__c == 'Main' && ApplicantInfo.Application_Type__c == 'Original' }" value="/apex/apc_hf_app_interview_status?id={!applicantInfo.Id}"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                <apex:outputLink id="BackRen" styleClass="btn btn-link btn-lg" rendered="{!ApplicantInfo.Application_Type__c == 'Renewal' || ApplicantInfo.Application_Type__c == 'Rematch'}" value="/apex/apc_hf_app_program_pref?id={!applicantInfo.Id}"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                <apex:outputLink id="BackExten" styleClass="btn btn-link btn-lg" rendered="{!ApplicantInfo.Application_Type__c == 'Extension'}" value="/apex/apc_hf_app_eligibility?id={!applicantInfo.Id}"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                
+                  <apex:outputPanel id="contbutton"><!--apc_hf_app_payment-->
+                      <apex:outputLink rendered="{!(ApplicantInfo.Application_Type__c == 'Extension' ||  ApplicantInfo.Application_Type__c == 'Renewal' || ApplicantInfo.Application_Type__c == 'Rematch')
+                                                 && (ApplicantInfo.Terms_Accepted__c==True || $CurrentPage.parameters.event=='SignComplete')}" styleClass="btn btn-primary btn-lg" value="/apex/apc_hf_app_completion?id={!applicantInfo.Id}&SubmitApp=APCHFEXT" id="nextlink">
+                          <span><apex:outputText value="Continue"> </apex:outputText></span> 
+                      </apex:outputLink>
+                    <!--  <apex:outputLink rendered="{!ApplicantInfo.Application_Type__c == 'Extension' 
+                                                 && (ApplicantInfo.Terms_Accepted__c==True || $CurrentPage.parameters.event=='SignComplete') && ApplicantInfo.Extension_DOS_Fee_Indicated__c == 'No'}" styleClass="btn btn-primary btn-lg" value="/apex/apc_hf_main_completion?id={!applicantInfo.Id}" id="nextlink1">
+                          <span>Continue</span> 
+                      </apex:outputLink>-->
+                  </apex:outputPanel>
+             
+              </div>
+            </div>
+          </apex:form>
+        </div>
+        <!-- end column -->
+        
+        <apex:outputPanel layout="block" id="menuside">
+         <div class="col-md-3 col-md-pull-8">
+            <c:menu_apc_hf_app PersonInfo="{!personInfo}" ApplicantInfo="{!applicantInfo}" />
+        </div>
+        </apex:outputPanel>
+        <!--  end column --> 
+      
+      </div>
+      <!-- end row --> 
+    </apex:define>
+  </apex:composition>
+</apex:page>

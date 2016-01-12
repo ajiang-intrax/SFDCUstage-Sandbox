@@ -1,0 +1,24 @@
+<apex:component layout="none" >
+	<apex:form >
+		<h1>Hello,&nbsp; <apex:outputText value="{!$User.FirstName}" />
+		<!-- <apex:outputText value="{!hostContact.Name}"/>  -->
+		</h1>
+		             
+        <div class="row">
+			<!-- Panel to hold the page content components -->
+			<apex:outputPanel styleClass="span8">  
+			<c:block_content_home_hf_ayu />
+            <c:block_matches_teaser />    
+			</apex:outputPanel>  
+            
+                  
+            <!-- Panel to hold the Page Applications Links --> 
+            <apex:outputPanel styleClass="span4">  
+			<c:block_app_status />
+			<c:Block_Notifications />
+			</apex:outputPanel>   
+			  
+		</div>  
+		 <!-- end row -->
+	</apex:form>
+</apex:component>

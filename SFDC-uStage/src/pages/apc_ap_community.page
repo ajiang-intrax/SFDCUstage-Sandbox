@@ -1,0 +1,88 @@
+<apex:page id="apc_ap_community" docType="html-5.0" applyHtmlTag="false" applyBodyTag="false" title="Host Community" standardStylesheets="false" showHeader="false" action="{!myHome.checkLogin}" controller="apc_home_controller">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+  
+   <apex:outputPanel rendered="{!myHome.userProfAD.Area_Profile__r.Name == null}" layout="block"> 
+     <div class="row margin-b2">
+        <div class="col-sm-8 center-block center-text">
+          <h1 class="no-margin-t">Your Host Community</h1>
+          <p class="lead box gray">You currently do not have a host family. Once you are matched please check this page to find information about your host community, including climate, nearby educational institutions and other au pairs.</p>
+        </div>
+      </div>
+   </apex:outputPanel>
+   
+   
+  <apex:outputPanel rendered="{!myHome.userProfAD.Area_Profile__r.Name != null}" layout="block"> 
+      
+      <div class="row margin-b2">
+        <div class="col-sm-8 center-block center-text">
+          <h1 class="no-margin-t">{!myHome.userProfAD.Area_Profile__r.Name}</h1>
+          <p class="lead">{!myHome.userProfAD.Area_Profile__r.Description__c}</p>
+        </div>
+      </div>
+      <hr class="margin-b4"/>
+      <div class="row margin-b2 form-vertical">
+        <div class="row">
+          <div class="col-sm-6 center-block">
+            <div class="col-sm-6">
+              <apex:outputPanel layout="block" styleClass="form-group">
+                <label class="control-label">The Climate</label>
+                {!myHome.userProfAD.Area_Profile__r.Climate__c} </apex:outputPanel>
+            </div>
+            <div class="col-sm-6">
+              <apex:outputPanel layout="block" styleClass="form-group">
+                <label class="control-label">Nearby Educational Institutions</label>
+                <ul>
+                  <apex:outputText rendered="{!myHome.userProfAD.Area_Profile__r.Educational_Institution_1__c != null}">
+                    <li> <a href="http://{!myHome.userProfAD.Area_Profile__r.Educational_Institution_1_URL__c}" target="_blank">{!myHome.userProfAD.Area_Profile__r.Educational_Institution_1__c}</a> </li>
+                  </apex:outputText>
+                  <apex:outputText rendered="{!myHome.userProfAD.Area_Profile__r.Educational_Institution_2__c != null}">
+                    <li> <a href="http://{!myHome.userProfAD.Area_Profile__r.Educational_Institution_2_URL__c}" target="_blank">{!myHome.userProfAD.Area_Profile__r.Educational_Institution_2__c}</a> </li>
+                  </apex:outputText>
+                  <apex:outputText rendered="{!myHome.userProfAD.Area_Profile__r.Educational_Institution_3__c != null}">
+                    <li> <a href="http://{!myHome.userProfAD.Area_Profile__r.Educational_Institution_3_URL__c}" target="_blank">{!myHome.userProfAD.Area_Profile__r.Educational_Institution_3__c}</a> </li>
+                  </apex:outputText>
+                </ul>
+              </apex:outputPanel>
+            </div>
+            <!-- end column --> 
+          </div>
+          <!--  end row --> 
+        </div>
+        <!-- end column --> 
+      </div>
+      <!--  end row -->
+      
+      <hr class="margin-b2"/>
+      <div class="row margin-b2">
+        <div class="col-sm-8 center-block center-text">
+          <h2>Meet Other Au Pairs In Your Community</h2>
+        </div>
+        <!-- end column --> 
+      </div>
+      <!--  end row -->
+      
+      <div class="row margin-b2">
+        <div class="col-sm-12 center-block">
+          <apex:form >
+            <c:filter_apc_ap_engagement PageController="{!mySearch}" />
+          </apex:form>
+        </div>
+        <!-- end column --> 
+      </div>
+      <!--  end row --> 
+      
+</apex:outputPanel>  
+
+<!--  
+<apex:tabPanel styleClass="vs1" switchType="client" selectedTab="name1" id="theTabPanel">
+<apex:tab label="Overview" name="name1" id="tabOne">    
+</apex:tab>     
+<apex:tab label="Meet Other Au Pairs" name="name2" id="tabTwo">  
+</apex:tab>
+</apex:tabPanel>   
+--> 
+      
+    </apex:define>
+  </apex:composition>
+</apex:page>

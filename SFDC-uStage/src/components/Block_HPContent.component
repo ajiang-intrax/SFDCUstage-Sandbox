@@ -1,0 +1,63 @@
+<!--  
+Component: Block_HPContent
+
+Description: Intrax Partner Portal home page most recent notification holding component
+
+-->
+<apex:component layout="none" controller="User_Controller">
+	<div class="block">  
+		
+		
+		<apex:outputPanel rendered="{!ActiveUserType = 'Host Family'}">
+		<div class="block-body"> 
+			<h3>Welcome to the new and improved MyIntrax Partner Portal! </h3>    
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+		</div> 
+		</apex:outputPanel>
+		
+		<apex:outputPanel rendered="{!ActiveUserType = 'Partner'}">
+		<div class="block-body"> 
+			<h3>Welcome to the new and improved MyIntrax Partner Portal! </h3>    
+			<p>Now, in addition to tracking and processing your applications you will be able to follow your participants’ match progress, view match details, monitor your participants’ program assessments, and interact directly with us to communicate travel information and upload relevant program related forms.</p>
+		</div> 
+		<div class="block-body">				  
+		  <div class="col-lg-6">
+		    <div class="input-group">
+		      <apex:actionFunction name="callAction" action="{!GoSearch}" status="waitMsg" />
+		      <h3>Search</h3>
+		      <apex:input styleClass="form-control" value="{!inputValue}" id="theTextInput" onkeydown="return runScript(event);"/>
+		      <span class="input-group-btn">					      	
+		        <apex:commandLink styleClass="btn btn-default" value="Go" id="GoButton" action="{!GoSearch}" >		        
+                </apex:commandLink>
+		      </span>
+		    </div>
+		  </div>
+		 </div> 
+		</apex:outputPanel>
+		
+     <apex:outputPanel rendered="{!ActiveUserType = 'Host Company'}">
+            <div class="block-body">
+            
+            <h3>Welcome to your MyIntrax Host Company Portal!</h3>
+			<p>This web site is designed for you, so you can keep track of all of the Intrax candidates who are available or who have been placed with your company. This includes information on candidates and how you can reach us should you need help with anything. Bookmark this page for quick access to all of your information!</p>
+	
+			<h3>Not Your Typical Participants!</h3>
+			<p>Intrax connects you with students and young professionals from all over the world who are eager to enhance and share their skills, knowledge, and culture with your company. Intrax provides candidates that are highly motivated to meet the needs of companies around the world, while sharing the global cultures that define today’s business landscape.</p>
+            
+           </div> 
+	  </apex:outputPanel> 
+		
+	</div> 
+    <apex:outputPanel rendered="{!if(ActiveUserType = 'Host Company' && DisplayHCA,true,false)}">
+    <c:block_hostcompany_agreement />    
+    </apex:outputPanel>
+	<script>		        
+         function runScript(obj){		                
+             //alert(obj.keyCode);
+             if(obj.keyCode == 13){
+                 callAction();   // call action function
+                 return false;
+             }
+         }
+     </script>   
+</apex:component>

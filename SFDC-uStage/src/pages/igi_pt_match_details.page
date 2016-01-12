@@ -1,0 +1,334 @@
+<apex:page title="Find an Internship" standardcontroller="Engagement__c" extensions="IGI_PT_Controller" docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardStylesheets="false" id="scheduling-page" showHeader="false" action="{!Initialize}">
+  <script>
+	  function formReset(obj) {
+	  var divObj = document.getElementById(obj);
+	  var inputs = divObj.getElementsByTagName("input");
+	  for (var i = 0; i < inputs.length; i++) {
+	    if(inputs[i].checked) {
+	      inputs[i].checked = false;
+	      break;
+	    }
+	  }
+	  return false;
+	}                       
+	</script>
+  <apex:composition template="intraxtemplate_vs3">
+  <apex:define name="body">
+  <c:block_header_igi_pt_application />
+  <apex:variable var="VarRevAccept" value="{! IF($CurrentPage.parameters.RevAccept!=null, true, false)}"/>
+  <apex:variable var="VarInitSched" value="{! IF($CurrentPage.parameters.Sched!=null, true, false)}"/>
+  <style>
+i { color: #87b64f; font-size: 32px; text-align: right; margin-right: 15px; width: 35px; }
+</style>
+
+  <apex:outputPanel layout="block" rendered="{!matchInfo.Status__c == NULL}">
+  <div class="row">
+    <div class="col-md-12">
+      <h1>Position No Longer Available</h1>
+      <p class="lead">Looks like you are no longer matched with this internship position. This may be due to the following reasons:</p>
+      <ul class="margin-b">
+        <li>Your application to this position was declined</li>
+        <li>You manually removed this position.</li>
+        <li>You interviewed with the company, yet did not receive an offer.</li>
+        <li>You received an offer yet did not accept it.</li>
+        <li>You have already accepted another internship offer.</li>
+      </ul>
+      <p>
+        <apex:outputLink value="/apex/igi_pt_matches" id="linkAllPositions0"><strong>&lt; Back to All Positions</strong></apex:outputLink>
+      </p>
+    </div>
+  </div>
+  </apex:outputPanel>
+  <apex:outputPanel layout="block" rendered="{!matchInfo.Status__c != NULL}">
+    <div class="row">
+      <div class="col-md-8">
+        <apex:outputLink value="/apex/igi_pt_matches" id="linkAllPositions"><strong>&lt; Back to All Positions</strong></apex:outputLink>
+        <h1>
+          <apex:outputField value="{!positionInfo.Title__c}"/>
+        </h1>
+        <p class="lead">
+          <apex:outputField value="{!positionInfo.Marketing_Notes__c}"/>
+        </p>
+        <hr class="margin-t4 margin-b4"/>
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="margin-b">
+              <div class="tcell"><i class="fa fa-building-o center-text"></i></div>
+              <div class="tcell">
+                <label>Company Name</label>
+                <br/>
+                <apex:outputText value="{!companyInfo.Name}" rendered="{!ISBLANK(companyInfo.Website)}"/>
+                <apex:outputLink target="_blank" value="http://{!companyInfo.Website}" rendered="{!NOT(ISBLANK(companyInfo.Website))}"> <strong>
+                  <apex:outputField value="{!companyInfo.Name}" id="companyName"/>
+                  </strong> </apex:outputLink>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="margin-b">
+              <div class="tcell"><i class="fa fa-map-marker center-text"></i></div>
+              <div class="tcell">
+                <label>Internship Location</label>
+                <br/>
+                <apex:outputText rendered="{!positionInfo.Country__c == 'United States'}">
+                <apex:outputText value="{!positionInfo.City__c}"/>
+                <br/>
+                <apex:outputText value="{!positionInfo.State__c}, "/>
+                <apex:outputText value="{!positionInfo.Country__c}"/>
+                </apex:outputText>
+                <apex:outputText rendered="{!positionInfo.Country__c != 'United States'}">
+                <apex:outputText value="{!positionInfo.City__c}, "/>
+                <apex:outputText value="{!positionInfo.Country__c}"/>
+                </apex:outputText>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="margin-b">
+              <div class="tcell"><i class="fa fa-calendar-o"></i></div>
+              <div class="tcell">
+                <label>Position Dates</label>
+                <br/>
+                <apex:outputPanel layout="block" rendered="{!matchInfo.Status__c == 'Confirmed'}">
+                <apex:outputField value="{!matchInfo.Start_Date__c}" />
+                 &nbsp;<em>to</em>&nbsp;<span class="w-break">
+                 <apex:outputField value=" {!matchInfo.End_Date__c}"/></span>
+                </apex:outputPanel>
+                <apex:outputPanel layout="block" rendered="{!matchInfo.Status__c != 'Confirmed'}">
+                <apex:outputField value="{!positionInfo.Engagement_Start__c}"/>
+                &nbsp;<em>to</em>&nbsp;<span class="w-break"> </span>
+                <apex:outputField value="{!positionInfo.Engagement_End__c}"/>
+                </apex:outputPanel>
+                </div>
+            </div>
+          </div>
+        </div>
+        <!--  end row -->
+        
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="margin-b">
+              <div  class="tcell"><i class="fa fa-group"></i></div>
+              <div class="tcell">
+                <label>Position Category</label>
+                <br/>
+                <apex:outputField value="{!positionInfo.Intrax_Program_Category__c}"/>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="margin-b">
+              <div class="tcell"><i class="fa fa-money"></i></div>
+              <div class="tcell">
+                <label>Payment</label>
+                <br/>
+                <apex:outputField rendered="{!positionInfo.Compensation_Type__c == 'Unpaid'}" value="{!positionInfo.Compensation_Type__c}"/>
+                <apex:outputText value="{!positionInfo.CurrencyIsoCode} {!positionInfo.Pay_Rate__c} - {!positionInfo.Pay_Frequency__c}"/>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="margin-b">
+              <div class="tcell"><i class="fa fa-comments-o"></i></div>
+              <div class="tcell">
+                <label>Languages</label>
+                <br/>
+                <apex:outputText rendered="{!NOT(ISBLANK(positionInfo.Language_1__c))}">
+                <apex:outputText value="{!positionInfo.Language_1_Proficiency__c}"/>
+                &nbsp;
+                <apex:outputField value="{!positionInfo.Language_1__c}"/>
+                &nbsp;
+                <apex:outputText rendered="{!positionInfo.Language_1_Desirability__c == 'Required'}"><a data-toggle="tooltip" title="Required"><b>(!)</b></a></apex:outputText>
+                <br/>
+                </apex:outputText>
+                <apex:outputText rendered="{!NOT(ISBLANK(positionInfo.Language_2__c))}">
+                <apex:outputText value="{!positionInfo.Language_2_Proficiency__c}"/>
+                &nbsp;
+                <apex:outputField value="{!positionInfo.Language_2__c}"/>
+                &nbsp;
+                <apex:outputText rendered="{!positionInfo.Language_2_Desirability__c == 'Required'}"><a data-toggle="tooltip" title="Required"><b>(!)</b></a></apex:outputText>
+                <br/>
+                </apex:outputText>
+                <apex:outputText rendered="{!NOT(ISBLANK(positionInfo.Language_3__c))}">
+                <apex:outputText value="{!positionInfo.Language_3_Proficiency__c}"/>
+                &nbsp;
+                <apex:outputField value="{!positionInfo.Language_3__c}"/>
+                &nbsp;
+                <apex:outputText rendered="{!positionInfo.Language_3_Desirability__c == 'Required'}"><a data-toggle="tooltip" title="Required"><b>(!)</b></a></apex:outputText>
+                </apex:outputText>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--  end row -->
+        
+        <hr class="margin-t margin-b4"/>
+        <apex:outputField value="{!positionInfo.Description__c}" />
+        <p>&nbsp;</p>
+      </div>
+      <div class="col-md-4">
+        <apex:form id="webform" styleClass="ws-validate form-vertical">
+          <apex:outputPanel layout="block" rendered="{!matchInfo.Status__c == 'Recommended'}">
+            <div class="box yellow margin-b">
+              <div class="h4">Are you interested in this position?</div>
+              <apex:commandlink styleClass="btn btn-lg btn-primary margin-r" action="{!navigator}" rendered="{!matchInfo.Status__c == 'Saved' || matchInfo.Status__c == 'Recommended'}" >
+                <apex:param name="nextPage" value="/apex/igi_pt_matches"/>
+                <apex:param name="mId" value="{!matchInfo.Id}" assignTo="{!mId}" />
+                <apex:param name="Apply" value="true" assignTo="{!ApplyforPosition}" />
+                <apex:commandButton value="Apply Now"/>
+              </apex:commandlink>
+              <apex:commandlink action="{!navigator}" >
+                <apex:param name="nextPage" value="/apex/igi_pt_matches"/>
+                <apex:param name="mId" value="{!matchInfo.Id}" assignTo="{!mId}" />
+                <apex:param name="removeMatch" value="true" assignTo="{!removeMatch}"/>
+                <strong>Not Interested</strong> </apex:commandlink>
+            </div>
+          </apex:outputPanel>
+          <apex:outputPanel styleClass="box gray margin-b" layout="block" rendered="{! matchInfo.Status__c == 'Applied' && ISBLANK(matchInfo.Interview_Status__c) && ISBLANK(matchInfo.Offer_Status__c) }">
+            <div class="h4">You applied to this position</div>
+            <p>You will be notified if the company is interested in interviewing you.</p>
+          </apex:outputPanel>
+          <apex:outputPanel styleClass="box gray margin-b" layout="block" rendered="{! matchInfo.Hide_From_Host__c && matchInfo.Status__c == 'Withdrawn' && ISBLANK(matchInfo.Interview_Status__c) && ISBLANK(matchInfo.Offer_Status__c) }">
+            <div class="h4">Application Declined</div>
+            <p>Sorry, the company chose not to interview you.</p>
+          </apex:outputPanel>
+          <apex:outputPanel layout="block" rendered="{!if(matchInfo.Interview_Status__c=='Initiated' && matchInfo.Status__c=='Requested',true,false)}">
+            <apex:variable value="{!1}" var="divCount" />
+            <div class="box yellow margin-b">
+              <apex:repeat value="{!lstMatchWrapper}" var="matchWrapper" >
+                <div id="oldschedule">
+                  <div class="h4">The company would like to interview you for this position. Please select one of the dates below.</div>
+                  <div class="form-group" id="innerDiv-{!ROUND(divCount,0)}">
+                    <apex:selectRadio styleClass="radio" value="{!matchWrapper.strSelectedResponse}" layout="pageDirection" rendered="{!IF(matchWrapper.Request1 != null || matchWrapper.Request2 != null ||  matchWrapper.Request3 != null , true, false)}">
+                      <apex:selectOption itemValue="{!matchWrapper.Request1}"  itemLabel="{!matchWrapper.Request1}" rendered="{!IF(matchWrapper.Request1 != null, true, false)}"/>
+                      <apex:selectOption itemValue="{!matchWrapper.Request2}"  itemLabel="{!matchWrapper.Request2}" rendered="{!IF(matchWrapper.Request2 != null, true, false)}" />
+                      <apex:selectOption itemValue="{!matchWrapper.Request3}"  itemLabel="{!matchWrapper.Request3}" rendered="{!IF(matchWrapper.Request3 != null, true, false)}" />
+                    </apex:selectRadio>
+                  </div>
+                  <apex:variable value="{!divCount + 1}" var="divCount" />
+                  <apex:commandlink styleClass="btn btn-lg btn-primary margin-r" action="{!navigator}" >
+                    <apex:param name="nextPage" value="/apex/igi_pt_matches"/>
+                    <apex:param name="mId" value="{!matchWrapper.MatchId}" assignTo="{!mId}" />
+                    <apex:param name="confirm" value="true" assignTo="{!confirm}"/>
+                    <apex:commandButton value="Schedule"  rendered="{!if(confirm!='true',true,false)}"/>
+                  </apex:commandlink>
+                  <a id="requestnew" data-toggle="modal" data-target="#myModal"><strong>Reschedule</strong></a> </div>
+                <div class="modal fade vs1" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-body">
+                        <div class="h2 no-margin-t">New Interview Date/Time</div>
+                        <p>Please tell us why you would like to request another date.</p>
+                        <div class="form-group">
+                          <apex:inputTextArea styleClass="form-control" value="{!matchWrapper.response}" />
+                        </div>
+                        <apex:commandlink styleClass="btn btn-lg btn-primary margin-r" action="{!navigator}" >
+                          <apex:param name="nextPage" value="/apex/igi_pt_matches" />
+                          <apex:param name="SaveReqOther" value="true" assignTo="{!SaveReqOther}"/>
+                          <apex:param name="mId" value="{!matchWrapper.MatchId}" assignTo="{!mId}" />
+                          <apex:param name="SaveMatch" value="true"/>
+                          <apex:commandButton value="Submit Request"/>
+                        </apex:commandlink>
+                        <a data-dismiss="modal"><b>Cancel</b></a> </div>
+                    </div>
+                  </div>
+                </div>
+              </apex:repeat>
+            </div>
+          </apex:outputPanel>
+          <apex:outputPanel layout="block" rendered="{!if(matchInfo.Interview_Status__c=='Scheduled' && matchInfo.Status__c=='Requested',true,false) && (TODAY() < DATEVALUE(matchInfo.Interview_Date__c))}">
+            <div class="box green margin-b">
+              <div class="h4">You are scheduled to interview for this position.</div>
+              <div class="margin-b">
+                <label>Interview Time:</label>
+                &nbsp;
+                <apex:outputField value="{!matchInfo.Interview_Date__c}"/>
+                <br/>
+                <label>Interviewer:</label>
+                &nbsp;
+                <apex:outputField value="{!matchInfo.Position_Name__r.Position_Supervisor__r.Name}"/>
+                <br/>
+                <label>Skype:</label>
+                &nbsp;
+                <apex:outputField value="{!matchInfo.Position_Name__r.Position_Supervisor__r.Skype_ID__c}"/>
+              </div>
+              <apex:commandlink html-data-toggle="tooltip" title="This will cancel the current interview" action="{!navigator}">
+                <apex:param name="nextPage" value="/apex/igi_pt_matches?canc=true"/>
+                <apex:param name="canc" value="true" assignTo="{!canc}" />
+                <apex:param name="mId" value="{!matchInfo.Id}" assignTo="{!mId}" />
+                <strong>Reschedule Interview</strong> </apex:commandlink>
+            </div>
+          </apex:outputPanel>
+          <apex:outputPanel styleClass="box gray margin-b" layout="block" rendered="{! matchInfo.Status__c == 'Withdrawn' && matchInfo.Interview_Status__c == 'Cancelled' && ISBLANK(matchInfo.Offer_Status__c) && matchInfo.Hide_From_Host__c }">
+            <div class="h4">Sorry</div>
+            <p>The company is no longer considering you for this internship position.</p>
+          </apex:outputPanel>
+          <apex:outputPanel styleClass="box gray margin-b" layout="block" rendered="{! matchInfo.Status__c == 'Requested' && matchInfo.Interview_Status__c == 'Needs Assistance' && ISBLANK(matchInfo.Offer_Status__c) && ISBLANK(matchInfo.Interview_Date__c)}">
+            <div class="h4">On Hold</div>
+            <p>You requested a different interview time. We will get in touch with you.</p>
+          </apex:outputPanel>
+          <apex:outputPanel styleClass="box gray margin-b" layout="block" rendered="{! matchInfo.Status__c == 'Requested' && OR(matchInfo.Interview_Status__c == 'Participant No Show', matchInfo.Interview_Status__c == 'Company No Show') && ISBLANK(matchInfo.Offer_Status__c) && (TODAY() >= DATEVALUE(matchInfo.Interview_Date__c))}">
+            <div class="h4">Pending New Interview</div>
+            <p>Looks like the interview did not take place. We will notify you if the company chooses to propose a new date/time.</p>
+          </apex:outputPanel>
+          <apex:outputPanel styleClass="box gray margin-b" layout="block" rendered="{! matchInfo.Status__c == 'Requested' && matchInfo.Interview_Status__c == 'Cancelled' && ISBLANK(matchInfo.Offer_Status__c)}">
+            <div class="h4">Interview Cancelled</div>
+            <p>The company cancelled the interview. We will notify you if they choose to propose a new date/time.</p>
+          </apex:outputPanel>
+          <apex:outputPanel styleClass="box gray margin-b" layout="block" rendered="{! matchInfo.Status__c == 'Requested' && matchInfo.Interview_Status__c == 'Scheduled' && ISBLANK(matchInfo.Offer_Status__c) && (TODAY() >= DATEVALUE(matchInfo.Interview_Date__c))}">
+            <div class="h4">How did it go?</div>
+            <p>Hope your interview went well! If it did not take place please contact Intrax.</p>
+          </apex:outputPanel>
+          <apex:outputPanel styleClass="box gray margin-b" layout="block" rendered="{! matchInfo.Status__c == 'Requested' && matchInfo.Interview_Status__c == 'Completed' && ISBLANK(matchInfo.Offer_Status__c)}" >
+            <div class="h4">Interview Complete!</div>
+            <p>Awaiting decision from the company.</p>
+          </apex:outputPanel>
+          <apex:outputPanel styleClass="box gray margin-b" layout="block" rendered="{! matchInfo.Status__c == 'Withdrawn' && matchInfo.Interview_Status__c == 'Completed' && matchInfo.Offer_Status__c == 'Not Offered'}" >
+            <div class="h4">Sorry</div>
+            <p>The company did not offer this job to you.</p>
+             <p><apex:commandlink action="{!navigator}" >
+					            <apex:param name="nextPage" value="/apex/igi_pt_matches"/>
+					            <apex:param name="mId" value="{!matchInfo.Id}" assignTo="{!mId}" />
+					            <apex:param name="PTDeclined" value="true" assignTo="{!PTDeclined}"/>
+					            <strong>Remove Match ></strong>
+					        </apex:commandlink></p>
+          </apex:outputPanel>
+          <apex:outputPanel layout="block" rendered="{!if(matchInfo.Offer_Status__c=='Offered',true,false)}">
+            <div class="box yellow margin-b">
+              <div class="h4">Congratulations! This position is offered to you.</div>
+              <p>Please keep in mind that accepting this offer will remove your other active matches.</p>
+              <apex:commandlink styleClass="btn btn-lg btn-primary margin-r" action="{!navigator}" >
+                <apex:param name="nextPage" value="/apex/igi_pt_matches"/>
+                <apex:param name="mId" value="{!matchInfo.Id}" assignTo="{!mId}" />
+                <apex:param name="Offer" value="true" assignTo="{!Offer}" />
+                <apex:commandButton value="Accept Offer"/>
+              </apex:commandlink>
+              <apex:commandlink action="{!navigator}" >
+                <apex:param name="nextPage" value="/apex/igi_pt_matches?vstate=rejoffer"/>
+                <apex:param name="mId" value="{!matchInfo.Id}" assignTo="{!mId}" />
+                <apex:param name="rejMatch" value="true" assignTo="{!rejMatch}"/>
+                <strong>Reject Offer</strong> </apex:commandlink>
+            </div>
+          </apex:outputPanel>
+          <apex:outputPanel styleClass="box green margin-b" layout="block" rendered="{! matchInfo.Status__c == 'Confirmed' && matchInfo.Interview_Status__c == 'Completed' && matchInfo.Offer_Status__c == 'Accepted'}" >
+            <div class="h4">Congratulations!</div>
+            <p>This internship position is yours.</p>
+          </apex:outputPanel>
+          <apex:outputPanel layout="block" rendered="{!if(matchInfo.Offer_Status__c != 'Offered' && matchInfo.Interview_Status__c != 'Completed' && (matchInfo.Status__c=='Requested' || matchInfo.Status__c=='Applied'),true,false)}">
+            <div class="box gray margin-b">
+              <div class="h4">No longer interested in this position?</div>
+              <apex:commandlink action="{!navigator}" >
+                <apex:param name="nextPage" value="/apex/igi_pt_matches"/>
+                <apex:param name="mId" value="{!matchInfo.Id}" assignTo="{!mId}" />
+                <apex:param name="removeMatch" value="true" assignTo="{!removeMatch}"/>
+                <strong>Remove Position</strong> </apex:commandlink>
+            </div>
+          </apex:outputPanel>
+        </apex:form>
+      </div>
+    </div>
+    <!--  end row --> 
+  </apex:outputPanel>
+  </apex:define>
+  </apex:composition>
+</apex:page>

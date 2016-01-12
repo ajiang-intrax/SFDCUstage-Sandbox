@@ -1,0 +1,118 @@
+<!--  
+Component: Block_Notification
+
+Description: Intrax Partner Portal home page most recent notification holding component
+
+-->
+<apex:component layout="none" controller="Notification_Portal_Manager">
+	<!-- OLD VERSION, NOT USED
+	<div class="block alert fade in">   
+		
+		<button data-dismiss="alert" class="close" type="button"><i class="icon-remove"></i></button> 
+		
+		<div class="block-body"> 
+			Travel plan information required immediately for &nbsp;
+			<apex:outputLink value="/apex/IntraxPartnerPortal_Home">
+				<apex:outputText value="{!hostCompany.Name}"/>
+			</apex:outputLink>                
+		</div> 
+	</div> 
+	 -->  
+	 
+	 <div class="block">
+        <!-- If there is no app in working status -->
+        <apex:outputPanel >
+            <div class="block-header">
+                <div class="title">Notifications</div>
+            </div>
+            <div class="block-body">
+            	<apex:outputText value="No records to display" rendered="{!(notifications.size == 0 && AYRecNotifications.size==0)}"/>
+				<apex:repeat value="{!notifications}" var="item">
+					<p class="app-teaser">
+				<strong><apex:outputtext value="Your family is now approved!" rendered="{!item.Type__c == 'Host Family Approval'}"/></strong>
+                <strong><apex:outputtext value="Your Ayusa match is confirmed!" rendered="{!item.Type__c == 'Confirmed Students'}"/></strong>
+                 <strong><apex:outputfield value="{!item.Subject__c}" rendered="{!item.Type__c != 'Host Family Approval' && item.Type__c != 'Confirmed Students'}"/></strong><br/>
+					    
+						<!--  <strong><apex:outputfield value="{!item.Subject__c}" rendered="{!item.Type__c != 'Host Family Approval'}"/></strong><br/> -->
+						<apex:outputField value="{!item.Body__c}" />
+						<apex:outputtext value="Status:" rendered="{!item.Intrax_Program__c=='Work Travel'}"/>
+                         <apex:outputField value="{!item.Status__c}" rendered="{!item.Intrax_Program__c=='Work Travel'}"/>
+					</p>
+					<apex:outputPanel layout="block" styleClass="form-button no-float no-margin" rendered="{!NOT(item.Subject__c=='Call to Check-In!')}">
+	                    <apex:outputLink value="{!item.Action_URL__c}" target="_blank" rendered="{!item.Type__c == 'Orientation'}">
+	                    	<apex:outputText value="Launch Orientation"/>
+	                    </apex:outputLink>
+	                    <apex:outputLink value="{!item.Action_URL__c}" target="_blank" rendered="{!item.Type__c == 'Terms and Conditions'}">
+	                    	<apex:outputText value="Sign Terms and Conditions"/>
+	                    </apex:outputLink>
+	                    <apex:outputLink value="{!item.Action_URL__c}" target="_blank" rendered="{!item.Type__c == 'Offer Extended'}">
+	                    	<apex:outputText value="Sign Job Offer"/>
+	                    </apex:outputLink>
+	                    <apex:outputLink value="{!item.Action_URL__c}" rendered="{!item.Type__c == 'Check-In Assessment'}">
+	                    	<apex:outputText value="Check-In"/>
+	                    </apex:outputLink>
+	                    <apex:outputLink value="{!item.Action_URL__c}" rendered="{!item.Type__c == 'Monthly Contact'}">
+	                    	<apex:outputText value="Complete Monthly Contact" />
+	                    </apex:outputLink>
+	                    <apex:outputLink value="{!item.Action_URL__c}" target="_blank" rendered="{!item.Type__c == 'Visa Support Letter'}">
+	                    	<apex:outputText value="Print Letter" />
+	                    </apex:outputLink>
+	                    <apex:outputLink value="{!item.Action_URL__c}" target="_blank" rendered="{!item.Type__c == 'Travel Info Needed'}">
+	                    	<apex:outputText value="Add Arrival Travel Info" />
+	                    </apex:outputLink>
+	                    
+	                    <apex:outputLink value="{!item.Action_URL__c}" target="_blank" rendered="{!item.Type__c == 'Departure Info Needed'}">
+	                    	<apex:outputText value="Add Departure Travel Info" />
+	                    </apex:outputLink>
+	                    
+	                    <apex:outputLink value="{!item.Action_URL__c}" rendered="{!item.Type__c == 'Job Information Needed'}">
+	                    	<apex:outputText value="Submit Job Information" />
+	                    </apex:outputLink>
+	                    
+	                      <apex:outputLink value="{!item.Action_URL__c}" target="_self" rendered="{!item.Type__c == 'Host Family Approval'}" >
+								<apex:outputText value="View Students" />
+	                    </apex:outputLink>
+	                    
+	                      <apex:outputLink value="{!item.Action_URL__c}" target="_self" rendered="{!item.Type__c == 'Confirmed Students'}">
+	                    	<apex:outputText value="Confirmed Student" />
+	                    </apex:outputLink>
+	                    
+	                    <apex:outputLink value="{!item.Action_URL__c}" target="_self" rendered="{!item.Type__c == 'Emergency Contact'}">
+	                    	<apex:outputText value="Add Emergency Contact" />
+	                    </apex:outputLink>
+	                    
+	                    <apex:outputLink value="{!item.Action_URL__c}" target="_self" rendered="{!item.Type__c == 'Visa Interview'}">
+	                    	<apex:outputText value="Submit Interview Date" />
+	                    </apex:outputLink>
+	                    <apex:outputLink value="{!item.Action_URL__c}" target="_self" rendered="{!item.Type__c == 'Visa Result'}">
+	                    	<apex:outputText value="Submit Visa Result" />
+	                    </apex:outputLink>
+	                    <apex:outputLink value="{!item.Action_URL__c}" target="_self" rendered="{!item.Type__c == 'Health Information'}">
+	                    	<apex:outputText value="Submit Health Information" />
+	                    </apex:outputLink>
+	                     <apex:outputLink value="{!item.Action_URL__c}" target="_self" rendered="{!item.Type__c == 'Required Documents'}">
+	                    	<apex:outputText value="Upload Required Documents" />
+	                    </apex:outputLink> 
+	                </apex:outputPanel>
+	                <br/><br/>
+				</apex:repeat>
+				<apex:outputPanel rendered="{!NOT(AYRecNotifications.size== 0)}">
+				<p class="app-teaser">
+					<strong><apex:outputtext value="You have recommended students!"/></strong><br/>
+             
+						<apex:outputField value="{!AYRecNotifications[0].Body__c}" /> <br/> 
+						
+					</p>
+			
+				<apex:outputPanel layout="block" styleClass="form-button no-float no-margin" >
+				  <apex:outputLink value="{!AYRecNotifications[0].Action_URL__c}" target="_self" >
+	                    	<apex:outputText value="Recommended Students" />
+	                    </apex:outputLink>
+	             </apex:outputPanel> 
+	             </apex:outputPanel>      
+                <!-- <p>Take the first step! Welcome an Ayusa exchange student into your home!</p> -->
+                
+            </div>
+        </apex:outputPanel>        
+    </div> 
+</apex:component>

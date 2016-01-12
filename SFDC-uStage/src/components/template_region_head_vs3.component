@@ -1,0 +1,72 @@
+<apex:component layout="none">   
+    <meta charset="utf-8" />    
+    <!--[if lte IE 9]>
+<script src="https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/themes/ie-warning/warning.js"></script>
+<script>window.onload=function(){e('ie-warning')}</script>
+<!--[endif]-->
+    
+    <!--Intrax base theme used to set the right fonts etc. for Bootstrap to be loaded on  -->
+    <apex:stylesheet value="{!URLFOR($Resource.intrax_themes_vs3, '/intrax_themes_vs3/styles/base.css')}" />
+    
+    <!--jQuery basics-->
+    <apex:includeScript value="{!URLFOR($Resource.module_jquery, '/module_jquery/scripts/jquery-1.8.0.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.module_jquery, '/module_jquery/scripts/jquery-ui-1.8.23.custom.min.js')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.module_jquery, '/module_jquery/styles/jquery-ui-1.8.23.custom.css')}" />
+    
+    <!--Bootstrap-->
+    <apex:includeScript value="{!URLFOR($Resource.module_bootstrap, '/module_bootstrap/v3.1.1/js/bootstrap.min.js')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.module_bootstrap, '/module_bootstrap/v3.1.1/css/bootstrap.css')}" />
+    
+    <!-- Fontawesome module for icons -->
+    <apex:stylesheet value="{!URLFOR($Resource.module_fontawesome, '/module_fontawesome/vs-4.4.0/css/font-awesome.min.css')}" />
+
+    <!-- module_font for all other conceptual icons -->
+    <apex:stylesheet value="{!URLFOR($Resource.module_fonts, '/module_fonts/vs1/styles.css')}" />
+
+    <!--Datepicker module for custom jQuery datepicker-->
+    <apex:includeScript value="{!URLFOR($Resource.module_datepicker, '/module_datepicker/Timepicker.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.module_datepicker, '/module_datepicker/jQuery-ui.datetimepicker_localization.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.module_datepicker, '/module_datepicker/SFdatepicker_patch.js')}" />
+
+    <!--module_multiselect for custom jQuery multi-select picklists http://davidstutz.github.io/bootstrap-multiselect-->
+    <apex:includeScript value="{!URLFOR($Resource.module_multiselect, '/module_multiselect/vs1/dist/js/bootstrap-multiselect.js')}" />    
+    <apex:stylesheet value="{!URLFOR($Resource.module_multiselect, '/module_multiselect/vs1/dist/css/bootstrap-multiselect.css')}" />    
+    
+    <!--module_select for custom jQuery single-select picklists http://silviomoreto.github.io/bootstrap-select/ -->
+    <apex:includeScript value="{!URLFOR($Resource.module_select, '/module_select/vs1/dist/js/bootstrap-select.min.js')}" />    
+    <apex:stylesheet value="{!URLFOR($Resource.module_select, '/module_select/vs1/dist/css/bootstrap-select.min.css')}" />    
+    
+    <!--Modernizr module for feature detection-->
+    <apex:includeScript value="{!URLFOR($Resource.module_modernizr, '/module_modernizr/1-3-2014/modernizr.js')}" />
+    
+     <!--Numeric module to prevent alpha characters from being added to number fields-->
+    <apex:includeScript value="{!URLFOR($Resource.module_numeric, '/module_numeric/jquery.numeric.js')}" /> 
+    
+    <!--Character limit module to truncate long text answers http://dotdotdot.frebsite.nl/ -->
+    <apex:includeScript value="{!URLFOR($Resource.module_char_limit, '/module_char_limit/vs1/js/jquery.dotdotdot.min.js')}" /> 
+    
+    <!--WebShim module to add polyfills for older browsers  --> 
+    <apex:includeScript value="{!URLFOR($Resource.module_webshim, '/webshim-master/js-webshim/minified/polyfiller.js')}" />  
+
+    <!--Slideshow module to create modal slideshows of images and video  http://dimsemenov.com/plugins/magnific-popup/ --> 
+    <apex:stylesheet value="{!URLFOR($Resource.module_slideshow, '/module_slideshow/vs1/magnific-popup.css')}" />
+    <apex:includeScript value="{!URLFOR($Resource.module_slideshow, '/module_slideshow/vs1/jquery.magnific-popup.js')}" />     
+    
+    <!--Intrax theme customization -->
+    <apex:stylesheet value="{!URLFOR($Resource.intrax_themes_vs3, '/intrax_themes_vs3/styles/custom.css')}" />
+    
+    <!-- Rating module -->
+    <apex:stylesheet value="{!URLFOR($Resource.module_ratings, '/module_ratings/raty-2.7-2.0/jquery.raty.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.module_ratings, '/module_ratings/raty-2.7-2.0/jquery.raty.js')}"/>
+    
+    <!-- handlebars.js module -->
+    <apex:includeScript value="{!URLFOR($Resource.module_handlebars, '/module_handlebars/v1.3.0/handlebars.js')}" />
+    
+    <!-- typeahead.js module --> 
+    <apex:includeScript value="{!URLFOR($Resource.module_typeahead, '/module_typeahead/v0.10.4/typeahead.js')}" />
+    
+    <!-- videojs module -->
+    <apex:includeScript value="{!URLFOR($Resource.module_videoJs, '/videojs/video.min.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.module_videoJs, '/videojs/video-js.css')}"/>     
+          
+</apex:component>

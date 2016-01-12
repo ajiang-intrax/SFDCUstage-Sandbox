@@ -1,0 +1,405 @@
+<!--  
+Page : Ayusa_app_home
+
+Description: Summary Page for Ayusa Application.
+
+-->
+<apex:page id="ayusa_app_home" docType="html-5.0" standardController="Applicant_Info__c"  extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+    
+    <apex:includeScript value="{!URLFOR($Resource.MJQuery, 'jquery-ui-1.9.2.custom/js/jquery-1.8.3.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.MJQuery, 'jquery-ui-1.9.2.custom/js/jquery-ui-1.9.2.custom.min.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.MJQuery, 'jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css')}"/>
+    
+    <script type="text/javascript">
+         var j$ = jQuery.noConflict();
+ 
+         j$(document).ready(function(){
+            j$("#nosubmit").click(function() {
+                 $( '<div id="dialog" title="Ayusa Application"><p>Please complete all sections (excepting those marked optional) before submitting your application. If a section does not have a green tick <i class="icon-ok"></i>, then you should go back and provide further details.</p></div>' ).dialog({
+                  resizable: false,
+                  height:240,width:350,
+                  modal: true,
+                  buttons: {
+                    "Continue": function() {
+                      $( this ).dialog( "close" );
+                    }
+                  }
+                });
+            });
+        });
+    </script>   
+  
+    <apex:composition template="IntraxTemplate_Vs1">
+        <apex:define name="body">
+            <meta name="viewport" content="width=960, initial-scale=1.0"/>
+            
+            <div class="wrapper">
+                <apex:form id="form">
+                
+                    <div class="page-header clearfix">
+                        <h1>Ayusa Student Application <apex:OutputText value=" - {!personInfo.First_Name__c} {!personInfo.Last_Name__c}" rendered="{!IsPartner}" /></h1>
+                    </div>
+          
+                    <div class="white-box clearfix">
+                        <div class="panel two_thirds">
+                            
+                            <c:Badge_Welcome_To_The_Participant />
+
+                            <div class="panel">
+                                <div class="app-summary-section">
+                                    
+                                    <div class="app-summary-section-header">About You </div>
+                                    
+                                    <div class="app-summary-section-body">
+                                        
+                                        <div class="app-summary-section-link">
+                                            <apex:commandlink action="{!navigator}">
+                                                <apex:param name="nextPage" value="/apex/ayusa_app_profile_contact_info"/>
+                                                <apex:param name="role" value="Student" assignTo="{!role}"/>
+                                                <apex:param name="reDirectPage" value="true"/>
+                                                <apex:param name="add" value="false" assignTo="{!add}"/>
+                                                <apex:outputLabel >Basic/Contact Info</apex:outputLabel>
+                                                <apex:outputPanel layout="inline" styleClass="finished" rendered="{! IF(NOT(ISBLANK(personInfo.Birth_City__c)), true, false)}">
+                                                    <i class="icon-ok"></i>
+                                                </apex:outputPanel>
+                                            </apex:commandlink>
+                                        </div>
+
+                                        <div class="app-summary-section-link">
+                                            <apex:commandlink action="{!navigator}">
+                                                <apex:param name="nextPage" value="/apex/ayusa_app_culture_interests"/>
+                                                <apex:param name="reDirectPage" value="false"/>
+                                                <apex:outputLabel >Interests and Culture</apex:outputLabel>
+                                                <apex:outputPanel layout="inline" styleClass="finished" rendered="{! IF(NOT(ISBLANK(applicantInfo.Interests__c)), true, false)}">
+                                                    <i class="icon-ok"></i>
+                                                </apex:outputPanel>
+                                            </apex:commandlink>
+                                        </div>
+
+                                        <div class="app-summary-section-link">
+                                            <apex:commandlink action="{!navigator}">
+                                                <apex:param name="nextPage" value="/apex/ayusa_app_household_basics"/>
+                                                <apex:param name="reDirectPage" value="false"/>
+                                                <apex:outputLabel >About Your Home</apex:outputLabel>
+                                                <apex:outputPanel layout="inline" styleClass="finished" rendered="{! IF(NOT(ISBLANK(applicantInfo.Home_Responsibilities__c)), true, false)}">
+                                                    <i class="icon-ok"></i>
+                                                </apex:outputPanel>
+                                          </apex:commandlink>
+                                        </div>
+                                        
+                                        <div class="app-summary-section-link">
+                                            <apex:commandlink action="{!navigator}">
+                                                <apex:param name="nextPage" value="/apex/ayusa_app_essays"/>
+                                                <apex:param name="reDirectPage" value="false"/>
+                                                <apex:outputLabel >Essay Questions</apex:outputLabel>
+                                                <apex:outputPanel layout="inline" styleClass="finished" rendered="{!checkCompletedEssays}">
+                                                    <i class="icon-ok"></i>
+                                                </apex:outputPanel>
+                                          </apex:commandlink>
+                                        </div>
+                                        
+                                        <div class="app-summary-section-link">
+                                            <apex:commandlink action="{!navigator}">
+                                                <apex:param name="nextPage" value="/apex/ayusa_app_stu_photos_videos"/>
+                                                <apex:param name="reDirectPage" value="true"/>
+                                                <apex:param name="docType" value="Media" assignTo="{!docType}"/>
+                                                <apex:outputLabel >Your Profile Picture</apex:outputLabel>
+                                                <apex:outputPanel layout="inline" styleClass="finished" rendered="{!checkParticipantPhotos}">
+                                                    <i class="icon-ok"></i>
+                                                </apex:outputPanel>
+                                            </apex:commandlink>
+                                        </div>
+                                        
+                                        <div class="app-summary-section-link">
+                                            <apex:commandlink action="{!navigator}">
+                                                <apex:param name="nextPage" value="/apex/ayusa_app_passport_details"/>
+                                                <apex:param name="reDirectPage" value="true"/>
+                                                <apex:param name="docType" value="Passport" assignTo="{!docType}"/>
+                                                <apex:outputLabel >Identification Document Upload(Optional)</apex:outputLabel>
+                                            </apex:commandlink>
+                                        </div>
+                                    
+                                    </div>
+                                </div>
+                                    
+                                <div class="app-summary-section">
+                                    <div class="app-summary-section-header">Your Health</div>
+                                    
+                                    <div class="app-summary-section-body">
+                                        
+                                        <div class="app-summary-section-link">
+                                            <apex:commandlink action="{!navigator}">
+                                                <apex:param name="nextPage" value="/apex/ayusa_app_health_overview"/>
+                                                <apex:param name="reDirectPage" value="false"/>
+                                                <apex:outputLabel >Health Overview</apex:outputLabel>
+                                                <apex:outputPanel layout="inline" styleClass="finished" rendered="{! IF(NOT(ISBLANK(applicantInfo.Disabilities__c)), true, false)}">
+                                                    <i class="icon-ok"></i>
+                                                </apex:outputPanel>
+                                          </apex:commandlink>
+                                        </div>
+                                        
+                                        <div class="app-summary-section-link">
+                                            <apex:commandlink action="{!navigator}">
+                                                <apex:param name="nextPage" value="/apex/ayusa_app_doc_assessment"/>
+                                                <apex:param name="reDirectPage" value="true"/>
+                                                <apex:param name="docType" value="Health" assignTo="{!docType}"/>
+                                                <apex:outputLabel >Doctor's Report</apex:outputLabel>
+                                                <apex:outputPanel layout="inline" styleClass="finished" rendered="{!checkDoctor}">
+                                                    <i class="icon-ok"></i>
+                                                </apex:outputPanel>
+                                            </apex:commandlink>
+                                        </div>
+                                    
+                                    </div>
+                                </div>
+                                
+                                <div class="app-summary-section">
+                                    <div class="app-summary-section-header">Your Program</div>
+                                    
+                                    <div class="app-summary-section-body">
+                                    
+                                        <div class="app-summary-section-link">
+                                            <apex:commandlink action="{!navigator}">
+                                                <apex:param name="nextPage" value="/apex/ayusa_app_prog_pref"/>
+                                                <apex:param name="reDirectPage" value="false"/>
+                                                <apex:outputLabel >Program Preferences</apex:outputLabel>
+                                                <apex:outputPanel layout="inline" styleClass="finished" rendered="{!IF(NOT(ISBLANK(applicantInfo.Private_High_School_Indicated__c)), true, false)}">
+                                                    <i class="icon-ok"></i>
+                                                </apex:outputPanel>
+                                            </apex:commandlink>
+                                        </div>
+                                        
+                                        <div class="app-summary-section-link">
+                                            <apex:commandlink action="{!navigator}">
+                                                <apex:param name="nextPage" value="/apex/ayusa_app_prog_agreements"/>
+                                                <apex:param name="reDirectPage" value="true"/>
+                                                <apex:param name="docType" value="Agreements" assignTo="{!docType}"/>
+                                                <apex:outputLabel >Program Agreements</apex:outputLabel>
+                                                <apex:outputPanel layout="inline" styleClass="finished" rendered="{!checkAgreements}">
+                                                    <i class="icon-ok"></i>
+                                                </apex:outputPanel>
+                                            </apex:commandlink>
+                                        </div>
+                                        
+                                        <div class="app-summary-section-link">
+                                            <apex:commandlink action="{!navigator}">
+                                                <apex:param name="nextPage" value="/apex/ayusa_app_stu_emergency_contact"/>
+                                                <apex:param name="reDirectPage" value="true"/>
+                                                <apex:param name="role" value="EmergencyContact" assignTo="{!role}"/>
+                                                <apex:param name="flush" value="true"/>
+                                                <apex:outputLabel >Emergency Contact Info</apex:outputLabel>
+                                                <apex:outputPanel layout="inline" styleClass="finished" rendered="{!checkEmergencyContact}">
+                                                    <i class="icon-ok"></i>
+                                                </apex:outputPanel>
+                                            </apex:commandlink>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+              
+                            <div class="pane last">
+                                
+                                <div class="app-summary-section">
+                                    <div class="app-summary-section-header">Your Family</div>
+                                    
+                                    <div class="app-summary-section-body">
+                                        <div class="app-summary-section-link">
+                                            <apex:commandlink action="{!navigator}">
+                                                <apex:param name="nextPage" value="/apex/ayusa_app_parent_info"/>
+                                                <apex:param name="reDirectPage" value="false"/>
+                                                <apex:outputLabel >Family Overview</apex:outputLabel>
+                                                <apex:outputPanel layout="inline" styleClass="finished" rendered="{! IF(NOT(ISBLANK(applicantInfo.Parent_Marital_Status__c)), true, false)}">
+                                                    <i class="icon-ok"></i>
+                                                </apex:outputPanel>
+                                            </apex:commandlink>
+                                        </div>
+                                        
+                                        <div class="app-summary-section-link">
+                                            <apex:commandlink action="{!navigator}">
+                                                <apex:param name="nextPage" value="/apex/ayusa_app_fam_members"/>
+                                                <apex:param name="reDirectPage" value="false"/>
+                                                <apex:outputLabel >Your Family Members</apex:outputLabel>
+                                                <apex:outputPanel layout="inline" styleClass="finished" rendered="{!CheckFamilyMembers}">
+                                                    <i class="icon-ok"></i>
+                                                </apex:outputPanel>
+                                          </apex:commandlink>
+                                        </div>
+                                        
+                                        <div class="app-summary-section-link">
+                                            <apex:commandlink action="{!navigator}">
+                                                <apex:param name="nextPage" value="/apex/ayusa_app_fam_photos_videos"/>
+                                                <apex:param name="reDirectPage" value="true"/>
+                                                <apex:param name="docType" value="Family" assignTo="{!docType}"/>
+                                                <apex:outputLabel >Family and Friends Photo Album</apex:outputLabel>
+                                                <apex:outputPanel layout="inline" styleClass="finished" rendered="{!CheckFamilyAlbum}">
+                                                    <i class="icon-ok"></i>
+                                                </apex:outputPanel>
+                                            </apex:commandlink>
+                                        </div>
+                                        
+                                        <div class="app-summary-section-link">
+                                            <apex:commandlink action="{!navigator}">
+                                                <apex:param name="nextPage" value="/apex/ayusa_app_parents_letter"/>
+                                                <apex:param name="reDirectPage" value="true"/>
+                                                <apex:param name="EssayType" value="Parent" assignTo="{!EssayType}"/>
+                                                <apex:outputLabel >Your Parents' Letter</apex:outputLabel>
+                                                <apex:outputPanel layout="inline" styleClass="finished" rendered="{!CheckParentLetter}">
+                                                    <i class="icon-ok"></i>
+                                                </apex:outputPanel>
+                                            </apex:commandlink>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="app-summary-section">
+                                    
+                                    <div class="app-summary-section-header">Your Education</div>
+                                    <div class="app-summary-section-body">
+                    
+                                        <div class="app-summary-section-link">
+                                            <apex:commandlink action="{!navigator}">
+                                                <apex:param name="nextPage" value="/apex/ayusa_app_edu_overview"/>
+                                                <apex:param name="reDirectPage" value="false"/>
+                                                <apex:outputLabel >Academic Overview</apex:outputLabel>
+                                                <apex:outputPanel layout="inline" styleClass="finished" rendered="{!IF(NOT(ISBLANK(applicantInfo.GPA_Self_Reported__c)), true, false)}">
+                                                    <i class="icon-ok"></i>
+                                                </apex:outputPanel>
+                                            </apex:commandlink>
+                                        </div>
+                                        
+                                        <div class="app-summary-section-link">
+                                            <apex:commandlink action="{!navigator}">
+                                                <apex:param name="nextPage" value="/apex/ayusa_app_reco_list"/>
+                                                <apex:param name="docType" value="Academic" assignTo="{!docType}"/>
+                                                <apex:param name="reDirectPage" value="true"/>
+                                                <apex:outputLabel >Academic Recommendations</apex:outputLabel>
+                                                <apex:outputPanel layout="inline" styleClass="finished" rendered="{!CheckAcademicRecommendation}">
+                                                    <i class="icon-ok"></i>
+                                                </apex:outputPanel>
+                                            </apex:commandlink>
+                                        </div>
+                                        
+                                        <div class="app-summary-section-link">
+                                            <apex:commandlink action="{!navigator}">
+                                                <apex:param name="nextPage" value="/apex/ayusa_app_school_transcripts"/>
+                                                <apex:param name="reDirectPage" value="true"/>
+                                                <apex:param name="docType" value="Transcripts" assignTo="{!docType}"/>
+                                                <apex:outputLabel >School Transcripts</apex:outputLabel>
+                                                <apex:outputPanel layout="inline" styleClass="finished" rendered="{!CheckSchoolTranscript}">
+                                                    <i class="icon-ok"></i>
+                                                </apex:outputPanel>
+                                            </apex:commandlink>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <apex:outputPanel styleClass="app-summary-section partner" layout="block" rendered="{!IsPartner}">
+                                    
+                                    <div class="app-summary-section-header" >For Partners Only</div>
+                                        
+                                    <div class="app-summary-section-body">
+                                        <div class="app-summary-section-link">
+                                            <apex:commandlink action="{!navigator}" rendered="{!IsPartner}">
+                                                <apex:param name="nextPage" value="/apex/ayusa_app_partner_stu_overview"/>
+                                                <apex:param name="reDirectPage" value="false"/>
+                                                <apex:outputLabel rendered="{!IsPartner}">Student Overview</apex:outputLabel>
+                                            </apex:commandlink>
+                                        </div>
+                                        
+                                        <div class="app-summary-section-link">
+                                            <apex:commandlink action="{!navigator}" rendered="{!IsPartner}">
+                                                <apex:param name="nextPage" value="/apex/ayusa_app_partner_detailed_report"/>
+                                                <apex:param name="reDirectPage" value="true"/>
+                                                <apex:param name="docType" value="Partner" assignTo="{!docType}"/>
+                                                <apex:outputLabel rendered="{!IsPartner}">Document Uploads</apex:outputLabel>
+                                            </apex:commandlink>
+                                        </div>
+                                        
+                                        <div class="app-summary-section-link">
+                                            <apex:commandlink action="{!navigator}" rendered="{!IsPartner}">
+                                                <apex:param name="nextPage" value="/apex/ayusa_partner_school_reco"/>
+                                                <apex:param name="reDirectPage" value="false"/>
+                                                <apex:outputLabel rendered="{!IsPartner}">School Recommendation</apex:outputLabel>
+                                            </apex:commandlink>
+                                        </div>
+                                        
+                                        <div class="app-summary-section-link">
+                                            <apex:commandlink action="{!navigator}" rendered="{!IsPartner}">
+                                                <apex:param name="nextPage" value="/apex/ayusa_partner_teacher_reco"/>
+                                                <apex:param name="reDirectPage" value="false"/>
+                                                <apex:outputLabel rendered="{!IsPartner}">Teacher Recommendation</apex:outputLabel>
+                                            </apex:commandlink>
+                                        </div>
+                                        
+                                    </div>
+                                </apex:outputPanel>
+                                
+                                <div class="app-summary-section" style=" width:90%; margin:0 auto; text-align:center;">
+                                    <p><strong>Have you completed your application?</strong></p>
+                                 
+                                    <div class="form-button no-float">
+                                        <apex:commandlink styleClass="submit" action="{!navigator}" rendered="{!(checkMainApp && NOT(isPartner))}">
+                                            <apex:param name="nextPage" value="/apex/Ayusa_PT_App_Submitted"/>
+                                            <apex:param name="SubmitApp" value="PA"/>
+                                            <apex:param name="env" value="{!env}"/>
+                                            <apex:param name="reDirectPage" value="true"/>
+                                            <apex:param name="reviewSubmit" value="RS"/>
+                                            <apex:commandButton id="Submit" value="Submit Application" />
+                                        </apex:commandlink>
+                                    </div>
+                                      
+                                    <div class="form-button no-float">
+                                        <apex:commandlink styleClass="submit" target="_self" action="{!navigator}" rendered="{!IsPartner && applicantInfo.Application_Stage__c != 'Conditional'}">
+                                            <apex:param name="nextPage" value="/apex/ayusa_partner_audit"/>
+                                            <apex:param name="reDirectPage" value="true"/>
+                                            <apex:commandButton id="Audit" value="Audit Application" />
+                                        </apex:commandlink>
+                                        <apex:commandlink styleClass="submit" action="{!StageToInReview}" rendered="{!IsPartner && applicantInfo.Application_Stage__c == 'Conditional'}">
+                                            <apex:param name="reDirectPage" value="true"/>
+                                            <apex:commandButton id="Resubmit" value="Resubmit" />
+                                        </apex:commandlink>
+                                    </div>
+                                      
+                                    <apex:outputPanel styleClass="form-button no-float"  layout="block" rendered="{!(NOT(isPartner) && NOT(checkMainApp))}">
+                                        <a id="nosubmit" href="" class="no-submit" style="cursor: pointer;">Submit Application</a>
+                                    </apex:outputPanel>                                   
+                  
+                                <div class="form-link no-float">
+                                        <apex:commandlink action="{!navigator}" > 
+                                            <i class="icon-file"></i>
+                                            <apex:param name="nextPage" value="/apex/ayusa_main_submitted_view?BackURL=HM&view"/>
+                                            <apex:param name="participantId" value="{!applicantInfo.Engagement__r.Id}" assignTo="{!participantId}"/>                                            <apex:param name="reDirectPage" value="true"/>
+                                            <apex:param name="role" value="Both" assignTo="{!role}"/>
+                                            <apex:commandButton id="View" value="View Application Summary" />
+                                        </apex:commandlink>
+                                    </div>
+                                    
+                                                                
+                                                                        
+                                    
+                                    <apex:outputPanel layout="block" styleClass="no-margin" rendered="{!IsPartner}">
+
+                                        <div class="form-link no-float">
+                                            <apex:commandlink action="{!navigator}" rendered="{!IsPartner}">
+                                                <i class="icon-thumbs-down"></i>
+                                                <apex:param name="nextPage" value="/apex/pr_app_list"/>
+                                                <apex:param name="DeclineApp" value="DA"/>
+                                                <apex:param name="reDirectPage" value="false"/>
+                                                <apex:param name="idNeeded" value="false"/>
+                                                <apex:commandButton id="Decline" value="Decline Application" />
+                                            </apex:commandlink>
+                                        </div>
+                                    </apex:outputPanel>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="panel one_third last aside">
+                            <c:Badge_AboutAyusa />  
+                        </div>
+                    </div>
+                </apex:form>
+            </div>
+        </apex:define>
+    </apex:composition>
+</apex:page>

@@ -1,0 +1,548 @@
+<apex:page controller="ParticipantPortalController"  action="{!checkLogin}" standardStylesheets="false" showHeader="false" renderAs="pdf" applyHtmlTag="false" applyBodyTag="false">
+  <head>
+  <style type="text/css" >
+@page {
+ size:portrait;
+font-family:Trebuchet MS, Arial, Helvetica, sans-serif;
+margin:2cm 1cm 3cm 1cm;
+padding:0 0 1em 0;
+@top-left {
+ content: element(header);
+}
+@bottom-center { 
+ content: element(footer);
+}
+}
+ @page:first {
+@top-left {
+content: element(master);
+}
+.header {
+display:none;
+}
+}
+div.master { position: running(master); padding:2em 1em 1em 1em; }
+div.header { position: running(header); padding:1em; }
+div.footer { display: block; padding: 1em; position: running(footer); font-family:Trebuchet MS, Arial, Helvetica, sans-serif; color:#7d7d7d; }
+.page-numbers { text-align:center; padding-top:0.5cm; width:100%; }
+.pagenumber:before { content: counter(page); font-size:9pt; }
+.pagecount:before { content: counter(pages); font-size:9pt; }
+.title { text-align:center; background:#b8d459; margin-bottom:2em; }
+.title div { color:#202020; display:inline-block; font-size:18pt; background:#fff; padding:0 1em; text-align:center; }
+h2 { background:#e3edd4; font-size:9pt; padding:0.5em 1em; margin-bottom:1em; page-break-inside:avoid; page-break-after: avoid;}
+.container { width:100%; font-family:Trebuchet MS, Arial, Helvetica, sans-serif; font-size:9pt; }
+.left-column { width:40%; margin-right:10%; float:left; }
+.right-column { width:40%; float:left; }
+.data-row { margin-bottom:1em; }
+.repeat-last { border-bottom:1px solid #e3edd4; padding-bottom:1em; }
+.data-row.last { border-bottom:none; }
+.data-row:after { display:block; visibility:hidden; content:"."; clear:both; width:1px; height:1px; }
+.data-label { float:left; font-weight:bold; }
+.data-label.left { margin-left:1em; }
+.data-field { float:left; margin-left:1em; font-style:italic; }
+.essay { margin-right:1em; margin-left:1em; }
+.essay.answer{border-bottom:1px solid #e3edd4; padding-bottom:1em; }
+.clearfix:after { content:"."; width:1px; height:1px; display:block; visibility:hidden; clear:both; }
+.regular{font-weight:normal;}
+.page-break { page-break-before: always; }
+.page-break-inside { page-break-inside: avoid; }
+.avoid-page-break-after {page-break-after: avoid; }
+.page-title-small { float:right; font-family:Trebuchet MS, Arial, Helvetica, sans-serif; font-size:9pt; color:#7d7d7d; }
+</style>
+  </head>
+  <body>
+  <form>
+  <!--  
+    <div class="master">
+      <apex:image style="width:2.5cm;" url="{!URLFOR($Resource.intrax_themes, '/intrax_themes/images/pdf-ayusa.gif')}" alt="Ayusa" title="Ayusa"/>
+    </div>
+    -->
+    <div class="header"> <span class="page-title-small">Match Details</span> </div>
+    <div class="footer">
+      <div class="page-numbers"><span class="pagenumber"></span>/<span class="pagecount"></span></div>
+    </div>
+    <div class="container clearfix">
+    <div class="title">
+      <div>Match Details</div>
+    </div>
+    <h2>Match Information</h2>
+    <div class="data-row">
+      <div class="data-label left">Position Name:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!match.Position_Name__r.Name}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Participant Name:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!match.Engagement__r.Name}"/>
+      </div>
+    </div>
+    
+    <div class="data-row">
+      <div class="data-label left">Consider Other Position:</div>
+      <div class="data-field">
+        <apex:outputText value="Yes" rendered="{!match.Consider_Other_Positions__c = true}"/>
+		<apex:outputText value="No" rendered="{!match.Consider_Other_Positions__c = false}"/>
+      </div>
+    </div>
+    
+    <div class="data-row">
+      <div class="data-label left">Match Date:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!match.Match_Date__c}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">End Date:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!match.End_Date__c}"/>
+      </div>
+    </div>
+    
+    <div class="data-row">
+      <div class="data-label left">Match Stage:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!match.Status__c}"/>
+      </div>
+    </div>
+    
+    <div class="data-row">
+      <div class="data-label left">Interview Status:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!match.Interview_Status__c}"/>
+      </div>
+    </div>
+    
+    <div class="data-row">
+      <div class="data-label left">Interview Date:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!match.Interview_Date__c}"/>
+      </div>
+    </div>
+    
+    <div class="data-row">
+      <div class="data-label left">Offer Status:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!match.Offer_Status__c}"/>
+      </div>
+    </div>
+    
+    <h2>Position Overview</h2>
+    <div class="data-row">
+      <div class="data-label left">Host Company Description:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!positionInfo.Host_Company_Id__r.Description}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Position Code:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!positionInfo.Code__c}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">City:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!positionInfo.City__c}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">State:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!positionInfo.State__c}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Gender Preference:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!positionInfo.Gender_Preference__c}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">English Level:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!positionInfo.Language_1_Proficiency__c}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Minimum Age:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!positionInfo.Minimum_Age__c}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Earliest Start Date:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!positionInfo.Engagement_Start__c}" />
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Earliest End Date:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!positionInfo.Engagement_Earliest_End__c}" />
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Latest Start Date:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!positionInfo.Engagement_Latest_Start__c}" />
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Latest End Date:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!positionInfo.Engagement_End__c}" />
+      </div>
+    </div>
+    
+
+    <h2>Position Details</h2>
+    <div class="data-row">
+      <div class="data-label left">Average Hours/Week:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!positionInfo.Employment_Hrs_Wk__c}"/>
+      </div>
+    </div>
+     <div class="data-row">
+      <div class="data-label left">Typical Schedule:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!positionInfo.Typical_Schedule__c}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Position Description:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!positionInfo.Description__c}"/>
+      </div>
+    </div>
+     <div class="data-row">
+      <div class="data-label left">Required Duties:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!positionInfo.Required_Duties__c}"/>
+      </div>
+    </div>
+     <div class="data-row">
+      <div class="data-label left">Skills Required:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!positionInfo.Skills_Required__c}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Supplies Required:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!positionInfo.Supplies_Required__c}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Supplies Cost:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!positionInfo.Supplies_Cost__c}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Company Policies:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!positionInfo.Host_Company_Id__r.Company_Policies__c}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Interview Required?:</div>
+      <div class="data-field">
+      	<apex:outputText value="Yes" rendered="{!PositionInfo.Requires_Interview__c == true}"/>
+        <apex:outputText value="No" rendered="{!PositionInfo.Requires_Interview__c == false}"/>
+      </div>
+    </div>
+    <div class="data-row last">
+      <div class="data-label left">Additional Information:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!positionInfo.Special_Notes__c}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Pay Rate:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!positionInfo.Pay_Rate__c}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Pay Frequency:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!positionInfo.Pay_Frequency__c}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Pay Notes:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!positionInfo.Pay_Notes__c}"/>
+      </div>
+    </div>
+   
+    <div class="data-row">
+      <div class="data-label left">Overtime Available?</div>
+      <div class="data-field">
+      	<apex:outputText value="Yes" rendered="{!positionInfo.Overtime_Available__c == true}"/>
+        <apex:outputText value="No" rendered="{!positionInfo.Overtime_Available__c == false}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Overtime Rate:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!positionInfo.Overtime_Rate__c}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Days Before Start of Work:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!positionInfo.Days_Before_Work__c}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Tipped Position?</div>
+      <div class="data-field">
+      	<apex:outputfield value="{!positionInfo.Tipped_Position__c}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Accepts Couples?</div>
+      <div class="data-field">
+      	<apex:outputText value="Yes" rendered="{!positionInfo.Accepts_Couples__c == true}"/>
+        <apex:outputText value="No" rendered="{!positionInfo.Accepts_Couples__c == false}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Accepts Groups?</div>
+      <div class="data-field">
+      	<apex:outputText value="Yes" rendered="{!positionInfo.Accepts_Groups__c == true}"/>
+        <apex:outputText value="No" rendered="{!positionInfo.Accepts_Groups__c == false}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Second Job Allowed?</div>
+      <div class="data-field">
+        <apex:outputfield value="{!positionInfo.Second_Job_Allowed__c}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Company Provided Housing?</div>
+      <div class="data-field">
+      	<apex:outputfield value="{!positionInfo.Company_Provided_Housing__c}"/>
+      </div>
+    </div>
+
+    <h2>Arrival Information</h2>
+    <div class="data-row">
+      <div class="data-label left">Recommended Airport:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!positionInfo.Host_Company_Id__r.Recommended_Airport__c}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Nearest Bus Station:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!positionInfo.Host_Company_Id__r.Nearest_Bus_Station__c}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Nearest Train Station:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!positionInfo.Host_Company_Id__r.Nearest_Train_Station__c}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Transportation to Company:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!positionInfo.Host_Company_Id__r.Transportation_to_Company__c}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Reporting Instructions:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!positionInfo.Host_Company_Id__r.Reporting_Instructions__c}" />
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Travel Instructions:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!positionInfo.Host_Company_Id__r.Travel_Instructions__c}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Nearest Social Security Office:</div>
+      <div class="data-field">
+        <apex:outputfield value="{!positionInfo.Host_Company_Id__r.Nearest_Work_Authorization_Office__c}"/>
+      </div>
+    </div>
+    <div class="data-row last">
+      <div class="data-label left">Social Security Instructions: </div>
+      <div class="data-field">
+        <apex:outputField value="{!positionInfo.Host_Company_Id__r.Work_Authorization_Instructions__c}"/>
+      </div>
+    </div>
+    
+    <h2>Area Information</h2>
+    <div class="data-row">
+      <div class="data-label left"> Area Information:</div>
+      <div class="data-field">
+        <apex:outputField value="{!positionInfo.Host_Company_Id__r.Area_Information__c}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Cultural Opportunities:</div>
+      <div class="data-field">
+        <apex:outputField value="{!positionInfo.Host_Company_Id__r.Cultural_Opportunities__c}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Website:</div>
+      <div class="data-field">
+        <apex:outputField value="{!positionInfo.Host_Company_Id__r.Website}"/>
+      </div>
+    </div>
+    <div class="data-row last">
+      <div class="data-label left">Additional Website Info:</div>
+      <div class="data-field">
+        <apex:outputField value="{!positionInfo.Host_Company_Id__r.Websites_Additional__c}"/>
+      </div>
+    </div>
+    
+    <div class="data-row">
+    <apex:outputPanel rendered="{!IF(accOptionInfoList.Size == 0, true, false)}"
+		layout="block" styleClass="block">
+		<h2>Accomodation Options</h2>
+		<div class="data-row">
+			<div class="data-field">No record(s) to display.</div>
+		</div>
+	</apex:outputPanel>
+    <apex:repeat id="accOptionInfoList" value="{!accOptionInfoList}" var="item" rendered="{!IF(accOptionInfoList.Size == 0, false, true)}">
+    	  <h2>Accomodation Option: <apex:outputText value=" {!item.Name}"/> </h2>
+    	  <apex:outputPanel rendered="{!IF(item.Accommodation_Site__c != null, true, false)}">
+    	  	<div class="data-row">
+	    	  <div class="data-label left">Address:</div>
+		      <div class="data-field">
+		        <strong><apex:outputField value="{!item.Accommodation_Site__r.Business_Name__c}"/></strong>
+		        &nbsp;<br/>
+		        <apex:outputText value="{!item.Accommodation_Site__r.Street__c} {!item.Accommodation_Site__r.Street_2__c}"/>
+		        &nbsp;<br/>
+		        <apex:outputText value="{!item.Accommodation_Site__r.City__c} {!item.Accommodation_Site__r.State__c}"/>
+		        &nbsp;<br/>
+		        <apex:outputText value="{!item.Accommodation_Site__r.Postal_Code__c} - {!item.Accommodation_Site__r.Country__c}"/>
+		        &nbsp;<br/>
+		      </div>
+		     </div>
+	      </apex:outputPanel>
+	      
+	      <apex:outputPanel rendered="{!IF(item.Accommodation_Site__c != null, true, false)}">
+	      	<div class="data-row">
+		      <div class="data-label left">Type:</div>
+		      <div class="data-field">
+		        <apex:outputField value="{!item.Accommodation_Site__r.Type__c}"/>
+		      </div>
+		    </div>
+		  </apex:outputPanel>
+    <div class="data-row">
+      <div class="data-label left">Company Arranged:</div>
+      <div class="data-field">
+        <apex:outputText value="Yes" rendered="{!item.Host_Arranged__c == true}"/>
+        <apex:outputText value="No" rendered="{!item.Host_Arranged__c == false}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Company Recommended:</div>
+      <div class="data-field">
+      	<apex:outputText value="Yes" rendered="{!item.Host_Recommended__c == true}"/>
+        <apex:outputText value="No" rendered="{!item.Host_Recommended__c == false}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left"> Description: </div>
+      <div class="data-field">
+        <apex:outputField value="{!item.Description__c}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Estimated Weekly Cost:</div>
+      <div class="data-field">
+        <apex:outputField value="{!item.Estimated_Cost__c}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Additional Weekly Cost:</div>
+      <div class="data-field">
+        <apex:outputField value="{!item.Additional_Costs__c}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Additional Cost Description:</div>
+      <div class="data-field">
+        <apex:outputField value="{!item.Additional_Costs_Description__c}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Commute Options:</div>
+      <div class="data-field">
+        <apex:outputField value="{!item.Commute_Options__c}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Commute Cost:</div>
+      <div class="data-field">
+        <apex:outputField value="{!item.Commute_Cost__c}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Company Provides Transportation:</div>
+      <div class="data-field">
+      	<apex:outputText value="Yes" rendered="{!item.Transportation_Provided__c == true}"/>
+        <apex:outputText value="No" rendered="{!item.Transportation_Provided__c == false}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Estimated Distance to Company:</div>
+      <div class="data-field">
+        <apex:outputField value="{!item.Estimated_Distance__c}"/>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label left">Gender Restrictions:</div>
+      <div class="data-field">
+        <apex:outputField value="{!item.Gender_Restriction__c}"/>
+      </div>
+    </div>
+    <apex:outputPanel rendered="{!IF(item.Accommodation_Site__c != null, true, false)}">
+    	<div class="data-row">
+	      <div class="data-label left">Features:</div>
+	      <div class="data-field">
+	        <apex:outputField value="{!item.Accommodation_Site__r.Features__c}"/>
+	      </div>
+	    </div>
+    </apex:outputPanel>
+    <apex:outputPanel rendered="{!IF(item.Accommodation_Site__c != null, true, false)}">
+    	<div class="data-row">
+	      <div class="data-label left">Features Description:</div>
+	      <div class="data-field">
+	        <apex:outputField value="{!item.Accommodation_Site__r.Features_Description__c}"/>
+	      </div>
+	    </div>
+    </apex:outputPanel>
+    <apex:outputPanel rendered="{!IF(item.Accommodation_Site__c != null, true, false)}">
+    	<div class="data-row">
+	      <div class="data-label left">Additional Information:</div>
+	      <div class="data-field">
+	        <apex:outputField value="{!item.Accommodation_Site__r.Additional_Information__c}"/>
+	      </div>
+	    </div>
+    </apex:outputPanel>
+    
+    </apex:repeat>
+   </div>
+   
+   </div> 
+	
+  </form>
+  <div class="footer" style="border-top:#e3edd4 solid 1px;  ">
+    <apex:image style="width:100%;" url="{!URLFOR($Resource.intrax_themes, '/intrax_themes/images/pdf-boiler-plate.png')}" alt="Intrax" title="Intrax"/>
+    <div class="page-numbers"><span class="pagenumber"></span>/<span class="pagecount"></span></div>
+  </div>
+  </body>
+</apex:page>

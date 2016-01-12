@@ -1,0 +1,77 @@
+<apex:page standardcontroller="Engagement__c" extensions="IGI_PT_Controller" docType="html-5.0" standardStylesheets="true" id="scheduling-page" showHeader="false" action="{!Initialize}">
+   
+<script type="text/javascript">
+
+</script>
+    <apex:composition template="IntraxTemplate_Vs1">
+      <apex:define name="body">
+      <div class="wrapper">
+        <apex:form >      
+         
+           
+          <div class="page-header clearfix">
+            <h1><apex:outputText >Your Interviews</apex:outputText></h1> 
+          </div>
+          
+          <div class="white-box clearfix">
+            <c:PT_Sub_Navigation />
+            <div class="panel two_thirds">
+                        
+                   <apex:outputPanel layout="block" rendered="{!IF(ConfirmedMatches.Size > 0, false, true)}" styleClass="dotted-box">
+       			<apex:outputLabel >You currently do not have any upcoming interviews.</apex:outputLabel>
+       	    </apex:outputPanel>           
+                  <apex:outputPanel layout="block" rendered="{!IF(ConfirmedMatches.Size > 0, true, false)}" styleClass="form-row">
+                 <div class="content-group">
+                <div class="content-group-title">Confirmed Interviews</div>
+                <div class="content-group-body">
+         
+                          <p><apex:outputText >Below is a list of your upcoming interviews.</apex:outputText></p>
+       	   
+                     
+                         <apex:repeat value="{!ConfirmedMatches}" var="ConfMatch"> 
+              			 <div class="divider-top">
+                         <h2><apex:outputText value="{!ConfMatch.Position_Name__r.sAccount__r.Name}" /></h2> 
+                         <strong>Position Title:</strong><apex:commandlink styleClass="inline-link no-padding" action="{!navigator}">
+        					<apex:param name="nextPage" value="/apex/IGI_PT_Scheduling?detail=true"/>
+        					<apex:param name="detail" value="true" assignTo="{!detail}"/>
+       						<apex:param name="mId" value="{!ConfMatch.Id}" />                                       
+                            <apex:commandButton value="{!ConfMatch.Position_Name__r.Name}" />                                      
+       						</apex:commandlink>
+                          <br/>
+                             <strong>Interview Date/Time:</strong>&nbsp;<apex:outputText value="{!ConfMatch.Interview_Date__c}" /><br/>
+              			   <strong>Interviewer:</strong> 
+               				<apex:outputLabel value="{!ConfMatch.Position_Name__r.Position_Supervisor__r.Name}" /> 
+                    		<br/>  
+                 		<strong>Skype:</strong> 
+                			<apex:outputText value="{!ConfMatch.Participant_Id__r.Skype_ID__pc}" />
+                   			<div class="form-link no-float"> 
+                             <apex:commandlink styleClass="no-padding" action="{!navigator}" rendered="{!if(ConfMatch.Interview_Status__c=='Scheduled',true,false)}">
+                                  <i class="icon-remove"></i>           
+                                 <apex:param name="nextPage" value="/apex/IGI_PT_Scheduling?schCancel=true" />
+                                            <apex:param name="mId" value="{!ConfMatch.Id}" assignTo="{!mId}" />  
+                                            <apex:param name="schCancel" value="true" assignTo="{!schCancel}" />                                           
+                                            <apex:commandButton value="Cancel Interview" />                                         
+                                         </apex:commandlink>
+                                  </div>
+                             </div>
+                		                  </apex:repeat>
+                   
+                  
+                   </div>  
+                </div>
+                </apex:outputPanel>    
+                  
+              
+                 </div> 
+              
+             
+				
+             
+            </div>
+          
+          
+          </apex:form>
+        </div>
+      </apex:define>
+  </apex:composition>
+</apex:page>

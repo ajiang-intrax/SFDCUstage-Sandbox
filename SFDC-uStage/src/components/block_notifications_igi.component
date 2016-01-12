@@ -1,0 +1,86 @@
+<apex:component layout="none" controller="Notification_Portal_Manager">
+
+<apex:attribute name="OnProgramEngg" description="Decide second job submission" type="boolean" required="false" default="false"/>
+<apex:attribute name="intrax_Id" description="Contains the last User Intrax-Id" type="string" required="false" default=""/>
+<apex:attribute name="engagementId" description="Contains the EngagementId related to the last Accepted App" type="string" required="false" default=""/>
+<apex:attribute name="accommodation" description="Contains the last Accommodation related to the Engagement in context" type="Accommodation__c" required="false" default=""/>
+<div id="notifications">
+
+<apex:outputPanel layout="block" styleClass="center-text" rendered="{!IF(notifications.size == 0, true, false)}">
+
+<h2 class="margin-b">Your To Do List</h2>
+<p class="margin-b">Please check this space... You will find links requesting additional information, if required, throughout your program. </p>
+   
+</apex:outputPanel>
+
+<apex:repeat value="{!notifications}" var="item">
+<div class="notify-container">
+<div class="notify-body">
+<div class="notify-title h3">
+<apex:outputfield value="{!item.Subject__c}"/>
+</div>
+
+<div class="notify-content"><apex:outputField value="{!item.Body__c}" /></div>
+
+<apex:outputPanel layout="block" styleClass="notify-action" rendered="{!NOT(item.Subject__c=='Call to Check-In!')}">
+                        <apex:outputLink value="{!item.Action_URL__c}" target="_blank" rendered="{!item.Type__c == 'Terms and Conditions'}">
+	                    Sign Terms and Conditions >
+	                    </apex:outputLink>
+	                    <apex:outputLink value="{!item.Action_URL__c}"  rendered="{!item.Type__c == 'Update Profile'}">
+	                    Update Profile >
+	                    </apex:outputLink>
+	                     <apex:outputLink value="{!item.Action_URL__c}"  rendered="{!item.Type__c == 'Orientation'}">
+	                     Start Orientation >
+                        
+	                    </apex:outputLink>
+	                    <apex:outputLink value="{!item.Action_URL__c}"  rendered="{!item.Type__c == 'Health Information'}">
+	                    Submit Health Information >
+	                    </apex:outputLink>
+	                     <apex:outputLink value="{!item.Action_URL__c}"  rendered="{!item.Type__c == 'Emergency Contact'}">
+	                   Provide Emergency Contact >
+	                    </apex:outputLink>
+	                    <apex:outputLink value="{!item.Action_URL__c}"  rendered="{!item.Type__c == 'Required Documents'}">
+	                    Upload Required Documents >
+	                    </apex:outputLink>
+	                     <apex:outputLink value="{!item.Action_URL__c}"  rendered="{!item.Type__c == 'Housing Preferences'}">
+	                    Submit Housing Preferences >
+	                    </apex:outputLink>
+	                     <apex:outputLink value="{!item.Action_URL__c}"  rendered="{!item.Type__c == 'Visa Interview'}">
+	                   Submit Visa Interview Date >
+	                    </apex:outputLink>
+	                     <apex:outputLink value="{!item.Action_URL__c}"  rendered="{!item.Type__c == 'Visa Result'}">
+	                    Submit Visa Interview Result >	
+	                    </apex:outputLink>
+	                     <apex:outputLink value="{!item.Action_URL__c}"  rendered="{!item.Type__c == 'Travel Info Needed'}">
+	                    Submit Arrival Information >	
+	                    </apex:outputLink>
+	                     <apex:outputLink value="{!item.Action_URL__c}"  rendered="{!item.Type__c == 'Check-In Assessment'}">
+	                    Start Check-In	
+	                    </apex:outputLink>  
+	                    <apex:outputLink value="{!item.Action_URL__c}"  rendered="{!item.Type__c == 'Monthly Contact'}">
+	                    Complete Monthly Contact	
+	                    </apex:outputLink> 
+	                    <apex:outputLink value="{!item.Action_URL__c}"  rendered="{!item.Type__c == 'Mid Program Assessment'}">
+	                    Complete Mid Program Assessment	
+	                    </apex:outputLink>
+	                    <apex:outputLink value="{!item.Action_URL__c}"  rendered="{!item.Type__c == 'Final Program Assessment'}">
+	                    Complete Final Program Assessment	
+	                    </apex:outputLink>   
+	                    <apex:outputLink value="{!item.Action_URL__c}"  rendered="{!item.Type__c == 'Initiated'}">
+	                    Schedule Interview	
+	                    </apex:outputLink> 
+	                    <apex:outputLink value="{!item.Action_URL__c}"  rendered="{!item.Type__c == 'Offer Extended'}">
+	                    Respond to Offer	
+	                    </apex:outputLink>  
+	                    </apex:outputPanel>
+
+</div>
+
+</div> <!--  end notification container -->
+
+
+
+</apex:repeat>
+</div> <!--  end notifications -->
+
+</apex:component>

@@ -1,0 +1,13 @@
+<apex:component layout="none">
+    
+    <apex:outputPanel styleClass="block" layout="block">
+        <div class="block-header"><h3>Contact Us</h3></div>
+        <div class="block-body">
+	        <p>Phone: xxx-xxx-xxxx</p>
+	        <p>Email: <a id="theLink" name="theLink" href="mailto:info@ayusa.com">info@ayusa.org</a></p>
+	        <p><strong>Skype:</strong>&nbsp;<a href="skype:intraxglobal?chat">intraxglobal</a></p>
+	        <p><strong>Live Chat:</strong>&nbsp;<apex:outputLink onclick="return openPopup('https://server.iad.liveperson.net/hc/27443582/?cmd=file&file=visitorWantsToChat&site=27443582&SESSIONVAR!opid=2&imageUrl=https%3A//images.liveperson.com/lp/27443582&referrer=http%3A//www.intrax.edu/')" target="_blank" >Start Chat</apex:outputLink><!--<apex:outputLink value="{!ctrLiveChat}" target="_blank" >Start Chat</apex:outputLink>--></p>
+        </div>
+    </apex:outputPanel>
+    
+</apex:component>

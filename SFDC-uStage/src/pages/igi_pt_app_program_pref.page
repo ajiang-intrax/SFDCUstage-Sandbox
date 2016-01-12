@@ -1,0 +1,272 @@
+<apex:page id="igi_pt_app_program_pref" docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardController="Applicant_Info__c"
+	extensions="AppEngine_Controller" action="{!checkLogin}"
+	standardStylesheets="false" showHeader="false"  title="Internship Preferences">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_igi_pt_application userAgentCheck="{!userAgentCheck}"/>
+      <div class="row">
+        <div class="col-md-7 col-md-push-3"> 
+          <c:block_app_completion_igi applicantInfo="{!applicantInfo}" isIGIMainReady="{!CheckMainIGIApp}"/>
+					<h1>Your Internship</h1>
+					<p class="lead">Explore internship opportunities around the world and select your preferred destination and field. 
+			<strong>Please select only ONE location and category at this time.</strong> You can continue to make changes during the application process. 
+			After you submit the application, a Program Advisor will help you decide what's the best  fit for you.</p>
+          <apex:form styleClass="form-vertical ws-validate" id="webform">
+          	
+            <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />         
+            
+            <div class="row">
+	            
+	            <div class="col-sm-6">
+	             <div class="form-group">
+	              <label class="control-label">Where would you like to do an internship?<br/><span class="info">(For now, please select your top choice)</span></label>
+	              
+	                      <apex:actionRegion >  
+	                         
+							<apex:inputField styleClass="form-control destinationpick reformat" value="{!applicantInfo.Country_of_Interest__c}" required="TRUE" id="countryInterest2">
+	                		
+	                		<apex:actionSupport event="onchange" rerender="CountryInterestBlock, ServiceLevelBlock, igiprices" status="pleasewait01"/> 
+	                		
+	                	</apex:inputField> 
+	                 
+            	              	  
+            	   </apex:actionRegion>
+       					 
+       				 <script>
+					    var j$ = jQuery.noConflict();
+					    j$('.reformat option[value="Peru"]').remove();
+					    j$('.reformat option[value="Belize"]').remove();
+					    j$('.reformat option[value="Ghana"]').remove();
+					</script>
+	                 		                                        
+	                     
+					
+	            </div>
+	            </div>
+	            
+	            <apex:pageBlock id="IPCBlock">
+	            	<apex:outputPanel >
+			            <div class="col-sm-6">
+			            <div class="form-group restoreclass">
+			              <label class="control-label">What type of internship would you like to do?<br/><span class="info">(For now, please select your top choice)</span></label>
+							
+			              	<apex:inputField styleClass="form-control programpick" value="{!applicantInfo.Intrax_Program_Category__c}" required="TRUE" id="internshipType"/>
+			                        	
+              
+			            </div>
+			            </div>
+			       </apex:outputPanel>
+		        </apex:pageBlock>
+		        
+            </div>
+            
+            <div class="row">
+            	<div class="col-sm-12">
+            		<apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="pleasewait01"/>
+            	</div>
+            </div>
+            
+            <apex:pageBlock id="FunctionalAreasBlock">
+            	<apex:outputPanel >
+	               <div class="row">
+			            <div class="col-sm-12">
+			                <div class="form-group">
+			              <label class="control-label">What are your specific areas of interests? </label>
+			               	<apex:inputField styleClass="form-control" value="{!applicantInfo.Functional_Areas__c}" required="TRUE" id="InterestArea" />			               
+			            </div>
+			            </div>
+		        	</div>
+	        	</apex:outputPanel>	        	
+            </apex:pageBlock>
+            
+            <apex:pageBlock id="CountryInterestBlock">
+            	<apex:outputPanel layout="block" rendered="{!applicantInfo.Country_of_Interest__c != 'United States'}">
+            		<div class="row">
+            		<div class="col-sm-12">
+			             <div class="form-group">	
+			             <label class="control-label">Are you part of a faculty led program? </label>		             
+			                <apex:selectRadio styleClass="radio" value="{!faculty_led_program}" required="TRUE" id="facultyLedProgram">
+			                	<apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+			                	<apex:selectOption itemValue="No" itemLabel="No"/>             		                	
+			                </apex:selectRadio>
+			                <apex:Message for="facultyLedProgram" styleClass="custom-error-radio"/>
+			            </div>
+			        </div>
+            		</div>  		
+            	</apex:outputPanel>
+            	
+            	<apex:outputPanel layout="block" rendered="{! applicantInfo.Country_of_Interest__c == 'United States' && personInfo.Country_of_Residence__c == 'United States' && personInfo.Citizenship__c != 'United States'}">
+            		<div class="row">
+            		<div class="col-sm-12">
+			             <div class="form-group">	
+			              <label class="control-label">Please choose one of the following:</label>		             
+			                <apex:selectRadio layout="pageDirection" styleClass="radio" value="{!igi_visa_status}" required="TRUE" id="visaNeed">
+			                	<apex:selectOption itemValue="no_need_visa" itemLabel="I am a non-U.S. citizen in the U.S. on an F1 student visa."/>
+			                	<apex:selectOption itemValue="need_visa" itemLabel="I am a non-U.S. citizen needing a training/internship visa in the U.S."/>             		                	
+			                </apex:selectRadio>
+			                <apex:Message for="visaNeed" styleClass="custom-error-radio"/>
+			            </div>
+			        </div>
+            		</div> 
+            	</apex:outputPanel>
+            	
+            	<apex:outputPanel layout="block" rendered="{!applicantInfo.Country_of_Interest__c != personInfo.Citizenship__c}">
+            		<div class="row">
+            		<div class="col-sm-12">
+			             <div class="form-group">	
+			             	<label class="control-label">Do you have a visa/work authorization for your destination? </label>			             
+			                <apex:selectRadio styleClass="radio" value="{!applicantInfo.Work_Authorization_Indicated__c}" required="TRUE" id="workAuth">
+			                	<apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+			                	<apex:selectOption itemValue="No" itemLabel="No"/>             		                	
+			                </apex:selectRadio>
+			                <apex:Message for="workAuth" styleClass="custom-error-radio"/>
+			            </div>
+			        </div>
+            		</div>
+            	</apex:outputPanel>
+            	
+           	</apex:pageBlock>
+           	        
+	      	<div class="section-title">Internship Dates </div>
+          
+          		<p class="margin-b4">Intrax Global Internships require at least 90 days from the date you submit your application to the day you start. Self-arranged J1 placements in the United States require at least 60 days before the start date. If you enter a start date less than 90 days from today (60 for J1 Self-arranged), 
+          						an Intrax program adviser will contact you before you complete the application process.</p>
+	       		
+          	<div class="row dp-group">
+	            <div class="col-sm-6">
+	                <div class="form-group">
+	              <label class="control-label">Desired Start Date</label>
+	              	<div class="datepicker start" locale="{!user.localeSidKey}">
+	                	<apex:inputField styleClass="form-control" value="{!applicantInfo.Engagement_Start__c}" required="TRUE" id="startDate" />
+	                </div>
+	            </div>
+	            </div> 
+	            <div class="col-sm-6">
+	              <div class="form-group">
+	              <label class="control-label">Desired End Date </label>
+	              	<div class="datepicker end" locale="{!user.localeSidKey}">
+	                	<apex:inputField styleClass="form-control" value="{!applicantInfo.Engagement_End__c}" required="TRUE" id="endDate" />
+	              	</div>
+	            </div>
+	            </div> 
+            </div>
+            
+      		<div class="row">
+          		<div class="col-sm-12">
+	             	<div class="form-group">	
+	             		<label class="control-label">Have you already secured an internship offer from a company? </label>			             
+		                <apex:actionRegion >
+			                <apex:selectRadio styleClass="radio" value="{!applicantInfo.Service_Level__c}" required="TRUE" id="serviceLevel">
+			                	<apex:selectOption itemValue="Independent" itemLabel="Yes"/>  
+			                	<apex:selectOption itemValue="Premium" itemLabel="No"/>	  
+			                	<apex:actionSupport event="onchange" status="pleasewait02" rerender="ServiceLevelBlock, igiprices, doubleplacementBlock"/>      		                	
+			                </apex:selectRadio>	
+			                 <apex:Message for="serviceLevel" styleClass="custom-error-radio"/>	                
+		                </apex:actionRegion>
+		                <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="pleasewait02"/>
+		                
+	            	</div>
+	        	</div>
+          	</div> 
+          	<apex:pageBlock id="doubleplacementBlock">
+          	<apex:outputPanel layout="block" rendered="{!isPartner && applicantInfo.Service_Level__c == 'Independent'}">
+            <div class="row">
+          		<div class="col-sm-12">
+	             	<div class="form-group">	
+	             		<label class="control-label">Have you arranged to start a second internship during your program after completing your first? </label>			             
+		               
+			                <apex:selectRadio styleClass="radio" value="{!applicantInfo.Double_Placement_Indicated__c}" required="TRUE" id="doubleplacement">
+			                	<apex:selectOption itemValue="Yes" itemLabel="Yes"/>  
+			                	<apex:selectOption itemValue="No" itemLabel="No"/>	  
+			                 </apex:selectRadio>	
+			                 <apex:Message for="doubleplacement" styleClass="custom-error-radio"/>	                
+		              	                
+	            	</div>
+	        	</div>
+          	</div> 
+          	</apex:outputPanel>
+          	</apex:pageBlock>
+          	            
+            <div class="form-group margin-t">
+            
+            	<apex:outputText rendered="{!applicantInfo.Application_Level__c == 'Basic'}">
+                <apex:outputLink styleClass="btn btn-link btn-lg float"  value="/apex/igi_pt_app_education?id={!applicantInfo.Id}" id="backlink"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+               </apex:outputText>
+                
+                   <apex:outputText rendered="{!applicantInfo.Application_Level__c == 'Basic'}">
+	                <apex:commandlink styleClass="btn btn-primary btn-lg"
+										action="{!navigator}" id="nextlinkNotIndependentBasic"  onComplete="rerunjs();" reRender="webform" status="onsubmit">
+	                  <apex:param name="nextPage" value="/apex/igi_pt_app_completion"/>
+	                  <apex:param name="reDirectPage" value="true" />
+	                  <apex:param name="pageId" value="053"/>
+	                  <apex:commandButton value="Save & Continue" id="continuebuttonNotIndependentBasic" />
+	                </apex:commandlink>
+	                
+               </apex:outputText>
+               
+               <apex:pageBlock id="ServiceLevelBlock"> 
+                <apex:outputText rendered="{!applicantInfo.Application_Level__c == 'Main'}">
+	                <apex:commandlink styleClass="btn btn-primary btn-lg" rendered="{!applicantInfo.Service_Level__c != 'Independent' && applicantInfo.Visa_Type__c == 'J-1'}"
+										action="{!navigator}" id="nextlinkNotIndependentVisa"  onComplete="rerunjs();" reRender="webform" status="onsubmit">
+	                  <apex:param name="nextPage" value="/apex/igi_pt_app_visa"/>
+	                  <apex:param name="reDirectPage" value="true" />
+	                  <apex:param name="pageId" value="053"/>
+	                  <apex:commandButton value="Save & Continue" id="continuebuttonNotIndependentVisa" />
+	                </apex:commandlink>
+	                <apex:commandlink styleClass="btn btn-primary btn-lg" rendered="{!applicantInfo.Service_Level__c != 'Independent' && !(applicantInfo.Visa_Type__c == 'J-1')}"
+										action="{!navigator}" id="nextlinkNotIndependentEmergency"  onComplete="rerunjs();" reRender="webform" status="onsubmit">
+	                  <apex:param name="nextPage" value="/apex/igi_pt_app_emergency"/>
+	                  <apex:param name="reDirectPage" value="true" />
+	                  <apex:param name="pageId" value="053"/>
+	                  <apex:commandButton value="Save & Continue" id="continuebuttonNotIndependentEmergency" />
+	                </apex:commandlink>
+	                
+	                <apex:commandlink styleClass="btn btn-primary btn-lg" rendered="{!applicantInfo.Service_Level__c == 'Independent'}"
+										action="{!navigator}" id="nextlinkIndependent"  onComplete="rerunjs();" reRender="webform" status="onsubmit">
+	                  <apex:param name="nextPage" value="/apex/igi_pt_app_placement"/>
+	                  <apex:param name="reDirectPage" value="true" />
+	                  <apex:param name="pageId" value="053"/>
+	                  <apex:commandButton value="Save & Continue" id="continuebuttonIndependent" />
+	                </apex:commandlink>
+               </apex:outputText>
+              </apex:pageBlock>  
+            
+
+            </div>    
+                  
+          </apex:form>
+          <apex:form >          	     
+          	<c:block_app_coedit_authorization ApplicantInfo="{!applicantInfo}" pageController="{!AEC}" rendered="{!applicantInfo.Apply_on_Behalf_of_PT__c && applicantInfo.Application_Stage__c == 'Working'}"/>
+          </apex:form>
+        </div>
+               
+        <div class="col-md-3 col-md-pull-7">        
+          
+          <apex:form >
+            <c:menu_igi_pt_app ApplicantInfo="{!applicantInfo}" personInfo="{!personInfo}" />
+          </apex:form>
+          
+        </div>
+        <!-- end column  --> 
+        
+          <div class="col-md-2"> 
+          
+          <apex:pageBlock id="igiprices" rendered="{!applicantInfo.Partner_Account__c == NULL}">		
+					<apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Calculating..." id="calculating01"/>
+					<c:block_cart_igi_app PersonInfo="{!personInfo}" ApplicantInfo="{!applicantInfo}"/>
+			</apex:pageBlock>
+		  
+			<!--
+			<apex:pageBlock id="igiprices2">
+				<apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Calculating..." id="calculating01"/>	
+				<c:block_script_igi_new_pricing PersonInfo="{!personInfo}" ApplicantInfo="{!applicantInfo}" CurrencyCode="{!CurrencyCode}" StartingPrice="{!StartingPrice}"/>
+		 	</apex:pageBlock>
+          	-->
+        </div>
+        <!-- end column  --> 
+      </div>
+      <!-- end row --> 
+      
+    </apex:define>
+  </apex:composition>
+</apex:page>

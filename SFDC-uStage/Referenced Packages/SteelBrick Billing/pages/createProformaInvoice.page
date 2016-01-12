@@ -1,0 +1,41 @@
+<apex:page standardController="invoiceit_s__Job__c" extensions="invoiceit_s.ControllerGenerateProformaInvoice"> 
+    <apex:form >
+    <apex:pageMessages ></apex:pageMessages>
+    <apex:pageBlock title="{!$Label.Proforma_Invoice}">
+        <apex:pageBlockButtons >
+            <apex:commandButton value="{!$Label.Create_ProformaINV}" action="{!createProformaInvoice}" />
+            <apex:commandButton value="{!$Label.ButtonCancel}" action="{!Cancel}" />
+        </apex:pageBlockButtons>       
+     
+        <apex:pageBlockSection columns="1" collapsible="false" title="Order Line Items">   
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Proforma Invoice Reference" />
+                <apex:inputText value="{!sInvoiceRefNo}"/>
+            </apex:pageBlockSectionItem>       
+            <apex:pageBlockTable value="{!listOfOrderRPChargeWrapper}" var="orderRPChargeWrapper" >    
+                <apex:column headerValue="Select">
+                    <apex:inputCheckbox value="{!orderRPChargeWrapper.isChecked}" />
+                </apex:column>
+                <apex:column headerValue="Order Line Name">
+                    <apex:outputField value="{!orderRPChargeWrapper.orderRPCharge.Name}" />
+                </apex:column>
+                <apex:column headerValue="Price">
+                    <apex:outputField value="{!orderRPChargeWrapper.orderRPCharge.invoiceit_s__Price__c}" />
+                </apex:column>
+                <apex:column headerValue="Discount">
+                    <apex:outputField value="{!orderRPChargeWrapper.orderRPCharge.invoiceit_s__Discount_Value__c}" />
+                </apex:column>
+                <apex:column headerValue="Subtotal">
+                    <apex:outputField value="{!orderRPChargeWrapper.orderRPCharge.invoiceit_s__Tax__c}" />
+                </apex:column>
+                <apex:column headerValue="Net Total">
+                    <apex:outputField value="{!orderRPChargeWrapper.orderRPCharge.invoiceit_s__Net_Total__c}" />
+                </apex:column>
+                  <apex:column headerValue="Status">
+                    <apex:outputField value="{!orderRPChargeWrapper.orderRPCharge.invoiceit_s__Status__c}" />
+                </apex:column>             
+            </apex:pageBlockTable>    
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+    </apex:form>
+</apex:page>

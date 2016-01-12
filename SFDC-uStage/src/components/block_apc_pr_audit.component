@@ -1,0 +1,29 @@
+<apex:component layout="none">
+<!-- 
+<apex:attribute name="ApplicantInfo" description="This is the value for the Applicant_Info__c object." type="Applicant_Info__c" required="false" default="" />
+ -->
+<apex:attribute name="flaggedList" description="This is the value for flagged fields" type="String" required="false" default="" />
+<div class="alert alert-warning">
+<p><strong>This application has been flagged for the following reason(s).
+  		Please review and decide whether to qualify / disqualify the applicant to continue on to the Main application:</strong></p>
+<!--  Jose please display the audit results in the order below and make sure that the first value that you return does not begin with ' ,' 
+This way we can stack these without extra commas. Also please delete this comment when you are done :) -->
+<p>{!flaggedList}
+<!-- 
+, Age
+, Marital Status
+, Childcare Experience
+, Criminal History
+, Secondary School
+, Driver's License
+, Visa Denial
+, Overall Health
+, Pregnancy
+, Disabilities
+, Medication(s)
+, Hospitalization(s)
+, Psychiatric Treatment(s)
+ -->
+</p>
+</div>
+</apex:component>

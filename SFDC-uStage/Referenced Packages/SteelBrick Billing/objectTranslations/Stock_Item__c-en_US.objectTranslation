@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Stock Item</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Stock Items</value>
+    </caseValues>
+    <fields>
+        <label><!-- Available Quantity --></label>
+        <name>Available_Quantity__c</name>
+    </fields>
+    <fields>
+        <help><!-- Bar code number --></help>
+        <label><!-- Bar Code --></label>
+        <name>Bar_Code__c</name>
+    </fields>
+    <fields>
+        <label><!-- Dispatched Quantity --></label>
+        <name>Dispatched_Quantity__c</name>
+    </fields>
+    <fields>
+        <label><!-- Invoice IT Product --></label>
+        <name>Product__c</name>
+        <relationshipLabel><!-- Stock Items --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Received Quantity --></label>
+        <name>Received_Quantity__c</name>
+    </fields>
+    <fields>
+        <label><!-- Stock Entry Date --></label>
+        <name>Stock_Entry_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Stock Reference --></label>
+        <name>Stock_Reference__c</name>
+    </fields>
+    <layouts>
+        <layout>Stock Item Layout</layout>
+        <sections>
+            <label><!-- Bar Code (Required only for scanned items) --></label>
+            <section>Bar Code (Required only for scanned items)</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Quantity --></label>
+            <section>Quantity</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

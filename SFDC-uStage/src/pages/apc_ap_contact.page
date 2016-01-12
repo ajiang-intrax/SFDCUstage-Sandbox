@@ -1,0 +1,172 @@
+<apex:page id="apc_pt_contact" docType="html-5.0" applyHtmlTag="false" applyBodyTag="false" title="Contact AuPairCare" standardStylesheets="false" showHeader="false" action="{!myHome.checkLogin}" controller="apc_home_controller">
+<apex:composition template="intraxtemplate_vs3">
+<apex:define name="body">
+<style>
+.contact-icon{height:80px; font-size:80px; line-height:1; color:#BABABA;}
+.contact-box{}
+.contact-box-inner{vertical-align:top; min-height:420px;  padding:20px; border:#ccc solid 1px;}
+.contact-img{text-align:center; border-bottom:#ccc solid 1px; padding-bottom:20px;}
+</style>
+
+ 
+<div class="row margin-b2">
+<div class="col-md-9 center-block center-text">
+<h1 class="no-margin-t">Contact AuPairCare</h1>
+<p class="lead">Your primary AuPairCare contact while you are in the United States is your <b>Area Director</b>. If you are unable to reach your Area Director and need to speak to someone, you may also contact your Regional Manager.</p>
+</div>
+</div>
+
+<div class="row margin-b2">
+<div class="col-lg-10 col-md-11 col-sm-12 center-block">
+<div class="row">
+
+<div class="col-sm-4 margin-b2">
+
+
+
+
+<apex:outputText rendered="{!myHome.userProfAD.User_Name__c == null}">
+<div class="contact-box-inner box gray">
+<apex:image styleClass="img-circle margin-b2 center-block" rendered="{!myHome.photoADUrl == 'no picture'}" style="width:111px;" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/female-profile-med.png')}"/>               
+<hr/>
+<h3>Your Area Director</h3>
+<div class="lead">You currently do not have an area director assigned to you. Please check again when you are matched with a host family.</div>
+</div>
+</apex:outputText>
+
+<apex:outputText rendered="{!myHome.userProfAD.User_Name__c != null}">
+<div class="contact-box-inner">
+<div class="contact-img">
+<apex:image styleClass="img-circle" style="width:111px;" rendered="{!myHome.photoADUrl != 'no picture'}" id="theImage" value="{!myHome.photoADUrl}"/>
+<apex:image styleClass="img-circle" rendered="{!myHome.photoADUrl == 'no picture'}" style="width:111px;" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/female-profile-med.png')}"/>               
+</div>
+<h3>Your Area Director</h3>
+<div><label>{!myHome.userProfAD.User_Name__c}</label></div>
+<div><em>Your Primary Contact</em></div>
+<div><label>Phone</label></div>
+<div>{!myHome.userProfAD.User_Phone__c}</div>
+<div><label>Email</label></div>
+<div><a href="mailto:{!myHome.userProfAD.User_Email__c}">{!myHome.userProfAD.User_Email__c}</a></div>
+</div>
+</apex:outputText>
+
+
+
+
+</div>
+
+<div class="col-sm-4 margin-b2">
+
+
+
+<apex:outputText rendered="{!myHome.userProfRM.User_Name__c == null}">
+<div class="contact-box-inner box gray">
+<apex:image styleClass="img-circle margin-b2 center-block" rendered="{!myHome.photoADUrl == 'no picture'}" style="width:111px;" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/female-profile-med.png')}"/>               
+<hr/>
+<h3>Your Regional Manager</h3>
+<div class="lead">You currently do not have a regional manager assigned to you. Please check again when you are matched with a host family.</div>
+</div>
+</apex:outputText>
+
+<apex:outputText rendered="{!myHome.userProfRM.User_Name__c != null}">
+<div class="contact-box-inner">
+<div class="contact-img">
+<apex:image styleClass="img-circle" style="width:111px;" rendered="{!myHome.photoRMUrl != 'no picture'}" id="theImage2" value="{!myHome.photoRMUrl}"/>
+<apex:image styleClass="img-circle" rendered="{!myHome.photoRMUrl == 'no picture'}" style="width:111px;" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/female-profile-med.png')}"/>                         
+</div>
+<h3>Your Regional Manager</h3>
+<div><label>{!myHome.userProfRM.User_Name__c}</label></div>
+<div><em>Your Secondary Contact</em></div>
+<div><label>Phone</label></div>
+<div>{!myHome.userProfRM.User_Phone__c}</div>
+<div><label>Email</label></div>
+<div class="margin-b2"><a href="mailto:{!myHome.userProfRM.User_Email__c}">{!myHome.userProfRM.User_Email__c}</a></div>
+</div>
+</apex:outputText>
+
+
+</div>
+
+<div class="col-sm-4 margin-b2">
+
+<div class="contact-box-inner">
+<div class="contact-img"><div class="contact-icon icon ix-map-wpin"></div></div>
+<h3>Our Headquarters</h3>
+<div><label>AuPairCare</label></div>
+<div>{!myHome.HQInfo.Address_Line_1__c}</div> 
+<div>{!myHome.HQInfo.Address_Line_2__c}</div>
+<div>{!myHome.HQInfo.Address_City__c}</div>
+<div>{!myHome.HQInfo.Address_State__c} {!myHome.HQInfo.Address_Zipcode__c}</div>
+<div>{!myHome.HQInfo.Phone__c}</div>
+<div class="margin-b2"><a href="mailto:customercare@aupaircare.com">{!myHome.HQInfo.Email__c}</a></div>
+</div>
+
+</div>
+
+</div><!--  end row -->
+</div><!-- end column -->
+</div><!--  end row -->
+
+<div class="row margin-b4">
+<div class="col-lg-10 col-md-11 col-sm-12 center-block">
+<div class="row">
+
+
+
+
+<div class="col-sm-4 margin-b2">
+<div class="contact-box-inner">
+<div class="contact-img"><div class="contact-icon fa fa-hospital-o"></div></div>
+<h3>United Healthcare</h3>
+<div>{!myHome.InsuranceInfo.Phone__c}</div>
+<div>{!myHome.InsuranceInfo.Additional_Notes__c}</div>
+<div class="margin-b2"><a href="{!myHome.InsuranceInfo.Website_URL__c}" target="_blank">{!myHome.InsuranceInfo.Website_URL__c}</a></div>
+</div>
+</div>
+
+<div class="col-sm-4 margin-b2">
+<div class="contact-box-inner">
+<div class="contact-img"><div style="font-size:70px;" class="contact-icon icon ix-phone-ringing"></div></div>
+<h3>Emergency Calls</h3>
+<div><label>24-hour Answering Service</label></div>
+<div class="margin-b1">{!myHome.EmergencyLine.Phone__c}</div>
+<div>{!myHome.EmergencyLine.Additional_Notes__c}</div>
+</div> 
+</div>
+
+<div class="col-sm-4 margin-b2">
+
+<apex:outputText rendered="{!myHome.partnerAcc.Name == null}">
+<div class="contact-box-inner box gray">
+<div class="contact-img"><div style="font-size:70px;" class="contact-icon fa fa-globe"></div></div>
+<hr/>
+<h3>Your Agency</h3>
+<div class="lead">You currently do not have any Agency assigned to you.</div>
+</div>
+</apex:outputText>
+
+<apex:outputText rendered="{!myHome.partnerAcc.Name != null}">
+<div class="contact-box-inner">
+<div class="contact-img"><div style="font-size:70px;" class="contact-icon fa fa-globe"></div></div>
+<h3>Your Agency</h3>
+<p>Helping you to prepare for your departure to the U.S. and providing you with any other support you may need.</p>
+<div>{!myHome.partnerAcc.Name}</div>
+<div>{!myHome.partnerAcc.BillingStreet}</div>
+<div>{!myHome.partnerAcc.BillingCity}, {!myHome.partnerAcc.BillingPostalCode}</div>
+<div>{!myHome.partnerAcc.BillingCountry}</div>
+<div>{!myHome.partnerAcc.Phone}</div>
+</div>
+</apex:outputText>
+
+</div>
+
+</div><!--  end row -->
+</div><!-- end column -->
+</div><!--  end row -->
+
+ 
+
+
+</apex:define>
+</apex:composition>
+</apex:page>

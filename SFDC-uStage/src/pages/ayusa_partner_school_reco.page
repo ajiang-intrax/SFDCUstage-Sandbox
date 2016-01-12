@@ -1,0 +1,141 @@
+<apex:page docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper">
+          <apex:form >
+          <div class="page-header clearfix">
+            <h1 class="page-title">Ayusa Application</h1>
+            <div class="back-to-main"><apex:outputLink value="apex/ayusa_app_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+          </div>
+          <h2> School Recommendation</h2>
+          <div class="white-box clearfix">
+          <div class="panel two_thirds">
+
+             <div class="data-row">
+                <div class="data-label left">Name: </div>
+                <div class="data-field">
+                  <apex:outputField value="{!applicantInfo.School_Officials_Name__c}"/> 
+                </div>
+              </div>
+                                    
+              <div class="data-row">
+                <div class="data-label left">Title: </div>
+                <div class="data-field">
+                  <apex:outputField value="{!applicantInfo.School_Officials_Title__c}"/> 
+                </div>
+              </div>
+              
+              <div class="data-row">
+                <div class="data-label left">School Name: </div>
+                <div class="data-field">
+                  <apex:outputField value="{!applicantInfo.School_Officials_Name__c}"/> 
+                </div>
+              </div>
+              
+              <div class="data-row">
+                <div class="data-label left">Has the student skipped or repeated a year? </div>
+                <div class="data-field">
+                  <apex:outputField value="{!applicantInfo.Skip_or_Repeat__c}"/> 
+                </div>
+              </div>
+              
+              <div class="data-row">
+                <div class="data-label left">If yes, please explain why and describe student's performance since. </div>
+                <div class="data-field">
+                  <apex:outputField value="{!applicantInfo.Skip_or_Repeat_Description__c}"/> 
+                </div>
+              </div>
+              
+              <div class="data-row">
+                <div class="data-label left">Does the student have a history of absence from school? </div>
+                <div class="data-field">
+                  <apex:outputField value="{!applicantInfo.Attendance_Problems__c}"/> 
+                </div>
+              </div>
+              
+              <div class="data-row">
+                <div class="data-label left">If yes, please explain. </div>
+                <div class="data-field">
+                  <apex:outputField value="{!applicantInfo.Attendance_Problems_Description__c}"/> 
+                </div>
+              </div>
+              
+              <div class="data-row">
+                <div class="data-label left">Does the student have any special educational needs? </div>
+                <div class="data-field">
+                  <apex:outputField value="{!applicantInfo.Special_Ed__c}"/> 
+                </div>
+              </div>
+              
+              <div class="data-row">
+                <div class="data-label left">If yes, please explain and outline special requests student might have. </div>
+                <div class="data-field">
+                  <apex:outputField value="{!applicantInfo.Special_Ed_Description__c}"/> 
+                </div>
+              </div>
+              
+              <div class="data-row">
+                <div class="data-label left">Has the student had adjustment or disciplinary problems? </div>
+                <div class="data-field">
+                  <apex:outputField value="{!applicantInfo.Behavioral_Problems__c}"/> 
+                </div>
+              </div>
+              <div class="data-row">
+                <div class="data-label left">If yes, please explain. </div>
+                <div class="data-field">
+                  <apex:outputField value="{!applicantInfo.Behavioral_Problems_Description__c}"/> 
+                </div>
+              </div>
+              <div class="data-row">
+                <div class="data-label left">How many years of primary and secondary education does this student plan to complete before university or entrance to the workforce? </div>
+                <div class="data-field">
+                  <apex:outputField value="{!applicantInfo.PreUniversity_Years_Required__c}"/> 
+                </div>
+              </div>
+              <div class="data-row">
+                <div class="data-label left">How many of those years will the student have completed by August? </div>
+                <div class="data-field">
+                  <apex:outputField value="{!applicantInfo.PreUniversity_Years_at_Start__c}"/> 
+                </div>
+              </div>
+              
+              <div class="data-row">
+                <div class="data-label left">By the start of the program will the student have graduated from secondary school? </div>
+                <div class="data-field">
+                  <apex:outputField value="{!applicantInfo.Graduated__c}"/> 
+                </div>
+              </div>
+              
+              <div class="data-row">
+                <div class="data-label left">Received Date</div>
+                <div class="data-field">
+                  <apex:outputField value="{!applicantInfo.SOR_Received_Date__c}"/> 
+                </div>
+              </div>
+              
+                           
+            <div class="form-row">                                
+              <div class="form-link">
+                    <apex:outputLink styleClass="back" value="/apex/ayusa_app_partner_detailed_report?id={!applicantInfo.Id}&doctype=Partner">
+                    <i class="icon-chevron-left"></i>
+                    <span>Back</span>
+                    </apex:outputLink>
+              </div>
+              
+              <div class="form-button">
+                <apex:commandlink styleClass="next" action="{!navigator}">
+                  <apex:param name="nextPage" value="/apex/ayusa_partner_teacher_reco"/>
+                  <apex:param name="reDirectPage" value="false"/>               
+                  <apex:commandButton value="Continue"/>
+                  <i class="icon-chevron-right"></i>
+                </apex:commandlink> 
+              </div>
+            </div>
+          
+         </div>
+       </div>
+               </apex:form>
+     </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

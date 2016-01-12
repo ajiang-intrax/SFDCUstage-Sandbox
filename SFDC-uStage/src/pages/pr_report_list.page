@@ -1,0 +1,37 @@
+<apex:page applyBodyTag="false" applyHtmlTag="false" title="Reports | Intrax" standardStylesheets="false" showHeader="false" controller="IntraxPartnerPortalEngineController" action="{!checkLoginWithReportSearch}">
+<apex:composition template="intraxtemplate_vs3">
+<apex:define name="body">
+<style>
+#content-zone .container { width: 100%; padding: 40px 40px 60px; }
+</style>
+
+
+<div class="row margin-b2">
+  <div class="col-md-10 col-lg-8 center-text center-block">
+    <h1>Reports</h1>
+    <p class="lead">Download and review relevant program data in Excel using the links below.</p>
+  </div>
+  <!--  end column --> 
+</div>
+<!--  end row -->
+<div class="table-responsive vs3">
+  <apex:form styleClass="form-vertical ws-validate">
+    <apex:pageBlock id="docListBlock" rendered="{!if(allpartnerreports.Size > 0, true, false)}" >
+      <apex:pageBlockTable id="docListTable" styleClass="table vs3" value="{!allpartnerreports}" var="item" >
+        <apex:column headerValue="Name" >
+          <apex:commandlink id="rpt_Name" styleClass="inline-link" action="{!getReportUrl}" target="_blank">
+            <apex:param name="guid" value="{!item.id}"/>
+            <apex:param name="csv" value="1"/>
+            <apex:commandButton value="{!item.Name}" />
+          </apex:commandlink>
+        </apex:column>
+        <apex:column headerValue="Description" >
+          <apex:outputText id="rpt_Desc" value="{!item.description}"/>
+        </apex:column>
+      </apex:pageBlockTable>
+    </apex:pageBlock>
+  </apex:form>
+</div>
+</apex:define>
+</apex:composition>
+</apex:page>

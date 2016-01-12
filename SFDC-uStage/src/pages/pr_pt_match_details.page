@@ -1,0 +1,1193 @@
+<apex:page applyHtmlTag="false" applyBodyTag="false" id="Page" title="Participant's Matches" standardStylesheets="false" showHeader="false" controller="IntraxPartnerPortalEngineController" action="{!checkLogin}">
+  <apex:composition template="intraxtemplate_vs3" >
+    <apex:define name="body">
+      <apex:form styleClass="form-vertical ws-validate" id="form">
+        <div class="row margin-b2">
+          <div class="col-sm-9 center-text center-block">
+            <c:block_pr_pt_profile_thumb photoUrl="{!returnUrl}"/>
+            <h1>
+              <apex:outputText rendered="{!IF($CurrentPage.parameters.participantId == null, false, true)}" value="{!participant.Name}"/>
+              <apex:outputText rendered="{!IF($CurrentPage.parameters.participantId == null, true, false)}" value="No Individual Participant Selected"/>
+            </h1>
+          </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+        
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="center-text">
+              <c:menu_pr_pt participant="{!participant}" applicationRecord="{!applicationRecord}" />
+            </div>
+          </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+        <hr class="margin-b4"/>
+        <div class="row margin-b2">
+          <div class="col-sm-9 center-text center-block">
+            <h2>Match Information</h2>
+              
+          </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->   
+                  
+       <apex:outputPanel layout="block" rendered="{!IF((match.Engagement__r.Visa_Type__c == 'J-1' && match.Engagement__r.Intrax_Program__c =='Internship' && (posInfo.size == 0 || (posInfo.size > 0 && posInfo[0].Status__c !='Accepted' && posInfo[0].Status__c !='In-Review'))&&(match.Current_TIPP_Editor__c == null || match.Current_TIPP_Editor__c =='Partner Agent')), true, false)}">                   
+        <div class="row margin-b2">
+           <div class="col-sm-9 center-text center-block">
+                                     <apex:commandlink styleClass="btn btn-primary btn-lg" action="{!openTIPPForm}" target="_blank">  
+                                        <apex:param name="nextPage" value="/apex/igi_tipp_host_company_info"/>
+                                        <apex:param name="reDirectPage" value="true"/> 
+                                        <apex:param name="mId" value="{!match.Id}"/>                                                                              
+                                        <apex:outputLabel rendered="{!IF(posInfo.size > 0 && posInfo[0].Status__c =='Declined',true,false)}">Resubmit TIPP </apex:outputLabel>
+                                        <apex:outputLabel rendered="{!IF(posInfo.size == 0  || (posInfo.size > 0 && posInfo[0].Status__c !='Declined'),true,false)}">Submit TIPP </apex:outputLabel>
+                                    </apex:commandlink>
+                          </div>  
+          </div>
+          </apex:outputPanel>
+           <apex:outputPanel layout="block" rendered="{!IF((match.Engagement__r.Visa_Type__c == 'J-1' && match.Engagement__r.Intrax_Program__c =='Internship' && (posInfo.size == 0 || (posInfo.size > 0 && (posInfo[0].Status__c =='Accepted' || posInfo[0].Status__c =='In-Review')))), true, false)}">                   
+        <div class="row margin-b2">
+           <div class="col-sm-9 center-text center-block">
+                                     <apex:commandlink styleClass="btn btn-primary btn-lg" action="{!openTIPPPDFForm}" target="_blank">  
+                                        <apex:param name="nextPage" value="/apex/igi_tipp_pdf_view"/>
+                                        <apex:param name="reDirectPage" value="true"/> 
+                                        <apex:param name="id" value="{!match.Id}"/>                                                                              
+                                        <apex:outputLabel >View TIPP Info </apex:outputLabel>                                        
+                                    </apex:commandlink>
+                          </div>  
+          </div>
+          </apex:outputPanel>                
+        <!--  end addition-->
+        <apex:outputPanel layout="block" rendered="{!IF(match.Engagement__r.Intrax_Program__c == 'Ayusa', true, false)}">
+          <apex:outputPanel rendered="{!IF(ISBLANK(match.Id), false, true)}" layout="block" >
+            <div class="row">
+              <div class="col-sm-7 center-block">
+              
+              <div class="row">
+                  <div class="col-sm-6"> 
+            <apex:outputText rendered="{!IF(match.Engagement__r.Intrax_Program__c == 'Internship' || match.Engagement__r.Intrax_Program__c == 'Work Travel', true, false)}">
+            <div class="form-group">
+            <label class="control-label">Engagement</label>
+            <apex:outputText value=" {!match.Engagement__r.Name}"/>
+            </div>
+            </apex:outputText>
+            </div>
+                  <!-- end column --> 
+                  <div class="col-sm-6"> 
+            <apex:outputText rendered="{!IF(match.Position_Name__r.Name == null, false, true)}">
+              <div class="form-group">
+            <label class="control-label">Position</label>
+              <apex:outputText value=" {!match.Position_Name__r.Name}"/>
+              </div>
+            </apex:outputText>
+            </div>
+                  <!-- end column --> 
+                </div>
+                <!--  end row -->
+                  
+              
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Match Status</label>
+                      <apex:outputField value="{!match.Status__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(match.Status__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Match Type</label>
+                      <apex:outputField value="{!match.Match_Type__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(match.Match_Type__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <!--  end row -->
+                
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Start Date</label>
+                      <apex:outputField value="{!match.Start_Date__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(match.Start_Date__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">End Date</label>
+                      <apex:outputField value="{!match.End_Date__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(match.End_Date__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <!--  end row -->
+                
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Double Placement</label>
+                      <apex:outputtext value="Yes" rendered="{!match.Double_Placement__c}"/>
+                      <apex:outputtext value="No" rendered="{!IF(match.Double_Placement__c==false,True,False)}"/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Single No Children</label>
+                      <apex:outputtext value="Yes" rendered="{!match.Single_No_Children__c}"/>
+                      <apex:outputtext value="No" rendered="{!IF(match.Single_No_Children__c==false,True,False)}"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <!--  end row -->
+                
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Arrival Trip Needed</label>
+                      <apex:outputField value="{!match.Engagement__r.Arrival_Trip_Needed__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(match.Engagement__r.Arrival_Trip_Needed__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Departure Trip Needed</label>
+                      <apex:outputField value="{!match.Engagement__r.Departure_Trip_Needed__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(match.Engagement__r.Departure_Trip_Needed__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <!--  end row --> 
+                
+              </div>
+              <!-- end column --> 
+            </div>
+            <!--  end row -->
+            <hr/>
+            <div class="row">
+              <div class="col-sm-7 center-block">
+                <h3 class="margin-b4">Family Contact Information</h3>
+              </div>
+              <!-- end column --> 
+            </div>
+            <!--  end row -->
+            
+            <div class="row">
+              <div class="col-sm-7 center-block">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Address</label>
+                      <apex:outputText value="{!match.Position_Name__r.Street__c}"/><br/>
+                      <apex:outputText value="{!match.Position_Name__r.Postal_Code__c}, {!match.Position_Name__r.City__c} - {!match.Position_Name__r.State__c} "/><br/>
+                      <apex:outputText value="{!match.Position_Name__r.Country__c}"/><br/>
+                      <apex:outputText rendered="{!IF(ISBLANK(match.Position_Name__r.Street__c), true, false)}" value="-"/><br/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Home Type</label>
+                      <apex:outputField value="{!familyApp.Home_Type__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(familyApp.Home_Type__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <!--  end row -->
+                
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Home Phone</label>
+                      <apex:outputField value="{!familyApp.Home_Phone__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(familyApp.Home_Phone__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Mobile Phone</label>
+                      <apex:outputField value="{!personPrimary.Mobile__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(personPrimary.Mobile__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <!--  end row -->
+                
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Work Phone</label>
+                      <apex:outputField value="{!personPrimary.Work_Phone__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(personPrimary.Work_Phone__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Email</label>
+                      <apex:outputField value="{!personPrimary.Email__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(personPrimary.Email__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <!--  end row --> 
+                
+              </div>
+              <!-- end column --> 
+            </div>
+            <!--  end row -->
+            <hr/>
+            <div class="row">
+              <div class="col-sm-7 center-block">
+                <h3 class="margin-b4">About the Household</h3>
+              </div>
+              <!-- end column --> 
+            </div>
+            <!--  end row -->
+            
+            <div class="row">
+              <div class="col-sm-7 center-block">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Number of Bedrooms</label>
+                      <apex:outputText value="{!familyApp.Bedrooms__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(familyApp.Bedrooms__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Number of Bathrooms</label>
+                      <apex:outputField value="{!familyApp.Bathrooms__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(familyApp.Bathrooms__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <!--  end row -->
+                
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Is the bedroom shared?</label>
+                      <apex:outputField value="{!familyApp.Bedroom_Shared_Indicated__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(familyApp.Bedroom_Shared_Indicated__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Is there a smoker in family?</label>
+                      <apex:outputField value="{!match.Position_Name__r.Smoker_in_Family__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(match.Position_Name__r.Smoker_in_Family__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <!--  end row -->
+                
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Are there any pets?</label>
+                      <apex:outputText value="{!match.Position_Name__r.Pets__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(match.Position_Name__r.Pets__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">If yes, what types?</label>
+                      <apex:outputText value="{!familyApp.Pet_Types__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(familyApp.Pet_Types__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <!--  end row -->
+                
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label class="control-label">Additional Pet Information</label>
+                      <apex:outputField value="{!match.Position_Name__r.Pets_Description__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(match.Position_Name__r.Pets_Description__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <!--  end row -->
+                
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Is there a special diet?</label>
+                      <apex:outputText value="{!familyApp.Special_Diet_Indicated__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(familyApp.Special_Diet_Indicated__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Description of Special Diet</label>
+                      <apex:outputField value="{!familyApp.Special_Diet_Description__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(familyApp.Special_Diet_Description__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <!--  end row -->
+                
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label class="control-label">Family Activities</label>
+                      <apex:outputField value="{!familyApp.Family_Activities__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(familyApp.Family_Activities__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <!--  end row --> 
+                
+              </div>
+              <!-- end column --> 
+            </div>
+            <!--  end row -->
+            <hr/>
+            <div class="row">
+              <div class="col-sm-7 center-block">
+                <h3 class="margin-b4">About the Community</h3>
+              </div>
+              <!-- end column --> 
+            </div>
+            <!--  end row -->
+            
+            <div class="row">
+              <div class="col-sm-7 center-block">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Community Type</label>
+                      <apex:outputText value="{!familyApp.Community_Type__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(familyApp.Community_Type__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Community Population</label>
+                      <apex:outputText value="{!familyApp.Community_Population__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(familyApp.Community_Population__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <!--  end row -->
+                
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label class="control-label">Community Description</label>
+                      <apex:outputField value="{!familyApp.Community_Description__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(familyApp.Community_Description__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <!--  end row -->
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Nearest City</label>
+                      <apex:outputText value="{!familyApp.Nearest_City__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(familyApp.Nearest_City__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Nearest Airport</label>
+                      <apex:outputField value="{!familyApp.Airport__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(familyApp.Airport__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <!--  end row -->
+                
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">School Name</label>
+                      <apex:outputField value="{!match.School_Name__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(match.School_Name__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">School Address</label>
+                      <apex:outputField value="{!match.School_Address__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(match.School_Address__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <!--  end row --> 
+                
+              </div>
+              <!-- end column --> 
+            </div>
+            <!--  end row -->
+            <hr/>
+            <div class="row">
+              <div class="col-sm-7 center-block">
+                <h3 class="margin-b4">Family Members</h3>
+              </div>
+              <!-- end column --> 
+            </div>
+            <!--  end row -->
+            
+            <apex:outputText rendered="{!IF(FamilyInfo.Size > 0 , true, false)}">
+            <div class="row margin-b2">
+              <div class="col-sm-7 center-block">
+                <apex:repeat value="{!familyInfo}" var="item" >
+                  <apex:outputText value="{!item.First_Name__c} {!item.Last_Name__c}"/><apex:outputText value=", "/>
+                  <apex:outputText value="Age: "/> <apex:outputField value="{!item.Age__c}"/> <apex:outputText value=", " rendered="{! IF(item.Role__c == 'Spouse or Partner' || item.Role__c == 'Parent' || item.Role__c == 'Spouse' || item.Primary_Applicant__c == true, true, false)}"/>
+                  <apex:outputField value="{!item.Profession__c}" rendered="{! IF(item.Role__c == 'Spouse or Partner' || item.Role__c == 'Parent' || item.Role__c == 'Spouse' || item.Primary_Applicant__c == true, true, false)}"/><br/>
+                </apex:repeat>
+              </div>
+              <!-- end column --> 
+            </div>
+            <!--  end row -->
+            </apex:outputText>
+            <div class="row margin-b3">
+              <div class="col-sm-7 center-block">
+                <apex:outputText rendered="{!IF(FamilyPhotos.Size == 0 , true, false)}"> <span class="no-records">No photo(s) to display.</span> </apex:outputText>
+                <apex:outputPanel styleClass="flex-small" layout="block" rendered="{!if(FamilyPhotos.Size > 0, true, false)}">
+                  <div class="flexslider carousel">
+                    <ul class="slides">
+                      <apex:repeat value="{!returnURLListHF}" var="item">
+                        <li>
+                          <apex:outputLink value="{!item}" target="_blank">
+                            <apex:image url="{!item}"></apex:image>
+                          </apex:outputLink>
+                        </li>
+                      </apex:repeat>
+                    </ul>
+                  </div>
+                </apex:outputPanel>
+              </div>
+              <!-- end column --> 
+            </div>
+            <!--  end row -->
+            
+            <hr/>
+            <div class="row">
+              <div class="col-sm-7 center-block">
+                <h3 class="margin-b4">Letter to Participant</h3>
+              </div>
+              <!-- end column --> 
+            </div>
+            <!--  end row -->
+            
+            <div class="row">
+              <div class="col-sm-7 center-block">
+                <div class="form-group">
+                  <apex:outputField value="{!FamilyLetter.Narrative__c}"/>
+                  <apex:outputText rendered="{!IF(ISBLANK(FamilyLetter.Narrative__c), true, false)}" value="-"/>
+                </div>
+              </div>
+              <!-- end column --> 
+            </div>
+            <!--  end row -->
+            <hr/>
+            <div class="row">
+              <div class="col-sm-7 center-block">
+                <h3 class="margin-b4">Field Staff Contact Information</h3>
+              </div>
+              <!-- end column --> 
+            </div>
+            <!--  end row -->
+            
+            <div class="row">
+              <div class="col-sm-7 center-block">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Name</label>
+                      <apex:outputField value="{!match.Owner_Name__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(match.Owner_Name__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <!-- end row -->
+                
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">City</label>
+                      <apex:outputField value="{!match.Owner_City__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(match.Owner_City__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">State</label>
+                      <apex:outputField value="{!match.Owner_State__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(match.Owner_State__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <!-- end row -->
+                
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Email</label>
+                      <apex:outputField value="{!match.Owner_Email__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(match.Owner_Email__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Phone</label>
+                      <apex:outputField value="{!match.Owner_Phone__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(match.Owner_Phone__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <!-- end row --> 
+                
+              </div>
+              <!-- end column --> 
+            </div>
+            <!-- end row -->
+            
+            <apex:pageBlock rendered="{!if(AccountUser.Type == 'Institution', true, false)}">
+              <hr/>
+              <div class="row">
+                <div class="col-sm-7 center-block">
+                  <h3 class="margin-b4">About the School</h3>
+                </div>
+                <!-- end column --> 
+              </div>
+              <!--  end row -->
+              
+              <div class="row">
+                <div class="col-sm-7 center-block">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Account Name</label>
+                      <apex:outputText value="{!AccountUser.Name}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(AccountUser.Name), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Address</label>
+                      <apex:outputField value="{!AccountUser.ShippingStreet}"/><br/>
+                      <apex:outputText value="{!AccountUser.ShippingPostalCode}, {!AccountUser.ShippingCity} - {!AccountUser.ShippingState} "/><br/>
+                      <apex:outputField value="{!AccountUser.ShippingCountry}"/><br/>
+                      <apex:outputText rendered="{!IF(ISBLANK(AccountUser.ShippingStreet), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Phone Number</label>
+                      <apex:outputField value="{!AccountUser.Phone}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(AccountUser.Phone), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Enrollment Total</label>
+                      <apex:outputField value="{!AccountUser.Enrollment_Total__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(AccountUser.Enrollment_Total__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                  
+                </div>
+                <!--  end column --> 
+              </div>
+              <!--  end row --> 
+            </apex:pageBlock>
+            <hr/>
+            <div class="row margin-b2">
+              <div class="col-sm-7 center-block center-text">
+                <apex:outputLink styleClass="margin-t2 btn btn-link btn-lg" value="/apex/pr_pt_matches?participantId={!participant.Id}"> <i class="fa fa-chevron-left"></i> <span>Back To Matches</span> </apex:outputLink>
+              </div>
+              <!--  end column --> 
+            </div>
+            <!--  end row --> 
+            
+          </apex:outputPanel>
+        </apex:outputPanel>
+        <!--  End Ayusa Match -->
+        
+        <apex:outputPanel layout="block" rendered="{!IF(match.Engagement__r.Intrax_Program__c == 'Internship' || match.Engagement__r.Intrax_Program__c == 'Work Travel', true, false)}">
+          <apex:outputPanel rendered="{!IF(ISBLANK(positionInfo.Id), false, true)}" layout="block" >
+            <div class="row">
+              <div class="col-sm-7 center-block">
+              
+                <div class="row">
+                  <div class="col-sm-6"> 
+            <apex:outputText rendered="{!IF(match.Engagement__r.Intrax_Program__c == 'Internship' || match.Engagement__r.Intrax_Program__c == 'Work Travel', true, false)}">
+            <div class="form-group">
+            <label class="control-label">Engagement</label>
+            <apex:outputText value=" {!match.Engagement__r.Name}"/>
+            <apex:outputText rendered="{!IF(ISBLANK(match.Engagement__r.Name), true, false)}" value="-"/>
+            </div>
+            </apex:outputText>
+            </div>
+                  <!-- end column --> 
+                  <div class="col-sm-6"> 
+            <apex:outputText rendered="{!IF(match.Position_Name__r.Name == null, false, true)}">
+              <div class="form-group">
+              <label class="control-label">Position</label>
+              <apex:outputText value=" {!match.Position_Name__r.Name}"/>
+              <apex:outputText rendered="{!IF(ISBLANK(match.Position_Name__r.Name), true, false)}" value="-"/>
+              </div>
+            </apex:outputText>
+            </div>
+                  <!-- end column --> 
+                </div>
+                <!--  end row -->
+              
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Match Stage</label>
+                      <apex:outputField value="{!match.Status__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(match.Status__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Match Date</label>
+                      <apex:outputField value="{!match.Match_Date__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(match.Match_Date__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Start Date</label>
+                      <apex:outputField value="{!match.Start_Date__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(match.Start_Date__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">End Date</label>
+                      <apex:outputField value="{!match.End_Date__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(match.End_Date__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Interview Status</label>
+                      <apex:outputField value="{!match.Interview_Status__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(match.Interview_Status__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Interview Date</label>
+                      <apex:outputField value="{!match.Interview_Date__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(match.Interview_Date__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Offer Status</label>
+                      <apex:outputField value="{!match.Offer_Status__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(match.Offer_Status__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Consider Other Positions</label>
+                      <apex:outputText value="Yes" rendered="{!match.Consider_Other_Positions__c = true}"/>
+                      <apex:outputText value="No" rendered="{!match.Consider_Other_Positions__c = false}"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Position Title</label>
+                      <apex:outputField value="{!positionInfo.Title__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Title__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Position ID</label>
+                      <apex:outputField value="{!positionInfo.Code__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Code__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Position Type</label>
+                      <apex:outputField value="{!positionInfo.Intrax_Program__c}"/>
+                      <apex:outputText value="-" rendered="{!(ISBLANK(positionInfo.Intrax_Program__c))}"/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Position Tags</label>
+                      <apex:outputField value="{!positionInfo.Position_Types__c}"/>
+                      <apex:outputText value="-" rendered="{!(ISBLANK(positionInfo.Position_Types__c))}"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Requires Interview</label>
+                      <apex:outputText value="Yes" rendered="{!positionInfo.Requires_Interview__c}" />
+                      <apex:outputText value="No" rendered="{!NOT(positionInfo.Requires_Interview__c)}" />
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Interview Type</label>
+                      <apex:outputField value="{!positionInfo.Interview_Type__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Interview_Type__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Earliest Start Date</label>
+                      <apex:outputField value="{!positionInfo.Engagement_Start__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Engagement_Start__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Latest Start Date</label>
+                      <apex:outputField value="{!positionInfo.Engagement_Latest_Start__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Engagement_Latest_Start__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Earliest End Date</label>
+                      <apex:outputField value="{!positionInfo.Engagement_Earliest_End__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Engagement_Earliest_End__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Latest End Date</label>
+                      <apex:outputField value="{!positionInfo.Engagement_End__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Engagement_End__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Position Language</label>
+                      <apex:outputField value="{!positionInfo.Language_1__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Language_1__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Position Language Level</label>
+                      <apex:outputField value="{!positionInfo.Language_1_Proficiency__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Language_1_Proficiency__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Minimum Age</label>
+                      <apex:outputField value="{!positionInfo.Minimum_Age__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Minimum_Age__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Maximum Age</label>
+                      <apex:outputField value="{!positionInfo.Maximum_Age__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Maximum_Age__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                
+                <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label class="control-label">Do they accept couples?</label>
+                    <apex:outputText value="Yes" rendered="{!positionInfo.Accepts_Couples__c}" />
+                    <apex:outputText value="No" rendered="{!NOT(positionInfo.Accepts_Couples__c)}" />
+                  </div>
+                </div>
+                <!-- end column -->
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label class="control-label">Do they accept groups?</label>
+                    <apex:outputText value="Yes" rendered="{!positionInfo.Accepts_Groups__c}" />
+                    <apex:outputText value="No" rendered="{!NOT(positionInfo.Accepts_Groups__c)}" />
+                  </div>
+                </div>
+                </div>
+                
+                <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label class="control-label">Gender Preference</label>
+                    <apex:outputField value="{!positionInfo.Gender_Preference__c}"/>
+                    <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Gender_Preference__c), true, false)}" value="-"/>
+                  </div>
+                </div>
+                <!-- end column -->
+                </div>
+                
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label class="control-label">Required Duties</label>
+                      <apex:outputField value="{!positionInfo.Required_Duties__c}"/>
+                      <apex:outputText value="-" rendered="{!(ISBLANK(positionInfo.Required_Duties__c))}"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Required Skills</label>
+                      <apex:outputField value="{!positionInfo.Skills_Required__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Skills_Required__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label class="control-label">Description</label>
+                      <apex:outputField value="{!positionInfo.Description__c}"/>
+                      <apex:outputText value="-" rendered="{!(ISBLANK(positionInfo.Description__c))}"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+              </div>
+              <!-- end column --> 
+            </div>
+            <hr/>
+            <div class="row">
+              <div class="col-sm-7 center-block">
+                <h3 class="margin-b4">Compensation and Benefits</h3>
+              </div>
+              <!-- end column --> 
+            </div>
+            <!--  end row -->
+            
+            <div class="row">
+              <div class="col-sm-7 center-block">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Pay Rate</label>
+                      <apex:outputField value="{!positionInfo.Pay_Rate__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Pay_Rate__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Pay Frequency</label>
+                      <apex:outputField value="{!positionInfo.Pay_Frequency__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Pay_Frequency__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label class="control-label">Pay Notes</label>
+                      <apex:outputField value="{!positionInfo.Pay_Notes__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Pay_Notes__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Overtime Available</label>
+                      <apex:outputText value="Yes" rendered="{!positionInfo.Overtime_Available__c}" />
+                      <apex:outputText value="No" rendered="{!NOT(positionInfo.Overtime_Available__c)}" />
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Overtime Rate</label>
+                      <apex:outputField value="{!positionInfo.Overtime_Rate__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Overtime_Rate__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label class="control-label">Is this a tipped position?</label>
+                      <apex:outputField value="{!positionInfo.Tipped_Position__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Tipped_Position__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Estimated Hours per Week</label>
+                      <apex:outputField value="{!positionInfo.Employment_Hrs_Wk__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Employment_Hrs_Wk__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Maximum Hours per Week</label>
+                      <apex:outputField value="{!positionInfo.Maximum_Hours__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Maximum_Hours__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Days After Arrival Before Starting Work</label>
+                      <apex:outputField value="{!positionInfo.Days_Before_Work__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Days_Before_Work__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Typical Schedule</label>
+                      <apex:outputField value="{!positionInfo.Typical_Schedule__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Typical_Schedule__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Supplies Required</label>
+                      <apex:outputField value="{!positionInfo.Supplies_Required__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Supplies_Required__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Supplies Cost</label>
+                      <apex:outputField value="{!positionInfo.Supplies_Cost__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Supplies_Cost__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                
+                
+               <div class="row"> 
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label class="control-label">Is a second job allowed?</label>
+                    <apex:outputField value="{!positionInfo.Second_Job_Allowed__c}"/>
+                    <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Second_Job_Allowed__c), true, false)}" value="-"/>
+                  </div>
+                </div>
+                <!-- end column -->
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label class="control-label">Does the company provide housing?</label>
+                    <apex:outputField value="{!positionInfo.Company_Provided_Housing__c}"/>
+                    <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Company_Provided_Housing__c), true, false)}" value="-"/>
+                  </div>
+                </div>
+                <!-- end column -->
+                </div>
+                
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label class="control-label">Special Notes</label>
+                      <apex:outputField value="{!positionInfo.Special_Notes__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Special_Notes__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+              </div>
+              <!-- end column --> 
+            </div>
+            <hr/>
+            <div class="row">
+              <div class="col-sm-7 center-block">
+                <h3 class="margin-b4">About the Company</h3>
+              </div>
+              <!-- end column --> 
+            </div>
+            <!--  end row -->
+            
+            <div class="row">
+              <div class="col-sm-7 center-block">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label class="control-label">Name</label>
+                      <apex:outputField value="{!positionInfo.Host_Company_Id__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Host_Company_Id__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Address Line 1</label>
+                      <apex:outputField value="{!positionInfo.Street__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Street__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Address Line 2</label>
+                      <apex:outputField value="{!positionInfo.Street_2__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Street_2__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">City</label>
+                      <apex:outputField value="{!positionInfo.City__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(positionInfo.City__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">State</label>
+                      <apex:outputField value="{!positionInfo.State__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(positionInfo.State__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Postal Code</label>
+                      <apex:outputField value="{!positionInfo.Postal_Code__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Postal_Code__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Country</label>
+                      <apex:outputField value="{!positionInfo.Country__c}"/>
+                      <apex:outputText rendered="{!IF(ISBLANK(positionInfo.Country__c), true, false)}" value="-"/>
+                    </div>
+                  </div>
+                  <!-- end column --> 
+                </div>
+              </div>
+              <!-- end column --> 
+            </div>
+            
+            <hr/>
+            <div class="row">
+              <div class="col-sm-7 center-block center-text">
+                <apex:outputLink styleClass="btn btn-link btn-lg margin-t2" value="/apex/pr_pt_matches?participantId={!participant.Id}"> <i class="fa fa-chevron-left"></i> <span>Back To Matches</span> </apex:outputLink>
+         
+              </div>
+              <!-- end column --> 
+            </div>
+            <!--  end row -->
+            
+           </apex:outputPanel>
+        </apex:outputPanel>
+      </apex:form>
+    </apex:define>
+  </apex:composition>
+</apex:page>

@@ -1,0 +1,20 @@
+<!--  
+Description: User account settings menu 
+
+-->
+<apex:component controller="IntraxPartnerPortalEngineController" layout="none">
+<style>#content-zone{background:#fff;}</style>
+	<apex:variable var="account_overview" value="active" rendered="{! IF($CurrentPage.Name=='account_overview', true, false)}"/> 
+	<apex:variable var="account_overview_edit" value="active" rendered="{! IF($CurrentPage.Name=='account_overview_edit', true, false)}"/> 
+	<apex:variable var="account_password_edit" value="active" rendered="{! IF($CurrentPage.Name=='account_password_edit', true, false)}"/>
+    <apex:variable var="apc_billing_payments" value="active" rendered="{! IF($CurrentPage.Name=='apc_billing_payments', true, false)}"/>
+    <apex:variable var="apc_billing_payments" value="active" rendered="{! IF($CurrentPage.Name=='apc_cc_update', true, false)}"/>
+    
+	<ul class="nav nav-list vs1">
+        <li><apex:outputLink styleClass="{!account_overview} {!account_overview_edit}" value="/apex/account_overview"><apex:outputText value="{!$Label.T_0210}" /></apex:outputLink></li>
+		<li><apex:outputLink styleClass="{!account_password_edit}" value="/apex/account_password_edit"><apex:outputText value="{!$Label.T_0042}" /></apex:outputLink></li>
+        <li><apex:outputLink styleClass="{!apc_billing_payments}" value="/apex/apc_billing_payments"><apex:outputText value="Billing and Payments" rendered="{!activeUser.User_Interests__c=='Hosting an au pair'}"/></apex:outputLink></li>
+        
+ 
+	</ul> 
+</apex:component>

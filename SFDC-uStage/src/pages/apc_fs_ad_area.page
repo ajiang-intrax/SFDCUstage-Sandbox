@@ -1,0 +1,152 @@
+<apex:page tabStyle="Your_Area__tab" controller="CommunityApcController" showHeader="true" id="ad_area">
+
+<!--jQuery basics-->
+    <apex:includeScript value="{!URLFOR($Resource.module_jquery, '/module_jquery/scripts/jquery-1.8.0.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.module_jquery, '/module_jquery/scripts/jquery-ui-1.8.23.custom.min.js')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.module_jquery, '/module_jquery/styles/jquery-ui-1.8.23.custom.css')}" />
+	
+	<apex:pageMessages />
+	
+	<apex:form id="myForm">
+		<!-- 
+		<apex:commandLink target="_self" action="{!redirectUser}" id="linkteam" rendered="{!IF(userlog.Profile.Name == 'APC AD PC',false,true)}">
+	    <apex:param name="teamParam" value="true"/>
+	    Return to Team Page 
+        </apex:commandLink>
+		 -->
+		<apex:sectionHeader title="Your Area" subtitle="{!area.Name}"/>
+			
+			<apex:pageBlock id="pgBlockButtons" mode="maindetail">
+				<apex:pageBlockButtons location="top">
+				<apex:commandButton value="Save" action="{!saveArea}" />
+				<apex:commandButton value="Cancel" action="{!cancel}"/>
+				</apex:pageBlockButtons>
+			</apex:pageBlock>
+		    
+		    <apex:pageBlock id="pgBlockArea" mode="inlineEdit">
+            	
+            	<apex:pageblocksection columns="2" collapsible="false">                            
+		            <apex:pageBlockSectionItem helpText="Please name your area with a short geographical description.
+					Example: San Francisco Bay Area">
+	                	<apex:outputLabel value="Area Name" for="name"/>
+	                	<apex:outputField value="{!area.Name}" id="name">
+	                	</apex:outputField>
+	                </apex:pageBlockSectionItem>
+	                
+	                <apex:pageBlockSectionItem helpText="Provide the names of the cities or locations you service.
+					Example: Palo Alto, Mountain View, Sunnyvale, Los Gatos, San Jose">
+	                	<apex:outputLabel value="Cities/Location Serviced" for="cities"/>
+	                	<apex:outputField value="{!area.Cities_Cervised__c}" id="cities">
+	                	</apex:outputField>
+	                </apex:pageBlockSectionItem>
+	                
+	                
+	                <apex:pageBlockSectionItem helpText="Include tourist attractions and other places you know au pairs will enjoy visiting in your area.
+					Example: South Bay offers a wide range of fun attractions from…">
+	                	<apex:outputLabel value="Area Highlights" for="areahigh"/>
+	                	<apex:inputTextarea id="areahigh" value="{!area.Description__c}" rows="8" cols="100" onkeyup="countChar(this, 1000, 'areahighCount')" onfocus="countChar(this, 1000, 'areahighCount')"/>
+	                </apex:pageBlockSectionItem>
+	              
+	                
+	                <apex:pageBlockSectionItem helpText="Briefly describe the weather in your area.
+					Example: Temperatures in the Bay Area average from 40 degrees F in winter to 100 degrees F in summer. The area is dry with some rain in fall, winter & spring…">
+	                	<apex:outputLabel value="Climate" for="clima" />
+	                	<apex:inputTextarea id="clima" value="{!area.Climate__c}" rows="8" cols="100" onkeyup="countChar(this, 255, 'climaCount')" onfocus="countChar(this, 255, 'climaCount')"/>
+	                </apex:pageBlockSectionItem>
+	                
+	                <apex:pageBlockSectionItem >
+	                <apex:outputLabel value=""/>
+	                <i>
+	                	<div class="char-limit bb">
+	                	<span class="char-count-label">Characters left:</span>
+	                	<span id="areahighCount" class="char-count"> {!255-len(area.Description__c) }</span>
+	                	</div>
+	                </i>
+	                </apex:pageBlockSectionItem>
+	                
+	                <apex:pageBlockSectionItem >
+	                <apex:outputLabel value=""/>
+	                <i>
+	                	<div class="char-limit bb">
+	                	<span class="char-count-label">Characters left:</span>
+	                	<span id="climaCount" class="char-count"> {!255-len(area.Climate__c) }</span>
+	                	</div>
+	                </i>
+	                </apex:pageBlockSectionItem>
+	                
+	                 <apex:pageBlockSectionItem helpText="Please add 3 accredited post-secondary institutions in
+	                  your area where au pairs can fulfill their education requirement." >
+	                	<apex:outputLabel value="Educational Institution 1" for="inst1"/>
+	                	<apex:outputField value="{!area.Educational_Institution_1__c}" id="inst1">
+	                	</apex:outputField>
+	                </apex:pageBlockSectionItem>
+	                
+	                <apex:pageBlockSectionItem >
+	                	<apex:outputLabel value="Educational Institution 1 URL" for="instURL1"/>
+	                	<apex:outputField value="{!area.Educational_Institution_1_URL__c}" id="instURL1">
+	                	</apex:outputField>
+	                </apex:pageBlockSectionItem>
+	                 <apex:pageBlockSectionItem >
+	                	<apex:outputLabel value="Educational Institution 2" for="inst2"/>
+	                	<apex:outputField value="{!area.Educational_Institution_2__c}" id="inst2">
+	                	</apex:outputField>
+	                </apex:pageBlockSectionItem>
+	                
+	                <apex:pageBlockSectionItem >
+	                	<apex:outputLabel value="Educational Institution 2 URL" for="instURL2"/>
+	                	<apex:outputField value="{!area.Educational_Institution_2_URL__c}" id="instURL2">
+	                	</apex:outputField>
+	                </apex:pageBlockSectionItem>
+	                
+	                 <apex:pageBlockSectionItem >
+	                	<apex:outputLabel value="Educational Institution 3" for="inst3"/>
+	                	<apex:outputField value="{!area.Educational_Institution_3__c}" id="inst3">
+	                	</apex:outputField>
+	                </apex:pageBlockSectionItem>
+	                
+	                <apex:pageBlockSectionItem >
+	                	<apex:outputLabel value="Educational Institution 3 URL" for="instURL3"/>
+	                	<apex:outputField value="{!area.Educational_Institution_3_URL__c}" id="instURL3">
+	                	</apex:outputField>
+	                </apex:pageBlockSectionItem>
+	                
+	                
+                	
+                	<apex:pageBlockSectionItem helpText="Include chamber of commerce or other local
+                	 websites that provide photos and a positive overview of your community.">
+	                	<apex:outputLabel value="Other Helpful Links" for="bestSites"/>
+                		<apex:inputTextarea value="{!area.Recommended_Websites__c}" rows="8" cols="100" id="bestSites" onkeyup="countChar(this, 1000, 'bestSitesCount')" onfocus="countChar(this, 1000, 'bestSitesCount')"/>
+	                </apex:pageBlockSectionItem>
+	                
+	                <apex:pageBlockSectionItem >
+                	</apex:pageBlockSectionItem>
+	                
+	                <apex:pageBlockSectionItem >
+	                <apex:outputLabel value=""/>
+	                <i>
+	                	<div class="char-limit bb">
+	                	<span class="char-count-label">Characters left:</span>
+	                	<span id="bestSitesCount" class="char-count"> {!1000-len(area.Recommended_Websites__c) }</span>
+	                	</div>
+	                </i>
+	                </apex:pageBlockSectionItem>
+                
+            	</apex:pageblocksection>
+            </apex:pageBlock>
+
+	</apex:form>
+
+<script>
+var j$ = jQuery.noConflict();
+// Text field character counter 
+    function countChar(val, maxchars, elem) {
+        var len = val.value.length;
+        if (len > maxchars) {
+            val.value = val.value.substring(0, maxchars);
+        } else {
+            var elem1 = '#'+elem;
+            j$(elem1).text(maxchars - len);
+        }
+    };
+</script>
+</apex:page>

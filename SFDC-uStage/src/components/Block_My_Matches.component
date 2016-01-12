@@ -1,0 +1,35 @@
+<apex:component controller="MyMatchesController" >   
+	<div class="block">
+		<div class="block-header">
+			<h3>Your Matches </h3>
+		</div>	
+		
+	    <div class="block-body">
+	     	
+	     		<apex:outputPanel layout="block" rendered="{!IF(matchInfoList.Size > 0, false, true)}" styleClass="form-row">
+	       			<apex:outputLabel ><span class="no-records">You currently do not have any matches to review.</span></apex:outputLabel>
+	       	    </apex:outputPanel>
+		     	<apex:repeat value="{!matchInfoList}" var="m">
+		     		 
+	                    <p><strong><apex:outputLink value="/apex/C_Match_Details?mid={!m.id}" ><apex:outputText value="{!m.Name}" /></apex:outputLink></strong><br/> 
+	                    <apex:outPutText value="{!m.Position_Name__r.Host_Company_Id__r.Name}, {!m.Position_Name__r.Regional_Location__c}"/><br/>
+	               
+	              <!--  <apex:commandLink styleClass="inline-link" action="{!navigator}" rendered="{!accountInfo.Type__c == 'Participant'}">
+	                    <apex:param name="nextPage" value="/IGI_PT_Match_Details"/> 
+							<apex:param name="mId" value="{!m.Id}" />
+							<apex:commandButton value="See Details" />			
+					</apex:commandLink>
+					<apex:commandLink styleClass="inline-link" action="{!navigator}" rendered="{!accountInfo.Type__c == 'Host Company'}">
+	                    <apex:param name="nextPage" value="/IGI_HC_MatchDetails" /> 
+							<apex:param name="mId" value="{!m.Id}" assignTo="{!mId}" /> 
+							<apex:commandButton value="See Details" />			
+					</apex:commandLink> --> 
+	                    </p>
+		     	</apex:repeat> 
+		     	<apex:outputLink value="/IGI_PT_MyMatches" rendered="{!accInfo.Type == 'Participant'}"> View All</apex:outputLink>
+				<apex:outputLink value="/C_Matches" rendered="{!accInfo.Type == 'Host Company'}"> View All</apex:outputLink>
+			
+	    
+	    </div> 
+    </div>
+</apex:component>

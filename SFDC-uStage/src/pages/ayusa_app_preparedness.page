@@ -1,0 +1,54 @@
+<apex:page docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper">
+          <apex:form >
+         <div class="page-header clearfix">
+ <h1>Ayusa Student Application</h1>
+<div class="back-to-main"><apex:outputLink value="apex/ayusa_app_home?id={!applicantInfo.Id}"></apex:outputLink></div>
+</div>
+          <h2>Program Preparedness</h2>
+          <div class="white-box clearfix">
+          <div class="panel two_thirds">
+          	<apex:pageBlock >
+          	
+                 <apex:pageBlockTable styleClass="pageblocktable" value="{!EssayList}" var="item">
+                       <apex:column > 
+                        <div class="form-button submit">
+			                <apex:commandlink action="{!navigator}">
+			                  <apex:param name="nextPage" value="/apex/ayusa_app_prep_detail"/>
+			                  <apex:param name="reDirectPage" value="true"/>
+			                  <apex:param name="EssayId" value="{!item.Id}"/>
+			                  <apex:commandButton value="Start" />
+		                	</apex:commandlink>
+             			</div>
+                       </apex:column> 
+                       
+                       <apex:column value="{!item.Label__c}" />
+                 		 
+                 </apex:pageBlockTable>  
+            </apex:pageBlock>
+           
+                </div>
+                </div>
+                <div class="form-row">
+		             
+		             <div class="form-button">
+                <apex:outputLink value="/apex/ayusa_app_household_basics">Back</apex:outputLink>
+              </div> 
+		              <div class="form-button">
+		                <apex:commandlink styleClass="next" action="{!navigator}">
+		                  <apex:param name="nextPage" value="/apex/ayusa_app_stu_photos_videos"/>
+		                  <apex:param name="reDirectPage" value="true"/>
+		                  <apex:param name="docType" value="Student" assignTo="{!docType}"/>
+		                  <apex:commandButton value="Next" />
+                          <i class="icon-chevron-right"></i>   
+		                </apex:commandlink>
+		              </div>		              
+		        </div>
+         
+      </apex:form>
+          </div>
+    </apex:define>
+ </apex:composition>
+</apex:page>

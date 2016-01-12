@@ -1,0 +1,1875 @@
+<apex:page standardController="invoiceit_s__Product__c" showHeader="true" extensions="invoiceit_s.CreateProductsControllerNew" sidebar="false" tabStyle="invoiceit_s__Product__c" >
+    <apex:includeScript value="{!URLFOR($Resource.invoiceit_s__jQuery, '/js/jquery-1.5.1.min.js')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.invoiceit_s__jQuery, '/js/jquery-ui-1.8.14.custom.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.invoiceit_s__jQuery, '/js/colResizable-1.3.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.invoiceit_s__jQuery, '/js/jquery.blockUI.js')}"/> 
+    <apex:includeScript value="{!URLFOR($Resource.invoiceit_s__tooltipster, '/js/jquery.tooltipster.min.js')}"/> 
+    <apex:includeScript value="{!URLFOR($Resource.invoiceit_s__tooltipster, '/js/prettify.js')}"/> 
+    <apex:includeScript value="{!URLFOR($Resource.invoiceit_s__tooltipster, '/js/scripts.js')}"/> 
+    
+    <apex:stylesheet value="{!URLFOR($Resource.invoiceit_s__tooltipster, '/css/tooltipster.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.invoiceit_s__tooltipster, '/css/style.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.invoiceit_s__jQuery, '/css/smoothness/jquery-ui-1.8.14.custom.css')}"/>
+ 
+    <style>  
+       .helpText{
+           z-index:100000;
+       }
+       
+       .searchCharge{
+           height:18px;
+           float:left;
+       }
+       
+       .blueBar{
+           background: rgb(240,249,255); /* Old browsers */
+           background: -moz-linear-gradient(top, rgba(240,249,255,1) 0%, rgba(203,235,255,1) 47%, rgba(161,219,255,1) 100%); /* FF3.6+ */
+           background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(240,249,255,1)), color-stop(47%,rgba(203,235,255,1)), color-stop(100%,rgba(161,219,255,1))); /* Chrome,Safari4+ */
+           background: -webkit-linear-gradient(top, rgba(240,249,255,1) 0%,rgba(203,235,255,1) 47%,rgba(161,219,255,1) 100%); /* Chrome10+,Safari5.1+ */
+           background: -o-linear-gradient(top, rgba(240,249,255,1) 0%,rgba(203,235,255,1) 47%,rgba(161,219,255,1) 100%); /* Opera 11.10+ */
+           background: -ms-linear-gradient(top, rgba(240,249,255,1) 0%,rgba(203,235,255,1) 47%,rgba(161,219,255,1) 100%); /* IE10+ */
+           background: linear-gradient(to bottom, rgba(240,249,255,1) 0%,rgba(203,235,255,1) 47%,rgba(161,219,255,1) 100%); /* W3C */
+           filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f0f9ff', endColorstr='#a1dbff',GradientType=0 ); /* IE6-9 */
+           width: 100%;
+           border: 1px solid #A1DBFF;
+          
+           padding: 10px;
+       }
+       
+       .blueBar td .btn{
+           background: #CCCCCC;
+           padding-left:10px;
+           padding-right:10px;
+       }
+        
+       table.productTab{
+           border: 1px solid #999;
+           width: 100%;
+           background: #F7F7F7;
+           box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 10px;
+       }
+       
+       table.productTab:hover{
+           background-color: #eee;
+       }
+       
+       table.ratePlanTab{
+           border: 1px solid #999;
+           width: 100%;
+           background: #F7F7F7;
+            box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 10px;
+           
+       }
+       
+       table.ratePlanTab:hover{
+           background-color: #eee;
+       }
+      
+       table.chargeTab{
+           border: 1px solid #999;
+           width: 100%;
+           background: #F7F7F7;
+           box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 10px;
+           
+       }
+       
+       table.chargeTab:hover{
+           background-color: #eee;
+       }
+       
+       a.actionBorder{
+           color:#0000A0;
+       }
+       .custPopupLayout{
+           background-color: white;
+           border-style: solid;
+           border-width: 2px;
+           left: 58%;
+           margin-left: -368px;
+           padding: 10px;
+           position: absolute;
+           top: -26px;
+           width: 451px;
+           z-index: 9999;
+       }
+       
+       .custPopup{
+           background-color: white;
+           border-width: 2px;
+           border-style: solid;
+           z-index: 9999;
+           left: 50%;
+           padding:10px;
+           position: absolute;
+           /* These are the 3 css properties you will need to change so the popup 
+           displays in the center of the screen. First set the width. Then set 
+           margin-left to negative half of what the width is. You can add 
+           the height property for a fixed size pop up if you want.*/
+           width: 900px;
+           margin-left: -480px;
+           top:38%;
+       }   
+   
+       .custPopupCharges{
+           background-color: white;
+           border-width: 2px;
+           border-style: solid;
+           z-index: 9999;
+           left: 50%;
+           padding:10px;
+           position: absolute;
+           /* These are the 3 css properties you will need to change so the popup 
+           displays in the center of the screen. First set the width. Then set 
+           margin-left to negative half of what the width is. You can add 
+           the height property for a fixed size pop up if you want.*/
+           width: 900px;
+           margin-left: -480px;
+           top:40%;
+       } 
+       
+       .custPopupChargesEdit{
+           background-color: white;
+           border-width: 2px;
+           border-style: solid;
+           z-index: 9999;
+           left: 50%;
+           padding:10px;
+           position: absolute;
+           /* These are the 3 css properties you will need to change so the popup 
+           displays in the center of the screen. First set the width. Then set 
+           margin-left to negative half of what the width is. You can add 
+           the height property for a fixed size pop up if you want.*/
+           width: 65%;
+           margin-left: -412px;
+           top:40%;
+       } 
+       
+      .custPopupClone{
+           background-color: white;
+           border-width: 2px;
+           border-style: solid;
+           z-index: 9999;
+           left: 19%;
+           padding: 10px;
+           position: absolute;
+           width: 800px;
+           height: 27%;
+           top: 38%;
+       }  
+           
+       .popupBackground{
+           background-color:black;
+           opacity: 0.20;
+           filter: alpha(opacity = 20);
+           position: absolute;
+           width: 100%;
+           height: 100%;
+           top: 0;
+           left: 0;
+           z-index: 9998;
+       }     
+      
+      .popT .pbSubsection{
+          padding-left : 20px;
+      }
+      
+      .popT .labelCol{
+          width : 15%;
+          text-align : left;
+      }
+      
+      #datePicker{
+          z-index: 1000000000;
+      }
+     
+      .helpButton {
+          z-index: 1000000000;
+      }
+      
+      .highlightRate{
+        background-color: #999999!important;
+      } 
+   
+       /* table resize */
+      .columnResize th, .columnResize1 th, .columnResize2 th{
+         height:30px;
+         color:#000000;
+         
+      }
+      
+      .columnResize td,.columnResize th, .columnResize1 td,.columnResize1 th, .columnResize2 td,.columnResize2 th{
+          text-indent:5px;
+          color:#444;
+          border-bottom:1px solid #bbb;
+          border-left:1px solid #bbb;
+      }
+      
+      .columnResize td.left, .columnResize1 td.left, .columnResize2 td.left{
+          border-left:1px solid #2e638e;
+      }
+      
+      .columnResize td.right, .columnResize1 td.right, .columnResize2 td.right{
+          border-right:1px solid #2e638e;
+      }
+      
+      .columnResize td.bottom, .columnResize1 td.bottom, .columnResize2 td.bottom{
+          border-bottom:1px solid #2e638e;
+      }
+      
+      .columnResize .grip, .columnResize1 .grip, .columnResize2 .grip{
+          width:20px;
+          height:30px;
+          margin-top:-3px;
+          margin-left:-5px;
+          position:relative;
+          z-index:88;
+          cursor:e-resize;
+      }
+      
+      .columnResize .grip:hover, .columnResize1 .grip:hover, .columnResize2 .grip:hover{
+          background-position-x:-20px;
+      }
+      
+      .columnResize .dragging .grip, .columnResize1 .dragging .grip, .columnResize2 .dragging .grip{
+          background-position-x:-40px;
+      }
+      
+      .customTd td.noSidebarCell{
+          padding:5px;
+      }
+      .customTd .pbBody{ 
+      margin: 7px 6px !important;
+      } 
+      
+     </style>
+    
+
+      <script type="text/javascript">
+         var isTrue;
+         var __sfdcSessionId = '{!GETSESSIONID()}';
+                  
+       
+       $(document).ready(function(){
+       
+            $('#bodyTable').addClass('customTd'); 
+            var sCurrentRatePlanCounter ='{!currentRatePlanCounter}';
+            if($(window).load()){
+                $('#'+sCurrentRatePlanCounter).addClass('highlightRate');
+            }
+
+            $(".ratePlanClick td").not('td.notli').click(function(){
+                $('.ratePlanClick td').closest('tr').removeClass("highlightRate");
+                $(this).closest('tr').addClass("highlightRate");
+            });
+               
+           restrictDescriptionWidth();
+           setProductColumnsWidth();
+           setRatePlanColumnsWidth();
+           setChargeColumnsWidth();
+           setProductToolTip();
+           setRatePlanToolTip();
+           setChargeToolTip();
+       
+      });
+       
+      function restrictDescriptionWidth() {
+          $(".descrip").each(function(){
+               len=$(this).text().length;
+                if(len > 40){
+                     $(this).text($(this).text().substr(0,40)+'...');
+                }
+                
+           });  
+      }   
+      
+       function setProductColumnsWidth() {
+           var arrayProduct = [];
+           var productColumnsWidth = '{!sProductColumnsWidth}';
+           arrayProduct = productColumnsWidth.split(',');
+           for(var i=0;i < arrayProduct.length; i++) {
+                $("#prod"+i).width(arrayProduct[i]);           
+           }
+            // Table Resize
+           $(function (){   
+                var onSampleResized3 = function(e){
+                    var columns = $(e.currentTarget).find("th");
+                     var msg = [];
+                     var counterColumn =0;
+                     columns.each(function(){ 
+                       msg [counterColumn] = $(this).width() ;
+                       ++ counterColumn;
+                     })
+                     saveProductLayoutFields2(msg);
+                };   
+            
+                $(".columnResize").colResizable({
+                   liveDrag:true, 
+                   gripInnerHtml:"<div class='grip'></div>", 
+                   draggingClass:"dragging", 
+                    onResize:onSampleResized3
+                   });
+               });   
+        }
+        
+        function setRatePlanColumnsWidth() {
+           var arrayRateplan = [];
+           
+           var rateplanColumnsWidth = '{!sRateplanColumnsWidth}';
+           arrayRateplan = rateplanColumnsWidth.split(',');
+           for(var i=0;i < arrayRateplan.length; i++) {
+                $("#rateplan"+i).width(arrayRateplan[i]);
+           }
+           
+           // Table Resize
+           $(function (){   
+                var onSampleResizedRP = function(e){
+                     var columns = $(e.currentTarget).find("th");
+                     var msg = [];
+                     var counterColumn =0;
+                     columns.each(function(){ 
+                       msg [counterColumn] = $(this).width() ;
+                       ++ counterColumn;
+                     })
+                      saveRatePlanLayoutFields2(msg);
+                };   
+            
+                $(".columnResize1").colResizable({
+                   liveDrag:true, 
+                   gripInnerHtml:"<div class='grip'></div>", 
+                   draggingClass:"dragging", 
+                    onResize:onSampleResizedRP
+                   });
+               });  
+        }
+        
+        function setChargeColumnsWidth() {
+           var arrayCharge = [];
+           var chargeColumnsWidth = '{!sChargeColumnsWidth}';
+           arrayCharge = chargeColumnsWidth.split(',');
+           for(var i=0;i < arrayCharge.length; i++) {
+                $("#charg"+i).width(arrayCharge[i]);
+           }
+           
+             // Table Resize
+           $(function (){   
+            var onSampleResizedCharge = function(e){
+                 var columns = $(e.currentTarget).find("th");
+                 var msg = [];
+                 var counterColumn =0;
+                 columns.each(function(){ 
+                   msg [counterColumn] = $(this).width() ;
+                   ++ counterColumn;
+                 })
+                 saveChargeLayoutFields2(msg);
+            };   
+        
+            $(".columnResize2").colResizable({
+               liveDrag:true, 
+               gripInnerHtml:"<div class='grip'></div>", 
+               draggingClass:"dragging", 
+                onResize:onSampleResizedCharge
+               });
+           });  
+        }
+      
+       function blockElement(sfId) {   
+           $('[id$='+sfId+']').block({ message: '<img src="/img/loading.gif" /><h1> Loading...</h1>',   
+             css: {   
+                border: 'none',   
+                padding: '15px',   
+                '-webkit-border-radius': '5px',   
+                '-moz-border-radius': '5px',   
+                opacity: .9  
+             }   
+           });   
+           return false;  
+      }  
+     
+     /*  
+     *Pass the Id of the element to unblock   
+     **/  
+     function unblockElement(sfId){  
+        $('[id$='+sfId+']').unblock();  
+     }  
+     
+     function reloadProductLayout2() {
+          restrictDescriptionWidth();
+          setProductColumnsWidth1();
+          setProductToolTip1();        
+     }
+        
+     function reloadProduct_Rateplan_charge() {
+         reloadProductLayout2();
+         reloadRatePlanLayout();
+         reloadColumReSize();
+     }  
+        
+    function reloadRatePlanHighlight() {
+         //setRatePlanToolTip1();
+         restrictDescriptionWidth();
+         reloadRatePlanLayout();
+         reloadColumReSize();
+     }
+       
+    function reloadRatePlanLayout() {
+         restrictDescriptionWidth();
+         setRatePlanColumnsWidth1();
+         setRatePlanToolTip1();
+     }
+        
+    function reloadColumReSize() {
+       restrictDescriptionWidth();
+       setChargeColumnsWidth1();
+       reloadChargeToolTip1();           
+    }
+    
+     function setChargeToolTip() {
+         var tableCharge = '';
+          <apex:repeat value="{!productClass.productRatePlans}" var="rateplanClass"  >
+                tableCharge ='<table width="100%"  style="border: 1px solid #ECECEC;border-collapse:collapse;"  ><tr style="background-color:#eeeeee;border: 1px solid #ECECEC;"><apex:repeat value="{!$ObjectType.invoiceit_s__Product_Rate_Plan_Charge_Tier__c.FieldSets.invoiceit_s__ProductRatePlanChargeTier}" var="tierfieldAPI"><th><apex:outputText value="{!tierfieldAPI.Label}" /></th></apex:repeat></tr>';
+                <apex:repeat value="{!rateplanClass.productRatePlanChargeClass}" var="chargeClass" >
+                    if(tableCharge == ''){
+                      tableCharge ='<table width="100%"  style="border: 1px solid #ECECEC;border-collapse:collapse;"  ><tr style="background-color:#eeeeee;border: 1px solid #ECECEC;" ><apex:repeat value="{!$ObjectType.invoiceit_s__Product_Rate_Plan_Charge_Tier__c.FieldSets.invoiceit_s__ProductRatePlanChargeTier}" var="tierfieldAPI"><th><apex:outputText value="{!tierfieldAPI.Label}" /></th></apex:repeat></tr>';
+                    }
+                    tableCharge += '<apex:repeat value="{!chargeClass.ProductRatePlanChargeTierClass}" var="tier" ><tr style="border: 1px solid #ECECEC;" ><td><apex:outputField value="{!tier.productRatePlanChargeTier.invoiceit_s__Start_Unit__c}" /></td><td><apex:outputField value="{!tier.productRatePlanChargeTier.invoiceit_s__End_Unit__c}" /></td><td><apex:outputField value="{!tier.productRatePlanChargeTier.invoiceit_s__Unit_Price__c}" /></td><td><apex:outputField value="{!tier.productRatePlanChargeTier.invoiceit_s__Unit_Cost_Price__c}" /></td></tr></apex:repeat>';
+                      tableCharge += '</table>'; 
+                     var chargeid = "#" + "{!chargeClass.productRatePlancharge.Id}";
+                    $(chargeid).attr( "title", tableCharge);
+                     tableCharge = '';
+                </apex:repeat> 
+          </apex:repeat> 
+          
+        
+         $('.tooltipCharge').tooltipster({
+            fixedWidth: 300,
+            position: 'bottom-left',
+            tooltipTheme: '.tooltip-custom-New'
+          }); 
+     }
+     
+     function reloadChargeToolTip() {
+       var tableCharge = '';
+          <apex:repeat value="{!productClass.productRatePlans}" var="rateplanClass"  >
+                tableCharge ='<table width="100%"  style="border: 1px solid #ECECEC;border-collapse:collapse;"  ><tr style="background-color:#eeeeee;border: 1px solid #ECECEC;"><apex:repeat value="{!$ObjectType.invoiceit_s__Product_Rate_Plan_Charge_Tier__c.FieldSets.invoiceit_s__ProductRatePlanChargeTier}" var="tierfieldAPI"><th><apex:outputText value="{!tierfieldAPI.Label}" /></th></apex:repeat></tr>';
+                <apex:repeat value="{!rateplanClass.productRatePlanChargeClass}" var="chargeClass" >
+                    if(tableCharge == ''){
+                      tableCharge ='<table width="100%"  style="border: 1px solid #ECECEC;border-collapse:collapse;"  ><tr style="background-color:#eeeeee;border: 1px solid #ECECEC;" ><apex:repeat value="{!$ObjectType.invoiceit_s__Product_Rate_Plan_Charge_Tier__c.FieldSets.invoiceit_s__ProductRatePlanChargeTier}" var="tierfieldAPI"><th><apex:outputText value="{!tierfieldAPI.Label}" /></th></apex:repeat></tr>';
+                    }
+                    tableCharge += '<apex:repeat value="{!chargeClass.ProductRatePlanChargeTierClass}" var="tier" ><tr style="border: 1px solid #ECECEC;"><td><apex:outputField value="{!tier.productRatePlanChargeTier.invoiceit_s__Start_Unit__c}" /></td><td><apex:outputField value="{!tier.productRatePlanChargeTier.invoiceit_s__End_Unit__c}" /></td><td><apex:outputField value="{!tier.productRatePlanChargeTier.invoiceit_s__Unit_Price__c}" /></td><td><apex:outputField value="{!tier.productRatePlanChargeTier.invoiceit_s__Unit_Cost_Price__c}" /></td></tr></apex:repeat>';
+                      tableCharge += '</table>'; 
+                     var chargeid = "#" + "{!chargeClass.productRatePlancharge.Id}";
+                     $(chargeid).attr( "title", tableCharge);
+                     tableCharge = '';
+                </apex:repeat> 
+          </apex:repeat> 
+        $('.tooltipCharge').tooltipster({
+            fixedWidth: 300,
+            position: 'bottom-left',
+            tooltipTheme: '.tooltip-custom-New'
+          });
+     }
+     
+     function setProductToolTip() {
+         var tableProduct = '';
+         tableProduct = '<table width="100%" style="border: 1px solid #ECECEC;border-collapse:collapse;" > <apex:repeat value="{!$ObjectType.invoiceit_s__Product__c.FieldSets.invoiceit_s__ProductToolTip}" var="fieldAPI2"><tr style="border: 1px solid #ECECEC;"><th class="labelCol"  ><apex:outputText value="{!fieldAPI2.Label}" />  </th><td class="data2Col" ><apex:outputField value="{!product[fieldAPI2]}" rendered="{!fieldAPI2 !='invoiceit_s__Effective_Period__c'}" style="word-break: break-all; word-wrap: break-word;" /><apex:outputText rendered="{!fieldAPI2 =='invoiceit_s__Effective_Period__c'}" ><apex:outputField value="{!product.invoiceit_s__Valid_From_Date__c}"  /> <span>&nbsp;--&nbsp;</span><apex:outputField value="{!product.invoiceit_s__Valid_To_Date__c}"  /> </apex:outputText> </td> </tr></apex:repeat></table>';
+         var productid = "#" + "{!product.id}";
+         $(productid).attr( "title", tableProduct);
+         
+           $('.tooltipProduct').tooltipster({
+            fixedWidth: 300,
+            position: 'bottom-left',
+            tooltipTheme: '.tooltip-custom-New'
+          });
+     }
+     
+     function setRatePlanToolTip() {
+         var  tableRatePlan ='';
+         <apex:repeat value="{!productClass.productRatePlans}" var="rateplanClass1" >
+          tableRatePlan = '<table width="100%" style="border: 1px solid #ECECEC;border-collapse:collapse;" ><apex:repeat value="{!$ObjectType.invoiceit_s__Product_Rate_Plan__c.FieldSets.invoiceit_s__ProductRatePlanToolTip}" var="fieldAPIToolTip"><tr style="border: 1px solid #ECECEC;" ><th class="labelCol" ><apex:outputText value="{!fieldAPIToolTip.Label}" />  </th><td class="data2col"><apex:outputField style="word-break: break-all; word-wrap: break-word;"  value="{!rateplanClass1.productRatePlan[fieldAPIToolTip]}" rendered="{!fieldAPIToolTip !='invoiceit_s__Effective_Period__c'}"  /> <apex:outputText rendered="{!fieldAPIToolTip =='invoiceit_s__Effective_Period__c'}" ><apex:outputField value="{!rateplanClass1.productRatePlan.invoiceit_s__Valid_From_Date__c}"  /> <span>&nbsp;--&nbsp;</span><apex:outputField value="{!rateplanClass1.productRatePlan.invoiceit_s__Valid_To_Date__c}"  /> </apex:outputText> </td></tr></apex:repeat></table>';    
+          var rateplanid = "#" + "{!rateplanClass1.productRatePlan.Id}";
+           $(rateplanid).attr( "title", tableRatePlan);
+         </apex:repeat>
+  
+         $('.tooltipRatePlan').tooltipster({
+            fixedWidth: 300,
+            position: 'bottom-left',
+            tooltipTheme: '.tooltip-custom-New'
+          }); 
+      }
+     
+     function deleteConfirmation() {
+        var isCancel = confirm('Are you sure');
+        if (isCancel) {
+            return true;
+        }
+        return false;
+     }
+     
+     function deleteConfirmation() {
+      var isCancel = confirm('Are you sure');
+       
+        if (isCancel) {
+           return true ;
+        }
+          return false;
+      }
+      
+      function deleteConfirmationRatePlan1(id,counterRatePlan) {
+         isTrue = deleteConfirmation();
+         if(isTrue)
+         {
+           var rateplanID = id.toString();
+           var rateplanCounter = counterRatePlan.toString();
+           deleteRatePlan(rateplanID,rateplanCounter);
+         }      
+      }    
+     
+     function deleteConfirmationCharge(id,counterCharge,counterRatePlan) {
+        isTrue = deleteConfirmation();
+        if(isTrue)
+        {
+           var chargeId = id;
+           var chargeCounter = counterCharge;
+           var rateplanCounter = counterRatePlan;
+           deleteCharge(chargeId,chargeCounter,rateplanCounter);
+        }
+     }
+     
+     function confirmCancel() {
+        var isCancel = confirm('Are you sure');
+        if (isCancel) {
+            return true;
+        }
+        return false;
+    } 
+     
+    function cancelEditProduct() {
+        isTrue = confirmCancel();
+        
+        if(isTrue)
+        {
+          cancelEditProduct1();
+        }
+    }
+    
+    function cancelEditRateplan() {
+        isTrue = confirmCancel();
+        
+        if(isTrue)
+        {
+          cancelEditRateplan1();
+        }
+    }
+    
+    function cancelEditCharge() {
+        isTrue = confirmCancel();
+        
+        if(isTrue)
+        {
+          cancelEditCharge1();
+        }
+    }
+    
+    function cancelCloneCharge() {
+        isTrue = confirmCancel();
+        
+        if(isTrue)
+        {
+          cancelCloneCharge1();
+        }
+    }
+    
+    function cancelSelectedCharges() {
+        isTrue = confirmCancel();
+        
+        if(isTrue)
+        {
+          cancelSelectedCharges1();
+        }
+    }
+    
+    
+    function cancelProductLayout() {
+        isTrue = confirmCancel();
+        
+        if(isTrue)
+        {
+          cancelProductLayout1();
+        }
+    } 
+    
+    function cancelRateplanLayout() {
+        isTrue = confirmCancel();
+        
+        if(isTrue)
+        {
+          cancelRateplanLayout1();
+        }
+    } 
+    
+    function cancelChargeLayout() {
+        isTrue = confirmCancel();
+        
+        if(isTrue)
+        {
+          cancelChargeLayout1();
+        }
+    } 
+    
+    function blockElementpopup(sfId) {   
+       $('[id$='+sfId+']').block({ message: '<img src="/img/loading.gif" /><h1> Please wait...</h1>',   
+         css: {   
+            border: 'none',   
+            padding: '15px',   
+            '-webkit-border-radius': '5px',   
+            '-moz-border-radius': '5px', 
+             'z-index': '100000',    
+            opacity: .9
+           
+         }   
+       });   
+       return false;  
+    }  
+     
+     /*  
+     *Pass the Id of the element to unblock   
+     **/  
+     function unblockElementpopup(sfId){  
+        $('[id$='+sfId+']').unblock();  
+     } 
+     
+    function blockElementpopupSave(sfId) {   
+       $('[id$='+sfId+']').block({ message: '<img src="/img/loading.gif" /><h1> Please wait... Saving...</h1>',   
+         css: {   
+            border: 'none',   
+            padding: '15px',   
+            '-webkit-border-radius': '5px',   
+            '-moz-border-radius': '5px', 
+             'z-index': '100000',    
+            opacity: .9
+           
+         }   
+       });   
+       return false;  
+    }  
+     
+     /*  
+     *Pass the Id of the element to unblock   
+     **/  
+     function unblockElementpopupSave(sfId){  
+        $('[id$='+sfId+']').unblock();  
+     } 
+     
+    
+     function onClickRatePlan1(ratePlanId,counterForRatePlan){
+         onClickRatePlan(ratePlanId,counterForRatePlan);
+         $('.ratePlanClick').removeClass('highlightRate');
+         $('#'+counterForRateplan).addClass('highlightRate');
+     }
+ 
+     function onSelectAll() {
+       onSelectAll();
+     }
+   
+     function doSearch() {
+         searchCharges(
+          document.getElementById("Name").value,
+          document.getElementById("selectedCurrency").options[document.getElementById("selectedCurrency").selectedIndex].value,
+          document.getElementById("selectedPriceType").options[document.getElementById("selectedPriceType").selectedIndex].value
+          );
+     }      
+     
+     function saveProductLayoutFields2(columnWidths) {
+         var columnWidth ='';
+         var columnCounterLables = 0;
+         var  varlistProductLabels ;
+         var  splitProductLabels ;
+         varlistProductLabels  = '{!finalSelectedProductFields}';
+         splitProductLabels = varlistProductLabels.split(',');
+         for(var columnCounter =0 ;columnCounter < columnWidths.length;columnCounter++){
+           if(columnCounter > 0) {
+                columnWidth = columnWidth + splitProductLabels[columnCounterLables] +'-'+ columnWidths[columnCounter] + ',';
+                ++columnCounterLables;
+           }       
+         }
+         var columnsLength = columnWidth.length;
+         var finalcolumnWidth = columnWidth.substring(0, columnsLength - 1);
+         saveProductColumn_width(finalcolumnWidth);
+     }
+     
+    function saveProductColumn_width(finalcolumnWidth) {
+         var productLabel ='{!sProductLabel}';
+        var result = sforce.connection.query("select id ,Name,invoiceit_s__Selected_Fields__c from invoiceit_s__Layout_Fields__c");
+         records = result.getArray("records");
+           var productId;
+           for (var i = 0; i < records.length; i++) {
+                if(records[i].Name == productLabel) {
+                  productId = records[i].Id;
+                  break;
+                }
+           }
+        var layoutfields = new sforce.SObject("invoiceit_s__Layout_Fields__c");
+        layoutfields.id = productId;
+        layoutfields.invoiceit_s__Selected_Fields__c = finalcolumnWidth;
+        result = sforce.connection.update([layoutfields]);
+      }
+             
+     function saveRatePlanLayoutFields2(columnWidths) {
+        var columnWidth ='';
+        var columnCounterFields = 0;
+        var  varlistRatePlanFields ;
+        var  splitRatePlanFields ;
+        varlistRatePlanFields  = '{!finalSelectedRatePlanFields}';
+         splitRatePlanFields = varlistRatePlanFields.split(',');
+         for(var columnCounter =0 ;columnCounter < columnWidths.length;columnCounter++){
+           if(columnCounter > 0) {
+                columnWidth = columnWidth + splitRatePlanFields[columnCounterFields] +'-'+ columnWidths[columnCounter] + ',';
+                ++columnCounterFields;
+           }       
+         }
+         var columnsLength = columnWidth.length;
+         var finalcolumnWidth = columnWidth.substring(0, columnsLength - 1);
+        saveRatePlanColumn_width(finalcolumnWidth);
+    }
+    
+    function saveRatePlanColumn_width(finalcolumnWidth) {
+        var rateplanLabel ='{!sRatePlanLabel}';
+         var result = sforce.connection.query("select id ,Name,invoiceit_s__Selected_Fields__c from invoiceit_s__Layout_Fields__c");
+         records = result.getArray("records");
+          var ratePlanId;
+           for (var i = 0; i < records.length; i++) {
+                if(records[i].Name == rateplanLabel) {
+                  ratePlanId = records[i].Id;
+                  break;
+                }
+           }
+        var layoutfields = new sforce.SObject("invoiceit_s__Layout_Fields__c");
+        layoutfields.id = ratePlanId;
+        layoutfields.invoiceit_s__Selected_Fields__c = finalcolumnWidth;
+        result = sforce.connection.update([layoutfields]);
+    }
+         
+    function saveChargeLayoutFields2(columnWidths) {
+        var columnWidth ='';
+        var columnCounterFields = 0;
+        var  varlistChargeFields ;
+        var  splitChargeFields ;
+        varlistChargeFields  = '{!finalSelectedChargeFields}';
+         splitChargeFields = varlistChargeFields.split(',');
+         for(var columnCounter =0 ;columnCounter < columnWidths.length;columnCounter++){
+           if(columnCounter > 1) {
+                columnWidth = columnWidth + splitChargeFields[columnCounterFields] +'-'+ columnWidths[columnCounter] + ',';
+                ++columnCounterFields;
+           }       
+         }
+         var columnsLength = columnWidth.length;
+         var finalcolumnWidth = columnWidth.substring(0, columnsLength - 1);
+         saveChargeColumn_width(finalcolumnWidth);
+    }
+
+
+    function saveChargeColumn_width(finalcolumnWidth) {
+        var chargeLabel ='{!sChargeLabel}';
+        var result = sforce.connection.query("select id ,Name,invoiceit_s__Selected_Fields__c from invoiceit_s__Layout_Fields__c");
+        records = result.getArray("records");
+        var chargeId;
+        for (var i = 0; i < records.length; i++) {
+            if(records[i].Name == chargeLabel) {
+              chargeId = records[i].Id;
+              break;
+            }
+        }
+        var layoutfields = new sforce.SObject("invoiceit_s__Layout_Fields__c");
+        layoutfields.id = chargeId;
+        layoutfields.invoiceit_s__Selected_Fields__c = finalcolumnWidth;
+        result = sforce.connection.update([layoutfields]);
+    }     
+            
+    </script>
+    <script src="/soap/ajax/15.0/connection.js" type="text/javascript"></script>
+    <script src="/soap/ajax/15.0/apex.js" type="text/javascript"></script>
+    <apex:form id="form1" >  
+        <apex:outputPanel id="productColumnWidthPanel" style="display:none;" >
+         <script type="text/javascript">
+              function setProductColumnsWidth1() {
+                   var arrayProduct = [];
+                   var productColumnsWidth = '{!sProductColumnsWidth}';
+                   arrayProduct = productColumnsWidth.split(',');
+                   for(var i= 0;i < arrayProduct.length; i++) {
+                        $("#prod"+i).width(arrayProduct[i]);
+                   }
+                   
+                   $(function (){   
+                           
+                    var onSampleResized3 = function(e){
+                        var columns = $(e.currentTarget).find("th");
+                         var msg = [];
+                         var counterColumn =0;
+                         columns.each(function(){ 
+                           msg [counterColumn] = $(this).width() ;
+                           ++ counterColumn;
+                         })
+                         saveProductLayoutFields3(msg);
+                    };   
+                   $(".columnResize").colResizable({
+                       liveDrag:true, 
+                       gripInnerHtml:"<div class='grip'></div>", 
+                       draggingClass:"dragging", 
+                       onResize:onSampleResized3
+                       });
+                   }); 
+               } 
+               
+               function saveProductLayoutFields3(columnWidths) {
+                     var columnWidth ='';
+                     var columnCounterLables = 0;
+                     var  varlistProductLabels ;
+                     var  splitProductLabels ;
+                     varlistProductLabels  = '{!finalSelectedProductFields}';
+                     splitProductLabels = varlistProductLabels.split(',');
+                     for(var columnCounter =0 ;columnCounter < columnWidths.length;columnCounter++){
+                       if(columnCounter > 0) {
+                            columnWidth = columnWidth + splitProductLabels[columnCounterLables] +'-'+ columnWidths[columnCounter] + ',';
+                            ++columnCounterLables;
+                       }       
+                     }
+                     var columnsLength = columnWidth.length;
+                     var finalcolumnWidth = columnWidth.substring(0, columnsLength - 1);
+                     saveProductColumn_width(finalcolumnWidth);
+                }
+         </script> 
+       </apex:outputPanel>
+       <apex:outputPanel id="ratePlanColumnWidthPanel" style="display:none;" >
+         <script type="text/javascript">
+              function setRatePlanColumnsWidth1() {
+                   var arrayRateplan = [];
+                   var rateplanColumnsWidth = '{!sRateplanColumnsWidth}';
+                   arrayRateplan = rateplanColumnsWidth.split(',');
+                   for(var i=0;i < arrayRateplan.length; i++) {
+                        $("#rateplan"+i).width(arrayRateplan[i]);
+                   }
+                   
+                   // Table Resize
+                   $(function (){   
+                    var onSampleResizedRP = function(e){
+                         var columns = $(e.currentTarget).find("th");
+                         var msg = [];
+                         var counterColumn =0;
+                         columns.each(function(){ 
+                           msg [counterColumn] = $(this).width() ;
+                           ++ counterColumn;
+                         })
+                          saveRatePlanLayoutFields3(msg);
+                    };   
+                
+                    $(".columnResize1").colResizable({
+                       liveDrag:true, 
+                       gripInnerHtml:"<div class='grip'></div>", 
+                       draggingClass:"dragging", 
+                        onResize:onSampleResizedRP
+                       });
+                   });  
+               }
+
+            function saveRatePlanLayoutFields3(columnWidths) {
+                var columnWidth ='';
+                var columnCounterFields = 0;
+                var  varlistRatePlanFields ;
+                var  splitRatePlanFields ;
+                varlistRatePlanFields  = '{!finalSelectedRatePlanFields}';
+                 splitRatePlanFields = varlistRatePlanFields.split(',');
+                 for(var columnCounter =0 ;columnCounter < columnWidths.length;columnCounter++){
+                   if(columnCounter > 0) {
+                        columnWidth = columnWidth + splitRatePlanFields[columnCounterFields] +'-'+ columnWidths[columnCounter] + ',';
+                        ++columnCounterFields;
+                   }       
+                 }
+                 var columnsLength = columnWidth.length;
+                 var finalcolumnWidth = columnWidth.substring(0, columnsLength - 1);
+                 saveRatePlanColumn_width(finalcolumnWidth);
+            }       
+         </script> 
+        </apex:outputPanel>
+        <apex:outputPanel id="chargeColumnWidthPanel" style="display:none;" >
+         <script type="text/javascript">
+            function setChargeColumnsWidth1() {
+               var arrayCharge = [];
+               var chargeColumnsWidth = '{!sChargeColumnsWidth}';
+               arrayCharge = chargeColumnsWidth.split(',');
+               for(var i=0;i < arrayCharge.length; i++) {
+                    $("#charg"+i).width(arrayCharge[i]);
+               }
+               
+                 // Table Resize
+               $(function (){   
+                    var onSampleResizedCharge = function(e){
+                     var columns = $(e.currentTarget).find("th");
+                     var msg = [];
+                     var counterColumn =0;
+                     columns.each(function(){ 
+                       msg [counterColumn] = $(this).width() ;
+                       ++ counterColumn;
+                     })
+                      saveChargeLayoutFields3(msg);
+                };   
+            
+                $(".columnResize2").colResizable({
+                   liveDrag:true, 
+                   gripInnerHtml:"<div class='grip'></div>", 
+                   draggingClass:"dragging", 
+                    onResize:onSampleResizedCharge
+                   });
+               });  
+            } 
+
+            function saveChargeLayoutFields3(columnWidths) {
+                var columnWidth ='';
+                var columnCounterFields = 0;
+                var  varlistChargeFields ;
+                var  splitChargeFields ;
+                varlistChargeFields  = '{!finalSelectedChargeFields}';
+                 splitChargeFields = varlistChargeFields.split(',');
+                 for(var columnCounter =0 ;columnCounter < columnWidths.length;columnCounter++){
+                   if(columnCounter > 1) {
+                        columnWidth = columnWidth + splitChargeFields[columnCounterFields] +'-'+ columnWidths[columnCounter] + ',';
+                        ++columnCounterFields;
+                   }       
+                 }
+                 var columnsLength = columnWidth.length;
+                 var finalcolumnWidth = columnWidth.substring(0, columnsLength - 1);
+                 saveChargeColumn_width(finalcolumnWidth);
+            }       
+         </script> 
+        </apex:outputPanel>
+        <apex:actionFunction name="cancelSelectedCharges1" action="{!closeSelectedChargesPopup}" immediate="true" reRender="editSelectedPanel,ChargeBlock,chargeColumnWidthPanel"   oncomplete="reloadColumReSize();"  status="cancelLoader" />
+        <apex:actionFunction name="cancelCloneCharge1" action="{!closeCloneChargePopup}" immediate="true" reRender="cloneChargepopUpBlockPanel,ChargeBlock,panelDelJS,chargeColumnWidthPanel"   oncomplete="reloadColumReSize();"  status="cancelLoader" />
+        <apex:actionFunction name="cancelProductLayout1" action="{!closeProductLayout}"  reRender="productLayoutPanel" status="cancelLoader"  />
+        <apex:actionFunction name="cancelRateplanLayout1" action="{!closeRatePlanLayout}"  reRender="ratePlanLayoutPanel" status="cancelLoader"  />
+        <apex:actionFunction name="cancelChargeLayout1" action="{!closeChargesLayout}"  reRender="chargeLayoutPanel" status="cancelLoader"  />
+        <apex:actionFunction name="cancelEditProduct1" action="{!closeProductPopup}" immediate="true" reRender="productpopUpBlockPanel,cloneProductpopUpBlockPanel,productColumnWidthPanel,panelProductJS,productBlock"  oncomplete="reloadProductLayout2();" status="cancelLoader" />
+        <apex:actionFunction name="cancelEditRateplan1" action="{!closeRatePlanPopup}" immediate="true" reRender="productRatePlanpopUpBlockPanel,cloneRatePlanpopUpBlockPanel,panelDelRatePlanJS,RatePlanBlock,ratePlanColumnWidthPanel"  oncomplete="reloadRatePlanLayout();"  status="cancelLoader" />
+        <apex:actionFunction name="cancelEditCharge1" action="{!closeChargePopup}" immediate="true" reRender="chargespopUpBlockPanel,ChargeBlock,chargeColumnWidthPanel,panelDelJS,RatePlanBlock,ratePlanColumnWidthPanel,panelDelRatePlanJS"   oncomplete="reloadRatePlanHighlight();"  status="cancelLoader" />
+        <apex:actionFunction name="deleteRatePlan" action="{!removeRatePlan}" reRender="RatePlanBlock,ratePlanColumnWidthPanel,RatePlanBlockPanel,panelDelRatePlanJS,panelProductJS,productBlock,productColumnWidthPanel,panelDelJS,ChargeBlock,chargeColumnWidthPanel"  oncomplete="reloadProduct_Rateplan_charge();">
+            <apex:param value="" name="productrateplanidtodelete"/>
+            <apex:param value="" name="productrateplancountertodelete"/>
+        </apex:actionFunction>
+        <apex:actionFunction name="deleteCharge" action="{!removeRatePlanCharges}"  reRender="ChargeBlock,chargeColumnWidthPanel,renderCounterPanel,panelDelJS,RatePlanBlock,ratePlanColumnWidthPanel,panelDelRatePlanJS"  oncomplete="reloadRatePlanHighlight();" >
+            <apex:param value="" name="chargeidtodelete"/>
+            <apex:param value="" name="chargecountertodelete"/>
+            <apex:param value="" name="rateplancountertodelete"/>
+        </apex:actionFunction>
+        <apex:actionStatus onstart="blockElement('ChargeBlock')" onstop="unblockElement('ChargeBlock')" id="onclickRatePlanStatus"/>  
+        <apex:actionStatus onstart="blockElement('form1')" onstop="unblockElement('form1')" id="onclickLoader"/> 
+        <apex:actionStatus onstart="blockElementpopup('form1')" onstop="unblockElementpopup('form1')" id="cancelLoader"/> 
+        <apex:actionStatus onstart="blockElementpopupSave('form1')" onstop="unblockElementpopupSave('form1')" id="saveLoader"/> 
+        <apex:actionFunction name="onSelectAll" action="{!onSelectAll}" reRender="ChargeBlock,chargeColumnWidthPanel,panelDelJS"  status="onclickRatePlanStatus" oncomplete="reloadColumReSize();">
+        </apex:actionFunction>
+        <apex:actionFunction name="onChangePriceFormat1" action="{!onChangePriceFormat}"  reRender="tierPanel,chargespopUpBlockPanel,tierPanelClone,cloneChargepopUpBlockPanel" >
+        </apex:actionFunction>
+        <apex:actionFunction name="onClickRatePlan" action="{!onClickRatePlan}" rerender="ChargeBlock,chargeColumnWidthPanel,panelDelJS,RatePlanBlock,panelDelRatePlanJS" status="onclickRatePlanStatus" oncomplete="reloadRatePlanHighlight();"  >
+              <apex:param name="ratePlanId" value="" />
+               <apex:param name="counterForRatePlan" value="" />
+         </apex:actionFunction>
+        <apex:actionFunction name="searchCharges" action="{!filterCharges}" rerender="repeatCharge,theTable,renderCounterPanel,errors,filterError,panelDelJS,chargeColumnWidthPanel" status="onclickRatePlanStatus" oncomplete="reloadColumReSize();"  >
+          <apex:param name="Name" value="" />
+         <apex:param name="selectedCurrency" value="" />
+         <apex:param name="selectedPriceType" value="" />
+        </apex:actionFunction>
+        
+        <!-- start of the product view block --> 
+         <apex:pageBlock id="productBlock" >
+             <table width="100%" style="margin-bottom:10px">
+                 <tr class="blueBar" style="float:left;padding: 2px;"> 
+                   <td class="pbTitle" style="float: left;width: 68%;"><h2  class="mainTitle">Product</h2></td>
+                   <td style="float: right;margin-top: 7px; margin-right: 7px; width: auto;">
+                   <apex:commandLink styleClass="actionBorder" value="{!$Label.LinkEditLayout}" action="{!editProductLayout}"  reRender="productLayoutPanel" status="onclickLoader" />
+                   </td>
+                 </tr>  
+             </table>  
+          
+             <table  width="100%" class="productTab productTable columnResize" style="max-width:1300px;margin-top:5px;padding-left:0px;line-height:30px;" border="0" cellpadding="0" cellspacing="0">
+                   <tr style="background-color:#eeeeee;" > 
+                      <th style="width:115px;" >
+                       Action
+                      </th>
+                      <apex:variable value="{!0}" var="rowNum"/>
+                      <apex:repeat value="{!listProductLabels}"  var="label" >
+                          <th id="prod{!FLOOR(rowNum)}" >
+                           {!label}
+                          </th>
+                          <apex:variable var="rowNum" value="{!rowNum + 1}"/>
+                      </apex:repeat>  
+                    </tr>  
+                    <tr style="margin-top:8px;background-color:#ffffff;">
+                      <td style="width:115px;" >
+                           <apex:commandLink styleClass="actionBorder" value="{!$Label.LinkEdit}" action="{!editProduct}"  reRender="productpopUpBlockPanel"  status="onclickLoader" /><span>&nbsp;|</span>
+                           <apex:commandLink styleClass="actionBorder" value="{!$Label.LinkDel}" action="{!deleteProduct}"  onclick="return  deleteConfirmation();" status="onclickLoader"/><span>&nbsp;|&nbsp;</span>
+                           <apex:commandLink styleClass="actionBorder" value="{!$Label.LinkClone}" action="{!cloneProduct}"  reRender="cloneProductpopUpBlockPanel" status="onclickLoader" />
+                     </td>
+                      <apex:repeat value="{!listProductFields}"  var="fieldApi" >
+                      <td >
+                       <apex:outputText rendered="{!fieldApi =='Name'}" >
+                           <a  href="#" style="color:#0000A0;" class="tooltipProduct"  id="{!product.id}" >
+                              {!product[fieldApi]}
+                           </a>
+                        </apex:outputText> 
+                       <apex:outputText rendered="{!fieldApi =='invoiceit_s__Effective_Period__c'}" >
+                            <apex:outputField value="{!product.invoiceit_s__Valid_From_Date__c}"  /> <span>&nbsp;--&nbsp;</span><apex:outputField value="{!product.invoiceit_s__Valid_To_Date__c}"  />
+                        </apex:outputText> 
+                      <apex:outputField value="{!product[fieldApi]}" rendered="{!fieldApi !='Name' && fieldApi !='invoiceit_s__Status__c' && fieldApi !='invoiceit_s__Description__c' && fieldApi !='invoiceit_s__Effective_Period__c'}" />
+                      <apex:outputText styleClass="descrip"  value="{!product[fieldApi]}" rendered="{!fieldApi =='invoiceit_s__Description__c'}" />
+                      <apex:outputText value="{!product[fieldApi]}" style="color:#299a0b;font-weight:bold;" rendered="{!fieldApi =='invoiceit_s__Status__c' && product[fieldApi]== 'Active'}" />
+                      <apex:outputText value="{!product[fieldApi]}" style="color:#FF6600;font-weight:bold;" rendered="{!fieldApi =='invoiceit_s__Status__c' && product[fieldApi]== 'Future'}" />
+                      <apex:outputText value="{!product[fieldApi]}" style="color:#ff1a00;font-weight:bold;" rendered="{!fieldApi =='invoiceit_s__Status__c' && product[fieldApi]== 'Expired'}" />
+                      </td>
+                      </apex:repeat>
+                    </tr>     
+             </table>
+     </apex:pageBlock>
+          <!-- end of the product view block -->
+          
+         <!-- start of the  Rateplan view block -->
+     <apex:pageBlock id="RatePlanBlock">
+          <table width="100%" style="margin-bottom:10px">
+              <tr class="blueBar" style="float:left;padding: 2px;"> 
+                <td class="pbTitle" style="float:left;width: 78%;"><h2  class="mainTitle">{!$Label.LabelRatePlans}</h2></td>
+                <td style="width: auto;margin-top: 7px;float:right;margin-right:5px;"><span>|&nbsp;</span><apex:commandLink style="color:#0000A0;" value="Edit Layout" action="{!editRatePlanLayout}"  reRender="ratePlanLayoutPanel" status="onclickLoader" /></td>
+                <td style="width:auto;float:right;margin-right:1px;margin-top:7px;">
+                   <apex:commandLink value="{!$Label.LabelNewRatePlan}" style="color:#0000A0;" action="{!newRatePlan}" reRender="productRatePlanpopUpBlockPanel" status="onclickLoader" />  
+                </td>
+              </tr>  
+          </table> 
+        
+     <apex:outputPanel id="RatePlanBlockPanel" rendered="{!renderRatePlan}" style="overflow:auto;height:auto;margin-top:3px;padding-top:7px;padding-left:0px;padding-bottom:7px;border-spacing: 2px;" > 
+       <div style="color: rgb(0, 0, 0);max-height: 400px;overflow-y: scroll;overflow-x:hidden;width:100%;">
+        <table  width="100%" class="ratePlanTab rateplanTable columnResize1"  style="max-width:1300px;margin-top:5px;padding-left:0px;line-height:30px;border-collapse:collapse;"   >
+            <tr style="background-color:#eeeeee;" > 
+              <th style="width:115px;" >
+               Action
+              </th>
+              <apex:variable value="{!0}" var="rowNum"/>
+              <apex:repeat value="{!listRatePlanLabels}"  var="label" >
+                  <th id="rateplan{!FLOOR(rowNum)}" >
+                   {!label}
+                  </th>
+                  <apex:variable var="rowNum" value="{!rowNum + 1}"/>
+              </apex:repeat>      
+            </tr>  
+            <apex:repeat value="{!productClass.productRatePlans}" var="rateplanClass" id="RatePlanBlockRepeat" >
+             
+             <tr id="{!rateplanClass.productRatePlanCounter}" class="ratePlanClick"   style="margin-top:8px;margin-bottom:10px;padding-top:8px;padding-bottom:8px;background-color:#ffffff;" >
+              <td style="width:115px;" class="notli">
+                <apex:commandLink styleClass="actionBorder" value="{!$Label.LinkEdit}" action="{!editRatePlan}"  reRender="productRatePlanpopUpBlockPanel" status="onclickLoader" >
+                    <apex:param value="{!rateplanClass.productRatePlanCounter}" name="ratePlanCounter"   />
+                </apex:commandLink><span>&nbsp;|&nbsp;</span>
+                <apex:commandLink styleClass="actionBorder" value="{!$Label.LinkDel}" onclick="deleteConfirmationRatePlan1('{!rateplanClass.productRatePlan.Id}','{!rateplanClass.productRatePlanCounter}');" reRender="RatePlanBlockRepeat" status="onclickLoader" >
+                </apex:commandLink><span>&nbsp;|&nbsp;</span>
+                <apex:commandLink styleClass="actionBorder"  value="{!$Label.LinkClone}" action="{!cloneRatePlanPopup}"  reRender="optionRatePlanpopUpBlockPanel"  status="onclickLoader" >
+                     <apex:param name="ratePlanCounter" value="{!rateplanClass.productRatePlanCounter}" />
+                     <apex:param name="ratePlanName" value="{!rateplanClass.productRatePlan.Name}" />
+                </apex:commandLink>
+              </td>
+               <apex:repeat value="{!listRatePlanFields}"  var="fieldApi" >
+                   <td  onclick="onClickRatePlan1('{!rateplanClass.productRatePlan.Id}','{!rateplanClass.productRatePlanCounter}')"  >
+                        <apex:outputText rendered="{!fieldApi =='Name'}" >
+                            <a  href="#" style="color:#0000A0;" class="tooltipRatePlan" id="{!rateplanClass.productRatePlan.Id}" >
+                              {!rateplanClass.productRatePlan[fieldApi]}
+                          </a>
+                        </apex:outputText> 
+                          <apex:outputText rendered="{!fieldApi =='invoiceit_s__Effective_Period__c'}" >
+                            <apex:outputField value="{!rateplanClass.productRatePlan.invoiceit_s__Valid_From_Date__c}"  /> <span>&nbsp;--&nbsp;</span><apex:outputField value="{!rateplanClass.productRatePlan.invoiceit_s__Valid_To_Date__c}"  />
+                          </apex:outputText> 
+                          <apex:outputField value="{!rateplanClass.productRatePlan[fieldApi]}" rendered="{!fieldApi !='Name' && fieldApi !='invoiceit_s__Status__c' && fieldApi !='invoiceit_s__Description__c' && fieldApi !='invoiceit_s__Effective_Period__c'}" />
+                          <apex:outputText styleClass="descrip"  value="{!rateplanClass.productRatePlan[fieldApi]}"  rendered="{!fieldApi =='invoiceit_s__Description__c'}" />
+                          <apex:outputText value="{!rateplanClass.productRatePlan[fieldApi]}" style="color:#299a0b;font-weight:bold;" rendered="{!fieldApi =='invoiceit_s__Status__c' && rateplanClass.productRatePlan[fieldApi]== 'Active'}" />
+                          <apex:outputText value="{!rateplanClass.productRatePlan[fieldApi]}" style="color:#FF6600;font-weight:bold;" rendered="{!fieldApi =='invoiceit_s__Status__c' && rateplanClass.productRatePlan[fieldApi]== 'Future'}" />
+                          <apex:outputText value="{!rateplanClass.productRatePlan[fieldApi]}" style="color:#ff1a00;font-weight:bold;" rendered="{!fieldApi =='invoiceit_s__Status__c' && rateplanClass.productRatePlan[fieldApi]== 'Expired'}" />
+                     </td>
+               </apex:repeat> 
+             </tr>
+            </apex:repeat> 
+        </table>
+        </div>
+    </apex:outputPanel> 
+   </apex:pageBlock>
+     <!-- end of the rateplan view block -->
+   
+    <!-- start of the charges view block -->
+   <apex:pageBlock id="ChargeBlock">
+    <table width="100%" style="margin-bottom:10px"  >
+      <tr class="blueBar" style="float:left;padding: 2px;"> 
+        <td class="pbTitle" style="float:left;width: 78%;"><h2  class="mainTitle">{!$Label.LabelCharges}</h2></td>
+        <td style="width: auto;margin-top: 7px;float:right;margin-right:5px;"><span>|&nbsp;</span><apex:commandLink style="color:#0000A0;" value="Edit Layout" action="{!editChargesLayout}"  reRender="chargeLayoutPanel"  status="onclickLoader" /></td>
+        
+        <td style="width:auto;float:right;margin-right:1px;margin-top:7px;"><span>|&nbsp;</span>
+            <apex:commandLink value="{!$Label.LinkEditSelected}" style="color:#0000A0;" action="{!editSelectedCharges}" reRender="ChargeBlock,editSelectedPanel,editPanelToRerender,editChargesPanel" status="onclickLoader"  oncomplete="reloadColumReSize();">   
+               <apex:param name="editSelected" value="editSelected" />
+           </apex:commandLink>
+        </td>
+        <td style="width:auto;float:right;margin-right:1px;margin-top:7px;">
+           <apex:commandLink value="{!$Label.LinkNewCharge}" style="color:#0000A0;" action="{!newCharge}" immediate="true"  reRender="chargespopUpBlockPanel" status="onclickLoader"  /> 
+        </td>
+      </tr>  
+    </table>   
+    <apex:pageMessages id="errors"  rendered="{!!displayChargesPopUp && !displayClonedChargePopUp && !displayClonedRatePlanPopUp && !displayRatePlanPopUp}" ></apex:pageMessages> 
+     <apex:outputPanel id="filterError" >
+         <table>
+         <tr>
+          <td><b><font color="red">{!sFilterString}</font></b></td>
+          </tr> 
+           </table>
+       </apex:outputPanel>
+    <apex:outputPanel id="chargesTablePanel" rendered="{!renderCharge}" >   
+     <table id="chargesTable" width="100%" style="margin-bottom:0px;" >
+      <tr style="width:100%;float: left;padding: 2px;background: #f2f3f3;border-bottom: 0;border-radius: 10px 10px 0 0;paddin: 0px;border-color: #e0e3e5;"> 
+        <td class="pbTitle" style="width:8%;"  >
+       
+         </td>
+         <td style="width:auto;align:left;" >
+           <input type="text" id="Name"  style="border-radius: 10px 10px 10px 10px;padding-left: 5px; padding-top: 0;width: 230px;"  /> 
+         </td>
+        <td style="width:25%;align:left;"  >
+         <input name="Search" type="button" value="{!$Label.ButtonSearch}" onclick="doSearch();"></input>
+       </td>
+        <td style="width:20%;align:left;"  >
+          <select id="selectedCurrency" onchange="doSearch();">
+                <option value="">{!$Label.LabelFilterCurrency}</option>
+                <apex:repeat value="{!listselectOptionsforCurrency}" var="currency">
+                  <option value="{!currency}">{!currency}</option>
+                </apex:repeat>
+          </select>
+       </td>
+        <td style="width:20%;align:left;"  >
+          <select id="selectedPriceType" onchange="doSearch();">
+                <option value="">{!$Label.LabelFilterPriceType}</option>
+                <apex:repeat value="{!listPriceType}" var="priceType">
+                  <option value="{!priceType}">{!priceType}</option>
+                </apex:repeat>
+          </select>        
+        </td>
+        <td style="width:20%;align:right;"  >
+        </td>
+      </tr>  
+     </table> 
+    </apex:outputPanel>
+    <apex:pageBlock id="repeatCharge" mode="maindetail" rendered="{!renderCharge}" > 
+      <apex:repeat value="{!productClass.productRatePlans}" var="rateplanClass"  >
+        <apex:outputPanel id="renderCounterPanel" rendered="{!rateplanClass.productRatePlanCounter == currentRatePlanCounter}" >
+            <table class="chargeTab chargTable columnResize2"   width="100%" style="max-width:1300px;border-collapse:collapse;" > 
+              <tr style="background-color:#eeeeee;" >
+              <th style="width:26px;">
+              <apex:inputCheckbox value="{!isSelectAll }"  onChange="onSelectAll();"/>
+              </th>
+               <th  style="width:115px;" >
+              Action
+              </th>
+               <apex:variable value="{!0}" var="rowNum"/>
+               <apex:repeat value="{!listChargeLabels}"  var="label" >
+               <th id="charg{!FLOOR(rowNum)}" >
+               {!label}
+              </th>
+               <apex:variable var="rowNum" value="{!rowNum + 1}"/>
+               </apex:repeat>
+              </tr>
+            
+               <apex:repeat value="{!rateplanClass.productRatePlanChargeClass}" var="chargeClass" id="theTable" >
+                  <tr style="border: 1px solid #999999;margin-top:8px;margin-bottom:10px;padding-top:8px;padding-bottom:8px;background-color:#ffffff;" >
+                   <td style="width:26px;" >
+                     <apex:inputCheckbox value="{!chargeClass.isSelected}" />
+                   </td>
+                   <td style="width:115px;" > 
+                    <apex:commandLink styleClass="actionBorder" value="{!$Label.LinkEdit}" action="{!editCharges}"  reRender="chargespopUpBlockPanel" status="onclickLoader" >
+                    <apex:param value="{!chargeClass.productRatePlanChargeCounter}" name="chargeCounter"   />
+                    </apex:commandLink><span>&nbsp;|&nbsp;</span>
+                    <apex:commandLink styleClass="actionBorder" value="{!$Label.LinkDel}" onclick="deleteConfirmationCharge('{!chargeClass.productRatePlancharge.Id}','{!chargeClass.productRatePlanChargeCounter}','{!rateplanClass.productRatePlanCounter}');" reRender="theTable" status="onclickLoader" >
+                    </apex:commandLink><span>&nbsp;|&nbsp;</span>
+                    <apex:commandLink styleClass="actionBorder"  value="{!$Label.LinkClone}" action="{!cloneChargesPopup}"  reRender="optionChargepopUpBlockPanel"  status="onclickLoader" >
+                     <apex:param name="chargeCloneCounter" value="{!chargeClass.productRatePlanChargeCounter}" />
+                     <apex:param name="chargeName" value="{!chargeClass.productRatePlancharge.Name}" />
+                    </apex:commandLink>
+                   </td>
+                  <apex:repeat value="{!listChargeFields}"  var="fieldApi" id="chargeFieldsRepeat1" >
+                   <td>
+                     <apex:outputField value="{!chargeClass.productRatePlancharge[fieldApi]}"  rendered="{!fieldApi=='invoiceit_s__Price_Format__c' && chargeClass.productRatePlancharge.invoiceit_s__Price_Format__c=='Volume Pricing'}" ><span>&nbsp;&nbsp;</span>
+                     <a href="#" id="{!chargeClass.productRatePlancharge.Id}" class="tooltipCharge"  >
+                     <apex:image id="imageToolTip"  url="{!URLFOR($Resource.invoiceit_s__Images,'/images/priceTypeIcon.gif')}"  /> 
+                      </a>
+                     </apex:outputField>
+                     <apex:outputField value="{!chargeClass.productRatePlancharge[fieldApi]}" rendered="{!fieldApi=='invoiceit_s__Price_Format__c' && chargeClass.productRatePlancharge.invoiceit_s__Price_Format__c=='Tiered Pricing'}" ><span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                     <a href="#" id="{!chargeClass.productRatePlancharge.Id}" class="tooltipCharge"  >
+                     <apex:image id="imageToolTip1"  url="{!URLFOR($Resource.invoiceit_s__Images,'/images/priceTypeIcon.gif')}"   /> 
+                      </a>
+                     </apex:outputField>
+                     <apex:outputField value="{!chargeClass.productRatePlancharge[fieldApi]}" rendered="{!fieldApi=='invoiceit_s__Price_Format__c' && chargeClass.productRatePlancharge.invoiceit_s__Price_Format__c=='Flat Fee Pricing'}" ><span>&nbsp;</span>
+                     <a href="#" id="{!chargeClass.productRatePlancharge.Id}" class="tooltipCharge"  >
+                     <apex:image id="imageToolTip2"  url="{!URLFOR($Resource.invoiceit_s__Images,'/images/priceTypeIcon.gif')}"   /> 
+                      </a>
+                     </apex:outputField>
+                     <apex:outputField value="{!chargeClass.productRatePlancharge[fieldApi]}" rendered="{!fieldApi=='invoiceit_s__Price_Format__c' && chargeClass.productRatePlancharge.invoiceit_s__Price_Format__c !='Volume Pricing' && chargeClass.productRatePlancharge.invoiceit_s__Price_Format__c!='Tiered Pricing' && chargeClass.productRatePlancharge.invoiceit_s__Price_Format__c!='Flat Fee Pricing'}"/>
+                     <apex:outputField value="{!chargeClass.productRatePlancharge[fieldApi]}" rendered="{!fieldApi!='invoiceit_s__Price_Format__c'}"/>
+                     </td>
+                   </apex:repeat>
+              </tr>   
+           </apex:repeat>
+         </table>  
+        </apex:outputPanel>
+    </apex:repeat>     
+    </apex:pageBlock>
+  </apex:pageBlock>
+      <!-- end of the charges block -->
+      
+      <!-- start of the product tool tip pop up block -->   
+    <apex:outputPanel id="panelProductJS" style="display:none;">
+        <script type="text/javascript">
+            function setProductToolTip1() {
+                 var tableProduct = '';
+                 tableProduct = '<table width="100%" style="border: 1px solid #ECECEC;border-collapse:collapse;" > <apex:repeat value="{!$ObjectType.invoiceit_s__Product__c.FieldSets.invoiceit_s__ProductToolTip}" var="fieldAPI2"><tr style="border: 1px solid #ECECEC;"><th class="labelCol"  ><apex:outputText value="{!fieldAPI2.Label}" />  </th><td class="data2Col" ><apex:outputField value="{!product[fieldAPI2]}" rendered="{!fieldAPI2 !='invoiceit_s__Effective_Period__c'}" style="word-break: break-all; word-wrap: break-word;" /><apex:outputText rendered="{!fieldAPI2 =='invoiceit_s__Effective_Period__c'}" ><apex:outputField value="{!product.invoiceit_s__Valid_From_Date__c}"  /> <span>&nbsp;--&nbsp;</span><apex:outputField value="{!product.invoiceit_s__Valid_To_Date__c}"  /> </apex:outputText> </td> </tr></apex:repeat></table>';
+                 var productid = "#" + "{!product.id}";
+                 $(productid).attr( "title", tableProduct);
+                 
+                 $('.tooltipProduct').tooltipster({
+                    fixedWidth: 300,
+                    position: 'bottom-left',
+                    tooltipTheme: '.tooltip-custom-New'
+                 });
+            }
+        </script> 
+    </apex:outputPanel>
+    <!-- end of the product tool tip pop up block --> 
+      
+     <!-- start of the charge tool tip pop up block -->   
+   <apex:outputPanel id="panelDelJS" style="display:none;">
+     <script type="text/javascript">
+        function reloadChargeToolTip1() {
+          var tableCharge = '';
+          <apex:repeat value="{!productClass.productRatePlans}" var="rateplanClass"  >
+                tableCharge ='<table  width="100%"  style="border: 1px solid #ECECEC;border-collapse:collapse;" ><tr style="background-color:#eeeeee;border: 1px solid #ECECEC;" ><apex:repeat value="{!$ObjectType.invoiceit_s__Product_Rate_Plan_Charge_Tier__c.FieldSets.invoiceit_s__ProductRatePlanChargeTier}" var="tierfieldAPI"><th><apex:outputText value="{!tierfieldAPI.Label}" /></th></apex:repeat></tr>';
+                <apex:repeat value="{!rateplanClass.productRatePlanChargeClass}" var="chargeClass" >
+                    if(tableCharge == ''){
+                      tableCharge ='<table  width="100%"  style="border: 1px solid #ECECEC;border-collapse:collapse;" ><tr style="background-color:#eeeeee;border: 1px solid #ECECEC;" ><apex:repeat value="{!$ObjectType.invoiceit_s__Product_Rate_Plan_Charge_Tier__c.FieldSets.invoiceit_s__ProductRatePlanChargeTier}" var="tierfieldAPI"><th><apex:outputText value="{!tierfieldAPI.Label}" /></th></apex:repeat></tr>';
+                    }
+                    tableCharge += '<apex:repeat value="{!chargeClass.ProductRatePlanChargeTierClass}" var="tier" ><tr style="border: 1px solid #ECECEC;"><td><apex:outputField value="{!tier.productRatePlanChargeTier.invoiceit_s__Start_Unit__c}" /></td><td><apex:outputField value="{!tier.productRatePlanChargeTier.invoiceit_s__End_Unit__c}" /></td><td><apex:outputField value="{!tier.productRatePlanChargeTier.invoiceit_s__Unit_Price__c}" /></td><td><apex:outputField value="{!tier.productRatePlanChargeTier.invoiceit_s__Unit_Cost_Price__c}" /></td></tr></apex:repeat>';
+                      tableCharge += '</table>'; 
+                     var chargeid = "#" + "{!chargeClass.productRatePlancharge.Id}";
+                      $(chargeid).attr( "title", tableCharge);
+                     tableCharge = '';
+                </apex:repeat> 
+          </apex:repeat> 
+        $('.tooltipCharge').tooltipster({
+            fixedWidth: 300,
+            position: 'bottom-left',
+            tooltipTheme: '.tooltip-custom-New'
+          });
+     }
+     </script> 
+   </apex:outputPanel>
+   
+    <!-- end of the charge tool tip pop up block -->   
+         
+          <!-- start of the product layout block -->
+        <apex:outputPanel id="productLayoutPanel" >
+         <apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!displayProductLayout}" />
+         <apex:outputPanel styleClass="custPopupLayout" layout="block" rendered="{!displayProductLayout}">
+         <apex:pageBlock title="{!$Label.LabelProductFields}">
+                <c:MultiselectPicklist leftLabel="{!$Label.LabelAvailableFields}"
+                    leftOptions1="{!availableProductFields}"
+                    rightLabel="{!$Label.LabelSelectedFields}"
+                    rightOptions1="{!selectedProductFields}"
+                    size="14"
+                    width="150px"/>
+                <apex:pageBlockButtons location="bottom" >
+                    <apex:commandButton value="{!$Label.ButtonSave}" action="{!saveProductLayout}"  reRender="productLayoutPanel,panelProductJS,productColumnWidthPanel,productBlock" oncomplete="reloadProductLayout2();"  status="saveLoader"   />
+                    <apex:commandButton value="{!$Label.ButtonCancel}"   onclick="cancelProductLayout();"  reRender="dummyRerender" />
+                </apex:pageBlockButtons>
+         </apex:pageBlock>
+
+         </apex:outputPanel>
+         </apex:outputPanel> 
+       <!-- end of the product popup block -->   
+       
+                
+             <!-- start of the rate plan layout block -->
+        <apex:outputPanel id="ratePlanLayoutPanel" >
+         <apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!displayRatePlanLayout}" />
+         <apex:outputPanel styleClass="custPopupLayout" layout="block" rendered="{!displayRatePlanLayout}">
+         <apex:pageBlock title="{!$Label.LabelRatePlanFields}">
+                <c:MultiselectPicklist leftLabel="{!$Label.LabelAvailableFields}"
+                    leftOptions1="{!availableRatePlanFields}"
+                    rightLabel="{!$Label.LabelSelectedFields}"
+                    rightOptions1="{!selectedRatePlanFields}"
+                    size="14"
+                    width="150px"/>
+                <apex:pageBlockButtons location="bottom" >
+                    <apex:commandButton value="{!$Label.ButtonSave}" action="{!saveRatePlanLayout}"  reRender="ratePlanLayoutPanel,panelDelRatePlanJS,ratePlanColumnWidthPanel,RatePlanBlock"  oncomplete="reloadRatePlanLayout();"  status="saveLoader"  />
+                    <apex:commandButton value="{!$Label.ButtonCancel}" onclick="cancelRateplanLayout();" reRender="dummyRerender" />
+                </apex:pageBlockButtons>
+         </apex:pageBlock>
+         </apex:outputPanel>
+         </apex:outputPanel> 
+            <!-- end of the product popup block --> 
+            
+            
+             
+             <!-- start of the charge layout block -->
+        <apex:outputPanel id="chargeLayoutPanel" >
+         <apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!displayChargesLayout}" />
+         <apex:outputPanel styleClass="custPopupLayout" layout="block" rendered="{!displayChargesLayout}">
+         <apex:pageBlock title="{!$Label.LabelChargeFields}">
+                <c:MultiselectPicklist leftLabel="{!$Label.LabelAvailableFields}"
+                    leftOptions1="{!availableChargeFields}"
+                    rightLabel="{!$Label.LabelSelectedFields}"
+                    rightOptions1="{!selectedChargeFields}"
+                    size="14"
+                    width="150px"/>
+                <apex:pageBlockButtons location="bottom" >
+                    <apex:commandButton value="{!$Label.ButtonSave}" action="{!saveChargesLayout}"  reRender="chargeLayoutPanel,panelDelJS,ChargeBlock,chargeColumnWidthPanel"  oncomplete="reloadColumReSize();" status="saveLoader"  />
+                    <apex:commandButton value="{!$Label.ButtonCancel}" onclick="cancelChargeLayout();" reRender="dummyRerender" />
+                </apex:pageBlockButtons>
+         </apex:pageBlock>
+         </apex:outputPanel>
+         </apex:outputPanel> 
+            <!-- end of the charge layout block --> 
+            
+          <!-- start of the product popup block -->
+    <apex:outputPanel id="productpopUpBlockPanel" >
+        <apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!displayProductPopUp}" />
+           <apex:outputPanel styleClass="custPopup" layout="block" rendered="{!displayProductPopUp}">
+            <apex:pageBlock id="productpopUpBlock" > 
+            <table width="100%" style="margin-bottom:10px">
+              <tr class="blueBar" style="float:left;padding: 2px;"> 
+                <td class="pbTitle" style="width:85%;"  ><h2  class="mainTitle">{!sProductActionString}</h2></td>
+                <td style="width:2.5%;align:left;" >
+                </td>
+                <td style="width:2.5%;align:left;" >
+                </td>
+                <td style="width:2.5%;align:left;" >
+                </td>
+                 <td style="width:7.5%;align:left;" >
+                </td>
+              </tr>  
+           </table> 
+               <apex:pageBlockSection columns="2"> 
+                  <apex:repeat value="{!$ObjectType.invoiceit_s__Product__c.FieldSets.invoiceit_s__ProductFieldSet}" var="fieldAPI" >  
+                     <apex:inputField value="{!product[fieldAPI]}" rendered="{!fieldAPI.Type != 'double' && fieldAPI.required != true}" />
+                    <apex:inputField value="{!product[fieldAPI]}" rendered="{!fieldAPI.required == true}" required="true" />
+                    <apex:outputField value="{!product[fieldAPI]}" rendered="{!fieldAPI.Type == 'double'}" />
+                  </apex:repeat>   
+               </apex:pageBlockSection>
+                  <table width="100%" style="margin-top:10px">
+                     <tr> 
+                        <td  style="width:45%;"  ></td>
+                        <td style="width:5%;align:left;" >
+                           <apex:commandButton value="{!$Label.ButtonSave}" action="{!updateProduct}"  reRender="productpopUpBlockPanel,panelProductJS,productBlock,productColumnWidthPanel"   oncomplete="reloadProductLayout2();" status="saveLoader" /> 
+                        </td>
+                        <td style="width:5%;align:left;" >
+                           <apex:commandButton value="{!$Label.ButtonCancel}" onclick="cancelEditProduct();"   reRender="productRepeat"   />  
+                        </td>
+                          <td style="width:45%;align:left;" >
+                        </td>
+                    </tr>  
+              </table>  
+          </apex:pageBlock>                   
+        </apex:outputPanel>
+    </apex:outputPanel> 
+     <!-- end of the product pop up block --> 
+     
+        <!-- start of the clone product popup block -->
+    <apex:outputPanel id="cloneProductpopUpBlockPanel" >
+        <apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!displayCloneProductPopUp}" />
+           <apex:outputPanel styleClass="custPopup" layout="block" rendered="{!displayCloneProductPopUp}">
+            <apex:pageBlock id="cloneProductpopUpBlock" > 
+            <table width="100%" style="margin-bottom:10px">
+              <tr class="blueBar" style="float:left;padding: 2px;"> 
+                <td class="pbTitle" style="width:85%;"  ><h2  class="mainTitle">{!sProductActionString}</h2></td>
+                <td style="width:2.5%;align:left;" >
+                </td>
+                <td style="width:2.5%;align:left;" >
+                </td>
+                <td style="width:2.5%;align:left;" >
+                </td>
+                 <td style="width:7.5%;align:left;" >
+                </td>
+              </tr>  
+           </table> 
+               <apex:pageBlockSection columns="2"> 
+                  <apex:repeat value="{!$ObjectType.invoiceit_s__Product__c.FieldSets.invoiceit_s__ProductFieldSet}" var="fieldAPI" >  
+                    <apex:inputField value="{!product[fieldAPI]}" rendered="{!fieldAPI.Type != 'double' && fieldAPI.required != true}" />
+                    <apex:inputField value="{!product[fieldAPI]}" rendered="{!fieldAPI.required == true}" required="true" />
+                    <apex:outputField value="{!product[fieldAPI]}" rendered="{!fieldAPI.Type == 'double'}" />
+                  </apex:repeat>   
+               </apex:pageBlockSection>
+                  <table width="100%" style="margin-top:10px">
+                     <tr> 
+                        <td  style="width:45%;"  ></td>
+                        <td style="width:5%;align:left;" >
+                           <apex:commandButton value="{!$Label.ButtonSave}" action="{!saveClonedProduct}"  reRender="cloneProductpopUpBlockPanel,panelProductJS,productColumnWidthPanel,productBlock"   oncomplete="reloadProductLayout2();" status="saveLoader" /> 
+                        </td>
+                        <td style="width:5%;align:left;" >
+                           <apex:commandButton value="{!$Label.ButtonCancel}" onclick="cancelEditProduct();"   reRender="productRepeat"   /> 
+                        </td>
+                         <td style="width:45%;align:left;" >
+                        </td>
+                    </tr>  
+              </table>  
+          </apex:pageBlock>                   
+        </apex:outputPanel>
+    </apex:outputPanel> 
+     <!-- end of the clone product pop up block --> 
+   
+    <!-- start of the rateplan tool tip pop up block --> 
+    <apex:outputPanel id="panelDelRatePlanJS" style="display:none;">
+     <script type="text/javascript">
+       
+         function setRatePlanToolTip1() {
+             var  tableRatePlan ='';
+             <apex:repeat value="{!productClass.productRatePlans}" var="rateplanClass1" >
+              tableRatePlan = '<table width="100%" style="border: 1px solid #ECECEC;border-collapse:collapse;" ><apex:repeat value="{!$ObjectType.invoiceit_s__Product_Rate_Plan__c.FieldSets.invoiceit_s__ProductRatePlanToolTip}" var="fieldAPIToolTip"><tr style="border: 1px solid #ECECEC;" ><th class="labelCol" ><apex:outputText value="{!fieldAPIToolTip.Label}" />  </th><td class="data2col"><apex:outputField style="word-break: break-all; word-wrap: break-word;"  value="{!rateplanClass1.productRatePlan[fieldAPIToolTip]}" rendered="{!fieldAPIToolTip !='invoiceit_s__Effective_Period__c'}"  /> <apex:outputText rendered="{!fieldAPIToolTip =='invoiceit_s__Effective_Period__c'}" ><apex:outputField value="{!rateplanClass1.productRatePlan.invoiceit_s__Valid_From_Date__c}"  /> <span>&nbsp;--&nbsp;</span><apex:outputField value="{!rateplanClass1.productRatePlan.invoiceit_s__Valid_To_Date__c}"  /> </apex:outputText> </td></tr></apex:repeat></table>';    
+              var rateplanid = "#" + "{!rateplanClass1.productRatePlan.Id}";
+              $(rateplanid).attr( "title", tableRatePlan);
+              </apex:repeat>
+              
+              
+              $('.tooltipRatePlan').tooltipster({
+                fixedWidth: 300,
+                position: 'bottom-left',
+                tooltipTheme: '.tooltip-custom-New'
+              });
+              
+              var sCurrentRatePlanCounter ='{!currentRatePlanCounter}';
+              $('.ratePlanClick').removeClass('highlightRate');
+              $('#'+sCurrentRatePlanCounter).addClass('highlightRate');
+         }
+         
+     </script>
+   </apex:outputPanel>
+    <!-- end of the rateplan tool tip pop up block --> 
+    <!-- start of the product Rate plan New popup block -->
+    <apex:outputPanel id="productRatePlanpopUpBlockPanel" >
+        <apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!displayRatePlanPopUp}" />
+           <apex:outputPanel styleClass="custPopup" layout="block" rendered="{!displayRatePlanPopUp}">
+            <apex:pageBlock id="rateplanpopUpBlock" > 
+            <apex:pageMessages id="errorsRatePlanPanel" />
+            <table width="100%" style="margin-bottom:10px">
+              <tr class="blueBar" style="float:left;padding: 2px;"> 
+                <td class="pbTitle" style="width:85%;"  ><h2  class="mainTitle">{!sRatePlanActionString}</h2></td>
+                <td style="width:2.5%;align:left;" >
+               </td>
+                <td style="width:2.5%;align:left;" >
+               </td>
+                <td style="width:2.5%;align:left;" >
+                </td>
+                 <td style="width:7.5%;align:left;" >
+                </td>
+              </tr>  
+           </table> 
+              
+           <apex:repeat value="{!productClass.productRatePlans}" var="rateplanClass" >
+             <apex:outputPanel id="renderCounterPanel1" rendered="{!rateplanClass.productRatePlanCounter == currentRPCounter}"  >
+             <apex:pageBlockSection columns="2">
+             <apex:repeat value="{!$ObjectType.invoiceit_s__Product_Rate_Plan__c.FieldSets.invoiceit_s__ProductRatePlanFieldSet}" var="fieldAPI" >
+                <apex:inputField value="{!rateplanClass.productRatePlan[fieldAPI]}" rendered="{!fieldAPI.Type != 'double' && fieldAPI != 'Name' && fieldAPI != 'invoiceit_s__Valid_From_Date__c'}"/>
+                <apex:inputField value="{!rateplanClass.productRatePlan[fieldAPI]}" rendered="{!fieldAPI.Type != 'double' && (fieldAPI == 'Name' || fieldAPI == 'invoiceit_s__Valid_From_Date__c')}" required="true"/>
+                <apex:outputField value="{!rateplanClass.productRatePlan[fieldAPI]}" rendered="{!fieldAPI.Type == 'double'}" />
+            </apex:repeat>  
+             </apex:pageBlockSection> 
+            </apex:outputPanel>
+           </apex:repeat> 
+          <table width="100%" style="margin-top:10px">
+              <tr> 
+                 <td  style="width:40%;"  ></td>
+                 <td style="width:5%;align:left;" >
+                    <apex:commandButton value="{!$Label.ButtonSave}" action="{!saveRatePlan}"   reRender="productRatePlanpopUpBlockPanel,RatePlanBlock,panelDelRatePlanJS,ratePlanColumnWidthPanel,panelDelJS,ChargeBlock,chargeColumnWidthPanel,panelProductJS,productBlock,productColumnWidthPanel"  oncomplete="reloadProduct_Rateplan_charge();" status="saveLoader"/> 
+                 </td>
+                <td style="width:5%;align:left;" >
+                    <apex:commandButton value="{!$Label.ButtonSaveAndNew}" action="{!saveRatePlan}" reRender="productRatePlanpopUpBlockPanel" oncomplete="reloadRatePlanHighlight();" status="saveLoader" > 
+                      <apex:param name="SaveandNewRateplan"  value="SaveandNewRateplan"/>
+                    </apex:commandButton>
+                 </td>
+                 <td style="width:5%;align:left;" >
+                    <apex:commandButton value="{!$Label.ButtonCancel}" onclick="cancelEditRateplan();"   reRender="RatePlanBlockRepeat"   /> 
+                 </td>
+                   <td style="width:45%;align:left;" >
+                 </td>
+             </tr>  
+           </table>  
+       </apex:pageBlock>                   
+     </apex:outputPanel>
+       
+       </apex:outputPanel> 
+ <!-- end of the product rate plan  New pop up block --> 
+ 
+ <!-- start of the option product Rate plan popup block -->
+    <apex:outputPanel id="optionRatePlanpopUpBlockPanel" >
+      
+        <apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!displayOptionPopup}" />
+           <apex:outputPanel styleClass="custPopupClone" layout="block" rendered="{!displayOptionPopup}">
+           
+            <apex:pageBlock id="optionRateplanpopUpBlock" > 
+               <table width="100%" style="margin-bottom:10px">
+                  <tr class="blueBar" style="float:left;padding: 2px;"> 
+                    <td class="pbTitle" style="width:100%;"  ><h2  class="mainTitle">{!$Label.LabelCloneRatePlan} - {!sRatePlanName}</h2></td>
+                   
+                  </tr>  
+               </table> 
+                <table width="100%" style="margin-bottom:10px">
+                  <tr>
+                     <td  style="width:100%;float:left;padding: 2px;"  ><h2  class="mainTitle">{!$Label.MessageCloneRateplanChoice}</h2></td>
+                    </tr> 
+               </table> 
+                 <table width="100%" style="margin-top:10px">
+                   
+                     <tr> 
+                        <td  style="width:34%;"  ></td>
+                        <td style="width:5%;align:left;" >
+                           <apex:commandButton value="{!$Label.LinkClone}" action="{!cloneRatePlan}" reRender="optionRatePlanpopUpBlockPanel,cloneRatePlanpopUpBlockPanel"> 
+                               <apex:param value="CloneRatePlan" name="cloneRatePlan"/>
+                           </apex:commandButton>
+                        </td>
+                        <td style="width:5%;align:left;" >
+                           <apex:commandButton value="{!$Label.LabelCloneWithCharges}" action="{!cloneRatePlan}"  reRender="optionRatePlanpopUpBlockPanel,cloneRatePlanpopUpBlockPanel"> 
+                                <apex:param value="CloneWithCharges" name="cloneRatePlan"/>
+                           </apex:commandButton>
+                        </td>
+                        <td >
+                           <apex:commandButton value="{!$Label.ButtonCancel}" action="{!closeOptionPopup}"  reRender="optionRatePlanpopUpBlockPanel" > 
+                            </apex:commandButton>
+                        </td>
+                    </tr>  
+              </table>  
+          </apex:pageBlock>                   
+        </apex:outputPanel>
+    </apex:outputPanel> 
+ <!-- end of the option product rate plan pop up block --> 
+ 
+  <!-- start of the clone product Rate plan popup block -->
+    <apex:outputPanel id="cloneRatePlanpopUpBlockPanel" >
+        <apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!displayClonedRatePlanPopUp}" />
+           <apex:outputPanel styleClass="custPopup" layout="block" rendered="{!displayClonedRatePlanPopUp}">
+            <apex:pageBlock id="cloneRateplanpopUpBlock" > 
+             <apex:pageMessages id="errorCloneRatePlanPanel" />
+            <table width="100%" style="margin-bottom:10px">
+              <tr class="blueBar" style="float:left;padding: 2px;"> 
+                <td class="pbTitle" style="width:85%;"  ><h2  class="mainTitle">{!sRatePlanActionString}</h2></td>
+                <td style="width:2.5%;align:left;" >
+               </td>
+                <td style="width:2.5%;align:left;" >
+               </td>
+                <td style="width:2.5%;align:left;" >
+                </td>
+                 <td style="width:7.5%;align:left;" >
+                </td>
+              </tr>  
+           </table> 
+              <apex:pageBlockSection columns="2">
+                    <apex:repeat value="{!$ObjectType.invoiceit_s__Product_Rate_Plan__c.FieldSets.invoiceit_s__ProductRatePlanFieldSet}" var="fieldAPI" >
+                        <apex:inputField value="{!productRatePlanTobeClone[fieldAPI]}" rendered="{!fieldAPI.Type != 'double' && fieldAPI != 'Name' && fieldAPI != 'invoiceit_s__Valid_From_Date__c'}"/>
+                        <apex:inputField value="{!productRatePlanTobeClone[fieldAPI]}" rendered="{!fieldAPI.Type != 'double' && (fieldAPI == 'Name' || fieldAPI == 'invoiceit_s__Valid_From_Date__c')}" required="true"/>
+                        <apex:outputField value="{!productRatePlanTobeClone[fieldAPI]}" rendered="{!fieldAPI.Type == 'double'}" />
+                    </apex:repeat>  
+               </apex:pageBlockSection>  
+              
+                 <table width="100%" style="margin-top:10px">
+                     <tr> 
+                        <td  style="width:45%;"  ></td>
+                        <td style="width:5%;align:left;" >
+                           <apex:commandButton value="{!$Label.ButtonSave}" action="{!saveClonedRatePlan}"  reRender="cloneRatePlanpopUpBlockPanel,RatePlanBlock,ratePlanColumnWidthPanel,RatePlanBlockPanel,panelDelRatePlanJS,panelProductJS,productBlock,productColumnWidthPanel,panelDelJS,ChargeBlock,chargeColumnWidthPanel" oncomplete="reloadProduct_Rateplan_charge();" status="saveLoader"/> 
+                        </td>
+                        <td style="width:5%;align:left;" >
+                           <apex:commandButton value="{!$Label.ButtonCancel}" onclick="cancelEditRateplan();"   reRender="RatePlanBlockRepeat"   /> 
+                        </td>
+                          <td style="width:45%;align:left;" >
+                        </td>
+                    </tr>  
+              </table>  
+          </apex:pageBlock>                   
+        </apex:outputPanel>
+       
+    </apex:outputPanel> 
+ <!-- end of the clone product rate plan pop up block --> 
+
+  
+  <!-- start of the charges popup block -->
+    <apex:outputPanel id="chargespopUpBlockPanel" styleClass="popT" >
+       <apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!displayChargesPopUp}" />
+        <apex:outputPanel styleClass="custPopupCharges" layout="block" rendered="{!displayChargesPopUp}"> 
+          <apex:pageBlock id="chargespopUpBlock" > 
+          <apex:pageMessages id="errorsChargesPanel" rendered="{! !isTierErrorMsg}" />
+            <table width="100%" style="margin-bottom:10px">
+              <tr class="blueBar" style="float:left;padding: 2px;"> 
+                <td class="pbTitle" style="width:85%;"  ><h2  class="mainTitle">{!sChargesActionString}</h2></td>
+                <td style="width:2.5%;align:left;" >
+               </td>
+                <td style="width:2.5%;align:left;" >
+               </td>
+                <td style="width:2.5%;align:left;" >
+                </td>
+                 <td style="width:7.5%;align:left;" >
+                </td>
+              </tr>  
+           </table> 
+            <apex:repeat value="{!productClass.productRatePlans}" var="rateplanClass" >
+              <apex:outputPanel id="renderCounterPanel2" rendered="{!rateplanClass.productRatePlanCounter == currentRatePlanCounter}"  >
+              <apex:repeat value="{!rateplanClass.productRatePlanChargeClass}" var="chargeClass" >
+                 <apex:outputPanel rendered="{!chargeClass.productRateplanChargeCounter == currentRatePlanChargeCounter}"  >
+                 <apex:pageBlockSection columns="2">
+                  <apex:repeat value="{!$ObjectType.invoiceit_s__Product_Rate_Plan_Charge__c.FieldSets.invoiceit_s__ProductRatePlanCharge}" var="fieldAPI" >
+                   <apex:inputField value="{!chargeClass.productRatePlancharge[fieldAPI]}" rendered="{!fieldAPI != 'Name' && fieldAPI != 'invoiceit_s__Unit_Price__c' && fieldAPI !='invoiceit_s__Price_Format__c'}" />
+                   <apex:inputField value="{!chargeClass.productRatePlancharge[fieldAPI]}"  rendered="{!fieldAPI=='invoiceit_s__Price_Format__c'}"  onchange="onChangePriceFormat1();" />
+                   <apex:inputField value="{!chargeClass.productRatePlancharge[fieldAPI]}" rendered="{!fieldAPI == 'Name' || fieldAPI == 'invoiceit_s__Unit_Price__c'}" required="true"/>
+                  </apex:repeat>  
+                    </apex:pageBlockSection>  
+                   </apex:outputPanel>
+             </apex:repeat>
+           </apex:outputPanel>
+        </apex:repeat>
+ 
+        <apex:outputPanel id="tierPanel"  rendered="{!displayTierSection}" > 
+         <table width="100%" style="margin-bottom:10px">
+            <tr class="blueBar" style="float:left;padding: 2px;"> 
+              <td class="pbTitle" style="width:85%;float:left;"  ><h2  class="mainTitle">{!$Label.Tiers}</h2></td>
+               <td style="float: right;margin-right: 10px;margin-top: 5px;width: auto;" >
+               <apex:commandLink value="{!$Label.NewTier}" action="{!newTier}"  reRender="tierPanel"/>
+              </td>
+            </tr>  
+         </table> 
+      <apex:pageblockSection >
+        <apex:repeat value="{!productClass.productRatePlans}" var="rateplanClass">
+          <apex:repeat value="{!rateplanClass.productRatePlanChargeClass}" var="productrateplancharge"> 
+            <apex:outputPanel rendered="{!productrateplancharge.productRatePlanChargeCounter == currentRatePlanChargeCounter}">
+              <apex:pageMessages id="errorsTiersPanel" rendered="{!isTierErrorMsg}" />
+            <apex:pageBlockTable value="{!productrateplancharge.ProductRatePlanChargeTierClass}" var="tier">                     
+               <apex:column headerValue="{!$Label.StartUnit}">
+                 <apex:inputField value="{!tier.productRatePlanChargeTier.invoiceit_s__Start_Unit__c}"  />
+               </apex:column>             
+               <apex:column headerValue="{!$Label.EndUnit}">
+                 <apex:inputField value="{!tier.productRatePlanChargeTier.invoiceit_s__End_Unit__c}" />
+               </apex:column>  
+               <apex:column headerValue="{!$Label.UnitPrice}">
+                 <apex:inputField value="{!tier.productRatePlanChargeTier.invoiceit_s__Unit_Price__c}"  />
+               </apex:column>   
+               <apex:column headerValue="{!$Label.UnitCostPrice}">
+                 <apex:inputField value="{!tier.productRatePlanChargeTier.invoiceit_s__Unit_Cost_Price__c}" />
+                </apex:column>
+                  <apex:column >
+                 <apex:commandbutton action="{!removeTiers}" immediate="true" value="{!$Label.ButtonDelete}" reRender="tierPanel" >
+                   <apex:param value="{!tier.productRatePlanChargeTier.Id}"     name="tieridtodelete"/>
+                   <apex:param value="{!tier.productRatePlanChargeTierCounter}" name="tiercountertodelete"/>
+                 </apex:commandbutton>
+               </apex:column>   
+            </apex:pageBlockTable>
+            </apex:outputPanel>
+          </apex:repeat>
+         </apex:repeat>
+        </apex:pageblockSection>
+     </apex:outputPanel>
+         <table width="100%" style="margin-top:10px">
+              <tr> 
+                 <td  style="width:45%;"  ></td>
+                 <td style="width:5%;align:left;" >
+                    <apex:commandButton value="{!$Label.ButtonSave}" action="{!saveCharge}"   reRender="chargespopUpBlockPanel,ChargeBlock,chargeColumnWidthPanel,panelDelJS,RatePlanBlock,ratePlanColumnWidthPanel,panelDelRatePlanJS,errorsChargesPanel,errorsTiersPanel" oncomplete="reloadRatePlanHighlight();" status="saveLoader"/> 
+                 </td>
+                 <td style="width:5%;align:left;" >
+                    <apex:commandButton value="{!$Label.ButtonSaveAndNew}" action="{!saveCharge}"  reRender="chargespopUpBlockPanel,errorsChargesPanel,errorsTiersPanel" oncomplete="reloadColumReSize();" status="saveLoader" > 
+                      <apex:param name="SaveandNew"  value="SaveandNew"/>
+                    </apex:commandButton>
+                 </td>
+                 <td style="width:5%;align:left;" >
+                    <apex:commandButton value="{!$Label.ButtonCancel}" onclick="cancelEditCharge();" reRender="theTable"  /> 
+                 </td>
+                 <td style="width:45%;align:left;" >
+                  </td>
+                </tr>  
+          </table>  
+          </apex:pageBlock>                   
+        </apex:outputPanel> 
+    </apex:outputPanel>
+ <!-- end of the product rate plan pop up block --> 
+ 
+  <!-- start of the option charge popup block -->
+    <apex:outputPanel id="optionChargepopUpBlockPanel" >
+        <apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!displaychargeOptionPopup}" />
+           <apex:outputPanel styleClass="custPopupClone" layout="block" rendered="{!displaychargeOptionPopup}">
+            <apex:pageBlock id="optionChargepopUpBlock" > 
+                <table width="100%" style="margin-bottom:10px">
+                  <tr class="blueBar" style="float:left;padding: 2px;"> 
+                    <td class="pbTitle" style="width:100%;"  ><h2  class="mainTitle">{!$Label.LabelCloneCharge} - {!sChargeCloneName}</h2></td>
+                   </tr>  
+               </table> 
+               <table width="100%" style="margin-bottom:10px">
+                 <tr>
+                 <td  style="width:100%;float:left;padding: 2px;"  ><h2  class="mainTitle">{!$Label.MessageCloneChargeChoice}</h2></td>
+                </tr>  
+               </table> 
+               <table width="100%" style="margin-top:10px">
+                     <tr> 
+                        <td  style="width:34%;"  ></td>
+                        <td style="width:5%;align:left;" >
+                           <apex:commandButton value="{!$Label.LinkClone}" action="{!cloneCharge}" reRender="optionChargepopUpBlockPanel,cloneChargepopUpBlockPanel"> 
+                               <apex:param value="CloneCharge" name="cloneCharge"/>
+                           </apex:commandButton>
+                        </td>
+                        <td style="width:5%;align:left;" >
+                           <apex:commandButton value="{!$Label.LabelCloneWithTiers}" action="{!cloneCharge}"  reRender="optionChargepopUpBlockPanel,cloneChargepopUpBlockPanel"> 
+                                <apex:param value="CloneWithTiers" name="cloneCharge"/>
+                           </apex:commandButton>
+                        </td>
+                        <td>
+                           <apex:commandButton value="{!$Label.ButtonCancel}" action="{!closeChargeOptionPopup}"  reRender="optionChargepopUpBlockPanel" /> 
+                        </td>
+                    </tr>  
+              </table>  
+          </apex:pageBlock>                   
+        </apex:outputPanel>
+    </apex:outputPanel> 
+ <!-- end of the option charge pop up block --> 
+ 
+  <!-- start of the clone charge popup block -->
+    <apex:outputPanel id="cloneChargepopUpBlockPanel" >
+      
+        <apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!displayClonedChargePopUp}" />
+           <apex:outputPanel styleClass="custPopup" layout="block" rendered="{!displayClonedChargePopUp}">
+            <apex:pageBlock id="cloneChargepopUpBlock" > 
+            <apex:pageMessages id="errorCloneChargePanel" rendered="{! !isTierErrorMsg}" />
+            <table width="100%" style="margin-bottom:10px">
+              <tr class="blueBar" style="float:left;padding: 2px;"> 
+                <td class="pbTitle" style="width:85%;"  ><h2  class="mainTitle">{!sChargesActionString}</h2></td>
+                <td style="width:2.5%;align:left;" >
+               </td>
+                <td style="width:2.5%;align:left;" >
+               </td>
+                <td style="width:2.5%;align:left;" >
+                </td>
+                 <td style="width:7.5%;align:left;" >
+                </td>
+              </tr>  
+           </table> 
+               <apex:repeat value="{!productClass.productRatePlans}" var="rateplanClass" >
+                    <apex:outputPanel id="renderCounterPanel3" rendered="{!rateplanClass.productRatePlanCounter == currentRatePlanCounter}"  >
+                    <apex:repeat value="{!rateplanClass.productRatePlanChargeClass}" var="chargeClass" >
+                       <apex:outputPanel rendered="{!chargeClass.productRateplanChargeCounter == currentRatePlanChargeCounter}"  >
+                       <apex:pageBlockSection columns="2">
+                        <apex:repeat value="{!$ObjectType.invoiceit_s__Product_Rate_Plan_Charge__c.FieldSets.invoiceit_s__ProductRatePlanCharge}" var="fieldAPI" >
+                             <apex:inputField value="{!chargeClass.productRatePlancharge[fieldAPI]}" rendered="{!fieldAPI != 'Name' && fieldAPI != 'invoiceit_s__Unit_Price__c' && fieldAPI !='invoiceit_s__Price_Format__c'}" />
+                             <apex:inputField value="{!chargeClass.productRatePlancharge[fieldAPI]}"  rendered="{!fieldAPI=='invoiceit_s__Price_Format__c'}"  onchange="onChangePriceFormat1();" />
+                             <apex:inputField value="{!chargeClass.productRatePlancharge[fieldAPI]}" rendered="{!fieldAPI == 'Name' || fieldAPI == 'invoiceit_s__Unit_Price__c'}" required="true"/>
+                         </apex:repeat>  
+                          </apex:pageBlockSection>  
+                         </apex:outputPanel>
+                   </apex:repeat>
+                 </apex:outputPanel>
+              </apex:repeat>
+               
+             <apex:outputPanel id="tierPanelClone"  rendered="{!displayTierSection}"  > 
+               <table width="100%" style="margin-bottom:10px">
+                  <tr class="blueBar" style="float:left;padding: 2px;"> 
+                    <td class="pbTitle" style="width:85%;float:left;"  ><h2  class="mainTitle">{!$Label.Tiers}</h2></td>
+                     <td style="float: right;margin-right: 10px;margin-top: 5px;width: auto;" >
+                     <apex:commandLink value="{!$Label.NewTier}" action="{!newTier}"  reRender="tierPanelClone"/>
+                    </td>
+                  </tr>  
+               </table> 
+            <apex:pageblockSection >
+              <apex:repeat value="{!productClass.productRatePlans}" var="rateplanClass" >
+                <apex:repeat value="{!rateplanClass.productRatePlanChargeClass}" var="productrateplancharge"> 
+                  <apex:outputPanel rendered="{!productrateplancharge.productRatePlanChargeCounter == currentRatePlanChargeCounter}">
+                   <apex:pageMessages id="errorCloneTierPanel" rendered="{!isTierErrorMsg}" />
+                  <apex:pageBlockTable value="{!productrateplancharge.ProductRatePlanChargeTierClass}" var="tier">                     
+                     <apex:column headerValue="{!$Label.StartUnit}">
+                       <apex:inputField value="{!tier.productRatePlanChargeTier.invoiceit_s__Start_Unit__c}" />
+                     </apex:column>             
+                     <apex:column headerValue="{!$Label.EndUnit}">
+                       <apex:inputField value="{!tier.productRatePlanChargeTier.invoiceit_s__End_Unit__c}" />
+                     </apex:column>  
+                     <apex:column headerValue="{!$Label.UnitPrice}">
+                       <apex:inputField value="{!tier.productRatePlanChargeTier.invoiceit_s__Unit_Price__c}" />
+                     </apex:column>   
+                     <apex:column headerValue="{!$Label.UnitCostPrice}">
+                       <apex:inputField value="{!tier.productRatePlanChargeTier.invoiceit_s__Unit_Cost_Price__c}" />
+                      </apex:column>
+                      <apex:column >
+                       <apex:commandbutton action="{!removeTiers}" immediate="true" value="{!$Label.ButtonDelete}" reRender="tierPanelClone" >
+                         <apex:param value="{!tier.productRatePlanChargeTier.Id}"     name="tieridtodelete"/>
+                         <apex:param value="{!tier.productRatePlanChargeTierCounter}" name="tiercountertodelete"/>
+                       </apex:commandbutton>
+                     </apex:column>   
+                  </apex:pageBlockTable>
+                  </apex:outputPanel>
+                </apex:repeat>
+              </apex:repeat>
+           </apex:pageblockSection>
+       </apex:outputPanel>
+             <table width="100%" style="margin-top:10px">
+                 <tr> 
+                    <td  style="width:45%;"  ></td>
+                    <td style="width:5%;align:left;" >
+                       <apex:commandButton value="{!$Label.ButtonSave}" action="{!saveClonedCharge}"  reRender="cloneChargepopUpBlockPanel,ChargeBlock,chargeColumnWidthPanel,panelDelJS,RatePlanBlock,ratePlanColumnWidthPanel,panelDelRatePlanJS,errorCloneTierPanel,errorCloneChargePanel"  oncomplete="reloadRatePlanHighlight();" status="saveLoader" />     
+                    </td>
+                    <td style="width:5%;align:left;" >
+                       <apex:commandButton value="{!$Label.ButtonCancel}" onclick="cancelCloneCharge();" reRender="theTable"  /> 
+                    </td>
+                      <td style="width:45%;align:left;" >
+                    </td>
+                </tr>  
+          </table>  
+      </apex:pageBlock>                   
+    </apex:outputPanel>
+      
+    </apex:outputPanel> 
+ <!-- end of the clone charge pop up block --> 
+ 
+ <!-- start of the edit selected charge pop up block --> 
+     <apex:outputPanel id="editSelectedPanel" >
+       <apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!displaySelectedCharges}" />
+        <apex:outputPanel styleClass="custPopupChargesEdit" layout="block" rendered="{!displaySelectedCharges}">
+         <apex:pageblock id="selectedChargesBlock">
+         <apex:pageMessages id="errorSelectedPanel" />
+         <table width="100%" style="margin-bottom:10px">
+          <tr class="blueBar" style="float:left;padding: 2px;"> 
+            <td class="pbTitle" style="float:left;width: 100%;"><h2  class="mainTitle">{!sChargesActionString}</h2></td>
+          </tr>  
+          </table>   
+           <apex:repeat value="{!productClass.productRatePlans}" var="rateplanClass" >
+            <apex:outputPanel id="renderCounterPanel4" rendered="{!rateplanClass.productRatePlanCounter == currentRatePlanCounter}">
+             <div style="color: rgb(0, 0, 0);max-width: 95%;overflow-x: scroll;width:95%;">     
+               <table width="100%" style="background: none repeat scroll 0 0 #F7F7F7;box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);margin-top:5px;padding-top:10px;padding-left:10px;padding-bottom:10px;border-spacing: 3px;border: 1px solid #ECECEC;border-collapse: collapse;line-height:23px;"> 
+                 <tr style="border: 1px solid #999999;">
+                    <apex:repeat value="{!listChargeLabels}"  var="label" >
+                   <th  >
+                   {!label}
+                  </th>
+                    </apex:repeat>
+                  </tr>
+                  <apex:repeat value="{!rateplanClass.productRatePlanChargeClass}" var="chargeClass" id="theTable" >
+                       <tr>  
+                        <apex:repeat value="{!listChargeFields}"  var="fieldApi" rendered="{!chargeClass.isSelected}">
+                         <td>
+                             <apex:inputField value="{!chargeClass.productRatePlancharge[fieldApi]}" />
+                         </td>
+                        </apex:repeat>
+                       </tr>  
+                    </apex:repeat>
+                </table>  
+            </div>  
+            </apex:outputPanel>
+        </apex:repeat> 
+          <table width="100%" style="margin-top:10px">
+                 <tr> 
+                    <td  style="width:45%;"  ></td>
+                    <td style="width:5%;align:left;" >
+                       <apex:commandButton value="{!$Label.ButtonSave}" action="{!saveCharge}" reRender="editSelectedPanel,ChargeBlock,chargeColumnWidthPanel,panelDelJS"  oncomplete="reloadColumReSize();"  status="saveLoader" > 
+                       </apex:commandButton>
+                    </td>
+                    <td style="width:5%;align:left;" >
+                       <apex:commandButton value="{!$Label.ButtonCancel}" onclick="cancelSelectedCharges();"   reRender="theTable"  /> 
+                    </td>
+                      <td style="width:45%;align:left;" >
+                    </td>
+                </tr>  
+          </table>  
+    </apex:pageblock>                
+    </apex:outputPanel>
+    </apex:outputPanel>  
+    
+ <!-- end of the edit selected charge pop up block -->     
+    </apex:form>    
+</apex:page>

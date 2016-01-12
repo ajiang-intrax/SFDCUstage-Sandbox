@@ -1,0 +1,44 @@
+<apex:page id="centers_app_submitted" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" title="Home | Intrax" standardStylesheets="false" showHeader="false" action="{!checkLogin}">
+<apex:composition template="IntraxTemplate_Vs1">
+<apex:define name="body">
+<apex:form id="form" >
+
+<div  class="wrapper">
+          
+  <div class="page-header clearfix">
+  <h1 class="page-title">Application Complete</h1></div>
+            
+ 
+         
+  <div  class="white-box clearfix">
+             
+    <div class="panel two_thirds">
+         <h2>Thanks for sharing your travel plans</h2>
+      <p>We will contact you within 1 business day Intrax will email you about your booking so we can send your quote. If you have questions now, please contact us:</p>
+
+      <ul>
+        <li>For Students: Call <apex:outputText value="{!ctrStudentPhoneNumber}" />, email <a href="mailto:info@intrax.edu">info@intrax.edu</a>,&nbsp;<apex:outputLink value="{!ctrLiveChat}" target="_blank" >LiveChat</apex:outputLink> or <a href="skype:intraxglobal?chat">Skype</a></li>
+        <li>For Partner Agencies: Call <apex:outputText value="{!ctrPartnerPhoneNumber}" /> or email <a href="mailto:admissions@intrax.edu">admissions@intrax.edu</a></li>
+      </ul>
+
+      <p>You can download a copy of your application here, or login back in to update information here.</p>
+      <p>Meet Intrax students and staff now on Facebook (like us).</p>
+      <p>Check out videos of San Francisco, San Diego and Chicago.</p>
+
+                
+      <div class="form-link no-float inline-block">
+        <apex:commandlink id="NextBtn" styleClass="next" action="{!navigator}">
+          <i class="icon-chevron-right"></i> 
+          <apex:param name="nextPage" value="/apex/your_applications"/>
+          <apex:param name="reDirectPage" value="false"/>
+          <apex:commandButton value="Next"/>
+        </apex:commandlink>
+      </div>              
+    </div>         
+  </div>
+</div>
+  
+</apex:form>
+</apex:define>
+</apex:composition>
+</apex:page>

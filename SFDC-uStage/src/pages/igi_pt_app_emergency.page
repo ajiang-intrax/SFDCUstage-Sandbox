@@ -1,0 +1,167 @@
+<apex:page id="igi_pt_app_education" docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardController="Applicant_Info__c"
+    extensions="AppEngine_Controller" action="{!checkLogin}"
+    standardStylesheets="false" showHeader="false"  title="Emergency Contacts">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_igi_pt_application userAgentCheck="{!userAgentCheck}" />
+      <div class="row">
+        <div class="col-md-7 col-md-push-3">
+            
+          <c:block_app_completion_igi applicantInfo="{!applicantInfo}" isIGIMainReady="{!CheckMainIGIApp}"/>
+          
+          <h1>Emergency Contacts</h1>
+            <p class="lead">Please tell us who to contact in case you have an emergency during your internship.</p>
+            <apex:form styleClass="form-vertical ws-validate" id="webform">
+            <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+            
+            <!-- <apex:outputPanel rendered="{!IF(applicantInfo.Application_Level__c == 'Main', true, false)}"> -->
+                  <apex:outputpanel layout="block" id="wrappertable" styleClass="panel-group group1">
+                    <apex:repeat id="wtable"  value="{!emergencyMap}" var="wrapper">
+                      <apex:variable var="rowLast" value="{!IF( emergencyMapLast == wrapper, 'in','')}"/>
+                      <!-- <apex:variable value="{!IF(wrappersParent.size==rowNum, 'in', '')}" var="rowLast" id="rowLast" /> -->
+                      <div class="panel panel-default">
+                        <div class="panel-heading">
+                          <h4 class="panel-title">
+                            <!-- <apex:outputLink styleClass="accordion-toggle" html-data-toggle="collapse" html-data-parent=".group1" value="#collapse1{!rowNum}">record Num -->
+                            <apex:outputLink styleClass="accordion-toggle" html-data-toggle="collapse" html-data-parent=".group1" value="#collapse1{!wrapper}">
+                              <apex:outputText rendered="{!IF(ISBLANK(emergencyMap[wrapper].First_Name__c), true, False)}" value="Emergency Contact {!wrapper}"> </apex:outputText>                        
+                              <apex:outputText rendered="{!IF(ISBLANK(emergencyMap[wrapper].First_Name__c), false, true)}" value=" {!emergencyMap[wrapper].First_Name__c} {!emergencyMap[wrapper].Last_Name__c}"> </apex:outputText>
+                            </apex:outputLink>
+                          </h4>
+                        </div>
+                        <!--  end panel heading -->
+                        <!-- <div id="collapse1{!rowNum}" class="panel-collapse collapse {!rowLast}"> -->
+                        <div id="collapse1{!wrapper}" class="panel-collapse collapse {!rowLast}">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                          <label class="control-label">First Name</label>                                           
+                                          <apex:inputField styleClass="form-control" value="{!emergencyMap[wrapper].First_Name__c}" required="true" id="firstName"/>
+                                        </div>
+                                    </div><!--  end col -->
+                                    <div class="col-sm-6">
+                                     <div class="form-group">
+                                      <label class="control-label">Last Name </label>
+                                        <apex:inputField styleClass="form-control" value="{!emergencyMap[wrapper].Last_Name__c}" required="TRUE" id="lastName"/>
+                                    </div>
+                                    </div><!--  end col -->
+                                </div><!--  end row -->
+                                
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                          <label class="control-label">Emergency Phone</label>                                          
+                                          <!-- <apex:inputField styleClass="form-control" value="{!emergencyMap[wrapper].Mobile__c}" required="true" id="mobilePhone"/> -->
+                                          <apex:inputField styleClass="form-control onlynumber" value="{!emergencyMap[wrapper].Mobile__c}" required="true" id="mobilePhone"/>
+                                        </div>
+                                    </div><!--  end col -->
+                                    <div class="col-sm-6">
+                                     <div class="form-group">
+                                      <label class="control-label">Email</label>
+                                        <apex:inputField styleClass="form-control" value="{!emergencyMap[wrapper].Email__c}" required="true" id="email"/>
+                                    </div>
+                                    </div><!--  end col -->
+                                </div><!--  end row -->
+                                
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                          <label class="control-label">Relationship</label>                                         
+                                          <apex:inputField styleClass="form-control" value="{!emergencyMap[wrapper].Role_Other__c}" required="true" id="relationship"/>
+                                        </div>
+                                    </div><!--  end col -->
+                                    
+                                </div><!--  end row -->
+                                                           
+                                <apex:outputText id="outputpanel1">
+                                  <apex:commandlink styleClass="btn btn-link btn-lg pull-right" action="{!removeEmergencyRecord}" rerender="wrappertable" onComplete="dpInitiate();" immediate="true" id="linkdelWrapper" status="status"> <i class="fa fa-trash-o"></i> <span>Remove</span>
+                                    <apex:param name="toDelIdent" value="{!wrapper}" assignTo="{!toDelIdent}"/>
+                                  </apex:commandlink>
+                                </apex:outputText>
+                            </div>
+                        </div>
+                        
+                      </div>
+                      <!--  end panel -->
+                      
+               
+                    </apex:repeat>
+                    <apex:outputPanel layout="block" id="addButtonP" >
+                      <!-- <apex:outputPanel layout="block" rendered="{!wrapperParsize < 2}" id="outputpaneladd">-->
+                      <apex:outputPanel layout="block" id="outputpaneladd">
+                        <apex:commandlink styleClass="btn btn-link btn-lg margin-b" action="{!addEmergencyRecord}" onComplete="dpInitiate();" immediate="true" rerender="wrappertable, emergencyblock, rowCounter" id="linkaddlWrapper" status="status">
+                          <apex:param name="addCount" value="1" assignTo="{!addCount}"/>
+                          <apex:commandButton value="" id="addbutton"/>
+                                <i class="fa fa-plus-circle"></i>
+                                <span>Add Emergency Contact</span>
+                        </apex:commandlink>
+                      </apex:outputPanel>
+                    </apex:outputPanel>
+          
+                  </apex:outputpanel>
+                  <!--  end panel group --> 
+            
+            <!-- </apex:outputPanel> --> <!-- END MAIN BLOCK -->
+            
+            <div class="form-group margin-t">
+               <apex:outputText rendered="{!IF(applicantInfo.Application_Level__c == 'Main' && applicantInfo.Application_Stage__c == 'Working',  true, false)}">
+                    <apex:commandlink styleClass="btn btn-primary btn-lg  margin-r"
+                                        action="{!navigator}" id="nextlink"  onComplete="rerunjs();" reRender="webform" status="onsubmit" >
+                      <apex:param name="nextPage" value="/apex/igi_pt_app_health"/>
+                      <apex:param name="reDirectPage" value="true" />
+                      <apex:param name="pageId" value="057"/>
+                      <apex:commandButton value="Save & Continue" id="continuebutton" />
+                    </apex:commandlink>
+                    
+                    <apex:commandlink rendered="{!NOT(CONTAINS(applicantInfo.PageStatus_Complete__c,'057'))}" styleClass="btn btn-link btn-lg"
+                                    action="{!setPageIdStarted}" id="skipLink" reRender="webform" status="onsubmit">
+                        <apex:param name="pageId" value="57"/>
+                        <apex:commandButton value="" id="skipButton"/>        
+                        <span>Skip this page</span>        
+                    </apex:commandlink>
+               </apex:outputText>   
+              
+                
+                <apex:outputText rendered="{!IF(applicantInfo.Application_Level__c == 'Main' && applicantInfo.Application_Stage__c != 'Working' && NOT(isPartner),  true, false)}">
+                <apex:commandlink styleClass="btn btn-primary btn-lg"
+                                    action="{!saveEmergencyContactNotify}" id="nextlink1"  onComplete="rerunjs();" reRender="webform" status="onsubmit" >
+                  <apex:param name="nextPage" value="/apex/igi_home"/>
+                  <apex:param name="FromNotify" value="1" />
+                  <apex:param name="reDirectPage" value="true" />
+                  <apex:param name="pageId" value="57"/>
+                  <apex:commandButton value="Save" id="continuebutton1" />
+                </apex:commandlink>
+                </apex:outputText>
+                <apex:outputText rendered="{!IF(applicantInfo.Application_Level__c == 'Main' && applicantInfo.Application_Stage__c != 'Working' && isPartner,  true, false)}">                     
+	                <apex:commandlink styleClass="btn btn-primary btn-lg margin-r"
+										action="{!navigator}" id="nextlinkPartner"  onComplete="rerunjs();" reRender="webform" status="onsubmit">
+	                  <apex:param name="nextPage" value="/apex/igi_pt_app_home"/>
+	                  <apex:param name="reDirectPage" value="true" />
+	                  <apex:param name="pageId" value="059"/>	                  
+	                  <apex:commandButton value="Save & Continue" id="continuebuttonPartner" />
+	                </apex:commandlink>
+               </apex:outputText>
+                
+            </div>
+            
+          </apex:form>
+          <apex:form >
+          	<c:block_app_coedit_authorization ApplicantInfo="{!applicantInfo}" pageController="{!AEC}" rendered="{!applicantInfo.Apply_on_Behalf_of_PT__c && applicantInfo.Application_Stage__c == 'Working'}"/>
+          </apex:form>
+        </div>
+        <!-- end column -->
+        
+        <div class="col-md-3 col-md-pull-7">
+            <c:block_notification_sidebar ApplicantInfo="{!applicantInfo}" isPartner="{!isPartner}"/>   
+          <apex:form >
+            <c:menu_igi_pt_app ApplicantInfo="{!applicantInfo}" personInfo="{!personInfo}" />
+          </apex:form>
+        </div>
+        <!-- end column  --> 
+      </div>
+      <!-- end row --> 
+      
+    </apex:define>
+  </apex:composition>
+</apex:page>

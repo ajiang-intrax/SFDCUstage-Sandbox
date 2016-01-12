@@ -1,0 +1,54 @@
+<apex:page docType="html-5.0" id="portalUserProfilePage" controller="MyProfilePageController" standardStylesheets="true" showHeader="false" title="My Intrax Profile">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+    <div class="wrapper">
+        <apex:form >
+        <h1>Account Settings</h1>
+   
+            <apex:pageBlock id="viewUserDetail">
+             <h2>Summary</h2> 
+                <div class="white-box clearfix">
+                    <div class="panel two_thirds">
+                        <p>Below is the information we have for your account. Please select the Edit button to make any necessary updates. Make sure to select the Time Zone for where you live, so that any future appointments are displayed according to your time zone.</p>
+                <br/>
+                        <div class="data-row"> 
+                <div class="data-label left">First Name</div>
+                <div class="data-field"><apex:outputField id="detailfirstName" value="{!user.firstName}"/> </div> 
+                      </div>
+                <div class="data-row"> 
+                <div class="data-label left">Last Name</div>
+                <div class="data-field"><apex:outputField id="detaillastName" value="{!user.lastName}"/> </div> 
+                      </div>
+                <div class="data-row"> 
+                <div class="data-label left">Email</div>
+                <div class="data-field"><apex:outputField id="detailemail" value="{!user.email}"/> </div> 
+                      </div>
+                <div class="data-row"> 
+                <div class="data-label left">Locale</div>
+                <div class="data-field">
+                	<apex:outputField id="detaillocale" value="{!user.localesidkey}"/> </div> 
+                </div>
+                
+                <div class="data-row"> 
+                <div class="data-label left">Language</div>
+                <div class="data-field"><apex:outputField id="detaillanguage" value="{!user.languagelocalekey}"/> </div> 
+                      </div>
+               <div class="data-row">   
+                <div class="data-label left">Time Zone</div>
+                <div class="data-field"><apex:outputField id="detailtimezone" value="{!user.timezonesidkey}"/></div> 
+                      </div>
+                <div class="data-row">    
+                <div class="form-input"><apex:commandButton id="edit" value="Edit" action="{!edit}"/></div>
+                <div class="form-input"><apex:commandButton id="changePassword" value="Change Password" action="{!changePassword}"/></div>
+                </div>
+                    </div>
+                    </div>
+                </apex:pageBlock>
+         
+       
+        
+              </apex:form>
+         </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

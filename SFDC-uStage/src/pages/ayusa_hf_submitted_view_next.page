@@ -1,0 +1,376 @@
+<apex:page id="ayusa_hf_submitted_view_next" docType="html-5.0" standardController="Applicant_Info__c"  extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false" >
+  <apex:composition template="IntraxTemplate_Vs1">
+     <apex:define name="body">
+      <div class="wrapper" id="ayusa-student-preapp-summary">
+ <apex:form id="form">
+ 
+      <div class="page-header clearfix">
+<h1 class="page-title">Ayusa Host Family Application</h1>
+
+<div class="back-to-main">
+  
+                         <apex:outputLink id="BacktoMain1" value="/apex/ayusa_hf_home?id={!applicantInfo.Id}" rendered="{!IF(applicantInfo.Intrax_Program_Options__c == 'Ayusa High School' && applicantInfo.Type__c == 'Participant' && applicantInfo.Application_Stage__c == 'Working' && applicantInfo.Application_Level__c == 'Main' && NOT(IsPartner), true, false)}">Back to Main Page</apex:outputLink>
+                   <apex:outputLink id="BacktoMain2" value="/apex/your_applications" rendered="{!IF(applicantInfo.Intrax_Program_Options__c == 'Ayusa High School' && applicantInfo.Type__c == 'Participant' && NOT(applicantInfo.Application_Stage__c == 'Working') && applicantInfo.Application_Level__c == 'Main' && NOT(IsPartner), true, false)}">Back to Main Page</apex:outputLink>
+                     <apex:outputLink id="BacktoMain3" value="/apex/your_applications" rendered="{!IF(applicantInfo.Intrax_Program_Options__c == 'Ayusa High School' && applicantInfo.Type__c == 'Host Family' && NOT(applicantInfo.Application_Stage__c == 'Working') && applicantInfo.Application_Level__c == 'Main' && NOT(IsPartner), true, false)}">Back to Main Page</apex:outputLink>
+                 <apex:outputLink id="BacktoMain4" value="/apex/ayusa_hf_home?id={!applicantInfo.Id}" rendered="{!IF(applicantInfo.Intrax_Program_Options__c == 'Ayusa High School' && applicantInfo.Type__c == 'Host Family' && applicantInfo.Application_Stage__c == 'Working' && applicantInfo.Application_Level__c == 'Main' && NOT(IsPartner), true, false)}">Back to Main Page</apex:outputLink>
+                <apex:outputLink id="BacktoMain5" value="/apex/ayusa_hf_home?id={!applicantInfo.Id}" rendered="{!IF(NOT(applicantInfo.Application_Stage__c == 'In-Review') && NOT(applicantInfo.Application_Stage__c == 'Declined - Ayusa') && NOT(applicantInfo.Application_Stage__c == 'Conditional') && NOT(applicantInfo.Application_Stage__c == 'Accepted') && NOT(applicantInfo.Application_Stage__c == 'Declined - Agent') && applicantInfo.Application_Level__c == 'Main' && IsPartner, true, false)}">Back to Main Page</apex:outputLink>
+                <apex:outputLink id="BacktoMain6" value="/apex/LoginRedirection" rendered="{!IF((applicantInfo.Application_Stage__c == 'In-Review' || applicantInfo.Application_Stage__c == 'Declined - Ayusa' || applicantInfo.Application_Stage__c == 'Conditional' || applicantInfo.Application_Stage__c == 'Accepted' || applicantInfo.Application_Stage__c == 'Declined - Agent') && applicantInfo.Application_Level__c == 'Main' && IsPartner, true, false)}">Back to Main Page</apex:outputLink>
+</div>
+</div>
+          <div class="section-header clearfix">
+             <h2>Summary</h2>
+            <div class="progress-bar">Page 2 <em>of</em> 2</div>
+            </div> 
+          
+       
+        <div class="white-box clearfix">       
+         
+            
+              
+              
+             
+           
+              
+                  
+            <div class="panel no-float half">
+            
+                <p>Click <strong>View PDF Summary</strong> to print or save your information for your records.</p>
+
+               
+            
+            </div>
+              
+              <div class="panel half">
+          
+            <h3 class="data-block-title">Local High School</h3> 
+              
+                           
+              <div class="form-row">
+                <div class="form-label left">High School Name:</div>
+                <div class="form-field">
+                  <apex:outputField value="{!SchoolInfo.Name__c}" />
+                </div>
+              </div>
+              
+              <div class="form-row"> 
+                <div class="form-label left">Street Address 1:</div>
+                <div class="form-field">
+                  <apex:outputField value="{!SchoolInfo.Street__c}" />
+                </div>
+            
+              </div>
+           
+              <div class="form-row">
+                <div class="form-label left"> City: </div>
+                <div class="form-field">
+                  <apex:outputField value="{!SchoolInfo.City__c}" /> &nbsp;
+                </div>
+              </div> 
+               <div class="form-row">
+                <div class="form-label left">State:</div>
+                <div class="form-field">
+                  <apex:outputField value="{!SchoolInfo.State__c}" />
+                </div>
+              </div>
+              
+              <div class="form-row"> 
+                <div class="form-label left">Zip Code:</div>
+                <div class="form-field">
+                  <apex:outputField value="{!SchoolInfo.Postal_Code__c}" />
+                </div>
+            
+              </div>
+           
+              <div class="form-row">
+                <div class="form-label left"> Is this a private or public school?: </div>
+                <div class="form-field">
+                  <apex:outputField value="{!SchoolInfo.Category__c}" /> &nbsp;
+                </div>
+              </div> 
+               <div class="form-row">
+                <div class="form-label left">School Administrator Name:</div>
+                <div class="form-field">
+                  <apex:outputField value="{!SchoolInfo.Contact_Name__c}" />
+                </div>
+              </div>
+              
+              <div class="form-row"> 
+                <div class="form-label left">School Administrator Title:</div>
+                <div class="form-field">
+                  <apex:outputField value="{!SchoolInfo.Contact_Title__c}" />
+                </div>
+            
+              </div>
+           
+              <div class="form-row">
+                <div class="form-label left"> Phone: </div>
+                <div class="form-field">
+                  <apex:outputField value="{!SchoolInfo.Phone__c}" /> &nbsp;
+                </div>
+              </div>
+               <div class="form-row">
+                <div class="form-label left"> Email: </div>
+                <div class="form-field">
+                  <apex:outputField value="{!SchoolInfo.Email__c}" /> &nbsp;
+                </div>
+              </div> 
+                 <h3 class="data-block-title">Hosting Preferences </h3>
+              <div class="form-row">
+                <div class="form-label left">When do you wish to start hosting? </div>
+                <div class="form-field">
+                  <apex:outputField value="{!applicantInfo.Engagement_Start__c}"/> 
+                </div>
+              </div> 
+              <div class="form-row">
+                <div class="form-label left">Gender </div>
+                <div class="form-field">
+                  <apex:outputField value="{!applicantInfo.Gender_Preference__c}"/> 
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-label left">How many students would you be willing to host? </div>
+                <div class="form-field">
+                  <apex:outputField value="{!applicantInfo.Pax__c}"/> 
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-label top">Nationality</div>
+                <div class="form-field">
+                  <apex:outputField value="{!applicantInfo.Nationality_Preferences__c}"/>
+                </div>
+              </div>
+                  
+              <div class="form-row">
+                <div class="form-label left">Would you be willing to inform the exchange student in advance of any religious affiliations of family members?</div>
+                <div class="form-field">
+                    <apex:outputField value="{!applicantInfo.Religious_Sharing_Indicated__c}" />
+                        
+                </div>
+              </div>
+                  
+              <div class="form-row">
+                <div class="form-label left">Would any member of the household have difficulty hosting a student whose religious beliefs were different from their own?</div>
+                <div class="form-field">
+                    <apex:outputField value="{!applicantInfo.Religious_Restriction_Indicated__c}" />
+                        
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-label left">Would you host a student who follows a particular diet?</div>
+                <div class="form-field">
+                    <apex:outputField value="{!applicantInfo.Host_Special_Diet__c}" />
+                        
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-label left">Can your family provide three meals daily?</div>
+                <div class="form-field">
+                    <apex:outputField value="{!applicantInfo.Daily_Meal_Commitment__c}" />
+                        
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-label left">Has your family ever hosted an international student?</div>
+                <div class="form-field">
+                <apex:outputField value="{!applicantInfo.Prior_Host_Experience__c}"/>
+                        
+                </div>
+              </div>
+                <apex:pageBlock id="hosting-before"> 
+                   <apex:outputPanel layout="block" rendered="{!ApplicantInfo.Prior_Host_Experience__c == 'Yes'}">     
+              <div class="form-row">
+                <div class="form-label left">If yes, with which organization? </div>
+                <div class="form-field">
+                  <apex:outputField value="{!applicantInfo.Prior_Hosting_Agency__c}"/>
+                </div>
+              </div>
+             
+              <div class="form-row">
+                <div class="form-label top">If yes, how was the experience? </div>
+                <div class="form-field">
+                  <apex:outputField value="{!applicantInfo.Prior_Host_Description__c}"/>
+                </div>
+              </div>
+                 </apex:outputPanel> 
+              </apex:pageBlock>
+                        
+              <div class="form-row">
+                <div class="form-label left">Does any member of the home currently or has in the past worked for an exchange organization?</div>
+                <div class="form-field">
+                   
+               <apex:outputField value="{!applicantInfo.Exchange_Agency_Employment__c}"/>
+                    
+                </div>
+              </div>
+              
+               <apex:pageBlock id="worked-hosting-before"> 
+                   <apex:outputPanel layout="block" rendered="{!ApplicantInfo.Exchange_Agency_Employment__c == 'Yes'}"> 
+              <div class="form-row">
+                <div class="form-label left"> If yes, which organization?</div>
+                <div class="form-field">
+                  <apex:outputField value="{!applicantInfo.Exchange_Agency_Employer_Name__c}"/>
+                </div>
+              </div>
+                </apex:outputPanel>
+             </apex:pageBlock>
+             
+            <div class="form-row">
+                <div class="form-label left"> How did you learn about hosting? </div>
+                <div class="form-field">
+                  <apex:outputField value="{!applicantInfo.How_Heard__c}"/>
+                </div>
+              </div>
+             
+             </div> 
+            
+            
+             <div class="panel half last">     
+                 
+             
+          
+           
+                 <h3 class="data-block-title">Other Family Members</h3>
+        
+             <apex:repeat value="{!familyInfoList}" var="item" >
+             <div class="form-row">
+          <div class="form-label left"><b>Name</b></div>
+          <div class="form-field">
+          <b>  <apex:outputText value="{!item.First_Name__c} {!item.Last_Name__c}"/></b>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-label left">Role</div>
+          <div class="form-field">
+            <apex:outputText value="{!item.Role__c}"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-label left">Gender</div>
+          <div class="form-field">
+            <apex:outputText value="{!item.Gender__c}"/>
+          </div>
+        </div>
+       
+        <div class="form-row">
+          <div class="form-label left"> Date Of Birth</div>
+          <div class="form-field">
+            <apex:outputfield value="{!item.Date_of_Birth__c}"/>
+          </div>
+        </div>
+       
+      </apex:repeat>
+            <h3 class="data-block-title">Family References</h3>
+        
+             <apex:repeat value="{!RefererInfoList}" var="item" >
+             <div class="form-row">
+          <div class="form-label left"><b>Name</b></div>
+          <div class="form-field">
+          <b>  <apex:outputText value="{!item.First_Name__c} {!item.Last_Name__c}"/></b>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-label left">Email</div>
+          <div class="form-field">
+            <apex:outputText value="{!item.Email__c}"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-label left">Mobile</div>
+          <div class="form-field">
+            <apex:outputText value="{!item.Mobile__c}"/>
+          </div>
+        </div>
+       
+       
+       
+      </apex:repeat>
+      <h3 class="data-block-title">The Primary Contact - Previous Addresses</h3>
+        
+        <apex:repeat value="{!locationInfoList}" var="item" >
+        <div class="form-row">
+          <div class="form-label left"><b>Street</b></div>
+          <div class="form-field">
+          <b>  <apex:outputText value="{!item.Street__c}"/></b>
+        </div>
+        </div>
+        <div class="form-row">
+          <div class="form-label left">City</div>
+          <div class="form-field">
+          <apex:outputText value="{!item.City__c}"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-label left">State</div>
+          <div class="form-field">
+            <apex:outputText value="{!item.State__c}"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-label left">Postal Code/Zip</div>
+          <div class="form-field">
+            <apex:outputText value="{!item.Postal_Code__c}"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-label left">Occupancy Start</div>
+          <div class="form-field">
+            <apex:outputfield value="{!item.Occupancy_Start__c}"/>
+          </div>
+        </div>
+       
+       
+      </apex:repeat>
+           </div>
+             <div class="panel full last">
+                
+                <div class="form-link">
+                    <apex:outputLink id="Back" styleClass="back" value="/apex/ayusa_hf_submitted_view?id={!applicantInfo.Id}&view=Both">
+                    <i class="icon-chevron-left"></i>
+                    <span>Back</span>
+                    </apex:outputLink>
+              </div>
+              <!-- 
+               <div class="form-button">
+                 <apex:commandlink styleClass="next" action="{!navigator}">
+                 <apex:param name="nextPage" value="/apex/ayusa_hf_submitted_view"/>
+                 <apex:param name="reDirectPage" value="true"/>
+                 <i class="icon-chevron-left"></i>
+                 <apex:commandButton value="Back" />
+                 </apex:commandlink>
+               </div>  
+               -- -->         
+             
+               <div class="form-link">
+                <apex:commandlink action="{!navigator}" target="_blank" >
+                 <i class="icon-file"></i>
+                    <apex:param name="nextPage" value="/apex/ayusa_hf_fam_view_pdf_summary"/>
+                    <apex:param name="reDirectPage" value="true"/>
+                    <apex:param name="view" value="Both" assignTo="{!view}"/>
+                    <apex:commandButton value="View PDF Summary" />
+                </apex:commandlink>
+               </div>
+           
+                 
+                      <div class="form-link">
+                            <apex:outputLink id="FooterBacktoMain1" value="/apex/ayusa_hf_home?id={!applicantInfo.Id}" rendered="{!IF(applicantInfo.Intrax_Program_Options__c == 'Ayusa High School' && applicantInfo.Type__c == 'Participant' && applicantInfo.Application_Stage__c == 'Working' && applicantInfo.Application_Level__c == 'Main' && NOT(IsPartner), true, false)}"><i class="icon-home"></i> <span>Back to Main Page</span></apex:outputLink>
+                            <apex:outputLink id="FooterBacktoMain2" value="/apex/your_applications" rendered="{!IF(applicantInfo.Intrax_Program_Options__c == 'Ayusa High School' && applicantInfo.Type__c == 'Participant' && NOT(applicantInfo.Application_Stage__c == 'Working') && applicantInfo.Application_Level__c == 'Main' && NOT(IsPartner), true, false)}"><i class="icon-home"></i> <span>Back to Main Page</span></apex:outputLink>
+                            <apex:outputLink id="FooterBacktoMain3" value="/apex/your_applications" rendered="{!IF(applicantInfo.Intrax_Program_Options__c == 'Ayusa High School' && applicantInfo.Type__c == 'Host Family' && NOT(applicantInfo.Application_Stage__c == 'Working') && applicantInfo.Application_Level__c == 'Main' && NOT(IsPartner), true, false)}"><i class="icon-home"></i> <span>Back to Main Page</span></apex:outputLink>
+                            <apex:outputLink id="FooterBacktoMain4" value="/apex/ayusa_hf_home?id={!applicantInfo.Id}" rendered="{!IF(applicantInfo.Intrax_Program_Options__c == 'Ayusa High School' && applicantInfo.Type__c == 'Host Family' && applicantInfo.Application_Stage__c == 'Working' && applicantInfo.Application_Level__c == 'Main' && NOT(IsPartner), true, false)}"><i class="icon-home"></i> <span>Back to Main Page</span></apex:outputLink>
+                            <apex:outputLink id="FooterBacktoMain5" value="/apex/ayusa_hf_home?id={!applicantInfo.Id}" rendered="{!IF(NOT(applicantInfo.Application_Stage__c == 'In-Review') && NOT(applicantInfo.Application_Stage__c == 'Declined - Ayusa') && NOT(applicantInfo.Application_Stage__c == 'Conditional') && NOT(applicantInfo.Application_Stage__c == 'Accepted') && NOT(applicantInfo.Application_Stage__c == 'Declined - Agent') && applicantInfo.Application_Level__c == 'Main' && IsPartner, true, false)}"><i class="icon-home"></i> <span>Back to Main Page</span></apex:outputLink>
+                            <apex:outputLink id="FooterBacktoMain6" value="/apex/LoginRedirection" rendered="{!IF((applicantInfo.Application_Stage__c == 'In-Review' || applicantInfo.Application_Stage__c == 'Declined - Ayusa' || applicantInfo.Application_Stage__c == 'Conditional' || applicantInfo.Application_Stage__c == 'Accepted' || applicantInfo.Application_Stage__c == 'Declined - Agent') && applicantInfo.Application_Level__c == 'Main' && IsPartner, true, false)}"><i class="icon-home"></i> <span>Back to Main Page</span></apex:outputLink>
+                     </div>
+                     
+               </div>
+            
+              </div>
+           
+           </apex:form>
+      </div>
+    </apex:define>
+</apex:composition>
+</apex:page>

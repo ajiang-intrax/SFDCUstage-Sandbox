@@ -1,0 +1,32 @@
+<apex:page standardController="Sevis__c" extensions="SevisListActionController" recordSetVar="sevisRecs" action="{!getPaymentData}" >
+
+   <apex:form >
+       <apex:pageBlock title="Selected Sevis Records for Payment Processing">
+       
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!printPaymentXML}" value="Confirm" onClick="return getConfirmation();"/>
+                <apex:commandlink styleClass="save" target="_blank" action="{!downloadPaymentXML}" >
+                	<apex:commandButton value="Download XML"/>
+                </apex:commandLink>
+            </apex:pageBlockButtons>
+            
+            <apex:outputText value="You have selected the following records for Payment processing."/>
+            <apex:pageBlockTable value="{!selected}" var="sevisRec">
+            	<apex:column value="{!sevisRec.Id}"/>
+                <apex:column value="{!sevisRec.SEVIS_Fee_Paid__c}"/>
+                <apex:column value="{!sevisRec.SEVIS_ID__c}"/>
+                <apex:column value="{!sevisRec.SEVIS_When_Downloaded__c}"/>
+                <apex:column value="{!sevisRec.SEVIS_ARO_Name__c}"/> 
+            </apex:pageBlockTable>
+
+        </apex:pageBlock>
+
+		<script>
+			function getConfirmation(){
+				return confirm('I have downloaded and saved the XML and confirm to update');
+			}
+		</script>        
+        
+    </apex:form> 
+
+</apex:page>

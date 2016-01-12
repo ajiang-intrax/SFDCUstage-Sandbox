@@ -1,0 +1,26 @@
+<!--  
+Component : Block_PortalShortcuts
+
+Description: Intrax Partner Portal Home Page Quick Links.
+
+-->
+<apex:component layout="none">
+	
+	<div class="block portal-shortcuts">  
+		<div class="block-header"> 
+			
+			<h3>Quicklinks</h3>    
+		</div>     
+
+		<div class="block-body"> 
+	
+			<ul>    
+				<li><apex:outputLink value="/apex/IntraxPartnerPortal_Application?workingStatus=true">Applications in progress</apex:outputLink></li>
+				<li><apex:outputLink value="/apex/IntraxPartnerPortal_Application?submittedStatus=true">Application pending audit</apex:outputLink></li>
+				<li><apex:outputLink value="/apex/IntraxPartnerPortal_Matches?confirmedStatus=true">Matches pending special approval</apex:outputLink></li>
+				<li><apex:outputLink value="/apex/IntraxPartnerPortal_Assessment?isAssessments=true">Assessments to view</apex:outputLink></li>
+				<li><apex:outputLink value="/apex/IntraxPartnerPortal_Participant?isNeedsTravel=true">Participants pending travel</apex:outputLink></li>   
+			</ul>    
+		</div>    
+	</div>     
+</apex:component>

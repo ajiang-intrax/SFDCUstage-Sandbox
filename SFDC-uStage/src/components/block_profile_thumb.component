@@ -1,0 +1,6 @@
+<apex:component >
+<apex:attribute name="photoUrl" description="This is the value for the component" type="String" required="false" default=""/>
+	<apex:outputPanel styleClass="profile-thumb" layout="block" rendered="{!IF(ISBLANK(photoUrl),false,true)}">
+	     <apex:image url="{!photoUrl}"></apex:image>
+	</apex:outputPanel>
+</apex:component>

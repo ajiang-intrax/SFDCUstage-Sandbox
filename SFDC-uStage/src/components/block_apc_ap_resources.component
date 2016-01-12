@@ -1,0 +1,136 @@
+<apex:component layout="none" id="block_apc_ap_resources" allowDML="true">
+  <apex:attribute name="PageController" description="Instance of home_controller class" type="home_controller" required="false" default="" />
+  
+  
+  
+    <!--Post Application -->
+
+ <apex:outputpanel layout="block" id="blockCasePA" rendered="{!PageController.currentApp.Intrax_Program__c == 'AuPairCare' && 
+PageController.currentApp.Application_Type__c == 'Original' && PageController.currentApp.Application_Stage__c == 'Accepted' &&
+PageController.currentApp.Application_Level__c == 'Main' && PageController.currentApp.Engagement__r.Status__c!='On Program' && PageController.confMatch.Status__c!='Confirmed'}">
+<div class="row margin-b4">
+<div class="col-sm-12">
+          <h2 class="no-margin-t">About the Au Pair Program</h2>
+         <!--  <p class="lead">These articles and guides will help you learn more about the au pair program, give you cultural information about the United States, and address other questions you might have.</p>
+       -->
+       <div style="margin-bottom:5px;"><apex:outputLink value="apc_resources_article?cname=ptinterviewguide" id="linkresinfoPAC0" ><b>Interview Guide</b> </apex:outputLink></div>
+                <div style="margin-bottom:5px;"><apex:outputLink value="apc_resources_article?cname=aphandbook" id="linkresinfoPAC1" ><b>The Au Pair Handbook</b> </apex:outputLink></div>
+                <div style="margin-bottom:5px;"><apex:outputLink value="apc_resources_article?cname=ptculturegrams" id="linkresinfoPAC2" ><b>Learn about the different states in the U.S.A</b> </apex:outputLink></div>
+                <div style="margin-bottom:5px;"><apex:outputLink value="apc_resources_article?cname=ptfaq" id="linkresinfoPAC3" ><b>Frequently Asked Questions</b> </apex:outputLink></div>
+   		
+ 
+   <div class="margin-t2"><apex:outputLink value="apc_resources" styleClass="btn btn-link btn-lg vs2" id="linkresinfoBreak1"><span>View All Resources ></span></apex:outputLink></div>
+</div>
+</div>
+  </apex:outputpanel>
+  
+  
+  
+  
+  
+  <!-- Confirmed Match -->
+  
+<apex:outputpanel layout="block" id="blockCase1" rendered="{!PageController.currentApp.Intrax_Program__c == 'AuPairCare' && 
+PageController.currentApp.Application_Type__c == 'Original' && PageController.currentApp.Application_Stage__c == 'Accepted' &&
+PageController.currentApp.Application_Level__c == 'Main' && PageController.confMatch.Id!=null && PageController.confMatch.Status__c=='Confirmed' && 
+PageController.currentApp.Engagement__r.Status__c!='On Program' && PageController.currentApp.Engagement__r.Status__c!='Program Complete'}">
+  <div class="row margin-b4">
+<div class="col-sm-12"> 
+          <h2 class="no-margin-t">Preparing For Your Program</h2>
+          <p>These guides will walk you through the <b>mandatory</b> tasks you need to complete before your arrival in the United States.</p>
+ 
+ <div class="margin-b1">
+          <apex:outputLink value="apc_resources_article?cname=predepartureproject" id="linkresinfo1"> <b>Pre-departure Project</b> </apex:outputLink>
+          <div>The pre-departure project must be completed before you depart your home country.</div>
+  </div>
+ <div class="margin-b1">
+          <apex:outputLink value="apc_resources_article?cname=aptrainings" id="linkresinfo2" > <b>Au Pair Trainings</b> </apex:outputLink>
+          <div>A series of required video tutorials to complete before departing your home country.</div> 
+  </div>
+ <div class="margin-b1">
+          <apex:outputLink value="apc_resources_article?cname=gettingyourdsform" id="linkresinfo3" > <b>Your DS-2019 Form</b> </apex:outputLink>
+          <div>Get to know your DS-2019 form, how you will receive it, and why it is important.</div>
+ </div>     
+  <div class="margin-b1">
+          <apex:outputLink value="apc_resources_article?cname=visaappointment" id="linkresinfoCol1" > <b>Scheduling a Visa Appointment </b> </apex:outputLink>
+          <div>A guide to making your visa appointment, as well as what types of questions you may be asked.</div>
+</div>
+ <div class="margin-b1">
+          <apex:outputLink value="apc_resources_article?cname=internationaldriverslicense" id="linkresinfoCol2" > <b>Obtaining Your International Driver's License </b> </apex:outputLink>
+          <div>How to get your international driver?s License, which you are required to obtain before your departure.</div>
+   </div>
+ <div class="margin-b1">
+          <apex:outputLink value="apc_resources_article?cname=healthinsurance" id="linkresinfoCol3" > <b>Signing Up For Health Insurance </b> </apex:outputLink>
+          <div>Information and resources regarding your health insurance.</div>
+</div>
+    <div class="margin-t2">
+   <apex:outputLink value="apc_resources" styleClass="btn btn-link btn-lg vs2" id="linkresinfoBreak2" > <span>View All Resources</span> </apex:outputLink>
+   </div>
+  
+  </div>
+  </div> 
+  </apex:outputpanel>
+
+  
+  <!-- Post Arrival Home. Eng Status = on program || Match Break -->
+<apex:outputpanel layout="block" id="blockCase2" rendered="{!PageController.currentApp.Intrax_Program__c == 'AuPairCare' && 
+PageController.currentApp.Application_Type__c == 'Original' && PageController.currentApp.Application_Stage__c == 'Accepted' &&
+PageController.currentApp.Application_Level__c == 'Main' && 
+((PageController.confMatch.Id!=null && PageController.confMatch.Status__c=='Confirmed' && PageController.currentApp.Engagement__r.Status__c=='On Program') || (PageController.currentApp.Engagement__r.Status__c=='On Program' && PageController.confMatch.Id==null))}">
+<div class="row margin-b4">
+<div class="col-sm-12">
+    
+          <h2 class="no-margin-t">Au Pair Resources</h2>
+          <p>These guides will provide you with valuable information regarding your time on the au pair program.</p>
+
+            <div style="margin-bottom:5px;"><apex:outputLink value="apc_resources_article?cname=aphandbook" id="linkresinfoC1" > <b>Au Pair Handbook</b> </apex:outputLink></div>
+               <div style="margin-bottom:5px;"><apex:outputLink value="apc_resources_article?cname=AuPairAcademy" id="linkresinfoC2" > <b>Au Pair Academy</b> </apex:outputLink></div>
+                <div style="margin-bottom:5px;"><apex:outputLink value="apc_resources_article?cname=healthinsurance" id="linkresinfoC3" > <b>Health Insurance Information</b> </apex:outputLink></div>
+                <div style="margin-bottom:5px;"><apex:outputLink value="apc_resources_article?cname=EducationRequirement" id="linkresinfoC4" > <b>Completing Your Education Requirement</b> </apex:outputLink></div>
+                 <div style="margin-bottom:5px;"><apex:outputLink value="apc_resources_article?cname=internationaldriverslicense" id="linkresinfoC5" > <b>Driving Tips</b> </apex:outputLink></div>
+                 <div style="margin-bottom:5px;"><apex:outputLink value="apc_resources_article?cname=socialsecuritycard" id="linkresinfoC6" > <b>Applying for a Social Security Card</b> </apex:outputLink></div>
+                  <div style="margin-bottom:5px;"><apex:outputLink value="apc_resources_article?cname=travelingonprogram" id="linkresinfoC7" > <b>Traveling While On Program</b> </apex:outputLink></div>
+    <div class="margin-t2">
+   <apex:outputLink value="apc_resources" styleClass="btn btn-link btn-lg vs2" id="linkresinfoBreak3" > <span>View All Resources</span> </apex:outputLink>
+   </div>
+
+</div>
+</div>
+  </apex:outputpanel>
+  
+  <!--Post Program -->
+
+  <apex:outputpanel layout="block" id="blockCasePP" rendered="{!PageController.currentApp.Intrax_Program__c == 'AuPairCare' && 
+PageController.currentApp.Application_Type__c == 'Original' && PageController.currentApp.Application_Stage__c == 'Accepted' &&
+PageController.currentApp.Application_Level__c == 'Main' && PageController.currentApp.Engagement__r.Status__c=='Program Complete' && PageController.confMatch.Id!=null}">
+<div class="row margin-b4">
+<div class="col-sm-12">
+
+          <h2 class="no-margin-t">What's Next?</h2>
+          <p>You can view and download a copy of your program completion certificate for three (3) months following your program completion.</p>
+
+              <div class="margin-b1">
+              <a href="apc_resources_article?cname=endofprogramquestions" target="_blank"><b>Tell Us About Your Experience</b></a>
+              <p>The AuPairCare Alumni Network is a space for participants to stay in contact, share their stories, and begin their lifelong adventure as an AuPairCare Alumni.</p>
+             </div>
+              
+               <div class="margin-b1">
+               <a href="apc_resources_article?cname=ptreferral"><b>Refer a Friend to AuPairCare Program</b></a>
+               <p>Some of our best au pairs were referred from other great au pairs like you.  Share the joys of being an AuPairCare au pair with your friends.</p>
+             </div>
+             
+            <div class="margin-b1">
+               <a href="apc_resources_article?cname=exploreintrax" target="_blank"><b>Explore Other Programs</b></a>
+               <p>Looking for more international work experience to strengthen your resume in a global economy? Intrax has a program for you. We provide children, students, young adults, families, and organizations with rewarding cross-cultural opportunities which inspire personal growth and cultural understanding.</p>
+     </div>
+           
+    <div class="margin-t2">
+   <apex:outputLink value="apc_resources" styleClass="btn btn-link btn-lg vs2" id="linkresinfoBreak4" > <span>View All Resources</span> </apex:outputLink>
+   </div>
+
+</div>
+</div>
+  </apex:outputpanel>
+  
+
+</apex:component>

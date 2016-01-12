@@ -1,0 +1,45 @@
+<apex:component id="block_portal_msg_match_deadline">
+<apex:attribute name="PreviousMatch" description="Placed Current Match object" type="List" required="false" default="" />
+
+					<!-- JOSE B-03139 Display Match Request Deadline messages in HF and PT portals (Match Deadlines - B) -->
+          
+       <style>
+       .hp-block  .ix-piggybank{
+       font-size: 90px;
+    line-height: 0;
+    color: #40c3df;}  
+       </style>         
+				 
+				 
+				 <div class="hp-block">
+<div class="row">
+
+<div class="col-sm-8">
+  <div class="tcell"><div class="ix-piggybank margin-r2 margin-l1"></div>
+  </div>
+  <div class="tcell">
+  	 <h3>Finalize a new match by
+  	 <br class="visible-xs"/>
+				    <apex:outputText value=" {0,date,MMMM}">
+					<apex:param name="month" value="{!PreviousMatch[0].End_Date__c - 90}"/>
+					</apex:outputText>
+					<apex:outputText value=" {!Day(PreviousMatch[0].End_Date__c - 90)}"></apex:outputText>,
+					<apex:outputText value=" {!Year(PreviousMatch[0].End_Date__c - 90)}"></apex:outputText><br/>
+					to take advantage of the<br/>
+					<em>Early Match Discount!</em> 
+				</h3>
+  </div>
+</div>
+<div class="col-sm-4"><a href="/aupaircare/apc_hf_search_au_pairs" class="btn btn-lg btn-link vs2 margin-t2"> <span>Search All Au Pairs</span></a>
+</div>
+  
+</div>
+</div>
+				 
+				 
+				 
+				 
+			
+					
+					<!-- END JOSE B-03139 -->
+</apex:component>

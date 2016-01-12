@@ -1,0 +1,122 @@
+<apex:component layout="none" Controller="AppEngine_Controller">
+    <div class="block">
+        <!-- If there is no app in working status -->
+        <apex:outputPanel rendered="{!AND(CheckHFAppStatus, CheckHFNoAppStatus)}">
+            <div class="block-header">
+                <div class="title">Your Applications</div>
+            </div>
+            <div class="block-body">
+
+                <p>Take the first step! Welcome an Ayusa exchange student into
+                    your home!</p>
+                <apex:outputPanel layout="block"
+                    styleClass="form-button no-float no-margin">
+                    <apex:outputLink value="/apex/your_applications">Start a Hosting Application</apex:outputLink>
+
+                    <!-- 
+                    <apex:commandlink action="{!navigator}">
+                        <apex:param name="nextPage" value="/apex/ayusa_hf_home" />
+                        <apex:param name="reDirectPage" value="true" />
+                        <apex:param name="app" value="AyusaHF" assignTo="{!app}" />
+                        <apex:param name="role" value="Host" assignTo="{!role}" />
+                        <apex:commandButton value="Ayusa Host Family Application"
+                            onclick="disable_button(this);" />
+                    </apex:commandlink>
+                     -->
+                     
+                </apex:outputPanel>
+            </div>
+        </apex:outputPanel>
+
+        <!-- If there is an app in working status -->
+        <apex:outputPanel rendered="{!AND(NOT(CheckHFAppStatus), CheckHFNumberAppStatus)}">
+            <div class="block-header">
+                <div class="title">Your Applications</div>
+            </div>
+            <div class="block-body">
+                <p>You have an application in progress</p>
+                <p>
+                    <strong>Ayusa Host Family Application</strong><br /> 
+                    <em>Creation Date:</em>&nbsp;<apex:outputField value="{!ApplicantInfoWorking.CreatedDate}" />
+                    <br /> <em>Last Update:</em>&nbsp;
+                    <apex:outputField value="{!ApplicantInfoWorking.LastModifiedDate}" />
+                </p>
+
+                <!-- Continue Button -->
+                <apex:outputPanel layout="block"
+                    styleClass="form-button no-float no-margin">
+                    <apex:outputLink value="/apex/ayusa_hf_home?id={!ApplicantInfoWorking.Id}&view">Continue</apex:outputLink>
+                </apex:outputPanel>
+            </div>
+        </apex:outputPanel>
+
+        <!-- If there is an app in submitted status -->
+        <apex:outputPanel rendered="{!AND(CheckHFAppStatus, appCurrent.Application_Stage__c =='Submitted' || appCurrent.Application_Stage__c =='In-Review' || appCurrent.Application_Stage__c =='Conditional', CheckHFNumberAppStatus)}">
+            <div class="block-header">
+                <div class="title">Your Applications</div>
+            </div>
+            <div class="block-body">
+                <p>You have succesfully submitted an application</p>
+                <p>We are currently reviewing your application and will get in
+                    touch with you shortly for next steps.</p>
+            </div>
+        </apex:outputPanel>
+        
+        <!-- If there is an app in accepted status -->
+        <apex:outputPanel rendered="{!AND(CheckHFAppStatus, appCurrent.Application_Stage__c =='Accepted', CheckHFNumberAppStatus)}">
+            <div class="block-header">
+                <div class="title">Your Applications</div>
+            </div>
+            <div class="block-body">
+                <p><strong>Congratulations!</strong></p>
+                <p>Your application is now accepted.</p>
+            </div>
+        </apex:outputPanel>
+        
+        <apex:outputPanel rendered="{!AND(CheckHFAppStatus, appCurrent.Application_Stage__c =='Cancelled', CheckHFNumberAppStatus)}">
+            <div class="block-header">
+                <div class="title">Your Applications</div>
+            </div>
+            <div class="block-body">
+                <p>Your application has been cancelled.</p>
+            </div>
+        </apex:outputPanel>
+
+        <!-- If there is an app in accepted status -->
+        <apex:outputPanel rendered="{!AND(CheckHFAppStatus, appCurrent.Application_Stage__c =='Declined - Ayusa', CheckHFNumberAppStatus)}">
+            <div class="block-header">
+                <div class="title">Your Applications</div>
+            </div>
+            <div class="block-body">
+                <p>We're sorry, your application has been declined.</p>
+            </div>
+        </apex:outputPanel>
+
+        <!-- If there are more than 2 Apps linked with the curret user -->
+        <apex:outputPanel rendered="{!NOT(CheckHFNumberAppStatus)}">
+            <div class="block-header">
+                <div class="title">Your Applications</div>
+            </div>
+            <div class="block-body">
+                <p>You have more than one application in progress</p>
+                <apex:repeat value="{!AppListGeneral}" var="item">
+                    <p class="app-teaser">
+                        <strong>Ayusa Host Family Application</strong><br /> <em>Creation
+                        Date:</em>&nbsp;
+                        <apex:outputField value="{!item.CreatedDate}" />
+                        <br /> <em>Last Update:</em>&nbsp;
+                        <apex:outputField value="{!item.LastModifiedDate}" />
+                    </p>
+                </apex:repeat>
+                <apex:outputPanel layout="block"
+                    styleClass="form-link no-float margin-t">
+                    <apex:outputLink styleClass="no-padding"
+                        value="/apex/your_applications">
+                        <i class="icon-chevron-right"></i>
+                        <span>See All Applications</span>
+                    </apex:outputLink>
+                </apex:outputPanel>
+            </div>
+        </apex:outputPanel>
+    </div>
+</apex:component>

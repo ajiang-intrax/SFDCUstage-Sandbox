@@ -1,0 +1,52 @@
+<apex:page id="Participant_PreApp_Submitted" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" title="Home | IGI" standardStylesheets="false" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <apex:form id="form" >
+
+        <div class="wrapper">
+          
+            <div class="page-header clearfix">
+              <h1 class="page-title">Thank You!</h1></div>
+                
+              <div  class="white-box clearfix">
+             
+                <div class="panel two_thirds">
+                  <p>Great! We have received your application!</p>
+                  <p>You will be contacted shortly regarding the next steps or if any additional details are required from you. </p>
+                    <p>Thank you for choosing Intrax!</p>
+                   
+						        <apex:outputPanel rendered="{!IF(isPartner, false, true)}" >
+      							<div class="form-button no-float inline-block">
+        							<!--  <apex:commandlink id="ContinuePT" styleClass="next" action="{!navigator}">
+								        <apex:param name="nextPage" value="/apex/your_applications"/>
+								        <apex:param name="reDirectPage" value="true"/>
+							        	<apex:commandButton value="Continue"/>
+							        	<i class="icon-chevron-right"></i> 
+        							</apex:commandlink>
+        							-->
+        							<apex:outputLink value="/your_applications" styleClass="next" >Continue <i class="icon-chevron-right"></i> </apex:outputLink>
+      							</div>
+      							</apex:outputPanel> 
+      							
+      							<apex:outputPanel rendered="{!IF(isPartner, true, false)}" >
+                    <div class="form-button no-float inline-block">
+                      <apex:commandlink id="Continue" styleClass="next" action="{!navigator}">
+                        <apex:param name="nextPage" value="/apex/your_applications"/>
+                        <apex:param name="reDirectPage" value="true"/>
+                        <apex:commandButton value="Continue"/>
+                        <i class="icon-chevron-right"></i> 
+                      </apex:commandlink>
+                  </div>              
+      							</apex:outputPanel>
+      						             
+              </div>  
+      
+              <div class="panel one_third last aside">
+                    <!-- <c:Badge_Centers_Contact />    -->  
+                  </div>
+            </div>
+        </div> 
+      </apex:form>
+    </apex:define>
+  </apex:composition>
+</apex:page>

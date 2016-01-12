@@ -1,0 +1,349 @@
+<apex:page title="Profiles" standardStylesheets="false" showHeader="false" controller="HFPortal_Controller" action="{!checkLogin}">
+
+     
+        <apex:composition template="IntraxTemplate_Vs2" >
+        
+            <apex:define name="body">
+            <apex:form >
+            <div class="row-fluid"><div class="span6"><h1>View Students</h1></div><div class="span6"></div></div>
+                
+                <div class="row-fluid">
+                <div class="span3"> 
+                    
+                    <div class="block filter-group">
+                        <div class="block-header">
+                            <h3>Search Filters</h3>
+                        </div>
+                        <div class="block-body">
+	                    <div class="filter">
+	                    <div class="filter-name">Participant Name</div>
+	                    <div class="filter-field">
+	                    <apex:inputText value="{!ptName}" />
+	                    
+	                   <apex:commandLink styleClass="btn margin-t" action="{!searchStudentsList}" rerender="StudentListBlock, pb, validationMsg" status="waitMsg" id="GoButton">
+	                   <apex:commandButton value="Search"/>
+	                   </apex:commandLink>
+	                  
+	                    </div>   
+	                   </div><!-- end filter -->                        
+                            <div class="filter">
+                                 <div class="filter-name">Nationality</div>
+                                 <div class="filter-field"> 
+                                 <apex:selectList value="{!nationalitySelected}" multiselect="false" size="1" onchange="doSearch();return false;">
+                                    <apex:selectOption itemValue="" itemLabel="--None--"/>
+                                    <apex:selectOptions value="{!nationality}"/>
+                                 </apex:selectList>
+                                 </div>
+                            </div><!-- end filter -->
+                            
+                            <div class="filter">
+                                 <div class="filter-name">Gender</div>
+                                 <div class="filter-field"> 
+                                 <apex:selectList value="{!genderSelected}" multiselect="false" size="1" onchange="doSearch();return false;">
+                                    <apex:selectOption itemValue="" itemLabel="--None--"/>
+                                    <apex:selectOptions value="{!gender}"/>
+                                 </apex:selectList>
+                                 </div>
+                            </div>
+                            
+                            <div class="filter">
+                                 <div class="filter-name">Age</div>
+                                 <!-- <apex:commandLink value="SelectAll" onclick="selectAll();"/> / <apex:commandLink value="SelectAll" onclick="unselectAll();"/>-->
+                                 <div class="filter-field"> 
+                                 <apex:selectCheckBoxes value="{!ageRangeSelected}" id="AgeRange" onchange="doSearch();return false;" >
+                                    <apex:selectOptions value="{!ageRange}" />
+                                 </apex:selectCheckBoxes>                                 
+                                 </div>
+                            </div> 
+                                                       
+                            <!-- new filters. story ay2-715 -->
+                            
+                            <div class="filter">
+                                 <div class="filter-name">Student Interests</div>
+                                 <div class="filter-field"> 
+                                 <apex:selectList value="{!StudInterestSelected}" multiselect="true" size="3" onchange="doSearch();return false;">
+                                    <apex:selectOption itemValue="" itemLabel="--None--"/>
+                                    <apex:selectOptions value="{!studInterest}"/>
+                                 </apex:selectList>
+                                 </div>
+                            </div>
+                            <div class="filter">
+                                 <div class="filter-name">Religion</div>
+                                 <div class="filter-field"> 
+                                 <apex:selectList value="{!ReligionSelected}" multiselect="false" size="1" onchange="doSearch();return false;">
+                                    <apex:selectOption itemValue="" itemLabel="--None--"/>
+                                    <apex:selectOptions value="{!religion}"/>
+                                 </apex:selectList>                                 
+                                 </div>
+                            </div>
+                            <div class="filter">
+                                 <div class="filter-name">Program Duration</div>
+                                 <div class="filter-field"> 
+                                 <apex:selectList value="{!ProgDurationSelected}" multiselect="false" size="1" onchange="doSearch();return false;">
+                                    <apex:selectOption itemValue="" itemLabel="--None--"/>
+                                    <apex:selectOptions value="{!progDuration}"/>
+                                 </apex:selectList>
+                                 </div>
+                            </div>
+                            <apex:outputPanel id="MatchFilters" rendered="{!checkHFStatus}">
+                            <div class="filter">
+                                 <div class="filter-name">My Saved and Recommended Students</div>
+                                 <div class="filter-field"> 
+                                 <apex:selectList value="{!MatchStatusSelected}" multiselect="false" size="1" onchange="doSearch();return false;">
+                                    <apex:selectOption itemValue="" itemLabel="--None--"/>
+                                    <apex:selectOptions value="{!MatchStatus}"/>
+                                 </apex:selectList>                                 
+                                 </div>
+                            </div>
+                            </apex:outputpanel> 
+                         </div><!-- end block body -->
+                    </div><!-- end block -->
+                </div><!-- end span3 -->
+            
+            
+                <div class="span9">
+                    <apex:actionStatus id="waitMsg" startStyleClass="alert alert-info">
+                            <apex:facet name="start" >
+                                <i class="no-float icon-spinner icon-spin icon-2x"></i>  <strong>Please Wait.....</strong>
+                            </apex:facet>
+                        </apex:actionStatus>
+                    
+                        <apex:pageBlock id="pb">
+                                    
+                            <apex:pageMessages id="validationMsg"/>
+                            <apex:outputPanel rendered="{!IF(studentList.Size == 0, true, false)}" layout="block" styleClass="block">
+                                <div class="block-body">
+                               There are no profiles that match your search criteria. Please reset your filters and try again. 
+                                </div>
+                            </apex:outputPanel>
+                            
+                          
+                            
+                            <apex:outputPanel rendered="{!IF((studentlist.Size > 0 && checkHFStatus), true, false)}" layout="block" styleClass="block">
+                               <div class="block-body">
+                                 <h3>Your search is now easier!</h3>
+                                <ol>
+<li><strong>Save Students</strong>: Check the boxes next to students (maximum of 5) to indicate your interest and click "Save Selected Students". Your local Ayusa representative will be in contact with you to determine if these students are available.</li>
+<li><strong>See Our Recommendations</strong>: We have recommended a number of students for your family for 72 hours. Please act fast if you would like to host these students.</li>
+ 
+
+</ol>
+
+<p class="no-margin"><em>You can always find your saved and recommended students by using the filters on the left.</em></p>
+                                </div>
+                            </apex:outputPanel>
+                            
+                                <apex:outputPanel rendered="{!IF(selectedEngs.Size == 0, true, false)}" layout="block" styleClass="alert alert-error">
+                               Please select at least one to save match. 
+                            </apex:outputPanel>
+                                
+                            <!--<apex:actionFunction name="callAction" action="{!pageNavigation}" status="waitMsg" reRender="pb, validationMsg"/>-->
+                
+                <!-- <apex:actionFunction name="doSearch" action="{!searchStudentsList}" status="waitMsg" reRender="StudentListBlock, validationMsg"/> -->
+                <apex:actionFunction name="doSearch" action="{!searchStudentsList}" status="waitMsg" reRender="StudentListBlock, validationMsg"/>         
+                           
+                    <!-- begin sorting fields rendered="{!IF(studentList.Size > 0, true, false)}" -->
+                            <apex:outputPanel layout="block" styleClass="clearfix navbar" id="blockHead">
+                                <div class="navbar-inner">
+                                    <div class="navbar-form">
+                                            
+                                        <div class="pull-left margin-r">  
+                                            Sort By&nbsp;         
+                                                                              
+                                            <apex:selectList value="{!sortExpression}" onchange="doSearch();return false;" styleClass="short" multiselect="false" size="1" title="Sort By">
+                                                <apex:selectOptions value="{!SortBy}"/>                                                                                             
+                                             </apex:selectList>
+                                             
+                                               <apex:commandLink styleClass="navbar-link" action="{!reverseOrder}" value=" Reverse Order" reRender="pb,validationMsg" status="waitMsg" >                                                     
+                                               </apex:commandLink>
+                                        	 
+                                        </div>  
+        								
+                                        <div class="pull-right margin-r">
+                                             <apex:pageBlock id="SortByDirectionBlock" rendered="{!checkHFStatus}">
+                                    
+                                                <apex:commandLink action="{!saveSelectedMatches}" styleClass="navbar-link"  value="Save Selected Students" reRender="pb,StudentListBlock"  status="waitMsg">                                                 	
+                                                 </apex:commandLink>
+                                             </apex:pageBlock>
+                                        </div> 
+                                            
+                                    </div >  
+                                </div > 
+                                               
+                            </apex:outputPanel> 
+                            <!-- end sorting fields -->  
+                   <div class="list-view" >
+                   
+                   <apex:outputPanel id="StudentListBlock">                             
+                   <apex:pageblocktable value="{!studentList}" var="item" rendered="{!IF(studentList.Size > 0, true, false)}" >
+                      
+                         <apex:column >
+                   <div class="block" >         
+                        <div class="block-body" >     
+                            <div class="row" >  
+                                <!-- Adding the profile student picture to each "repeat" row  -->
+                                <div class="span3">
+                                <apex:outputLink target="_blank" styleClass="ph-thumb default sm" value="/apex/profile?participantId={!item.eng.Id}" rendered="{!IF(item.eng.Gender__c == 'Male' && NOT(checkHFStatus), true, false)}">
+                                <apex:image url="{!URLFOR($Resource.intrax_themes_vs2, '/intrax_themes_vs2/images/icons/male-icon.png')}"></apex:image> 
+                                <apex:image url="{!NationalityEngagementList[item.eng.Id]}" styleClass="flag-icon"></apex:image>
+                                </apex:outputLink>
+                                
+                                <apex:outputLink target="_blank" styleClass="ph-thumb default sm" value="/apex/profile?participantId={!item.eng.Id}" rendered="{!IF(item.eng.Gender__c == 'Female' && NOT(checkHFStatus), true, false)}">
+                                <apex:image url="{!URLFOR($Resource.intrax_themes_vs2, '/intrax_themes_vs2/images/icons/female-icon.png')}"></apex:image>
+                                <apex:image url="{!NationalityEngagementList[item.eng.Id]}" styleClass="flag-icon"></apex:image> 
+                                </apex:outputLink>
+                                
+                                <apex:outputLink target="_blank" styleClass="ph-thumb default sm" value="/apex/profile?participantId={!item.eng.Id}" rendered="{!IF(ProfilePhotoMap[item.eng.id] == 'no-picture' && item.eng.Gender__c == 'Male' && checkHFStatus, true, false)}">
+                                <apex:image url="{!URLFOR($Resource.intrax_themes_vs2, '/intrax_themes_vs2/images/icons/male-icon.png')}"></apex:image>
+                                <apex:image url="{!NationalityEngagementList[item.eng.Id]}" styleClass="flag-icon"></apex:image> 
+                                </apex:outputLink>
+                                 
+                                <apex:outputLink target="_blank" styleClass="ph-thumb default sm" value="/apex/profile?participantId={!item.eng.Id}" rendered="{!IF(ProfilePhotoMap[item.eng.id] == 'no-picture' && item.eng.Gender__c == 'Female' && checkHFStatus, true, false)}">
+                                <apex:image url="{!URLFOR($Resource.intrax_themes_vs2, '/intrax_themes_vs2/images/icons/female-icon.png')}"></apex:image> 
+                                <apex:image url="{!NationalityEngagementList[item.eng.Id]}" styleClass="flag-icon"></apex:image>
+                                </apex:outputLink>
+                            
+                                <apex:outputLink target="_blank" styleClass="ph-thumb sm" value="/apex/profile?participantId={!item.eng.Id}" rendered="{!IF(ProfilePhotoMap[item.eng.id] != 'no-picture' && checkHFStatus, true, false)}">
+                                <apex:image url="{!ProfilePhotoMap[item.eng.id]}"></apex:image> 
+                                </apex:outputLink>     
+                                </div> <!-- end span -->
+                                                                
+                                      
+                                              
+                                <div class="span3">                                                                                                                                    
+                                    <label>Name</label>
+                                    <apex:outputLink id="studentLink" value="/apex/profile?participantId={!item.eng.Id}" target="_blank"> <apex:outputText value="{!item.eng.Account_Id__r.FirstName}" />&nbsp;<apex:outputText value="{!LEFT(item.eng.Account_Id__r.LastName,1)}" /> </apex:outputLink>                       
+                                    <label>Program Duration</label>
+                                    <apex:outputText value="{!item.eng.Program_Duration__c}"/>
+                            
+                                </div>  <!-- end span -->
+                                              
+                                <div class="span3">
+                                    <label>Country</label>
+                                    <apex:outputText value="{!item.eng.Account_Id__r.Citizenship__pc}" />                         
+                                    <label>Interests and Hobbies</label>
+                                    <apex:outputText value="{!item.eng.Interests_Top__c}" />
+                                </div>   <!-- end span -->                                                        
+                         
+                        
+                                <div class="span3">
+                                <apex:outputPanel layout="block" styleClass="center" rendered="{!IF((item.displayText=='' && checkHFStatus),True,False)}">
+                                <apex:inputCheckbox value="{!item.selected}"/> Select
+                                </apex:outputPanel>
+                                
+                                <apex:outputPanel layout="block" rendered="{!IF((item.displayText!='' && checkHFStatus),True,False)}">
+                                <p class="center"><apex:outputText value="{!item.displayText}"  escape="false"></apex:outputText></p>
+                                </apex:outputPanel>
+                                 
+                                </div>   <!-- end span -->                             
+
+                          </div><!-- end block row -->
+                         </div><!-- end block body --> 
+                        </div><!-- end block -->
+                        </apex:column>
+                     </apex:pageblocktable>                                            
+                     </apex:outputPanel>  
+                     
+                     </div>
+                     <!-- end app list -->
+                    <apex:outputPanel rendered="{!IF(studentList.Size > 0, true, false)}" layout="block" styleClass="clearfix navbar">
+                                <div class="navbar-inner">
+                                	<!-- 
+                                	<div class="navbar-form">
+                                	<div class="pull-right margin">
+                                             <apex:pageBlock id="SortByDirectionBlockBottom" rendered="{!checkHFStatus}">
+                                    
+                                                <apex:commandLink action="{!saveSelectedMatches}" styleClass="navbar-link"  value="Save Selected Students" reRender="pb,StudentListBlock"  status="waitMsg">
+                                                         <apex:param value="{!sortExpression}" ></apex:param>
+                                                 </apex:commandLink>
+                                             </apex:pageBlock>
+                                    </div>
+                                    </div>
+                                    <br/>
+                                    -->
+                                    <div class="navbar-form">
+                                                
+                                       <!--   <div class="pull-left margin-r">  
+                                            Page&nbsp;
+                                            <apex:inputText id="pageNoBottom" value="{!totalpageNumber}" size="3" onkeydown="return runScript(event);"/>
+                                            &nbsp;
+                                            <apex:outputLabel value="of {!listOfListStudent.size}"/> 
+                                        </div> -->
+                                         <div class="pagination pull-left margin-r">
+                                            <ul>
+                                                <li><apex:commandLink value="First" action="{!first}" status="waitMsg" reRender="pb, validationMsg"/></li>
+                                                <li><apex:commandLink action="{!previous}" status="waitMsg" reRender="pb, validationMsg" rendered="{!IF(PreviousButtonDisabled  == true, false, true)}">
+                                                <apex:outputText value="Previous"/>
+                                                </apex:commandLink></li>
+                                                             
+                                                <li><apex:commandLink action="{!next}" status="waitMsg" reRender="StudentListBlock, pb, validationMsg" rendered="{!IF(NextButtonDisabled == true, false, true)}">
+                                                <apex:outputText value="Next"/>
+                                                </apex:commandLink></li>
+                                                
+                                                <li><apex:commandLink value="Last" action="{!last}" status="waitMsg" reRender="pb, validationMsg"/></li>
+                                            </ul>    
+                                        </div> 
+                                        
+                                        <div class="pull-left margin-r">                                      
+                                             
+                                            List Size&nbsp;
+                                            <apex:selectList value="{!limits}" styleClass="short" size="1" onchange="doSearch();return false;">
+                                                <apex:selectOptions value="{!items}"/>
+                                            </apex:selectList>
+                                           
+                                        </div> 
+                                        
+                                           <div class="pull-right margin-r">
+                                             <apex:pageBlock id="SortByDirectionBlock2" rendered="{!checkHFStatus}">
+                                    
+                                                <apex:commandLink action="{!saveSelectedMatches}" styleClass="navbar-link"  value="Save Selected Students" reRender="pb,StudentListBlock"  status="waitMsg">
+                                                          <!-- <apex:param value="{!sortExpression}" ></apex:param>-->
+                                                 </apex:commandLink>
+                                             </apex:pageBlock>
+                                        </div > 
+                                        
+                                        
+                                              
+                                    </div> 
+                                </div> 
+                                               
+                            </apex:outputPanel> 
+                    
+                    
+                    </apex:pageBlock> 
+                
+                    
+                </div><!-- end span9 -->
+                </div><!-- end row -->
+                <script type="text/javascript">
+            function selectAllCheckboxes(obj,receivedInputID){
+                var inputCheckBox = document.getElementsByTagName("input");
+                for(var i=0; i<inputCheckBox.length; i++){
+                    if(inputCheckBox[i].id.indexOf(receivedInputID)!=-1){
+                        inputCheckBox[i].checked = obj.checked;
+                    }
+                }
+            }
+            
+            function runScript(obj){
+                
+                //alert(obj.keyCode);
+                if(obj.keyCode == 13){
+                    callAction();   // call action function
+                    return false;
+                }else if((obj.keyCode > 34 && obj.keyCode < 40) || (obj.keyCode > 95 && obj.keyCode < 106) || (obj.keyCode > 47 && obj.keyCode < 58) || obj.keyCode == 8 || obj.keyCode == 46 ){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        </script>
+        
+    </apex:form>
+           
+            </apex:define>
+             
+        </apex:composition>
+        
+        
+</apex:page>

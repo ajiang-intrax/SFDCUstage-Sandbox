@@ -1,0 +1,134 @@
+<apex:page id="ayusa_preapp_stu_skills" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper" id="ayusa-student-preapp-academic-language-skills">
+  <apex:form id="form">
+     <div class="page-header clearfix">
+<h1 class="page-title">Ayusa Student Application</h1>
+<div class="back-to-main"><apex:outputLink id="BacktoMain" value="apex/ayusa_preapp_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+</div>
+       <div class="section-header clearfix">
+             <h2>Academic and Language Skills</h2>
+            <div class="progress-bar">Page 4 <em>of</em> 6</div>
+            </div> 
+     
+      
+        <div class="white-box clearfix">
+         
+             <a class="page-help" title="Help for this Page (New Window)" onclick="return openPopup('./Help_ayusa_preapp_stu_skills')" >
+<span>Help For This Page</span><i class="icon-info-sign"></i></a> 
+         <div class="panel two_thirds">
+         
+            <apex:Messages styleClass="custom-error-pagelevel"/>
+            <p><em> All fields marked with an asterisk (<span class="required no-padding">*</span>) are required</em></p><br/>
+            
+              
+              <div class="form-row">
+                <div class="form-label left">Expected Graduation Date from Secondary School<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="GraduationDate" value="{!applicantInfo.Graduation_Date__c}" required="TRUE"/>
+                </div>
+                <div class="dropt"> <i class="icon-question-sign"></i>
+                   <span>{!$ObjectType.Applicant_Info__c.Fields.Graduation_Date__c.inlineHelpText}</span>
+                </div>
+              </div> 
+              <div class="form-row">
+                <div class="form-label left">Academic years completed by program start date<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="AcademicYearsCompleted" value="{!applicantInfo.Academic_Years_Completed__c}" required="TRUE"/>
+                </div>
+                  <div class="dropt"> <i class="icon-question-sign"></i>
+                   <span>{!$ObjectType.Applicant_Info__c.Fields.Academic_Years_Completed__c.inlineHelpText}</span>
+                   </div>
+              </div> 
+              <div class="form-row">
+                <div class="form-label left ">Average Grade In All Classes<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="GPASelfReported" value="{!applicantInfo.GPA_Self_Reported__c}" required="TRUE"/>
+                </div>
+                  <div class="dropt"> <i class="icon-question-sign"></i>
+                   <span>{!$ObjectType.Applicant_Info__c.Fields.GPA_Self_Reported__c.inlineHelpText}</span>
+                   </div>
+              </div> 
+              <div class="form-row">
+                <div class="form-label left ">Number of Failed Grades<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="LowGradeCount" value="{!applicantInfo.Low_Grade_Count__c}" required="TRUE"/>
+                </div>
+                  <div class="dropt"> <i class="icon-question-sign"></i>
+                   <span>{!$ObjectType.Applicant_Info__c.Fields.Low_Grade_Count__c.inlineHelpText}</span>
+                   </div>
+              </div>  
+                <div class="form-row">
+                <div class="form-label left ">English Level<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="EnglishLevel" value="{!applicantInfo.English_Level__c}" required="TRUE"/>
+                </div>
+                    <div class="dropt"> <i class="icon-question-sign"></i>
+                   <span>{!$ObjectType.Applicant_Info__c.Fields.English_Level__c.inlineHelpText}</span>
+                   </div>
+                </div>
+                <div>
+                <div class="form-row">
+                <div class="form-label left ">Years of English Study<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="EnglishStudyYears" value="{!applicantInfo.English_Study_Years__c}" required="TRUE"/>
+                </div>
+                </div>
+                
+              </div>
+              <div class="form-row">
+                <div class="form-label left ">Have you been on an exchange program to the U.S. before?<span class="required">*</span></div>
+                <div class="form-field">
+                    <apex:actionRegion >
+                        <apex:selectRadio value="{!applicantInfo.Prior_Exchange_Experience__c}" required="TRUE" id="exchange-indicated">
+                            <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                            <apex:selectOption itemValue="No" itemLabel="No"/>
+                            <apex:actionSupport event="onclick" rerender="thePageBlock" status="status"/>
+                        </apex:selectRadio> 
+                        <apex:message for="exchange-indicated" styleClass="custom-error-radio"/>
+                    </apex:actionRegion>
+                </div>
+                  <div class="dropt"> <i class="icon-question-sign"></i>
+                   <span>{!$ObjectType.Applicant_Info__c.Fields.Prior_Exchange_Experience__c.inlineHelpText}</span>
+                  </div>
+                   
+              </div>
+             
+              <apex:pageBlock id="thePageBlock">
+                    <apex:outputPanel layout="block" rendered="{!ApplicantInfo.Prior_Exchange_Experience__c == 'Yes'}">
+              <div class="form-row">
+                <div class="form-label left">If yes, did you have a J-1 or F-1 visa?<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="PriorExchangeVisa" value="{!applicantInfo.Prior_Exchange_Visa__c}" required="TRUE"/>
+                </div>
+              </div>
+                </apex:outputPanel>
+                   </apex:pageBlock> 
+           
+            <div class="form-row">
+              
+              <div class="form-link">
+                    <apex:outputLink id="Back" styleClass="back" value="/apex/ayusa_preapp_stu_parent?id={!applicantInfo.Id}&role=parent">
+                    <i class="icon-chevron-left"></i>
+                    <span>Back</span>
+                    
+                    </apex:outputLink>
+              </div>
+              
+              <div class="form-button">
+                <apex:commandlink styleClass="next" action="{!navigator}">
+                  <apex:param name="nextPage" value="/apex/ayusa_preapp_stu_program"/>
+                  <apex:param name="reDirectPage" value="false"/>
+                  <apex:commandButton id="Save" value="Save & Continue" />
+                    <i class="icon-chevron-right"></i>
+                </apex:commandlink>
+              </div>
+            </div>
+      </div>
+        </div>
+      </apex:form>
+      </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

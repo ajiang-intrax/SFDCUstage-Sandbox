@@ -1,0 +1,168 @@
+<apex:component layout="none">
+<apex:attribute name="uInParameter" description="manage the background" type="String" required="false" default=""/>
+<apex:attribute name="userAgentCheck" description="check if smartphone" type="String" required="false" default=""/>
+<!--  assigning the right background image -->  
+<style> 
+body{background:none no-repeat scroll 50% -100px #f8f8f8;}
+#content-zone{background:transparent;}
+.portal-entry{background: none;}
+
+<apex:outputText rendered="{!NOT(CONTAINS(uInParameter,'APCHF') || CONTAINS(uInParameter,'APCPT')) && $Site.Name == 'AuPairCare'}">    
+/* APC Default */
+<apex:outputText rendered="{!userAgentCheck=='smartphone'}">
+body {background:#000 url("{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/apc/headers/mobile-1.jpg')}") 0 0 no-repeat;}
+</apex:outputText>
+<apex:outputText rendered="{!userAgentCheck!='smartphone'}">
+body {background:#000 url("{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/apc/headers/full-3.jpg')}") 50% 0 no-repeat;}
+</apex:outputText>
+.portal-entry{background-image: none;}
+</apex:outputText> 
+
+
+<apex:outputText rendered="{!CONTAINS(uInParameter,'APCHF') && $Site.Name == 'AuPairCare'}">    
+/* APC Host Families AuPairCare Community*/
+<apex:outputText rendered="{!userAgentCheck=='smartphone'}">
+body {background:#000 url("{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/apc/headers/mobile-1.jpg')}") 0 0 no-repeat;}
+</apex:outputText>
+<apex:outputText rendered="{!userAgentCheck!='smartphone'}">
+body {background:#000 url("{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/apc/headers/full-3.jpg')}") 50% 0 no-repeat;}
+</apex:outputText>
+.portal-entry{background-image: none;}
+</apex:outputText>  
+
+<apex:outputText rendered="{!CONTAINS(uInParameter,'APCPT') && $Site.Name == 'AuPairCare'}">    
+/* APC Au Pairs AuPairCare Community*/
+<apex:outputText rendered="{!userAgentCheck=='smartphone'}">
+body {background:#000 url("{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/apc/headers/mobile-1.jpg')}") 0 0 no-repeat;}
+</apex:outputText>
+<apex:outputText rendered="{!userAgentCheck!='smartphone'}">
+body {background:#000 url("{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/apc/headers/full-5.jpg')}") 50% 0 no-repeat;}
+</apex:outputText>
+.portal-entry{background-image: none;}
+</apex:outputText>     
+
+<apex:outputText rendered="{!CONTAINS(uInParameter,'AYHF') && $Site.SiteId == '0DM30000000TNbh'}">    
+/* Ayusa Host Families */
+<apex:outputText rendered="{!userAgentCheck=='smartphone'}">
+body {background:#000 url("{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/apc/headers/mobile-1.jpg')}") 0 0 no-repeat;}
+</apex:outputText>
+<apex:outputText rendered="{!userAgentCheck!='smartphone'}">
+body {background:#000 url("{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/ayu/headers/full-3.jpg')}") 50% 0 no-repeat;}
+</apex:outputText>
+.portal-entry{background-image: none;}
+</apex:outputText>  
+
+<apex:outputText rendered="{!CONTAINS(uInParameter,'AYPT') && $Site.SiteId == '0DM30000000TNbh'}">    
+/* Ayusa Students */
+<apex:outputText rendered="{!userAgentCheck=='smartphone'}">
+body {background:#000 url("{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/apc/headers/mobile-1.jpg')}") 0 0 no-repeat;}
+</apex:outputText>
+<apex:outputText rendered="{!userAgentCheck!='smartphone'}">
+body {background:#000 url("{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/ayu/headers/full-2.jpg')}") 50% 0 no-repeat;}
+</apex:outputText>
+.portal-entry{background-image: none;}
+</apex:outputText>  
+
+<apex:outputText rendered="{!CONTAINS(uInParameter,'IGIG') && $Site.SiteId == '0DM30000000TNbh'}">    
+/* IGI Interns */
+<apex:outputText rendered="{!userAgentCheck=='smartphone'}">
+body {background:#000 url("{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/apc/headers/mobile-1.jpg')}") 0 0 no-repeat;}
+</apex:outputText>
+<apex:outputText rendered="{!userAgentCheck!='smartphone'}">
+body {background:#000 url("{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/gi/headers/full-5.jpg')}") 50% 0 no-repeat;}
+</apex:outputText>
+.portal-entry{background-image:none;}
+</apex:outputText>  
+
+<apex:outputText rendered="{!CONTAINS(uInParameter,'CNPT') && $Site.SiteId == '0DM30000000TNbh'}">    
+/* Centers Participants */
+<apex:outputText rendered="{!userAgentCheck=='smartphone'}">
+body {background:#000 url("{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/apc/headers/mobile-1.jpg')}") 0 0 no-repeat;}
+</apex:outputText>
+<apex:outputText rendered="{!userAgentCheck!='smartphone'}">
+body {background:#000 url("{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/cnt/headers/full-1.jpg')}") 50% 0 no-repeat;}
+</apex:outputText>
+.portal-entry{background-image: none;}
+</apex:outputText>  
+
+<apex:outputText rendered="{!CONTAINS(uInParameter,'WTPT') && $Site.SiteId == '0DM30000000TNbh'}">    
+/* WT Participants */
+<apex:outputText rendered="{!userAgentCheck=='smartphone'}">
+body {background:#000 url("{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/apc/headers/mobile-1.jpg')}") 0 0 no-repeat;}
+</apex:outputText>
+<apex:outputText rendered="{!userAgentCheck!='smartphone'}">
+body {background:#000 url("{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/wt/headers/full-2.jpg')}") 50% 0 no-repeat;} 
+</apex:outputText>
+.portal-entry{background:none;}
+</apex:outputText>  
+
+<apex:outputText rendered="{!NOT(CONTAINS(uInParameter,'AYHF')) && NOT(CONTAINS(uInParameter,'AYPT')) && NOT(CONTAINS(uInParameter,'CNPT')) && NOT(CONTAINS(uInParameter,'WTPT')) && NOT(CONTAINS(uInParameter,'IGIG')) && $Site.SiteId == '0DM30000000TNbh'}">    
+/* AppEngine + Unrecognized UIN */
+<apex:outputText rendered="{!userAgentCheck=='smartphone'}">
+body {background:#000 url("{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/apc/headers/mobile-1.jpg')}") 0 0 no-repeat;}
+</apex:outputText>
+<apex:outputText rendered="{!userAgentCheck!='smartphone'}">
+body {background-image: url("{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/wt/headers/full-2.jpg')}");}
+</apex:outputText>
+.portal-entry{background-image: none;}
+</apex:outputText>   
+
+<apex:outputText rendered="{!uInParameter == null && $Site.SiteId == '0DM30000000TNbh'}">    
+/* AppEngine + No UIN in URL */
+<apex:outputText rendered="{!userAgentCheck=='smartphone'}">
+body {background:#000 url("{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/apc/headers/mobile-1.jpg')}") 0 0 no-repeat;}
+</apex:outputText>
+<apex:outputText rendered="{!userAgentCheck!='smartphone'}">
+body {background-image: url("{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/wt/headers/full-2.jpg')}");}
+</apex:outputText>
+.portal-entry{background-image: none;}
+</apex:outputText>   
+
+<apex:outputText rendered="{!$Site.SiteId == '0DMa0000000TOEA'}">
+/* Partner Portal */
+<apex:outputText rendered="{!userAgentCheck=='smartphone'}">
+body {background:#000 url("{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/apc/headers/mobile-1.jpg')}") 0 0 no-repeat;}
+</apex:outputText>
+<apex:outputText rendered="{!userAgentCheck!='smartphone'}">
+body {background:#000 url("{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/company/headers/full-1.jpg')}") 50% 0 no-repeat;}
+</apex:outputText>
+.portal-entry{background: none;}
+</apex:outputText>  
+
+<apex:outputText rendered="{!$Site.SiteId == '0DMa0000000TO2E'}"> 
+/* Company Portal */
+<apex:outputText rendered="{!userAgentCheck=='smartphone'}">
+body {background:#000 url("{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/apc/headers/mobile-1.jpg')}") 0 0 no-repeat;}
+</apex:outputText>
+<apex:outputText rendered="{!userAgentCheck!='smartphone'}">
+body {background:#000 url("{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/company/headers/full-1.jpg')}") 50% 0 no-repeat;}
+</apex:outputText>
+.portal-entry{background-image: none;}
+</apex:outputText>  
+
+<apex:outputText rendered="{!$Site.Name == 'Universities'}"> 
+/* University Portal */
+<apex:outputText rendered="{!userAgentCheck=='smartphone'}">
+body {background:#000 url("{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/apc/headers/mobile-1.jpg')}") 0 0 no-repeat;}
+</apex:outputText>
+<apex:outputText rendered="{!userAgentCheck!='smartphone'}">
+body {background:#000 url("{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/univ/headers/full-1.jpg')}") 50% 0 no-repeat;}
+</apex:outputText>
+.portal-entry{background-image: none;}
+</apex:outputText>  
+
+
+</style>
+    
+<!--  assigning the right logo -->    
+<apex:outputText rendered="{!IF(ISPICKVAL($User.UserType,'Guest') && ($Site.Name == 'AuPairCare'),true,false)}">
+<apex:image width="228" height="45" styleClass="center-block margin-b" url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/logos/myaupaircare-logo.svg')}" alt="AuPairCare" title="AuPairCare" />
+</apex:outputText>
+						
+<apex:outputText rendered="{!IF(ISPICKVAL($User.UserType,'Guest') && (uInParameter != 'APCHF' && uInParameter != 'APCPT' && $Site.Name != 'AuPairCare'),true,false)}">
+<apex:image width="161" height="54" styleClass="center-block margin-b" url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/logos/myintrax-logo.svg')}" alt="Intrax" title="Intrax" />
+</apex:outputText>		
+ 
+
+
+</apex:component>

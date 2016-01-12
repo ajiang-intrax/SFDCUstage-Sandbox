@@ -1,0 +1,85 @@
+<apex:component controller="EU_APC_DepartureList_Controller" access="global">
+ <apex:attribute access="global" assignTo="{!opptyId}" name="opportunityId" type="String" required="true" description="Opportunity Id"/>
+
+<head>
+<style type="text/css" media="print">
+        @page {
+                margin:1cm 1cm 4cm 1cm;
+
+                @top-left {
+                    content: element(header);
+                }
+                @bottom-left {
+                    content: element(footer);
+                }
+              }
+        div.eop {
+            position: running(footer);
+                }
+    </style>
+<style type="text/css">
+    
+html, body {
+
+            margin:0; 
+
+            padding:0;
+
+            font-family: sans serif, Arial Unicode MS;
+            
+            font-size: 12px;
+
+            }       
+p, ol, ul{margin-bottom:1em;}
+img{border:0;}
+#wrapper { margin-left: 20px}
+    
+    
+    
+</style>
+
+ 
+    
+</head>
+
+  <body>  
+   
+    <div align="left"><apex:image id="AuPaircare" value="{!$Resource.AuPairCare_by_Intrax_Logo}" /></div>
+    <div id="wrapper">
+    <br/><br/><br/>
+    <h2>Abflugliste für den {!Day(OppEngStart)}.{!Month(OppEngStart)}.{!Year(OppEngStart)}</h2>
+    <br/>
+ 
+<table width="100%" >
+ <tr>
+ <th><u><b>Name</b></u></th>
+ <th><u><b>Telefon</b></u></th>
+ <th><u><b>Handy</b></u></th>
+ <th><u><b>E-Mail</b></u></th>
+ </tr>
+ <apex:repeat value="{!OtherOpps}" var="opp">
+ <tr>
+ <td>{!opp.Primary_Contact__r.Name}</td>
+ <td>{!opp.Primary_Contact__r.Phone}</td>
+ <td>{!opp.Primary_Contact__r.MobilePhone}</td>
+ <td>{!opp.Primary_Contact__r.Email}</td> 
+ </tr>
+ 
+ </apex:repeat>
+ </table>
+ 
+<apex:outputPanel layout="block" styleClass="eop">
+<div align="center"><apex:image value="{!URLFOR($Resource.Intrax_Invoice_Themes,'/intrax_invoice_themes/images/pdf-boiler-plate-de.png')}" width="700" />
+</div>
+
+</apex:outputPanel>
+
+
+
+
+
+
+ 
+</div>
+</body>
+ </apex:component>

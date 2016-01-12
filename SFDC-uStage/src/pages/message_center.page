@@ -1,0 +1,176 @@
+<apex:page id="message_center" title="Message Center" docType="html-5.0" controller="message_center_controller" action="{!checkLogin}" standardStylesheets="false" showHeader="false" applyBodyTag="false" applyHtmlTag="false" >
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+     
+     <style>
+     #message-center .table.vs3 th{background:transparent; border-bottom:#ccc solid 1px;}
+     #message-center .table.vs3 td{font-size:20px; padding:12px 16px;} 
+     #message-center .table.vs3 > tbody > tr:nth-child(even) > td {
+  background: transparent;
+}
+ #message-center .table.vs3 > thead > tr > th:first-child, .table.vs3 > tbody > tr > td:first-child{padding-left:16px;}
+      #message-center .table.vs3 tr.first > td{padding-top:30px;}
+   #message-center .status-cell{  text-align: center;}  
+  #message-center .status-cell .ix-envelope-closed{font-size:28px;}
+  #message-center .status-cell .ix-envelope-open{font-size:24px;}
+   #message-center .notify-detail.Unread{font-family:'milowebbold';}
+    #message-center .notify-detail.Read{font-family:'miloweb';}
+     </style> 
+      
+      <div class="row">
+        <div class="col-sm-9 center-block center-text">
+          <h1>Your Messages</h1>
+        </div>
+        <!-- end column --> 
+      </div>
+      <!-- end row -->
+      
+   
+        <div id="message-center" class="row">
+          <div class="col-md-10 center-block">
+            <apex:form styleClass="form-vertical ws-validate" id="webform">
+              <apex:Messages styleClass="custom-error-pagelevel" />
+              <div>
+               
+                <!-- PARTNER PORTAL ALL START -->
+                <apex:outputPanel layout="block" id="urgent" rendered="{!(activeUser!=null && activeUser.Type__c!=null && activeUser.Type__c=='Partner')}">
+                  <apex:pageBlock rendered="{!IF((urgentNotificationsListPTR!=null), true, false)}">
+                    <div>
+                      <apex:pageBlockTable styleClass="table vs3" value="{!urgentNotificationsListPTR}" var="item">
+                       
+                        
+                        <apex:column styleClass="status-cell" headerValue="">
+                        <apex:outputPanel rendered="{!item.Message_Status__c == 'Read'}" layout="block" styleClass="ix-envelope-open"></apex:outputPanel>
+                        <apex:outputPanel rendered="{!item.Message_Status__c == 'Unread'}" layout="block" styleClass="ix-envelope-closed"></apex:outputPanel>
+                        </apex:column>
+                        
+                        <apex:column headerValue="Message Subject">
+                          <apex:outputText rendered="{!item.Subject__c!='' && item.Subject__c!= NULL}">
+                          <!-- <a class="notify-detail" data-toggle="modal" data-target="#dochelpUrgent"><apex:outputText value="{!item.Subject__c}" /></a> -->
+                          <apex:commandLink styleClass="notify-detail {!item.Message_Status__c}" action="{!markAsRead}" html-data-backdrop="static" html-data-keyboard="false" html-data-toggle="modal" html-data-target="#dochelpUrgent-{!item.Id}" reRender="none" >
+                            <apex:param name="contIdParam" value="{!item.Id}" assignTo="{!contIdChosen}"/>
+                            <apex:outputText value="{!item.Subject__c}" escape="false"/>
+                          </apex:commandLink>
+                          <div id="dochelpUrgent-{!item.Id}" class="modal vs1 fade in" >
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <apex:commandLink styleClass="closebtn" html-data-dismiss="modal"> <span class="fa-stack fa-lg "> <i class="fa fa-circle fa-stack-2x"></i> <i class="fa fa-times fa-stack-1x fa-inverse"></i> </span> </apex:commandLink>
+                                <div class="modal-body">
+                                  <div class="row">
+                                    <div class="col-lg-12">
+                                      <div class="h2 no-margin-t">
+                                        <apex:outputText value="{!item.Subject__c}" escape="false"/>
+                                      </div>
+                                      <div class="lead margin-b2">
+                                        <apex:outputText value="{!item.Body__c}" escape="false"/>
+                                      </div>
+                                      <div><label>Date: </label>
+                                        <apex:outputText value=" {0,date,long}">
+                                          <apex:param value="{!item.Email_Sent_At__c}"/>
+                                        </apex:outputText>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <!--  end row --> 
+                                </div>
+                                <!--  end modal body --> 
+                              </div>
+                              <!--  end modal content --> 
+                            </div>
+                            <!--  end modal dialog --> 
+                          </div>
+                          <!-- end modal -->
+                          </apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="Date">
+                          <apex:outputText value=" {0,date,long}">
+                            <apex:param value="{!item.Email_Sent_At__c}"/>
+                          </apex:outputText>
+                        </apex:column>
+                      </apex:pageBlockTable>
+                    </div>
+                  </apex:pageBlock>
+                  <apex:outputPanel layout="block" styleClass="lead box gray center-text" rendered="{!urgentNotificationsListPTR==null}">
+                    <apex:outputText value="There are currently no messages to display."/>
+                  </apex:outputPanel>
+                </apex:outputPanel>
+                <!-- PARTNER PORTAL ALL END --> 
+                
+                
+                <!-- APC ALL START -->
+                <apex:outputPanel layout="block" id="urgentPT" rendered="{!(activeUser!=null && activeUser.User_Interests__c!=null)}">
+                  <apex:pageBlock rendered="{!IF((NotificationsListAPC!=null), true, false)}">
+                    <div >
+                      <apex:pageBlockTable styleClass="table vs3" value="{!NotificationsListAPC}" var="item">
+                       
+                        
+                        <apex:column styleClass="status-cell" headerValue="">
+                         <apex:outputPanel rendered="{!item.Message_Status__c == 'Read'}" layout="block" styleClass="ix-envelope-open"></apex:outputPanel>
+                        <apex:outputPanel rendered="{!item.Message_Status__c == 'Unread'}" layout="block" styleClass="ix-envelope-closed"></apex:outputPanel>
+                        </apex:column>
+                        <apex:column headerValue="Message Subject">
+                          <apex:outputText rendered="{!item.Subject__c!='' && item.Subject__c!= NULL}">
+                          <!-- <a class="notify-detail" data-toggle="modal" data-target="#dochelpUrgent"><apex:outputText value="{!item.Subject__c}" /></a> -->
+                          <apex:commandLink styleClass="notify-detail {!item.Message_Status__c}" action="{!markAsRead}" html-data-backdrop="static" html-data-keyboard="false" html-data-toggle="modal" html-data-target="#dochelpUrgentPT-{!item.Id}" reRender="none" >
+                            <apex:param name="contIdParam" value="{!item.Id}" assignTo="{!contIdChosen}"/>
+                            <apex:outputText value="{!item.Subject__c}" escape="false"/>
+                          </apex:commandLink>
+                          <div id="dochelpUrgentPT-{!item.Id}" class="modal vs1 fade in" style="z-index:10000;">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <apex:commandLink styleClass="closebtn" html-data-dismiss="modal" > <span class="fa-stack fa-lg "> <i class="fa fa-circle fa-stack-2x"></i> <i class="fa fa-times fa-stack-1x fa-inverse"></i> </span> </apex:commandLink>
+                                <div class="modal-body">
+                                  <div class="row">
+                                    <div class="col-lg-12">
+                                      <div class="h2 no-margin-t">
+                                        <apex:outputText value="{!item.Subject__c}" escape="false"/>
+                                      </div>
+                                      <div class="lead margin-b2">
+                                        <apex:outputText value="{!item.Body__c}" escape="false"/>
+                                        <br/>
+                                        <apex:outputText rendered="{!item.Dynamic_Content__c != null}" value="{!item.Dynamic_Content__c}" escape="false"/>
+                                      </div>
+                                      <div><label>Date: </label>
+                                        <apex:outputText value=" {0,date,long}">
+                                          <apex:param value="{!item.Email_Sent_At__c}"/>
+                                        </apex:outputText>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <!--  end row --> 
+                                </div>
+                                <!--  end modal body --> 
+                              </div>
+                              <!--  end modal content --> 
+                            </div>
+                            <!--  end modal dialog --> 
+                          </div>
+                          <!-- end modal -->
+                          </apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="Date">
+                          <apex:outputText value=" {0,date,long}">
+                            <apex:param value="{!item.Email_Sent_At__c}"/>
+                          </apex:outputText>
+                        </apex:column>
+                      </apex:pageBlockTable>
+                    </div>
+                  </apex:pageBlock>
+                  <apex:outputPanel layout="block" styleClass="lead box gray center-text" rendered="{!NotificationsListAPC==null}">
+                    <apex:outputText value="There are currently no messages to display."/>
+                  </apex:outputPanel>
+                </apex:outputPanel>
+                <!-- APC ALL END --> 
+
+                                
+              </div>
+              
+            </apex:form>
+          </div>
+          <!-- end column --> 
+        </div>
+        <!-- end row --> 
+  
+    </apex:define>
+  </apex:composition>
+</apex:page>

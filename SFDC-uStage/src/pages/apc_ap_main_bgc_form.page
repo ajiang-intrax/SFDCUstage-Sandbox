@@ -1,0 +1,177 @@
+<apex:page docType="html-5.0" title="Background Check Information" applyBodyTag="false" applyHtmlTag="false" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="false" showHeader="false" id="apc_ap_main_bgc_form">
+<apex:composition template="intraxtemplate_vs3">
+        <apex:define name="body">
+            <c:block_header_apc_ap_application />
+             <div id="app-page" class="row">
+        <div id="app-focus" class="col-md-8 col-md-push-3">
+                    
+                    <c:block_app_completion ApplicantInfo="{!applicantInfo}" userProfileName="{!userProfileName}"  />
+                      <!-- Jose-Adding Tips for Partners  (Profile "OCPM Agent Portal")
+                      <apex:outputPanel rendered="{!userProfileName == 'OCPM Agent Portal' && applicantInfo.Application_Level__c == 'Main'}" layout="block" id="blockTip">
+				            <div class="lead alert alert-warning clearfix">
+							<div class="margin-b1"><b>Tips</b></div>
+							<ul>
+							<li>Did you verify that the Background check form does not indicate any condition that
+							 the au pair did not mention, or vice versa?
+				            </li>
+							<li> Did you verify that every question on the form is answered?</li>
+							</ul>
+							</div>
+					  </apex:outputPanel>
+					  -->
+			          
+                    
+                    <h1>Background Check Form</h1>
+                    <p class="lead">The U.S. Department of State requires each au pair pass a criminal background check. Please upload a police report from your home country verifying you do not have any criminal charges on record. 
+                    </p>
+                    <apex:form styleClass="form-vertical ws-validate" id="webform">
+                        <div class="row">
+                        <div class="col-sm-12">
+                                <apex:outputLink html-data-toggle="modal" html-data-backdrop="static" html-data-target=".modal-widget" styleClass="btn btn-link vs2 btn-lg margin-r1">
+                                <i class="fa fa-plus"></i> <span>Upload Background Check Form</span>
+                                </apex:outputLink>
+                                
+                                 <i class="infobtn fa fa-question-circle" data-toggle="modal" data-target="#dochelp"></i>
+                      <div id="dochelp" class="modal vs1 fade in">
+                       <div class="modal-dialog modal-dialog-lg">
+                       <div class="modal-content">
+                       <a class="closebtn" data-dismiss="modal">
+                            <span class="fa-stack fa-lg ">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-times fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                       <div class="modal-body">
+                    <div class="row">
+                   <div class="col-lg-6"> 
+                    <h3 class="inline-block">Sample Document</h3> <a target="_blank" href="https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/documents/portals/apc/pt/app/police-background-check.jpg"><b>(See Full Size)</b></a>
+                     <div class="margin-b4">
+                     <img src="https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/documents/portals/apc/pt/app/police-background-check.jpg"/></div>  
+                       
+                   </div>
+                    <div class="col-lg-6"> 
+                     <h3>Tips for Photographing Documents</h3>
+
+<p>If you do not have access to a scanner you can use a digital camera or smartphone camera to capture the required documents. Please note that the copy must be clear with all text being readable. Below are a few tips for achieving this.</p>
+  <ul>
+<li>Do not use the flash when copying documents, as that will wash them out.</li>
+<li>The best source of light is sunlight as it is bright enough to get a sharp, readable image.</li>
+<li>Use a dark background for the image. You can place a piece of black or gray poster board or paper below the documents when you photograph them if you don't have dark surface.</li>
+    <li>Keep the images square and centered in the photograph.</li>
+</ul>
+                   </div>
+                     
+                    </div>  <!--  end row -->
+</div> <!--  end modal body -->
+</div> <!--  end modal content -->
+</div> <!--  end modal dialog -->
+</div> <!-- end modal -->
+                                
+                                
+                            </div>
+                        </div><!--  end row -->
+                        <apex:outputPanel styleClass="margin-t3" layout="block" rendered="{!IF(DocList.Size > 0, true, false)}">
+                            <apex:pageBlock id="Block_ListExperience" >
+                                <div class="table-responsive margin-t4">
+                                    <apex:pageBlockTable styleClass="table vs2" value="{!DocList}" var="item">
+                                        <apex:column headerValue="Uploaded Documents">
+                                            <apex:commandLink action="{!load}" rerender="" target="_blank">
+                                                <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                                <apex:outputText value="{!item.Document_Name__c}"/>
+                                            </apex:commandLink>
+                                        </apex:column>
+                                        <apex:column headerValue="Remove" >
+                                            <div class="btn-toolbar no-margin">
+                                                <apex:commandLink action="{!iWantMyJSValues}" styleClass="btn-lg" oncomplete="confDelete();" rerender=""> <i class="fa fa-trash-o"></i>
+                                                    <apex:param name="docGuid" value="{!item.Document_GUID__c}" assignTo="{!docGuid}"/>
+                                                </apex:commandLink>
+                                            </div>
+                                        </apex:column>
+                                    </apex:pageBlockTable>
+                                </div>
+                            </apex:pageBlock>
+                        </apex:outputPanel>
+                        <apex:outputText value="{!disableFileUploadText}" rendered="{!disableFileUpload}"/>
+                        
+                        
+                        <div class="row margin-t6">
+                            <div class="col-sm-12">
+                                <apex:outputLink styleClass="btn btn-link btn-lg" value="/apex/apc_ap_main_visa_info?id={!applicantInfo.Id}&docType=Passport" id="backlink"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                                <apex:commandlink rendered="{!applicantInfo.Application_Type__c!='Original'}" styleClass="btn btn-primary btn-lg" action="{!navigator}" id="nextpage" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+				                  <apex:param name="nextPage" value="/apex/apc_ap_main_ext_agreements" />
+				                  <apex:param name="reDirectPage" value="true" />
+				                  <apex:param name="pageId" value="034"/>
+				                  <apex:commandButton value="Save & Continue" id="continuebutton" />
+				                </apex:commandlink>
+				              
+ 				                <apex:commandlink rendered="{!applicantInfo.Application_Type__c=='Original' && userProfileName != 'OCPM Agent Portal'}" styleClass="btn btn-primary btn-lg" action="{!navigator}" id="nextpage1" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+				                  <apex:param name="nextPage" value="/apex/apc_ap_main_interview_status" />
+				                  <apex:param name="reDirectPage" value="true" />
+				                  <apex:param name="pageId" value="037"/>
+				                  <apex:commandButton value="Save & Continue" id="continuebutton1" />
+				                </apex:commandlink>
+				               
+ 								<apex:commandlink rendered="{!applicantInfo.Application_Type__c=='Original' && userProfileName == 'OCPM Agent Portal'}" styleClass="btn btn-primary btn-lg" action="{!navigator}" id="nextpage10" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+				                  <apex:param name="nextPage" value="/apex/apc_ap_main_interview" />
+				                  <apex:param name="reDirectPage" value="true" />
+				                  <apex:param name="pageId" value="037"/>
+				                  <apex:commandButton value="Save & Continue" id="continuebutton10" />
+				                </apex:commandlink>
+				               
+                            </div>
+                        </div>
+                        
+                        <div class="modal vs1 fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-sm">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <p>Are you sure you want to remove this file?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <apex:commandLink styleClass="btn btn-primary" action="{!deletefile}" immediate="true">
+                                            <apex:param name="bgcparam" value="true" assignTo="{!bgcparam}" />
+                                            <apex:commandButton value="Yes" id="yesbutton"/>
+                                        </apex:commandLink>
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--  end modal -->
+                        
+                        <div class="modal vs1 fade modal-widget" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Upload Background Check Form</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <iframe width="100%" height="400" frameborder="0" scrolling="no" src="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType={!$CurrentPage.parameters.docType}&retparam={!retParam}"></iframe>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--  end modal --> 
+                        
+                        <script>
+                        var j$ = jQuery.noConflict();
+                        function confDelete(){
+                            j$('#myModal').modal();
+                        } 
+                        
+                        //activate tooltip
+                        j$('.linkpdf').tooltip();
+                        
+                        </script> 
+                    </apex:form>
+                </div>
+                <!-- end column -->
+                
+                 <div id="app-side" class="col-md-3 col-md-pull-8">
+                    <c:menu_side_apc_ap_basic ApplicantInfo="{!applicantInfo}" />
+                </div>
+            </div>
+            <!-- end row --> 
+        </apex:define>
+    </apex:composition>
+</apex:page>

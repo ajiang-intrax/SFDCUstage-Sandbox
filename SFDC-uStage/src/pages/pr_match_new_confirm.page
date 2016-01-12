@@ -1,0 +1,17 @@
+<apex:page applyBodyTag="false" applyHtmlTag="false"  title="New Match Confirmation | Intrax" standardStylesheets="false" showHeader="false" id="partner_match_confirm">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      
+      <div class="row margin-b2">
+        <div class="col-sm-9 center-text center-block">
+          <h1>Thank You</h1>
+          <p class="lead">You have successfully created a new match.</p>
+          <apex:outputLink styleClass="btn btn-link btn-lg margin-t2" value="/apex/pr_pt_list"><i class="fa fa-chevron-left"></i> <span>Go Back to Participants list</span></apex:outputLink>
+        </div>
+        <!--  end column --> 
+      </div>
+      <!--  end row --> 
+      
+    </apex:define>
+  </apex:composition>
+</apex:page>

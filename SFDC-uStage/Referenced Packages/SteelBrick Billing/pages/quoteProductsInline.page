@@ -1,0 +1,122 @@
+<apex:page standardController="invoiceit_s__Quote__c" extensions="invoiceit_s.CreateQuoteController">
+    <apex:includeScript value="{!URLFOR($Resource.invoiceit_s__jQuery, '/js/jquery-1.5.1.min.js')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.invoiceit_s__jQuery, '/js/jquery-ui-1.8.14.custom.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.invoiceit_s__tooltipster, '/js/jquery.tooltipster.min.js')}"/> 
+    <apex:includeScript value="{!URLFOR($Resource.invoiceit_s__tooltipster, '/js/prettify.js')}"/> 
+    <apex:includeScript value="{!URLFOR($Resource.invoiceit_s__tooltipster, '/js/scripts.js')}"/>    
+    <apex:stylesheet value="{!URLFOR($Resource.invoiceit_s__tooltipster, '/css/tooltipster.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.invoiceit_s__tooltipster, '/css/style.css')}"/>
+    
+    <script type="text/javascript">   
+        $(document).ready(function(){
+         displayChargeToolTip();
+        });
+        
+        function displayChargeToolTip() {
+         var tableCharge = '';
+         <apex:repeat value="{!quoteClass.quoteProducts}" var="quoteProduct"  >
+            tableCharge ='<table width="100%"  style="border: 1px solid #ECECEC;border-collapse:collapse;"  ><tr style="background-color:#ECECEC;border: 1px solid #ECECEC;"><apex:repeat value="{!$ObjectType.invoiceit_s__Quote_Rate_Plan_Charge_Tier__c.FieldSets.invoiceit_s__Quote_Plan_Charge_Tier}" var="tierfieldAPI"><th><apex:outputText value="{!tierfieldAPI.Label}" /></th></apex:repeat></tr>';
+            
+            <apex:repeat value="{!quoteProduct.quoteRatePlans}" var="quoteRatePlan" >
+               if(tableCharge == ''){
+                tableCharge ='<table width="100%"  style="border: 1px solid #ECECEC;border-collapse:collapse;"  ><tr style="background-color:#ECECEC;border: 1px solid #ECECEC;"><apex:repeat value="{!$ObjectType.invoiceit_s__Quote_Rate_Plan_Charge_Tier__c.FieldSets.invoiceit_s__Quote_Plan_Charge_Tier}"     var="tierfieldAPI"><th><apex:outputText value="{!tierfieldAPI.Label}" /></th></apex:repeat></tr>'
+              }
+              <apex:repeat value="{!quoteRatePlan.quoteRatePlanCharges}" var="quoteRatePlanCharge">
+                 if(tableCharge == ''){
+                   tableCharge ='<table width="100%"  style="border: 1px solid #ECECEC;border-collapse:collapse;"  ><tr style="background-color:#ECECEC;border: 1px solid #ECECEC;"><apex:repeat value="{!$ObjectType.invoiceit_s__Quote_Rate_Plan_Charge_Tier__c.FieldSets.invoiceit_s__Quote_Plan_Charge_Tier}" var="tierfieldAPI"><th><apex:outputText value="{!tierfieldAPI.Label}" /></th></apex:repeat></tr>'
+                }
+                
+                tableCharge += '<apex:repeat value="{!quoteRatePlanCharge.quoteRatePlanChargeTiers}" var="tier" ><tr style="border: 1px solid #ECECEC;" ><td><apex:outputField value="{!tier.quoteRatePlanChargeTier.invoiceit_s__Start_Unit__c}" /></td><td><apex:outputField value="{!tier.quoteRatePlanChargeTier.invoiceit_s__End_Unit__c}" /></td><td><apex:outputField value="{!tier.quoteRatePlanChargeTier.invoiceit_s__Unit_Price__c}" /></td><td><apex:outputField value="{!tier.quoteRatePlanChargeTier.invoiceit_s__Unit_Cost_Price__c}" /></td></tr></apex:repeat>';
+                      tableCharge += '</table>'; 
+                     var chargeid = "#" + "{!quoteRatePlanCharge.quoterateplancharge.Id}";
+                    $(chargeid).attr( "title", tableCharge);
+                     tableCharge = '';
+              </apex:repeat> 
+          </apex:repeat>    
+        </apex:repeat> 
+        
+        $('.tooltipCharge').tooltipster({
+           fixedWidth: 300,
+           position: 'bottom-left',
+           tooltipTheme: '.tooltip-custom-New'
+       });
+     }
+    </script> 
+    
+    <apex:form >    
+        <apex:pageBlock id="jobrateplancharges">
+             <table cellspacing="0" cellpadding="0" border="0" class="list" width="100%">
+                    <thead class="rich-table-thead">
+                    <tr class="headerRow">
+                        <apex:repeat value="{!$ObjectType.invoiceit_s__Quote_Product__c.FieldSets.invoiceit_s__ProductFieldsInline}" var="fieldAPI">
+                            <th colspan="1" scope="col" class="headerRow">
+                                <div>
+                                    {!fieldAPI.Label}
+                                </div>
+                            </th> 
+                        </apex:repeat>
+                        <th colspan="1" scope="col" class="headerRow">
+                          <div>
+                          {!$Label.Quantity}
+                          </div>
+                        </th>
+                        <apex:repeat value="{!$ObjectType.invoiceit_s__Quote_Rate_Plan_Charge__c.FieldSets.invoiceit_s__Quote_Detail_Page}" var="fieldAPI">
+                            <th colspan="1" scope="col" class="headerRow">
+                                <div>
+                                    {!fieldAPI.Label}
+                                </div>
+                            </th>
+                        </apex:repeat>
+                    </tr>
+                </thead>
+                <tbody>
+                    <apex:repeat value="{!quoteClass.quoteProducts}" var="quoteproduct">
+                        <apex:repeat value="{!quoteproduct.quoteRatePlans}" var="quoterateplan">
+                            <apex:repeat value="{!quoterateplan.quoteRatePlanCharges}" var="quoterateplancharge">
+                                <tr onfocus="if (window.hiOn){hiOn(this);}" onblur="if (window.hiOff){hiOff(this);}" onmouseout="if (window.hiOff){hiOff(this);}" onmouseover="if (window.hiOn){hiOn(this);}" class="dataRow even odd first">                                   
+                                    <apex:repeat value="{!$ObjectType.invoiceit_s__Quote_Product__c.FieldSets.invoiceit_s__ProductFieldsInline}" var="fieldAPI">
+                                        <td colspan="1" class="dataCell">
+                                            <apex:outputField value="{!quoteproduct.quoteProduct[fieldAPI]}" rendered="{!quoterateplancharge.quoterateplancharge.invoiceit_s__Sequence_No__c <= 1}"/>
+                                        </td>   
+                                    </apex:repeat>
+                                    <td colspan="1" class="dataCell">
+                                        <apex:outputField value="{!quoterateplancharge.quoterateplancharge.invoiceit_s__Quantity__c}">
+                                            <apex:param value="{0,number,0}" />
+                                        </apex:outputField>
+                                    </td>
+                                    <apex:repeat value="{!$ObjectType.invoiceit_s__Quote_Rate_Plan_Charge__c.FieldSets.invoiceit_s__Quote_Detail_Page}" var="fieldAPI">
+                                        <td colspan="1" class="dataCell">
+                                            <apex:outputField value="{!quoterateplancharge.quoterateplancharge[fieldAPI]}" rendered="{!fieldAPI != 'Name' && fieldAPI != 'invoiceit_s__Price_Format__c' }" />                                           
+                                            <apex:outputPanel rendered="{!fieldAPI == 'Name'}">
+                                                <a href="/{!quoterateplancharge.quoterateplancharge.Id}" target="_blank">
+                                                    <apex:outputField value="{!quoterateplancharge.quoterateplancharge[fieldAPI]}"/>
+                                                </a>
+                                            </apex:outputPanel>
+                                             <!--
+                                                Modified By     : Rama krishna
+                                                Modified Date   : 28 -11-13
+                                                JIRA Task       : INVOICEIT-271
+                                                Comments        : added below code, to display the tier/volume data
+                                            -->
+                                            <apex:outputPanel rendered="{!fieldAPI == 'invoiceit_s__Price_Format__c'}">
+                                                <apex:outputField value="{!quoterateplancharge.quoterateplancharge[fieldAPI]}" rendered="{!quoterateplancharge.quoterateplancharge.invoiceit_s__Price_Format__c == 'Volume Pricing' || quoterateplancharge.quoterateplancharge.invoiceit_s__Price_Format__c=='Flat Fee Pricing' || quoterateplancharge.quoterateplancharge.invoiceit_s__Price_Format__c=='Tiered Pricing'}">
+                                                   <a href="#" id="{!quoterateplancharge.quoterateplancharge.Id}" class="tooltipCharge"  >
+                                                     <apex:image id="imageToolTip"  url="{!URLFOR($Resource.invoiceit_s__Images,'/images/priceTypeIcon.gif')}"  /> 
+                                                   </a>
+                                             </apex:outputField>
+                                            </apex:outputPanel>
+                                            <apex:outputPanel rendered="{!fieldAPI == 'invoiceit_s__Price_Format__c'}">
+                                                <apex:outputField value="{!quoterateplancharge.quoterateplancharge[fieldAPI]}" rendered="{!quoterateplancharge.quoterateplancharge.invoiceit_s__Price_Format__c == 'Default' || quoterateplancharge.quoterateplancharge.invoiceit_s__Price_Format__c == 'Per Unit Pricing'}">
+                                             </apex:outputField>
+                                            </apex:outputPanel>
+                                        </td>
+                                    </apex:repeat>
+                                </tr>
+                            </apex:repeat>
+                        </apex:repeat>
+                    </apex:repeat>
+                </tbody>
+            </table>  <br/><br/><br/><br/>
+        </apex:pageBlock> <br/><br/><br/><br/><br/>
+    </apex:form>
+</apex:page>

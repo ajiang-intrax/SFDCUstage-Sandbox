@@ -1,0 +1,12 @@
+<apex:page standardController="Opportunity" extensions="IPositionCloneController" action="{!oppToPosition}">
+     <apex:sectionHeader title="New Position"/>
+
+        <!-- Display Error Messages -->
+        <apex:pageMessages />
+        
+        <br/> <br/>
+        
+        <!-- Back Button -->
+        <apex:outputLink value="{! URLFOR($Action.opportunity.view, opportunity.id)}" > Back to Opportunity Details </apex:outputLink> 
+
+</apex:page>

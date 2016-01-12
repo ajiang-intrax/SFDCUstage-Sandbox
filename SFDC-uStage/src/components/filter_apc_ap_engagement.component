@@ -1,0 +1,85 @@
+<apex:component layout="none" id="filter_apc_ap_engagement" allowDML="true">
+
+<apex:attribute name="PageController" description="Instance of search_controller class" type="search_controller" required="false" default="" />
+
+				<apex:pageBlock id="pb">
+				  <apex:pageMessages id="validationMsg"/>
+				  
+				  <apex:pageBlock rendered="{!IF(PageController.engCommList.Size == 0, true, false)}">
+				   <p class="lead box gray center-text">Looks like there are no other au pairs in your area.</p>
+				  </apex:pageBlock>
+				   
+				  <apex:pageBlock rendered="{!IF(PageController.engCommList.Size > 0, true, false)}">
+				    <div id="pr_app_list" class="table-responsive vs3">
+				      <apex:pageBlockTable id="AppsList" styleClass="table vs3" var="item" value="{!PageController.engCommList}">     
+				      	<apex:column >
+				        	<apex:facet name="header">
+					        Name
+					        </apex:facet>
+					    	{!item.Account_Id__r.FirstName}  {!item.Account_Id__r.LastName}     
+				        </apex:column>
+				        
+				        <apex:column >
+				        	<apex:facet name="header">
+					        Nationality
+					        </apex:facet>
+					    	{!item.Account_Id__r.Citizenship__pc}     
+				        </apex:column>
+				        
+				        <!--
+				        <apex:column >
+				        	<apex:facet name="header">
+					        Location
+					        </apex:facet>
+					    	{!myHome.userProfAD.Area_Profile__r.APC_Field_Region__c}     
+				        </apex:column>
+				        -->
+				        <apex:column >
+				        	<apex:facet name="header">
+					        Program Dates
+					        </apex:facet>
+						    <apex:outputText value=" {0,date,MM'/'dd'/'yyyy}">
+			    			<apex:param value="{!item.Engagement_Start__c}" /> 
+							</apex:outputText>
+						    <div>to</div>
+						    <apex:outputText value=" {0,date,MM'/'dd'/'yyyy}">
+			    			<apex:param value="{!item.Engagement_End__c}" /> 
+							</apex:outputText> 
+						</apex:column>
+					    
+					    <apex:column >
+				        	<apex:facet name="header">
+					        Email 
+					        </apex:facet>
+					    	{!item.Account_Id__r.PersonEmail}     
+				        </apex:column>
+				        
+				                        
+				      </apex:pageBlockTable>
+				    </div>
+				  </apex:pageBlock>
+				 
+				 <apex:outputpanel layout="block" id="buttonblock" rendered="{!PageController.totalRecords > 20}" > 
+				 <div class="sort-container vs1 margin-b4 form-vertical">
+	                <div class="sort vs1 paginate pull-right">
+	                  <apex:pageblock id="selectedPageBlock">
+	                    <apex:commandLink rendered="{!PageController.community_results.hasPrevious}" status="pleasewait01" reRender="pb" action="{!PageController.community_results.previous}"  title="Next Page">
+	                      <apex:commandButton disabled="{!PageController.community_results.hasPrevious}"/>
+	                      <i class="fa fa-chevron-left"></i> </apex:commandLink>
+	                    <apex:SelectList value="{!PageController.pageNumberSelected}" style="width:50px;" StyleClass="form-control" size="1">
+	                      <apex:selectOptions value="{!PageController.pageNumbers}"/>
+	                      <apex:actionSupport event="onchange" action="{!PageController.setpageNumberComm}" rerender="pb" status="pleasewait01"/>
+	                    </apex:SelectList>
+	                    of {!PageController.totalPages}
+	                    <apex:commandLink rendered="{!PageController.community_results.hasNext}" status="pleasewait01" reRender="pb" action="{!PageController.community_results.next}"  title="Last Page">
+	                      <apex:commandButton disabled="{!PageController.community_results.hasNext}"/>
+	                      <i class="fa fa-chevron-right"></i> </apex:commandLink>
+	                  </apex:pageblock>
+	                </div>
+	              </div>
+	              <!--  end list control --> 
+	              </apex:outputpanel>
+                  
+                  
+				</apex:pageBlock>
+</apex:component>

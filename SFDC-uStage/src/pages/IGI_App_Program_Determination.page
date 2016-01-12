@@ -1,0 +1,73 @@
+<apex:page docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+    
+    <!-- UI Blocker component for Background processing -->
+    <c:BlockUI />
+    
+    <apex:composition template="IntraxTemplate_Vs1">
+        <apex:define name="body">
+            <div class="wrapper" id="IGI_PreApp_Program_Preferences">    
+                <apex:form >
+                
+                    <!-- Heading -->
+                    <div class="page-header clearfix">
+                        <h1 class="page-title">Intrax Global Internship Application</h1>
+                        
+                        <!-- Back To Main Page Link -->
+                        <div class="back-to-main"><div class="form-link no-margin">
+                            <apex:outputLink styleClass="no-padding" value="apex/IGI_App_Home?id={!applicantInfo.Id}"><i class="icon-chevron-left no-padding"></i><i class="icon-chevron-left"></i> <span>Back to Main Page</span></apex:outputLink></div></div>
+                        </div>
+                       
+                       <!-- Section Header -->  
+                       <div class="section-header clearfix">
+                            <h2>Program Determination</h2>
+                       </div> 
+                        
+                       <!-- Panel -->   
+                       <div class="white-box clearfix">   
+                            <div class="panel two_thirds">  
+                                
+                            <!-- Do you have an Internship offer from a company? -->
+                            <div class="form-row">
+                                <div class="form-label left ">Have you already secured an internship offer from a company?<span class="required">*</span></div>
+                                <div class="form-field">
+									<apex:selectList size="1" value="{!selectedServiceLevel}" required="true">
+		          						<apex:selectOptions value="{!listServiceLevel}"></apex:selectOptions>
+		      						</apex:selectList>
+	      						</div>
+                            </div>
+                        
+                            <div class="form-row">
+                            	<div class="form-link">
+				              		<apex:outputLink value="/apex/IGI_app_home?id={!applicantInfo.Id}"><i class="icon-chevron-left"></i> <span>Back</span></apex:outputLink>
+				                </div>
+          
+                                <!-- Back Command Link 
+                                <div class="form-link">
+                                    <apex:commandlink action="{!navigator}" immediate="true">
+                                        <apex:param name="nextPage" value="/apex/IGI_App_Home"/>
+                                        <apex:param name="reDirectPage" value="true"/> 
+                                        <i class="icon-chevron-left"></i>
+                                        <apex:commandButton value="Back" immediate="true"/>
+                                    </apex:commandlink>
+                                </div>
+                                -->
+                                <!-- Command Link for Save & Continue -->
+                                <div class="form-button">
+                                    <apex:commandlink styleClass="next" action="{!validateIGIProgramDeterminationServiceLevel}">
+                                        <apex:commandButton value="Save & Continue" />
+                                        <i class="icon-chevron-right"></i>
+                                    </apex:commandlink>
+                                </div>
+                                 
+                            </div>  
+                        </div>
+                            
+                        <div class="panel one_third last aside">
+                            <c:Badge_Centers_Contact />     
+                        </div>
+                    </div>
+                </apex:form>
+            </div>
+        </apex:define>
+    </apex:composition>
+</apex:page>

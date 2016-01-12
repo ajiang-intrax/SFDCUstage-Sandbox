@@ -1,0 +1,22 @@
+<apex:component >
+<apex:variable var="PT_Home" value="active" rendered="{! IF($CurrentPage.Name=='PT_Home', true, false)}"/>    
+<apex:variable var="IGI_PT_MyInterviews" value="active" rendered="{! IF($CurrentPage.Name=='IGI_PT_MyInterviews', true, false)}"/>  
+<apex:variable var="IGI_PT_MyMatches" value="active" rendered="{! IF($CurrentPage.Name=='IGI_PT_MyMatches', true, false)}"/>     
+<apex:variable var="your_applications" value="active" rendered="{! IF($CurrentPage.Name=='your_applications', true, false)}"/>   
+<ul class="sub-navigation clearfix">
+<!-- <li class="{!PT_Home}">
+       <apex:outputLink value="PT_Home">Home</apex:outputLink>
+      </li>-->
+      <!-- As per IGI 373 
+<li class="{!IGI_PT_MyMatches}">
+    <apex:outputLink value="IGI_PT_MyMatches">Matches</apex:outputLink>
+    </li>
+<li class="{!IGI_PT_MyInterviews}">
+    <apex:outputLink value="IGI_PT_MyInterviews">Interviews</apex:outputLink>
+    </li>   
+    -->
+<!-- <li class="{!your_applications} last">
+    <apex:outputLink value="your_applications">Applications</apex:outputLink>
+    </li>-->
+</ul>
+</apex:component>

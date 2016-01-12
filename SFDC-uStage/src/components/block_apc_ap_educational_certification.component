@@ -1,0 +1,102 @@
+<apex:component layout="none" id="block_apc_ap_educational_certification" allowDML="true">
+
+<apex:attribute name="PageController" description="Instance of home_controller class" type="home_controller" required="false" default="" />
+
+<style>
+i.fa.fa-graduation-cap.margin-r2.margin-l2,
+i.fa.fa-trophy.margin-r2.margin-l2 {
+    font-size: 80px;
+    color: #AED96A;
+}
+
+
+</style>
+
+
+<!-- Begining CASE 1: PT  Upload your proof of Education -->
+<apex:outputpanel layout="block" id="blockCase1" rendered="{!PageController.currentApp.Intrax_Program__c == 'AuPairCare' && PageController.currentApp.Application_Stage__c == 'Accepted' &&
+PageController.currentApp.Application_Level__c == 'Main' && PageController.currentApp.Engagement__r.Status__c=='On Program' && 
+PageController.currentApp.Engagement__r.Engagement_Start__c != null && (TODAY() > PageController.currentApp.Engagement__r.Engagement_Start__c + 30) &&
+PageController.isProofEducation == false}">
+
+<div class="hp-block">
+<div class="row">
+<div class="col-sm-8">
+
+<div class="tcell">
+<i class="fa fa-graduation-cap margin-r2 margin-l2"></i>
+</div>
+
+<div class="tcell">
+<h3 class="margin-b1 margin-t2">Upload Your Proof of Education</h3>
+ <apex:outputLink id="linkrEarlyDep" target="_blank" value="/apex/resource_article?cname=EducationRequirement"><b>Download Proof of Education Form</b></apex:outputLink>
+</div>
+
+</div><!-- end col -->
+<div class="col-sm-4">
+    <apex:commandlink styleClass="btn btn-primary btn-lg margin-t2" immediate="false" reRender="panelModal" onComplete="openModal();" status="onsubmit">
+    <apex:param name="doctype2" value="Proof-of-Education-Home" />
+    <span>Upload Document</span>
+    </apex:commandlink> 
+</div><!-- end col -->
+</div><!-- end row -->
+</div><!-- end hp block -->
+  
+<apex:outputPanel layout="block" id="panelModal">           
+<div id="myModalCert" class="modal vs1 fade modal-widget" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Upload Your Proof of Education</h4>
+                </div>
+                <div class="modal-body">
+                <iframe width="100%" height="400" frameborder="0" scrolling="no" src="{!PageController.fileUploadUrl}pid=upload_eng&eng_id={!PageController.currentApp.Engagement__c}&orgid={!$Organization.Id}&docType=Proof-of-Education&rType=eng&retparam={!PageController.retParam}"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+<!--  end modal --> 
+</apex:outputPanel>
+            
+<script>
+var j$ = jQuery.noConflict();
+function openModal(){
+     j$('#myModalCert').modal();
+} 
+</script> 
+
+</apex:outputpanel>
+
+<!-- Begining CASE 2: Engagement has No Selection with futureInterview date -->
+<apex:outputpanel layout="block" id="blockCase2" rendered="{!PageController.currentApp.Intrax_Program__c == 'AuPairCare' &&
+PageController.currentApp.Application_Stage__c == 'Accepted' &&
+PageController.currentApp.Application_Level__c == 'Main' && PageController.currentApp.Engagement__r.Status__c=='Program Complete' &&
+PageController.isProofEducation == true}"> 
+  
+<div class="hp-block">
+<div class="row">
+<div class="col-sm-12">
+<div class="tcell">
+<i class="fa fa-trophy margin-r2 margin-l2"></i>
+</div>
+<div class="tcell">
+<h3 class="margin-b1 margin-t2">Congratulations on Completing Your Au Pair Program!</h3>
+        <apex:commandLink action="{!PageController.generateAuPairCertificate}" target="_blank">
+        <b>Download Your Certificate of Completion</b>
+        </apex:commandLink>
+</div>        
+        
+</div><!-- end col -->
+</div><!-- end row -->
+
+
+    <!-- 
+    <apex:commandLink styleClass="blue" rendered="{!(parent.Result__c == 'Passed' && parent.Has_Certificate__c == True)}" action="{!generateScormCertificate}" target="_blank">
+    <apex:param name="ScomIdCertificate" value="{!parent.Id}" />
+    <apex:outputText value="View & Print Certificate" id="resultscrommultiprint"/>
+    </apex:commandLink>
+    -->
+</div><!-- end hp block -->
+</apex:outputpanel>
+
+</apex:component>

@@ -1,0 +1,27 @@
+<apex:page docType="html-5.0" title="SiteDocViewer" applyBodyTag="false" applyHtmlTag="false" Controller="AppEngine_Controller" standardStylesheets="false" showHeader="false" id="SiteDocViewer">
+
+<apex:composition template="intraxtemplate_vs3">
+	<apex:define name="body">
+	<div id="app-page" class="row">
+	<div id="app-focus" class="col-md-8 col-md-push-3">
+	<apex:form styleClass="form-vertical ws-validate" id="webform">
+	  <div class="table-responsive">
+			
+			<apex:outputPanel layout="block" id="ipuerror">
+	            <apex:pageBlock >
+	         		<apex:Messages styleClass="errorMsg" style="list-style-type:none;"/>
+	            </apex:pageBlock>
+	        </apex:outputPanel>
+	        
+	         <apex:commandlink styleClass="btn btn-primary btn-lg"  id="commandlinkclose" onclick="window.close();">
+                  <apex:commandButton value="Close Window" id="CloseWindow"/>
+             </apex:commandlink>
+	        
+	  </div>          
+	</apex:form>
+	</div>
+	</div>
+	</apex:define>
+ </apex:composition>
+ 
+</apex:page>

@@ -1,0 +1,311 @@
+<apex:page standardController="Engagement__c"  standardStylesheets="false" showHeader="false" renderas="pdf"
+	applyHtmlTag="false" applyBodyTag="false">
+  <head>
+  <!-- Adding the base styles for PDFs -->
+  <apex:stylesheet value="{!URLFOR($Resource.intrax_themes_vs3, '/intrax_themes_vs3/styles/pdf.css')}"
+/>
+  <!-- Adding custom styling and overrides -->
+  <style type="text/css" media="print">
+@page { size: portrait; margin: 3cm 1cm 2cm 1cm; @top-left {
+ content : element( header);
+ width: 3cm;
+}
+ @bottom-right {
+ content: "Intrax Global Internships Terms and Conditions | Page " counter(page) " of " counter(pages);
+ vertical-align: bottom;
+ line-height: 1;
+ font-weight: lighter;
+ font-size: 8pt;
+ font-family: Dialog, Arial Unicode MS;
+}
+}
+div.master { display: block; position: running(header); }
+</style>
+  </head>
+  <body>
+  <div class="master"> 
+      <apex:image width="3cm"
+				url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/pdf/pdf-logo-intrax.gif')}"
+				alt="Intrax" title="Intrax"/>
+  </div>
+  <div class="content">
+    <form>
+      <h1>INTRAX GLOBAL INTERNSHIPS PROGRAM TERMS AND CONDITIONS</h1>
+      <p> Intrax program, its agents, affiliates, officers, directors, staff, and representatives (collectively "Intrax") and the undersigned participant ("Participant"), understand and agree to the terms and conditions stated below relating to Participant�s participation in the Intrax Global Internship program ("Program"), Participant�s association with the company providing the internship ("Host Company") and the location of the Program ("Host Country"). </p>
+      <h2>1) Participant Requirements</h2>
+      <ul class="lower-latin">
+        <li>Meet visa requirements and labor regulations specific to Host Country</li>
+        <li>At least eighteen (18) years old upon Program start date</li>
+        <li>Language skills and/or specific experience may be required depending on internship position or visa requirement</li>
+        <li>Demonstrate the necessary maturity and competency to train successfully at a host company and adapt to life in an international and professional setting</li>
+      </ul>
+      <h2>2) Start/End Dates and Deadlines</h2>
+      <ul class="lower-latin">
+        <li>Applications are accepted on a rolling basis; year round (blackout dates may apply)</li>
+        <li>Specific duration and start/end dates are to be determined by Intrax and the host company</li>
+        <li>Participant may postpone start date (prior to matching process) within a calendar year without penalty. Date changes made by Participant after the matching process has begun or after the calendar year are subject to a reinstatement fee of $150.  For date changes after a confirmed match, refer to refund section.
+        <p>&nbsp;</p>
+        <table>
+          <tr>
+            <td><b>Required Participant Activity</b></td>
+            <td><b>Deadline</b></td>
+          </tr>
+          <tr>
+            <td>Online Application Submission</td>
+            <td>80-90 days prior to departure/desired start date (depending on location and visa requirements). If requiring a visa, Participants need to allow an additional 30 days.</td>
+          </tr>
+          <tr>
+            <td>Application Fee Submission</td>
+            <td>75-85 days prior to departure/desired start date (depending on location and visa requirements). If requiring a visa, Participants need to allow an additional 30 days.</td>
+          </tr>
+          <tr>
+            <td>Revised Resume and Complete Profile Submission</td>
+            <td>70-80 days prior to departure/desired start date (depending on location and visa requirements). If requiring a visa, Participants need to allow an additional 30 days.</td>
+          </tr>
+        </table>
+        </li>
+        <li>Failure to meet deadlines may result in delayed start dates and/or inability to obtain necessary visas and participate on Program. </li>
+      </ul>
+      <h2 class="pgbr-bf">3) Responsibility of Intrax</h2>
+      <p>Intrax shall be responsible and agrees to perform the following:</p>
+      <ul class="lower-latin">
+        <li>Upon acceptance into the Intrax Program and receipt of the Application Fee, Intrax agrees to assist Participant through the interview and match process in an internship prior to the start of the Program (with exception of J1 visa service).
+          
+          <div class="nested-list lower-roman">
+            <div>Participants are expected to be prepared to accept the position that is offered by Intrax and the host company. Every effort will be made to accommodate preferences and requests, however, specific host companies or positions cannot be guaranteed.</div>
+            <div>Participant agrees to only request interview with companies that they in good faith will accept an internship offer if made after the interview.</div>
+            <div>Participant may request interview with multiple host companies but will only have a maximum of three (3) opportunities to accept an offer after the interview.</div>
+            <div>There will be no Host Company replacements after a match has been made.</div>
+          </div> 
+        </li>
+        <li>Pre-internship orientation</li>
+        <li>Resume review </li>
+        <li>Basic training authorization support</li>
+        <li>On-program  support (inquiries related to internship position)</li>
+        <li>Accident/sickness insurance (liability insurance for certain locations) (with exception of U.S. Domestic/Practical Training Program)
+           <div class="nested-list lower-roman">
+            <div>Participant is financially responsible for any medical expenses that are not covered by the insurance that Intrax provides.</div>
+          </div>
+        </li>
+      </ul>
+      <p>If Participant is seeking further program support, certain items can be added for an additional fee.  Add-on items may include:</p>
+      <ul class="lower-latin">
+        <li>Visa assistance (with exception of J1 visa service, which is included in Program Fee)</li>
+        <li>Housing</li>
+        <li>On-site orientation</li>
+        <li>On-site support and regular check-ins</li>
+        <li>Assistance with academic credit</li>
+        <li>Any additional insurance not covered in Program Fee</li>
+        <li>Airport pick-up</li>
+        <li>Airport drop-off</li>
+        <li>Excursions</li>
+      </ul>
+      <p>All Social Development Programs include:</p>
+      <ul class="lower-latin">
+        <li>Internship Placement</li>
+        <li>Homestay with a carefully-screened host family</li>
+        <li>Daily meals</li>
+        <li>Health and travel insurance</li>
+        <li>On-site transportation</li>
+        <li>Project funding and support</li>
+        <li>Basic language classes or cultural excursions</li>
+        <li>24 hour emergency support</li>
+      </ul>
+      <p>J1 Visa Service includes:</p>
+      <ul class="lower-latin">
+        <li>Issuance of DS-2019 forms</li>
+        <li>Travel Health Insurance</li>
+        <li>Student Exchange Visitor Information System (SEVIS) fee ($180) paid by Intrax to the U.S. government</li>
+        <li>Vetting your U.S. host organizations to ensure their eligibility</li>
+        <li>Assisting with visa related documents</li>
+        <li>Pre-departure orientation (already mentioned as a service so may not need to go here)</li>
+        <li>On-program support including 24 hour emergency support</li>
+      </ul>
+      <h2>4) Responsibility of Participant</h2>
+      <p>Participant shall be responsible and agrees to provide the following:</p>
+      <ul class="lower-latin">
+        <li>Transportation to/from Host Country and commuting costs
+          <div class="nested-list lower-roman">
+            <div>Travel itinerary is to be provided to Intrax</div>
+            <div>All expenses due to flight delays/cancellations, excess baggage charges, luggage handling, and other irregularities will be the responsibility of the Participant.</div>
+          </div>
+        </li>
+        <li>Housing in the Host Country for the length of the Program (with exception of Social Development Programs)</li>
+        <li>Passports, visa fees, and all associated costs including shipping and expediting fees
+          <div class="nested-list lower-roman">
+            <div>Although Intrax provides visa assistance as a program add-on, it will be the responsibility of the Participant to acquire and submit all necessary documents to the appropriate consulate or government agency and to obtain the visa and/or work approval prior to the program start date.</div>
+            <div>During the visa application process, passports may be required by the consulate.  It is advised that participants avoid international travel shortly before the program start date.</div>
+          </div>
+        </li>
+        <li>Additional insurance not covered in Program Fee</li>
+        <li>Medical information
+          <div class="nested-list lower-roman">
+            <div>Participant is responsible for providing Intrax with any personal medical information regarding health and mental conditions that may affect his/her ability to participate on Program, including but not limited to pre-existing or prior conditions, allergies, and prescription medications.</div>
+            <div>Participant is required to provide Intrax with the name and contact information of the person to contact in the event of an emergency.</div>
+          </div>
+        </li>
+        <li>Personal Responsibility
+          <div class="nested-list lower-roman">
+            <div>Participants are expected to behave in a professional and respectful manner throughout the duration of the Program and demonstrate open-mindedness, flexibility and a willingness to adapt. It is critical to maintain a positive attitude towards the internship, Host Company employers and coworkers, as well as the people of the host country, their culture and way of life.</div>
+            <div>While Intrax provides a pre-departure orientation and safety tips, the Participant is responsible for his/her own safety and will not hold Intrax or the Host Company liable for any injuries to person or property or any other losses as a result of participation in the Program. Upon termination of the Program (for any reason), Participant is legally responsible for his/her own care, safety and legal status as an alien in the Host Country.</div>
+            <div>Participant will be financially responsible for himself/herself for the duration of the program. Proof of financial means may be required as a part of the visa process.</div>
+            <div>Participant agrees to use his/her best efforts for internship placement with Intrax by answering Intrax communications to ensure timely internship placement.</div>
+          </div>
+        </li>
+        <li>Participant is responsible for any civil or criminal liability or for defending against any legal claims made against them.</li>
+      </ul>
+      <h2>5) Release</h2>
+      <ul class="lower-latin">
+        <li>Medical Release Authorization
+          <div class="nested-list lower-roman">
+            <div>Participant authorizes Intrax and its representatives to seek medical attention on behalf of the Participant in the event of sickness, accident or other emergency during the Program. Participant also authorizes any physician to release any information acquired in the course of examination or treatment. This authorization shall be valid for the entire duration of the Intrax Program. Participant is financially responsible for any medical treatment received which is not covered by the provided accident and sickness insurance.</div>
+          </div>
+        </li>
+        <li>Marketing Release
+          <div class="nested-list lower-roman">
+            <div>Participant lends his/her consent and authorizes Intrax to use his/her name, photograph, file or video likeness, as well as any comments or statements made by Participant in materials or publications for commercial and/or promotional purposes.</div>
+          </div>
+        </li>
+      </ul>
+      <h2 class="pgbr-bf">6) Payment Policies</h2>
+      <ul class="lower-latin">
+        <li>Prices are subject to adjustment due to circumstances beyond the control of Intrax, including but not limited to lack of participation and currency exchange rate fluctuations.</li>
+        <li>Program fees are due according to the following schedule:
+        <p>&nbsp;</p>
+        <table>
+          <tr>
+            <td><strong>Application Fee</strong></td>
+            <td>Due within seven (7) calendar days of acceptance to program. </td>
+          </tr>
+          <tr>
+            <td><strong>Final Payment</strong></td>
+            <td>Due within seven (7) calendar days of confirmed Host Company match or fifty (50) days before departure, whichever comes first.</td>
+          </tr>
+          <tr>
+            <td><strong>Extension Payment</strong></td>
+            <td>Due at time of match or once the extension has been confirmed by the Host Company.</td>
+          </tr>
+        </table>
+        <br />
+        <em>* Application Fee is non-refundable</em>
+       
+        </li>
+        <li>Non-responsive Participants will be subject to cancellation and a reinstatement fee of $150.00 if they do not start on Program within the calendar year.</li>
+        <li>If Participant has not been matched prior to fifty (50) days before departure, all Program fees must be paid in full at that date to confirm their place in the Program.</li>
+        <li>Participant agrees to pay any bank wiring fees.</li>
+      </ul>
+      <h2>7) Dismissal</h2>
+      <ul class="lower-latin">
+        <li>Intrax reserves the right to dismiss from the Program any Participant whose attitude, health, mental condition, or physical infirmity negatively affects their performance in their internship, or whose conduct is discourteous to others or incompatible with the best interests of the Host Company and/or Intrax. This decision will be based on the sole discretion of Intrax.
+          <div class="nested-list lower-roman">
+            <div>If Participant is dismissed for any reason, Participant is not entitled to replacement.</div>
+            <div>If Participant is dismissed or withdraws early, he/she will no longer be covered on any insurance that Intrax has provided.</div>
+          </div>
+        </li>
+        <li>Reasons for dismissal include but are not limited to:
+         <div class="nested-list lower-roman">
+            <div>Not abiding by all laws of the Host Country as well as all rules and regulations of the visa scheme when applicable and regulations issued by Intrax, the Host Company and their representatives.</div>
+             <div>Not abiding by the agreed upon work schedule.</div>
+             <div>Misrepresentation of abilities and/or work experience.</div>
+             <div>Abusive use of alcohol or buying, selling, or using drugs at any time.</div>
+            <div>Not abiding by dress and cultural codes of the Host Company and host country.</div>
+             <div>Participant has not fulfilled all Program requirements (including but not limited to: payment in full of the Program Fee and/or extension fees; submission of all signed forms and documents; successful completion of necessary visa requirements).</div>
+          </div>
+        </li>
+        <li>The Host Company, Intrax or the foreign government may prematurely terminate the internship due to circumstances beyond their control (including but not limited to: natural disasters, civil unrest, acts of terrorism).</li>
+      </ul>
+      <h2>8) Refunds </h2>
+      <ul class="lower-latin">
+        <li>Neither the Host Company nor Intrax bears any liability for any losses or claims incurred by a Participant in connection with dismissal, early withdrawal or the Host Company or Intrax's termination of the Program.
+        </li>
+        <li>If a Participant withdraws from the Program for any reason before the confirmation of a match to an internship with a Host Company, Intrax will retain the non-refundable Application Fee.</li>
+        <li>If a Participant withdraws from the Program for any reason after confirmation of a match with an internship with a Host Company, Intrax will retain the non-refundable Application Fee and the percentage of Program Fees according to the schedule below:
+         <div class="nested-list lower-roman">
+            <div>90-76 days prior to start date- 50% of Program Fees.</div>
+            <div>75-61 days prior to start date - 75% of Program Fees.</div>
+           <div>60 days or less prior to start date - 100 % of Program Fees.</div>
+          </div>
+        </li>
+        <li>Participant will not be eligible for a refund if:
+          <div class="nested-list lower-roman">
+            <div>Participant withdraws from the Program after the start of the Program for any reason, or</div>
+            <div>Participant is dismissed for any reason, or</div>
+            <div>Intrax per its sole discretion dismisses Participant for not having fulfilled all Program requirements (including but not limited to: payment in full of the Program Fees; submission of all signed forms and documents; successful completion of necessary visa requirements).</div>
+         </div>
+        </li>
+        <li>In case of visa denial, Participant will be eligible for following refund:
+          <div class="nested-list lower-roman">
+            <div>Program fee</div>
+            <div>Placement fee minus $500 (if candidate had accepted an Intrax arranged position)</div>
+         </div>
+        </li>
+        <li>In case of visa denial, Participant will not be eligible for following refund:
+          <div class="nested-list lower-roman">
+            <div>Non-refundable application fee</div>
+            <div>SEVIS fee</div>
+         </div>
+        </li>
+        
+      </ul>
+      <h2>9) Confidentiality</h2>
+      <p>Participant agrees to not disclose, in any case whatsoever, any confidential information gained as a result of working with the Host Company. 
+        Thus, no reports, communications or publications shall be disseminated without the prior agreement of the Host Company.</p>
+      <h2>10) Indemnification </h2>
+      <p>The Participant and the Participant's heirs, successors and assigns agree to indemnify and hold Intrax, its past and present trustees, officers, employees, agents, and their heirs, successors and assigns of and from each, from any and all loss, cost, damage, liability or expense (including reasonable attorneys' fees), resulting in or arising from his/her participation in the Program.</p>
+      <h2>11) Waiver, Amendment, or Modification </h2>
+      <p>No term or condition hereof will be considered waived by Intrax, and no breach excused by Intrax, unless such waiver or consent is in writing signed by Intrax. The waiver by Intrax of, or consent by Intrax to, a breach of any provision of this Agreement by Participant shall not operate or be construed as a waiver of, consent to, or excuse of any other or subsequent breach by Participant. This Agreement may be amended or modified only by mutual agreement of authorized representatives of the parties in writing. Intrax, a California corporation, represents, and is the agent for, certain carefully selected carriers, wholesalers and service companies, all of which are disclosed principals and independent contractors. Intrax is not responsible for any negligent act or omission by any of these organizations, such as ship or flight delay, cancellations or prevention of the performance of any obligation or its part to be performed including, but not limited to, any product sold by Intrax resulting from seizures under local process, sanctions, quarantine restrictions, acts of governmental authority, strikes, work stoppages or labor disputes (whether resulting from disputes between carriers and employees, or between other parties), war or hazards incident to a state of war, fire, acts of god or nature including, without limitation, floods, earthquakes or weather conditions, mechanical difficulties, riots or civil commotions, or any other acts, matters of things, whether or not of a similar nature, beyond control of Intrax or its representative carriers, wholesalers and service companies. CST# 1003992-50</p>
+      <h2>12) Dispute Resolution, Choice of Law and Forum</h2>
+      <p>These terms and conditions shall be construed and interpreted in accordance with the laws of the State of California, U.S.A., without regard to principles of conflict of law.  In the event of any dispute between the parties concerning the performance, enforcement or interpretation of these terms and conditions, such dispute shall be determined by binding arbitration before, and in accordance with the rules of the American Arbitration Association ("AAA") in San Francisco, CA.  The decision of the arbitrator shall be final and binding and may be enforced in any court of competent jurisdiction on the petition of either party. The parties agree that California is a fair and reasonable forum for resolution of any and all disputes and submit to the exclusive jurisdiction of the Courts of the State of California as otherwise provided herein.</p>
+      <h2>13) Severability </h2>
+      <p>If any provision of these terms and conditions thereof is held to be invalid, illegal or unenforceable for any reason, the invalid, illegal or unenforceable provision or application shall not affect or impair the other provisions or applications of the terms and conditions which can be given effect without the invalid, illegal or unenforceable provision or application.  To this end, the provisions of the terms and conditions are declared to be severable and shall be construed and enforced accordingly.</p>
+      <h2>14) Headings not controlling </h2>
+      <p>Headings in the document are used only for ease of reference and are not controlling.</p>
+      <!--<p><em>By checking the affirmation option box on the online application, the Participant affirms that they have read and agree to the above Terms and Conditions.</em></p>-->
+      <apex:pageBlock id="J1Block" rendered="{!IF(Engagement__c.Visa_Type__c == 'J-1', true, false)}">
+        <h2>Intrax J-1 Visa Intern and Trainee Program Terms and Conditions</h2>
+        <p> Intrax, as a US Department of State designated Exchange Visitor Program, abides by all US Department of State regulations outlined in the Code of Federal Regulations governing the Exchange Visitor program <a href='http://www.ecfr.gov/cgi-bin/text-idx?SID=a936b3810ca08f555020d22cc6afa48d&node=se22.1.62_122&rgn=div8' target='_blank'>(22 CFR Part 62)</a> and is the legal sponsor of each Trainee/Intern during their program. </p>
+        <ul class="lower-latin">
+          <li>Intrax is my legal sponsor while I am in the United States on the J-1 program.  I understand that I am not permitted to leave my Intrax sponsored training/internship program nor may I seek additional training/internship opportunities. Change of Host Company may be granted by Intrax at Intrax�s sole discretion and only with advanced written approval.</li>
+          <li>I certify, within my knowledge, that I meet following program requirements to apply for the J-1 intern/trainee program.
+          	<ul>
+          		<li>J-1 Intern: be currently enrolled full-time and actively pursuing degree or certificate in a ministerially-recognized degree or certificate-granting post-secondary academic institution outside of the U.S. for at least 2 semesters OR be a recent graduate (within 12 months of program start date) from said institution. </li>
+          		<li>J-1 Trainee: be a graduate of ministerially-recognized degree or certificate-granting post-secondary academic institution* outside of the United States with at least 1 year of work experience outside of the U.S. OR have five years’ work experience outside of the U.S.<br /><br />
+          		*The academic institution is defined as any publicly or privately operated post-secondary intuition that offers primarily academic programs. An institution that offers primarily vocational or technical programs is not an academic institution. Participants’ education and work experience must match the internship and training field.</li>
+          	</ul>
+          </li>
+          <li>The intent of the J-1 Exchange Visitor Visa Program is cultural exchange which also allows me to enhance my skills and improve my knowledge of American business methods that will be useful to me when I return home.   I will not seek any changes in visa status during my J-1 visa program sponsored by Intrax. I will leave the United States upon completion of my program.</li>
+          <li>I agree to provide Intrax with my arrival date as well as an established U.S. address, phone number, and valid email address within seven (7) days of my arrival. During my stay in the U.S., I will notify Intrax of any changes in my address within seven (7) days of the change. <b>U.S. Government regulations stipulate that failure to do so will result in the automatic cancellation of my J1 visa.</b></li>
+          <li>I understand that my SEVIS record will be canceled automatically if I do not check-in or update program dates with Intrax within 30 days of my program start dates.  Failure to inform Intrax of arrival or the program dates change may lead to program dismissal for early departure or reinstatement process for additional fee.  I understand I will not be able to apply for Social Security Number until my SEVIS record is reactivated.</li>
+          <li>I understand that the maximum duration for an internship program is twelve (12) months and for training is eighteen (18) months (excluding Hospitality and Tourism trainings, which are limited to twelve (12) months). I realize that I will a have thirty (30) day grace period beyond the date printed on my DS 2019 form to travel within the U.S. and close any outstanding affairs. I understand that I am not allowed to continue my training at the hosting organization during the grace period. After the thirty (30) day grace period, I will leave the U.S. I understand that overstaying my visa or violating the terms of my visa can result in notification to the Department of State and the USCIS, federal fines, and disbarment from re-entry to the US for a period of up to ten (10) years.</li>
+          <li>While in the United States, I must obey all federal, state, and local laws.  Failure to do so will result in my immediate dismissal from the Intrax program.  Intrax is not responsible for any civil or criminal liability I may incur or for defending me in any way in connection with any legal claims made against me.</li>
+          <li>If I am dismissed from the Intrax Program for any reason, I will be out of status with my J-1 visa and will no longer have medical insurance provided by Intrax.  Once I am out of status, I must leave the United States within fifteen (15) days or face further penalties.  I understand that should I not leave the United States within the required fifteen (15) days this may not only result in dismissal notification to the U.S. Department of State and the USCIS, an early return to my home country at my expense, federal fines, and possible disbarment from re-entry to the United States for a period of up to ten (10) years.</li>
+          <li>The host company may terminate the training at any time, without prior notification, with or without cause. Intrax is not responsible for and cannot control decisions made by the host company.</li>
+          <li>I am responsible for bringing enough money to the United States to cover the cost of my food, housing and other personal expenses for at least one month.  Intrax suggests a minimum of $1,000.00 USD or appropriate amount to cover minimum living expense in your destination due to possible delays with Social Security and distance of travel from airport to employer, advance payment for accommodation needed upon arrival, and other initial investments.  Intrax is not responsible for such expenses, or for any period of time during which I am not being paid by the host company.</li>
+          <li>I am responsible for making my own travel and housing arrangements, and prior to departure from my home country must provide my travel and housing plans to Intrax's local partner in my home country at least two (2) weeks prior to arrival in the United States. Intrax will assist participants by providing resources to secure housing and transportation, however is not responsible for making or assisting in travel or housing arrangements.</li>
+          <li>I understand I am responsible for my accompanying dependents who will travel under the J-2 Visa status (spouse and children under 21) and will report their email addresses, contact information, and arrival/departure dates from the U.S.</li>
+          <li>I understand that Intrax provides all refunds directly to the invoiced party based on the Refund policy. I agree that I will contact party remitting payment to Intrax if I did not pay Intrax directly.</li>
+          <li>I have read and agree to all Department of State regulations regarding the Training/Internship programs as outlined in the Code of Federal Regulations governing the Exchange Visitor program (<a href='http://www.ecfr.gov/cgi-bin/text-idx?SID=a936b3810ca08f555020d22cc6afa48d&amp;node=se22.1.62_122&rgn=div8' target='_blank'>CFR 62 part 22</a>). I understand that if I break any of these regulations at any time, I will be dismissed from the Intrax program.</li>
+          <li>Governing Law:  These Terms &amp; Conditions shall be governed by and construed under the laws of the State of California, USA, without regard to principles of conflict of laws.</li>
+        </ul>
+      </apex:pageBlock>
+      <div class="box callout">
+        <table>
+          <tr>
+            <th>Participant's Name</th>
+            <th>Email</th>
+            <th>Signature</th>
+             <th>Date Signed</th>
+          </tr>
+          <tr>
+            <td>{!Engagement__c.Account_Id__r.FirstName} {!Engagement__c.Account_Id__r.LastName}</td>
+            <td>{!Engagement__c.Account_Id__r.PersonEmail}</td>
+            <td style="padding-top: 20pt;"><span style="color: #fff;">TC-Signature</span></td>
+            <td><span style="color: #fff;">TC-DateSigned</span></td>
+          </tr>
+        </table>
+        <p>&nbsp;</p>
+      </div> <!--  end callout  -->
+    </form>
+  </div>
+  </body>
+</apex:page>

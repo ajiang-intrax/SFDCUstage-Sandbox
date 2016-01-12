@@ -1,0 +1,27 @@
+<apex:page id="Help_ayusa_app_profile_contact_info" docType="html-5.0" standardStylesheets="true" showHeader="false">
+
+    <apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/reset.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/fonts.css')}"/> 
+    <apex:stylesheet value="{!URLFOR($Resource.module_colorbox, '/module-colorbox/css/colorbox.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/vs1.css')}"/> 
+    <apex:outputText value="<" escape="false"/>!--[if IE]<apex:outputText value=">" escape="false"/>
+    <link rel="stylesheet" href="/intraxappengine/resource/intrax_themes/intrax_themes/styles/ie.css"/>  
+    <apex:outputText value="<" escape="false"/>![endif]--<apex:outputText value=">" escape="false"/>      
+     
+    <apex:outputText value="<" escape="false"/>!--[if lt IE 8]<apex:outputText value=">" escape="false"/>      
+    <link rel="stylesheet" href="/intraxappengine/resource/intrax_themes/intrax_themes/styles/ie-7.css"/>
+    <apex:outputText value="<" escape="false"/>![endif]--<apex:outputText value=">" escape="false"/>
+    
+    <apex:define name="body">
+      <div class="wrapper">
+        <apex:form >
+        <h2>Basic Info Help<br/></h2>
+        <div class="white-box">
+            <p>We never share email/contact information with third parties. We collect this information so Ayusa representatives can communicate with you regarding your application.</p>
+            <p>Some of this information is used to generate your DS-2019 Certificate of Eligibility which you will need in order to apply for your J-1 visa. Please ensure that this information is accurate. </p>
+            
+        </div>
+    </apex:form>
+    </div>
+    </apex:define>
+</apex:page>

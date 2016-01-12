@@ -1,0 +1,36 @@
+<apex:page showHeader="true" id="admin_resources_category" controller="apc_resource_controller" action="{!showCatResourceDetails}">
+<apex:composition template="intraxtemplate_vs3">
+<apex:define name="body">
+
+<apex:form styleClass="form-vertical" id="Form">
+<div class="row">
+<div class="col-sm-8 center-block ">
+<h1 class="no-margin-t">Family Resources</h1>
+
+<apex:pageBlock id="pb">
+<apex:outputPanel styleClass="span8" layout="block" rendered="{!IF(allCatResLst.Size > 0 , true, false)}" >  
+        
+                        <div class="block">
+                        <div class="block-header"><h3><b>{!allCatResLst[0].Category__c}</b></h3></div>
+                        <div class="block-body">
+                            <apex:repeat value="{!allCatResLst}" var="itemRes">
+                             
+                             <b>Subject:</b>&nbsp;&nbsp;{!itemRes.Subject__c}<br />
+                             <b>Body:</b>&nbsp;&nbsp;<apex:outputtext escape="false" value="{!ResourceBodyMap[itemRes.Id]}" />
+                             &nbsp;&nbsp;&nbsp;<a href="apc_resources_article?cid={!itemRes.Id}">Read More</a>
+                             <br /> <br />
+                            </apex:repeat>
+                        </div>
+                        
+                        </div>
+                        </apex:outputPanel>
+        
+    
+</apex:pageBlock>
+</div><!-- end col -->
+</div><!-- end row -->
+</apex:form>
+
+</apex:define>
+</apex:composition>
+</apex:page>

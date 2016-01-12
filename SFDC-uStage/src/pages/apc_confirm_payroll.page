@@ -1,0 +1,134 @@
+<apex:page docType="html-5.0" standardController="Pay_Event__c" extensions="apc_payEvent_controller" recordSetVar="Pay_Event__c" showHeader="true" id="apc_confirm_payroll" sidebar="false">
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css"/>
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+<style>
+    .button-center {text-align: center; text-decoration: none !important;}
+    .panel-label {font-weight: bold;}
+    .panel-u {display: block; margin-top: 10px;}
+    .panel-bt {margin-top: 10px !important; text-align: center !important;}
+    .block1half { width: 50%;float: left;}
+    .block2half { width: 50%;float: right;}
+    table.list tr.dataRow td {
+    border-width: 0 0 0 0 !important;
+    }
+    
+</style>
+   
+   <apex:form id="myForm">
+      
+      <div class="block1half">
+      
+      <apex:pageMessages id="errors" />
+      
+      <apex:pageBlock mode="{!IF(flag1 == true,'edit', 'detail')}" title="Pay period processing">
+      
+      <apex:actionStatus startStyle="color: red;" startText="Loading. Please wait..." id="status" />  
+      		
+      		<apex:pageBlockSection title="Pay period filters" id="pageblock1" columns="2" rendered="{!flag1 == true}" >
+                
+                
+                <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Start Date" for="sdate"/>
+                <apex:outputpanel >
+                <div class="requiredInput">
+                <div class="requiredBlock"></div>
+                <apex:input required="false" type="date" value="{!startDate}" id="sdate" />
+                </div>
+                </apex:outputpanel>
+				</apex:pageBlockSectionItem>
+				
+				<apex:pageBlockSectionItem >
+                <apex:outputLabel value="End Date" for="edate"/>
+                <apex:outputpanel >
+                <div class="requiredInput">
+                <div class="requiredBlock"></div>
+				<apex:input required="false" type="date" value="{!endDate}" id="edate" />
+				</div>
+				</apex:outputpanel>
+				</apex:pageBlockSectionItem>
+		   		
+		    
+		   </apex:pageBlockSection> 	
+		   
+		   
+		   <apex:pageBlockSection title="ADP Payroll" id="pageblock2" columns="2" rendered="{!flag1 == true}" >
+				<apex:pageBlockSectionItem >
+                <apex:outputLabel value="Pay Date" for="pDate"/>
+				<apex:outputpanel >
+                <div class="requiredInput">
+                <div class="requiredBlock"></div>
+				<apex:input required="false" type="date" value="{!payDate}" id="pDate" />
+				</div>
+				</apex:outputpanel>
+				</apex:pageBlockSectionItem>
+			</apex:pageBlockSection> 
+            
+            <apex:pageBlockSection title="Confirm Validation" id="pageblock3" columns="2" rendered="{!flag2 == true}" >
+                
+                
+                <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Start Date" for="sdate1"/>
+                <apex:outputText value="{0,date,dd-MM-yyyy}" id="sdate1">
+                   <apex:param value="{!startDate}" />
+                </apex:outputText>
+                </apex:pageBlockSectionItem>
+				
+				<apex:pageBlockSectionItem >
+                <apex:outputLabel value="End Date" for="edate1"/>
+                <apex:outputText value="{0,date,dd-MM-yyyy}" id="edate1">
+                   <apex:param value="{!endDate}" />
+                </apex:outputText>
+                </apex:pageBlockSectionItem>
+                
+                
+                <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Pay Date" for="pdate1, pdate11"/>
+                <apex:outputPanel >
+                <apex:outputText rendered="{!payDate != null}" value="{0,date,dd-MM-yyyy}" id="pdate1">
+                   <apex:param value="{!payDate}"/>
+                </apex:outputText>
+                <apex:outputText rendered="{!payDate == null}" value="Not assigned" id="pdate11">
+                </apex:outputText>
+                </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                
+                
+                <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Stage" for="stage1"/>
+                <apex:outputText value="{!stage}" id="stage1">
+                </apex:outputText>
+                </apex:pageBlockSectionItem>
+            
+            </apex:pageBlockSection> 
+            
+            <apex:pageBlockSection id="pageblock4" columns="1" rendered="{!flag2 == true}" >  
+                <div style="text-align: center;">
+                <p>You are going to update <strong style="color: red;">{!listSize}</strong> pay period records to <strong style="color: red;">{!stage}</strong> stage.
+                </p>
+                <p><strong>Please click on Confirm button to update selected records for the pay period. </strong></p> 
+                </div>
+		   		
+		   </apex:pageBlockSection> 	
+            
+            <apex:pageBlockButtons id="blockButtons" location="bottom">
+        	
+        	<apex:commandButton rendered="{!flag1 == true}" rerender="myForm" value="Continue" action="{!searchConfirm}" id="Continue" status="status"/>
+        	<apex:commandButton rendered="{!flag2 == true && flag3 == false}" rerender="myForm" value="Confirm Update" action="{!confirm}" id="Confrim" status="status"/>
+        	<apex:commandLink rendered="{!flag3 == true}" style="text-decoration: none;" action="{!cancel}" id="back" status="status">
+        	<apex:commandButton value="Back to List" />
+        	</apex:commandLink>
+        	<apex:commandLink rendered="{!flag3 != true}" style="text-decoration: none;" action="{!cancel}" id="CancelFlag1" status="status">
+        	<apex:commandButton value="Cancel" />
+        	</apex:commandLink>
+        	
+        	</apex:pageBlockButtons>
+               
+       </apex:pageBlock>
+       </div>
+         
+   </apex:form>
+  
+</apex:page>

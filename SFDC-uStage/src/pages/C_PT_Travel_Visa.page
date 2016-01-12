@@ -1,0 +1,190 @@
+<apex:page title="Participant's Travel and Visa | Intrax" standardStylesheets="false" showHeader="false" controller="IGI_HC_Controller" action="{!checkLogin}">
+  
+    <apex:composition template="IntraxTemplate_Vs2" >
+      <apex:define name="body">
+      <apex:form >
+        <!-- begin row -->
+          <div class="row">
+          <apex:outputPanel styleClass="span9" layout="block">
+            <h1>
+                <apex:outputText rendered="{!IF($CurrentPage.parameters.PTId == null, false, true)}" value="{!partID.Name}"/>
+                <apex:outputText rendered="{!IF($CurrentPage.parameters.PTId == null, true, false)}" value="No Individual Participant Selected"/>
+            </h1>
+          </apex:outputPanel>
+        </div>
+        <!-- end row -->
+        <!-- begin row --> 
+        <div class="row">
+          <!-- begin span3 -->
+          <apex:outputPanel styleClass="span3" layout="block">
+           <!--  <c:Badge_Participant_Photo photoUrl="{!returnUrl}"/> -->
+           
+             <div class="form-link no-float">
+              <apex:commandLink action="{!load}" styleClass="center" rerender="" target="_blank" rendered="{!(NOT(ISBLANK(PTR)) && (engagementInfo.Intrax_Program__c =='Internship'))}" immediate="true">
+                <apex:param name="docGuid" value="{!PTR}"/>
+                <i class="icon-file"></i> <span>View Resume</span> </apex:commandLink>
+                <apex:outputText styleClass="center" rendered="{!((PTR==null || PTR=='') && engagementInfo.Intrax_Program__c =='Internship')}">                           
+	                <i class="icon-file"></i> <span>No Resume</span><br/><br/>
+	            </apex:outputText>
+            </div>   
+          
+        
+            <c:Badge_Participant_Photo photoUrl="{!returnUrl}" rendered="{!PartID.Intrax_Program__c !='Internship'}"/> 
+           
+           
+            <c:Menu_HC_Sidebar participant="{!PartID}"  />
+          </apex:outputPanel>
+          <!-- end span3 -->
+          <!-- begin span9 -->
+            <div class="span9">
+            <apex:outputPanel styleClass="block" layout="block">
+              <div class="block-header">
+                <h3>Travel and Visa Information</h3>
+              </div>
+              <div class="block-body">
+                <apex:outputPanel id="buttonPanel" styleClass="form-row" layout="block">
+                   <apex:outputPanel rendered="{!IF(listTrips.size > 0, true,false)}">   
+                    <div class="block alert fade in">
+                        <div class="block-body"> 
+                            <!--<strong><apex:outputText value="Engagement Start Date: "/></strong><apex:outputField value="{!match.Position_Name__r.Engagement_Start__c}"/>&nbsp;-->
+                            <strong><apex:outputText value="Match Start Date: "/></strong><apex:outputField value="{!match.Start_Date__c}"/>&nbsp;
+                            <br/><br/>
+                            <strong><apex:outputText value="Match End Date: "/></strong><apex:outputField value="{!match.End_Date__c}"/>&nbsp;
+                        </div> 
+                    </div>
+                  </apex:outputPanel>
+                </apex:outputPanel>
+                 
+                <div>
+                  <apex:actionStatus id="waitMsg" startStyleClass="feedback">
+                    <apex:facet name="start" > <i class="no-float icon-spinner icon-spin icon-2x pull-left"></i> <strong>Please Wait.....</strong> </apex:facet>
+                  </apex:actionStatus>
+                </div>
+                
+                <apex:outputPanel id="myPanel2">
+                  <apex:outputPanel rendered="{!IF(listTrips.Size == 0, true, false)}" layout="block"> <span class="no-records">No record(s) to display.</span></apex:outputPanel>
+                </apex:outputPanel>
+                <apex:outputPanel id="myPanel1" layout="block">
+                  <apex:pageBlock id="pb1" >
+                    <apex:outputPanel layout="block" rendered="{!IF(listTrips.Size > 0, true, false)}">
+                    <div id="flight-list" class="list-view container-fluid">
+                    <apex:repeat value="{!listTrips}" var="item">
+                   
+                  <div class="row-fluid">
+                   
+                  <div class="list-view-header span12">
+                   <div class="title pull-left"><apex:outputText value="{!item.Name}"/></div> 
+                   <div class="controls pull-right clearfix">    
+                   <!--  
+                   <apex:outputLink value="/apex/Partner_PT_Travel_Visa_Details?tripId={!item.id}&isView=true&matchId={!item.Match__c}&participantId={!item.Match__r.Engagement__c}&isPhotoAvaialable=true">View Details</apex:outputLink>
+                   <apex:outputLink value="/apex/Partner_PT_Travel_Visa_Details?tripId={!item.id}&isView=false&matchId={!item.Match__c}&participantId={!item.Match__r.Engagement__c}&isPhotoAvaialable=true">Edit</apex:outputLink>
+                   -->
+                   <apex:outputLink value="/apex/C_PT_Travel_Visa_Details?tripId={!item.id}&isView=true&PtId={!item.Engagement__c}">View Details</apex:outputLink>
+                  
+                   
+                   </div>      
+                   </div>  <!-- end list-view-header -->
+                 
+                   <div class="span12">      
+                  
+                   <div class="span4">
+                       <!--  <div class="list-field">
+                           <label><apex:outputText value="Departure Date"/></label>
+                       <apex:outputField value="{!item.Departing_Date__c}"/>&nbsp;
+                       </div>
+                       -->
+                       <div class="list-field">
+                           <label><apex:outputText value="Departure Date"/></label>
+                       <apex:outputField value="{!item.Departure_Date_Time__c}"/>&nbsp;
+                       </div>
+                       <div class="list-field">
+                           <label><apex:outputText value="Departure City"/></label>
+                       <apex:outputText value="{!item.Departing_City__c}"/>&nbsp;
+                       </div> 
+                       <div class="list-field">
+                       <label><apex:outputText value="Departure Airport Code"/></label>
+                       <apex:outputText value="{!item.Departing_From__c}"/>&nbsp;
+                       </div>
+                           
+                       <!-- <div class="list-field">  
+                       <label><apex:outputText value="Departure from Host Community"/></label>
+                       <apex:outputtext value="Yes" rendered="{!item.Departure_from_Host_Community__c}"/>
+                       <apex:outputtext value="No" rendered="{!IF(item.Departure_from_Host_Community__c==false,True,False)}"/>
+                      </div>   
+                         -->   
+                  </div> 
+                  <div class="span4">   
+                       <!--  <div class="list-field">
+                           <label><apex:outputText value="Arrival Date"/></label>
+                       <apex:outputField value="{!item.Arriving_Date__c}"/>&nbsp;
+                       </div> 
+                       -->
+                       <div class="list-field">
+                           <label><apex:outputText value="Arrival Date"/></label>
+                       <apex:outputField value="{!item.Arrival_Date_Time__c}"/>&nbsp;
+                       </div> 
+                       <div class="list-field">
+                          <label><apex:outputText value="Arrival City"/></label>
+                       <apex:outputText value="{!item.Arriving_City__c}"/>&nbsp;
+                       </div> 
+                      <div class="list-field"> 
+                      <label><apex:outputText value="Arrival Airport Code"/></label>
+                       <apex:outputText value="{!item.Arriving_At__c}"/>&nbsp;
+                      </div>  
+                      <!-- <div class="list-field">
+                       <label><apex:outputText value="Arrival to Host Community"/></label>
+                       <apex:outputtext value="Yes" rendered="{!item.Arrival_to_Host_Community__c}"/>
+                       <apex:outputtext value="No" rendered="{!IF(item.Arrival_to_Host_Community__c==false,True,False)}"/>
+                       </div> 
+                        -->
+                 </div> 
+                 <div class="span4">      
+                     <div class="list-field">  
+                     <label><apex:outputText value="Airline"/></label>
+                       <apex:outputText value="{!item.Carrier__c}"/>&nbsp;
+                         </div> 
+                     <div class="list-field">  
+                         <label><apex:outputText value="Flight Number"/></label>
+                       <apex:outputField value="{!item.Carrier_Number__c}"/>&nbsp;
+                         </div> 
+                     <!--    
+                     <div class="list-field">  
+                         <label><apex:outputText value="International Travel"/></label>
+                       <apex:outputField value="{!item.International_Leg__c}"/>&nbsp;
+                         </div> 
+                     -->
+                     <!-- <div class="list-field">  
+                       <label><apex:outputText value="Record Locator"/></label>
+                       <apex:outputtext value="{!item.Record_Locator__c}"/>
+                      </div>
+                       -->
+                      <!-- <div class="list-field">
+                       <label><apex:outputText value="Arrival to Host Country"/></label>
+                       <apex:outputtext value="Yes" rendered="{!item.Arrival_to_Host_Country__c}"/>
+                       <apex:outputtext value="No" rendered="{!IF(item.Arrival_to_Host_Country__c==false,True,False)}"/>
+                       </div>
+                        -->
+                 </div>
+                   
+                   </div> <!-- end span12 -->
+                      
+                 
+                        </div>
+                     
+                      </apex:repeat>
+                        </div>
+                      </apex:outputPanel>
+                    
+                  </apex:pageBlock>
+                </apex:outputPanel>
+              </div>
+            </apex:outputPanel>
+          </div>
+          <!-- end span9 -->
+        </div>
+        <!-- end row -->
+        </apex:form>
+      </apex:define>
+    </apex:composition>
+  
+</apex:page>

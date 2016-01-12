@@ -1,0 +1,67 @@
+<apex:page id="apc_hf_match_payment_confirmation" docType="html-5.0" applyHtmlTag="false" applyBodyTag="false" 
+           title="Payment Confirmation" standardStylesheets="false" showHeader="false" 
+           controller="apc_portal_controller" action="{!paymentController.updateRecords2}">
+<apex:composition template="intraxtemplate_vs3">
+<apex:define name="body">
+
+<apex:outputPanel layout="block" id="outputpanelOriginal" rendered="{!ApplicantInfo.Application_Type__c != 'Rematch'}">
+      <div class="row">
+        <div class="col-md-6">
+          <h1>Your payment was successful. Thank you!</h1>
+          <apex:outputText rendered="{!ApplicantInfo.Application_Type__c == 'Extension'}">
+          	<h2>What's Next For Your Extension Application?</h2>
+            <p class="lead">You will be notified once your au pair's extension is approved by the Department of State.</p>
+          </apex:outputText>    
+          <apex:outputLink value="/apex/apc_hf_home"><b>Return to Homepage ></b></apex:outputLink>
+		</div>	
+			
+           <div class="col-md-6">
+           <div class="well lead margin-t">
+            <p> Please keep the following transaction ID for future reference: <strong>{!paymentController.paymentTxId}</strong> </p>
+               <p> Charged Amount: <strong>$<!--<apex:outputText value="{!paymentController.paymentAmount}"/> -->
+                                           <apex:outputText value=" {0, number, #,##0.00}">
+                                                     <apex:param value="{!paymentController.paymentAmount}"/>
+                                            </apex:outputText>
+                                           
+                   				   </strong>
+               </p>
+            <p> Transaction date: <strong>{!paymentController.paymentDate}</strong> </p>
+            <apex:outputLink style="background:#fff;"
+							styleClass="margin-t btn btn-default btn-lg"
+							value="/apex/apc_hf_match_payment_confirmation_pdf?id={!paymentController.paramAppId}&viewpage=true&title=AuPairCare Childcare Application&paymentAmount={!paymentController.paymentAmount}&paymentTxId={!paymentController.paymentTxId}&paymentDate={!paymentController.paymentDate}&"
+							target="_blank" id="backlinkOriginal"> <i class="fa fa-print"></i> <span>Print Page</span>
+            </apex:outputLink>
+          </div>
+          <!--  end well --> 	
+          </div> <!--  end column -->
+          </div> <!--  end row -->
+    <apex:outputPanel id="MatchFinalizaitonException" rendered="{!paymentController.HasAnyException == 'true'}">
+        <div class="row">
+        <div class="col-md-6" style="color:red">
+           <h3>
+               Updation of match details on your account failed. Please contact your area director or regional manager.
+            </h3> 
+        </div>
+    </div>
+    </apex:outputPanel>
+    </apex:outputPanel>
+    
+    <apex:outputPanel layout="block" id="outputpanelRematch" rendered="{!ApplicantInfo.Application_Type__c == 'Rematch'}">
+      <div class="row">
+        <div class="col-md-6">
+            <h3>Your Service Credit and/or any current payment is successfully applied to your current invoices. <br/>
+                Please refer to Accounts and Billing page 
+              after one working day for the updated information. Thank you!</h3>
+   
+          <apex:outputLink value="/apex/apc_hf_home"><b>Return to Homepage ></b></apex:outputLink>
+		</div>	
+			
+
+          <!--  end column -->
+          </div> <!--  end row -->
+       
+   </apex:outputPanel>
+
+</apex:define>
+</apex:composition>
+</apex:page>

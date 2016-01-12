@@ -1,0 +1,280 @@
+<apex:page id="Page" applyBodyTag="false" applyHtmlTag="false" standardController="Communication__c" extensions="User_Invitation_Controller" action="{!checklogin}" standardStylesheets="false" showHeader="false">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+     
+      <script>
+                function disableBtn(sender){
+                    sender.disabled = true;
+                }
+                
+                function offBtn(){
+                    document.getElementById('loadingImage').style.display = 'none';
+                }
+                
+                function SendNewInvitation() {
+                    document.getElementById('loadingImage').style.display = 'block';
+                }
+     </script>
+      
+      <div class="row margin-b2">
+        <div class="col-sm-9 center-text center-block">
+          <apex:outputText rendered="{!IF(DefaultIP=='Work Travel' ,True,False)}">
+          <h1>Work Travel New User Invitation</h1>
+          </apex:outputText>
+          <apex:outputText rendered="{!IF(DefaultIP=='Internship',True,False)}">
+          <h1>Global Internships New User Invitation</h1>
+          </apex:outputText>
+          <apex:outputText rendered="{!IF(DefaultIP=='AuPairCare' ,True,False)}">
+          <h1>AuPairCare New User Invitation</h1>
+          </apex:outputText>
+          <p class="lead">Invite applicants to apply by completing the fields below and clicking "Send Invitation". This will send an email with the personal message you have provided and a link to register and apply on the participant portal.
+          You can add 5 people maximum per time.</p>
+        </div>
+        <!--  end column --> 
+      </div>
+      <!--  end row -->
+      
+      <div class="row margin-b2">
+        <div class="col-sm-10 col-md-8 col-lg-6 center-block">
+          <apex:form styleClass="form-vertical ws-validate" id="webForm">
+            <!--
+            <apex:pageMessages />
+           -->
+             
+            <!-- Multiple Invitation Email -- Jose -->
+            
+            <apex:outputPanel id="blockEmail" layout="block">
+            
+            <apex:variable value="{!0}" var="rowNum" id="rowcert"/>
+             
+             <apex:outputPanel layout="block" rendered="{!countMap >= 4}">
+             <div id="maxN"></div>
+             <p class="alert alert-info">
+             You have reached the max. number of invitations (5)
+             </p>
+             </apex:outputPanel>
+            
+            <apex:outputPanel layout="block" rendered="{!invalidPartenerId}">
+             <div id="invalidPartner"></div>
+             <p class="alert alert-danger vs2">
+             Sorry, you have an invalid Intrax Id.Please contact with your system administrator
+             </p>
+             </apex:outputPanel>
+             
+             <apex:outputPanel layout="block" rendered="{!invalidApp}">
+             <div id="invalidApp"></div>
+             <p class="alert alert-danger vs2">
+             An Application already exists for a user with this email address for this Program Year
+             </p>
+             </apex:outputPanel>
+            
+            <apex:pageBlock id="InviteBlock">
+            <apex:outputpanel layout="block" id="wrappertable" styleClass="panel-group group1">
+            <apex:repeat id="emailList"  value="{!emailMap}" var="item">
+            	<apex:variable value="{!IF(item == countMap, 'in', '')}" var="rowLast" id="rowLast" />
+                <div class="panel panel-default">
+            		<div class="panel-heading">
+                        
+                        <h4 class="panel-title">
+                        <apex:outputLink styleClass="accordion-toggle" html-data-toggle="collapse" html-data-parent=".group1" value="#collapse1{!rowNum}">
+                        Invitation {!item +1}
+                        </apex:outputLink>
+                        </h4>
+                    </div>
+                    <!--  end panel heading -->
+                    <div id="collapse1{!rowNum}" class="panel-collapse collapse {!rowLast}">
+                    <div class="panel-body">
+            
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label class="control-label">First Name</label>
+                  <apex:inputText styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!emailMap[item][0]}" id="firstname" required="true" />
+                  <apex:message for="firstname" styleClass="custom-error-radio"/>
+                </div>
+              </div>
+              <!--  end column -->
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label class="control-label">Last Name</label>
+                  <apex:inputText styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!emailMap[item][1]}" id="lastname" required="true" />
+                  <apex:message for="lastname" styleClass="custom-error-radio"/>
+                </div>
+              </div>
+              <!--  end column --> 
+            </div>
+            <!--  end row -->
+            
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="form-group">
+                  <label class="control-label">Applicant's Email</label>
+                  <apex:inputText html-placeholder="test@email.com" required="true" styleClass="form-control" value="{!emailMap[item][2]}" id="emailAppl"  />
+                   <apex:message for="emailAppl" styleClass="custom-error-radio"/>
+                  </div>
+              </div>
+            </div>
+            
+            
+           <apex:outputText id="outputpanel1" rendered="{!countMap > 0}">
+	           <apex:commandlink styleClass="btn btn-link btn-lg pull-right" immediate="true" action="{!removeEmail}" onComplete="dpInitiate();" rerender="blockEmail, blockButton" id="removeemail" status="statusemail">
+	           <i class="fa fa-trash-o"></i><span>Remove Email</span>
+	           <apex:param name="delEmail" value="{!item}" assignTo="{!delEmail}"/>
+	           </apex:commandlink>
+            </apex:outputText>
+                          
+            <!--  end row -->
+            </div>
+            </div>
+            </div>
+            <apex:variable var="rowNum" value="{!rowNum + 1}"/>
+            
+            </apex:repeat>
+            </apex:outputpanel>
+            </apex:pageBlock>
+            
+            </apex:outputPanel>
+            
+            <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();errorfunc();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="statusemail"/>
+            
+            <apex:outputPanel id="blockButton">
+            
+            
+            <div class="row">
+            
+            <div class="col-sm-6">
+            <apex:outputPanel layout="block" rendered="{!countMap < 4}">
+            <apex:commandlink styleClass="btn btn-link btn-lg margin-b" action="{!addEmail}" onComplete="dpInitiate();goTop();" rerender="blockEmail, blockButton" id="addemail" status="statusemail">
+            <apex:commandButton value="" id="addemailButton"/> 
+            <i class="fa fa-plus-circle"></i>
+            <span>Add Another User</span>
+            </apex:commandlink> 
+            </apex:outputPanel>
+            </div>
+            
+            <!-- 
+            <div class="col-sm-6">
+            <apex:outputPanel layout="block" rendered="{!countMap > 0}">
+            <apex:commandlink styleClass="btn btn-link btn-lg margin-b" immediate="true" action="{!removeEmail}" onComplete="dpInitiate();" rerender="blockEmail, blockButton" id="removeemail" status="statusemail">
+            <apex:commandButton value="" id="removeemailButton"/> 
+            <i class="fa fa-minus-circle"></i>
+            <span>Remove Email</span>
+            </apex:commandlink>
+            </apex:outputPanel>
+            </div>
+             -->
+            
+           
+            
+            </div><!--  end row -->
+            </apex:outputPanel>
+            
+            <div class="row">
+            
+            <div class="col-sm-12">
+            <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();errorfunc();offBtn()" id="statusemail01"/>
+            <p>
+            <div style="display:none;" class="alert alert-info" id="loadingImage"> <i class="fa fa-refresh fa-spin"></i> <span>Sending invitation</span> </div>
+            </p>
+            <apex:commandlink styleClass="btn btn-primary btn-lg" action="{!CreateCommunicationMulti}" rerender="webForm" status="statusemail01" onclick="SendNewInvitation();">
+            <apex:commandButton id="SendInvitationEmail" value="Send invitation" onClick="disableBtn();" />
+            </apex:commandlink>
+            </div>
+            
+            </div><!--  end row -->
+            
+            <!-- END -Jose -->
+            
+            <!-- 
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label class="control-label">First Name</label>
+                  <apex:inputField styleClass="form-control" value="{!comInfo.Recipient_First_Name__c}" id="firstname" required="true" />
+                </div>
+              </div>
+              <!--  end column --
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label class="control-label">Last Name</label>
+                  <apex:inputField styleClass="form-control" value="{!comInfo.Recipient_Last_Name__c}" id="lastname" required="true" />
+                </div>
+              </div>
+              <!--  end column --
+            </div>
+            <!--  end row --
+             -->
+            <!-- 
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="form-group">
+                  <label class="control-label">Email</label>
+                  <apex:inputField styleClass="form-control" value="{!comInfo.To_Address__c}" id="email" required="true" />
+                </div>
+              </div>
+              <!--  end column -- 
+            </div>
+            <!--  end row --
+            
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="form-group margin-b1">
+                  <label class="control-label">Message</label>
+                  <apex:inputField styleClass="form-control" id="message" value="{!comInfo.Message__c}"
+                                            required="FALSE"
+                                            onkeyup="countChar(this, 500, 'messageCount')" />
+                  <div class="char-limit"> <span class="char-count-label">Characters left:</span> <span
+                                                id="messageCount" class="char-count"> {!500-len(comInfo.Message__c) } </span> </div>
+                </div>
+              </div>
+              <!--  end column -- 
+            </div>
+            <!--  end row --
+            
+            <!-- 
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label class="control-label">Program</label>
+                  <apex:selectRadio styleClass="radio" layout="pageDirection" value="{!ipo_options}" id="ipo" required="true">
+                    <apex:selectOptions value="{!ProgramOptions}" />
+                  </apex:selectRadio>
+                  <apex:message for="ipo" styleClass="custom-error-radio" />
+                </div>
+              </div>
+              <!--  end column --
+            </div>
+            <!--  end row --
+             --
+            
+            <div class="row">
+              <div class="col-sm-12">
+                <div style="display:none;" class="alert alert-info" id="loadingImage"> <i class="fa fa-refresh fa-spin"></i> <span>Sending invitation</span> </div>
+                <apex:outputLink styleClass="btn btn-lg btn-link" id="Back" value="/apex/pr_app_list"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                <apex:commandlink styleClass="btn btn-primary btn-lg" action="{!CreateCommunication}"  onclick="SendNewInvitation();">
+                  <apex:commandButton id="SendInvitation" value="Send invitation"  onClick="disableBtn();" />
+                </apex:commandlink>
+              </div>
+              <!--  end column -- 
+            </div>
+            <!--  end row -- 
+          -->
+            
+          </apex:form>
+        </div>
+        <!--  end column --> 
+      </div>
+      <!--  end row --> 
+<script>
+var j$ = jQuery.noConflict();
+function goTop(){
+	var Aux = j$('#maxN');
+	if(Aux != null){
+		j$('html, body').animate({'scrollTop': j$('#maxN').offset().top});
+	}
+}
+
+</script>      
+    </apex:define>
+  </apex:composition>
+</apex:page>

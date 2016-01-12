@@ -1,0 +1,15 @@
+<apex:page controller="CommunityApcController" showHeader="true" id="fs_resources">
+
+<apex:outputPanel layout="block" rendered="{!IF(ProfileName == 'APC RM PC',true,false)}" id="panelRM" >
+<iframe src="https://app.box.com/embed_widget/s/81v0s0bfqdja68lmyfe9msi7pptrvshe?view=list&sort=name&direction=ASC&theme=gray" 
+width="100%" height="800" frameborder="0" allowfullscreen="allowfullscreen" webkitallowfullscreen="webkitallowfullscreen" 
+mozallowfullscreen="mozallowfullscreen" oallowfullscreen="oallowfullscreen" msallowfullscreen="msallowfullscreen"></iframe>
+</apex:outputPanel>
+
+<apex:outputPanel layout="block" rendered="{!IF(ProfileName == 'APC AD PC',true,false)}" id="panelAD" >
+<iframe src="https://app.box.com/embed_widget/s/7el3jwj4ykwerhk49wblz79mdipo801j?view=list&sort=name&direction=ASC&theme=gray" width="100%"
+ height="800" frameborder="0" allowfullscreen="allowfullscreen" webkitallowfullscreen="webkitallowfullscreen" 
+mozallowfullscreen="mozallowfullscreen" oallowfullscreen="oallowfullscreen" msallowfullscreen="msallowfullscreen"></iframe>
+</apex:outputPanel>
+
+</apex:page>

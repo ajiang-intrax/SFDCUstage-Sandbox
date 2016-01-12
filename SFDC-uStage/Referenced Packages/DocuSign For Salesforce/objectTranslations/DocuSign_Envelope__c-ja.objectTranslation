@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- DocuSign Envelope --></value>
+    </caseValues>
+    <fields>
+        <label>エンベロープが Chatter テキストを完了しました</label>
+        <name>ChatterEnvCompletedText__c</name>
+    </fields>
+    <fields>
+        <label>エンベロープが Chatter を完了しました</label>
+        <name>ChatterEnvCompleted__c</name>
+    </fields>
+    <fields>
+        <label>エンベロープが Chatter テキストを却下しました</label>
+        <name>ChatterEnvDeclinedText__c</name>
+    </fields>
+    <fields>
+        <label>エンベロープが Chatter を却下しました</label>
+        <name>ChatterEnvDeclined__c</name>
+    </fields>
+    <fields>
+        <label>エンベロープが Chatter テキストを配信しました</label>
+        <name>ChatterEnvDeliveredText__c</name>
+    </fields>
+    <fields>
+        <label>エンベロープが Chatter を配信しました</label>
+        <name>ChatterEnvDelivered__c</name>
+    </fields>
+    <fields>
+        <label>エンベロープが Chatter テキストを送信しました</label>
+        <name>ChatterEnvSentText__c</name>
+    </fields>
+    <fields>
+        <label>エンベロープが Chatter を送信しました</label>
+        <name>ChatterEnvSent__c</name>
+    </fields>
+    <fields>
+        <label>エンベロープが Chatter テキストを無効化しました</label>
+        <name>ChatterEnvVoidedText__c</name>
+    </fields>
+    <fields>
+        <label>エンベロープが Chatter を無効化しました</label>
+        <name>ChatterEnvVoided__c</name>
+    </fields>
+    <fields>
+        <label><!-- Recipient Completed Chatter Text --></label>
+        <name>ChatterRecipCompletedText__c</name>
+    </fields>
+    <fields>
+        <label><!-- Recipient Completed Chatter --></label>
+        <name>ChatterRecipCompleted__c</name>
+    </fields>
+    <fields>
+        <label>受信者が Chatter テキストを却下しました</label>
+        <name>ChatterRecipDeclinedText__c</name>
+    </fields>
+    <fields>
+        <label>受信者が Chatter を却下しました</label>
+        <name>ChatterRecipDeclined__c</name>
+    </fields>
+    <fields>
+        <label>受信者が Chatter テキストを配信しました</label>
+        <name>ChatterRecipDeliveredText__c</name>
+    </fields>
+    <fields>
+        <label>受信者が Chatter を配信しました</label>
+        <name>ChatterRecipDelivered__c</name>
+    </fields>
+    <fields>
+        <label>受信者が Chatter テキストを送信しました</label>
+        <name>ChatterRecipSentText__c</name>
+    </fields>
+    <fields>
+        <label>受信者が Chatter を送信しました</label>
+        <name>ChatterRecipSent__c</name>
+    </fields>
+    <fields>
+        <label>受信者が Chatter テキストに署名しました</label>
+        <name>ChatterRecipSignedText__c</name>
+    </fields>
+    <fields>
+        <label>受信者が Chatter に署名しました</label>
+        <name>ChatterRecipSigned__c</name>
+    </fields>
+    <fields>
+        <help><!-- Check to show chatter during DocuSign signature workflow. --></help>
+        <label>Chatter ステータスの更新を可能にする</label>
+        <name>ChatterUpdatesEnabled__c</name>
+    </fields>
+    <fields>
+        <help><!-- Select a Contact from Salesforce to be a DocuSign Recipient/Signer.  Only Contacts with valid email addresses can be used as DocuSign Recipients. --></help>
+        <label>eSign 文書の連絡先</label>
+        <name>Contact2eSignDoc01__c</name>
+        <relationshipLabel>DocuSign Envelope01</relationshipLabel>
+    </fields>
+    <fields>
+        <label>カスタムフィールド 1 の名前</label>
+        <name>Custom_Field_1_Name__c</name>
+    </fields>
+    <fields>
+        <label>カスタムフィールド 1 の値</label>
+        <name>Custom_Field_1_Value__c</name>
+    </fields>
+    <fields>
+        <help><!-- Custom Field to pass data via Envelope --></help>
+        <label>カスタムフィールド 1</label>
+        <name>Custom_Field_1__c</name>
+    </fields>
+    <fields>
+        <label>カスタムフィールド 2 の名前</label>
+        <name>Custom_Field_2_Name__c</name>
+    </fields>
+    <fields>
+        <label>カスタムフィールド 2 の値</label>
+        <name>Custom_Field_2_Value__c</name>
+    </fields>
+    <fields>
+        <help><!-- Custom Field to pass data via Envelope --></help>
+        <label>カスタムフィールド 2</label>
+        <name>Custom_Field_2__c</name>
+    </fields>
+    <fields>
+        <label>カスタムフィールド 3 の名前</label>
+        <name>Custom_Field_3_Name__c</name>
+    </fields>
+    <fields>
+        <label>カスタムフィールド 3 の値</label>
+        <name>Custom_Field_3_Value__c</name>
+    </fields>
+    <fields>
+        <help><!-- Custom Field to pass data via Envelope --></help>
+        <label>カスタムフィールド 3</label>
+        <name>Custom_Field_3__c</name>
+    </fields>
+    <fields>
+        <help><!-- Indicate how many days prior to expiration you want an email message to alert recipients that a deadline approaches for completion. This is sent only to recipients who have not yet completed the transaction. --></help>
+        <label>有効期間終了より N 日前の警告</label>
+        <name>Day_Prior_to_Warn_of_expiration__c</name>
+    </fields>
+    <fields>
+        <help><!-- Indicate the number of days until this transaction is expired. --></help>
+        <label>N 日後にエンベロープが期限切れ／無効化</label>
+        <name>Days_before_Envelope_is_Expired_Voided__c</name>
+    </fields>
+    <fields>
+        <help><!-- Edit this Email Message Text (up to 2,000 characters) and it will appear in the notification to sign for your DocuSign Recipient. --></help>
+        <label>DocuSign 電子メールメッセージ</label>
+        <name>DocuSign_Email_Message__c</name>
+    </fields>
+    <fields>
+        <help><!-- Change this default Email Subject text and it will appear as the Subject Line in the notification to Sign for your DocuSign Recipients. --></help>
+        <label>DocuSign 電子メールの件名</label>
+        <name>DocuSign_Email_Subject__c</name>
+    </fields>
+    <fields>
+        <help><!-- DocuSign Envelope ID --></help>
+        <label>DocuSign エンベロープ ID</label>
+        <name>DocuSign_Envelope_ID__c</name>
+    </fields>
+    <fields>
+        <help><!-- DocuSign Envelope Sent --></help>
+        <label>送信済み DocuSign エンベロープ</label>
+        <name>DocuSign_Envelope_Sent__c</name>
+    </fields>
+    <fields>
+        <help><!-- Document ID --></help>
+        <label>DocumentID</label>
+        <name>DocumentID__c</name>
+    </fields>
+    <fields>
+        <help><!-- This is a list of PDF Documents located in your Organization&apos;s Salesforce &quot;Documents Tab&quot;.  In order to send with DocuSign you must add a PDF to any of the folders within your Documents Tab in Salesforce.  To Send with other Formats click &quot;Learn More&apos;. --></help>
+        <label>文書名</label>
+        <name>Document_Name__c</name>
+    </fields>
+    <fields>
+        <help><!-- At times, you may need to encourage your recipients to complete an envelope more rapidly. After an envelope expires, DocuSign for Salesforce voids the envelope and sends a notification to both sender and recipient. --></help>
+        <label>エンベロープの失効／無効化</label>
+        <name>Expire_Void_Envelope__c</name>
+    </fields>
+    <fields>
+        <help><!-- I agree to Terms --></help>
+        <label>契約条件に同意する</label>
+        <name>I_agree_to_Terms__c</name>
+    </fields>
+    <fields>
+        <help><!-- Click this checkbox if you would like to be added as an additional Recipient/Signer on this document.  If you leave this unchecked you will receive notification that the Contact has DocuSigned but will not be able to Sign it yourself. --></help>
+        <label>署名も行う</label>
+        <name>I_will_Sign__c</name>
+    </fields>
+    <fields>
+        <help><!-- Quick Lead to eSign Document --></help>
+        <label>eSign 文書のリード</label>
+        <name>Lead2eSignDoc01__c</name>
+        <relationshipLabel>DocuSign エンベロープ</relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Indicate how many days should pass before the first reminder is sent --></help>
+        <label>N 日後にリマインダを送信する</label>
+        <name>Reminder_Interval__c</name>
+    </fields>
+    <fields>
+        <help><!-- Indicate how often (in days) the reminder should repeat until the transaction is complete. --></help>
+        <label>処理が完了するまで N 日ごとに繰り返し送信する</label>
+        <name>Reminder_Repeat_Interval_in_Days__c</name>
+    </fields>
+    <fields>
+        <help><!-- Check this box to have an email reminder sent to recipients of the envelope who have not yet completed their task. --></help>
+        <label>署名者宛に電子メールでリマインダを送信する</label>
+        <name>Send_Reminder__c</name>
+    </fields>
+    <fields>
+        <help><!-- This is the name of the Salesforce User who created this DocuSign transaction. --></help>
+        <label>差出人</label>
+        <name>Sender__c</name>
+    </fields>
+    <fields>
+        <label>Source_Object_Parent</label>
+        <name>Source_Object_Parent__c</name>
+    </fields>
+    <fields>
+        <help><!-- Source Object --></help>
+        <label>ソースオブジェクト</label>
+        <name>Source_Object__c</name>
+    </fields>
+    <layouts>
+        <layout>DocuSign Envelope Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- DocuSign Envelope --></nameFieldLabel>
+    <webLinks>
+        <label><!-- Learn_More --></label>
+        <name>Learn_More</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Resend_This_Envelope --></label>
+        <name>Resend_This_Envelope</name>
+    </webLinks>
+</CustomObjectTranslation>

@@ -1,0 +1,258 @@
+<apex:page standardController="Campaign" 
+						extensions="ZMG.ZMG_Survey_Picker" 
+						showHeader="false"
+						standardStylesheets="false"
+						sidebar="false"
+						action="{!loadSurveys}">
+						
+<apex:stylesheet value="{!URLFOR($Resource.ZMG__ZMG_Resources, 'common.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.ZMG__ZMG_Resources, 'zoomcenter.css')}"/>
+<style>
+.surveySelect {
+	padding: 2px;
+	border: 1px solid #B3D9DD;
+	color: #666666;
+	font-size: 11px;
+	margin: 0;
+}
+
+.zoom-table .th1-1 span.header, .zoom-table .th1-2 span.header, .zoom-table .th1-3 span.header, 
+.zoom-table .th2-1 span.header, .zoom-table .th2-2 span.header, .zoom-table .th3 span.header {
+	padding: 0 8px 0 5px;
+	color: #5891A0;
+	margin: 0;
+	font-weight: bold;
+}
+
+.zoom-table .th1-1 {
+	width: 95px;
+}
+
+.btn {
+	background-image:url(/img/bgButton.gif);
+	background-position:left top;
+	background-repeat:repeat-x;
+	border-color:-moz-use-text-color #5C5D61 #5C5D61 -moz-use-text-color;
+	border-style:none solid solid none;
+	border-width:medium 1px 1px medium;
+	color:#FFFFFF;
+	cursor:pointer;
+	display:inline;
+	font-family:'Verdana','Geneva',sans-serif;
+	font-size:80%;
+	font-weight:bold;
+	padding:1px 3px;
+}
+</style>
+
+<script type="text/javascript">
+var url;
+function launchSurvey() {
+	// fix the url, then go
+	var rep = "amp;"
+	while (url.indexOf(rep) > -1) {
+		url = url.replace(rep, "", "gi");
+	}
+
+	top.location = url; 
+}
+</script>
+
+<body id="pbody" style="background-color: #F3F3EC;">
+
+<apex:outputPanel layout="block" id="missingZoomCreds"  style="background-color: #F3F3EC; height: 125px; text-align: left;" rendered="{!missingZoomCreds}">
+<style>
+.ErrorFieldset {
+	margin-bottom:30px;
+	margin-top: 10px;
+	margin-left:50px;
+	margin-right:50px;
+	padding-left:10px;
+	position:relative;
+}
+.ErrorText {
+	color:#330099;
+	font-family:Verdana,Helvetica,sans-serif;
+	font-size:16pt;
+	font-weight:bold;
+}
+ul {
+	margin: 5px 0 0 0;
+	padding-left: 15px;
+}
+li { 
+	font-size: 8pt;
+	margin-bottom: 5px;
+}
+</style>
+
+	<fieldset class="ErrorFieldset">
+		<legend><span class="ErrorText">Account Link Missing</span></legend>
+		<div style="padding-bottom: 10px; padding-right: 10px;">
+
+	<ul>
+		<li>It appears that your account has not been linked to your Zoomerang account, or your Zoomerang credentials are missing. Visit the 
+				<apex:outputLink target="_top" value="{!zoomTabUrlBase}">Zoomerang tab</apex:outputLink> to link your accounts.
+				If this error persists, please contact
+			<apex:outputPanel layout="inline" rendered="{!NOT(ISNULL(supportURL))}"><a target="_new" href="{!supportURL}">Zoomerang Support</a>.</apex:outputPanel>
+			<apex:outputPanel layout="inline" rendered="{!ISNULL(supportURL)}">Zoomerang Support.</apex:outputPanel>.</li>
+	</ul>
+
+		</div>
+	</fieldset>
+</apex:outputPanel>
+
+<apex:outputPanel layout="block" id="loadSurveyErrors"  style="background-color: #F3F3EC; height: 125px; text-align: left;" rendered="{!hasErrors}">
+<style>
+.ErrorFieldset {
+	margin-bottom:30px;
+	margin-top: 10px;
+	margin-left:50px;
+	margin-right:50px;
+	padding-left:10px;
+	position:relative;
+}
+.ErrorText {
+	color:#330099;
+	font-family:Verdana,Helvetica,sans-serif;
+	font-size:16pt;
+	font-weight:bold;
+}
+</style>
+
+	<fieldset class="ErrorFieldset">
+		<legend><span class="ErrorText">Error</span></legend>
+		<div style="padding-bottom: 10px; padding-right: 10px;">
+			<c:ZMG_Errors errors="{!errors}" supportURL="{!supportUrl}" suppressCode="true" />
+		</div>
+	</fieldset>
+</apex:outputPanel>
+
+<apex:outputPanel layout="block" id="loadSurveyContainer" style="background-color: #F3F3EC; height: 125px;" rendered="{!NOT(hasErrors)}">
+<script type="text/javascript">
+url = '{!campaignTabUrl}';
+</script>
+
+	<apex:form style="margin: 0px; padding: 0px;">
+
+		<apex:outputPanel id="surveyPickerPanel" styleClass="container" layout="block" style="margin: 0; padding: 0;" rendered="{!surveysLoaded}">
+			<div id="zoom-grid" style="position: relative;">
+
+				<div class="total-viewed" style="margin-bottom: 2px; margin-top: 2px; padding: 0;">
+					Select a Survey:&nbsp;
+					<apex:actionStatus id="loadStatus">
+						<apex:facet name="start"><apex:image id="loadingDots" value="{!URLFOR($Resource.ZMG__ZMG_Resources, 'images/dots.gif')}" /></apex:facet>
+						<apex:facet name="stop"></apex:facet>
+					</apex:actionStatus>
+				</div>
+
+				<div style="margin-bottom: 5px; padding: 0;">
+					<apex:selectList styleClass="surveySelect" value="{!selectedSurveyId}" multiSelect="false" size="1">
+						<apex:actionSupport event="onchange" action="{!loadSurvey}" rerender="loadSurveyContainer" status="loadStatus" />
+						<apex:selectOptions value="{!surveyNameOptions}" />
+					</apex:selectList>						
+
+					<apex:outputPanel layout="inline" rendered="{!surveyLoaded}" style="margin-left: 5px;">
+						<input type="button" class="btn" onclick="launchSurvey(); return false;" value="Launch This Survey In Zoomerang" />
+					</apex:outputPanel>
+				</div>
+				
+				<apex:outputPanel style="block" rendered="{!surveyLoaded}" style="margin: 0 0 0 0; padding: 0 0 0 0;">
+					<table class="zoom-table grid" cellspacing="0" cellpadding="0">
+						<thead>
+							<tr>
+
+								<th class="th1-1" column="0">
+									<span style="padding-left: 0px;" class="header">Survey Name</span>
+									<span>|</span>
+								</th>
+								
+								<th class="th1-2" column="1">
+									<span style="padding-left: 0px;" class="header">Creation Date</span>
+								</th>
+
+								<th class="th1-3" column="2">
+									<span class="header">&nbsp;</span>
+								</th>
+
+								<th class="th2-1" column="3">
+									<span style="padding-left: 0;" class="header">Status</span>
+									<span>|</span>
+								</th>
+								
+								<th class="th2-2" column="4">
+									<span class="header">Launch Date</span>
+								</th>
+
+								<th class="th3" column="5">
+									<span class="header">Invites</span>
+								</th>
+
+								<th class="th3" column="6">
+									<span class="header">Completes</span>
+								</th>
+
+								<th class="th3" column="7">
+									<span class="header">Partials</span>
+								</th>
+
+								<th class="th3" column="5">
+									<span class="header">Screen-outs</span>
+								</th>
+
+							</tr>
+						</thead>
+
+						<tbody>
+							<tr>
+							
+								<td class="th1" colspan="3">
+									<div class="zc-survey-name"><apex:outputText value="{!loadedSurvey.name}" /></div>
+									<apex:outputPanel layout="block" styleClass="zc-sublabel" rendered="{!NOT(ISNULL(loadedSurvey.dateCreated))}"><apex:outputText value="Created {!loadedSurvey.dateCreated}" /></apex:outputPanel>
+								</td>
+								
+								<td colspan="2">
+									<apex:outputPanel rendered="{!NOT(ISNULL(loadedSurvey.dateLaunched))}" layout="block"
+																		styleClass="zc-status ACTIVE">Active</apex:outputPanel>
+									<apex:outputPanel rendered="{!ISNULL(loadedSurvey.dateLaunched)}" layout="block"
+																		styleClass="zc-status READY">Ready</apex:outputPanel>
+									<apex:outputPanel rendered="{!NOT(ISNULL(loadedSurvey.dateLaunched))}" layout="block"
+																		styleClass="zc-sublabel2">
+										<apex:outputText value="Launched {!loadedSurvey.dateLaunched}" />
+									</apex:outputPanel>
+								</td>
+							
+								<td class="zc-data col1">
+									<apex:outputPanel layout="inline" rendered="{!(loadedSurvey.totalInvites == 0)}">&mdash;</apex:outputPanel>
+									<apex:outputPanel layout="inline" rendered="{!(loadedSurvey.totalInvites != 0)}">{!loadedSurvey.totalInvites}</apex:outputPanel>									
+								</td>
+								
+								<td class="zc-data col2">
+									<apex:outputPanel layout="inline" rendered="{!(loadedSurvey.completes == 0)}">&mdash;</apex:outputPanel>
+									<apex:outputPanel layout="inline" rendered="{!(loadedSurvey.completes != 0)}">{!loadedSurvey.completes}</apex:outputPanel>									
+								</td>
+								
+								<td class="zc-data col3">
+									<apex:outputPanel layout="inline" rendered="{!(loadedSurvey.partials == 0)}">&mdash;</apex:outputPanel>
+									<apex:outputPanel layout="inline" rendered="{!(loadedSurvey.partials != 0)}">{!loadedSurvey.partials}</apex:outputPanel>									
+								</td>
+								
+								<td class="zc-data col4">
+									<apex:outputPanel layout="inline" rendered="{!(loadedSurvey.screenOuts == 0)}">&mdash;</apex:outputPanel>
+									<apex:outputPanel layout="inline" rendered="{!(loadedSurvey.screenOuts != 0)}">{!loadedSurvey.screenOuts}</apex:outputPanel>									
+								</td>
+
+							</tr>
+						</tbody>
+
+					</table>
+				</apex:outputPanel>
+		
+			</div>
+		</apex:outputPanel>
+		
+	</apex:form>
+
+</apex:outputPanel>
+</body>
+</apex:page>

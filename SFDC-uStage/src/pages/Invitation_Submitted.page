@@ -1,0 +1,15 @@
+<apex:page id="Page" controller="User_Invitation_Controller"
+    standardStylesheets="false" showHeader="false">
+    <apex:composition template="IntraxTemplate_Vs2">
+     <apex:define name="body">
+     <apex:form >
+       <h3><apex:outputText value="Invitation Successfully Sent." /></h3>
+       <div class="form-button">
+        <apex:commandlink styleClass="next" action="{!return1}">
+           <apex:commandButton styleClass="next" value="Return" />
+       </apex:commandlink>
+       </div>
+      </apex:form>
+    </apex:define>
+   </apex:composition>
+</apex:page>

@@ -1,0 +1,83 @@
+<apex:page controller="googleGeoHelper">
+<script>
+function getRMConfirmation(newZipCodeValue,ADName){
+	if (newZipCodeValue == 0){
+		return confirm('This action will create all the new Zip Codes with the associated ADs/ chosen Areas. Confirm?');
+	}
+	else{
+		return confirm('This action will create the new zip '+newZipCodeValue+' to the AD '+ADName+' and chosen Area. Confirm?');
+	}
+		
+}
+</script>
+<apex:pageBlock >
+
+
+	<apex:pageBlockTable value="{!allZipWithADInfo}" var="aZip" id="ZipTable">
+		<apex:facet name="header"><b>ZIP CODE ASSIGNMENT STATISTICS</b> <i>(Click on ZipCode to reassign)</i></apex:facet>
+
+		<apex:column headerValue="Zip Code">
+		<apex:outputLink value="googlezipvisualizer?id={!aZip.id}">{!aZip.Zip_Code__c}</apex:outputLink>
+		</apex:column>
+		<apex:column value="{!zipCodeToHF[aZip.Zip_Code__c]}" headerValue="No. of HF's in Zip"/>
+		<apex:column value="{!aZip.Area__r.Name}" headerValue="Associated Area" />
+		<apex:column value="{!aZip.Area__r.Area_Director__r.Contact.Name}" headerValue="Area Director" />
+		<apex:column value="{!aZip.Area__r.Area_Director__r.ManagerId}" headerValue="Regional Manager" />
+		<apex:facet name="footer">
+			<apex:form >
+			<b>SEARCH FILTERS:</b>
+			
+				<apex:outputpanel id="searcher">
+			    	<apex:outputText value="	By ZipCode"/>
+			      	<apex:inputText value="{!searchZipCode}" id="searchZip"/>
+
+			    	<apex:outputText value="	Having count >"/>
+			      	<apex:inputText value="{!countGreaterThan}" id="countGreaterThan"/>
+			    </apex:outputpanel>
+			    
+			    <apex:outputPanel id="SearchAction">
+			        <apex:commandbutton id="Filter" value="Filter" action="{!filterResults}" rerender="ZipTable"/>
+			        <apex:commandbutton id="Reset" value="Reset" action="{!filterResults}" rerender="ZipTable">
+			        	<apex:Param name="searchZipCode" value="" assignTo="{!searchZipCode}"/>
+			        	<apex:Param name="countGreaterThan" value="0" assignTo="{!countGreaterThan}"/>
+			        </apex:commandbutton>
+			    </apex:outputPanel>
+			</apex:form>	
+
+		</apex:facet>
+	</apex:pageBlockTable>
+	<br/><br/>
+	
+	
+	<apex:pageBlockTable value="{!areaToHF}" var="areaName">
+		<apex:facet name="header"><b>AREA ASSIGNMENT STATISTICS</b> <i>(Click on Area name to reassign)</i></apex:facet>
+		<apex:column headerValue="Area Name">
+			<apex:outputLink value="googleAreaVisualizer?id={!areaNameIdMap[areaName]}">{!areaName}</apex:outputLink>
+		</apex:column>
+		<apex:column value="{!areaToHF[areaName]}" headerValue="No. of HF's under the AD"/>
+	</apex:pageBlockTable>
+	<br/><br/>
+	
+<apex:form >	
+	<apex:pageBlockTable value="{!noADZips}" var="newZipWrapper" id="ZipTable1">
+		<apex:facet name="header"><b>NEW ZIPCODE ASSIGNMENTS</b> <i>(ZipCode not in the system, choose Area to create)</i></apex:facet>
+		<apex:column value="{!newZipWrapper.newZipCode}" headerValue="New Zip"/>
+		<apex:column value="{!newZipWrapper.associatedAD.Name}" headerValue="AD Name"/>
+		<apex:column value="{!newZipWrapper.HFCount}" headerValue="No. of HF's"/>
+		<apex:column headerValue="Areas Associated">
+				<apex:selectList styleClass="form-control" value="{!newZipWrapper.areas}" multiselect="false" size="1" >
+		        	<apex:selectOptions value="{!newZipWrapper.areaValues}"/>
+		    	</apex:selectList>
+    	</apex:column>
+    	<apex:column headerValue="Action">
+				<apex:commandButton action="{!createNewZipForAreaAssociation}" onclick="return getRMConfirmation({!newZipWrapper.newZipCode},'{!newZipWrapper.associatedAD.Name}');" value="Assign zip to new area">
+					<apex:Param name="newZipCodeValue" value="{!newZipWrapper.newZipCode}" assignTo="{!newZipCodeValue}"/>
+		    	</apex:commandButton>
+    	</apex:column>
+    	<apex:facet name="footer">
+			<apex:commandButton action="{!createNewZipForAreaAssociation}" onclick="return getRMConfirmation(0,'ALL');" value="Assign zips to selected areas"/>    		
+    	</apex:facet>
+	</apex:pageBlockTable>
+</apex:form>
+</apex:pageBlock>
+</apex:page>

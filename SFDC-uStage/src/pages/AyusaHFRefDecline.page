@@ -1,0 +1,16 @@
+<apex:page docType="html-5.0" StandardController="Reference__c" extensions="FlowPersonInfoHFRefController" standardStylesheets="true" showHeader="false">
+  <apex:composition template="FlowTemplate_Vs1"> 
+    <apex:define name="body">
+      <div class="wrapper" id="AyusaHFRefDecline">
+          <h1>Ayusa Host Family Reference Request</h1>
+          <div class="white-box clearfix">
+             <div class="flow two_thirds">
+                <flow:interview name="AY_HF_Ref_Decline"  buttonLocation="bottom">
+                     <apex:param name="pReferenceId" value="{!$CurrentPage.parameters.Id}"/>    
+                 </flow:interview>
+              </div>
+            </div> 
+      </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

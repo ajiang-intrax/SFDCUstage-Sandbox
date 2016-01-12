@@ -1,0 +1,14 @@
+<apex:component layout="none" >
+<apex:attribute name="userAgentCheck" description="Checking for user agent to detect mobile devices etc." type="string" required="false" default="" /> 
+<style>
+<apex:outputText rendered="{!NOT(userAgentCheck=='mobile')}">
+<apex:outputText rendered="{!$Site.Name != 'AuPairCare' && $Site.Name != 'Intrax_Partners_Portal'}">
+
+#header-zone {
+background: url("{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/apc/headers/narrow-1.jpg')}") no-repeat scroll 50% 0 transparent; 
+height: 200px;}
+</apex:outputText>
+</apex:outputText>
+</style> 
+
+</apex:component>

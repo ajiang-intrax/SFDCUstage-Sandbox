@@ -1,0 +1,143 @@
+<apex:page title="Essays" applyBodyTag="false" applyHtmlTag="false" id="apc_ap_main_essays" docType="html-5.0"
+	standardController="Applicant_Info__c"
+	extensions="AppEngine_Controller" action="{!checkLogin}"
+	standardStylesheets="false" showHeader="false">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_apc_ap_application />
+      <apex:variable value="{!1}" var="rowNum" id="rowCounter" />
+      <div id="app-page" class="row">
+        <div id="app-focus" class="col-md-8 col-md-push-3">
+          
+           <c:block_app_completion ApplicantInfo="{!applicantInfo}" userProfileName="{!userProfileName}"  />
+          
+          <!-- Jose-Adding Tips for Partners  (Profile "OCPM Agent Portal")
+          <apex:outputPanel rendered="{!userProfileName == 'OCPM Agent Portal' && applicantInfo.Application_Level__c == 'Main'}" layout="block" id="blockTip">
+	          <div class="lead alert alert-warning clearfix">
+	          <b>Tip</b>&nbsp;&nbsp;
+	          This a key opportunity for au pairs to highlight their strengths and suitability. Has the au pair
+			  demonstrated a strong interest and the right motivation to be an au pair?
+	          </div>
+          </apex:outputPanel>
+          -->
+          
+          <h1>Match Questions</h1>
+          <p class="lead">Please take your time answering the questions below, as many host families review this area of your application closely. 
+            It is your opportunity to tell families more about yourself and why you would be the perfect au pair for their family. 
+            Don't forget to check your spelling and punctuation before saving!</p>
+       <apex:form id="webform" styleClass="form-vertical ws-validate">
+            <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+            <apex:pageBlock id="pageBlock">
+              <apex:repeat id="PageBlockTable" value="{!EssayList}" var="item">
+                <apex:outputPanel layout="block" rendered="{!item.Ordinal__c == 16 && applicantinfo.Application_Type__c =='Original'}" >
+                
+                <div class="row">
+           		<div class="col-sm-12">
+                <div class="form-group">
+              	<label class="control-label">Have you ever lived away from home or traveled for an extended period of time?</label>
+                <apex:actionRegion >
+                  <apex:selectRadio styleClass="radio" value="{!applicantinfo.US_Experience_Indicated__c}" id="offence" required="FALSE">
+                    <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                    <apex:selectOption itemValue="No" itemLabel="No"/>
+                    <apex:actionSupport event="onclick" rerender="USbefore" status="showessay"/>
+                  </apex:selectRadio> 
+                </apex:actionRegion>
+                <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showessay"/>
+                <apex:message for="offence" styleClass="custom-error-radio" id="errormess3"/>
+              	</div>
+              	</div>
+                  </div><!--  end row -->
+           		
+           		<apex:outputPanel layout="block" id="USbefore" >
+           		<apex:outputPanel layout="block" rendered="{!applicantinfo.US_Experience_Indicated__c == 'Yes'}" >
+           		
+           		<div class="row">
+           		<div class="col-sm-12">
+           		<div class="form-group">
+                  <label class="control-label">
+                    <apex:outputText value="Please tell us more about your travels or independent living. Where did you travel or live, how long and with whom?"/>
+                    <i data-toggle="popover" data-content="Share any significant travel experience you may have, including visits to the United States." class="infobtn fa fa-question-circle"></i>
+                  </label>
+                    <apex:inputTextarea styleClass="form-control" id="NarrativeUS" value="{!item.Narrative__c}"
+						required="FALSE" onkeyup="countChar(this, 5000, 'NarrativeCountUS')" onfocus="countChar(this, 5000, 'NarrativeCountUS')" />
+                    <div class="char-limit bb"> <span class="char-count-label">Characters left:</span><span id="NarrativeCountUS" class="char-count">{!5000-len(item.Narrative__c)}</span> </div>
+                    <apex:message for="NarrativeUS" styleClass="custom-error-text" id="errormesnarrativeUS" />
+                  </div>
+                  </div>
+                  </div><!--  end row -->
+                  
+           		</apex:outputPanel>
+           		</apex:outputPanel>
+           		
+           		</apex:outputPanel>
+           		
+                
+                <apex:outputPanel layout="block" rendered="{!item.Ordinal__c != 16 && applicantInfo.Application_Type__c=='Original'}" >
+                
+                <div class="form-group">
+                  <label class="control-label">
+                    <apex:outputText value="{!item.Label__c}" />
+                  </label>
+                    <apex:inputTextarea styleClass="form-control" id="Narrative" value="{!item.Narrative__c}" 
+						required="FALSE" onkeyup="countChar(this, 5000, 'NarrativeCount{!rowNum}')" onfocus="countChar(this, 5000, 'NarrativeCount{!rowNum}')" />
+                    <div class="char-limit bb"> <span class="char-count-label">Characters left:</span><span id="NarrativeCount{!rowNum}" class="char-count">{!5000-len(item.Narrative__c)}</span> </div>
+                    <apex:message for="Narrative" styleClass="custom-error-text" id="errormesnarrative" />
+                  </div>
+                </apex:outputPanel>
+                
+                <apex:outputPanel layout="block" rendered="{!item.Ordinal__c != 16 && applicantInfo.Application_Type__c=='Extension'}" >
+                
+                <div class="form-group">
+                  <label class="control-label">
+                    <apex:outputText value="{!item.Label__c}" />
+                  </label>
+                    <apex:inputTextarea styleClass="form-control" id="NarrativeExt" value="{!item.Narrative__c}" 
+						required="TRUE" onkeyup="countChar(this, 5000, 'NarrativeCountExt{!rowNum}')" onfocus="countChar(this, 5000, 'NarrativeCountExt{!rowNum}')" />
+                    <div class="char-limit bb"> <span class="char-count-label">Characters left:</span><span id="NarrativeCountExt{!rowNum}" class="char-count">{!5000-len(item.Narrative__c)}</span> </div>
+                    <apex:message for="NarrativeExt" styleClass="custom-error-text" id="errormesnarrativeExt" />
+                  </div>
+                </apex:outputPanel>
+                
+                <apex:outputPanel layout="block" rendered="{!item.Ordinal__c != 16 && applicantInfo.Application_Type__c=='Renewal'}" >
+                <div class="form-group">
+                  <label class="control-label">
+                    <apex:outputText value="{!item.Label__c}" />
+                  </label>
+                    <apex:inputTextarea styleClass="form-control" id="NarrativeRen" value="{!item.Narrative__c}" 
+						required="TRUE" onkeyup="countChar(this, 5000, 'NarrativeCountRen{!rowNum}')" onfocus="countChar(this, 5000, 'NarrativeCountRen{!rowNum}')" />
+                    <div class="char-limit bb"> <span class="char-count-label">Characters left:</span><span id="NarrativeCountRen{!rowNum}" class="char-count">{!5000-len(item.Narrative__c)}</span> </div>
+                    <apex:message for="NarrativeRen" styleClass="custom-error-text" id="errormesnarrativeRen" />
+                  </div>
+                </apex:outputPanel> 
+                
+                
+                <apex:variable var="rowNum" value="{!rowNum + 1}" />
+              </apex:repeat>
+            </apex:pageBlock>
+           <div class="row">
+              <div class="col-sm-12 margin-t">
+                <apex:outputLink styleClass="btn btn-link btn-lg"  rendered="{!applicantInfo.Application_Type__c=='Original'}" value="/apex/apc_ap_main_family_info?id={!applicantInfo.Id}" id="backlinkreference"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                <apex:outputLink styleClass="btn btn-link btn-lg"  rendered="{!applicantInfo.Application_Type__c=='Extension'}" value="/apex/apc_ap_main_interests?id={!applicantInfo.Id}" id="backlinkinterests"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                <apex:commandlink styleClass="btn btn-primary btn-lg" action="{!navigator}" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                  <apex:param name="nextPage"	value="{!IF(applicantInfo.Application_Type__c='Original','/apex/apc_ap_main_media','/apex/apc_ap_main_media')}" />
+                  <apex:param name="reDirectPage" value="true" />
+                  <apex:param name="pageId" value="026"/> 
+                   <apex:param name="essayType" value="APC" assignTo="{!EssayType}" />
+                  <apex:param name="docType" value="Participant-Photo" assignTo="{!docType}"/>
+                  <apex:commandButton id="Continue" value="Save & Continue" />
+                </apex:commandlink>
+              </div>
+            </div>
+          </apex:form>
+        </div>
+        <!-- end column  -->
+        
+       <div id="app-side" class="col-md-3 col-md-pull-8">
+          <c:menu_side_apc_ap_basic ApplicantInfo="{!applicantInfo}" />
+        </div>
+        <!-- end column  --> 
+      </div>
+    
+    </apex:define>
+  </apex:composition>
+</apex:page>

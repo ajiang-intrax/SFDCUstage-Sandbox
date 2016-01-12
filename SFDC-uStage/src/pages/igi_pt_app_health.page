@@ -1,0 +1,297 @@
+<apex:page id="igi_pt_app_personal_info" docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardController="Applicant_Info__c"
+	extensions="AppEngine_Controller" action="{!checkLogin}"
+	standardStylesheets="false" showHeader="false"  title="Health Information">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_igi_pt_application userAgentCheck="{!userAgentCheck}" />
+      <div class="row">
+        <div class="col-md-7 col-md-push-3">
+        	
+          <c:block_app_completion_igi applicantInfo="{!applicantInfo}" isIGIMainReady="{!CheckMainIGIApp}"/>
+        	
+          <h1>Health Information</h1>
+			<p class="lead">This information will be used primarily to guide us in making appropriate arrangements for you as a Intrax Global Internships participant and will be forwarded to our in-country directors. 
+			Any information you provide will be kept confidential.</p>
+          <apex:form styleClass="form-vertical ws-validate" id="webform">
+            <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+            
+            <div class="row">
+	            <div class="col-sm-12">
+		            <div class="form-group">
+		              <label class="control-label">Have you been hospitalized for a serious injury or operation?</label>
+		                <apex:actionRegion >
+			                <apex:selectRadio styleClass="radio" value="{!personInfo.Hospitalization_Indicated__c}" required="TRUE" id="hospIndicated" >
+			                	<apex:selectOption itemLabel="Yes" itemValue="Yes"/>
+			                	<apex:selectOption itemLabel="No" itemValue="No"/>
+			                	<apex:actionSupport event="onchange" rerender="hospitalization-desc" status="pleasewait01"/>
+			                </apex:selectRadio>
+			                <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="pleasewait01"/>
+		            	</apex:actionRegion>
+		            	<apex:message for="hospIndicated" styleClass="custom-error-radio" id="errormessage1"/>
+		            </div>            
+	            </div><!--  end col -->	            
+            </div><!--  end row -->
+            
+            <apex:pageBlock id="hospitalization-desc">
+            	<apex:outputPanel rendered="{!personInfo.Hospitalization_Indicated__c == 'Yes'}">
+            		<div class="row">
+			            <div class="col-sm-12">
+			              <div class="form-group">
+			              <label class="control-label">Please describe, including dates if available</label>
+			                <apex:inputField styleClass="form-control" value="{!personInfo.Hospitalization_Description__c}" required="TRUE" id="hospDesc" />			                
+			            </div>
+			            </div> <!--  end col -->			            
+			        </div> <!--  end row -->	
+            	</apex:outputPanel>
+            </apex:pageBlock>      
+            
+            <div class="row">
+	            <div class="col-sm-12">
+		            <div class="form-group">
+		              <label class="control-label">Are you physically impaired or is your mobility restricted?</label>
+		                <apex:actionRegion >
+			                <apex:selectRadio styleClass="radio" value="{!applicantInfo.Disabilities__c}" required="TRUE" id="disabIndicated" >
+			                	<apex:selectOption itemLabel="Yes" itemValue="Yes"/>
+			                	<apex:selectOption itemLabel="No" itemValue="No"/>
+			                	<apex:actionSupport event="onchange" rerender="disabilities-desc" status="pleasewait02"/>
+			                </apex:selectRadio>
+			                <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="pleasewait02"/>
+		            	</apex:actionRegion>
+		            	<apex:message for="disabIndicated" styleClass="custom-error-radio" id="errormessage2"/>
+		            </div>            
+	            </div><!--  end col -->	            
+            </div><!--  end row -->
+            
+            <apex:pageBlock id="disabilities-desc">
+            	<apex:outputPanel rendered="{!applicantInfo.Disabilities__c == 'Yes'}">
+            		<div class="row">
+			            <div class="col-sm-12">
+			              <div class="form-group">
+			              <label class="control-label">Please describe</label>
+			                <apex:inputTextArea styleClass="form-control" value="{!applicantInfo.Disabilities_Description__c}" required="TRUE" id="disabDesc" />			                
+			            </div>
+			            </div> <!--  end col -->			            
+			        </div> <!--  end row -->	
+            	</apex:outputPanel>
+            </apex:pageBlock>    
+            
+            <div class="row">
+	            <div class="col-sm-12">
+		            <div class="form-group">
+		              <label class="control-label">Do you have any mental health issues?</label>
+		                <apex:actionRegion >
+			                <apex:selectRadio styleClass="radio" value="{!personInfo.Psychiatric_Treatment_Indicated__c}" required="TRUE" id="mentalIndicated" >
+			                	<apex:selectOption itemLabel="Yes" itemValue="Yes"/>
+			                	<apex:selectOption itemLabel="No" itemValue="No"/>
+			                	<apex:actionSupport event="onchange" rerender="mental-desc" status="pleasewait03"/>
+			                </apex:selectRadio>
+			                <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="pleasewait03"/>
+		            	</apex:actionRegion>
+		            	<apex:message for="mentalIndicated" styleClass="custom-error-radio" id="errormessage3"/>
+		            </div>            
+	            </div><!--  end col -->	            
+            </div><!--  end row -->
+            
+            <apex:pageBlock id="mental-desc">
+            	<apex:outputPanel rendered="{!personInfo.Psychiatric_Treatment_Indicated__c == 'Yes'}">
+            		<div class="row">
+			            <div class="col-sm-12">
+			              <div class="form-group">
+			              <label class="control-label">Please describe</label>
+			                <apex:inputField styleClass="form-control" value="{!personInfo.Psychiatric_Treatment_Description__c}" required="TRUE" id="mentalDesc" />			                
+			            </div>
+			            </div> <!--  end col -->			            
+			        </div> <!--  end row -->	
+            	</apex:outputPanel>
+            </apex:pageBlock>  
+            
+            <div class="row">
+	            <div class="col-sm-12">
+		            <div class="form-group">
+		              <label class="control-label">Do you have any dietary restrictions?</label>
+		                <apex:actionRegion >
+			                <apex:selectRadio styleClass="radio" value="{!applicantInfo.Special_Diet_Indicated__c}" required="TRUE" id="dietIndicated" >
+			                	<apex:selectOption itemLabel="Yes" itemValue="Yes"/>
+			                	<apex:selectOption itemLabel="No" itemValue="No"/>
+			                	<apex:actionSupport event="onchange" rerender="diet-desc" status="pleasewait04"/>
+			                </apex:selectRadio>
+			                <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="pleasewait04"/>
+		            	</apex:actionRegion>
+		            	<apex:message for="dietIndicated" styleClass="custom-error-radio" id="errormessage4"/>
+		            </div>            
+	            </div><!--  end col -->	            
+            </div><!--  end row -->
+            
+            <apex:pageBlock id="diet-desc">
+            	<apex:outputPanel rendered="{!applicantInfo.Special_Diet_Indicated__c == 'Yes'}">
+            		<div class="row">
+			            <div class="col-sm-12">
+			              <div class="form-group">
+			              <label class="control-label">Please describe</label>
+			                <apex:inputTextArea styleClass="form-control" value="{!applicantInfo.Special_Diet_Description__c}" required="TRUE" id="dietDesc" />
+			                <apex:message for="dietDesc" styleClass="custom-error-textarea" id="errormessage4Desc"/>			                
+			            </div>
+			            </div> <!--  end col -->			            
+			        </div> <!--  end row -->	
+            	</apex:outputPanel>
+            </apex:pageBlock>     
+            
+            <div class="row">
+	            <div class="col-sm-12">
+		            <div class="form-group">
+		              <label class="control-label">Do you have any allergies?</label>
+		                <apex:actionRegion >
+			                <apex:selectRadio styleClass="radio" value="{!applicantInfo.Allergies_Indicated__c}" required="TRUE" id="allergiesIndicated" >
+			                	<apex:selectOption itemLabel="Yes" itemValue="Yes"/>
+			                	<apex:selectOption itemLabel="No" itemValue="No"/>
+			                	<apex:actionSupport event="onchange" rerender="allergies-desc" status="pleasewait05"/>
+			                </apex:selectRadio>
+			                <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="pleasewait05"/>
+		            	</apex:actionRegion>
+		            	<apex:message for="allergiesIndicated" styleClass="custom-error-radio" id="errormessage5"/>
+		            </div>            
+	            </div><!--  end col -->	            
+            </div><!--  end row -->
+            
+            <apex:pageBlock id="allergies-desc">
+            	<apex:outputPanel rendered="{!applicantInfo.Allergies_Indicated__c == 'Yes'}">
+            		<div class="row">
+			            <div class="col-sm-12">
+			              <div class="form-group">
+			              <label class="control-label">Please describe</label>
+			                <apex:inputField styleClass="form-control" value="{!applicantInfo.Allergies_Other_desc__c}" required="TRUE" id="allergiesDesc" />			                
+			            </div>
+			            </div> <!--  end col -->			            
+			        </div> <!--  end row -->	
+            	</apex:outputPanel>
+            </apex:pageBlock>  
+            
+            <div class="row">
+	            <div class="col-sm-12">
+		            <div class="form-group">
+		              <label class="control-label">Are you currently on any medication?</label>
+		                <apex:actionRegion >
+			                <apex:selectRadio styleClass="radio" value="{!personInfo.Medication_Indicated__c}" required="TRUE" id="medicationIndicated" >
+			                	<apex:selectOption itemLabel="Yes" itemValue="Yes"/>
+			                	<apex:selectOption itemLabel="No" itemValue="No"/>
+			                	<apex:actionSupport event="onchange" rerender="medication-desc" status="pleasewait06"/>
+			                </apex:selectRadio>
+			                <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="pleasewait06"/>
+		            	</apex:actionRegion>
+		            	<apex:message for="medicationIndicated" styleClass="custom-error-radio" id="errormessage6"/>
+		            </div>            
+	            </div><!--  end col -->	            
+            </div><!--  end row -->
+            
+            <apex:pageBlock id="medication-desc">
+            	<apex:outputPanel rendered="{!personInfo.Medication_Indicated__c == 'Yes'}">
+            		<div class="row">
+			            <div class="col-sm-12">
+			              <div class="form-group">
+			              <label class="control-label">Please describe</label>
+			                <apex:inputField styleClass="form-control" value="{!personInfo.Medication_Description__c}" required="TRUE" id="medicationDesc" />			                
+			            </div>
+			            </div> <!--  end col -->			            
+			        </div> <!--  end row -->	
+            	</apex:outputPanel>
+            </apex:pageBlock> 
+            
+            <div class="row">
+	            <div class="col-sm-12">
+		            <div class="form-group">
+		              <label class="control-label">Please tell us about any other health issues or concerns <span class="info">(Optional)</span></label>
+		              <apex:inputField styleClass="form-control" value="{!personInfo.Health_Concerns__c}" required="FALSE" id="healthConcerns" />	
+		            </div>            
+	            </div><!--  end col -->	            
+            </div><!--  end row -->
+            
+            <div class="row">
+	            <div class="col-sm-12">
+		            <div class="form-group">
+		              <label class="control-label">Have you ever had or ever suffered from any of the following conditions? <span class="info">(Optional)</span></label>
+		              <apex:inputField styleClass="form-control" value="{!personInfo.Chronic_Disease__c}" required="FALSE" id="chronicDisease" />	
+		            </div>            
+	            </div><!--  end col -->	            
+            </div><!--  end row -->
+            
+            <div class="row">
+	            <div class="col-sm-12">
+		            <div class="form-group">
+		              <label class="control-label">Have you ever had any disease or abnormality? <span class="info">(Optional)</span></label>
+		              <apex:inputField styleClass="form-control" value="{!personInfo.Illnesses__c}" required="FALSE" id="illnesses" />	
+		            </div>            
+	            </div><!--  end col -->	            
+            </div><!--  end row -->
+            
+            <div class="row">
+	            <div class="col-sm-12">
+		            <div class="form-group">
+		              <label class="control-label">Other disease or abnormality? <span class="info">(Optional)</span></label>
+		              <apex:inputField styleClass="form-control" value="{!personInfo.Illness_Description__c}" required="FALSE" id="illnessDesc" />	
+		            </div>            
+	            </div><!--  end col -->	            
+            </div><!--  end row -->
+                
+            <div class="form-group margin-t">
+            
+            <apex:outputText rendered="{!IF(applicantInfo.Application_Level__c == 'Main' && applicantInfo.Application_Stage__c == 'Working',  true, false)}">
+            <apex:commandlink styleClass="btn btn-primary btn-lg margin-r"
+									action="{!navigator}" id="nextlink"  onComplete="rerunjs();" reRender="webform" status="onsubmit" rendered="{!IF(applicantInfo.Application_Stage__c == 'Accepted' || applicantInfo.Application_Stage__c == 'Submitted',  false, true)}">
+                  <apex:param name="nextPage" value="/apex/igi_pt_app_documents"/>
+                  <apex:param name="docType" value="igi-documents" assignTo="{!docType}"/>
+                  <apex:param name="reDirectPage" value="true" />
+                  <apex:param name="pageId" value="059"/>
+                  <apex:commandButton value="Save & Continue" id="continuebutton" />
+                </apex:commandlink>
+                
+                 <apex:commandlink styleClass="btn btn-link btn-lg" rendered="{!NOT(CONTAINS(applicantInfo.PageStatus_Complete__c,'059'))}"
+                					action="{!setPageIdStarted}" id="skipLink" immediate="true" reRender="webform" status="onsubmit">
+                	<apex:param name="pageId" value="059"/>
+                	<apex:commandButton value="" id="skipButton"/>    
+                		<span>Skip this page</span>                 
+                </apex:commandlink>
+            </apex:outputText>
+            	 
+               <apex:outputText rendered="{!IF(applicantInfo.Application_Level__c == 'Main' && applicantInfo.Application_Stage__c != 'Working' && NOT(isPartner),  true, false)}">                     
+	                <apex:commandlink styleClass="btn btn-primary btn-lg margin-r"
+										action="{!saveHealthInfo}" id="nextlinkNotPartner"  onComplete="rerunjs();" reRender="webform" status="onsubmit">
+	                  <apex:param name="nextPage" value="/apex/igi_home"/>
+	                  <apex:param name="reDirectPage" value="true" />
+	                  <apex:param name="pageId" value="059"/>
+	                  <apex:param name="FromNotify" value="1" />
+	                  <apex:commandButton value="Save" id="continuebuttonNotPartner" />
+	                </apex:commandlink>
+               </apex:outputText> 
+               <apex:outputText rendered="{!IF(applicantInfo.Application_Level__c == 'Main' && applicantInfo.Application_Stage__c != 'Working' && isPartner,  true, false)}">                     
+	                <apex:commandlink styleClass="btn btn-primary btn-lg margin-r"
+										action="{!navigator}" id="nextlinkPartner"  onComplete="rerunjs();" reRender="webform" status="onsubmit">
+	                  <apex:param name="nextPage" value="/apex/igi_pt_app_home"/>
+	                  <apex:param name="reDirectPage" value="true" />
+	                  <apex:param name="pageId" value="059"/>	                  
+	                  <apex:commandButton value="Save & Continue" id="continuebuttonPartner" />
+	                </apex:commandlink>
+               </apex:outputText>
+               
+                
+            </div>
+            
+          </apex:form>
+          <apex:form >
+          	<c:block_app_coedit_authorization ApplicantInfo="{!applicantInfo}" pageController="{!AEC}" rendered="{!applicantInfo.Apply_on_Behalf_of_PT__c && applicantInfo.Application_Stage__c == 'Working'}"/>
+          </apex:form>
+        </div>
+        <!-- end column -->
+        
+        <div class="col-md-3 col-md-pull-7">
+         <c:block_notification_sidebar ApplicantInfo="{!applicantInfo}" isPartner="{!isPartner}"/>   
+          <apex:form >
+            <c:menu_igi_pt_app ApplicantInfo="{!applicantInfo}" personInfo="{!personInfo}" />
+          </apex:form>
+        </div>
+        <!-- end column  --> 
+      </div>
+      <!-- end row --> 
+      
+    </apex:define>
+  </apex:composition>
+</apex:page>

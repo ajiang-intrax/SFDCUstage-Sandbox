@@ -1,0 +1,537 @@
+<!--  
+Description: APC PT Menu
+
+-->
+<apex:component layout="none" id="menuPtApc">
+<!-- <apex:component layout="none" id="menuPtApc" controller="MenuApplication_Controller" allowDML="true">
+ -->
+
+  <apex:attribute name="ApplicantInfo" description="This is the value for the Applicant_Info__c object." type="Applicant_Info__c" required="false" default=""/>
+ <!-- 
+ <apex:form > 
+  -->
+  <!-- 
+<apex:attribute name="PersonInfo" description="This is the value for the Person_Info__c object. " type="Person_Info__c" required="false" default=""/>
+<apex:attribute name="CheckReferences" description="This is the value to check if the references are completed " type="Boolean" required="false" default=""/>
+<apex:attribute name="checkEssay" description="Boolean to ckeck if the Essays are done. " type="Boolean" required="false" default="" /> 
+<apex:attribute name="CheckExperience" description="This is the value to check if the experiences are completed. Min 2 childcare experiences " type="Boolean" required="false" default="" /> 
+ -->
+  
+  <apex:variable var="Personal_Information" value="active" rendered="{! IF($CurrentPage.Name=='apc_ap_basic_personal_info', true, false)}"/>
+  <apex:variable var="Proof_Education" value="active" rendered="{! IF($CurrentPage.Name=='apc_ap_main_education_proof', true, false)}"/>
+  <apex:variable var="Contact_Information" value="active" rendered="{! IF($CurrentPage.Name=='apc_ap_basic_contact_info', true, false)}"/>
+  <apex:variable var="Program_Eligibility" value="active" rendered="{! IF($CurrentPage.Name=='apc_ap_basic_eligibility', true, false)}"/>
+  <apex:variable var="Program_Preferences" value="active" rendered="{! IF($CurrentPage.Name=='apc_ap_basic_program_preferences', true, false)}"/>
+  <apex:variable var="Health_Overview" value="active" rendered="{! IF($CurrentPage.Name=='apc_ap_basic_health_info', true, false)}"/>
+  <apex:variable var="Your_Family" value="active" rendered="{! IF($CurrentPage.Name=='apc_ap_main_family_info', true, false)}"/>
+  <apex:variable var="Driving_Experience" value="active" rendered="{! IF($CurrentPage.Name=='apc_ap_main_driving_experience', true, false)}"/>
+  <apex:variable var="Swimming_Experience" value="active" rendered="{! IF($CurrentPage.Name=='apc_ap_main_swimming_experience', true, false)}"/>
+  <apex:variable var="Training" value="active" rendered="{! IF($CurrentPage.Name=='apc_ap_main_training', true, false)}"/>
+  <apex:variable var="Experience" value="active" rendered="{! IF($CurrentPage.Name=='apc_ap_main_experience' || $CurrentPage.Name=='apc_ap_main_add_work_experience' || $CurrentPage.Name=='apc_ap_main_add_childcare_experience', true, false)}"/>
+  <apex:variable var="AuPairExperience" value="active" rendered="{! IF($CurrentPage.Name=='apc_ap_main_add_aupair_experience', true, false)}"/>
+  <apex:variable var="Interests_Hobbies" value="active" rendered="{! IF($CurrentPage.Name=='apc_ap_main_interests', true, false)}"/>
+  <apex:variable var="Photo_Uploads" value="active" rendered="{! IF($CurrentPage.Name=='apc_ap_main_media', true, false)}"/>
+  <apex:variable var="Video_Upload" value="active" rendered="{! IF($CurrentPage.Name=='apc_ap_main_video', true, false)}"/>
+  <apex:variable var="References" value="active" rendered="{! IF($CurrentPage.Name=='apc_ap_main_references', true, false)}"/>
+  <apex:variable var="Essays" value="active" rendered="{! IF($CurrentPage.Name=='apc_ap_main_essays', true, false)}"/>
+  <apex:variable var="Medical_History" value="active" rendered="{! IF($CurrentPage.Name=='apc_ap_main_illness_history', true, false)}"/>
+  <apex:variable var="Health_Info" value="active" rendered="{! IF($CurrentPage.Name=='apc_ap_main_health_info', true, false)}"/>
+  <apex:variable var="Physician_Info" value="active" rendered="{! IF($CurrentPage.Name=='apc_ap_main_physician_form', true, false)}"/>
+  <apex:variable var="Program_Agreement" value="active" rendered="{! IF($CurrentPage.Name=='apc_ap_main_ext_agreements', true, false)}"/>
+  <apex:variable var="Main_Payment" value="active" rendered="{! IF($CurrentPage.Name=='apc_ap_main_payment', true, false)}"/>
+  <apex:variable var="Main_Completion" value="active" rendered="{! IF($CurrentPage.Name=='apc_ap_main_completion', true, false)}"/>
+  <apex:variable var="Completion" value="active" rendered="{! IF($CurrentPage.Name=='apc_ap_basic_completion', true, false)}"/>
+  <apex:variable var="Visa_Info" value="active" rendered="{! IF($CurrentPage.Name=='apc_ap_main_visa_info', true, false)}"/>
+  <apex:variable var="BGC_Info" value="active" rendered="{! IF($CurrentPage.Name=='apc_ap_main_bgc_form', true, false)}"/>
+  <apex:variable var="p_Interview" value="active" rendered="{! IF($CurrentPage.Name=='apc_ap_main_interview', true, false)}"/>
+  <apex:variable var="Reference_Check" value="active" rendered="{! IF($CurrentPage.Name=='apc_ap_main_reference_check', true, false)}"/>
+  <apex:variable var="Health_Review" value="active" rendered="{! IF($CurrentPage.Name=='apc_ap_main_health_review', true, false)}"/>
+  <apex:variable var="Reference_Inter" value="active" rendered="{! IF($CurrentPage.Name=='apc_ap_main_interview_status', true, false)}"/>
+  <apex:variable var="BGC_Review" value="active" rendered="{! IF($CurrentPage.Name=='apc_ap_main_bgc_review', true, false)}"/>
+  <apex:variable var="Second_Review" value="active" rendered="{! IF($CurrentPage.Name=='apc_ap_main_secondary_review', true, false)}"/>
+  <apex:variable var="Other_Review" value="active" rendered="{! IF($CurrentPage.Name=='apc_ap_main_misc_review', true, false)}"/>
+  
+  <apex:variable var="proceed" value="allowed" rendered="{!CONTAINS(applicantinfo.PageStatus_Complete__c,'012') && CONTAINS(applicantinfo.PageStatus_Complete__c,'013') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'014') && CONTAINS(applicantinfo.PageStatus_Complete__c,'015') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'016') && CONTAINS(applicantinfo.PageStatus_Complete__c,'017') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'018') && CONTAINS(applicantinfo.PageStatus_Complete__c,'019') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'020') && CONTAINS(applicantinfo.PageStatus_Complete__c,'021') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'024') && CONTAINS(applicantinfo.PageStatus_Complete__c,'025') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'026') && CONTAINS(applicantinfo.PageStatus_Complete__c,'043') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'028') && CONTAINS(applicantinfo.PageStatus_Complete__c,'029') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'031') && CONTAINS(applicantinfo.PageStatus_Complete__c,'034') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'036') && CONTAINS(applicantinfo.PageStatus_Complete__c,'037') &&
+								applicantInfo.Application_Type__c=='Original' &&
+								applicantInfo.Application_Level__c=='Main' &&
+								applicantInfo.Application_Stage__c=='Working' &&
+								$Profile.Name !='OCPM Agent Portal'}"/>  
+								
+
+<apex:variable var="ptproceed" value="allowed" rendered="{!CONTAINS(applicantinfo.PageStatus_Complete__c,'012') && CONTAINS(applicantinfo.PageStatus_Complete__c,'013') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'014') && CONTAINS(applicantinfo.PageStatus_Complete__c,'015') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'016') && CONTAINS(applicantinfo.PageStatus_Complete__c,'017') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'018') && CONTAINS(applicantinfo.PageStatus_Complete__c,'019') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'020') && CONTAINS(applicantinfo.PageStatus_Complete__c,'021') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'024') && CONTAINS(applicantinfo.PageStatus_Complete__c,'025') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'026') && CONTAINS(applicantinfo.PageStatus_Complete__c,'038') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'028') && CONTAINS(applicantinfo.PageStatus_Complete__c,'029') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'031') && CONTAINS(applicantinfo.PageStatus_Complete__c,'034') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'036') && CONTAINS(applicantinfo.PageStatus_Complete__c,'037') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'039') && CONTAINS(applicantinfo.PageStatus_Complete__c,'040') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'041') && CONTAINS(applicantinfo.PageStatus_Complete__c,'042') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'046') && CONTAINS(applicantinfo.PageStatus_Complete__c,'047') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'049') &&
+								applicantInfo.Application_Type__c=='Original' &&
+								applicantInfo.Application_Level__c=='Main' &&
+								applicantInfo.Application_Stage__c=='Submitted' &&
+								$Profile.Name =='OCPM Agent Portal'}"/>  
+
+<apex:variable var="basicproceed" value="allowed" rendered="{!CONTAINS(applicantinfo.PageStatus_Complete__c,'012') && CONTAINS(applicantinfo.PageStatus_Complete__c,'013') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'014') && CONTAINS(applicantinfo.PageStatus_Complete__c,'015') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'016') && applicantInfo.Application_Level__c=='Basic'}"/>
+								
+								
+  <apex:outputText rendered="{!ApplicantInfo.Application_Level__c == 'Basic'}">
+    <!--Basic App Menu-->
+    
+	<apex:outputText rendered="{!IF($Site.SiteId == '0DMa0000000TOEA', true, false)}">	
+	<div class="h3 center-text margin-b1">
+		 <apex:repeat var="lstOfObjs" value="{!applicantInfo.Person_Info__r}">
+		 	<apex:outputText rendered="{!lstOfObjs.Primary_Applicant__c == true}">
+		 		<b>{!lstOfObjs.First_Name__c}&nbsp;{!lstOfObjs.Last_Name__c}</b><br/>Au Pair Application
+		 	</apex:outputText>	
+		 </apex:repeat> 
+		 </div>
+	</apex:outputText>
+	
+<apex:outputText rendered="{!IF($Site.Name == 'AuPairCare', true, false)}">	
+     <div class="h3 center-text margin-b1">Become an Au Pair</div>
+<p class="center-text margin-b2"><em>Fill out our brief pre-application</em></p>
+</apex:outputText>
+
+    <hr/>
+    <ul class="nav nav-list vs1 linear"> 
+      <li>
+        <apex:outputLink disabled="{! IF(contains(applicantinfo.PageStatus_Complete__c, '012'), 'false', 'true')}" 
+        styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '012'), 'complete', '')} {!Personal_Information}"   
+        value="/apex/apc_ap_basic_personal_info?id={!ApplicantInfo.Id}" id="linkpersonalinfo"> <i class="fa"></i> <span>Personal Information</span> </apex:outputLink>
+      </li>
+      <li>
+        <apex:outputLink disabled="{! IF(contains(applicantinfo.PageStatus_Complete__c, '012'), 'false', 'true')}" 
+        styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '013'), 'complete', '')} {!Contact_Information}"  value="/apex/apc_ap_basic_contact_info?id={!ApplicantInfo.Id}" id="linkcontactinfo"> <i class="fa"></i> <span>Contact Information</span> </apex:outputLink>
+      </li>
+      <li>
+        <apex:outputLink disabled="{! IF(contains(applicantinfo.PageStatus_Complete__c, '013'), 'false', 'true')}" 
+        styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '014'), 'complete', '')} {!Program_Eligibility}"  value="/apex/apc_ap_basic_eligibility?id={!ApplicantInfo.Id}" id="linkprogrameleg"> <i class="fa"></i> <span>Eligibility</span> </apex:outputLink>
+      </li>
+      <li>
+        <apex:outputLink disabled="{! IF(contains(applicantinfo.PageStatus_Complete__c, '014'), 'false', 'true')}" 
+        styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '015'), 'complete', '')} {!Program_Preferences}"  value="/apex/apc_ap_basic_program_preferences?id={!ApplicantInfo.Id}" id="linkprogrampref"> <i class="fa"></i> <span>Program Preferences</span> </apex:outputLink>
+      </li>
+      <li>
+        <apex:outputLink disabled="{! IF(contains(applicantinfo.PageStatus_Complete__c, '015'), 'false', 'true')}" 
+        styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '016'), 'complete', '')} {!Health_Overview}"  value="/apex/apc_ap_basic_health_info?id={!ApplicantInfo.Id}" id="linkhealth"> <i class="fa"></i> <span>Health Overview</span> </apex:outputLink>
+      </li>
+      <li>
+        <apex:outputLink styleClass="{!Completion}" disabled="{!basicproceed != 'allowed'}" value="/apex/apc_ap_basic_completion?id={!ApplicantInfo.Id}" id="linkcompletion"><span>Review and Submit</span> </apex:outputLink>
+      </li>
+    </ul>
+   
+    </apex:outputText>
+<apex:outputText rendered="{!applicantInfo.Application_Level__c=='Main' && applicantInfo.Application_Type__c=='Original' }"> 
+<!-- Main App Menu  -->
+
+
+<!--  open the right accordion based on which page you are on -->
+<apex:variable var="tierprf" value="in"
+rendered="{!IF(
+$CurrentPage.Name=='apc_ap_main_home'|| 
+$CurrentPage.Name=='apc_ap_basic_personal_info'|| 
+$CurrentPage.Name=='apc_ap_basic_contact_info'||
+$CurrentPage.Name=='apc_ap_main_interests'||
+$CurrentPage.Name=='apc_ap_main_family_info'||
+$CurrentPage.Name=='apc_ap_main_essays'||
+$CurrentPage.Name=='apc_ap_main_media'||
+$CurrentPage.Name=='apc_ap_main_video', true, false)}">
+</apex:variable>
+<apex:variable var="tierexp" value="in"
+rendered="{!IF(
+$CurrentPage.Name=='apc_ap_main_training'|| 
+$CurrentPage.Name=='apc_ap_main_experience'||
+$CurrentPage.Name=='apc_ap_main_add_childcare_experience'||
+$CurrentPage.Name=='apc_ap_main_add_work_experience'||
+$CurrentPage.Name=='apc_ap_main_swimming_experience'||
+$CurrentPage.Name=='apc_ap_main_driving_experience', true, false)}">
+</apex:variable>
+<apex:variable var="tierhealth" value="in"
+rendered="{!IF(
+$CurrentPage.Name=='apc_ap_basic_health_info'|| 
+$CurrentPage.Name=='apc_ap_main_illness_history'||
+$CurrentPage.Name=='apc_ap_main_health_info'||
+$CurrentPage.Name=='apc_ap_main_physician_form', true, false)}">
+</apex:variable>
+<apex:variable var="tierprg" value="in"
+rendered="{!IF(
+$CurrentPage.Name=='apc_ap_basic_eligibility'|| 
+$CurrentPage.Name=='apc_ap_basic_program_preferences'||
+$CurrentPage.Name=='apc_ap_main_references' ||
+$CurrentPage.Name=='apc_ap_main_visa_info'||
+$CurrentPage.Name=='apc_ap_main_ext_agreements' ||
+$CurrentPage.Name=='apc_ap_main_bgc_form'||
+$CurrentPage.Name=='apc_ap_main_interview_status', true, false)}">
+</apex:variable>
+
+<apex:variable var="partneronly" value="in"
+rendered="{!IF(
+$CurrentPage.Name=='apc_ap_main_interview' || $CurrentPage.Name=='apc_ap_main_health_review' ||
+$CurrentPage.Name=='apc_ap_main_reference_check' || $CurrentPage.Name=='apc_ap_main_bgc_review' ||
+$CurrentPage.Name=='apc_ap_main_secondary_review' ||
+$CurrentPage.Name=='apc_ap_main_misc_review' , true, false)}">
+</apex:variable>
+
+<div class="margin-b3">
+
+<!-- For partners only -->
+
+<apex:outputText rendered="{!IF($Site.SiteId == '0DMa0000000TOEA', true, false)}">	
+<div class="h3 center-text margin-b1">
+	 <apex:repeat var="lstOfObjs" value="{!applicantInfo.Person_Info__r}">
+	 	<apex:outputText rendered="{!lstOfObjs.Primary_Applicant__c == true}">
+	 		<b>{!lstOfObjs.First_Name__c}&nbsp;{!lstOfObjs.Last_Name__c}</b><br/>Au Pair Application
+	 	</apex:outputText>	
+	 </apex:repeat> 
+	 </div>
+</apex:outputText>
+
+
+<apex:outputText rendered="{!IF($Site.Name == 'AuPairCare', true, false)}">	
+<div class="h3 center-text margin-b1">Au Pair Application</div>
+<apex:outputText rendered="{!IF($CurrentPage.Name!='apc_ap_main_home', true, false)}"> 
+<div class="center-text"><apex:outputLink value="/apex/apc_ap_main_home?id={!ApplicantInfo.Id}"><b>Back to Home</b></apex:outputLink></div>
+</apex:outputText>
+</apex:outputText>
+
+</div>
+
+
+     
+      <ul id="apcmain" class="sidenav vs2 non-linear">
+        <li class="first-tier panel">
+        <a class="title block" data-toggle="collapse" href="#tierprf" data-parent="#apcmain">About You
+        </a>
+        <ul id="tierprf" class="sec-tier collapse {!tierprf}">
+        <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '012'), 'complete', '')} {!Personal_Information}" value="/apex/apc_ap_basic_personal_info?id={!ApplicantInfo.Id}" id="linkpersonalinfomain"> <i class="fa"></i> <span>Personal Information</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '013'), 'complete', '')} {!Contact_Information}" value="/apex/apc_ap_basic_contact_info?id={!ApplicantInfo.Id}" id="linkcontactinfomain"> <i class="fa"></i> <span>Contact Information</span> </apex:outputLink>
+        </li>
+          <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '024'), 'complete', '')} {!Interests_Hobbies}" value="/apex/apc_ap_main_interests?id={!ApplicantInfo.Id}" id="linkhobbies"> <i class="fa"></i> <span>Interests and Hobbies</span> </apex:outputLink>
+        </li>
+         <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '017'), 'complete', '')} {!Your_Family}" value="/apex/apc_ap_main_family_info?id={!ApplicantInfo.Id}" id="linkfamily"> <i class="fa"></i> <span>Your Family</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '026'), 'complete', '')} {!IF(contains(applicantinfo.PageStatus_Started__c, '026'), 'started', '')} {!Essays}" value="/apex/apc_ap_main_essays?id={!ApplicantInfo.Id}" id="linkessays"> <i class="fa"></i> <span>Match Questions</span> </apex:outputLink>
+        </li>
+          <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '031'), 'complete', '')} {!Photo_Uploads}" value="/apex/apc_ap_main_media?id={!ApplicantInfo.Id}&docType=Participant-Photo" id="linkmedia"> <i class="fa"></i> <span>Photo Album</span> </apex:outputLink>
+        </li>
+         <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '036'), 'complete', '')} {!Video_Upload}" value="/apex/apc_ap_main_video?id={!ApplicantInfo.Id}&docType=Introductory-Video" id="linkvideo"> <i class="fa"></i> <span>Video Resume</span> </apex:outputLink>
+        </li>
+        </ul>
+         </li><!--  end first tier -->
+        
+        
+        <li class="first-tier panel">
+       <a class="title block" data-toggle="collapse" href="#tierexp" data-parent="#apcmain">Your Experience</a>
+        <ul id="tierexp" class="sec-tier collapse {!tierexp}">
+          <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '020'), 'complete', '')} {!Training}" value="/apex/apc_ap_main_training?id={!ApplicantInfo.Id}&docType=Transcripts" id="linktraining"> <i class="fa"></i> <span>Education and Training</span> </apex:outputLink>
+        </li>
+         <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '021'), 'complete', '')} {!IF(contains(applicantinfo.PageStatus_Started__c, '021'), 'started', '')} {!Experience}" value="/apex/apc_ap_main_experience?id={!ApplicantInfo.Id}" id="linkexperience"> <i class="fa"></i> <span>Childcare Experience</span> </apex:outputLink>
+        </li>
+         <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '019'), 'complete', '')} {!Swimming_Experience}" value="/apex/apc_ap_main_swimming_experience?id={!ApplicantInfo.Id}&docType=Lifeguard" id="linkswimexperience"> <i class="fa"></i> <span>Swimming Experience</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '018'), 'complete', '')} {!Driving_Experience}" value="/apex/apc_ap_main_driving_experience?id={!ApplicantInfo.Id}&docType=Drivers-License" id="linkdriveexperience"> <i class="fa"></i> <span>Driving Experience</span> </apex:outputLink>
+        </li>
+        </ul>
+        </li><!--  end first tier -->
+        
+        <li class="first-tier panel">
+        <a class="title block" data-toggle="collapse" href="#tierhealth" data-parent="#apcmain">Your Health</a>
+        <ul id="tierhealth" class="sec-tier collapse {!tierhealth}"> 
+         <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '016'), 'complete', '')} {!Health_Overview}" value="/apex/apc_ap_basic_health_info?id={!ApplicantInfo.Id}" id="linkhealthmain"> <i class="fa"></i> <span>Health Overview</span> </apex:outputLink>
+        </li>
+        <!-- B-02241
+         <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '027'), 'complete', '')} {!Medical_History}" value="/apex/apc_ap_main_illness_history?id={!ApplicantInfo.Id}" id="linkillness"> <i class="fa"></i> <span>Medical History</span> </apex:outputLink>
+        </li>
+         -->
+        <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '028'), 'complete', '')} {!Health_Info}" value="/apex/apc_ap_main_health_info?id={!ApplicantInfo.Id}" id="linkhealthinfo"> <i class="fa"></i> <span>Medical Release</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '029'), 'complete', '')}  {!Physician_Info}" value="/apex/apc_ap_main_physician_form?id={!ApplicantInfo.Id}&docType=Doctor" id="linkphysician"> <i class="fa"></i> <span>Physician Review</span> </apex:outputLink>
+        </li>
+       </ul>
+       </li><!--  end first tier -->
+      
+        
+      <li class="first-tier panel">
+        <a class="title block" data-toggle="collapse" href="#tierprg" data-parent="#apcmain">Your Program</a>
+        <ul id="tierprg" class="sec-tier collapse {!tierprg}">   
+          <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '014'), 'complete', '')} {!Program_Eligibility}" value="/apex/apc_ap_basic_eligibility?id={!ApplicantInfo.Id}" id="linkprogramelegmain"> <i class="fa"></i> <span>Eligibility</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '015'), 'complete', '')} {!Program_Preferences}" value="/apex/apc_ap_basic_program_preferences?id={!ApplicantInfo.Id}" id="linkprogramprefmain"> <i class="fa"></i> <span>Program Preferences</span> </apex:outputLink>
+        </li>
+         <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '025'), 'complete', '')} {!IF(contains(applicantinfo.PageStatus_Started__c, '025'), 'started', '')} {!References}" value="/apex/apc_ap_main_references?id={!ApplicantInfo.Id}" id="linkreferences"> <i class="fa"></i> <span>Personal Reference</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '034'), 'complete', '')}  {!Visa_Info}" value="/apex/apc_ap_main_visa_info?id={!ApplicantInfo.Id}&docType=Passport" id="linkvisa"> <i class="fa"></i> <span>Your Travel/Passport</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '037'), 'complete', '')}  {!BGC_Info}" value="/apex/apc_ap_main_bgc_form?id={!ApplicantInfo.Id}&docType=BackgroundCheck" id="linkbgc"> <i class="fa"></i> <span>Background Check</span> </apex:outputLink>
+        </li>
+        <apex:outputText rendered="{!IF($Profile.Name == 'OCPM Agent Portal', false, true)}">
+        <li>
+        <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '043'), 'complete', '')}  {!Reference_Inter}" value="/apex/apc_ap_main_interview_status?id={!ApplicantInfo.Id}" id="linrefint"> <i class="fa"></i> <span>Interview</span> </apex:outputLink>
+        </li>
+        </apex:outputText>
+        <!-- 
+        <li>
+          <apex:outputLink styleClass="{!IF(ApplicantInfo.Terms_Accepted__c==True, 'complete', '')} {!Program_Agreement}" value="/apex/apc_ap_main_agreements?id={!ApplicantInfo.Id}" id="linkagreements"> <i class="fa"></i> <span>Agreements</span> </apex:outputLink>
+        </li>
+         -->
+        </ul>
+        </li><!--  end first tier -->
+        
+        <apex:outputText rendered="{!IF($Profile.Name == 'OCPM Agent Portal', true, false)}">
+        <li class="first-tier panel">
+        <a class="title block" data-toggle="collapse" href="#partneronly" data-parent="#apcmain">For Partners Only</a>
+        <ul id="partneronly" class="sec-tier collapse {!partneronly}"> 
+         
+         <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '038'), 'complete', '')}  {!p_Interview}" value="/apex/apc_ap_main_interview?id={!ApplicantInfo.Id}" id="linkinterview"> <i class="fa"></i> <span>In-Person Interview</span> </apex:outputLink>
+         </li>
+         <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '042'), 'complete', '')}  {!Reference_Check}" value="/apex/apc_ap_main_reference_check?id={!ApplicantInfo.Id}" id="linkreferenceCheck"> <i class="fa"></i> <span>Reference Check</span> </apex:outputLink>
+         </li>
+         <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '041'), 'complete', '')}  {!Health_Review}" value="/apex/apc_ap_main_health_review?id={!ApplicantInfo.Id}&docType=Doctor-Partner" id="linkhealthreview"> <i class="fa"></i> <span>Health Review</span> </apex:outputLink>
+         </li>
+         <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '046'), 'complete', '')}  {!BGC_Review}" value="/apex/apc_ap_main_bgc_review?id={!ApplicantInfo.Id}&docType=BackgroundCheck" id="bgcreview"> <i class="fa"></i> <span>Background Check Review</span> </apex:outputLink>
+         </li>
+         <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '047'), 'complete', '')}  {!Second_Review}" value="/apex/apc_ap_main_secondary_review?id={!ApplicantInfo.Id}&docType=Secondary-School-Diploma" id="secondreview"> <i class="fa"></i> <span>Secondary School Review</span> </apex:outputLink>
+         </li>
+         <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '049'), 'complete', '')}  {!Other_Review}" value="/apex/apc_ap_main_misc_review?id={!ApplicantInfo.Id}" id="otherReview"> <i class="fa"></i> <span>Other Review</span> </apex:outputLink>
+         </li>
+         
+       </ul>
+       </li>
+		</apex:outputText>
+
+		<!--  For PT Submission to APC -->
+		<apex:outputText rendered="{!proceed == 'allowed' && $Profile.Name !='OCPM Agent Portal'}">
+        <a data-toggle="modal" data-target="#appsubmitconfirm" class="btn btn-ultimate btn-lg btn-block vs2 margin-t4" id="complinkmain">
+        <span>Proceed to Submit</span>
+      </a>
+		</apex:outputText>
+		
+		<apex:outputText rendered="{!proceed != 'allowed' && $Profile.Name !='OCPM Agent Portal'}">
+		<div class="margin-t4" data-toggle="popover" data-content="You will not be able to submit your application until you see a green checkmark next to each section.">
+        <a class="btn btn-link btn-lg btn-block vs2 disabled" id="complinkmain">
+        <span>Proceed to Submit</span>
+      </a>
+      </div>
+		</apex:outputText>
+		<!--  For PT Submission to APC -->
+
+		
+		<!--  For Partner Submission to APC -->
+		<apex:outputText rendered="{!$Profile.Name =='OCPM Agent Portal'}">
+		
+		
+		
+		
+	
+		
+		<div class="center-text margin-t4">
+		<div class="btn-group left-text">
+  <a class="btn btn-lg btn-default" href="#"><i class="fa fa-pencil fa-fw"></i> Available Actions</a>
+  <a class="btn btn-lg btn-default dropdown-toggle" data-toggle="dropdown" href="#">
+    <span class="fa fa-caret-down"></span></a>
+     <ul class="dropdown-menu">
+    <apex:outputText rendered="{!ptproceed == 'allowed'}">
+     <li>
+	 <a href="apc_ap_main_pr_approve?id={!applicantInfo.Id}">Approve Application</a>
+	</li>
+	 </apex:outputText>
+    
+    <li> 
+    <a href="apc_ap_main_pr_decline?id={!applicantInfo.Id}">Decline Application</a>
+    </li>
+ 
+   	<apex:outputText rendered="{!applicantInfo.Application_Stage__c != 'Submitted'}">
+   	<li> 
+		  <a>Request Edits</a>
+		    </li>
+		   	</apex:outputText>
+		   	 
+	<apex:outputText rendered="{!applicantInfo.Application_Stage__c == 'Submitted'}">
+	<li>
+		    <a href="apc_ap_main_pr_review?id={!applicantInfo.Id}">Request Edits</a>
+		   </li>
+		    </apex:outputText>
+    </ul>
+</div>
+</div>
+  	<p class="center-text margin-b2 margin-t1">
+		<apex:outputText rendered="{!ptproceed != 'allowed'}">
+   <em>You cannot approve this application until your review is complete.</em>
+    </apex:outputText>
+		</p> 
+		
+		</apex:outputText>
+		
+	
+		
+      </ul>
+      <!-- 
+      <apex:commandlink styleClass="btn btn-primary btn-lg" action="{!SubmitApp}" immediate="TRUE"  id="yourLinkButton" rerender="">
+      <apex:param name="nextPage" value="apc_ap_main_completion" />
+      <apex:param name="viewpage" value="true"/>
+      <apex:param name="reDirectPage" value="true"/>
+      <apex:commandButton value="Submit Aplication" id="yourButton"/>
+      </apex:commandlink>
+       -->
+         
+     <script>
+      var j$ = jQuery.noConflict();
+    //j$('.first-tier.active .title').removeAttr('data-toggle'); 
+    //j$('.first-tier.active .sec-tier').show(); 
+    //j$('.first-tier').hover(function(){
+    //j$(this).find('.title').click();
+    //});   
+</script>
+    </apex:outputText>
+    
+    
+    <apex:outputText rendered="{!applicantInfo.Application_Level__c=='Main' && applicantInfo.Application_Type__c=='Extension'}"> 
+    <!-- 
+    <apex:outputText rendered="{!applicantInfo.Application_Level__c=='Main' && applicantInfo.Application_Type__c=='Extension' && applicantInfo.Extension_Preferences__c=='Existing Family'}"> 
+     --> 
+      <!-- Main App Menu EXTENSION   -->
+      
+      <ul class="nav nav-list vs1 linear">
+        <li>
+          <apex:outputLink disabled="{! IF(contains(applicantinfo.PageStatus_Complete__c, '035'), 'false', 'true')}" styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '035'), 'complete', '')} {!Proof_Education}" value="/apex/apc_ap_main_education_proof?id={!ApplicantInfo.Id}&docType=Proof-of-Education" id="ExlinkProofEducation"> <i class="fa"></i> <span>Proof Of Education</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink disabled="{! IF(contains(applicantinfo.PageStatus_Complete__c, '035'), 'false', 'true')}" styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '013'), 'complete', '')} {!Contact_Information}" value="/apex/apc_ap_basic_contact_info?id={!ApplicantInfo.Id}" id="Exlinkcontactinfomain"> <i class="fa"></i> <span>Contact Information</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink disabled="{! IF(contains(applicantinfo.PageStatus_Complete__c, '013'), 'false', 'true')}" styleClass="{!IF(ApplicantInfo.Terms_Accepted__c==True || $CurrentPage.parameters.event=='SignComplete', 'complete', '')} {!Program_Agreement}" value="/apex/apc_ap_main_ext_agreements?id={!ApplicantInfo.Id}" id="Exlinkagreements"> <i class="fa"></i> <span>Agreements</span> </apex:outputLink>
+        </li>
+        <!--
+        <apex:outputText rendered="{!ApplicantInfo.Extension_DOS_Fee_Indicated__c == 'No'}"> 
+        <li>"test"
+        	<apex:outputLink disabled="{!IF(ApplicantInfo.Terms_Accepted__c==True, 'false', 'true')}" styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '032'), 'complete', '')} {!Main_Payment}" value="/apex/apc_ap_main_payment?id={!ApplicantInfo.Id}" id="Exlinkmainpayment"> <i class="fa"></i> <span>Payment</span> </apex:outputLink>
+        </li>
+        </apex:outputText>
+        -->
+        <apex:outputText rendered="{!ApplicantInfo.Extension_DOS_Fee_Indicated__c == 'Yes'}"> 
+        <li>
+          <apex:outputLink disabled="{! IF(ApplicantInfo.Terms_Accepted__c==True , 'false', 'true')}" styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '033'), 'complete', '')}  {!Main_Completion}" value="/apex/apc_ap_main_completion?id={!ApplicantInfo.Id}" id="Exlinkmaincompletion1"> <i class="fa"></i> <span>Review and Submit</span> </apex:outputLink>
+        </li>
+        </apex:outputText>
+        
+        <apex:outputText rendered="{!ApplicantInfo.Extension_DOS_Fee_Indicated__c == 'No' || ApplicantInfo.Extension_DOS_Fee_Indicated__c == null}"> 
+        <li>
+          <apex:outputLink disabled="{!IF(contains(applicantinfo.PageStatus_Complete__c, '032'), 'false', 'true')}" styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '033'), 'complete', '')}  {!Main_Completion}" value="/apex/apc_ap_main_completion?id={!ApplicantInfo.Id}" id="Exlinkmaincompletion"> <i class="fa"></i> <span>Review and Submit</span> </apex:outputLink>
+        </li>
+        </apex:outputText>
+        
+      </ul>
+    </apex:outputText>
+    
+     <apex:outputText rendered="{!applicantInfo.Application_Level__c=='Main' && applicantInfo.Application_Type__c=='Renewal'}"> 
+     <!-- 
+     <apex:outputText rendered="{!applicantInfo.Application_Level__c=='Main' && applicantInfo.Application_Type__c=='Extension' && applicantInfo.Extension_Preferences__c=='New Family'}"> 
+      -->
+      <!-- Main App Menu RENEWAL  -->
+      
+      <ul class="nav nav-list vs1 linear">
+        <li>
+          <apex:outputLink disabled="{! IF(contains(applicantinfo.PageStatus_Complete__c, '035'), 'false', 'true')}" styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '035'), 'complete', '')} {!Proof_Education}" value="/apex/apc_ap_main_education_proof?id={!ApplicantInfo.Id}&docType=Proof-of-Education" id="ExNlinkProofEducation"> <i class="fa"></i> <span>Proof Of Education</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink disabled="{! IF(contains(applicantinfo.PageStatus_Complete__c, '035'), 'false', 'true')}" styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '013'), 'complete', '')} {!Contact_Information}" value="/apex/apc_ap_basic_contact_info?id={!ApplicantInfo.Id}" id="ExNlinkcontactinfomain"> <i class="fa"></i> <span>Contact Information</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink disabled="{! IF(contains(applicantinfo.PageStatus_Complete__c, '013'), 'false', 'true')}" styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '015'), 'complete', '')} {!Program_Preferences}" value="/apex/apc_ap_basic_program_preferences?id={!ApplicantInfo.Id}" id="Exlinkprogramprefmain"> <i class="fa"></i> <span>Program Preferences</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink disabled="{! IF(contains(applicantinfo.PageStatus_Complete__c, '015'), 'false', 'true')}" styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '018'), 'complete', '')} {!Driving_Experience}" value="/apex/apc_ap_main_driving_experience?id={!ApplicantInfo.Id}&docType=Drivers-License" id="Exlinkdriveexperience"> <i class="fa"></i> <span>Driving Experience</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink disabled="{! IF(contains(applicantinfo.PageStatus_Complete__c, '018'), 'false', 'true')}" styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '050'), 'complete', '')} {!AuPairExperience}" value="/apex/apc_ap_main_add_aupair_experience?id={!ApplicantInfo.Id}" id="Exlinkaupairexperience"> <i class="fa"></i> <span>Childcare Experience</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink disabled="{! IF(contains(applicantinfo.PageStatus_Complete__c, '050'), 'false', 'true')}" styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '024'), 'complete', '')} {!Interests_Hobbies}" value="/apex/apc_ap_main_interests?id={!ApplicantInfo.Id}" id="Exlinkhobbies"> <i class="fa"></i> <span>Interests and Hobbies</span> </apex:outputLink>
+        </li>
+         <li>
+          <apex:outputLink disabled="{! IF(contains(applicantinfo.PageStatus_Complete__c, '024'), 'false', 'true')}" styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '026'), 'complete', '')} {!IF(contains(applicantinfo.PageStatus_Started__c, '026'), 'started', '')} {!Essays}" value="/apex/apc_ap_main_essays?id={!ApplicantInfo.Id}" id="Exlinkessays"> <i class="fa"></i> <span>Match Questions</span> </apex:outputLink>
+        </li>
+         <li>
+          <apex:outputLink disabled="{! IF(contains(applicantinfo.PageStatus_Complete__c, '026'), 'false', 'true')}" styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '031'), 'complete', '')} {!Photo_Uploads}" value="/apex/apc_ap_main_media?id={!ApplicantInfo.Id}&docType=Participant-Photo" id="Exlinkmedia"> <i class="fa"></i> <span>Photo Uploads</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink disabled="{! IF(contains(applicantinfo.PageStatus_Complete__c, '031'), 'false', 'true')}" styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '036'), 'complete', '')} {!Video_Upload}" value="/apex/apc_ap_main_video?id={!ApplicantInfo.Id}&docType=Introductory-Video" id="Exlinkvideo"> <i class="fa"></i> <span>Video Upload</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink disabled="{! IF(contains(applicantinfo.PageStatus_Complete__c, '036'), 'false', 'true')}" styleClass="{!IF(ApplicantInfo.Terms_Accepted__c==True || ($CurrentPage.parameters.event='SignComplete'), 'complete', '')} {!Program_Agreement}" value="/apex/apc_ap_main_ext_agreements?id={!ApplicantInfo.Id}" id="ExNlinkagreements"> <i class="fa"></i> <span>Agreements</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink disabled="{!IF(ApplicantInfo.Terms_Accepted__c==True, 'false', 'true')}" styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '032'), 'complete', '')} {!Main_Payment}" value="/apex/apc_ap_main_payment?id={!ApplicantInfo.Id}" id="ExlNinkmainpayment"> <i class="fa"></i> <span>Payment</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink disabled="{! IF(contains(applicantinfo.PageStatus_Complete__c, '032'), 'false', 'true')}" styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '033'), 'complete', '')}  {!Main_Completion}" value="/apex/apc_ap_main_completion?id={!ApplicantInfo.Id}" id="ExNlinkmaincompletion"> <i class="fa"></i> <span>Review and Submit</span> </apex:outputLink>
+        </li>
+      </ul>
+    </apex:outputText>
+
+<div id="appsubmitconfirm" class="modal vs1 fade in">
+<div class="modal-dialog">
+<div class="modal-content">
+<a class="closebtn" data-dismiss="modal">
+<span class="fa-stack fa-lg ">
+<i class="fa fa-circle fa-stack-2x"></i>
+<i class="fa fa-times fa-stack-1x fa-inverse"></i>
+</span>
+</a>
+<div class="modal-body">
+<p class="lead">This will complete your application and you will not be able to return to it for further edits.</p>
+<div class="margin-t4">
+<apex:outputLink styleClass="btn btn-ultimate btn-lg margin-r1" value="/apex/apc_ap_main_submit?id={!applicantInfo.Id}" id="understandbutton">I understand</apex:outputLink>           
+<a class="btn btn-default btn-lg" href="#" data-dismiss="modal">Go Back</a>
+</div>
+</div> <!--  end modal body -->
+</div> <!--  end modal content -->
+</div> <!--  end modal dialog -->
+</div> <!-- end modal -->
+
+ <!-- </apex:form> -->   
+</apex:component>

@@ -1,0 +1,39 @@
+<apex:component controller="MyMatchesController">   
+	<h3 class="badge-title">Your Interviews 
+	<apex:outputLink value="/IGI_PT_MyInterviews" styleclass="badge-view-all" rendered="{!accInfo.Type == 'Participant'}"><i class="icon-chevron-right"></i> View All</apex:outputLink>
+		<apex:outputLink value="/IGI_HC_MyInterviews" styleclass="badge-view-all" rendered="{!accInfo.Type == 'Host Company'}"><i class="icon-chevron-right"></i> View All</apex:outputLink>
+	
+	</h3>
+    <div class="badge-content">
+     	<apex:form >
+     		
+       		<apex:outputLabel rendered="{!IF(interviewsList.Size > 0, false, true)}"><span class="no-records">You do not have any upcoming interviews.</span></apex:outputLabel>
+       	    
+	     	<apex:repeat value="{!InterviewsList}" var="item">
+	     		<p> <strong><apex:outPutText value="{!item.Position_Name__r.Name}"></apex:outPutText>&nbsp;Position</strong><br/>
+	     		 <apex:outPutText value="{!item.Position_Name__r.Host_Company_Id__r.Name}"></apex:outPutText><br/>
+	     		 
+		     		<apex:outputText value="Date/Time: {0,date, MMM' 'dd', 'yyyy}">
+	    				<apex:param value="{!item.Interview_Date__c}" /> 
+					</apex:outputText><br/>
+                    
+                    <!-- 
+	     			Depending on the Account Type (PT or HC), different links should be displayed.
+	     			<apex:commandLink styleClass="inline-link" action="{!navigator}" rendered="{!accountInfo.Type__c == 'Participant'}">
+						<apex:param name="nextPage" value="/IGI_PT_Match_Details"/> 
+						<apex:param name="mId" value="{!item.Id}" />
+						<apex:commandButton value="See Details" />			
+				</apex:commandLink>
+				<apex:commandLink styleClass="inline-link" action="{!navigator}" rendered="{!accountInfo.Type__c == 'Host Company'}">
+						<apex:param name="nextPage" value="/IGI_HC_MatchDetails" /> 
+						<apex:param name="mId" value="{!item.Id}" assignTo="{!mId}" /> 
+						<apex:commandButton value="See Details" />			
+				</apex:commandLink>
+	     		 -->
+	     		
+	     		</p>
+	     		
+	     	</apex:repeat> 
+     	</apex:form> 
+    </div> 
+</apex:component>

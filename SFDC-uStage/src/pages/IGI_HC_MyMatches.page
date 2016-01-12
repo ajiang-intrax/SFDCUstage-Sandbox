@@ -1,0 +1,219 @@
+<apex:page docType="html-5.0" standardController="Engagement__c" extensions="IGI_HC_Controller" standardStylesheets="true" showHeader="false">
+<apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper">
+          <apex:form >   
+             <div class="page-header clearfix">
+                 <h1>Your Matches</h1>
+            </div>
+            
+                     
+            <div class="white-box clearfix">
+                  <c:HC_Sub_Navigation />
+             
+<div class="panel full clearfix">
+    <div class="panel two_thirds">
+                    <p> 
+                       Below is a list of internship candidates with whom your company has been matched. Click on the name of each individual for more details.
+                    </p>
+            </div>    
+    </div>
+                   
+<div class="panel full clearfix">
+                        <apex:pageBlock rendered="{!IF(matchInfoList.Size > 0, true, false)}">
+                              <apex:pageBlockTable styleClass="pageblocktable" value="{!matchInfoList}" var="item">
+                                     
+                                
+                                   <apex:column headerValue="Name" > 
+                                       <apex:commandlink styleClass="inline-link" action="{!navigator}" rendered="{!if(item.Interview_Status__c=='New',true,false)}">
+                                            <apex:param name="nextPage" value="/apex/SC_Scheduling?detail=true&Sched=true"/>
+                                              <apex:param name="detail" value="true" assignTo="{!detail}"/>
+                                               <apex:param name="Sched" value="true" assignTo="{!Sched}" /> 
+                                            <apex:param name="mId" value="{!item.Id}" assignTo="{!mId}"/>                                       
+                                            <apex:commandButton value="{!item.Participant_Id__r.LastName}, {!item.Participant_Id__r.FirstName}" />                                           
+                                        </apex:commandlink>
+                                        <apex:commandlink styleClass="inline-link" action="{!navigator}" rendered="{!if(item.Interview_Status__c=='Initiated',true,false)}">
+                                            <apex:param name="nextPage" value="/apex/SC_Scheduling?detail=true&reSched=true&initCancel=true"/>
+                                              <apex:param name="detail" value="true" assignTo="{!detail}"/>
+                                               <apex:param name="reSched" value="true" assignTo="{!reSched}" />
+                                                <apex:param name="initCancel" value="true" assignTo="{!initCancel}" />
+                                            <apex:param name="mId" value="{!item.Id}" assignTo="{!mId}"/>                                       
+                                            <apex:commandButton value="{!item.Participant_Id__r.LastName}, {!item.Participant_Id__r.FirstName}" />                                           
+                                        </apex:commandlink>
+                                        <apex:commandlink styleClass="inline-link" action="{!navigator}" rendered="{!if(item.Interview_Status__c=='Scheduled',true,false)}">
+                                            <apex:param name="nextPage" value="/apex/SC_Scheduling?detail=true&schreSched=true&schCancel=true"/>
+                                              <apex:param name="detail" value="true" assignTo="{!detail}"/>
+                                               <apex:param name="schreSched" value="true" assignTo="{!schreSched}" />
+                                                <apex:param name="schCancel" value="true" assignTo="{!schCancel}" />
+                                            <apex:param name="mId" value="{!item.Id}" assignTo="{!mId}"/>                                       
+                                            <apex:commandButton value="{!item.Participant_Id__r.LastName}, {!item.Participant_Id__r.FirstName}" />                                           
+                                        </apex:commandlink>
+                                        <apex:commandlink styleClass="inline-link" action="{!navigator}" rendered="{!if(item.Interview_Status__c=='Awaiting Decision',true,false)}">
+                                            <apex:param name="nextPage" value="/apex/SC_Scheduling?detail=true&MakOff=true"/>
+                                             <apex:param name="MakOff" value="true" assignTo="{!MakOff}" />
+                                              <apex:param name="detail" value="true" assignTo="{!detail}"/>
+                                            <apex:param name="mId" value="{!item.Id}" assignTo="{!mId}"/>                                       
+                                            <apex:commandButton value="{!item.Participant_Id__r.LastName}, {!item.Participant_Id__r.FirstName}" />                                           
+                                        </apex:commandlink>
+                                         <apex:commandlink styleClass="inline-link" action="{!navigator}" rendered="{!if(item.Interview_Status__c=='Company Declined Interview' || item.Interview_Status__c=='Participant Declined Interview' || item.Interview_Status__c=='Company No Show' || item.Interview_Status__c=='Participant No Show' || item.Interview_Status__c=='No Offer' || item.Interview_Status__c=='Position Offered' || item.Interview_Status__c=='Position Accepted' || item.Interview_Status__c=='Position Declined' || item.Interview_Status__c == 'On Hold' ,true,false)}">
+                                            <apex:param name="nextPage" value="/apex/SC_Scheduling?detail=true"/>
+                                            
+                                              <apex:param name="detail" value="true" assignTo="{!detail}"/>
+                                            <apex:param name="mId" value="{!item.Id}" assignTo="{!mId}"/>                                       
+                                            <apex:commandButton value="{!item.Participant_Id__r.LastName}, {!item.Participant_Id__r.FirstName}" />                                           
+                                        </apex:commandlink>
+                            </apex:column>
+                                   <apex:column value="{!item.Interview_Status__c}" headerValue="Status"/>
+                                  <apex:column value="{!item.Position_Name__r.Name}" headerValue="Position"/>
+                                    <apex:column headerValue="Action">
+                                 
+                                      
+                                        <apex:commandlink styleClass="inline-link" action="{!navigator}" rendered="{!if(item.Interview_Status__c=='New',true,false)}">
+                                        
+                                            <apex:param name="nextPage" value="/apex/SC_Scheduling?Sched=true"/>
+                                            <apex:param name="mId" value="{!item.Id}" assignTo="{!mId}" />  
+                                            <apex:param name="Sched" value="true" assignTo="{!Sched}" />  
+                                            <apex:param name="compOffset" value="" assignTo="{!compOffset}" />
+                                            <apex:param name="compOffset1" value="" assignTo="{!compOffset1}" />
+                                            <apex:param name="compOffset2" value="" assignTo="{!compOffset2}" />
+                                            <apex:commandButton value="Schedule Interview" />                                           
+                                        </apex:commandlink>
+                                        <apex:outputtext value=" - " rendered="{!if(item.Interview_Status__c=='New',true,false)}"/>
+                                    
+                                      
+                                        <apex:commandlink styleClass="inline-link" action="{!navigator}" rendered="{!if(item.Interview_Status__c=='New',true,false)}">
+                                        
+                                            <apex:param name="nextPage" value="/apex/SC_Scheduling"/>
+                                            <apex:param name="mId" value="{!item.Id}" assignTo="{!mId}" /> 
+                                            <apex:param name="remove" value="true" assignTo="{!remove}" /> 
+                                            <apex:param name="compOffset" value="" assignTo="{!compOffset}" />
+                                            <apex:param name="compOffset1" value="" assignTo="{!compOffset1}" />
+                                            <apex:param name="compOffset2" value="" assignTo="{!compOffset2}" />
+                                            <apex:commandButton value="Remove Candidate" />                                         
+                                        </apex:commandlink>
+                                        
+                                         <apex:commandlink styleClass="inline-link" action="{!navigator}" rendered="{!if(item.Interview_Status__c=='Initiated',true,false)}">
+                                        
+                                            <apex:param name="nextPage" value="/apex/SC_Scheduling?reSched=true" />
+                                            <apex:param name="mId" value="{!item.Id}" assignTo="{!mId}" />  
+                                            <apex:param name="reSched" value="true" assignTo="{!reSched}" />
+                                            <apex:param name="compOffset" value="" assignTo="{!compOffset}" />
+                                            <apex:param name="compOffset1" value="" assignTo="{!compOffset1}" />
+                                            <apex:param name="compOffset2" value="" assignTo="{!compOffset2}" />
+                                            <apex:commandButton value="Reschedule" />                                           
+                                        </apex:commandlink>
+                                        <apex:outputtext value=" - " rendered="{!if(item.Interview_Status__c=='Initiated',true,false)}"/>
+                                    
+                                      
+                                        <apex:commandlink styleClass="inline-link" action="{!navigator}" rendered="{!if(item.Interview_Status__c=='Initiated',true,false)}">
+                                        
+                                            <apex:param name="nextPage" value="/apex/SC_Scheduling?initCancel=true" />
+                                            <apex:param name="mId" value="{!item.Id}" assignTo="{!mId}" />  
+                                             <apex:param name="initCancel" value="true" assignTo="{!initCancel}" />
+                                            <apex:param name="compOffset" value="" assignTo="{!compOffset}" />
+                                            <apex:param name="compOffset1" value="" assignTo="{!compOffset1}" />
+                                            <apex:param name="compOffset2" value="" assignTo="{!compOffset2}" />
+                                            <apex:commandButton value="Cancel Interview" />                                         
+                                        </apex:commandlink>
+                                         <apex:outputtext value=" - " rendered="{!if(item.Interview_Status__c=='Initiated',true,false)}"/>
+                                    
+                                      
+                                        <apex:commandlink styleClass="inline-link" action="{!navigator}" rendered="{!if(item.Interview_Status__c=='Initiated',true,false)}">
+                                        
+                                            <apex:param name="nextPage" value="/apex/SC_Scheduling" assignTo="{!nextPage}"/>
+                                            <apex:param name="mId" value="{!item.Id}" assignTo="{!mId}" /> 
+                                          <apex:param name="remove" value="true" assignTo="{!remove}" /> 
+                                            <apex:param name="compOffset" value="" assignTo="{!compOffset}" />
+                                            <apex:param name="compOffset1" value="" assignTo="{!compOffset1}" />
+                                            <apex:param name="compOffset2" value="" assignTo="{!compOffset2}" />
+                                            <apex:commandButton value="Remove Candidate" />                                         
+                                        </apex:commandlink>
+                                      
+                                      
+                                         <apex:commandlink styleClass="inline-link" action="{!navigator}" rendered="{!if(item.Interview_Status__c=='Scheduled',true,false)}">
+                                        
+                                            <apex:param name="nextPage" value="/apex/SC_Scheduling?schreSched=true" />
+                                            <apex:param name="mId" value="{!item.Id}" assignTo="{!mId}" />  
+                                            <apex:param name="schreSched" value="true" assignTo="{!schreSched}" />
+                                            <apex:param name="compOffset" value="" assignTo="{!compOffset}" />
+                                            <apex:param name="compOffset1" value="" assignTo="{!compOffset1}" />
+                                            <apex:param name="compOffset2" value="" assignTo="{!compOffset2}" />
+                                            <apex:commandButton value="Reschedule" />                                           
+                                        </apex:commandlink>
+                                        <apex:outputtext value=" - " rendered="{!if(item.Interview_Status__c=='Scheduled',true,false)}"/>
+                                    
+                                      
+                                        <apex:commandlink styleClass="inline-link" action="{!navigator}" rendered="{!if(item.Interview_Status__c=='Scheduled',true,false)}">
+                                        
+                                            <apex:param name="nextPage" value="/apex/SC_Scheduling?schCancel=true" />
+                                            <apex:param name="mId" value="{!item.Id}" assignTo="{!mId}" />  
+                                             <apex:param name="schCancel" value="true" assignTo="{!schCancel}" />
+                                            <apex:param name="compOffset" value="" assignTo="{!compOffset}" />
+                                            <apex:param name="compOffset1" value="" assignTo="{!compOffset1}" />
+                                            <apex:param name="compOffset2" value="" assignTo="{!compOffset2}" />
+                                            <apex:commandButton value="Cancel Interview" />                                         
+                                        </apex:commandlink>
+                                         <apex:outputtext value=" - " rendered="{!if(item.Interview_Status__c=='Scheduled',true,false)}"/>
+                                    
+                                      
+                                        <apex:commandlink styleClass="inline-link" action="{!navigator}" rendered="{!if(item.Interview_Status__c=='Scheduled',true,false)}">
+                                        
+                                            <apex:param name="nextPage" value="/apex/SC_Scheduling" assignTo="{!nextPage}"/>
+                                            <apex:param name="mId" value="{!item.Id}" assignTo="{!mId}" /> 
+                                            <apex:param name="remove" value="true" assignTo="{!remove}" /> 
+                                            <apex:param name="compOffset" value="" assignTo="{!compOffset}" />
+                                            <apex:param name="compOffset1" value="" assignTo="{!compOffset1}" />
+                                            <apex:param name="compOffset2" value="" assignTo="{!compOffset2}" />
+                                            <apex:commandButton value="Remove Candidate" />                                         
+                                        </apex:commandlink>
+                                      
+                                            <apex:commandlink styleClass="inline-link" action="{!navigator}" rendered="{!if(item.Interview_Status__c=='Awaiting Decision',true,false)}">
+                                        
+                                            <apex:param name="nextPage" value="/apex/IGI_HC_MyMatches"/>
+                                            <apex:param name="mId" value="{!item.Id}" assignTo="{!mId}" />  
+                                            <apex:param name="noShow" value="true" assignTo="{!noShow}" />
+                                            <apex:param name="compOffset" value="" assignTo="{!compOffset}" />
+                                            <apex:param name="compOffset1" value="" assignTo="{!compOffset1}" />
+                                            <apex:param name="compOffset2" value="" assignTo="{!compOffset2}" />
+                                            <apex:commandButton value="No Show" />                                           
+                                        </apex:commandlink>
+                                        <apex:outputtext value=" - " rendered="{!if(item.Interview_Status__c=='Awaiting Decision',true,false)}"/>
+                                    
+                                      
+                                        <apex:commandlink styleClass="inline-link" action="{!navigator}" rendered="{!if(item.Interview_Status__c=='Awaiting Decision',true,false)}">
+                                        
+                                            <apex:param name="nextPage" value="/apex/SC_Scheduling?MakOff=true"/>
+                                            <apex:param name="mId" value="{!item.Id}" assignTo="{!mId}" />  
+                                             <apex:param name="MakOff" value="true" assignTo="{!MakOff}" />
+                                            <apex:param name="compOffset" value="" assignTo="{!compOffset}" />
+                                            <apex:param name="compOffset1" value="" assignTo="{!compOffset1}" />
+                                            <apex:param name="compOffset2" value="" assignTo="{!compOffset2}" />
+                                            <apex:commandButton value="Make An Offer" />                                         
+                                        </apex:commandlink>
+                                         <apex:outputtext value=" - " rendered="{!if(item.Interview_Status__c=='Awaiting Decision',true,false)}"/>
+                                    
+                                      
+                                        <apex:commandlink styleClass="inline-link" action="{!navigator}" rendered="{!if(item.Interview_Status__c=='Awaiting Decision',true,false)}">
+                                        
+                                            <apex:param name="nextPage" value="/apex/SC_Scheduling"/>
+                                            <apex:param name="mId" value="{!item.Id}" assignTo="{!mId}" />  
+                                             <apex:param name="remove" value="true" assignTo="{!remove}" /> 
+                                            <apex:param name="compOffset" value="" assignTo="{!compOffset}" />
+                                            <apex:param name="compOffset1" value="" assignTo="{!compOffset1}" />
+                                            <apex:param name="compOffset2" value="" assignTo="{!compOffset2}" />
+                                            <apex:commandButton value="Remove Candidate" />                                         
+                                        </apex:commandlink>
+                                 
+                                   </apex:column>
+                              </apex:pageBlockTable>  
+                         </apex:pageBlock>
+                      </div> 
+
+                   </div>
+                
+            
+          </apex:form>
+      </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

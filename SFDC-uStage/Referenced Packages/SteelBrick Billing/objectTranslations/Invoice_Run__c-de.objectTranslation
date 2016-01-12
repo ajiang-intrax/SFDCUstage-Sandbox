@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>false</plural>
+        <value><!-- Invoice Run --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>true</plural>
+        <value><!-- Invoice Run --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>false</plural>
+        <value><!-- Invoice Run --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>true</plural>
+        <value><!-- Invoice Run --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>false</plural>
+        <value><!-- Invoice Run --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>true</plural>
+        <value><!-- Invoice Run --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>false</plural>
+        <value><!-- Invoice Run --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>true</plural>
+        <value><!-- Invoice Run --></value>
+    </caseValues>
+    <fields>
+        <label>Verarbeitete Konten</label>
+        <name>Accounts_Processed__c</name>
+    </fields>
+    <fields>
+        <label>Abschlusszeit</label>
+        <name>Completed_Time__c</name>
+    </fields>
+    <fields>
+        <label>Gutschriften erzeugt</label>
+        <name>CreditNotes_Generated__c</name>
+    </fields>
+    <fields>
+        <label>IException Log</label>
+        <name>Exception_Log__c</name>
+    </fields>
+    <fields>
+        <label>Rechnungsdatum</label>
+        <name>Invoice_Date__c</name>
+    </fields>
+    <fields>
+        <label>Steuerprogramm Rechnungslauf</label>
+        <name>Invoice_Run_Scheduler__c</name>
+        <relationshipLabel>Rechnungslauf</relationshipLabel>
+    </fields>
+    <fields>
+        <label>Rechnungen erzeugt</label>
+        <name>Invoices_Generated__c</name>
+    </fields>
+    <fields>
+        <label>Bestellungen verarbeitet</label>
+        <name>Jobs_Processed__c</name>
+    </fields>
+    <fields>
+        <label>Anfangszeit</label>
+        <name>Start_Time__c</name>
+    </fields>
+    <fields>
+        <label><!-- Status --></label>
+        <name>Status__c</name>
+        <picklistValues>
+            <masterLabel>Completed</masterLabel>
+            <translation><!-- Completed --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Failed</masterLabel>
+            <translation><!-- Failed --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Processing</masterLabel>
+            <translation><!-- Processing --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Started</masterLabel>
+            <translation><!-- Started --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label>Ausführungszieldatum</label>
+        <name>Target_Run_Date__c</name>
+    </fields>
+    <fields>
+        <label>Summe Rechnungsbetrag</label>
+        <name>Total_Invoice_Value__c</name>
+    </fields>
+    <gender><!-- Neuter --></gender>
+    <layouts>
+        <layout>Invoice Run Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- Invoice Run Name --></nameFieldLabel>
+    <webLinks>
+        <label>E-Mail Rechnungen an Benutzer</label>
+        <name>Email_Invoices_To_Users</name>
+    </webLinks>
+    <webLinks>
+        <label>Beitrag alle Rechnungen</label>
+        <name>Post_all_Invoices</name>
+    </webLinks>
+</CustomObjectTranslation>

@@ -1,0 +1,109 @@
+<apex:page applyBodyTag="false" applyHtmlTag="false" id="Application_Doc_Uploads" title="Documents Uploads | Intrax" standardStylesheets="false" showHeader="false" controller="IntraxPartnerPortalEngineController" action="{!checkLogin}">
+  <apex:composition template="intraxtemplate_vs3" >
+    <apex:define name="body">
+
+      <apex:form styleClass="form-vertical" id="form" >
+
+<div class="row margin-b2">
+        <div class="col-sm-9 center-text center-block">
+        
+        <apex:outputText rendered="{!IF($CurrentPage.parameters.AppId == null, false, true)}">
+        <h1>Document Review</h1>
+        <h2><em>for</em>&nbsp;<apex:outputText rendered="{!IF($CurrentPage.parameters.AppId == null, false, true)}" value="{!DocapplicationRecord.Name}"/></h2>
+        </apex:outputText>
+        
+        <apex:outputText rendered="{!IF($CurrentPage.parameters.AppId == null, true, false)}">
+        <h1>No Individual Application Selected</h1>
+        </apex:outputText>
+        
+        </div><!--  end column -->
+        </div><!--  end row -->
+
+ <div class="row margin-b2">
+  <div class="col-sm-9 center-block">          
+        <div class="btn-group">
+        <button class="btn btn-default dropdown-toggle" id="Upload" data-toggle="dropdown">Upload New Document <span class="caret"></span> </button>
+          <ul class="dropdown-menu">
+            <li>
+              <apex:outputlink rendered="{!IF(DocapplicationRecord.Intrax_Program__c == 'Internship' || DocapplicationRecord.Intrax_Program__c == 'Work Travel', true, false)}" value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.AppId}&orgid={!$Organization.Id}&docType=Participant-Photo&rType={!rType}&retparam={!retParam5}" id="Participant-Photo" target="_self" > <span>Participant Photo</span> </apex:outputlink>
+            </li>
+            <li>
+              <apex:outputlink rendered="{!IF(DocapplicationRecord.Intrax_Program__c == 'Internship' || DocapplicationRecord.Intrax_Program__c == 'Work Travel', true, false)}" value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.AppId}&orgid={!$Organization.Id}&docType=Participant-Eligibility-Form&rType={!rType}&retparam={!retParam5}" id="Participant-Eligibility-Form" target="_self" > <span>Participant Eligibility Form</span> </apex:outputlink>
+            </li>
+            <li>
+              <apex:outputlink rendered="{!IF(DocapplicationRecord.Intrax_Program__c == 'Internship' || DocapplicationRecord.Intrax_Program__c == 'Work Travel', true, false)}" value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.AppId}&orgid={!$Organization.Id}&docType=University-Letter&rType={!rType}&retparam={!retParam6}" id="University-Letter" target="_self" > <span>University Letter</span> </apex:outputlink>
+            </li>
+            <li>
+              <apex:outputlink rendered="{!IF(DocapplicationRecord.Intrax_Program__c == 'Internship' || DocapplicationRecord.Intrax_Program__c == 'Work Travel', true, false)}" value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.AppId}&orgid={!$Organization.Id}&docType=University-Letter-Translation&rType={!rType}&retparam={!retParam7}" id="University-Letter-Translation" target="_self" > <span>University Letter Translation</span> </apex:outputlink>
+            </li>
+            <li>
+              <apex:outputlink rendered="{!IF(DocapplicationRecord.Intrax_Program__c == 'Internship' || DocapplicationRecord.Intrax_Program__c == 'Work Travel', true, false)}" value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.AppId}&orgid={!$Organization.Id}&docType=Terms-and-Conditions&rType={!rType}&retparam={!retParam8}" id="Terms-and-Conditions" target="_self" > <span>
+                <apex:outputText value="Terms & Conditions" />
+                </span> </apex:outputlink>
+            </li>
+            <li>
+              <apex:outputlink rendered="{!IF(DocapplicationRecord.Intrax_Program__c == 'Internship' || DocapplicationRecord.Intrax_Program__c == 'Work Travel', true, false)}" value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.AppId}&orgid={!$Organization.Id}&docType=Offer-Document&rType={!rType}&retparam={!retParam9}" id="Offer-Documents" target="_self" > <span>
+                <apex:outputText value="Offer Document" />
+                </span> </apex:outputlink>
+            </li>
+            <li>
+              <apex:outputlink rendered="{!IF(DocapplicationRecord.Intrax_Program__c == 'Internship' || DocapplicationRecord.Intrax_Program__c == 'Work Travel', true, false)}" value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.AppId}&orgid={!$Organization.Id}&docType=Other&rType={!rType}&retparam={!retParam10}" id="Other" target="_self" > <span>
+                <apex:outputText value="Other" />
+                </span> </apex:outputlink>
+            </li>
+          </ul>
+        </div>
+        <!-- end btn group -->
+  </div><!--  end column -->
+        </div><!--  end row -->  
+
+<div class="row margin-b2">
+  <div class="col-sm-9 center-block">       
+        
+        <apex:pageBlock id="review-doc-list">
+        <div class="table-responsive vs3">
+        <apex:pageBlockTable styleClass="table vs3" id="AppDocList" value="{!AppDocList}" var="item" rendered="{!if(AppDocList.Size > 0, true, false)}">
+
+<apex:column headerValue="Document Name">
+<apex:commandlink target="_blank" action="{!load}">
+            <apex:param name="docGuid" id="Document_GUID" value="{!item.Document_GUID__c}"/>
+            <apex:outputText id="Document_Name" value="{!item.Document_Name__c}"/>
+          </apex:commandlink>
+</apex:column>
+<apex:column headerValue="Description">
+<apex:outputText id="Desc" value="{!item.Description__c}"/>
+</apex:column>
+<apex:column headerValue="Review Status">
+<apex:outputField id="Review_Status" value="{!item.Review_Status__c}"/>
+</apex:column>
+<apex:column headerValue="Actions">
+ <apex:commandlink rendered="{!IF(item.Review_Status__c == 'New', true, false)}" onclick="return ConfirmDelete('Are You Sure ?');"  action="{!deletefile}">
+            <apex:param name="docGuid"  value="{!item.Document_GUID__c}"/>
+            <i class="fa fa-remove"></i>
+            <apex:commandButton id="Delete" value="Delete" />
+          </apex:commandlink>
+</apex:column>
+        </apex:pageBlockTable>
+        </div>
+      </apex:pageBlock>
+         
+         </div><!--  end column -->
+        </div><!--  end row -->  
+
+<div class="row margin-b2">
+  <div class="col-sm-9 center-block">            
+        <apex:outputText rendered="{!IF(AppDocList.Size > 0 , false, true)}">
+          <div class="box gray h3 center-text">No record(s) to display.</div>
+        </apex:outputText>
+  </div><!--  end column -->
+        </div><!--  end row -->    
+ 
+       
+
+
+        
+        
+      </apex:form>
+    </apex:define>
+  </apex:composition>
+</apex:page>

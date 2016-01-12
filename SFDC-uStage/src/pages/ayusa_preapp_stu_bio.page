@@ -1,0 +1,158 @@
+<apex:page id="ayusa_preapp_stu_bio" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper" id="ayusa-student-preapp-bio">
+              
+          <apex:form id="form" >
+          <div class="page-header clearfix">
+<h1 class="page-title">Ayusa Student Application</h1>
+<div class="back-to-main"><apex:outputLink id="BacktoMain" value="apex/ayusa_preapp_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+</div>
+
+               <div class="section-header clearfix">
+                   <h2>Basic Info</h2>
+            <div class="progress-bar">Page 1 <em>of</em> 6</div>
+            </div> 
+              
+  
+          <div class="white-box clearfix">   
+      <a class="page-help" title="Help for this Page (New Window)" onclick="return openPopup('./Help_ayusa_preapp_stu_bio')" >
+<span>Help For This Page</span><i class="icon-info-sign"></i></a>          
+               <div class="panel two_thirds">
+                   <p><strong>All answers must be entered in English.</strong> </p>
+                   <apex:Messages styleClass="custom-error-pagelevel"/>
+                   <p><em> All fields marked with an asterisk (<span class="required no-padding">*</span>) are required</em></p><br/>
+                   
+              <div class="form-row">
+                <div class="form-label left ">First Name<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="FirstName" value="{!personInfo.First_Name__c}" required="TRUE"/>
+                </div>
+                <div class="dropt"> <i class="icon-question-sign"></i>
+                   <span>{!$ObjectType.Person_Info__c.Fields.First_Name__c.inlineHelpText}</span>
+                </div>
+              </div>
+                
+               <div class="form-row">
+                <div class="form-label left">Middle Name</div>
+                <div class="form-field">
+                  <apex:inputField id="MiddleName" value="{!personInfo.Middle_Name__c}" required="FALSE"/>
+                </div>
+                <div class="dropt"> <i class="icon-question-sign"></i>
+                   <span>{!$ObjectType.Person_Info__c.Fields.Middle_Name__c.inlineHelpText}</span>
+                </div>
+              </div>    
+                  
+              <div class="form-row">
+                <div class="form-label left ">Last Name<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="LastName" value="{!personInfo.Last_Name__c}" required="TRUE"/>
+                </div>
+              </div>
+                  
+             
+                  
+              <div class="form-row">
+                <div class="form-label left ">Gender<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="Gender" value="{!personInfo.Gender__c}" required="TRUE"/>
+                </div>
+              </div>
+                  
+              <div class="form-row">
+                <div class="form-label left ">Date of Birth<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="DateofBirth" value="{!personInfo.Date_of_Birth__c}"  required="TRUE"/>
+                </div>
+              </div>
+                  
+              <div class="form-row">
+                <div class="form-label left">Country of (Legal/Home) Residence<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="Residence_Country" value="{!personInfo.Country_of_Residence__c}" required="TRUE"/>
+                </div>
+              </div>
+                  
+              <div class="form-row">
+                <div class="form-label left">Country of Citizenship<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="citizenship" value="{!personInfo.Citizenship__c}" required="TRUE"/>   
+                </div>
+                <div class="dropt"> <i class="icon-question-sign"></i>
+                   <span>{!$ObjectType.Person_Info__c.Fields.Citizenship__c.inlineHelpText}</span>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-label left">
+                    <apex:outputText value="Local Ayusa Agent Name" rendered="{!NOT(ISBLANK(applicantInfo.Partner_Name__c))}"/>
+                </div>
+                <div class="form-field">
+                 <apex:outputField value="{!applicantInfo.Partner_Name__r.Name}" rendered="{!NOT(ISBLANK(applicantInfo.Partner_Name__c))}"/> 
+                </div>
+              </div> 
+              
+             <div class="form-row" >
+                <div class="form-label left">
+                    <apex:outputText value="Local Ayusa Agent ID" rendered="{!(ISBLANK(applicantInfo.Partner_Name__c))}"/> <span class="required">*</span>
+                </div>
+                <div class="form-field">
+                 <apex:inputField id="PartnerIntraxId" value="{!applicantInfo.Partner_Intrax_Id__c}" rendered="{!(ISBLANK(applicantInfo.Partner_Name__c))}" required="TRUE"/> 
+                </div>
+                   <apex:outputPanel styleClass="dropt" layout="block" rendered="{!(ISBLANK(applicantInfo.Partner_Name__c))}"> <i class="icon-question-sign"></i>
+                   <span>Please enter the ID provided to you by your agent</span>
+                </apex:outputPanel>
+              </div> 
+            <div class="form-row">
+                <div class="form-label left ">Do you have allergies?<span class="required">*</span> </div>
+                <div class="form-field">
+                    <apex:actionRegion >
+                    <apex:selectRadio value="{!applicantInfo.Allergies_Indicated__c}" id="allergies-indicated" required="TRUE">
+                        <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                        <apex:selectOption itemValue="No" itemLabel="No"/>
+                        <apex:actionSupport event="onclick" rerender="thePageBlock" status="status"/>
+                    </apex:selectRadio>
+                    </apex:actionRegion>
+                </div>
+                <apex:message for="allergies-indicated" styleClass="custom-error-radio"/>
+              </div>
+                
+                
+            <apex:pageBlock id="thePageBlock">
+                <apex:outputPanel layout="block" rendered="{!ApplicantInfo.Allergies_Indicated__c == 'Yes'}">
+                    <div class="form-row">
+                        <div class="form-label top">If yes, please select: </div>
+                        <div class="form-field">
+                          <apex:inputField id="Allergies" label="" value="{!applicantInfo.Allergies_from_Applicant__c}" required="TRUE"/>
+                        </div>
+                    </div>                          
+                 </apex:outputPanel>
+               </apex:pageBlock>
+                
+             <div class="form-row">
+             
+              <div class="form-link">
+                    <apex:outputLink id="Back" styleClass="back" value="/apex/ayusa_preapp_home?id={!applicantInfo.Id}">
+                    <i class="icon-chevron-left"></i>
+                    <span>Back</span>
+                    </apex:outputLink>
+              </div>
+                          
+              <div class="form-button">
+                <apex:commandlink styleClass="next" action="{!navigator}">
+                  <apex:param name="nextPage" value="/apex/ayusa_preapp_stu_home"/>
+                  <apex:param name="reDirectPage" value="true"/> 
+                    <apex:commandButton id="Save" value="Save & Continue" />
+                    <i class="icon-chevron-right"></i>
+                </apex:commandlink>
+              </div>    
+            </div>  
+              </div>
+          </div>
+   
+          </apex:form>
+      
+     </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

@@ -1,0 +1,92 @@
+<apex:component controller="myGenericComponentController" allowDML="true">
+  <apex:attribute name="applicantInfo" description="This is the value for the Applicant_Info__c object." type="Applicant_Info__c" required="false" default="" />
+  <apex:attribute name="pageController" type="AppEngine_Controller" description="Passing AEC" required="false"/>
+  <apex:actionFunction name="updateappInfo" action="{!pageController.updateApplicantInfo}" rerender="pageMessage" status="coedit_status"/>
+ 
+  <style>.coedit-auth{margin-top:-75px; max-width:250px;}</style>
+<div class="pull-right coedit-auth">
+
+<apex:PageBlock >
+    <apex:outputPanel layout="block" id="pageMessage">
+    <apex:outputText rendered="{!applicantInfo.Allow_Intrax_to_Apply__c == true}">
+        <div class="tcell"><i class="fa fa-unlock-alt data-label" style="color:#202020;"></i></div>
+        <div class="tcell">You have allowed Intrax to edit this application. <a data-toggle="modal" data-target="#coedit-auth"><b>Change</b></a></div>
+    </apex:outputText>
+    
+    <apex:outputText rendered="{!applicantInfo.Allow_Intrax_to_Apply__c == false}">
+        <div class="tcell"><i class="fa fa-lock data-label"  style="color:#202020;"></i></div>
+        <div class="tcell">You have not allowed Intrax to edit this application. <a data-toggle="modal" data-target="#coedit-auth"><b>Change</b></a></div>
+    </apex:outputText>
+    <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="coedit_status"/>
+    </apex:outputPanel>
+</apex:PageBlock>
+
+</div>
+
+
+<div class="modal fade vs1" id="coedit-auth" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="h1">Intrax Authorization</div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                          <label class="control-label">Intrax can submit a Global Internships application on your behalf based on information you have provided to our representatives. 
+                                                        Please choose an option below and click Save.</label>
+                            <apex:actionRegion >
+                                <apex:selectRadio styleClass="radio" value="{!applicantInfo.Allow_Intrax_to_Apply__c}" required="TRUE" id="AuthIndicated" layout="pageDirection">
+                                    <apex:selectOption itemLabel="I authorize Intrax to edit and submit an Application on my behalf" itemValue="true"/>
+                                    <apex:selectOption itemLabel="I will submit my own Application" itemValue="false"/>
+                                    <!-- <apex:actionSupport event="onchange" rerender="webform" status="pleasewait01"/> -->
+                                </apex:selectRadio>
+                            </apex:actionRegion>
+                        </div>
+                        <div>
+                        <apex:actionRegion >
+                            <apex:outputLink styleClass="btn btn-primary btn-lg" value="#" html-data-dismiss="modal" onclick="updateappInfo();"> Continue </apex:outputLink>
+                            <!--<apex:commandLink html-data-dismiss="modal" action="{!updateApplicantInfo}">
+                                Continue       
+                                <apex:actionSupport event="onclick" rerender="pageMessage" status="pleasewait01"/>
+                            </apex:commandLink>
+                            -->                           
+                         </apex:actionRegion>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+<!--  end modal window --> 
+
+<!--
+apex:outputpanel layout="block" id="modalSubmit" rendered="{!$CurrentPage.parameters.vstate == 'coedit'}" >
+                          <div class="modal fade vs1" id="coedited" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-body">
+                                <div class="h1">Thank You</div>
+                                <p>Thank you for authorizing Intrax to help you with the Application process. We will begin entering your information right away. 
+                                Once we submit the Application, we will notify you of the next steps. 
+                                If you have any questions, please contact your Intrax representative.</p>
+                                </div>
+                              <div class="modal-footer">
+                                <apex:commandButton html-data-dismiss="modal" onclick="updateappInfo(); return null;" styleClass="btn btn-default" rerender="app_auth">
+                                    Continue       
+                                </apex:commandButton>  
+                              </div>
+                            </div>
+                          </div>
+                        </div> 
+</apex:outputpanel> -->
+ <!--  end modal window -->
+        <script>
+        var j$ = jQuery.noConflict();
+        j$(window).load(function() {
+          j$('#coedited').modal();
+        });
+        </script>             
+
+</apex:component>

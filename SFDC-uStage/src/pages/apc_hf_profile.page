@@ -1,0 +1,362 @@
+<apex:page id="apc_hf_profile" docType="html-5.0" applyHtmlTag="false" applyBodyTag="false" title="Family Profile" standardStylesheets="false" showHeader="false" controller="apc_portal_controller">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <apex:includeScript value="{!URLFOR($Resource.module_videoJs, '/videojs/video.min.js')}"/>
+      <apex:stylesheet value="{!URLFOR($Resource.module_videoJs, '/videojs/video-js.css')}"/>
+      <script src="//www.google.com/jsapi"></script>
+  
+     <style>
+     .family-profile-img.ix-largefamily{
+    font-size: 150px;
+    line-height: 0;
+    text-align: center;
+    background-color: #efefef;
+    color: #989898;
+     }
+     </style>
+      <apex:variable value="{!myProfile.ReturnURL}" var="vRetUrl" id="RetUrl" />
+      <apex:variable value="{!myProfile.currentUser.User_Interests__c}" var="vUI" id="UI" />
+      <apex:variable value="{!myProfile.currentUser.Type__c}" var="vUType" id="UType" />
+          
+      <apex:form id="webform" styleClass="form-vertical ws-validate">
+        <div id="profile-detail" class="vs1 row ">
+          <div class="col-md-3 hidden-print">
+            <div class="row">
+              <div class="col-md-10 center-block">
+               
+               <apex:outputText rendered="{!vRetUrl != 'no-picture'}" >
+                <div class="item-image">
+                  <apex:image style="width:100%;" value="{!vRetUrl}" rendered="{!vRetUrl != 'no-picture'}" />
+                  <div class="media-actions">
+                    <apex:commandLink oncomplete="popModalPhoto();" rendered="{!vRetUrl != 'no-picture'}" > <i class="fa fa-camera"></i> </apex:commandLink>
+                  </div>
+                  
+                  <!--  end media actions --> 
+                </div>
+                <!--  end item image -->
+                </apex:outputText>
+                <apex:outputText rendered="{!vRetUrl == 'no-picture'}" >
+                  
+                  <div class="family-profile-img ix-largefamily"></div>
+                  </apex:outputText>
+                
+                <div class="hidden-sm hidden-xs margin-t2" data-spy="affix" data-offset-top="520" id="profile-nav">
+                  <div id="profile-nav-inner">
+                    <ul class="nav nav-list vs1 margin-t1">
+                      <li><a onclick="goContact();" href="#contact" id="linkContact"><span>Contact Information</span></a></li>
+                      <li><a onclick="goHobbies();" href="#hobbies" id="linkHobbies"><span>Hobbies and Interests</span></a></li>
+                      <li><a onclick="goWords();" href="#words" id="linkWords"><span>In Your Own Words</span></a></li>
+                    </ul>
+                  </div>
+                  <!--  end profile-nav inner --> 
+                </div>
+                <!--  end profile-nav --> 
+              </div>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <h1 class="no-margin-t">
+              <apex:outputText value="The {!myProfile.profile.Host_Company_Id__r.LastName} Family"/>
+            </h1>
+     
+            <div id="contact"></div>
+            <div class="profile-section">
+              <h2>Contact Information</h2>
+           
+ <apex:outputPanel layout="block" rendered="{!OR(vUI == 'Becoming an au pair', vUType == 'Partner')}">
+     </apex:outputPanel>
+  <apex:outputPanel layout="block" rendered="{!OR(vUI == 'Hosting an au pair', vUType == 'Partner')}">
+ </apex:outputPanel>
+ 
+ 
+     
+                <div class="row margin-b1">
+
+ <apex:outputPanel layout="block" rendered="{!vUI == 'Becoming an au pair'}">                
+                  <div class="col-sm-4">
+                    <div><label>Location</label></div>
+                    <div><apex:outputText value="{!myProfile.profile.City__c}, {!myProfile.profile.State__c}"/></div>
+                  </div>
+</apex:outputPanel>
+
+                 
+                   <apex:outputPanel layout="block" rendered="{!myProfile.profile.Host_Company_Id__r.PersonEmail != null}">
+                  <div class="col-sm-4">
+                    <div><label>Email</label></div>
+                    <div><apex:outputText value="{!myProfile.profile.Host_Company_Id__r.PersonEmail}"/></div>
+                  </div>
+                </apex:outputPanel>
+
+</div><!-- end row -->
+
+  <div class="row margin-b3">
+  <apex:outputPanel layout="block" rendered="{!OR(vUI == 'Hosting an au pair', vUType == 'Partner')}">                
+                <div class="col-sm-4">
+                    <div><label>Address</label></div>
+                    <div><apex:outputfield value="{!myProfile.profile.Host_Company_Id__r.PersonMailingStreet}"/></div>
+                    <div><apex:outputText value="{!myProfile.profile.Host_Company_Id__r.PersonMailingState} "/><apex:outputText value="{!myProfile.profile.Host_Company_Id__r.PersonMailingPostalCode}, "/><apex:outputText value="{!myProfile.profile.Host_Company_Id__r.PersonMailingCity}"/></div>
+                    <div><apex:outputfield value="{!myProfile.profile.Host_Company_Id__r.PersonMailingCountry}"/></div>
+                    </div>      
+ </apex:outputPanel>
+ 
+                    
+                     <apex:outputPanel layout="block" rendered="{!myProfile.profile.Host_Company_Id__r.Skype_ID__pc != null}">
+                  <div class="col-sm-4">
+                    <div><label>Skype ID for Interviews</label></div>
+                    <apex:outputText value="{!myProfile.profile.Host_Company_Id__r.Skype_ID__pc}"/>
+ </div>
+  </apex:outputPanel>    
+                
+                  
+                </div><!-- end row -->
+ 
+                            
+  
+          
+                <div class="row vtop">
+                
+                <div class="col-sm-4">
+                    <apex:outputText rendered="{!myProfile.profile.Host_Company_Id__r.Gender__pc == 'Male'}"><span class="ix-fam-father" style="font-size: 40px;"></span></apex:outputText>
+                    <apex:outputText rendered="{!myProfile.profile.Host_Company_Id__r.Gender__pc == 'Female'}"><span class="ix-fam-mother" style="font-size: 40px;"></span></apex:outputText>
+                    <div class="inline-block margin-l2 vtop">
+                    <h3 class="no-margin"><apex:outputfield value="{!myProfile.profile.Host_Company_Id__r.FirstName}"/></h3>
+                    <div><em>Parent</em></div>
+                    </div>
+                </div>
+                  <apex:outputPanel layout="block" rendered="{!OR(vUI == 'Hosting an au pair', vUType == 'Partner')}">  
+                  <div class="col-sm-4">
+                    <div><label>Email</label></div>
+                    <div><apex:outputText value="{!myProfile.profile.Host_Company_Id__r.PersonEmail}"/></div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div><label>Phone</label></div>
+                    <div><apex:outputText value="{!myProfile.profile.Host_Company_Id__r.Phone}"/></div>
+                  </div>
+                   </apex:outputPanel>  
+                </div><!--  end row -->
+            
+  
+               
+                
+                
+                 <apex:repeat id="repeatMember"  value="{!myProfile.listMember}" var="member"> 
+                   
+                  <apex:outputPanel id="thePanel" layout="block" rendered="{!member.Role__c != 'Child'}">
+                    <hr class="margin-b2 margin-t1"/> 
+                    <div class="row vtop">
+                    <div class="col-sm-4">
+                    <apex:outputText rendered="{!member.Gender__c == 'Male'}"><span class="ix-fam-father" style="font-size: 40px;"></span></apex:outputText>
+                    <apex:outputText rendered="{!member.Gender__c == 'Female'}"><span class="ix-fam-mother" style="font-size: 40px;"></span></apex:outputText>
+                     <div class="inline-block margin-l2 vtop">
+                     <h3 class="no-margin"><apex:outputfield value="{!member.First_Name__c}"/></h3>
+                     <div><em>Parent<apex:outputText value=", {!member.Profession__c}" rendered="{!member.Profession__c != null}" /></em></div>
+                     </div>
+                    </div>
+                    
+                    <apex:outputPanel layout="block" rendered="{!OR(vUI == 'Hosting an au pair', vUType == 'Partner')}">
+                      <div class="col-sm-4">
+                        <div><label>Email</label></div>
+                        <apex:outputText value="{!member.Email__c}"/>
+                      </div>
+                      <div class="col-sm-4">
+                        <div><label>Phone</label></div>
+                        <apex:outputText value="{!member.Phone__c}"/>
+                      </div>
+                      </apex:outputPanel>
+                      
+                    </div>
+                    <!--  end row --> 
+                  </apex:outputPanel>
+   
+                </apex:repeat>
+                    
+                <apex:repeat id="repeatMember2"  value="{!myProfile.listMember}" var="member">  
+                 
+                  <apex:outputPanel id="thePanel2" layout="block" rendered="{!member.Role__c == 'Child'}"> 
+                  <hr class="margin-b2 margin-t1"/>
+                    <div class="row vtop">
+                    <div class="col-sm-12">
+                    
+                    <apex:outputText rendered="{!member.Age__c == 0}"><span class="ix-aupair vtop" style="font-size: 40px;"></span></apex:outputText>
+                    <apex:outputText rendered="{!member.Gender__c == 'Male' && member.Age__c <= 14 && member.Age__c > 0}"><span class="ix-fam-brother-sm" style="font-size: 40px;"></span></apex:outputText>
+                    <apex:outputText rendered="{!member.Gender__c == 'Female' && member.Age__c <= 14 && member.Age__c > 0}"><span class="ix-fam-sister-sm" style="font-size: 40px;"></span></apex:outputText>
+                    <apex:outputText rendered="{!member.Gender__c == 'Male' && member.Age__c > 14}"><span class="ix-fam-brother-md" style="font-size: 40px;"></span></apex:outputText>
+                    <apex:outputText rendered="{!member.Gender__c == 'Female' && member.Age__c > 14}"><span class="ix-fam-sister-md" style="font-size: 40px;"></span></apex:outputText>
+ 
+                    <div class="inline-block margin-l2 vtop">
+                     <h3 class="no-margin">
+                     <apex:outputfield rendered="{!member.First_Name__c != null}" value="{!member.First_Name__c}"/>
+                     <apex:outputText rendered="{!member.First_Name__c == null && member.Gender__c == 'Female' }" value="Daughter"/>
+                     <apex:outputText rendered="{!member.First_Name__c == null && member.Gender__c == 'Male' }" value="Son"/>
+                     </h3>
+                     <apex:outputText rendered="{!member.Age__c == 0}"><div><em><apex:outputText value="Less than 1 year old" /></em></div></apex:outputText>
+                     <apex:outputText rendered="{!member.Age__c != 0 }"><div><em><apex:outputText value="{!member.Age__c} years old" /></em></div></apex:outputText>
+                     </div>
+                     
+                    </div>
+                    </div>
+                    <!--  end row -->  
+                  </apex:outputPanel>
+                  
+                </apex:repeat>
+                
+                
+            
+              
+            <!--   
+              <apex:repeat id="repeatPet"  value="{!myProfile.listPet}" var="pet" >
+               <div class="row">
+               <div class="col-sm-12">
+               <div><h3 class="no-margin"><apex:outputText value="{!pet}"/></h3></div>
+               </div>
+               </div>
+                </apex:repeat>
+              --> 
+
+          </div><!-- end profile section  -->
+          
+          
+            <div class="profile-section" id="hobbies">
+           
+                <h2>Interests and Hobbies</h2>
+                <div class="row margin-b4">
+                
+                  <apex:outputText rendered="{!NOT(ISBLANK(myProfile.profile.Interest_Sports__c))}">
+                  <div class="col-sm-6">
+                    <div class="tcell">
+                      <div class="icon ix-hobby-bike margin-t2 margin-r2"></div>
+                    </div>
+                    <div class="tcell">
+                      <label>Sports</label>
+                      <span class="capitalize">
+                      <apex:outputText value="{!SUBSTITUTE(myProfile.profile.Interest_Sports__c, ';', ', ')}" rendered="{!NOT(ISBLANK(myProfile.profile.Interest_Sports__c))}"/>
+                      <apex:outputText value="--" rendered="{!ISBLANK(myProfile.profile.Interest_Sports__c)}"/>
+                      </span> </div>
+                  </div>
+                  <!--  end col -->
+                  </apex:outputText>
+                  
+                  <apex:outputText rendered="{!NOT(ISBLANK(myProfile.profile.Interests_Hobbies__c))}">
+                  <div class="col-sm-6">
+                    <div class="tcell">
+                      <div class="icon ix-hobby-theatre margin-t2 margin-r2"></div>
+                    </div>
+                    <div class="tcell">
+                      <label>Crafts or Hobbies</label>
+                      <span class="capitalize">
+                      <apex:outputText value="{!SUBSTITUTE(myProfile.profile.Interests_Hobbies__c, ';', ', ')}" rendered="{!NOT(ISBLANK(myProfile.profile.Interests_Hobbies__c))}"/>
+                      <apex:outputText value="--" rendered="{!ISBLANK(myProfile.profile.Interests_Hobbies__c)}"/>
+                      </span> </div>
+                  </div>
+                  <!--  end col --> 
+                  </apex:outputText>
+              
+                 <apex:outputText rendered="{!NOT(ISBLANK(myProfile.profile.Interest_Fine_Arts__c))}">
+                  <div class="col-sm-6">
+                    <div class="tcell">
+                      <div class="icon ix-hobby-photos margin-t2 margin-r2"></div>
+                    </div>
+                    <div class="tcell">
+                      <label>Fine Arts</label>
+                      <span class="capitalize">
+                      <apex:outputText value="{!SUBSTITUTE(myProfile.profile.Interest_Fine_Arts__c, ';', ', ')}" rendered="{!NOT(ISBLANK(myProfile.profile.Interest_Fine_Arts__c))}"/>
+                      <apex:outputText value="--" rendered="{!ISBLANK(myProfile.profile.Interest_Fine_Arts__c)}"/>
+                      </span> </div>
+                  </div>
+                  <!--  end col -->
+                  </apex:outputText>
+                  
+                  <apex:outputText rendered="{!NOT(ISBLANK(myProfile.profile.Interests_Leisure__c))}">
+                  <div class="col-sm-6">
+                    <div class="tcell">
+                      <div class="icon ix-hobby-coffee margin-t2 margin-r2"></div>
+                    </div>
+                    <div class="tcell">
+                      <label>Other Activities</label>
+                      <span class="capitalize">
+                      <apex:outputText value="{!SUBSTITUTE(myProfile.profile.Interests_Leisure__c, ';', ', ')}" rendered="{!NOT(ISBLANK(myProfile.profile.Interests_Leisure__c))}"/>
+                      <apex:outputText value="--" rendered="{!ISBLANK(myProfile.profile.Interests_Leisure__c)}"/>
+                      </span> </div>
+                  </div>
+                  <!--  end col --> 
+                  </apex:outputText>
+                  
+                  
+                </div>
+                <!--  end row --> 
+                
+        
+             
+            </div> <!--  end hobbies --> 
+            
+   
+       
+     <apex:outputPanel layout="block" rendered="{!myProfile.EssayList.size > 0}">   
+            <div id="words" class="profile-section">
+       <apex:outputPanel layout="block" rendered="{!vUI == 'Finding an au pair'}">
+       <h2>In Your Own Words</h2>
+       </apex:outputPanel>
+       
+       <apex:outputPanel layout="block" rendered="{!OR(vUI == 'Becoming an au pair', vUType == 'Partner')}">
+       <h2>In Their Own Words</h2>
+       </apex:outputPanel>
+       
+              
+              <apex:repeat id="repeatEssay" value="{!myProfile.EssayList}" var="essay">
+                <div class="row margin-b3">
+                  <div class="col-sm-12">
+                      <label>
+                        <apex:outputfield value="{!essay.Label__c}"/>
+                      </label>
+                      <div class="item-quote">
+                        <div class="truncate"> {!essay.Narrative__c} <a class="readmore">Read More</a> </div>
+                        <apex:image styleClass="img-circle" value="{!vRetUrl}" rendered="{!vRetUrl != 'no-picture'}"/>
+                      </div>
+                  </div>
+                </div>
+                <!--  end row --> 
+              </apex:repeat>
+            </div>
+    </apex:outputPanel>        
+            
+            
+          </div>
+        </div>
+      </apex:form>
+      <script>
+                var j$ = jQuery.noConflict();
+
+                j$('body').scrollspy({ target: '#profile-nav' })
+                
+                function goContact(){
+                    j$('html, body').animate({'scrollTop': j$('#contact').offset().top});
+                }
+                function goHobbies(){
+                    j$('html, body').animate({'scrollTop': j$('#hobbies').offset().top});
+                }
+                function goWords(){
+                    j$('html, body').animate({'scrollTop': j$('#words').offset().top});
+                }               
+            </script> 
+      <script>
+          var j$ = jQuery.noConflict();
+          function popModalPhoto(){
+           j$.magnificPopup.open({
+            items: [
+            <apex:repeat value="{!myProfile.ParticipantPhotoList}" var="item">
+              {
+                src: '{!item}',
+                title: '{!myProfile.photoList[item]}'
+              },
+            </apex:repeat>
+            ],
+            gallery: {
+              enabled: true
+            },
+            type: 'image' 
+          });
+          }
+        </script>
+    </apex:define>
+  </apex:composition>
+</apex:page>

@@ -1,0 +1,88 @@
+<apex:component >
+<apex:attribute name="theWidget" type="ZMG.ZMG_Widget_Renderer" required="true" description="the widget to be rendered" />
+
+<apex:stylesheet value="{!URLFOR($Resource.ZMG__ZMG_Resources, 'epm.css')}" />
+<style>
+table {
+	font-family: Verdana;
+	font-size: 10px;
+}
+.lwidth3 { 
+	width: 25px;
+}
+label {
+	margin-left: 2px;
+}
+</style>
+
+<apex:outputPanel layout="block">
+
+	<div id="surveyTitle">
+		<a class="survey" title="Edit & Review" href="{!theWidget.editUrl}" target="_top">
+			<apex:outputText value="{!theWidget.surveyTitle}" />
+		</a>
+		<br/>
+		<a class="survey" target="_top" style="font-size: 12px; font-weight: bold;" title="Analyze Results" href="{!theWidget.resultsUrl}">Survey Status</a>
+	</div>
+
+	<div id="mainWidgetArea">
+	
+		<div style="padding-top: 36px; padding-bottom: 0px;">
+			<div class="label2">
+				<span class="lwidth3" style="font-weight: normal; font-size: 12px;"><apex:outputText value="{!theWidget.survey.totalInvites}" /></span>
+				<div/>
+			</div>
+			<label style="font-weight: normal; font-size: 12px;">Recipients</label>
+		</div>
+		<div style="clear: both;"></div>
+		
+		<div style="padding-top: 36px">
+			<table style="width: 100%; margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px;" cellspacing="0" cellpadding="0" border="0">
+				<tbody>
+	
+					<tr>
+						<td valign="middle" align="center" style="width: 50%; padding-right: 1px;">
+							<apex:outputPanel layout="inline" rendered="{!theWidget.hasPieChartData}">
+								<a title="Analyze Results" href="{!theWidget.resultsUrl}" target="_top">
+									<img src="{!theWidget.pieChartUrl}" border="0" />
+								</a>
+							</apex:outputPanel>
+							<apex:outputPanel layout="inline" rendered="{!NOT(theWidget.hasPieChartData)}">&nbsp;</apex:outputPanel>
+						</td>
+	
+						<td valign="middle" align="left" style="width: 50%; padding-left: 1px;">
+	
+							<div class="label3">
+								<span class="lwidth3" style="font-weight: normal; font-size: 12px;"><apex:outputText value="{!theWidget.survey.completes}" /></span>
+								<div/>
+							</div>
+							<label style="font-weight: normal; font-size: 12px;">Completes</label>
+							<div style="clear: both; margin-bottom: 2px;"></div>
+							
+							<div class="label4">
+								<span class="lwidth3" style="font-weight: normal; font-size: 12px;"><apex:outputText value="{!theWidget.survey.partials}" /></span>
+								<div/>
+							</div>
+							<label style="font-weight: normal; font-size: 12px;">Partials</label>
+							<div style="clear: both; margin-bottom: 2px;"></div>
+	
+							<div class="label5">
+								<span class="lwidth3" style="font-weight: normal; font-size: 12px;"><apex:outputText value="{!theWidget.survey.screenOuts}" /></span>
+								<div/>
+							</div>
+							<label style="font-weight: normal; font-size: 12px;">Screen Outs</label>
+							<div style="clear: both; margin-bottom: 2px;"></div>
+	
+						</td>
+					</tr>
+	
+				</tbody>
+			</table>
+		</div>
+	</div>
+	
+	<c:ZMG_PoweredBy theWidget="{!theWidget}" />
+
+</apex:outputPanel>
+
+</apex:component>

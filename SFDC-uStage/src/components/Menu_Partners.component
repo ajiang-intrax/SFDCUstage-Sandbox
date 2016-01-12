@@ -1,0 +1,55 @@
+<apex:component layout="none" controller="User_Controller"> 
+    
+    <apex:variable var="IntraxPartnerPortal_Participant" value="active" rendered="{! IF($CurrentPage.Name=='Participants', true, false)}"/>      
+    <apex:variable var="IntraxPartnerPortal_Application" value="active" rendered="{! IF($CurrentPage.Name=='Applications', true, false)}"/>  
+    <apex:variable var="IntraxPartnerPortal_Application" value="active" rendered="{! IF($CurrentPage.Name=='Partner_PT_Audit_Info', true, false)}"/>
+    <apex:variable var="IntraxPartnerPortal_Matches" value="active" rendered="{! IF($CurrentPage.Name=='Matches', true, false)}"/>
+    <apex:variable var="IntraxPartnerPortal_Match_Information" value="active" rendered="{! IF($CurrentPage.Name=='IntraxPartnerPortal_Match_Information', true, false)}"/>
+    <apex:variable var="IntraxPartnerPortal_Participant" value="active" rendered="{! IF($CurrentPage.Name=='Partner_PT_Profile', true, false)}"/> 
+    <apex:variable var="IntraxPartnerPortal_Participant" value="active" rendered="{! IF($CurrentPage.Name=='Partner_PT_Travel_Visa', true, false)}"/>
+    <apex:variable var="IntraxPartnerPortal_Participant" value="active" rendered="{! IF($CurrentPage.Name=='Partner_PT_Travel_Visa_New', true, false)}"/>
+    <apex:variable var="IntraxPartnerPortal_Participant" value="active" rendered="{! IF($CurrentPage.Name=='Partner_PT_Travel_Visa_Details', true, false)}"/>
+    <apex:variable var="IntraxPartnerPortal_Participant" value="active" rendered="{! IF($CurrentPage.Name=='Partner_Match_Information', true, false)}"/>
+    <apex:variable var="IntraxPartnerPortal_Participant" value="active" rendered="{! IF($CurrentPage.Name=='Partner_Match_Information', true, false)}"/>
+    <apex:variable var="IntraxPartnerPortal_Participant" value="active" rendered="{! IF($CurrentPage.Name=='Partner_Assessments', true, false)}"/>
+    <apex:variable var="IntraxPartnerPortal_Participant" value="active" rendered="{! IF($CurrentPage.Name=='Partner_Assessment_Details', true, false)}"/>
+    <apex:variable var="IntraxPartnerPortal_Participant" value="active" rendered="{! IF($CurrentPage.Name=='Partner_Docs_Upload', true, false)}"/>
+    <apex:variable var="IntraxPartnerPortal_Participant" value="active" rendered="{! IF($CurrentPage.Name=='Resources', true, false)}"/>
+    <apex:variable var="IntraxPartnerPortal_Campaigns" value="active" rendered="{! IF($CurrentPage.Name=='Campaigns', true, false)}"/>
+    <apex:variable var="IntraxPartnerPortal_Reports" value="active" rendered="{! IF($CurrentPage.Name=='Partner_Reports', true, false)}"/>
+    
+    
+    <apex:outputText rendered="{! IF($CurrentPage.Name!='Partner_DefaultIP_Selection', true, false)}">   
+    <ul class="clearfix pull-right">
+        
+        
+        <li class="{!IntraxPartnerPortal_Application}">
+        	
+            <apex:outputLink value="pr_app_list" >Applications</apex:outputLink>
+           
+        </li>
+        
+        <apex:outputText rendered="{!IF(NOT(DefaultIP=='English Academy') , true, false)}">
+        <li class="{!IntraxPartnerPortal_Participant}">
+            <apex:outputLink value="pr_pt_list">Participants</apex:outputLink>
+            
+        </li>
+        </apex:outputText>
+        
+         <apex:outputText rendered="{!IF((isInternshipUser || isWTUser) && NOT(DefaultIP=='Ayusa' || DefaultIP=='AuPairCare' || DefaultIP=='English Academy'), true, false)}">     
+        <li class="{!IntraxPartnerPortal_Campaigns}">
+            <apex:outputLink value="pr_camp_list">Campaigns</apex:outputLink>
+            
+        </li>
+         </apex:outputText>
+        
+         <apex:outputText rendered="{!IF((isInternshipUser || isWTUser) && NOT(DefaultIP=='Ayusa' || DefaultIP=='English Academy') , true, false)}">
+        <li class="{!IntraxPartnerPortal_Reports}">
+            <apex:outputLink value="pr_report_list">Reports</apex:outputLink>
+            
+        </li>
+        </apex:outputText>        
+    </ul>
+    </apex:outputText>
+    
+</apex:component>

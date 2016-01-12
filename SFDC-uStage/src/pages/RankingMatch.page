@@ -1,0 +1,321 @@
+<!-- 
+    Purpose         :   Ranking Match.
+                
+    Created Date    :   06/06/2012
+    
+    Current Version :   v1.0
+    
+    Revision Log    :   V_1.1 Created
+ -->
+<apex:page standardController="Position__c" extensions="RankingController" title="{!Position__c.Name}" showHeader="true" >
+<div class="wrapper">
+<script>    
+    //This javascript method is to select/unselect all the check boxes if header lel check box is selected.
+    function checkAll(selectAll) {
+        
+        var inputElem = document.getElementsByTagName("input");
+        for(var i=0; i<inputElem.length; i++) {
+                if(inputElem[i].id.indexOf("selectedRecords")!=-1)
+                    inputElem[i].checked = selectAll.checked;
+        }
+    }
+  
+    var prevOptionValue='';
+    function FnAlertNone(selOption)
+    {
+  
+     if (selOption.value=='Business Internship')
+      {
+      alert('You cannot choose any other Citizenship now!!!');
+      }
+     
+    }
+
+    
+    //validate next button
+    function validateBeforeSave() {
+            
+        var inputElem = document.getElementsByTagName("input");
+        for(var i=0; i<inputElem.length; i++) {
+            if(inputElem[i].id.indexOf("selectedRecords")!=-1 && inputElem[i].checked) {
+                matchSelected();
+                return false;
+            }
+        }
+        matchSelected();  
+        //show error message
+        //alert('Please select at least one record.');
+        return false;
+    }
+    window.onload = setFocus
+function setFocus() {
+        document.getElementById("{!$Component.Preparedness}").focus();
+}
+</script>
+    <!-- Form -->
+     
+    <apex:form >
+        
+        <!-- Action Function -->
+        <apex:actionFunction name="matchSelected" action="{!save}" status="loadingMsg" />
+        
+        <apex:pageBlock >
+            <apex:pageMessages id="validationMsg" />
+            <apex:commandLink action="{!cancel}" value="Back to previous page" />
+            <br/>
+            <table width="100%">
+                <tr>
+                    <th width="11%">
+                        Company
+                    </th>
+                    <th width="11%">
+                        Regional Location
+                    </th>
+                    <th width="11%">
+                        Position
+                    </th>
+                    <th width="11%">
+                        Functional Area
+                    </th>
+                    <th width="11%">
+                        Position Types
+                    </th>
+                    <th width="11%">
+                        Start
+                    </th>
+                    <th width="11%">
+                        Flexible Dates
+                    </th>
+                    <th width="11%">
+                        Compensation
+                    </th>
+                    <th width="12%">
+                        Skills Required
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        <apex:outputField value="{!Position__c.Host_Company_Id__c}" />
+                    </td>
+                    <td>
+                        <apex:outputField value="{!Position__c.Regional_Location__c}" />
+                    </td>
+                    <td>
+                        <apex:outputField value="{!match.Position_Name__c}"/>
+                    </td>
+                    <td>
+                        <apex:outputField value="{!Position__c.Functional_Areas__c}" />
+                    </td>
+                    <td>
+                        <apex:outputField value="{!Position__c.Position_Types__c}" />
+                    </td>
+                    <td>
+                        <apex:outputField value="{!Position__c.Engagement_Start__c}" />
+                    </td>
+                    <td>
+                        <apex:outputField value="{!Position__c.Flexible_Dates__c}" />
+                    </td>
+                    <td>
+                        <apex:outputField value="{!Position__c.Compensation_Type__c}" />
+                    </td>
+                    <td>
+                        <apex:outputField value="{!Position__c.Skills_Required__c}" />
+                    </td>
+                </tr>
+            </table>
+            <br/>
+            <apex:PageBlock >
+             <apex:pageBlockSection collapsible="true" columns="5" title="Filter By:" >
+             <apex:pageblocksectionitem >
+                           <apex:outputLabel value="Program Category" />           
+               <apex:actionRegion >
+                  <apex:selectList value="{!selectProgramCategory}" size="1" multiselect="false">                           
+                            <apex:selectOptions value="{!lstIntraxProgCategory}" /> 
+                            <apex:actionSupport event="onchange" rerender="postype,funarea" status="status"/>
+                        </apex:selectList>
+                 </apex:actionRegion>
+                 </apex:pageblocksectionitem>
+             <apex:pageblocksectionitem >
+                <apex:outputLabel value="Program Options" />
+                 <apex:actionRegion >
+                     
+                        <apex:selectList value="{!selectProgramOption}" size="1" multiselect="false" >                           
+                            <apex:selectOptions value="{!programOptions}" /> 
+                            <apex:actionSupport event="onchange" rerender="postype,funarea" status="status"/>
+                        </apex:selectList>
+                  </apex:actionRegion>
+             </apex:pageblocksectionitem>
+             <apex:pageblocksectionitem >
+                 <apex:outputLabel value="Position Types" />
+                  <apex:selectList value="{!selectPositionTypes}"  id="postype" size="3" multiselect="true" disabled="{!NOT(selectProgramCategory=='Hospitality & Tourism' || selectProgramOptions=='Hospitality Internship')}" >
+                             <apex:selectOptions value="{!PositionType}" /> 
+                        </apex:selectList>
+             </apex:pageblocksectionitem>
+             <apex:pageblocksectionitem >
+                 <apex:outputLabel value="Functional Areas"/>
+                  <apex:selectList value="{!selectAreas}"  id="funarea" size="3"  multiselect="True"  disabled="{!(selectProgramCategory=='Hospitality & Tourism' || selectProgramOptions=='Hospitality Internship' )}">
+                              <apex:selectOptions value="{!lstFuncAreas}" /> 
+                        </apex:selectList> 
+             </apex:pageblocksectionitem>
+            <apex:pageblocksectionitem >
+               <apex:outputLabel value="Citizenship"  /> 
+                  <apex:selectList value="{!selectCitizenships}"  size="3" multiselect="True" >
+                         <apex:selectOptions value="{!lstCitizenship}"  /> 
+                 </apex:selectList> 
+            </apex:pageblocksectionitem>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection columns="6">
+          <apex:pageblocksectionitem >
+             <apex:outputLabel value="Languages Spoken" />  
+             <apex:selectList value="{!selectLangs}" size="3" multiselect="True">
+                <apex:selectOptions value="{!lstLangs}" />                           
+             </apex:selectList>    
+          </apex:pageblocksectionitem>
+          <apex:pageblocksectionitem >
+               <apex:outputLabel value="Service Level" /> 
+                <apex:selectList value="{!selectserviceLevel}" size="1" id="servlevel" multiselect="false">
+                          <apex:selectOptions value="{!lstserviceLevel}" /> 
+                </apex:selectList>   
+         		</apex:pageblocksectionitem>
+          <apex:pageblocksectionitem >
+               <apex:outputLabel value="Language Proficiency" /> 
+                <apex:selectList value="{!selectlangLevel}" size="1" id="langProf" multiselect="false">
+                          <apex:selectOptions value="{!lstlangLevel}" /> 
+                </apex:selectList>   
+         </apex:pageblocksectionitem>
+         <apex:pageblocksectionitem >
+           <apex:outputLabel value="Engagement Dates" /> 
+           <apex:outputpanel >
+             <apex:outputLabel value="Start" style="font-weight: bold;"/>&nbsp;
+             <apex:inputField value="{!DummyObj.Engagement_Start__c}" />
+                     <br/>
+            <apex:outputLabel value="End" style="font-weight: bold;" />&nbsp;&nbsp;&nbsp;
+            <apex:inputField value="{!DummyObj.Engagement_End__c}"/>
+           </apex:outputpanel>
+        </apex:pageblocksectionitem>
+        <apex:pageblocksectionitem >
+            <apex:outputLabel value="Location Of Interest" />  
+            <apex:inputtext value="{!interest}"/>
+       </apex:pageblocksectionitem>
+       <apex:pageblocksectionitem >
+            <apex:outputLabel value="Countries Of Interest" />  
+            <apex:selectList value="{!selectIntCountries}" size="3" multiselect="True">
+              <apex:selectOptions value="{!lstIntCountries}" /> 
+            </apex:selectList> 
+      </apex:pageblocksectionitem>
+     </apex:pageBlockSection>
+     </apex:PageBlock>  
+            <apex:pageBlock >
+                <apex:pageBlockSection collapsible="true" columns="6" title="Additional Filters" >
+                <apex:pageblocksectionitem >
+                    <apex:outputLabel value="Rating Filters" />
+               <apex:outputpanel >
+                  <apex:outputLabel value="Preparedness" style="font-weight: bold;"/> 
+                  <apex:selectList value="{!selectPrepRating}" size="1" multiselect="false" id="Preparedness">
+                   <apex:selectOption itemLabel="0" itemValue="0" />
+                      <apex:selectOptions value="{!PrepRating}" /> 
+                  </apex:selectList>
+                  <br/>
+                <apex:outputLabel value="Personality" style="font-weight: bold;" /> &nbsp;&nbsp;&nbsp;&nbsp;   
+                  <apex:selectList value="{!selectPersRating}" size="1" multiselect="false">
+                  <apex:selectOption itemLabel="0" itemValue="0" />
+                      <apex:selectOptions value="{!PrepRating}" /> 
+                  </apex:selectList><br/>
+                  <apex:outputLabel value="Experience" style="font-weight: bold;" />  &nbsp; &nbsp;&nbsp;   
+                  <apex:selectList value="{!selectExpRating}" size="1" multiselect="false">
+                   <apex:selectOption itemLabel="0" itemValue="0" />
+                      <apex:selectOptions value="{!PrepRating}" /> 
+                    </apex:selectList>                                     
+                    </apex:outputpanel>
+                </apex:pageblocksectionitem>
+                <apex:pageblocksectionitem >
+                    <apex:outputLabel value="Partner" />
+                    <apex:inputtext value="{!selectPartner}"/>                       
+               </apex:pageblocksectionitem>
+               <apex:pageblocksectionitem >
+                   <apex:outputLabel value="Major" />
+                    <apex:inputtext value="{!major}"/>
+               </apex:pageblocksectionitem>
+               <apex:pageblocksectionitem >
+                    <apex:outputLabel value="Compensation"/>
+                    <apex:selectList value="{!selectCompType}" size="1" multiselect="false">
+                        <apex:selectOptions value="{!CompType}" /> 
+                     </apex:selectList>
+               </apex:pageblocksectionitem> 
+               <apex:pageblocksectionitem >
+                <apex:outputLabel value="Age"  />
+                <apex:selectList value="{!selectAgeRange}" size="1" multiselect="false">
+                      <apex:selectOptions value="{!lstAgeRange}" /> 
+                   </apex:selectList>
+               </apex:pageblocksectionitem> 
+				
+             </apex:pageBlockSection>
+           </apex:pageBlock>
+
+          <apex:commandButton value="Search" action="{!initIntern}" reRender="pbs, validationMsg" status="loadingMsg" />
+            <BR/>
+            <apex:pageBlockSection columns="1" title="Result" collapsible="false" id="pbs">
+                <apex:actionStatus startText="Please Wait....." startStyle="font-weight: bold;color: green;" id="loadingMsg"/>
+                <!-- <apex:outputLabel value="{!serachedProgramOptions}" escape="false" />-->
+                <!-- Resultant table -->
+                <apex:pageBlockTable value="{!PossibleMatchesList}" var="item" rendered="{!IF(PossibleMatchesList.Size > 0, true, false)}">
+                    <apex:column >
+                        <apex:facet name="header">
+                            <input type="checkbox" id="headerCheck" onclick="checkAll(this);" />
+                        </apex:facet>
+                        <apex:inputCheckBox value="{!item.selected}" id="selectedRecords"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:commandLink action="{!sortResults}" value="Rank{!IF(sortDir='ASC','▲','▼')}" reRender="pbs, validationMsg" status="loadingMsg" />
+                        </apex:facet>
+                        <apex:outputText value="{!item.ranking}" />
+                    
+                        
+                    </apex:column>
+                   <apex:column value="{!item.engagement.Account_Id__c}" />
+                    <apex:column value="{!item.oLI.whatId}" />               
+                    <apex:column value="{!item.engagement.Location_of_Interest__c}" />
+                    <apex:column value="{!item.engagement.Engagement_Start__c}" />
+                    <apex:column value="{!item.engagement.Engagement_End__c}" />
+                    <apex:column value="{!item.engagement.Account_Id__r.Major__pc}" />
+                    <apex:column value="{!item.engagement.Compensation_Type__c}" />
+                    <apex:column value="{!item.engagement.Account_Id__r.School_Name__pc}" />
+                    <apex:column value="{!item.engagement.Functional_Areas__c}" />
+                    <apex:column value="{!item.engagement.Position_Types__c}" />
+                  
+                   
+                  
+                </apex:pageBlockTable>
+                
+                <!-- Panel to render Paging functionality -->
+                <apex:outputPanel rendered="{!IF(totalResults > 0,true,false)}" >
+                    <table border="0" align="center">
+                        <tr>
+                            <td align="left" >
+                                <B><apex:commandLink action="{!getPrevious}" value="Previous" rendered="{!IF(resultsStartNumber = 1, false, true)}" reRender="pbs, validationMsg" status="loadingMsg"/> </B>
+                            </td>
+                            <td width="50">
+                            </td>
+                            <td >
+                                <B>Record(s) {!resultsStartNumber}-{!resultsStopNumber} of {!totalResults}</B>
+                            </td>
+                            <td width="50">
+                            </td>
+                            <td align="right">
+                                <B><apex:commandLink action="{!getNext}" value="Next" rendered="{!IF(resultsStopNumber = totalResults, false, true)}" reRender="pbs, validationMsg" status="loadingMsg" /></B>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" align="center" >
+                                <apex:image url="{!$Resource.MatchSelected}" style="cursor:pointer;" onclick="validateBeforeSave(); return false;"/>
+                            </td>
+                        </tr>
+                    </table>
+                </apex:outputPanel>
+                <apex:outputLabel rendered="{!IF(totalResults > 0, false, true)}" > {!searchResultMessage} </apex:outputLabel>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</div>
+</apex:page>

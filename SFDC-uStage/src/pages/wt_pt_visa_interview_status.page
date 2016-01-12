@@ -1,0 +1,64 @@
+<apex:page docType="html-5.0" title="Visa Result" controller="ParticipantPortalController" id="wt_pt_visa_interview_dt" standardStylesheets="false" showHeader="false">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+     <!-- <c:block_header_igi_pt_application /> -->    
+      <div class="row">
+        <div class="col-md-7 col-md-push-3">
+          
+         <h1>Your Visa Interview</h1>
+          <p class="lead">Our records indicate that you have recently completed your visa interview. Once you know your interview result, please share it with us so that we can help with your next steps.</p>
+          <apex:form styleClass="form-vertical ws-validate" id="webform">
+            <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+            
+            <apex:pageBlock id="Block_VisaDetails" rendered="{!IF(enggVisaDetails != NULL, true, false)}" >
+            <div class="row">
+            <div class="col-sm-6">
+            <div class="form-group">
+              <label class="control-label">Result of Visa Interview 
+             </label>
+                <apex:inputField styleClass="form-control" value="{!enggVisaDetails.Visa_Interview_Status__c}" required="TRUE" id="VisaStatus" />
+            </div>
+            </div><!--  end col -->
+            </div><!--  end row -->
+            
+                        
+            <div class="form-group">
+                <apex:commandlink styleClass="btn btn-primary btn-lg"
+									action="{!SaveVisaDate}" id="nextlink"  onComplete="rerunjs();" reRender="webform" status="onsubmit">
+				   <apex:param name="EnggID" value="{!EnggID}" assignto="{!EnggID}" />
+				   <apex:param name="ActionType" value="SaveInterviewStatus" />
+                  <apex:commandButton value="Save" id="continuebutton" />
+                </apex:commandlink>
+            </div>
+            </apex:pageBlock>
+          </apex:form>
+        </div>
+        <!-- end column  -->
+        
+       <div class="col-md-3 col-md-pull-7">
+       <c:block_notification_sidebar_wt ApplicantInfo="{!EnggAppInfo}" /> 
+        </div>
+        <!-- end column  --> 
+      </div>
+      <!-- end row --> 
+       <script>
+var j$ = jQuery.noConflict();
+
+function confDelete(){
+j$('#myModal').modal();
+} 
+  
+function popModal(){
+var auxerr= j$('.custom-error-pagelevel').attr('role');
+//alert(auxerr);
+	if(auxerr=="alert"){
+	}else{
+		j$('#myModalUpload').modal();
+	}
+} 
+    
+</script>          
+        
+    </apex:define>
+  </apex:composition>
+</apex:page>

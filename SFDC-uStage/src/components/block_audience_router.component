@@ -1,0 +1,62 @@
+<apex:component layout="none">
+<apex:attribute name="uInParameter" description="manage the background" type="String" required="false" default=""/>
+<apex:attribute name="userAgentCheck" description="check if smartphone" type="String" required="false" default=""/>
+<!--  audience router -->    
+<style>
+#route-audience a,
+#route-audience a:hover{ padding:30px; display:block;}
+#route-audience a{color:#202020; background:#efefef; margin-bottom: 20px;}
+#route-audience a:hover{ color: #fff; background: #87b64f;}
+#route-audience .lead{color:#202020;}
+#route-audience .h1{color: #fff; font-size: 30px;} 
+#route-audience .h4{font-size:22px;}
+ </style>
+      
+      <apex:outputpanel layout="block" rendered="{!NOT(CONTAINS(uInParameter,'APCHF') || CONTAINS(uInParameter,'APCPT')) && $Site.Name == 'AuPairCare' && $CurrentPage.Name == 'AppEngine_SiteRegister'}" > 
+       <div class="row">
+       <div class="col-sm-10 col-md-8 col-lg-6 center-block">
+              <div id="route-audience" class="modal-body center-text">
+                <div class="h1 margin-b4">Welcome, What Would You Like to Do?</div>
+                <div class="row">
+                <div class="col-sm-6">
+                <a  href="?uin=APCHF">
+ <span class="h4">Find an Au Pair</span><br/>
+ <span>Start a family application</span>
+</a>
+                </div>
+                 <div class="col-sm-6">
+                 <a href="?uin=APCPT">
+                 <span class="h4">Become an Au Pair</span><br/>
+                 <span>Start an au pair application</span>
+                 </a>
+                 </div>
+                </div><!--  end row -->
+              </div>
+              </div><!--  end col -->
+           </div><!--  end row -->
+        </apex:outputpanel>
+        
+        
+         <apex:outputpanel layout="block" rendered="{!NOT(CONTAINS(uInParameter,'APCHF') || CONTAINS(uInParameter,'APCPT')) && $Site.Name == 'AuPairCare' && $CurrentPage.Name == 'AppEngine_SiteLoginPage'}" > 
+       <div class="row">
+       <div class="col-sm-10 col-md-8 col-lg-6 center-block">
+              <div id="route-audience" class="modal-body center-text">
+                <div class="h1 margin-b4">Welcome, Please Select One</div>
+                <div class="row">
+                <div class="col-sm-6">
+                <a  href="?uin=APCHF">
+ <span class="h4">Host Family Login</span>
+</a>
+                </div>
+                 <div class="col-sm-6">
+                 <a href="?uin=APCPT">
+                 <span class="h4">Au Pair Login</span>
+                 </a>
+                 </div>
+                </div><!--  end row -->
+              </div>
+              </div><!--  end col -->
+           </div><!--  end row -->
+        </apex:outputpanel>
+
+</apex:component>

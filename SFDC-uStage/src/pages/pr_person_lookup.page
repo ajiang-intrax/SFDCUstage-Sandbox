@@ -1,0 +1,120 @@
+<apex:page applyBodyTag="false" applyHtmlTag="false" id="pt_personlookup" title="Search Results | Intrax" standardStylesheets="false" showHeader="false" controller="IntraxPartnerPortalEngineController">
+<apex:composition template="intraxtemplate_vs3">
+            <apex:define name="body">
+            
+<style>#content-zone .container { width: 100%; padding: 40px 40px 60px; }</style>
+
+
+<div class="row margin-b2">
+<div class="col-md-10 col-lg-8 center-text center-block">
+<h1>Search Results</h1>
+</div><!--  end column --> 
+</div><!--  end row -->  
+            
+
+            
+                <apex:form id="Form">
+                <apex:actionFunction name="callAction" action="{!SearchAgain}" status="waitMsg" reRender="app,error,eng,waitMsg"/>
+
+<div class="row">
+<div class="col-sm-5 col-lg-4 center-block">
+<apex:outputPanel styleClass="pagemessage vs1 center-text" layout="block" id="error">
+                     <apex:pageMessages />
+                </apex:outputPanel>
+</div><!--  end column --> 
+</div><!--  end row -->  
+
+<div class="row margin-t2 margin-b6">
+<div class="col-sm-5 col-lg-4 center-block">
+ <div class="input-group input-group-lg">
+<apex:inputText value="{!URLSearchValue}" id="searchInput" onkeydown="return runScript(event);" styleClass="form-control" style="height:46px;" html-placeholder="Name of Applicant or Participant"/> 
+<apex:commandLink styleClass="input-group-addon"  value="Search Again" id="SearchAgainButton" action="{!SearchAgain}" status="waitMsg" reRender="app,error,eng"/>
+</div>  
+</div><!--  end column --> 
+</div><!--  end row -->  
+
+
+    
+                <apex:actionStatus id="waitMsg" startStyleClass="alert alert-info">
+                    <apex:facet name="start" >
+                        <i class="fa fa-refresh fa-spin"></i><strong>Please Wait.....</strong>
+                    </apex:facet>
+                </apex:actionStatus>
+                
+                <apex:outputPanel styleClass="margin-b4" layout="block" id="app">
+                
+                <apex:pageBlock >
+                <h3 class="center-text">Results in Applications</h3>    
+                <apex:outputText rendered="{!appList.size==0}"><p class="center-text lead">No results found in applications.</p></apex:outputText>      
+                <apex:outputPanel layout="block" rendered="{!appList.size > 0}">
+                <div class="table-responsive vs3">  
+                <apex:pageblockTable styleClass="table vs3" value="{!appList}" var="app">
+                  <apex:column headerValue="Application Name">                                    
+                        <apex:outputLink id="Ayusa1" rendered="{!IF(app.Intrax_Program__c == 'Ayusa' && app.Intrax_Program_Options__c == 'Ayusa High School' && app.Application_Level__c == 'Basic' && app.Application_Stage__c == 'Working', true, false)}" value="/apex/Ayusa_preapp_home?Id={!app.id}&IsPartner=true"> <apex:outputText value="{!app.Name}" /></apex:outputLink>
+                        <apex:outputLink id="Ayusa2" rendered="{!IF(app.Intrax_Program__c == 'Ayusa' && app.Intrax_Program_Options__c == 'Ayusa High School' && app.Application_Level__c == 'Basic' && app.Application_Stage__c == 'Declined - Agent', true, false)}" value="/apex/Ayusa_preapp_summary?Id={!app.id}&IsPartner=true&view=true"> <apex:outputText value="{!app.Name}" /></apex:outputLink>
+                        <apex:outputLink id="Ayusa3" rendered="{!IF(app.Intrax_Program__c == 'Ayusa' && app.Intrax_Program_Options__c == 'Ayusa High School' && app.Application_Level__c == 'Main' && (app.Application_Stage__c == 'Working' || app.Application_Stage__c == 'Submitted' || app.Application_Stage__c == 'Conditional'), true, false)}" value="/apex/Ayusa_app_home?Id={!app.id}&IsPartner=true"> <apex:outputText value="{!app.Name}" /></apex:outputLink>
+                        <apex:outputLink id="Ayusa4" rendered="{!IF(app.Intrax_Program__c == 'Ayusa' && app.Intrax_Program_Options__c == 'Ayusa High School' && app.Application_Level__c == 'Main' && !(app.Application_Stage__c == 'Working' || app.Application_Stage__c == 'Submitted' || app.Application_Stage__c == 'Conditional') , true, false)}" value="/apex/Ayusa_app_summary?Id={!app.id}&participantId={!app.Engagement__r.Id}&view=true&backURL=AP"> <apex:outputText value="{!app.Name}" /> </apex:outputLink> 
+                        <apex:outputLink id="WT1" rendered="{!IF(app.Intrax_Program__c == 'Work Travel' && (app.Application_Stage__c == 'Working' || app.Application_Stage__c == 'Submitted' || app.Application_Stage__c == 'Conditional'), true, false)}" value="/apex/Participant_Preapp_home?Id={!app.id}&showBack=true&workingStatus=true&IsPartner=true"> <apex:outputText value="{!app.Name}" /> </apex:outputLink> 
+                        <apex:outputLink id="WT2" rendered="{!IF(app.Intrax_Program__c == 'Work Travel' && !(app.Application_Stage__c == 'Working' || app.Application_Stage__c == 'Submitted' || app.Application_Stage__c == 'Conditional') , true, false)}" value="/apex/Participant_Preapp_Summary?Id={!app.id}&participantId={!app.Engagement__r.Id}&view=true&backURL=AP"> <apex:outputText value="{!app.Name}" /> </apex:outputLink> 
+                        <apex:outputLink id="Internship1" rendered="{!IF(app.Intrax_Program__c == 'Internship' && (app.Application_Stage__c == 'Working' || app.Application_Stage__c == 'Submitted' || app.Application_Stage__c == 'Conditional'), true, false)}" value="/apex/igi_pt_app_personal_info?Id={!app.id}&showBack=true&workingStatus=true&IsPartner=true"> <apex:outputText value="{!app.Name}" /> </apex:outputLink>
+                        <apex:outputLink id="Internship2" rendered="{!IF(app.Intrax_Program__c == 'Internship' && !(app.Application_Stage__c == 'Working' || app.Application_Stage__c == 'Submitted' || app.Application_Stage__c == 'Conditional') , true, false)}" value="/apex/Participant_Preapp_Summary?Id={!app.id}&participantId={!app.Engagement__r.Id}&view=true&backURL=AP"> <apex:outputText value="{!app.Name}" /> </apex:outputLink>                  
+                        <apex:outputLink id="AuPairCare1" rendered="{!IF(app.Intrax_Program__c == 'AuPairCare', true, false)}" value="/apex/apc_ap_main_home?Id={!app.id}&IsPartner=true"><apex:outputText value="{!app.Name}" /></apex:outputLink>
+                    </apex:column>                
+                  <apex:column headerValue="Application Level" value="{!app.Application_Level__c}"/>
+                  <apex:column headerValue="Application Stage" value="{!app.Application_Stage__c}"/>
+                  <apex:column headerValue="Created Date" value="{!app.CreatedDate}"/>
+                  <apex:column headerValue="Submitted Date" value="{!app.Submitted_Date__c}"/>
+                </apex:pageblockTable>  
+                </div>
+                </apex:outputPanel>                     
+                </apex:pageBlock>   
+                
+                <div class="margin-t2">
+                <apex:commandLink action="{!OpenApplicationsWithSearch}" rendered="{!appList.size>=5}"><b>Show all application results ></b></apex:commandLink>
+                </div>
+                
+                      
+                </apex:outputPanel>
+                
+                 
+                 
+                 <apex:outputPanel layout="block" id="eng">
+                 
+                 <apex:pageBlock >
+                 <h3 class="center-text">Results in Participants</h3>
+                 <apex:outputText rendered="{!engList.size==0}"><p class="center-text lead">No results found in participants.</p></apex:outputText>     
+                 <apex:outputPanel layout="block" rendered="{!engList.size > 0}">
+                 <div class="table-responsive vs3"> 
+                 <apex:pageblockTable styleClass="table vs3" value="{!engList}" var="eng">
+                      <apex:column headerValue="Participant Name">
+                        <apex:outputLink value="/apex/pr_pt_profile?participantId={!eng.id}&isInputType=false"><apex:outputText value="{!eng.Name}" /></apex:outputLink>
+                      </apex:column>
+                      <apex:column headerValue="Status" value="{!eng.Status__c}"/>
+                      <apex:column headerValue="Placement Status" value="{!eng.Placement_Status__c}"/>
+                      <apex:column headerValue="Engagement Start Date" value="{!eng.Engagement_Start__c}"/>
+                      <apex:column headerValue="Engagement End Date" value="{!eng.Engagement_End__c}"/>
+                 </apex:pageblockTable> 
+                 </div>
+                 </apex:outputPanel>
+                 </apex:pageBlock>  
+                 
+                 <div class="margin-t2">
+                 <apex:commandLink action="{!OpenParticipantsWithSearch}" rendered="{!engList.size>=5}"><b>Show all participant results ></b></apex:commandLink>
+                 </div>         
+                 
+                 </apex:outputPanel>
+                 
+                 <script>               
+                    function runScript(obj){                        
+                        //alert(obj.keyCode);
+                        if(obj.keyCode == 13){
+                            callAction();   // call action function
+                            return false;
+                        }
+                    }
+                </script>
+                  
+                </apex:form>
+            </apex:define>
+        </apex:composition>
+</apex:page>

@@ -1,0 +1,87 @@
+<apex:page docType="html-5.0" title="Misc Review Information" applyBodyTag="false" applyHtmlTag="false" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="false" showHeader="false" id="apc_ap_main_misc_review">
+<apex:composition template="intraxtemplate_vs3">
+        <apex:define name="body">
+            <c:block_header_apc_ap_application />
+             <div id="app-page" class="row">
+        <div id="app-focus" class="col-md-8 col-md-push-3">
+                    
+                    <c:block_app_completion ApplicantInfo="{!applicantInfo}" userProfileName="{!userProfileName}"  />
+                     
+                    <h1>Miscellaneous Application Details</h1>
+                    
+                    <apex:form styleClass="form-vertical ws-validate" id="webform">
+                    <apex:pageMessages />
+                     
+                       <div class="section-title">Childcare Experience</div>
+                       <p>Childcare hours and experience are the most important aspect of an au pair's application and are carefully scrutinized by potential host families.  Please review this applicant's experience very carefully before agreeing to the following statement:</p>
+                       
+                        <div class="row margin-b3">
+							<div class="col-sm-12">	
+								<div class="form-group no-margin">				                    				                    			                      
+			                      <div class="tcell"><apex:inputCheckbox styleClass="form-control" required="FALSE" value="{!applicantInfo.Childcare_Reviewed__c}" id="ChildReviewed"/></div>
+			                      <div class="tcell"><label>I have reviewed the applicant's experience and confirm that they do not report working more than 50 hours during any week. If this applicant attended school full time, they did not simultaneously provide full time childcare. </label></div>			                      
+				                </div>
+							</div>					 
+						</div><!--  end row -->
+						
+						 <div class="section-title">Passport/Contact Information</div>
+                        <p>All au pairs need a valid passport for the duration of their stay in the USA. In addition, all documents provided by AuPairCare will need to match the name and dates from the passport. Please review the applicant's contact information and passport upload carefully before agreeing to the following statement:</p>
+                       
+                        <div class="row margin-b3">
+							<div class="col-sm-12">	
+								<div class="form-group no-margin">				                    				                    			                      
+			                      <div class="tcell"><apex:inputCheckbox styleClass="form-control" required="FALSE" value="{!applicantInfo.Passport_Reviewed__c}" id="PassportReviewed"/></div>
+			                      <div class="tcell"><label>I have reviewed the passport uploaded by the applicant and confirm that the name and birthdate provided on the application are identical to what is printed on the passport. I also have checked that the passport is not expired and the uploaded document is of good quality.</label></div>			                      
+				                </div>
+							</div>					 
+						</div><!--  end row -->
+                       
+                        <div class="section-title">Driving Experience</div>
+                        <p>Driving is a common and important childcare duty for au pairs on program. It is very important driving skills have been communicated accurately as false information will result in a match break.  Please review the applicant's driving experience carefully before agreeing to the following statement:</p>
+                       
+                        <div class="row margin-b3">
+							<div class="col-sm-12">	
+								<div class="form-group no-margin">				                    				                    			                      
+			                      <div class="tcell"><apex:inputCheckbox styleClass="form-control" required="FALSE" value="{!applicantInfo.Driving_Reviewed__c}" id="DrivingReviewed"/></div>
+			                      <div class="tcell"><label>I have verified this applicants driving experience and confirm that driver's license number and date of issue matches the copy of license uploaded by the au pair. </label></div>			                      
+				                </div>
+							</div>					 
+						</div><!--  end row -->
+                       
+                       <div class="section-title">Photos and Video</div>
+                       <p>Applicants have been asked to upload a minimum of {custom setting minimum number of required photos} photos of themselves with family, friends and caring for children.  They are also strongly encouraged to upload a video resume.  Please review any photos and video now before agreeing to the following statement:</p>
+                       
+                        <div class="row margin-b3">
+							<div class="col-sm-12">	
+								<div class="form-group no-margin">				                    				                    			                      
+			                      <div class="tcell"><apex:inputCheckbox styleClass="form-control" required="FALSE" value="{!applicantInfo.Photos_Reviewed__c}" id="PhotosReviewed"/></div>
+			                      <div class="tcell"><label>I have reviewed the applicant's photos and videos, removing any instances of poor quality or inappropriate content and imagery.</label></div>			                      
+				                </div>
+							</div>					 
+						</div><!--  end row -->
+                       
+                       
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <apex:outputLink styleClass="btn btn-link btn-lg" value="/apex/apc_ap_main_secondary_review?id={!applicantInfo.Id}&docType=Secondary-School-Diploma" id="backlink"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                                <apex:commandlink rendered="{!applicantInfo.Application_Type__c=='Original' && userProfileName == 'OCPM Agent Portal'}" styleClass="btn btn-primary btn-lg" action="{!navigator}" id="nextpage10" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+				                  <apex:param name="nextPage" value="/apex/apc_ap_main_home" />
+				                  <apex:param name="reDirectPage" value="true" />
+				                  <apex:param name="pageId" value="049"/>
+				                  <apex:commandButton value="Save & Continue" id="continuebutton10" />
+				                </apex:commandlink>
+				            </div>
+                        </div>
+                      
+                    </apex:form>
+                </div>
+                <!-- end column -->
+                
+                 <div id="app-side" class="col-md-3 col-md-pull-8">
+                    <c:menu_side_apc_ap_basic ApplicantInfo="{!applicantInfo}" />
+                </div>
+            </div>
+            <!-- end row --> 
+        </apex:define>
+    </apex:composition>
+</apex:page>

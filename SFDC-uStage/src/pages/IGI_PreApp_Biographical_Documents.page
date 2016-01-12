@@ -1,0 +1,144 @@
+<apex:page docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+    <apex:composition template="IntraxTemplate_Vs1">
+        <apex:define name="body">
+            <div class="wrapper">
+                <apex:form >
+                    
+                    <!-- Header -->
+                    <div class="page-header clearfix">
+                        <h1>Intrax Global Internship Application</h1>
+                        
+                        <!-- Back to Main Page Link -->
+                        <div class="back-to-main">
+                            <apex:outputLink value="apex/IGI_preApp_Home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+                        </div>
+                        
+                       <!-- Section Header -->  
+                       <div class="section-header clearfix">
+                            <h2>Biographical Documents</h2>
+                       </div> 
+                        
+                        <!-- Section for Add Photo functionality -->
+                        <div class="white-box clearfix">
+                            <div class="panel two_thirds">
+                            
+                                <p>Please upload a photo of yourself here.</p>
+                                
+                                <apex:outputText value="{!disableFileUploadText}" rendered="{!disableFileUpload}"/>          
+                                <div class="form-row">
+                                    <div class="form-link">
+                        
+                                        <!-- Add a new photo link -->
+                                        <apex:outputLink value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType=Participant-Photo&retparam={!retParam}" id="theLink" target="_self" disabled="{!disableFileUpload}"><i class="icon-plus-sign"></i><span>Add a New Photo</span></apex:outputLink>
+                                    </div>
+                                </div> 
+                                
+                                <p>Please upload the photo page of your passport.</p>
+                                
+                                <apex:outputText value="{!disableFileUploadText}" rendered="{!disableFileUpload}"/>          
+                                <div class="form-row">
+                                    <div class="form-link">
+                        
+                                        <!-- Add a new photo link -->
+                                        <apex:outputLink value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType=Passport&retparam={!retParam}" id="passportLink" target="_self" disabled="{!disableFileUpload}"><i class="icon-plus-sign"></i><span>Add a Passport Copy</span></apex:outputLink>
+                                    </div>
+                                </div> 
+                                
+                                <p>If you have had a visa to your destination country in the past, please upload it here.</p>
+                                
+                                <apex:outputText value="{!disableFileUploadText}" rendered="{!disableFileUpload}"/>          
+                                <div class="form-row">
+                                    <div class="form-link">
+                        
+                                        <!-- Add a new photo link -->
+                                        <apex:outputLink value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType=Previous-Visa&retparam={!retParam}" id="visalink" target="_self" disabled="{!disableFileUpload}"><i class="icon-plus-sign"></i><span>Add your Visa</span></apex:outputLink>
+                                    </div>
+                                </div> 
+                               <apex:outputPanel rendered="{! applicantInfo.Intrax_Program_Options__c == 'WEST'}" >
+                                 <p>Upload your WEST Application Documents here.</p>
+                                
+                                <apex:outputText value="{!disableFileUploadText}" rendered="{!disableFileUpload}"/>          
+                                <div class="form-row">
+                                    <div class="form-link">
+                        
+                                        <!-- Add a new photo link -->
+                                        <apex:outputLink value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType=Other&retparam={!retParam}" id="westlink" target="_self" disabled="{!disableFileUpload}"><i class="icon-plus-sign"></i><span>Add your Application Documents</span></apex:outputLink>
+                                    </div>
+                                </div> 
+                                </apex:outputPanel>
+                                 
+                                
+                                <!-- Case when we do not have ant photo in prior -->
+                                <div class="form-row">
+                                    <apex:outputLabel rendered="{!NOT(DocList.Size > 0)}"> <span class="no-records">No record(s) to display.</span></apex:outputLabel>
+                                </div>  
+             
+                                <!-- Table having details of documents -->
+                                <apex:pageBlock rendered="{!if(DocList.Size > 0, true, false)}">
+                                    <apex:pageBlockTable styleClass="pageblocktable" value="{!DocList}" var="item">
+                                        
+                                        <!-- File Name -->
+                                        <apex:column headerValue="File Name">
+                                            <apex:outputText value="{!item.Document_Name__c}"/>
+                                        </apex:column>
+                                        
+                                        <!-- Description -->
+                                        <apex:column headerValue="Description">
+                                            <apex:outputText value="{!item.Description__c}"/>
+                                        </apex:column>
+                                        <apex:column headerValue="Type">
+                                            <apex:outputText value="Previous Visa" rendered="{!item.Document_Type__c == 'PreviousVisa'}"/>
+                                            <apex:outputText value="{!item.Document_Type__c}" rendered="{!NOT(item.Document_Type__c == 'PreviousVisa')}"/>
+                                        </apex:column>
+                                        
+                                        <!-- Document GUID -->
+                                        <apex:column >
+                                            
+                                            <apex:commandlink styleClass="inline-link" action="{!load}" target="_blank">
+                                                <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                                <apex:commandButton value="View" />
+                                            </apex:commandlink>
+                                            
+                                            <apex:outputText value=" | " />
+                                                <apex:commandlink styleClass="inline-link" action="{!deletefile}" >
+                                                    <apex:param name="docGuid"  value="{!item.Document_GUID__c}"/>
+                                                    <apex:commandButton value="Delete" onclick="return ConfirmDelete('Are You Sure ?');"/>
+                                                </apex:commandlink>
+                                        </apex:column>
+                                        
+                                    </apex:pageBlockTable>
+                                </apex:pageBlock>    
+                                <!--  
+                                <apex:outputText value="{!disableFileUploadText}" rendered="{!disableFileUpload}"/>          
+                                <div class="form-row">
+                                    <div class="form-link">
+                        
+                                        <!-- Add a new photo link 
+                                        <apex:outputLink value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType={!$CurrentPage.parameters.docType}&retparam={!retParam}" id="theLink" target="_self" disabled="{!disableFileUpload}"><i class="icon-plus-sign"></i><span>Add a New Photo</span></apex:outputLink>
+                                    </div>
+                                </div>   
+                                 -->
+                                <!-- Back Button -->
+                                <div class="form-row">
+                                
+                                    <div class="form-link">
+                                        <apex:outputLink value="/apex/IGI_preApp_Biographical_Details?id={!applicantInfo.Id}"><i class="icon-chevron-left"></i> <span>Back</span></apex:outputLink>
+                                    </div>
+              
+                                    <!-- Save & Continue Button -->
+                                    <div class="form-button">
+                                        <apex:commandlink styleClass="next" action="{!navigator}">
+                                            <apex:param name="nextPage" value="/apex/IGI_preApp_Contact_Details"/>
+                                            <apex:param name="reDirectPage" value="true"/>
+                                            <apex:commandButton value="Continue" />
+                                            <i class="icon-chevron-right"></i>   
+                                        </apex:commandlink>
+                                    </div>                    
+                              </div>
+                        </div>
+                    </div>
+                </apex:form>
+            </div>
+        </apex:define>
+    </apex:composition>
+</apex:page>

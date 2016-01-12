@@ -1,0 +1,216 @@
+<apex:page standardController="Opportunity" showHeader="FALSE" renderas="pdf" >
+  
+<head>
+<style type="text/css" media="print">
+        @page {
+                margin:1cm 1cm 4cm 1cm;
+
+                @top-left {
+                    content: element(header);
+                }
+                @bottom-left {
+                    content: element(footer);
+                }
+              }
+        div.eop {
+            position: running(footer);
+                }
+    </style>
+<style type="text/css">
+    
+html, body {
+
+            margin:0; 
+
+            padding:0;
+
+            font-family: sans serif, Arial Unicode MS;
+            
+            font-size: 12px;
+
+            }       
+p, ol, ul{margin-bottom:1em;}
+img{border:0;}
+#wrapper { margin-left: 20px}
+    
+    
+    
+</style>
+
+ 
+    
+</head>
+<apex:pageBlock >
+    <div align="left"><apex:image url="{!$Resource.Intrax_Logo}" title="Intrax" alt="Intrax"/></div>
+    <div id="wrapper">
+    <br/><br/><br/><br/>
+    <apex:outputfield value="{!Opportunity.Account.Name}"/> <br/>
+    <apex:outputField value="{!Opportunity.Account.PersonMailingStreet}"/>  <br/>
+    <apex:outputField value="{!Opportunity.Account.PersonMailingPostalCode}"/>&nbsp;<apex:outputField value="{!Opportunity.Account.PersonMailingCity}"/><br/>
+    <apex:outputField value="{!Opportunity.Account.PersonMailingCountry}"/> <br/>
+    <br/><br/>
+    
+    <apex:outputPanel rendered="{!Opportunity.Intrax_Region__c = 'Europe' && Opportunity.Intrax_Market__c != 'Germany' && Opportunity.Intrax_Market__c != 'France' && Opportunity.Intrax_Market__c != 'Spain'}">
+        <p><b>Placement Confirmation Date</b>: {!Day(TODAY())}.{!Month(TODAY())}.{!YEAR(TODAY())}​</p>
+        
+         
+        <p>We confirm that {!Opportunity.Account.Name}, born on &nbsp;<apex:outputField value="{!Opportunity.Account.PersonBirthdate}" />, has been placed as an Au Pair with a host family in the United States for the 
+        contracted period of 12 months starting from &nbsp;<apex:outputField value="{!Opportunity.Engagement_Start__c}" />. <br/> </p>
+        
+        <p> During this placement all participants will receive support from AuPairCare as established in the regulations by the US government authorities. </p>
+        
+        <p> All Au Pair participants will receive a weekly stipend of US $195.75 per week. </p>
+        
+        <p>As part of the AuPairCare programme all participants are required to achieve six credits (or the equivalent of 60 hours) at an accredited post-secondary college or university. Host families 
+        contribute US $500 towards tution fees. </p>
+        
+        <p>During their stay, all participants have health insurance coverage provided by AuPairCare. This health insurance expires at the end of the Au Pair's stay or upon termination of the programme. </p>
+        <br/>
+        <p>Best Regards,
+        </p>
+        <br/><br/>
+        <p> {!Opportunity.owner.FirstName} {!Opportunity.owner.LastName}<br/>
+        AuPairCare</p>
+    </apex:outputPanel>
+    
+    <apex:outputPanel rendered="{!Opportunity.Intrax_Market__c = 'France'}">
+    
+    <p><b>Date de confirmation de placement</b>: {!Day(TODAY())}.{!Month(TODAY())}.{!YEAR(TODAY())}​ </p>
+    
+        <p>Nous confirmons que {!Opportunity.Account.Name}, né le &nbsp;<apex:outputField value="{!Opportunity.Account.PersonBirthdate}" />, a été engagé(e) comme au pair dans une famille d'accueil aux Etats-Unis pour une période de 12 mois à compter du &nbsp;<apex:outputField value="{!Opportunity.Engagement_Start__c}" />. <br/> </p>
+        
+        <p>Tous les participants recevront le soutien d’AuPairCare selon les régulations établies par les autorités gouvernementales américaines. </p>
+        <ul>
+        <li>une allocation hebdomadaire de 195,75 US$ par semaine.</li>
+        <li>Une bourse de 500 US$ pour suivre six crédits (ou l'équivalent de 60 heures) dans un établissement d'enseignement post-secondaire collégial ou universitaire.</li>
+        <li>une couverture médicale offerte par AuPairCare. Cette assurance expire à la fin du séjour de l'Au Pair ou à la fin du programme.</li>
+        </ul>
+        
+        <p>La règlementation complète du programme au pair n° P-4-06027 se trouve sur le site du Ministère des Affaires Etrangères américain : http://www.ecfr.gov , sous la rubrique 22: Foreign Relations, part § 62.31.</p>
+        
+        
+        <br/>
+        <p>Cordialement,</p>
+        <br/><br/>
+        <p> {!Opportunity.owner.FirstName} {!Opportunity.owner.LastName}<br/>
+         AuPairCare</p>
+    </apex:outputPanel>
+
+
+    <apex:outputPanel rendered="{!Opportunity.Intrax_Market__c = 'Spain'}">
+        <p><b>Fecha confirmación placement</b>: {!Day(TODAY())}.{!Month(TODAY())}.{!YEAR(TODAY())}​</p>
+        
+         
+        <p>Confirmamos que {!Opportunity.Account.Name}, nacido/a el&nbsp;<apex:outputField value="{!Opportunity.Account.PersonBirthdate}" />, trabajará como au pair en una familia en Estados Unidos durante 12 meses a partir del &nbsp;<apex:outputField value="{!Opportunity.Engagement_Start__c}" />. <br/> </p>
+        
+        <p>Durante este periodo todos los participantes recibirán apoyo de AuPairCare, según lo establecido por la reglamentación de las autoridades gubernamentales de Estados Unidos. </p>
+        <ul>
+        <li>Todos los participantes au pair recibirán un sueldo semanal de 195,75 dólares americanos.</li>
+        <li>Como parte del programa AuPairCare se requiere que todos los participantes completen seis créditos (o lo equivalente a 60 horas) en un college  acreditado o en una universidad. Las familias anfitrionas contribuyen con 500 dólares al pago de la matrícula del curso.</li>
+        <li>Durante su estancia todos los participantes estarán cubiertos por un seguro de médico proporcionado por AuPairCare. Este seguro caduca al final de la estancia como au pair o a la fecha de término del programa.</li>
+        </ul>
+        <p>Las regulaciones del programa Au pair se encuentran en la página web del U.S. Department of State  (Ministerio de Exteriores) Título 22: Foreign Relations, parte § 62.31 http://www.ecfr.gov. </p>
+        
+        <p>Un cordial saludo,
+        </p>
+        <br/><br/>
+        <p> {!Opportunity.owner.FirstName} {!Opportunity.owner.LastName}<br/>
+        AuPairCare</p>
+    </apex:outputPanel>
+    
+<apex:outputPanel layout="inline" rendered="{!Opportunity.Intrax_Market__c== 'Germany' && Opportunity.Match_Date__c==NULL}">
+        
+        <p><strong>Unverbindliche Bestätigung</strong></p>
+
+       <p>hiermit bestätigen wir, dass sich {!Opportunity.Account.Name}, geboren am&nbsp;<apex:outputField value="{!Opportunity.Account.PersonBirthdate}"/>, am&nbsp;<apex:outputText value="{0,date,MM'.'dd'.'yyyy}"><apex:param value="{!Opportunity.CreatedDate}"/> </apex:outputText> bislang unverbindlich für unser Au pair Programm beworben hat. Sobald die Einigung mit einer Gastfamilie, für {!IF(Opportunity.Countries_of_Interest__c == 'United States', '12','6')} Monate dort als Au pair zu arbeiten, erfolgte sowie die Rechnung über die Programmkosten beglichen ist, wird eine verbindliche Teilnahmebestätigung ausgestellt. Aktuell sind die Bewerbungsunterlagen in {!IF(Opportunity.Countries_of_Interest__c == 'Australia', 'Australien', IF(Opportunity.Countries_of_Interest__c == 'United States', 'den USA',Opportunity.Countries_of_Interest__c))} und für interessierte Gastfamilien sichtbar. Eine Ausreise ist ab sofort möglich.</p> 
+    
+    <apex:outputPanel layout="none" rendered="{!Opportunity.Countries_of_Interest__c == 'United States'}">
+    <p>Gemäß unserer Ausschreibung und Vereinbarung mit den amerikanischen Familien sowie den Richtlinien der amerikanischen Regierung werden die Teilnehmer von AuPairCare Mitarbeitern betreut.</p> <p>Die Au pairs müssen im Rahmen dieses kulturellen Austauschprogramms Fortbildungskurse von mindestens 6 Credits an einer Fortbildungsstätte bzw. Hochschule in den USA belegen. Die Kosten hierfür werden von der Gastfamilie bis zu einer Höhe von USD 500 erstattet.</p>
+    </apex:outputPanel>
+       
+    <apex:outputPanel layout="none" rendered="{!Opportunity.Countries_of_Interest__c == 'Australia'}">
+    <p>Gemäß unserer Ausschreibung und Vereinbarung mit den australischen Familien sowie unserem Partner vor Ort, werden die Teilnehmer von JCR Mitarbeitern betreut.</p>
+    </apex:outputPanel>
+        
+<p>Für die Tätigkeit erhalten die Au pairs ein wöchentliches Taschengeld in Höhe von {!IF(Opportunity.Countries_of_Interest__c == 'United States', 'USD 195.75','AUD 150-270')}.</p>
+
+<p>Die Au pairs sind während der Dauer des Au pair Aufenthaltes automatisch kranken- und unfallversichert. Diese Versicherung läuft mit dem Ende des Au pair Aufenthalts bzw. bei Beendigung des Programms aus, sofern diese nicht verlängert wird.</p>
+
+</apex:outputPanel>
+
+    <apex:outputPanel layout="inline" rendered="{!Opportunity.Intrax_Market__c=='Germany' && NOT(ISNULL(Opportunity.Match_Date__c))  && NOT(ISNULL(Opportunity.Engagement_End__c)) && Opportunity.Engagement_End__c > TODAY()}">
+    
+        <p><strong>Bestätigung</strong></p>
+
+        <p>hiermit bestätigen wir, dass sich {!Opportunity.Account.Name}, geboren am&nbsp;<apex:outputField value="{!Opportunity.Account.PersonBirthdate}"/>, vom&nbsp;<apex:outputField value="{!Opportunity.Engagement_Start__c}"/> bis zum vorgesehenen Programmende am&nbsp;<apex:outputField value="{!Opportunity.Engagement_End__c}"/> für die vertraglich festgelegte Dauer als Au pair bei einer {!IF(Opportunity.Countries_of_Interest__c == 'Australia', 'australischen', IF(Opportunity.Countries_of_Interest__c == 'United States', 'amerikanischen',Opportunity.Countries_of_Interest__c))} Gastfamilie aufhalten wird.</p>
+             
+            <p>Gemäß unserer Ausschreibung und Vereinbarung mit den amerikanischen Familien sowie den Richtlinien der amerikanischen Regierung werden die Teilnehmer von {!IF(Opportunity.Countries_of_Interest__c == 'Australia', 'JCR', 'AuPairCare')} Mitarbeitern betreut.</p>
+
+            <apex:outputPanel layout="none" rendered="{!Opportunity.Countries_of_Interest__c == 'United States' && (Opportunity.Program_Duration__c == '1 Year' || Opportunity.Program_Duration__c == '18 Months' || Opportunity.Program_Duration__c == '21 Months' || Opportunity.Program_Duration__c == '2 Years')}">
+            <p>Die Au pairs müssen im Rahmen dieses kulturellen Austauschprogramms Fortbildungskurse von mindestens {!IF(Opportunity.Program_Duration__c == '1 Year', '6', IF(Opportunity.Program_Duration__c == '18 Months', '9','12'))} credits an einer Fortbildungsstätte bzw. Hochschule in den USA belegen. Die Kosten hierfür werden von der Gastfamilie bis zu einer Höhe von {!IF(Opportunity.Program_Duration__c == '1 Year', 'USD 500', IF(Opportunity.Program_Duration__c == '18 Months', 'USD 750','$1000'))} erstattet.</p>
+             </apex:outputPanel>
+
+
+        <p>Für die Tätigkeit erhält das Au pair ein wöchentliches Taschengeld in Höhe von {!Opportunity.Pay_Notes__c}.</p>
+
+        <p>Die Au pairs sind während der Dauer des Au pair Aufenthaltes automatisch kranken- und unfallversichert. Diese Versicherung läuft mit dem Ende des Au pair Aufenthalts bzw. bei Beendigung des Programms aus, sofern diese nicht verlängert wird.</p>
+    </apex:outputPanel>
+    
+<apex:outputPanel rendered="{!Opportunity.Intrax_Market__c =='Germany' && NOT(ISNULL(Opportunity.Match_Date__c)) && NOT(ISNULL(Opportunity.Engagement_End__c)) &&Opportunity.Engagement_End__c <= TODAY()}">
+
+        <p><strong>Bestätigung</strong></p>
+
+        <p>hiermit bestätigen wir, dass sich {!Opportunity.Account.Name}, geboren am&nbsp;<apex:outputField value="{!Opportunity.Account.PersonBirthdate}"/>, vom&nbsp;<apex:outputField value="{!Opportunity.Engagement_Start__c}"/> bis zum&nbsp;<apex:outputField value="{!Opportunity.Engagement_End__c}"/> als Au pair bei einer {!IF(Opportunity.Countries_of_Interest__c == 'Australia', 'australischen', IF(Opportunity.Countries_of_Interest__c == 'United States', 'amerikanischen',Opportunity.Countries_of_Interest__c))} Gastfamilie aufgehalten hat.               
+            
+<apex:outputPanel layout="none" rendered="{!Opportunity.Operation_Stage__c != 'Early Departure'}">
+            Das Programm wurde nach der vertraglich festgelegten Dauer von {!IF(Opportunity.Program_Duration__c == '6 Months', '6', IF(Opportunity.Program_Duration__c == '1 Year', '12',IF(Opportunity.Program_Duration__c == '18 Months', '18',IF(Opportunity.Program_Duration__c == '21 Months', '21','24'))))} Monaten erfolgreich abgeschlossen.
+            </apex:outputPanel>
+ </p>        
+
+            <p>Gemäß unserer Ausschreibung und Vereinbarung mit den {!IF(Opportunity.Countries_of_Interest__c == 'Australia', 'australischen', IF(Opportunity.Countries_of_Interest__c == 'United States', 'amerikanischen',Opportunity.Countries_of_Interest__c))} Familien sowie unserem Partner vor Ort, werden die Teilnehmer von {!IF(Opportunity.Countries_of_Interest__c == 'Australia', 'JCR', 'AuPairCare')} Mitarbeitern betreut.</p>
+
+        <p>Für die Tätigkeit erhielt das Au pair ein wöchentliches Taschengeld in Höhe von {!Opportunity.Pay_Notes__c}.</p>
+
+            <apex:outputPanel layout="none" rendered="{!Opportunity.Countries_of_Interest__c == 'United States' && Opportunity.Operation_Stage__c != 'Early Departure'}">
+            <p>Die Au pairs müssen im Rahmen dieses kulturellen Austauschprogramms Fortbildungskurse von mindestens {!IF(Opportunity.Program_Duration__c == '1 Year', '6', IF(Opportunity.Program_Duration__c == '18 Months', '9','12'))} credits an einer Fortbildungsstätte bzw. Hochschule in den USA belegen. Die Kosten hierfür werden von der Gastfamilie bis zu einer Höhe von {!IF(Opportunity.Program_Duration__c == '1 Year', 'USD 500', IF(Opportunity.Program_Duration__c == '18 Months', 'USD 750','USD 1000'))} erstattet.</p>
+            </apex:outputPanel>
+
+        <p>Die Au pairs sind während der Dauer des Au pair Aufenthaltes automatisch kranken- und unfallversichert. Diese Versicherung läuft mit dem Ende des Au pair Aufenthalts bzw. bei Beendigung des Programms aus, sofern diese nicht verlängert wird.</p>
+
+    </apex:outputPanel>
+    
+    <apex:outputPanel rendered="{!Opportunity.Intrax_Market__c== 'Germany'}">
+    <p>Mit freundlichen Grüßen,</p>
+    <p> {!$User.CompanyName}</p>
+    <p>{!$User.FirstName} {!$User.LastName}<br/>
+        {!$User.Email} - {!$User.Phone}</p>
+    </apex:outputPanel>
+    
+
+ </div>
+ 
+<!--code for the new footer-->
+
+<apex:outputPanel layout="block" styleClass="eop" rendered="{!Opportunity.Intrax_Region__c = 'Europe' && Opportunity.Intrax_Market__c != 'Germany'}">
+
+<div align="center"><apex:image value="{!URLFOR($Resource.Intrax_Invoice_Themes,'/intrax_invoice_themes/images/pdf-boiler-plate-eu.png')}" width="700" />
+</div>
+
+</apex:outputPanel>
+
+<apex:outputPanel layout="block" styleClass="eop" rendered="{!Opportunity.Intrax_Region__c = 'Europe' && Opportunity.Intrax_Market__c == 'Germany'}">
+<div align="center"><apex:image value="{!URLFOR($Resource.Intrax_Invoice_Themes,'/intrax_invoice_themes/images/pdf-boiler-plate-de.png')}" width="700" />
+</div>
+
+</apex:outputPanel>
+
+<apex:outputPanel layout="block" styleClass="eop" rendered="{!Opportunity.Intrax_Region__c != 'Europe'}">
+
+<div align="center"><apex:image value="{!URLFOR($Resource.Intrax_Invoice_Themes,'/intrax_invoice_themes/images/pdf-boiler-plate-generic.png')}" width="700" />
+</div>
+
+</apex:outputPanel>
+
+
+</apex:pageBlock>
+</apex:page>

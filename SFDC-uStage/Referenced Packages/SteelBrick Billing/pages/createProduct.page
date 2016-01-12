@@ -1,0 +1,356 @@
+<apex:page standardController="invoiceit_s__Product__c" showHeader="true" extensions="invoiceit_s.CreateProductsController" sidebar="false" tabStyle="invoiceit_s__Product__c" standardStylesheets="false">
+   
+   <link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.InvoiceIt, 'css/tabcontent.css')}" />
+   <apex:includeScript value="{!URLFOR($Resource.invoiceit_s__InvoiceIt, 'js/tabcontent.js')}"  />  
+   <!-- below scripts n css are used for pop-up,please wait -->
+   <apex:includeScript value="{!URLFOR($Resource.invoiceit_s__jQuery, '/js/jquery-1.5.1.min.js')}"  />
+   <apex:includeScript value="{!URLFOR($Resource.invoiceit_s__jQuery, '/js/jquery-ui-1.8.14.custom.min.js')}"/>
+   <apex:stylesheet value="{!URLFOR($Resource.invoiceit_s__jQuery, '/css/smoothness/jquery-ui-1.8.14.custom.css')}"/>
+   <style type="text/css">
+    .custPopup{
+        background-color: white;
+        border-width: 2px;
+        border-style: solid;
+        z-index: 9999;
+        left: 50%;
+        padding:10px;
+        position: absolute;
+        /* These are the 3 css properties you will need to change so the popup 
+        displays in the center of the screen. First set the width. Then set 
+        margin-left to negative half of what the width is. You can add 
+        the height property for a fixed size pop up if you want.*/
+        width: 770px;
+        margin-left: -380px;
+        top:250px;
+    }
+    .popupBackground{
+        background-color:black;
+        opacity: 0.20;
+        filter: alpha(opacity = 20);
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 9998;
+    }
+    </style>
+    
+   <script>
+    function confirmCancel() {
+        var isCancel = confirm("{!$Label.CancellingthiswoulddiscardthechangesPleaseconfirm}");
+        if (isCancel) return true;
+        return false;
+    }  
+        
+    function deleteConfirmation() {
+        var isCancel = confirm('Are you sure to "Delete"?');
+        var ratePlanCounter = 1;
+        if (isCancel) {
+            return true;
+        }
+        return false;
+    }
+    
+    $j = jQuery.noConflict();
+    $j(document).ready(function() {
+        $j("#dialog").dialog({  autoOpen: false, modal: true, position: 'center', width: 190, 
+                               height:70, dialogClass: "ui-dialog-no-titlebar ui-dialog-no-padding", resizable: true});
+    });
+    /*Function to show the modal dialog for jquery*/
+    function showDialog(){
+        $j("#dialog").dialog("open");
+        $j('#dialog').dialog('option', 'position', 'center');
+        return false;
+    }
+    /*Function to hide the modal dialog for jquery*/
+    function closeDialog(){
+        $j("#dialog").dialog("close");
+        return false;
+    }
+    
+    function onClickRatePlan(ratePlanCounter){
+       onClickRatePlan(ratePlanCounter);
+    } 
+  </script>
+ <apex:form >
+   <apex:actionStatus id="status" onstart="return showDialog()" onstop="return closeDialog()"/>
+   <apex:actionFunction action="{!onClickRatePlan}" name="onClickRatePlan" id="onClickRatePlan" reRender="chargesPanel,RatePlanchargesPanel" status="status">
+       <apex:param name="ratePlanCounter" value=""/>
+   </apex:actionFunction>
+   <apex:sectionHeader title="{!$Label.Product}" subtitle="{!$Label.NewProduct}" rendered="{!!isViewMode}"/>
+   <apex:sectionHeader title="{!$Label.Product}" subtitle="{!product.Name}" rendered="{!isViewMode}"/>
+   <apex:pageBlock >
+    <apex:pageBlockButtons >
+       <apex:commandButton action="{!saveProduct}" value="{!$Label.ButtonSave}" rendered="{!!isViewMode}" reRender="message"/>
+       <apex:commandButton action="{!cancel}" value="{!$Label.ButtonCancel}" onclick="return confirmCancel()" immediate="true" rendered="{!!isViewMode}"/>
+       <apex:commandButton action="{!edit}" value="{!$Label.ButtonEdit}" rendered="{!isViewMode}" />
+       <apex:commandButton value="{!$Label.ButtonDelete}" rendered="{!isViewMode}" onclick="return deleteConfirmation();" action="{!deleteProduct}"/>
+       <apex:commandButton value="Clone" rendered="{!isViewMode}" action="{!cloneProduct}" />
+       <apex:commandButton value="{!$Label.ButtonViewProduct}" rendered="{!isViewMode}" action="{!viewProductNewScreen}" />
+    </apex:pageBlockButtons>
+           
+    <apex:outputPanel id="mainPanel">         
+    <table border="1" bordercolor="#FFFFFF" style="background-color:#FFFFFF" width="1200" cellpadding="4" cellspacing="4">
+    <apex:pageMessages id="message"/>  
+     <tr>
+          <td>   
+            <div style="border:1px solid gray; width:400px; padding: 5px; margin-bottom:1em">
+             <apex:pageBlock >
+             <!--<apex:pageBlockSection title="{!$Label.Product}" columns="1"> -->
+                <div class="pbSubheader tertiaryPalette">
+                <h3>{!$Label.Product}</h3>
+                </div>
+                <!-- ProductFieldSet is the FieldSet Name -->
+                <table class="detailList" cellspacing="0" cellpadding="0" border="0">
+                <apex:repeat value="{!$ObjectType.invoiceit_s__Product__c.FieldSets.invoiceit_s__ProductFieldSet}" var="fieldAPI">
+                    <tr>
+                      <td Class="labelCol">    
+                        <apex:outputText value="{!fieldAPI.Label}"  />&nbsp;&nbsp;
+                      </td>
+                      <td Class="data2Col">
+                        <apex:inputField value="{!product[fieldAPI]}" rendered="{!isViewMode == false && (fieldAPI.required != true)}" />
+                        <apex:inputField value="{!product[fieldAPI]}" rendered="{!isViewMode == false && (fieldAPI.required == true)}" required="true" />
+                        <apex:outputField value="{!product[fieldAPI]}" rendered="{!isViewMode}" />
+                      </td>
+                    </tr>
+                </apex:repeat>
+                </table>
+              <!-- </apex:pageBlockSection> -->
+                </apex:pageBlock>
+               </div>
+          </td> 
+          
+          <td>  
+            <apex:outputPanel id="RatePlanchargesPanel">
+             <div id="pettabs" class="indentmenu">
+               <ul id="rateplans">
+                 <apex:repeat value="{!productClass.productRatePlans}" var="rateplanClass" >
+                    <apex:outputPanel rendered="{!rateplanClass.productRatePlanCounter == currentRatePlanCounter}"  >
+                        <li onclick="onClickRatePlan('{!rateplanClass.productRatePlanCounter}')"><a href="#" rel="{!rateplanClass.productRatePlanCounter}" class="selected"><apex:outputText value="{!rateplanClass.productRatePlan.Name}"/></a></li>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!rateplanClass.productRatePlanCounter != currentRatePlanCounter}">
+                        <li onclick="onClickRatePlan('{!rateplanClass.productRatePlanCounter}')"><a href="#" rel="{!rateplanClass.productRatePlanCounter}" ><apex:outputText value="{!rateplanClass.productRatePlan.Name}" style="font: bold 13px Arial;color:black;"/></a></li>
+                    </apex:outputPanel>
+                 </apex:repeat>
+                    <li><apex:commandButton image="{!URLFOR($Resource.invoiceit_s__InvoiceIt,'images/add.gif')}" rendered="{!!isViewMode}" action="{!newRatePlan}" reRender="mainPanel" status="status"/></li>
+               </ul>
+              <br style="clear: left" />
+             </div>
+             
+             <div style="border:1px solid gray; width:400px; padding: 5px; margin-bottom:1em">
+             <apex:pageBlock >
+               <apex:repeat value="{!productClass.productRatePlans}" var="rateplanClass">
+                  <div id="{!rateplanClass.productRatePlanCounter}" class="tabcontent">
+                    <!-- <apex:pageBlockSection title="{!$Label.ProductRatePlan}" columns="1" > -->
+                    <!-- ProductRatePlanFieldSet is the FieldSet Name -->
+                      <div class="pbSubheader tertiaryPalette">
+                        <h3>{!$Label.ProductRatePlan}</h3>
+                      </div>
+                      <table class="detailList" cellspacing="0" cellpadding="0" border="0">
+                      <apex:repeat value="{!$ObjectType.invoiceit_s__Product_Rate_Plan__c.FieldSets.invoiceit_s__ProductRatePlanFieldSet}" var="fieldAPI">
+                        <tr>
+                          <td Class="labelCol">    
+                            <apex:outputText value="{!fieldAPI.Label}" />&nbsp;&nbsp;
+                          </td>
+                          <td Class="data2Col">
+                            <apex:inputField value="{!rateplanClass.productRatePlan[fieldAPI]}" rendered="{!isViewMode == false && (fieldAPI != 'Name' && fieldAPI != 'invoiceit_s__Valid_From_Date__c')}"/>
+                            <apex:inputField value="{!rateplanClass.productRatePlan[fieldAPI]}" rendered="{!isViewMode == false && (fieldAPI == 'Name' || fieldAPI == 'invoiceit_s__Valid_From_Date__c')}" required="true"/>
+                            <apex:outputField value="{!rateplanClass.productRatePlan[fieldAPI]}" rendered="{!isViewMode}"/>
+                          </td>
+                         </tr> 
+                      </apex:repeat>
+                      
+                      <tr>
+                      <td></td>
+                      <td><apex:commandButton action="{!removeRatePlan}" value="{!$Label.ButtonDelete}"
+                                 reRender="RatePlanchargesPanel,chargesPanel,message" status="status" rendered="{!!isViewMode}" style="float:right;" immediate="true">
+                             <apex:param value="{!rateplanClass.productRatePlan.Id}" name="productrateplanidtodelete"/>
+                             <apex:param value="{!rateplanClass.productRatePlanCounter}" name="productrateplancountertodelete"/>
+                           </apex:commandButton>
+                      </td>     
+                      </tr>
+                      </table>
+                    <!--</apex:pageBlockSection>-->
+                  </div>
+               </apex:repeat>
+             </apex:pageBlock>
+             </div>            
+            
+           <script type="text/javascript">
+            //Start Tab Content script for UL with id="maintab" Separate multiple ids each with a comma. 
+            var mypets=new ddtabcontent("pettabs")
+            mypets.setpersist(false)
+            mypets.setselectedClassTarget("link")
+            mypets.init(0)
+           </script> 
+          </apex:outputPanel>
+       </td>
+          
+       <td>
+          <apex:outputPanel id="chargesPanel">
+          <div id="pettabs1" class="indentmenu">
+            <ul>  
+              <apex:repeat value="{!productClass.productRatePlans}" var="rateplanClass">
+                <apex:repeat value="{!rateplanClass.productRatePlanChargeClass}" var="productrateplancharge" >   
+                    <apex:outputPanel rendered="{!rateplanClass.productRatePlanCounter == currentRatePlanCounter}">
+                        <!-- render class as selected if it is equals to currentRatePlanChargeCounter -->
+                        <apex:outputPanel rendered="{!productrateplancharge.productRatePlanChargeCounter == currentRatePlanChargeCounter}">
+                            <li><a href="#" rel="{!productrateplancharge.productRatePlancharge.Name}{!productrateplancharge.productRatePlanChargeCounter}" class="selected">{!productrateplancharge.productRatePlancharge.Name}</a></li>
+                        </apex:outputPanel>
+                        <!-- render class as not-selected if it is equals to currentRatePlanChargeCounter -->
+                        <apex:outputPanel rendered="{!productrateplancharge.productRatePlanChargeCounter != currentRatePlanChargeCounter}">
+                           <li><a href="#" rel="{!productrateplancharge.productRatePlancharge.Name}{!productrateplancharge.productRatePlanChargeCounter}"><apex:outputText value="{!productrateplancharge.productRatePlancharge.Name}" style="font: bold 13px Arial;color:black;"/></a></li>
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:repeat>
+             </apex:repeat>
+            <li><apex:commandButton action="{!newRatePlanCharge}" image="{!URLFOR($Resource.invoiceit_s__InvoiceIt,'images/add.gif')}" status="status" reRender="RatePlanchargesPanel,chargesPanel,message" rendered="{!!isViewMode}"/></li>
+           </ul>
+          <br style="clear: left" />
+          </div>
+          
+          <div style="border:1px solid gray; width:400px; padding: 5px; margin-bottom:1em">
+            <apex:pageBlock >
+            <apex:repeat value="{!productClass.productRatePlans}" var="rateplanClass">
+                <apex:repeat value="{!rateplanClass.productRatePlanChargeClass}" var="productrateplancharge">    
+                 <apex:outputPanel rendered="{!rateplanClass.productRatePlanCounter == currentRatePlanCounter}">
+                  <div id="{!productrateplancharge.productRatePlancharge.Name}{!productrateplancharge.productRatePlanChargeCounter}" class="tabcontent">
+                    <!--<apex:pageBlockSection title="{!$Label.ChargeName}"  columns="1">-->
+                    <!-- ProductRatePlanFieldSet is the FieldSet Name -->
+                    <div class="pbSubheader tertiaryPalette">
+                      <h3>{!$Label.ChargeName}</h3>
+                    </div>
+                    <table class="detailList" cellspacing="0" cellpadding="0" border="0">
+                    <apex:repeat value="{!$ObjectType.invoiceit_s__Product_Rate_Plan_Charge__c.FieldSets.invoiceit_s__ProductRatePlanCharge}" var="fieldAPI">
+                        <tr>
+                          <td Class="labelCol">    
+                            <apex:outputText value="{!fieldAPI.Label}"/>&nbsp;&nbsp;
+                          </td>
+                          <td Class="data2Col">
+                            <apex:inputField value="{!productrateplancharge.productRatePlancharge[fieldAPI]}" rendered="{!isViewMode == false && (fieldAPI != 'Name' && fieldAPI != 'invoiceit_s__Unit_Price__c')}"/>
+                            <apex:inputField value="{!productrateplancharge.productRatePlancharge[fieldAPI]}" rendered="{!isViewMode == false && (fieldAPI == 'Name' || fieldAPI == 'invoiceit_s__Unit_Price__c')}" required="true"/>
+                            <apex:outputField value="{!productrateplancharge.productRatePlancharge[fieldAPI]}" rendered="{!isViewMode}"/>
+                         </td>
+                        </tr> 
+                    </apex:repeat>
+                    
+                    <tr>
+                    <td></td>
+                    <td>
+                    <apex:commandButton action="{!removeRatePlanCharges}" value="{!$Label.ButtonDelete}"  immediate="true"
+                                    reRender="RatePlanchargesPanel,chargesPanel" status="status" rendered="{!isViewMode == false}" style="float:right;">            
+                       <apex:param value="{!productrateplancharge.productRatePlancharge.Id}"     name="productrateplanchargeidtodelete"/>
+                       <apex:param value="{!productrateplancharge.productRatePlanChargeCounter}" name="productrateplanchargecountertodelete"/>
+                       <apex:param value="{!rateplanClass.productRatePlanCounter}" name="rateplanchargecounterfromcharges"/>
+                    </apex:commandButton>
+                    </td>
+                    </tr>
+                    
+                    <tr>
+                    <td></td>
+                    <td>
+                    <apex:commandButton action="{!addTier}" value="{!$Label.ButtonAddorModifyTier}" style="float:right;" reRender="tstpopup,message" rendered="{!!isViewMode}">            
+                       <apex:param value="{!productrateplancharge.productRatePlanChargeCounter}"  name="productrateplanchargeCounterfortier"/>
+                    </apex:commandButton>
+                    </td>
+                    </tr>
+                    
+                    <tr>
+                    <td></td>
+                    <td>
+                    <apex:commandButton action="{!addTier}" value="{!$Label.ButtonViewTier}" style="float:right;" reRender="tstpopup" rendered="{!isViewMode == true && (productrateplancharge.productRatePlancharge.invoiceit_s__Price_Format__c == 'Tiered Pricing' || productrateplancharge.productRatePlancharge.invoiceit_s__Price_Format__c == 'Volume Pricing')}">            
+                       <apex:param value="{!productrateplancharge.productRatePlanChargeCounter}"  name="productrateplanchargeCounterfortier"/>
+                    </apex:commandButton>
+                    </td>
+                    </tr>
+                    </table>                   
+                    <!--</apex:pageBlockSection>-->
+                  </div>
+                 </apex:outputPanel>
+               </apex:repeat>
+            </apex:repeat>
+            </apex:pageBlock>
+          </div>
+ 
+          <script type="text/javascript">
+           //Start Tab Content script for UL with id="maintab" Separate multiple ids each with a comma. 
+           var mypets=new ddtabcontent("pettabs1")
+           mypets.setpersist(false)
+           mypets.setselectedClassTarget("link")
+           mypets.init(0)
+          </script> 
+          </apex:outputPanel>  
+         </td>
+    </tr>
+    </table>
+    </apex:outputPanel> 
+   </apex:pageBlock>
+   
+     <!-- this is for pop up -->
+  <apex:outputPanel id="tstpopup">
+    <apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!displayPopUp}"/> 
+        <apex:outputPanel styleClass="custPopup" layout="block" rendered="{!displayPopUp}">
+        <apex:commandButton style="Float:Right" action="{!saveAndClosePopup}" rerender="tstpopup" 
+                            image="{!URLFOR($Resource.invoiceit_s__InvoiceIt, '/images/Close_Box_Red.png')}"/>
+        <apex:pageBlock >
+          <apex:pageMessages id="popErrormessage"/> 
+           <apex:pageBlockButtons >
+              <apex:commandButton value="{!$Label.ButtonNew}" action="{!newTier}" reRender="tstpopup" rendered="{!!isViewMode}" />
+              <!--
+                Modified By     : Anil Pinto
+                Modified Date   : 13 June 2013
+                JIRA Task       : INVOICEIT-61
+                Comments        : This new method saveAndClosePopup created as a validations required while saving the tiers
+              -->
+              <apex:commandButton value="{!$Label.ButtonSaveAndClose}" action="{!saveAndClosePopup}" rerender="tstpopup" rendered="{!!isViewMode}"/>
+              <apex:commandButton value="{!$Label.ButtonClose}" action="{!closePopup}" rerender="tstpopup" rendered="{!isViewMode}"/>
+           </apex:pageBlockButtons>
+           <apex:pageblockSection title="{!$Label.Tiers}">
+              <apex:repeat value="{!productClass.productRatePlans}" var="rateplanClass">
+                <apex:repeat value="{!rateplanClass.productRatePlanChargeClass}" var="productrateplancharge"> 
+                  <apex:outputPanel rendered="{!productrateplancharge.productRatePlanChargeCounter == productrateplanchargeCounterfortier}">
+                  <apex:pageBlockTable value="{!productrateplancharge.ProductRatePlanChargeTierClass}" var="tier">                     
+                     <apex:column headerValue="{!$Label.StartUnit}">
+                       <apex:inputField value="{!tier.productRatePlanChargeTier.invoiceit_s__Start_Unit__c}" rendered="{!!isViewMode}"/>
+                       <apex:outputField value="{!tier.productRatePlanChargeTier.invoiceit_s__Start_Unit__c}" rendered="{!isViewMode}"/>
+                     </apex:column>             
+                     <apex:column headerValue="{!$Label.EndUnit}">
+                       <apex:inputField value="{!tier.productRatePlanChargeTier.invoiceit_s__End_Unit__c}" rendered="{!!isViewMode}"/>
+                       <apex:outputField value="{!tier.productRatePlanChargeTier.invoiceit_s__End_Unit__c}" rendered="{!isViewMode}"/>
+                     </apex:column>  
+                     <apex:column headerValue="{!$Label.UnitPrice}">
+                       <apex:inputField value="{!tier.productRatePlanChargeTier.invoiceit_s__Unit_Price__c}" rendered="{!!isViewMode}"/>
+                       <apex:outputField value="{!tier.productRatePlanChargeTier.invoiceit_s__Unit_Price__c}" rendered="{!isViewMode}"/>
+                     </apex:column>   
+                     <apex:column headerValue="{!$Label.UnitCostPrice}">
+                       <apex:inputField value="{!tier.productRatePlanChargeTier.invoiceit_s__Unit_Cost_Price__c}" rendered="{!!isViewMode}"/>
+                       <apex:outputField value="{!tier.productRatePlanChargeTier.invoiceit_s__Unit_Cost_Price__c}" rendered="{!isViewMode}"/>
+                     </apex:column>
+                     <apex:column rendered="{!!isViewMode}">
+                       <apex:commandbutton action="{!removeTiers}" immediate="true" value="{!$Label.ButtonRemove}" reRender="tstpopup" >
+                         <apex:param value="{!tier.productRatePlanChargeTier.Id}"     name="tieridtodelete"/>
+                         <apex:param value="{!tier.productRatePlanChargeTierCounter}" name="tiercountertodelete"/>
+                         <apex:param value="{!productrateplancharge.productRatePlanChargeCounter}" name="productRatePlanChargeCounterfromtier"/>  
+                       </apex:commandbutton>
+                     </apex:column>   
+                  </apex:pageBlockTable>
+                  </apex:outputPanel>
+                </apex:repeat>
+              </apex:repeat>
+           </apex:pageblockSection>              
+        </apex:pageBlock>                         
+        </apex:outputPanel>
+        </apex:outputPanel>
+    <!-- End Of popUp -->    
+  <!-- This div holds the image that is opened as a popup during processing -->
+  <div id="dialog">
+     <apex:image value="{!URLFOR($Resource.invoiceit_s__jQuery,'/css/smoothness/images/please_wait.gif')}"/>
+  </div>
+</apex:form>
+    <apex:relatedList list="ProductRatePlan__r"  rendered="{!isViewMode}"/>
+    <apex:relatedList list="Stock_Items__r"  rendered="{!isViewMode}"/>
+    <apex:relatedList list="NotesAndAttachments"  rendered="{!isViewMode}"/>
+    <!--<apex:relatedList list="Job_Product__r"  rendered="{!isViewMode}"/>-->
+
+</apex:page>

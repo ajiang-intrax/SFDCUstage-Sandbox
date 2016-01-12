@@ -1,0 +1,328 @@
+<apex:page standardController="Applicant_Info__c" extensions="AppEngine_Controller" applyHTMLTag="false" applyBodyTag="false" showHeader="false" renderas="pdf" id="apc_ap_main_physician_form_pdf">
+
+<head>
+<style type="text/css" media="print">
+
+@page { size: portrait; margin: 3cm 1cm 4cm 1cm;  
+
+@top-left {
+content: element(header);
+width:4cm;
+}
+
+@bottom-left {
+content: "PHYSICIAN VERIFIED MEDICAL HISTORY | Page " counter(page) " of " counter(pages);
+line-height:1;
+font-weight: lighter;
+font-family: Dialog, Arial Unicode MS;
+font-size:7pt;
+}
+
+@bottom-right{
+content: "AuPairCare ID: {!applicantInfo.Intrax_Id__c} | Name of Patient: {!personInfo.First_Name__c} {!personInfo.Last_Name__c}";
+line-height:1;
+font-weight: lighter;
+font-family: Dialog, Arial Unicode MS;
+font-size:7pt;
+}
+
+
+
+}
+div.master { display: block; position: running(header); }
+div.footer { display: block; position: running(footer); }
+html,
+body { margin: 0; padding: 0; font-family: Dialog, Arial Unicode MS; font-size: 8pt; line-height: 12pt; }
+h1 { font-size: 13pt; margin: 0 0 20pt 0; }
+h2,
+h3 { margin: 0 0 20pt 0; }
+h4,
+h5,
+h6 { margin: 0; }
+p { margin: 0 0 8pt 0; }
+strong { font-weight: bold; }
+img { display: block; }
+table { width: 100%; border: solid 1px #ccc; border-collapse: collapse; }
+td,
+th { vertical-align:top; text-align: left; border-spacing: 0; padding: 8pt; page-break-inside: avoid; }
+tr { page-break-inside: avoid; }
+table.noborder td { border: none; padding: 4pt 8pt 4pt 0; }
+table.nopadding td { padding: 0; }
+table.bordered td, table.bordered th  { border: #ccc solid 1px;  }
+table#logo td { vertical-align: top; }
+.callout.box { padding: 20pt; border: #ccc solid 1pt; margin: 20pt 0; page-break-inside: avoid; }
+.margin-b { margin-bottom: 20pt; }
+.clearfix:after { visibility: hidden; content: "."; display: block; width: 1px; height: 1px; clear: both; }
+.no-pgbr-in { page-break-inside: avoid; }
+.pgbr-bf{page-break-before: always;}
+.doctitle { font-size: 11pt; line-height: 1; font-weight: bold; }
+.yes { padding-right: 10pt; }
+
+</style>
+
+
+	</head>
+
+<body>
+		<div class="master">
+		 <table class="noborder nopadding" id="logo">
+		 <tr>
+		 <td>
+		 <apex:image width="4cm" url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/pdf/pdf-logo-aupaircare.gif')}"
+				alt="AuPairCare" title="AuPairCare" />
+		 </td>
+		 </tr>	
+		</table>			
+		</div>
+       <div class="content">
+ 
+ <h1>PHYSICIAN VERIFIED MEDICAL HISTORY</h1>
+ <div class="clearfix margin-b">  	
+       	
+       	<div>
+    	<p><strong>NOTE TO PHYSICIAN:</strong> The patient presenting you with this form is applying to be an au pair with AuPairCare. 
+    	If accepted, he/she will spend a year with an American family taking care of the family's children and being responsible for them. 
+    	It is important that the people we entrust with this responsibility be in good health. </p>
+    	<p><strong>Please review and verify the in-depth medical history self-reported by this patient and confirm their answers by filling out the two columns on the right. Please also sign and stamp the last page. Thank you.</strong></p>
+		</div>	
+	<p>&nbsp;</p>		
+
+    	<table class="bordered">
+    	
+    	<tr>
+    	<td colspan="3"><strong>The patient asked to self-report the following conditions:</strong></td>
+    	<td colspan="2"><strong>Disease or abnormalities of:</strong></td>
+    	</tr>
+    	<tr>
+<td>
+Anorexia<br/>
+Appendicitis<br/>
+Asthma<br/>
+Bulimia<br/>
+Chicken Pox<br/> 
+Cold Sores<br/>
+Diabetes<br/>
+Epilepsy
+    	</td>
+<td>
+Hernia<br/>
+HIV/AIDS<br/>
+Hepatitis<br/>
+Measles<br/>
+Meningitis<br/>
+Mumps<br/>
+Rubella<br/>
+Scarlet Fever
+</td>
+<td>
+Serious or persistent cough<br/>
+Serious or persistent headaches<br/>
+Tuberculosis<br/>
+Typhoid Fever<br/>
+Ulcer<br/>
+Vertigo/dizziness
+</td>
+<td>
+Blood or endocrine system<br/>
+Bones, joints or locomotive <br/>
+Brain or nervous system<br/>
+Ears or hearing<br/>
+Eyes or sight<br/>
+Heart<br/>
+Lung or respiratory 
+</td>
+<td>
+Abdominal organs<br/>
+Stomach or digestive<br/>
+Tonsils, nose or throat<br/>
+Genito-urinary 
+</td>
+    	</tr>
+    	
+    	
+    	</table>
+
+<p>&nbsp;</p>			
+		
+</div> <!--  end clearfix -->		 
+		 
+		<table class="bordered">
+		<tr>
+		<td style="border:none;">&nbsp;</td>
+		<td>Patient's Response</td>
+		
+		<td colspan="2" class="divider">Physician's Verification</td>
+		</tr>
+		<tr>
+		<th width="37%">Health question</th>
+		<th width="37%">&nbsp;</th>
+		<th class="divider" width="5%">Is this accurate?</th>		
+		<th width="20%">If not, please explain</th>
+		</tr>
+		<tr>
+		<td>How would you describe your overall health? (Excellent/Good/Fair/Poor)</td>
+		<td><apex:outputText value="{!personInfo.Overall_Health__c} " id="overall"/></td>
+		<td class="divider"><span class="yes">Y</span><span class="no">N</span></td>
+		<td>&nbsp;</td>
+		</tr>
+		
+		<tr>
+		<td>Are you expecting? (Yes/No)</td>
+		<td><apex:outputText value="{!personInfo.Pregnancy_Indicated__c} " id="pregnant"/></td>
+		<td class="divider"><span class="yes">Y</span><span class="no">N</span></td>
+		<td>&nbsp;</td>
+		</tr>	
+		
+		<tr>
+		<td>Do you have any physical disabilities? (Yes/No)</td>
+		<td><apex:outputText value="{!personInfo.Physical_Disabilities_Indicated__c} " id="disabilities"/></td>
+		<td class="divider"><span class="yes">Y</span><span class="no">N</span></td>
+		<td>&nbsp;</td>
+		</tr>
+		
+		<tr>
+		<td>Do you have any contagious diseases? (Yes/No)</td>
+		<td><apex:outputText value="{!personInfo.Contagious_Disease_Indicated__c} " id="contagious"/></td>
+		<td class="divider"><span class="yes">Y</span><span class="no">N</span></td>
+		<td>&nbsp;</td>
+		</tr>		
+		
+		<tr>
+		<td>Do you have a drug or alcohol dependency? (Yes/No)</td>
+		<td><apex:outputText value="{!personInfo.Drug_Dependency_Indicated__c} " id="alcohol"/></td>
+		<td class="divider"><span class="yes">Y</span><span class="no">N</span></td>
+		<td>&nbsp;</td>
+		</tr>	
+				
+		<tr>
+		<td>Do you take any medications prescribed by a doctor?(Yes/No)</td>
+		<td><apex:outputText value="{!personInfo.Medication_Indicated__c} " id="medications"/></td>
+		<td class="divider"><span class="yes">Y</span><span class="no">N</span></td>
+		<td>&nbsp;</td>
+		</tr>
+		
+        <tr>
+		<td>If yes, please list medication(s) and reason for taking</td>
+		<td><apex:outputText value="{!personInfo.Medication_Description__c} " id="medidesc"/></td>
+		<td class="divider"><span class="yes">Y</span><span class="no">N</span></td>
+		<td>&nbsp;</td>
+		</tr>
+		
+		<tr>
+		<td>Have you been hospitalized in the last 12 months? (Yes/No)</td>
+		<td><apex:outputText value="{!personInfo.Hospitalization_Indicated__c} " id="hospind"/></td>
+		<td class="divider"><span class="yes">Y</span><span class="no">N</span></td>
+		<td>&nbsp;</td>
+		</tr>
+		
+		<tr>
+		<td>If yes, please list the dates and reasons for your hospitalization</td>
+		<td><apex:outputText value="{!personInfo.Hospitalization_Description__c} " id="hospdesc"/></td>
+		<td class="divider"><span class="yes">Y</span><span class="no">N</span></td>
+		<td>&nbsp;</td>
+		</tr>
+		
+		<tr>
+		<td>Have you ever received counseling or psychiatric treatment? (Yes/No)</td>
+		<td><apex:outputText value="{!personInfo.Psychiatric_Treatment_Indicated__c} " id="psycIndi"/></td>
+		<td class="divider"><span class="yes">Y</span><span class="no">N</span></td>
+		<td>&nbsp;</td>
+		</tr>		
+
+		<tr>
+		<td>If yes, please describe</td>
+		<td><apex:outputText value="{!personInfo.Psychiatric_Treatment_Description__c} " id="psycIndiDesc"/></td>
+		<td class="divider"><span class="yes">Y</span><span class="no">N</span></td>
+		<td>&nbsp;</td>
+		</tr>	
+
+		<tr>
+		<td>Do you have any allergies? (Yes/No)</td>
+		<td><apex:outputText value="{!applicantInfo.Allergies_Indicated__c} " id="allergyind"/></td>
+		<td class="divider"><span class="yes">Y</span><span class="no">N</span></td>
+		<td>&nbsp;</td>
+		</tr>				
+		 		
+		<tr>
+		<td>If yes, please describe</td>
+		<td><apex:outputText value="{!applicantInfo.Allergy_Description__c} " id="allergyinddesc"/></td>
+		<td class="divider"><span class="yes">Y</span><span class="no">N</span></td>
+		<td>&nbsp;</td>
+		</tr>	
+	
+	
+		<tr>
+		<td>Have you ever had any of the conditions listed? (Yes/No)</td>
+		<td><apex:outputText value="Yes, " rendered="{!personInfo.Illnesses__c != 'No'}"/><apex:outputText value="{!personInfo.Illnesses__c}" id="illnes"/></td>
+		<td class="divider"><span class="yes">Y</span><span class="no">N</span></td>
+		<td>&nbsp;</td>
+		</tr>	
+				
+				
+		<tr>
+		<td>If yes, please provide dates and more details</td>
+		<td><apex:outputText value="{!personInfo.Illness_Description__c} " id="illnesdesc"/></td>
+		<td class="divider"><span class="yes">Y</span><span class="no">N</span></td>
+		<td>&nbsp;</td>
+		</tr>					
+
+		<tr>
+		<td>Have you ever had a disease or abnormality? (Yes/No)</td>
+		<td><apex:outputText value="Yes, " rendered="{!personInfo.Chronic_Disease__c != 'No'}"/><apex:outputText value="{!personInfo.Chronic_Disease__c} " id="chronic"/></td>
+		<td class="divider"><span class="yes">Y</span><span class="no">N</span></td>
+		<td>&nbsp;</td>
+		</tr>	
+				
+		<tr>
+		<td>If yes, please provide dates(s) and more details</td>
+		<td><apex:outputText value="{!personInfo.Chronic_Disease_Description__c} " id="chronicdesc"/></td>
+		<td class="divider"><span class="yes">Y</span><span class="no">N</span></td>
+		<td>&nbsp;</td>
+		</tr>
+		
+		<tr>
+		<td>Do you have orthodontics (braces)? (Yes/No)</td>
+		<td><apex:outputText value="{!personInfo.Braces_Indicated__c} " id="braces"/></td>
+		<td class="divider"><span class="yes">Y</span><span class="no">N</span></td>
+		<td>&nbsp;</td>
+		</tr>	
+		
+		<tr>
+		<td>Orthodontics removal date</td>
+		<td><apex:outputText value="{!personInfo.Braces_Removal_Date__c} " id="bracesdate"/></td>
+		<td class="divider"><span class="yes">Y</span><span class="no">N</span></td>
+		<td>&nbsp;</td>
+		</tr>					
+				
+		<tr>
+		<td>Please tell us about any other health issues or concerns</td>
+		<td><apex:outputText value="{!personInfo.Health_Concerns__c} " id="concerns"/></td>
+		<td class="divider"><span class="yes">Y</span><span class="no">N</span></td>
+		<td>&nbsp;</td>
+		</tr>
+																						
+		</table>
+
+<div class="pgbr-bf">	
+	
+<div class="box callout">
+		<h3>Physician Verification and Signature</h3>
+		<p><strong>I, the undersigned, have given a thorough physical examination and reviewed the medical history of the patient.
+					I certify that the above information is complete and accurate to the best of my knowledge.</strong></p>
+		
+		<label>Physician's Name:____________________________________________________________ </label><br/><br/>
+		<label>Phone Number:________________________________________________________________</label><br/><br/>
+		<label>Signature: __________________________________________________________________</label><br/><br/>
+		<label>Date: _____/_____/_____ (month/day/year)</label>
+		
+		</div>
+		
+
+					
+</div>			
+		
+        </div>
+		
+</body>
+
+</apex:page>

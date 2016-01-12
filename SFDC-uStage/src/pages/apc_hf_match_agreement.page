@@ -1,0 +1,35 @@
+<apex:page id="apc_hf_match_agreement" docType="html-5.0" applyHtmlTag="false" applyBodyTag="false" title="Childcare Agreement" standardStylesheets="false" showHeader="false" controller="apc_portal_controller">
+<apex:composition template="intraxtemplate_vs3">
+<apex:define name="body">
+
+    <apex:form styleClass="form-vertical ws-validate">
+   
+ <c:menu_apc_hf_match_checkout />
+
+<div class="row">
+
+<div class="col-sm-8 center-block center-text"> 
+
+    <apex:outputPanel layout="block" rendered="{!msgDisplay == 'Exception'}">
+         <p class="alert alert-danger">{!msgDisplay}</p>
+    </apex:outputPanel> 
+  
+    <h2>Childcare Agreement </h2>
+    <p class="lead">
+        Please agree to the details of the match between you and&nbsp;<apex:outputText value="{!confMatch.Participant_Id__r.Name}" rendered="{!(confMatch!=null && confMatch.Participant_Id__c!=null)}"/>
+    </p>
+    
+    <!-- 
+    <apex:commandLink id="Okcontin" styleClass="btn btn-primary btn-lg margin-r2">
+        <apex:commandButton value="View and Sign Childcare Agreement"/>        
+    </apex:commandLink>
+     -->
+    <apex:outputLink id="Okcontin1" styleClass="btn btn-primary btn-lg margin-r2" value="/apc_hf_cc_agreement?mid={!paramMatchId}&uType=HostFamily">View and Sign Childcare Agreement </apex:outputLink>
+					
+    
+</div><!-- end col -->
+</div><!-- end row -->
+</apex:form>
+</apex:define>
+</apex:composition>
+</apex:page>

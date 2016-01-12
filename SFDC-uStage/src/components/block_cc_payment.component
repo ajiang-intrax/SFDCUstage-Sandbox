@@ -1,0 +1,389 @@
+<apex:component layout="none" id="block_cc_payment" controller="cc_payment_controller" allowDML="true">
+    <!--<apex:attribute name="paymentController" description="Instance of cc_payment_controller class" type="cc_payment_controller" required="false" default="" />-->
+
+<apex:attribute name="applicationObj" description="Instance of application" type="Applicant_Info__c" 
+                required="true" default="" assignTo="{!applicantInfo}"/>
+<apex:attribute name="personInfoObj" description="Instance of personInfo" type="Person_Info__c" 
+                required="true" default="" assignTo="{!personInfo}"/>
+<apex:attribute name="childOppObj" description="Instance of child Opportunity" type="Opportunity" 
+                required="true" default="" assignTo="{!childApplicationOpportunity}"/>
+<apex:attribute name="matchObj" description="Instance of match object" type="Match__c" 
+                required="false" default="" assignTo="{!confMatch}"/>      
+<apex:attribute name="totalAmount" description="Total Amount to be paid" type="Decimal" 
+                required="true" default="" assignTo="{!amount}"/>
+<apex:attribute name="selectedOppProdCartListObj" description="Selected opportunity product list" type="Opportunity_Product_Cart[]" 
+                required="false" default="" assignTo="{!selectedOppProdCartList}"/>
+<apex:attribute name="nextPageURLObj1" description="URL of the payment thankyou page" type="String" 
+                required="true" default="" assignTo="{!nextPageURL1}"/>
+<apex:attribute name="nextPageURLObj2" description="URL of the payment thankyou pdf page" type="String" 
+                required="true" default="" assignTo="{!nextPageURL2}"/>
+<apex:attribute name="pymntconfirmEmailTempIdObj" description="Payment Confirmation Email Template Id" type="String" 
+                required="true" default="" assignTo="{!pymntconfirmEmailTemplateId}"/>
+
+    <div class="col-sm-8">
+        <apex:outputPanel layout="block" id="paymentfirst">
+            <apex:outputPanel rendered="{!NOT(isConfirmPayment)}">    
+                <apex:outputPanel layout="block" id="paymentpanel" >
+                    <h2 class="no-margin-t margin-b4">Please Enter Your Credit Card Information</h2>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">First Name</label>
+                                <apex:inputText styleClass="form-control fname" value="{!payment.Billing_FirstName__c}"
+                                                required="true"  id="billingFirstName" />
+                                <apex:message for="billingFirstName"
+                                              styleClass="custom-error-text" />
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">Last Name</label>
+                                <apex:inputText styleClass="form-control lname" value="{!payment.Billing_LastName__c}"
+                                                required="true" id="billingLastName" />
+                                <apex:message for="billingLastName" styleClass="custom-error-text" />
+                            </div>
+                        </div>
+                    </div>
+                    <!--  end row -->
+                    
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label"> Credit Card Number </label>
+                                <apex:inputText styleClass="form-control" value="{!payWrapper.ccNumber}"
+                                                required="true"  id="cardnumber" />
+                                <apex:message for="cardnumber"
+                                              styleClass="custom-error-text" />
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="control-label">CVV code</label>
+                                <apex:inputText styleClass="form-control short" value="{!payWrapper.cvvNumber}" 
+                                                required="true" id="cvcode" />
+                                <apex:message for="cvcode" styleClass="custom-error-text" />
+                                <apex:commandLink id="helptext" onclick="CVVHelpTextModal();" rerender="none"> 
+			  						<b class="sm">What is my CVV code?</b>
+			  					</apex:CommandLink>
+                            </div>
+                        </div>
+                    </div>
+                    <!--  end row -->
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">Type of Card</label>
+                                <apex:selectList styleClass="form-control cctype req" value="{!TypeCreditCardSelected}" multiselect="false" size="1" id="listcardtypes" required="true">
+                                    <apex:selectOption itemValue="" itemLabel=" --Please Choose-- "/>
+                                    <apex:selectOptions value="{!TypeCard}"/>
+                                </apex:selectList>
+                                <div><a id="visabtn" name="Visa" class="creditc-icon">Visa</a>
+                                    <a name="MasterCard" id="mastercardbtn" class="creditc-icon">MasterCard</a>
+                                    <a name="AmericanExpress" id="amexbtn" class="creditc-icon">American Express</a>
+                                    <a name="Discover" id="discbtn" class="creditc-icon">Discover Card</a>
+                                </div>
+                                <apex:message for="listcardtypes" styleClass="custom-error-text" />
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label"> Expiration Date </label>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <apex:selectList styleClass="form-control req" value="{!monthSelected}"
+                                                         multiselect="false" size="1"
+                                                         id="monthlist" required="true" >
+                                            <apex:selectOption itemValue="" itemLabel=" --Month-- " />
+                                            <apex:selectOptions value="{!Month}" />
+                                        </apex:selectList>
+                                        <apex:message for="monthlist" styleClass="custom-error-text" />
+                                    </div>
+                                    <div class="col-sm-5" style="padding-left:0;">
+                                        <apex:selectList styleClass="form-control req" value="{!yearSelected}" 
+                                                         multiselect="false" size="1" id="yearlist" required="true" >
+                                            <apex:selectOption itemValue="" itemLabel=" --Year-- " />
+                                            <apex:selectOptions value="{!year}" />
+                                        </apex:selectList>
+                                        <apex:message for="yearlist" styleClass="custom-error-text" />
+                                    </div>
+                                </div>
+                                <!--  end row --> 
+                                
+                            </div>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+                <apex:outputPanel layout="block" id="addressfieldsPanel">
+                    <div class="section-title">Billing Address</div>
+                    <div class="row">
+                        <div class="col-sm-12 margin-b">
+                            <div class="form-group margin-b1">
+                                <apex:actionRegion >
+                                    <apex:inputCheckbox styleClass="checkbox" id="billingAddressCheckbox" value="{!useCurrentBillingAddressInfo}"> 
+                                        <apex:actionSupport event="onchange" reRender="addressfieldsPanel" action="{!blankOutAddressDetailsOnPaymentPage}" onComplete="restoreclass();" status="addinfoload"/>
+                                    </apex:inputCheckbox>
+                                </apex:actionRegion>
+                                
+                                <label>Check if same as physical address</label></div>
+                            <apex:message for="billingAddressCheckbox" styleClass="custom-error-text" />
+                            <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="addinfoload"/>
+                        </div>
+                    </div>
+                    <!--  end row -->
+                    
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label"> Email </label>
+                                <apex:inputtext styleClass="form-control" value="{!payment.Billing_Email__c}"
+                                                required="true"   id="billingEmail" />
+                                <apex:message for="billingEmail"
+                                              styleClass="custom-error-text" />
+                            </div>
+                        </div>
+                    </div>
+                    <!--  end row -->
+                    
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">Street Address 1</label>
+                                <apex:inputtext styleClass="form-control" html-placeholder="Street address" onblur="CapitalizeName(event.target);" value="{!payment.Billing_Street_1__c}"
+                                                required="true"  id="street1" />
+                                <apex:message for="street1" styleClass="custom-error-text" />
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">Street Address 2 <span class="info">(Optional)</span></label>
+                                <apex:inputtext styleClass="form-control" html-placeholder="Apartment, building, floor, etc." onblur="CapitalizeName(event.target);" value="{!payment.Billing_Street_2__c}"
+                                                required="False" id="street2" />
+                            </div>
+                        </div>
+                    </div>
+                    <!--  end row -->
+                    
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">City</label>
+                                <apex:inputtext styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!payment.Billing_City__c}"
+                                                required="TRUE" id="city" />
+                                <apex:message for="city" styleClass="custom-error-text" />
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">State</label>
+                                <apex:inputField styleClass="form-control short" html-placeholder="XX" html-pattern="[A-Z]{2}" html-title="Two letter state format" onblur="UpperCase(event.target);" value="{!payment.Billing_State__c}"
+                                                 required="TRUE" id="state" />
+                                <apex:message for="state" styleClass="custom-error-text" />                    
+                            </div>
+                        </div>
+                    </div>
+                    <!--  end row -->
+                    
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">Country</label>
+                                <apex:inputtext styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!payment.Billing_Country__c}"
+                                                required="TRUE" id="country" />
+                                <apex:message for="country" styleClass="custom-error-text" />
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label"> Postal Code </label>
+                                <apex:inputtext styleClass="form-control" value="{!payment.Billing_Postal_Code__c}"
+                                                required="TRUE" id="zip" />
+                                <apex:message for="zip" styleClass="custom-error-text" />
+                            </div>
+                        </div>
+                    </div>
+                    <!--  end row --> 
+                    
+                </apex:outputPanel>
+                
+                <apex:commandlink styleClass="btn btn-primary btn-lg" action="{!navigateToPaymentNonEditPage}"
+                                  id="nextlink"  onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                    <apex:commandButton value="Continue" id="continuebutton" />
+                </apex:commandlink>                                    
+            </apex:outputPanel>
+        </apex:outputPanel>
+        <apex:outputPanel layout="block" id="paymentsecond">     
+            <apex:outputPanel layout="block" rendered="{!isConfirmPayment}">
+                <div class="col-sm-8">     
+                    <apex:ActionRegion >
+                        <apex:pageMessages id="pageMsg"/>
+                        <h2 class="no-margin-t">Payment Confirmation</h2>                                           
+                        <p class="lead">Please review the information below for accuracy.</p>                                                                                             
+                        <style>
+                            .payrow label{width:200px; margin-bottom:10px;}
+                        </style>
+                        
+                        <div class="payment-conf">
+                            
+                            <div class="payrow">
+                                <label>Type of Card</label>
+                                <apex:outputText value="{!TypeCreditCardSelected}"
+                                                 id="typCardout" />
+                            </div>
+                            
+                            <div class="payrow">
+                                <label>Credit Card Number</label>
+                                <apex:outputText value="{!maskedCCNumber}" id="maskCCout" />
+                            </div>
+                            
+                            <div class="payrow">
+                                <label>Expiration Date</label>
+                                <apex:outputText value="{!monthSelected} / {!yearSelected}"
+                                                 id="expiration" styleClass="short margin-r"></apex:outputText>
+                            </div>
+                            
+                            <div class="payrow">
+                                <label>Name</label>
+                                <apex:outputText value="{!payment.Billing_FirstName__c}" id="cardnameoutf" />
+                                &nbsp;
+                                <apex:outputText value="{!payment.Billing_LastName__c}" id="cardnameoutl" />
+                            </div>
+                            
+                            <div class="payrow">
+                                <label>Email</label>
+                                <apex:outputText value="{!payment.Billing_Email__c}"
+                                                 id="cardemailout"></apex:outputText>
+                            </div>
+                            
+                            
+                            <div class="payrow">
+                                <label>Street Address 1</label>
+                                <apex:outputText value="{!payment.Billing_Street_1__c}"
+                                                 id="steet1out" />
+                            </div>
+                            
+                            <apex:outputPanel layout="block" rendered="{!payment.Billing_Street_2__c!=null}">
+                                <div class="payrow">
+                                    <label>Street Address 2</label>
+                                    <apex:outputText value="{!payment.Billing_Street_2__c}"
+                                                     id="street2out" />
+                                </div>
+                            </apex:outputPanel>
+                            
+                            <div class="payrow">
+                                <label>City</label>
+                                <apex:outputText value="{!payment.Billing_City__c}"
+                                                 id="cityout" />
+                            </div>
+                            
+                            <div class="payrow">
+                                <label>State</label>
+                                <apex:outputText value="{!payment.Billing_State__c}"
+                                                 id="stateout" />
+                            </div>
+                            
+                            <div class="payrow">
+                                <label>Country</label>
+                                <apex:outputText value="{!payment.Billing_Country__c}"
+                                                 id="countryout" />
+                            </div>
+                            
+                            <div class="payrow">
+                                <label>Postal Code</label>
+                                <apex:outputText value="{!payment.Billing_Postal_Code__c}" id="zipout" />
+                            </div>
+                            
+                        </div><!--  end payment-conf -->
+                        
+                        <div class="row">
+                            <div class="col-sm-12 margin-t">
+                                
+                                <apex:commandLink styleClass="btn btn-link btn-lg" action="{!backToPaymentEditPage}"
+                                                  id="theCommandLink" immediate="true">
+                                    <i class="fa fa-chevron-left"></i>
+                                    <span>Back</span>
+                                </apex:commandLink>
+                                
+                                <apex:commandlink styleClass="btn btn-primary btn-lg margin-r2" action="{!makeAWSPayment}" id="nextlink1" onComplete="rerunjs();" status="onsubmit" reRender="webform,runscript">       
+                                    <apex:param name="nextPage"
+                                                value="/apex/{!nextPageURLObj1}" />
+                                    <apex:param name="reDirectPage" value="true" />
+                                    <apex:param name="viewpage" value="true" />
+                                    <apex:param name="expireMonth" value="{!monthSelected}" />
+                                    <apex:param name="expireYear" value="{!yearSelected}" />
+                                    <apex:param name="maskCCNumber" value="{!maskedCCNumber}" />
+                                    <apex:param name="paymentId" value="{!paymentRecordId}" />  
+                                    <apex:param name="sAppId" value="{!applicantInfo.Id}" />
+                                    <apex:commandButton value="Submit Payment" id="confirmbutton"/>
+                                    <!-- <INPUT TYPE="BUTTON" VALUE="Submit Payment" id="confirmbutton" NAME="submission" ONCLICK="doSubmit(this.form)"/>-->
+                                </apex:commandlink>
+                                
+                                <div class="margin-t2"><em>Submitting this form will charge your credit card.</em></div>
+                                
+                            </div>
+                        </div><!--  end row -->
+                        
+                    </apex:ActionRegion>
+                </div>
+                
+            </apex:outputPanel>
+        </apex:outputPanel>   
+        
+    </div><!--end col-->
+    <div class="modal fade vs1"  id="ModalCVVHelpText" tabindex="-1"
+           role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+              <apex:commandLink styleClass="closebtn" html-data-dismiss="modal" reRender="none"> <span class="fa-stack fa-lg "> <i class="fa fa-circle fa-stack-2x"></i> <i class="fa fa-times fa-stack-1x fa-inverse"></i> </span> </apex:commandLink> 
+            <div class="modal-body"> 
+                 <c:block_cvv_number_help_text ></c:block_cvv_number_help_text>
+              </div>
+          </div>
+        </div>
+      </div>
+    <script>
+    var j$ = jQuery.noConflict(); 
+    j$('.creditc-icon').bind('click', function () {
+        var cc = j$(this).attr("name");
+        j$('.cctype option[value="' + cc + '"]').prop('selected', true);
+    });
+    
+    j$( document ).ready(function() {
+        j$('.fname').attr('value','{!personinfo.First_Name__c}');
+        j$('.lname').attr('value','{!personinfo.Last_Name__c}');
+    });
+    
+    //move to the top of the page
+    function goToTheTop(){
+        j$('html, body').animate({ scrollTop: 0 }, 'slow');
+    }
+    
+    function DisableBtn(){
+        
+        //alert('hii');
+        if (!disablepromo == true)
+        {document.getElementById('promocode').disabled = true;
+         
+         document.getElementById('applypromolink').disabled= true;}
+        
+        
+    }
+    
+    function CVVHelpTextModal(){
+                var auxerr= j$('.custom-error-pagelevel').attr('role');
+                //alert(auxerr);
+                if(auxerr=="alert"){
+                }else{
+                    j$('#ModalCVVHelpText').modal();
+                }
+	}
+    
+    var submitted = false;
+    
+    function doSubmit(form) {
+        if (!submitted) {
+            submitted = true;
+            form.submit();
+        }
+    }
+    </script>
+</apex:component>

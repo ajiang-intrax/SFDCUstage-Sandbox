@@ -1,0 +1,73 @@
+<apex:page id="ayusa_hf_fam_letter" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller"  action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper">
+          <apex:form id="form">          
+              <div class="page-header clearfix">
+ <h1>Ayusa Host Family Application</h1>
+<div class="back-to-main"><apex:outputLink id="BacktoMain" value="apex/ayusa_hf_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+</div>
+              <h2>Family Letter to Student</h2> 
+              
+            <div class="white-box clearfix">
+            <a class="page-help" title="Help for this Page (New Window)" onclick="return openPopup('{!derivedbaseUrl}/Help_ayusa_hf_fam_letter')"  href="#">
+                <span>Help For This Page</span><i class="icon-info-sign"></i>
+            </a> 
+              
+               <div class="panel two_thirds">
+                    <apex:messages StyleClass="custom-error-essays" />
+                    <div class="form-row">
+                         <div class="form-label top"> 
+                            <apex:outputText value="{!EssayLabel}" /><span class="required">*</span>
+                          <p>
+                        <a title="View a sample essay" onclick="return openPopup('{!derivedbaseUrl}/Help_ayusa_hf_fam_letter')"  href="#">
+                View a sample essay
+            </a></p>
+             </div>
+                         <div class="form-field essay">
+                          
+                            <!--<apex:inputTextArea value="{!EssayNarrative}" required="TRUE" id="Narrative"/>-->
+                        
+                         <apex:inputTextarea id="familyLetter" value="{!EssayNarrative}" required="TRUE" onkeyup="countChar(this, 5000, 'familyLetterCount')"/> 
+                  </div>
+                  <div class="char-limit"><span class="char-count-label">Characters left:</span>
+                  <span id="familyLetterCount" class="char-count">
+                  {!5000-len(EssayNarrative) } 
+                  </span>
+                  </div>
+                         
+                         
+                          <!--<div class="dropt"> <i class="icon-question-sign"></i>
+                   <span>Do not include your child's last name, the name of your hometown or the name of your child's school for confidentiality. </span>
+                   </div>-->
+                         
+                    </div> 
+                    
+                    <div class="form-link">
+                        <apex:commandlink styleClass="back" action="{!navigator}">
+                          <i class="icon-chevron-left"></i>   
+                          <apex:param name="nextPage" value="/apex/ayusa_hf_fam_references"/>
+                          <apex:param name="reDirectPage" value="true"/>
+                          <apex:param name="docType" value="Family" assignTo="{!docType}"/>
+                          <apex:commandButton id="Back" value="Back" />
+                        </apex:commandlink>
+                      </div>
+                                       
+                    <div class="form-button">
+                          <apex:commandLink styleClass="save" action="{!navigator}">
+                              <apex:param name="nextPage" value="/apex/ayusa_hf_photos_videos" />
+                              <apex:param name="reDirectPage" value="true"/>
+                              <apex:param name="EssayType" value="Host Family" assignTo="{!EssayType}"/>
+                              <apex:param name="EssayUp" value="Up" assignTo="{!EssayUp}" />
+                              <apex:param name="docType" value="HostFamily" assignTo="{!docType}"/>
+                              <apex:commandButton id="Save" value="Save & Next" /> 
+                          </apex:commandLink>
+                      </div> 
+                    </div>
+                </div>
+         
+          </apex:form>
+            </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

@@ -1,0 +1,67 @@
+<apex:component layout="none">
+<apex:attribute name="ApplicantInfo" description="This is the value for the Applicant_Info__c object." type="Applicant_Info__c" required="false" default="" />
+<apex:attribute name="personInfo" description="This is the value for the Person_Info__c object." type="Person_Info__c" required="false" default="" />
+
+<apex:outputText rendered="{!applicantInfo.Service_Level__c == 'Independent' && applicantInfo.Country_of_Interest__c == 'United States'}">
+<div class="text-center margin-t3">
+<i style="font-size:40px;" class="fa fa-calculator data-label no-margin"></i>
+  <h4>Calculate Your J1 Sponsorship Cost</h4><a href="http://www.globalinternships.com/j1visa-service#pricing" target="_blank" class="margin-t2"><b>Calculate <i style="color:#428bca;" class="fa fa-external-link"></i></b></a>
+</div>
+</apex:outputText>
+
+
+
+
+<apex:outputText rendered="{!applicantInfo.Service_Level__c != 'Independent'}">
+<input type="hidden" id="origin" value="{!personInfo.Country_of_Residence__c}"/>
+<input type="hidden" id="destination" value="{!applicantInfo.Country_of_Interest__c}"/>
+
+<style>
+.price-container{
+padding: 20px 15px;
+padding-top: 20px;
+border-top: 6px solid #53832a;
+}
+.price-container li{margin-bottom:0;}
+</style>
+	
+<div class="price-container margin-t3">	
+
+<h4>Starting Price</h4>
+<div id="noprice"></div>	
+<div id="igiprice" style="font-size:22px;"></div>
+<div id="currencyd"></div>
+<div id="includedcontent"></div>
+
+</div><!--  end price container -->
+
+		<script src="https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/themes/igi-price-calculator/calculator_premium.js"></script>
+		<script>
+			jQuery(function () {
+				var config = {
+					'orig': '{!personInfo.Country_of_Residence__c}',
+					'dest': '{!applicantInfo.Country_of_Interest__c}',
+					/* 
+					 * Default settings.  
+					 'priceTargetID': 'igiprice', 
+					 'currencyTextTargetID': 'currencyd',
+					 'noPriceTargetID': 'noprice',
+					 'includedTargetID': 'includedcontent',
+						notIncludedText: 'Price is currently not available for this destination.'
+					 */
+					'priceTargetID': 'igiprice',
+					'currencyTextTargetID': 'currencyd',
+					'noPriceTargetID': 'noprice',
+					'includedTargetID': 'includedcontent'
+				};
+
+				priceCalculator.main(config);
+			});
+		</script>
+
+
+
+
+ </apex:outputText>
+
+</apex:component>

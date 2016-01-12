@@ -1,0 +1,40 @@
+<apex:page id="apc_resources" docType="html-5.0" applyHtmlTag="false" applyBodyTag="false" title="Family Resources" standardStylesheets="false" showHeader="false" controller="apc_resource_controller" action="{!showCatResourceDetails}">
+<apex:composition template="intraxtemplate_vs3">
+<apex:define name="body">
+<style>
+.res-article .res-article-title,
+.res-article .res-article-summary{color:#202020;}
+</style>
+<apex:form styleClass="form-vertical" id="Form">
+<div class="row">
+<div class="col-sm-8 center-block ">
+<apex:pageBlock id="pb">
+<apex:outputPanel layout="block" rendered="{!IF(allCatResLst.Size > 0 , true, false)}" >  
+        
+                       
+                      
+                       <div class="margin-b1"><a href="apc_resources">Back to All Resources</a></div>                       
+	<h2 class="no-margin-t">Resources In {!allCatResLst[0].Category__c} Category</h2>
+                            <apex:repeat value="{!allCatResLst}" var="itemRes">
+                              <a href="apc_resources_article?cid={!itemRes.Id}">
+                             <div class="res-article margin-b2 box gray"> 
+                            <h4 class="res-article-title no-margin">{!itemRes.Subject__c}</h4>
+                            <div class="res-article-summary"><apex:outputtext value="{!itemRes.Short_Summary__c}" /></div>
+                             <div><a href="apc_resources_article?cid={!itemRes.Id}"><b>Read More</b></a></div>
+                           </div>
+                           </a>
+                            </apex:repeat>
+                     
+                        
+                      
+                        </apex:outputPanel>
+        
+    
+</apex:pageBlock>
+</div><!-- end col -->
+</div><!-- end row -->
+</apex:form>
+
+</apex:define>
+</apex:composition>
+</apex:page>

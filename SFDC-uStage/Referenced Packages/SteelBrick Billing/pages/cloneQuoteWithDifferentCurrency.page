@@ -1,0 +1,22 @@
+<apex:page standardController="invoiceit_s__Quote__c" extensions="invoiceit_s.CreateQuoteController" tabStyle="invoiceit_s__Quote__c">
+    <apex:pageMessages id="messages"/>
+    <apex:form >
+        <apex:pageBlock title="Clone Quote">
+        <apex:pageBlockSection columns="1">
+            <apex:pageBlockSectionItem >
+                <apex:outputText value="Select the Currecy : "/>
+                <apex:selectList value="{!currecyIdAndName}" required="true" size="1">
+                    <apex:selectOptions value="{!curreciesOptions}" />   
+                </apex:selectList>               
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputText value="Select the conversion date : "/>
+                <apex:inputField value="{!quote.invoiceit_s__Start_Date__c}" rendered="true"/>               
+            </apex:pageBlockSectionItem>
+            {!$Label.startHere_Note}: This will clone the chosen quote with above currecy and exchange rate. Please confirm.
+        </apex:pageBlockSection>
+        </apex:pageBlock>
+        <apex:commandButton action="{!cloneQuoteWithDifferentCurrency}" value="{!$Label.ButtonConfirm}" />
+        <apex:commandButton action="{!cancel}" value="{!$Label.ButtonCancel}" />
+    </apex:form>
+</apex:page>

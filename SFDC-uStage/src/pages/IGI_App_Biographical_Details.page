@@ -1,0 +1,147 @@
+<apex:page docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+    
+    <!-- UI Blocker component for Background processing -->
+    <c:BlockUI />
+    
+    <apex:composition template="IntraxTemplate_Vs1">
+        <apex:define name="body">
+            <div class="wrapper" id="IGI_PreApp_My_Bio">    
+                <apex:form >
+                
+                    <!-- Heading -->
+                    <div class="page-header clearfix">
+                        <h1 class="page-title">Intrax Global Internship Application</h1>
+                        
+                        <!-- Back To Main Page Link -->
+                        <div class="back-to-main"><div class="form-link no-margin">
+                            <apex:outputLink styleClass="no-padding" value="apex/IGI_App_Home?id={!applicantInfo.Id}"><i class="icon-chevron-left no-padding"></i><i class="icon-chevron-left"></i> <span>Back to Main Page</span></apex:outputLink></div></div>
+                        </div>
+                       
+                       <!-- Section Header -->  
+                       <div class="section-header clearfix">
+                            <h2>Biographical Details</h2>
+                            <div class="progress-bar">Page 2 <em>of</em> 6</div>
+                       </div> 
+                        
+                       <!-- Panel -->   
+                       <div class="white-box clearfix">   
+                            <div class="panel two_thirds">                      
+                        
+                            <!-- First Name -->
+                            <div class="form-row">
+                                <div class="form-label left ">First Name<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!personInfo.First_Name__c}" required="TRUE"/>
+                                </div>
+                                <div class="dropt"> <i class="icon-question-sign"></i>
+                                    <span>{!$ObjectType.Person_Info__c.Fields.First_Name__c.inlineHelpText}</span>
+                                </div>
+                            </div>
+                                              
+                            <!-- Last Name -->
+                            <div class="form-row">
+                                <div class="form-label left ">Last Name<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!personInfo.Last_Name__c}" required="TRUE"/>
+                                </div>
+                            </div>
+                            
+                            <!-- Middle Name -->
+                            <div class="form-row">
+                                <div class="form-label left">Middle Name</div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!personInfo.Middle_Name__c}" required="FALSE"/>
+                                </div>
+                                <div class="dropt"> <i class="icon-question-sign"></i>
+                                    <span>{!$ObjectType.Person_Info__c.Fields.Middle_Name__c.inlineHelpText}</span>
+                                </div>
+                            </div>    
+                              
+                            <!-- Gender -->  
+                            <div class="form-row">
+                                <div class="form-label left ">Gender<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!personInfo.Gender__c}" required="TRUE"/>
+                                </div>
+                            </div>
+                  
+                            <!-- Date of Birth -->
+                            <div class="form-row">
+                                <div class="form-label left ">Birth Date<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!personInfo.Date_of_Birth__c}"  required="TRUE"/>
+                                </div>
+                            </div>
+                            
+                            <!-- Country of Citizenship -->
+                            <div class="form-row">
+                                <div class="form-label left">Country of Citizenship<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!personInfo.Citizenship__c}" required="TRUE"/>   
+                                </div>
+                                <div class="dropt"> <i class="icon-question-sign"></i>
+                                    <span>{!$ObjectType.Person_Info__c.Fields.Citizenship__c.inlineHelpText}</span>
+                                </div>
+                            </div>
+              
+                            <!-- City Of Birth -->
+                            <div class="form-row">
+                                <div class="form-label left">City Of Birth<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!personInfo.Birth_City__c}" required="TRUE"/>   
+                                </div>
+                            </div>
+                            
+                            <!-- Country Of Birth -->
+                            <div class="form-row">
+                                <div class="form-label left">Country Of Birth<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!personInfo.Birth_Country__c}" required="TRUE"/>   
+                                </div>
+                            </div>
+                            
+                            <!-- Country Of Legal Residence-->
+                            <div class="form-row">
+                                <div class="form-label left">Country Of Legal Residence<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!personInfo.Country_of_Residence__c}" required="TRUE"/>   
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                            	<div class="form-link">
+				              		<apex:outputLink value="/apex/IGI_PreApp_Program_Selection?id={!applicantInfo.Id}"><i class="icon-chevron-left"></i> <span>Back</span></apex:outputLink>
+				                </div>
+          
+                                <!-- Back Command Link 
+                                <div class="form-link">
+                                    <apex:commandlink action="{!navigator}" immediate="true">
+                                        <apex:param name="nextPage" value="/apex/IGI_PreApp_Program_Selection"/>
+                                        <apex:param name="reDirectPage" value="true"/> 
+                                        <i class="icon-chevron-left"></i>
+                                        <apex:commandButton value="Back" immediate="true"/>
+                                    </apex:commandlink>
+                                </div>
+                                -->  
+                                <!-- Next Command Link -->      
+                                <div class="form-button">
+                                    <apex:commandlink styleClass="next" action="{!navigator}">
+                                        <apex:param name="nextPage" value="/apex/IGI_app_Contact_Details"/>
+                                        <apex:param name="reDirectPage" value="false"/> 
+                                        <!-- <apex:param name="docType" value="Media" assignTo="{!docType}" /> -->
+                                        <apex:commandButton value="Save & Continue" />
+                                        <i class="icon-chevron-right"></i>
+                                    </apex:commandlink>
+                                </div>    
+                            </div>  
+                        </div>
+                            
+                        <div class="panel one_third last aside">
+                            <c:Badge_Centers_Contact />     
+                        </div>
+                    </div>
+                </apex:form>
+            </div>
+        </apex:define>
+    </apex:composition>
+</apex:page>

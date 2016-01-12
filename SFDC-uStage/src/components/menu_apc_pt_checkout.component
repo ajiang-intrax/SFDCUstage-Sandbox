@@ -1,0 +1,60 @@
+<apex:component layout="none">
+<apex:variable var="disc" value="active" rendered="{! IF($CurrentPage.Name=='apc_ap_main_disc', true, false)}"/>
+<apex:variable var="agreements" value="active" rendered="{! IF($CurrentPage.Name=='apc_ap_main_agreements', true, false)}"/>
+<apex:variable var="complete" value="complete" rendered="{! IF($CurrentPage.Name=='apc_ap_main_agreements', true, false)}"/>
+
+<style>
+.checkout.vs1{position:relative; text-align:center;}
+.checkout.vs1 .fa-stack{font-size: 1.4em;
+background: #fff;
+z-index: 10;
+padding: 0 28px;}
+.checkout.vs1 i.fa-stack-2x{color:#e8e8e8;}
+.checkout.vs1 .complete i.fa-stack-2x{color:#87b64f;}
+.checkout.vs1 i.fa-stack-1x{visibility:hidden; color: #fff; font-size: 0.8em;}
+.checkout.vs1 .complete i.fa-stack-1x{visibility:visible;}
+.checkout-step{margin-right:40px; display:inline-block;}
+.checkout-step-title{font-size:18px; margin-bottom:15px;}
+.checkout-step-title.active{font-family:'milowebbold';}
+.checkout-bar{height:8px; display:block; width:100%; background:#e8e8e8; position:absolute; bottom:18px;}
+</style>
+
+<div class="row margin-b4 margin-t2 hidden-xs">
+ <div class="col-md-8 center-block">
+
+<div class="checkout vs1">
+ 
+   <div class="checkout-step complete">
+   <div class="checkout-step-title">Au Pair Application</div>
+  <span class="fa-stack">
+  <i class="fa fa-circle fa-stack-2x"></i>
+  <i class="fa fa-check fa-stack-1x"></i>
+</span>
+   </div>
+   <div class="checkout-step {!complete}">
+   <div class="checkout-step-title {!disc}">Personality Assessment</div>
+   <span class="fa-stack">
+  <i class="fa fa-circle fa-stack-2x"></i>
+  <i class="fa fa-check fa-stack-1x"></i>
+</span>
+   </div>
+   <div class="checkout-step">
+   <div class="checkout-step-title {!agreements}">Program Agreements</div>
+   <span class="fa-stack">
+  <i class="fa fa-circle fa-stack-2x"></i>
+  <i class="fa fa-check fa-stack-1x"></i>
+</span>
+   </div>
+
+<div class="checkout-bar"></div>
+
+</div> <!--  end checkout -->
+  
+  </div><!--  end column -->
+</div><!--  end row -->
+
+
+
+
+
+</apex:component>

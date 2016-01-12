@@ -1,0 +1,256 @@
+<apex:page id="ayusa_app_household_basics" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+	
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper">
+     
+         <apex:form id="form"> 
+          <div class="page-header clearfix">
+ <h1>Ayusa Student Application</h1>
+<div class="back-to-main"><apex:outputLink id="BacktoMain" value="apex/ayusa_app_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+</div>
+          <h2>About Your Home</h2>
+          <div class="white-box clearfix">
+         <div class="panel two_thirds">
+         
+            <apex:Messages styleClass="custom-error-pagelevel"/>
+            <p><em> All fields marked with an asterisk (<span class="required no-padding">*</span>) are required</em></p><br/>
+         
+             <div class="form-row">
+                <div class="form-label left "> Have you ever lived away from your parents?<span class="required">*</span></div>
+                <div class="form-field">
+                    <apex:actionRegion >
+                    <apex:selectRadio value="{!applicantInfo.Lived_Independently__c}" required="TRUE" id="lived_independently">
+                        <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                        <apex:selectOption itemValue="No" itemLabel="No"/>
+                    <apex:actionSupport event="onchange" rerender="lived-independently" status="status"/>
+                    </apex:selectRadio>
+                    <apex:message for="lived_independently" styleClass="custom-error-radio"/>
+                    </apex:actionRegion>                    
+                </div>
+               
+           </div>
+           
+            <apex:pageBlock id="lived-independently">
+                    <apex:outputPanel layout="block" rendered="{!ApplicantInfo.Lived_Independently__c == 'Yes'}">  
+           <div class="form-row">
+                <div class="form-label left "> If yes, please describe.<span class="required">*</span></div>
+                <div class="form-field">
+                    <!--  <apex:inputField value="{!applicantInfo.Lived_Independently_Description__c}" required="TRUE"/>--> 
+                  <apex:inputTextarea id="liveIndDesc" value="{!applicantInfo.Lived_Independently_Description__c}" required="TRUE" onkeyup="countChar(this, 128, 'liveIndDescCount')"/> 
+                  </div>
+                  <div class="char-limit"><span class="char-count-label">Characters left:</span>
+                  <span id="liveIndDescCount" class="char-count">
+                  {!128-len(applicantInfo.Lived_Independently_Description__c) }
+                  </span>
+                  </div>  
+           </div>
+           </apex:outputPanel>
+           </apex:pageBlock>
+                        
+                        
+           <div class="form-row">
+                <div class="form-label top "> What are your responsibilities at home?<span class="required">*</span></div>
+                <div class="form-field">
+                    <!--  <apex:inputField value="{!applicantInfo.Home_Responsibilities__c}" required="TRUE"/> -->
+                <apex:inputTextarea id="homeResp" value="{!applicantInfo.Home_Responsibilities__c}" required="TRUE" onkeyup="countChar(this, 255, 'homeRespCount')"/> 
+                  </div>
+                  <div class="char-limit"><span class="char-count-label">Characters left:</span>
+                  <span id="homeRespCount" class="char-count">
+                  {!255-len(applicantInfo.Home_Responsibilities__c) }
+                  </span>
+                  </div> 
+               <div class="dropt"><i class="icon-question-sign"></i>
+                   <span>{!$ObjectType.Applicant_Info__c.Fields.Home_Responsibilities__c.inlineHelpText}</span>
+               </div>
+           </div>
+           
+           <div class="form-row">
+                <div class="form-label left"> Do you have a curfew at home?<span class="required">*</span></div>
+                <div class="form-field">
+                    <apex:actionRegion >
+                        <apex:selectRadio value="{!applicantInfo.Curfew_Indicated__c}" id="curfew_indicated" required="TRUE">
+                            <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                            <apex:selectOption itemValue="No" itemLabel="No"/>
+                            <apex:actionSupport event="onchange" rerender="curfew-indicated" status="status"/>
+                        </apex:selectRadio>
+                        <apex:message for="curfew_indicated" styleClass="custom-error-radio"/>
+                    </apex:actionRegion>    
+                </div> 
+               <div class="dropt"><i class="icon-question-sign"></i>
+                   <span>{!$ObjectType.Applicant_Info__c.Fields.Curfew_Indicated__c.inlineHelpText}</span>
+               </div>
+           </div>
+           
+              <apex:pageBlock id="curfew-indicated">
+                    <apex:outputPanel layout="block" rendered="{!ApplicantInfo.Curfew_Indicated__c == 'Yes'}"> 
+           <div class="form-row">
+                <div class="form-label left"> If yes, what time is your curfew during the week?<span class="required">*</span></div>
+                <div class="form-field">
+                    <apex:inputField id="Curfew_Weekdays" value="{!applicantInfo.Curfew_Weekdays__c}" required="TRUE"/>
+                </div>
+           </div>  
+          
+             <div class="form-row">
+                <div class="form-label left "> On the weekends?<span class="required">*</span></div>
+                <div class="form-field">
+                    <apex:inputField id="Curfew_Weekends" value="{!applicantInfo.Curfew_Weekends__c}" required="TRUE"/>
+                </div>
+           </div>             
+                        
+             </apex:outputPanel> 
+              </apex:pageBlock>          
+                        
+           <div class="form-row">
+                <div class="form-label left "> How much time do you spend studying at home per week?<span class="required">*</span> </div>
+                <div class="form-field">
+                    <apex:inputField id="Study_Time" value="{!applicantInfo.Study_Time__c}" required="TRUE"/>
+                </div>
+           </div>
+           
+           <div class="form-row">
+                <div class="form-label left "> Are you willing to live in a home where people smoke?<span class="required">*</span></div>
+                <div class="form-field">
+                    <apex:inputField id="Live_With_Smoker" value="{!applicantInfo.Live_With_Smoker__c}" required="TRUE"/>
+                </div>
+           </div>
+          <h3 class="data-block-title">Pets</h3> 
+           <div class="form-row">
+                <div class="form-label left "> Do you have any pets at home?<span class="required">*</span> </div>
+                <div class="form-field">
+                    <apex:actionRegion >
+                    <apex:selectRadio value="{!applicantInfo.Pets__c}" id="pets-indicated" required="TRUE">
+                        <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                        <apex:selectOption itemValue="No" itemLabel="No"/>
+                        <apex:actionSupport event="onchange" rerender="pet-type" status="status"/>
+                    </apex:selectRadio>
+                    <apex:message for="pets-indicated" styleClass="custom-error-radio"/>
+                    </apex:actionRegion>     
+                </div>
+           </div>
+           
+            <apex:pageBlock id="pet-type">
+                    <apex:outputPanel layout="block" rendered="{!ApplicantInfo.Pets__c == 'Yes'}">  
+           <div class="form-row">
+                <div class="form-label top"> If yes, what kind of pets do you have?<span class="required">*</span></div>
+                <div class="form-field">
+                    <apex:inputField id="Pet_Types" value="{!applicantInfo.Pet_Types__c}" required="TRUE"/>
+                </div>
+           </div>
+                <div class="form-row">
+                <div class="form-label left"> If other, please describe.</div>
+                <div class="form-field">
+                    <apex:inputField id="Pets_Description" value="{!applicantInfo.Pets_Description__c}" required="FALSE"/>
+                </div>
+           </div>
+                </apex:outputPanel>
+             </apex:pageBlock>
+                      
+           <div class="form-row">
+                <div class="form-label left "> Are you able to live with pets?<span class="required">*</span></div>
+                <div class="form-field">
+                    <apex:actionRegion >
+                    <apex:selectRadio value="{!applicantInfo.Live_With_Pets__c}" required="TRUE" id="live-pets-indicated">
+                        <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                        <apex:selectOption itemValue="No" itemLabel="No"/>
+                         <apex:actionSupport event="onclick" rerender="live-pet-desc" status="status"/>
+                    </apex:selectRadio>
+                    <apex:message for="live-pets-indicated" styleClass="custom-error-radio"/>
+                    </apex:actionRegion>    
+                </div>
+           </div>
+           
+             <apex:pageBlock id="live-pet-desc">
+                    <apex:outputPanel layout="block" rendered="{!ApplicantInfo.Live_With_Pets__c == 'No'}"> 
+           <div class="form-row">
+                <div class="form-label left "> If no, please describe why not.<span class="required">*</span></div>
+                <div class="form-field">
+                    <!--  <apex:inputTextarea value="{!applicantInfo.Live_With_Pets_Description__c}" required="TRUE"/>-->
+                  <apex:inputTextarea id="livePetsDesc" value="{!applicantInfo.Live_With_Pets_Description__c}" required="TRUE" onkeyup="countChar(this, 128, 'livePetsDescCount')"/> 
+                  </div>
+                  <div class="char-limit"><span class="char-count-label">Characters left:</span>
+                  <span id="livePetsDescCount" class="char-count">
+                  {!128-len(applicantInfo.Live_With_Pets_Description__c) }
+                  </span>
+                  </div>  
+           </div>
+                 </apex:outputPanel>
+             </apex:pageBlock>
+                        
+            <h3 class="data-block-title">Diet</h3>
+          
+           
+           <div class="form-row">
+                <div class="form-label left"> Do you follow a special diet?<span class="required">*</span> </div>
+                <div class="form-field">
+                <apex:actionRegion >
+                    <apex:selectRadio value="{!applicantInfo.Special_Diet_Indicated__c}" id="special-diet-indicated" required="TRUE">
+                        <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                        <apex:selectOption itemValue="No" itemLabel="No"/>
+                         <apex:actionSupport event="onchange" rerender="special-diet" status="status"/>
+                    </apex:selectRadio>
+                    <apex:message for="special-diet-indicated" styleClass="custom-error-radio"/>
+                    </apex:actionRegion>
+                </div>
+           </div>
+           
+              <apex:pageBlock id="special-diet">
+                    <apex:outputPanel layout="block" rendered="{!ApplicantInfo.Special_Diet_Indicated__c == 'Yes'}">  
+           <div class="form-row">
+                <div class="form-label left "> If yes, please select which diet you follow.<span class="required">*</span> </div>
+                <div class="form-field">
+                      <apex:actionRegion >
+                    <apex:inputField id="Special_Diet" value="{!applicantInfo.Special_Diet__c}" required="TRUE"/>
+                    <apex:actionSupport event="onchange" rerender="special-diet-other" status="status"/>
+                    </apex:actionRegion>
+                </div>
+           </div>
+             
+               <div class="form-row">
+                <div class="form-label left "> If other, please describe your special diet.</div>
+                <div class="form-field">
+                    <apex:inputField id="Special_Diet_Description" value="{!applicantInfo.Special_Diet_Description__c}" required="FALSE"/>    
+                </div>
+           </div>
+           </apex:outputPanel> 
+            </apex:pageBlock> 
+                        
+            <div class="form-row">
+                <div class="form-label left "> Are you able to prepare meals for yourself if needed occasionally?<span class="required">*</span></div>
+                <div class="form-field">
+                    <apex:selectRadio value="{!applicantInfo.Meal_Self_Sufficient__c}" id="meal-indicated" required="TRUE">
+                        <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                        <apex:selectOption itemValue="No" itemLabel="No"/>
+                    </apex:selectRadio>                 
+                    <apex:message for="meal-indicated" styleClass="custom-error-radio"/>
+                </div>
+           </div>
+            <div class="form-row">
+                            
+                <div class="form-link">
+                    <apex:outputLink id="Back" styleClass="back" value="/apex/ayusa_app_culture_interests?id={!applicantInfo.Id}">
+                    <i class="icon-chevron-left"></i>
+                    <span>Back</span>
+                    </apex:outputLink>
+                </div>
+               
+              <div class="form-button">
+                <apex:commandlink styleClass="next" action="{!navigator}">
+                  <apex:param name="nextPage" value="/apex/ayusa_app_essays"/>
+                  <apex:param name="reDirectPage" value="true"/>
+                  <apex:param name="role" value="Both" assignTo="{!role}"/>
+                  <apex:commandButton id="Save" value="Save & Continue" />
+                  <i class="icon-chevron-right"></i>   
+                </apex:commandlink>
+              </div>
+              
+            </div>
+            
+               </div>
+               </div>
+       
+               </apex:form>
+      </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

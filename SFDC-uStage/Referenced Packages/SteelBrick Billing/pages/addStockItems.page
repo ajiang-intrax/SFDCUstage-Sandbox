@@ -1,0 +1,70 @@
+<apex:page standardController="invoiceit_s__Stock_Item__c" extensions="invoiceit_s.AddStockItemsController" tabStyle="invoiceit_s__Stock_Item__c" title="Add Stock Items">
+    <apex:sectionHeader title="{!$Label.addStockItems_Stock_Item}" subtitle="{!$Label.addStockItems_Scan_Stock_Items}" />
+    <script>
+        function noenter(ev)
+        {
+            if (window.event && window.event.keyCode == 13 || ev.which == 13)
+            {
+                var ele=document.getElementById(cl);
+                ele.click();
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+    $j = jQuery.noConflict();
+    $j(document).ready(function() {
+        $j("#dialog").dialog({  autoOpen: false, modal: true, position: 'center', width: 190, 
+                              height:70, dialogClass: "ui-dialog-no-titlebar ui-dialog-no-padding", resizable: true});
+    });
+    /*Function to show the modal dialog for jquery*/
+    function showDialog(){
+        $j("#dialog").dialog("open");
+        $j('#dialog').dialog('option', 'position', 'center');
+        return false;
+    }
+    /*Function to hide the modal dialog for jquery*/
+    function closeDialog(){
+        $j("#dialog").dialog("close");
+        return false;
+    }
+    </script>
+    
+    <apex:form >
+        <apex:pagemessages />
+        <apex:actionStatus id="status" onstart="return showDialog()" onstop="return closeDialog()" />
+        <apex:actionFunction name="addProduct" action="{!addProductDetail }" rerender="thePageBlockForSearchString" status="status">
+            <apex:param name="productId" value="" />
+            <apex:param name="productName" value="" />
+        </apex:actionFunction>
+        <apex:pageBlock id="thePageBlockForSearchString" title="{!$Label.addStockItems_Stock_Item}" >
+            <apex:pageBlockSection >
+                <apex:panelGrid columns="4">
+                    <apex:outputLabel value="{!$Label.Search_Products}" styleClass="labelCol"/>&nbsp;
+                    <apex:inputText value="{!searchstring}" id="searchString" >
+                        <c:autoComplete objectname="{!objectname}" searchfields="{!searchfields}" 
+                                    displayfields="{!displayfields}" orderfield="{!orderfield}" autocomplete_textbox="{!$Component.searchstring}"  
+                                    products_Filters="{!sFilterCriteria}" products_Limit="{!sProductsLimit}"/>
+                    </apex:inputText>
+                    <img src="/s.gif" alt="Help" class="helpIcon" title="{!$Label.SearchProductsHelpText}"/>
+                 </apex:panelGrid><br/><br/>
+                 <apex:panelGrid columns="3"> 
+                    <apex:outputLabel value="Stock Reference #" styleClass="labelCol"/>
+                    <apex:inputField value="{!invoiceit_s__Stock_Item__c.invoiceit_s__Stock_Reference__c}" /><br/>
+                    <apex:outputLabel value="Stock Entry Date" styleClass="labelCol"/>
+                    <apex:inputField value="{!invoiceit_s__Stock_Item__c.invoiceit_s__Stock_Entry_Date__c}"/><br/>        
+                    <apex:outputLabel value="{!$Label.addStockItems_Barcodes}" styleClass="labelCol"/>
+                    <apex:inputTextarea value="{!sBarcodes}" cols="50" rows="30" />
+                 </apex:panelGrid>
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton value="{!$Label.ButtonSubmit}" action="{!insertStockItems}" />
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+        <div id="dialog">
+            <apex:image value="{!URLFOR($Resource.invoiceit_s__jQuery,'/css/smoothness/images/please_wait.gif')}"/>
+        </div>
+    </apex:form>
+</apex:page>

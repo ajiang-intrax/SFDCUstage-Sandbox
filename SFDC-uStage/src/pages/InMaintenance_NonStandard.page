@@ -1,0 +1,65 @@
+<!--<apex:page showHeader="false" standardStylesheets="true" title="Down For Maintenance" cache="false">-->
+<apex:page docType="html-5.0" showHeader="false" standardStylesheets="false" title="Down For Maintenance" id="InMaintenance">
+<html>
+    <head>    
+        <apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/reset.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/fonts.css')}"/> 
+        <apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/vs1.css')}"/>  
+        <apex:outputText value="<" escape="false"/>!--[if IE]<apex:outputText value=">" escape="false"/>
+            <link rel="stylesheet" href="/intraxappengine/resource/intrax_themes/intrax_themes/styles/ie.css"/>  
+        <apex:outputText value="<" escape="false"/>![endif]--<apex:outputText value=">" escape="false"/>      
+        <apex:outputText value="<" escape="false"/>!--[if lt IE 8]<apex:outputText value=">" escape="false"/>      
+            <link rel="stylesheet" href="/intraxappengine/resource/intrax_themes/intrax_themes/styles/ie-7.css"/>
+            <apex:outputText value="<" escape="false"/>![endif]--<apex:outputText value=">" escape="false"/>       
+        <c:IntraxTemplate_GoogleTracking />
+        <meta name="viewport" content="initial-scale=1.0,width=device-width"/>     
+    </head>
+    <body>  
+
+        <div id="global-header" class="clearfix">
+            <div id="global-header-inner" class="clearfix">
+                <div id="global-header-logo">
+        
+                    <!-- Type='Guest' Logos-->
+                    <apex:outputLink value="#" target="_self"><apex:image url="{!URLFOR($Resource.intrax_themes, '/intrax_themes/images/myintrax-logo.png')}" alt="Intrax" title="Intrax"/></apex:outputLink>
+
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+        <h1>Site Under Maintenance</h1>
+        <div class="white-box clearfix">
+            <p>Please note that our site is temporarily unavailable due to maintenance during the following time period:</p>
+            <table style="width:400px">
+                <tr>
+                    <th><b>Time and Date (PDT)</b>
+                    </th>
+                    <th><b>Time and Date (GMT)</b>
+                    </th>
+                </tr>
+                <tr>
+                    <td width="50%">June 21, 10:00 PM PDT- <br></br>June 21, 10:30 PM PDT
+                    </td>
+                    <td width="50%">June 22, 05:00 AM GMT- <br></br>June 22, 05:30 AM GMT
+                    </td>
+                </tr>
+            </table>
+            <p>Your account information will not be affected during this downtime. We apologize for the inconvenience.</p>
+        </div>
+        </div>
+        <div id="global-footer" class="clearfix">
+            <div id="global-footer-inner">
+                <apex:outputLink styleClass="footer-logo" value="http://www.intraxinc.com" target="_self">
+                    <apex:image url="{!URLFOR($Resource.intrax_themes, '/intrax_themes/images/footer-intrax.png')}" alt="Intrax" title="Intrax"/>
+                </apex:outputLink>
+                <apex:outputLink styleClass="footer-logo" value="http://www.aupaircare.com" target="_self">
+                    <apex:image url="{!URLFOR($Resource.intrax_themes, '/intrax_themes/images/footer-aupaircare.png')}" alt="AuPairCare" title="AuPairCare"/>
+                </apex:outputLink>
+                <apex:outputLink styleClass="footer-logo" value="http://www.ayusa.org" target="_self">
+                    <apex:image url="{!URLFOR($Resource.intrax_themes, '/intrax_themes/images/footer-ayusa.png')}" alt="Ayusa" title="Ayusa"/>
+                </apex:outputLink>       
+            </div>
+        </div>
+    </body>
+</html>
+</apex:page>

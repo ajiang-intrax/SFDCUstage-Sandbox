@@ -1,0 +1,114 @@
+<!-- Component modify by JOSE 12/10/2015 for story  D-02086-->
+
+<apex:component layout="none" id="headerComponent" controller="theme_controller" allowDML="true">
+
+<apex:attribute name="appendset" description="" type="string" required="false" default="false"/>
+<!-- <apex:attribute name="user" description="" type="User" required="false" default="false"/>  -->
+<!--  <apex:attribute name="isMatchingStage" description="" type="boolean" required="false" default="false"/>-->
+<apex:attribute name="engagementId" description="" type="Id" required="false" default="false"/>
+<apex:variable var="vCurrentApp" id="varOriginalApp" value="{!OriginalApp}" rendered="{!$Site.Name == 'AuPairCare'}"/>
+<apex:variable var="latestApp" id="varLastedApp" value="{!CurrentApp}" rendered="{!$Site.Name == 'AuPairCare'}"/>
+<apex:variable var="vUnreadCount" id="idUnreadCount" value="{!UnreadCount}" rendered="{!$Site.Name == 'AuPairCare'}"/>
+    
+ <!-- For Authenticated Users -->
+<apex:outputText rendered="{!(NOT(ISPICKVAL($User.UserType,'Guest')) || NOT(ISPICKVAL($User.UserType,'Standard')))}">
+  <div id="branding-zone">
+    <div id="branding-zone-inner">
+     <div id="custom-header">
+      <div class="container">
+      <button class="hidden-md hidden-lg" id="mobile-menu-toggle" data-toggle="offcanvas" data-target="#navigation" type="button"><i class="fa fa-bars"></i></button>
+              
+ 
+      <!-- Logo -->
+      <div id="program-logo">
+  		<apex:image width="228" height="45" url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/logos/myaupaircare-logo.svg')}" alt="AuPairCare" title="AuPairCare" />
+  	  </div>
+    
+     <!-- Navigation -->
+     <div role="navigation" class="sidebar-offcanvas">
+     	<div id="navigation">
+     
+     	<ul id="user-nav">
+    		
+    		<apex:outputText rendered="{!latestApp.Id!=null && latestApp.Application_Level__c=='Main' && 
+      ((latestApp.Application_Stage__c=='Accepted' && latestApp.Application_Type__c == 'Original') || latestApp.Application_Type__c != 'Original') }">
+            <li>
+            <apex:outputLink value="{!$Site.Prefix}/apc_ap_home?{!appendset}" target="_top">Home</apex:outputlink>
+            </li>
+            </apex:outputText>
+            
+            <apex:outputText rendered="{!user.User_Interests__c == 'Becoming an au pair' && latestApp!=null && latestApp.Application_Level__c=='Basic' && latestApp.Application_Stage__c=='Working' && latestApp.Application_Type__c == 'Original'}">
+            <li>
+            <apex:outputLink value="{!$Site.Prefix}/apc_ap_basic_personal_info?Id={!latestApp.Id}&{!appendset}" target="_top">Your Au Pair Application</apex:outputlink>
+            </li> 
+            </apex:outputText>
+                
+            <apex:outputText rendered="{!user.User_Interests__c == 'Becoming an au pair' && latestApp!=null && latestApp.Application_Type__c == 'Original' && ((latestApp.Application_Level__c=='Basic' && latestApp.Application_Stage__c=='Submitted') || (latestApp.Application_Level__c=='Main' && (latestApp.Application_Stage__c=='Submitted' || latestApp.Application_Stage__c=='In-Review')))}"> 
+            <li>
+            <apex:outputLink value="{!$Site.Prefix}/apc_ap_basic_completion?Id={!latestApp.Id}&viewpage=true&{!appendset}" target="_top">Your Au Pair Application</apex:outputlink>
+            </li>
+            </apex:outputText>
+                
+            <apex:outputText rendered="{!user.User_Interests__c == 'Becoming an au pair' && latestApp!=null && latestApp.Application_Level__c=='Main' && latestApp.Application_Stage__c=='Working' && latestApp.Application_Type__c == 'Original'}">
+            <li>
+            <apex:outputLink value="{!$Site.Prefix}/apc_ap_main_home?Id={!latestApp.Id}" target="_top">Your Au Pair Application</apex:outputlink>
+            </li>
+            </apex:outputText>
+
+        	<li>
+          	<apex:outputLink value="{!$Site.Prefix}/message_center?{!appendSet}"> Messages
+            <apex:outputPanel styleClass="inbox-count" layout="block" rendered="{!vUnreadCount != 0}">{!vUnreadCount}</apex:outputPanel>
+          	</apex:outputLink>
+        	</li>
+        	
+        	<li>
+          	<apex:outputLink value="{!$Site.Prefix}/account_overview?{!appendSet}">Account Settings</apex:outputLink>
+        	</li>
+        
+        	<li class="hidden-sm hidden-xs">
+          	<apex:outputLink value="{!$Site.Prefix}/AppEngine_Logout" target="_top">Logout</apex:outputLink>
+        	</li>
+      </ul>
+      
+      <apex:outputText rendered="{!latestApp.Id!=null && latestApp.Application_Level__c=='Main' && 
+      ((latestApp.Application_Stage__c=='Accepted' && latestApp.Application_Type__c == 'Original') || latestApp.Application_Type__c != 'Original') }"> 
+      <ul id="program-nav">
+          	
+          	<li>
+            <apex:outputLink value="/apex/apc_hf_au_pair_profile?Id={!latestApp.Engagement__c}" id="apc_profile_link"> Your Profile </apex:outputLink>
+            </li>
+            
+            <li>
+            <apex:outputLink value="apc_ap_interviews" id="apc_cp_interviews">Your Interviews</apex:outputLink>
+            </li>
+            
+            <li>
+            <apex:outputLink value="/apex/apc_ap_community?Id={!latestApp.Id}" id="apc_ap_community">Host Community</apex:outputLink>
+            </li>
+            
+            <li>
+            <apex:outputLink value="apc_resources" id="apc_resources">Resources</apex:outputLink>
+            </li>
+            
+            <li>
+           	<apex:outputLink value="apc_ap_contact" id="apc_ap_contact">Contact Us</apex:outputLink>
+            </li>
+      </ul>
+      </apex:outputText>
+      
+      </div>
+      </div>
+      <!-- end navigation -->
+      
+     
+</div>
+<!-- end custom header -->      
+      </div>
+      <!-- end container -->
+    </div>
+    <!--  end branding zone inner --> 
+  </div>
+  <!--  end branding zone -->
+</apex:outputText>
+
+</apex:component>

@@ -1,0 +1,42 @@
+<apex:page id="ayusa_hf_eSubmitted" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" standardStylesheets="false" showHeader="false" action="{!checkLogin}">
+	<apex:composition template="IntraxTemplate_Vs1">
+		<apex:define name="body">
+			<apex:form >
+
+		        <div id="wrapper" class="wrapper">
+		          
+					<div class="page-header clearfix">
+					<h1 class="page-title">Thank You!</h1></div>
+					            
+					<h2>Application Submitted and Documents Delivered </h2>
+					         
+					            <div  class="white-box clearfix">
+					             
+					<div class="panel two_thirds">
+					    <p> Congratulations, you have successfully submitted your Application! </p>
+						<p> As requested, your Program Agreement documents have been delivered via email to each household member age 18 and older using the email address(es) you provided in your application. </p>  
+						<p> One email has been delivered for each household member.  It is important that each household member electronically sign the agreement and authorize a background check by clicking through the email and following the prompts on the DocuSign website.</p>
+						<p> If an email address was not provided for any household members who are required to sign, then these documents were delivered in a separate email to the Primary Contact’s email account. </p>
+						<p> If you would like a copy of your completed application, please view and print the PDF Summary.   You will be able to use your username and password to view this application if necessary. Please be patient as we review your application.</p>
+					             
+						<div class="form-link no-float inline-block">
+			                <apex:outputLink id="BackLink" value="/apex/your_applications">
+			                	<i class="icon-chevron-right"></i> Back To Home
+			                </apex:outputLink>
+			                <!-- 
+			                <apex:commandlink id="BackToHome" styleClass="next" action="{!navigator}">
+			                  <i class="icon-chevron-right"></i> 
+			                    <apex:param name="nextPage" value="/apex/your_applications"/>
+			                  	<apex:param name="reDirectPage" value="true"/>
+			                  	<apex:commandButton value="Back To Home"/> 
+			                </apex:commandlink>
+			                 -->
+						</div>              
+					</div>         
+           			</div>
+     			</div>
+  
+    		</apex:form>
+    	</apex:define>
+    </apex:composition>
+</apex:page>

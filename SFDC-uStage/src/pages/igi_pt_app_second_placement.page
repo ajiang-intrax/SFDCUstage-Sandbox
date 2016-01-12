@@ -1,0 +1,283 @@
+<apex:page id="igi_pt_app_program_pref" docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardController="Applicant_Info__c"
+    extensions="AppEngine_Controller" action="{!checkLogin}"
+    standardStylesheets="false" showHeader="false"  title="Second Placement Information">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_igi_pt_application userAgentCheck="{!userAgentCheck}"/>
+      <div class="row">
+        <div class="col-md-7 col-md-push-3">
+         
+         <c:block_app_completion_igi applicantInfo="{!applicantInfo}" isIGIMainReady="{!CheckMainIGIApp}"/>
+          
+          <h1>Second Placement Information</h1>
+            <p class="lead">Provide details about the host company where you have arranged an internship. Please ensure this information is accurate as we may use it on official authorization forms.</p>
+          <apex:form styleClass="form-vertical ws-validate" id="webform">
+            <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label class="control-label">When will you begin your second internship?</label>
+									<div class="datepicker" locale="{!user.localeSidKey}">
+										<apex:inputField styleClass="form-control"
+											value="{!positionInfoSecond.Start_Date__c}" required="TRUE"
+											id="startDate" />
+									</div>
+
+
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+                <div class="col-sm-6">
+                <div class="form-group">
+                  <label class="control-label">Company Name</label>
+                    <apex:inputField styleClass="form-control" value="{!positionInfoSecond.Company_Name__c}" required="TRUE" id="companyName"/>                       
+                </div>
+                </div><!--  end col -->
+                <div class="col-sm-6">
+                     <div class="form-group">   
+                     <label class="control-label">Position Title</label>                     
+                     <apex:inputField styleClass="form-control" value="{!positionInfoSecond.Position_Title__c}" required="TRUE" id="positionTitle" />  
+                    </div>
+                </div><!--  end col -->                 
+               </div><!--  end row -->
+          
+          <div class="row">
+                <div class="col-sm-12">
+                     <div class="form-group">   
+                     <label class="control-label">Position Description</label>                   
+                     <apex:inputField styleClass="form-control" value="{!positionInfoSecond.Position_Description__c}" required="TRUE" id="positionDesc" />  
+                    </div>
+                </div><!--  end col -->                 
+          </div>
+          
+          
+          <div class="row">
+	          <div class="col-sm-12">
+	               <div class="form-group">   
+	               <label class="control-label">Will you be paid for this internship?</label>
+	               <apex:actionRegion >
+		               <apex:selectRadio styleClass="radio" value="{!paid_internship}" required="TRUE" id="paidInternship" >
+		                  <apex:selectOption itemLabel="Yes" itemValue="Yes"/>
+		                  <apex:selectOption itemLabel="No" itemValue="No"/>  
+		                  <apex:actionSupport event="onchange" rerender="paidInternshipBlock" status="pleasewait01"/>               
+		              </apex:selectRadio> 
+		              <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="pleasewait01"/> 
+		           </apex:actionRegion>                
+	             <!-- <apex:inputField styleClass="form-control" value="{!positionInfo.Tipped_Position__c}" required="TRUE" id="tippedPosition" />  -->
+	              </div>
+	          </div><!--  end col --> 
+          </div>
+          <apex:pageBlock id="paidInternshipBlock">          		
+          	<apex:outputPanel rendered="{!IF(paid_internship == 'Yes', true, false)}" >
+		          <div class="row">
+		                <div class="col-sm-6">
+		                     <div class="form-group">   
+		                     <label class="control-label">If the internship is paid, what is the pay rate?</label>                   
+		                     <apex:inputField styleClass="form-control" value="{!positionInfoSecond.Pay_Rate__c}" required="TRUE" id="payRate" />  
+		                    </div>
+		                </div><!--  end col -->
+		                <div class="col-sm-6">
+		                     <div class="form-group restoreclass">  
+		                         <label class="control-label">Currency</label>
+		                         <apex:inputField styleClass="radio" value="{!positionInfoSecond.CurrencyIsoCode}" required="TRUE" id="currencyCode" />                                    
+		                     </div>
+		                </div><!--  end col -->                   
+		          </div>
+		          <div class="row">                 
+		                <div class="col-sm-6">
+		                     <div class="form-group restoreclass">  
+		                         <label class="control-label">Pay Rate Basis</label>
+		                         <apex:inputField styleClass="radio" value="{!positionInfoSecond.Pay_Rate_Basis__c}" required="TRUE" id="payRateBasis" />                                  
+		                     </div>
+		                </div><!--  end col -->     
+		                <div class="col-sm-6">
+		                     <div class="form-group">   
+		                     <label class="control-label">Is this a tipped Position?</label>
+		                     <apex:selectRadio styleClass="radio" value="{!positionInfoSecond.Tipped_Position__c}" required="TRUE" id="tippedPosition" >
+		                        <apex:selectOption itemLabel="Yes" itemValue="Yes"/>
+		                        <apex:selectOption itemLabel="No" itemValue="No"/>                      
+		                    </apex:selectRadio>                  
+		                   <!-- <apex:inputField styleClass="form-control" value="{!positionInfoSecond.Tipped_Position__c}" required="TRUE" id="tippedPosition" />  -->
+		                    </div>
+		                </div><!--  end col -->               
+		          </div>
+	          </apex:outputPanel>
+          </apex:pageBlock>
+          
+          <div class="row">
+            <div class="col-sm-6">
+                 <div class="form-group">   
+                 <label class="control-label">Position Category</label>                  
+                 <apex:inputField styleClass="form-control" value="{!positionInfoSecond.Intrax_Program_Category__c}" required="TRUE" id="positionCategory" />  
+                </div>
+            </div><!--  end col -->
+          </div>
+          
+          <div class="row">
+            <div class="col-sm-12">
+                 <div class="form-group">   
+                 <label class="control-label">Functional Area</label>                    
+                 <apex:inputField styleClass="form-control" value="{!positionInfoSecond.Functional_Areas__c}" required="TRUE" id="functionalArea" />  
+                </div>
+            </div><!--  end col -->   
+          </div>
+          
+          <div class="row">
+                <div class="col-sm-12">
+                     <div class="form-group">   
+                     <label class="control-label">Other Functional Area<span class="info"> (Optional)   </span></label>                  
+                     <apex:inputTextArea styleClass="form-control" value="{!positionInfoSecond.Functional_Areas_Other__c}" required="FALSE" id="functionalAreaOther" />  
+                    </div>
+                </div><!--  end col -->             
+          </div>
+            
+                       
+            <div class="section-title">About the Company</div>
+            
+            
+            <div class="row">
+                <div class="col-sm-6">
+                     <div class="form-group">   
+                     <label class="control-label">Address Line 1 </label>                    
+                     <apex:inputField html-placeholder="Street address" styleClass="form-control" value="{!positionInfoSecond.Company_Street_1__c}" required="TRUE" id="companyAddress1" />  
+                    </div>
+                </div><!--  end col --> 
+                <div class="col-sm-6">
+                     <div class="form-group">   
+                     <label class="control-label">Address Line 2 <span class="info">(Optional)</span></label>                    
+                     <apex:inputField html-placeholder="Apartment, building, floor, etc." styleClass="form-control" value="{!positionInfoSecond.Company_Street_2__c}" required="FALSE" id="companyAddress2" />  
+                    </div>
+                </div><!--  end col --> 
+            </div> <!-- end row -->   
+            
+            <div class="row">
+                <div class="col-sm-6">
+                     <div class="form-group">   
+                     <label class="control-label">City</label>                   
+                     <apex:inputField styleClass="form-control" value="{!positionInfoSecond.Company_City__c}" required="TRUE" id="companyCity" />  
+                    </div>
+                </div><!--  end col --> 
+                <div class="col-sm-6">
+                     <div class="form-group">   
+                     <label class="control-label">State</label>                  
+                     <apex:inputField styleClass="form-control" value="{!positionInfoSecond.Company_State__c}" required="TRUE" id="companyState" />  
+                    </div>
+                </div><!--  end col --> 
+            </div>          
+            
+            <div class="row">
+                <div class="col-sm-6">
+                     <div class="form-group">   
+                     <label class="control-label">Postal Code</label>                    
+                     <apex:inputField styleClass="form-control" value="{!positionInfoSecond.Company_Postal_Code__c}" required="TRUE" id="companyPostalCode" />  
+                    </div>
+                </div><!--  end col --> 
+                <div class="col-sm-6">
+                     <div class="form-group">   
+                     <label class="control-label">Country</label>                    
+                     <apex:inputField styleClass="form-control" value="{!positionInfoSecond.Company_Country__c}" required="TRUE" id="companyCountry" />  
+                    </div>
+                </div><!--  end col --> 
+            </div>
+            
+            <div class="row">
+                <div class="col-sm-6">
+                     <div class="form-group">   
+                     <label class="control-label">Company Website <i data-toggle="popover" data-content="Enter 'none' if the company does not have a website." class="infobtn fa fa-question-circle"></i></label>                    
+                     <apex:inputField styleClass="form-control" value="{!positionInfoSecond.Company_Website__c}" required="TRUE" id="companyWebsite" />  
+                    </div>
+                </div><!--  end col --> 
+                <div class="col-sm-6">
+                     <div class="form-group">   
+                     <label class="control-label">Company Phone</label>                  
+                     <!-- <apex:inputField styleClass="form-control" value="{!positionInfoSecond.Company_Phone__c}" required="TRUE" id="companyPhone" /> --> 
+                     <apex:inputField styleClass="form-control onlynumber" value="{!positionInfoSecond.Company_Phone__c}" required="TRUE" id="companyPhone" />  
+                    </div>
+                </div><!--  end col --> 
+            </div>
+            
+            <div class="row">
+                <div class="col-sm-12">
+                     <div class="form-group">   
+                     <label class="control-label">Company Description</label>                    
+                     <apex:inputField styleClass="form-control" value="{!positionInfoSecond.Company_Description__c}" required="TRUE" id="companyDesc" />  
+                    </div>
+                </div><!--  end col -->                
+            </div>
+            
+            <div class="section-title">About Your Supervisor</div>
+            
+            <div class="row">
+                <div class="col-sm-6">
+                     <div class="form-group">   
+                     <label class="control-label">First Name</label>                     
+                     <apex:inputField styleClass="form-control" value="{!positionInfoSecond.Supervisor_First_Name__c}" required="TRUE" id="supervisorFN" />  
+                    </div>
+                </div><!--  end col --> 
+                <div class="col-sm-6">
+                     <div class="form-group">   
+                     <label class="control-label">Last Name</label>                  
+                     <apex:inputField styleClass="form-control" value="{!positionInfoSecond.Supervisor_Last_Name__c}" required="TRUE" id="supervisorLN" />  
+                    </div>
+                </div><!--  end col --> 
+            </div>
+            
+            <div class="row">
+                <div class="col-sm-6">
+                     <div class="form-group">   
+                     <label class="control-label">Email</label>                  
+                     <apex:inputField styleClass="form-control" value="{!positionInfoSecond.Supervisor_Email__c}" required="TRUE" id="supervisorEmail" />  
+                    </div>
+                </div><!--  end col --> 
+                <div class="col-sm-6">
+                     <div class="form-group">   
+                     <label class="control-label">Phone</label>                  
+                     <!-- <apex:inputField styleClass="form-control" value="{!positionInfoSecond.Supervisor_Phone__c}" required="TRUE" id="supervisorPhone" /> -->
+                     <apex:inputField styleClass="form-control onlynumber" value="{!positionInfoSecond.Supervisor_Phone__c}" required="TRUE" id="supervisorPhone" /> 
+                    </div>
+                </div><!--  end col --> 
+            </div>
+            
+            
+          
+         
+            
+            <div class="form-group margin-t">
+                
+   
+              <!--    <apex:outputLink styleClass="btn btn-link btn-lg float"  value="/apex/igi_pt_app_program_pref?id={!applicantInfo.Id}" id="backlink"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+              -->
+
+                <apex:commandlink styleClass="btn btn-primary btn-lg margin-r"
+                                    action="{!navigator}" id="nextlink"  onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                  <apex:param name="nextPage" value="/apex/igi_pt_app_home"/>
+                  <apex:param name="reDirectPage" value="true" />
+                  <apex:param name="pageId" value="062"/>
+                  <apex:commandButton value="Save & Continue" id="continuebutton" />
+                </apex:commandlink>
+                
+               
+            </div>
+            
+          </apex:form>
+          <apex:form >
+          	<c:block_app_coedit_authorization ApplicantInfo="{!applicantInfo}" pageController="{!AEC}" rendered="{!applicantInfo.Apply_on_Behalf_of_PT__c && applicantInfo.Application_Stage__c == 'Working'}"/>
+          </apex:form>
+        </div>
+        <!-- end column -->
+        
+        <div class="col-md-3 col-md-pull-7">
+          <apex:form >
+            <c:menu_igi_pt_app ApplicantInfo="{!applicantInfo}" personInfo="{!personInfo}"/>
+          </apex:form>
+        </div>
+        <!-- end column  --> 
+      </div>
+      <!-- end row --> 
+      
+    </apex:define>
+  </apex:composition>
+</apex:page>

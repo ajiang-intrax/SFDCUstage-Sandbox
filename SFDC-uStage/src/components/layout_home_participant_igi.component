@@ -1,0 +1,70 @@
+<apex:component layout="none" >
+	<apex:attribute name="OnProgramEngg" description="Decide second job submission" type="boolean" required="false" default="false"/>
+	<apex:attribute name="intrax_Id" description="Contains the last User Intrax-Id" type="string" required="false" default=""/>
+	<apex:attribute name="engagementId" description="Contains the EngagementId related to the last Accepted App" type="string" required="false" default=""/>
+	<apex:attribute name="accommodation" description="Contains the last Accommodation related to the Engagement in context" type="Accommodation__c" required="false" default=""/>
+	
+	<apex:form >
+		<h2>Hello,&nbsp; <apex:outputText value="{!$User.FirstName}" />
+		<!-- <apex:outputText value="{!hostContact.Name}"/>  -->
+		</h2>
+
+		<div class="row">
+			<!-- Panel to hold the page content components -->
+			<!-- 
+			<apex:outputPanel styleClass="span12">  
+				<c:Block_Notifications />
+			</apex:outputPanel>   
+			 -->
+			 
+		</div>  
+		 <!-- end row -->
+             
+        <div class="row">
+			<!-- Panel to hold the page content components -->
+			<apex:outputPanel styleClass="span8"> 
+				<div class="block"> 
+					<div class="block-body"> 
+						<h3>Welcome to MyIntrax! </h3>    
+						<p>This is your space to keep track of everything related to your Intrax experience – your application, companies with which we have matched you, upcoming interviews and how you can reach us should you need help with anything. Bookmark this page for quick access to all of your program information.</p>
+						<h3>Your Journey Has Begun</h3>
+		    			<p>Intrax helps you increase your experience, further develop your skill set, expand your professional network, and introduces you to an exciting new city and culture. Intrax has a long history of connecting qualified candidates with summer, short-term and long-term cultural experiences around the world. We are proud to work with a wide variety of companies, large and small, to find great placements and provide you the opportunity to grow professionally. Get ready for a new adventure! </p>
+					  
+					</div>
+				</div> 
+				<c:block_participant_address_update engagementId="{!engagementId}" accommodation="{!accommodation}" rendered="{!IF(NOT(ISNULL(accommodation.Id)), true, false)}" />
+			</apex:outputPanel>
+		<!-- 
+		<apex:outputPanel rendered="{!ActiveUserType = 'Host Company'}">
+        <div class="block-body">
+            
+            <h3>Welcome to MyIntrax!</h3>
+			<p>This web site is designed for you, so you can keep track of the candidates available to your company. This includes information on candidates and how you can reach us should you need help with anything. Bookmark this page for quick access to all of your information.</p>
+	
+			<h3>Not Your Typical Employees!</h3>
+			<p>Intrax works with you to develop a staffing solution that matches your key positions to the right employees. Our participants are top university students from around the world, eager to spend time in your country, speaking your language, and learning more about your culture. Intrax provides tailored seasonal hiring to meet the needs of companies around the world, while sharing the global cultures that define today’s business landscape.</p>
+		</div> 
+		</apex:outputPanel> 
+		
+	</div>   -->
+			<!--  <c:Block_HPContent /> -->
+			<!-- <c:Ayusa_HF_Applications /> -->
+			<!-- </apex:outputPanel>  -->
+                  
+            <!-- Panel to hold the Page Quick Links --> 
+			<apex:outputPanel styleClass="span4"> 
+			<c:block_intrax_id intrax_id="{!intrax_Id}" rendered="{!IF(intrax_id != null, true, false)}"/>
+			<c:Block_Notifications />
+			<!--  <c:block_OnProgramEngg OnProgramEngg="{!OnProgramEngg}" engagementId="{!engagementId}" rendered="{!IF(OnProgramEngg == true, true, false)}"/>-->
+			 <!-- <c:Block_PortalShortcuts /> -->	
+			</apex:outputPanel> 
+                  
+            <apex:outputPanel styleClass="span4">  
+			<!-- <c:block_app_status />-->
+			<!--  <c:Badge_Contact /> -->
+			</apex:outputPanel>   
+			  
+		</div>  
+		 <!-- end row -->
+	</apex:form>
+</apex:component>

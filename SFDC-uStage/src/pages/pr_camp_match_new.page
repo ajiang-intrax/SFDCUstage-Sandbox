@@ -1,0 +1,136 @@
+<apex:page applyBodyTag="false" applyHtmlTag="false"  title="Create a New Match | Intrax" standardStylesheets="false" showHeader="false" controller="IntraxPartnerPortalEngineController" action="{!checkLogin}">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <apex:form styleClass="form-vertical ws-validate" id="webForm">
+       <div class="row margin-b2">
+        <div class="center-block center-text col-sm-9">
+        <h1>Create a New Match</h1>
+        </div><!--  end column -->
+       </div><!--  end row -->
+      
+      <div class="row margin-b2">
+        <div class="col-sm-10 col-md-8 col-lg-6 center-block">
+            <apex:pageMessages />
+            <apex:actionStatus id="waitMsg" startStyleClass="feedback">
+              <apex:facet name="start" > <i class="no-float icon-spinner icon-spin icon-2x pull-left"></i> <strong>Please Wait.....</strong> </apex:facet>
+            </apex:actionStatus>
+            <apex:pageBlock id="pb" >
+              <apex:outputText id="match-input" rendered="{!$CurrentPage.parameters.mOrigin = 'mat'}" >
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Participant Name</label><br/>
+                      <apex:outputField value="{!participant.Account_Id__r.Name}" />
+                    </div>
+                  </div>
+                  <!--  end column -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Intrax Id </label><br/>
+                      <apex:outputField value="{!participant.Account_id__r.Intrax_Id__c}" />
+                    </div>
+                  </div>
+                  <!--  end column --> 
+                </div>
+                <!--  end row --> 
+              </apex:outputText>
+              <apex:outputText id="positon-input" rendered="{!$CurrentPage.parameters.mOrigin = 'pos'}">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label class="control-label">Company Name</label>
+                      <apex:outputField styleClass="form-control" value="{!positionInfo.Host_Company_Id__r.Name}" />
+                    </div>
+                  </div>
+                  <!--  end column --> 
+                </div>
+                <!--  end row -->
+                
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Position Title</label>
+                      <apex:outputField styleClass="form-control" value="{!positionInfo.Title__c}" />
+                    </div>
+                  </div>
+                  <!--  end column -->
+                  
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Position Code</label>
+                      <apex:outputField styleClass="form-control" value="{!positionInfo.Code__c}"/>
+                    </div>
+                  </div>
+                  <!--  end column --> 
+                </div>
+                <!--  end row --> 
+              </apex:outputText>
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="form-group">
+                    <label class="control-label">
+                      <apex:outputText rendered="{!$CurrentPage.parameters.mOrigin = 'pos'}" value="Select a Participant" />
+                      <apex:outputText rendered="{!$CurrentPage.parameters.mOrigin = 'mat'}" value="Select a Position" />
+                    </label>
+                    <apex:selectList styleClass="form-control" id="participant-selection" value="{!engagementId}" multiselect="false" size="1" required="true">
+                      <apex:selectOption itemValue="" itemLabel="- Select One -"/>
+                      <apex:selectOptions value="{!createMatchOptions}"/>
+                    </apex:selectList>
+                    <apex:message for="participant-selection" styleClass="custom-error-radio"/>
+                  </div>
+                </div>
+                <!--  end column --> 
+              </div>
+              <!--  end row -->
+              
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="form-group">
+                    <label class="control-label">Consider Other Positions</label>
+                    <apex:selectRadio styleClass="radio" id="ConsiderOtherOptions" value="{!newMatch.Consider_Other_Positions__c}" required="true">
+                      <apex:selectOption itemValue="true" itemLabel="Yes"/>
+                      <apex:selectOption itemValue="false" itemLabel="No"/>
+                    </apex:selectRadio>
+                  </div>
+                </div>
+                <!--  end column --> 
+              </div>
+              <!--  end row -->
+              
+              <div class="row dp-group">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label class="control-label">Start Date</label>
+                    <div class="datepicker start" locale="{!activeUser.localeSidKey}">
+                      <apex:inputField styleClass="form-control" value="{!newMatch.Start_Date__c}" required="true"/>
+                    </div>
+                  </div>
+                </div>
+                <!--  end column -->
+                
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label class="control-label">End Date</label>
+                    <div class="datepicker end" locale="{!activeUser.localeSidKey}">
+                      <apex:inputField styleClass="form-control" value="{!newMatch.End_Date__c}" required="true"/>
+                    </div>
+                  </div>
+                </div>
+                <!--  end column --> 
+                
+              </div>
+              <!--  end row -->
+              
+              <div class="margin-t2">
+                <apex:outputLink styleClass="btn btn-link btn-lg" value="/apex/pr_camp_list"><i class="fa fa-chevron-left"></i> <span>Cancel</span></apex:outputLink>
+                <apex:commandLink styleClass="btn btn-primary btn-lg" action="{!createMatch}" status="waitMsg"> Create Match </apex:commandLink>
+              </div>
+            </apex:pageBlock>
+        </div>
+        <!--  end column --> 
+      </div>
+      <!--  end row --> 
+      </apex:form> 
+    </apex:define>
+  </apex:composition>
+</apex:page>

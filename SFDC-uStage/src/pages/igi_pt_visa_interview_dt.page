@@ -1,0 +1,66 @@
+<apex:page docType="html-5.0" title="Visa Interview Date" controller="IGI_PT_Controller" id="igi_pt_visa_interview_dt" standardStylesheets="false" showHeader="false">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+     <c:block_header_igi_pt_application />    
+      <div class="row">
+        <div class="col-md-7 col-md-push-3">
+          
+         <h1>Visa Interview Date</h1>
+          <p class="lead">Since you will need to obtain a visa before you can start your program, you have to schedule a visa interview at the Consulate or Embassy. Please enter your visa interview date once you have one scheduled.</p>
+          <apex:form styleClass="form-vertical ws-validate" id="webform">
+            <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+            
+            <apex:pageBlock id="Block_VisaDetails" rendered="{!IF(enggVisaDetails != NULL, true, false)}" >
+            <div class="row">
+            <div class="col-sm-6">
+            <div class="form-group">
+              <label class="control-label">Visa Interview Date 
+             </label>
+                <div class="datepicker" locale="{!user.localeSidKey}"> 
+                <apex:inputField styleClass="form-control" value="{!enggVisaDetails.Visa_Interview_Date__c}" required="TRUE" id="VisaDate" />
+                </div>
+            </div>
+            </div><!--  end col -->
+            </div><!--  end row -->
+            
+                        
+            <div class="form-group">
+                <apex:commandlink styleClass="btn btn-primary btn-lg"
+									action="{!SaveVisaDate}" id="nextlink"  onComplete="rerunjs();" reRender="webform" status="onsubmit">
+				   <apex:param name="EnggID" value="{!EnggID}" assignto="{!EnggID}" />
+				   <apex:param name="ActionType" value="SaveInterviewDate" />
+                  <apex:commandButton value="Save" id="continuebutton" />
+                </apex:commandlink>
+            </div>
+            </apex:pageBlock>
+          </apex:form>
+        </div>
+        <!-- end column  -->
+        
+         <div class="col-md-3 col-md-pull-7">
+      <c:block_notification_sidebar ApplicantInfo="{!EnggAppInfo}" />  
+        </div>
+        <!-- end column  --> 
+      </div>
+      <!-- end row --> 
+       <script>
+var j$ = jQuery.noConflict();
+
+function confDelete(){
+j$('#myModal').modal();
+} 
+  
+function popModal(){
+var auxerr= j$('.custom-error-pagelevel').attr('role');
+//alert(auxerr);
+	if(auxerr=="alert"){
+	}else{
+		j$('#myModalUpload').modal();
+	}
+} 
+    
+</script>          
+        
+    </apex:define>
+  </apex:composition>
+</apex:page>

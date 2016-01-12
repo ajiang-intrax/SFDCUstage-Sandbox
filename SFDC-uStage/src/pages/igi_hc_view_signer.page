@@ -1,0 +1,102 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" action="{!preLoad}"
+                standardStylesheets="false" showHeader="false" controller="IGI_HC_Controller"
+                 title="HCA View and Send to Signer" id="igi_hc_view_signer">
+ <apex:composition template="intraxtemplate_vs3">
+  <apex:define name="body">
+ 
+<style>
+ #branding-zone, #footer-zone{display:none;}
+#content-zone {
+background: #f8f8f8;
+}
+.standalone{background: #fff;
+border:#ccc solid 1px;   
+border-radius: 5px;
+padding:60px;}
+</style>             
+    <div class="row">
+     <div class="col-md-8 center-block standalone"> 
+         <apex:image styleClass="center-block" url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/logos/medium-logo-intrax.png')}"/>
+            <br/><h1 class="center-text">Review and Select Signer</h1>
+             <p align="left" style="font-size:13pt">
+                 Please review a draft of the Host Company Agreement to understand the terms of hosting an Intern/Trainee.
+                 You should then select a contact at your organization to be the signer. The signer will then receive an email 
+                 to sign the agreement electronically once you submit.
+             </p> 
+        <apex:form >
+           <apex:commandlink styleClass="btn btn-primary btn-lg margin-r2" target="_blank" action="{!hca_navigator}">  
+                           <apex:param name="nextPage" value="/apex/igi_hc_agreement_pdf"/>
+                           <apex:param name="reDirectPage" value="true"/> 
+                           <apex:param name="Id" value="{!Account.Id}"/>
+                                     
+                            <apex:commandButton value="Preview Agreement" />
+            </apex:commandlink>
+           <div class="h2">Select Signer</div>
+            <p align="left" style="font-size:11pt;font-style:italic;">
+              Before choosing a Signer, Please be sure that all the information is correct in our system for that person.
+              If a contact on this list is not part of your organization anymore, please contact your Intrax representative so we can update our system.
+            </p>
+           <hr class="margin-b3"/> 
+                     
+             <apex:outputPanel layout="block" id="myPanel2">
+               <apex:outputPanel layout="block" rendered="{!IF(list_hca.Size == 0, true, false)}">
+                  <div class="h3 box gray center-text">No record(s) to display.</div>
+              </apex:outputPanel>
+            </apex:outputPanel>
+       <apex:outputPanel layout="block" id="myPanel1">
+        <apex:pageBlock id="pb1" rendered="{!IF(list_hca.Size > 0, true, false)}">
+          <div class="table-responsive vs3">
+              <apex:pageBlockTable styleClass="table vs3" value="{!list_hca}" var="item" rendered="{!IF(list_hca.Size > 0, true, false)}">
+               <apex:column style="min-width:200px;">
+                <apex:commandlink styleClass="btn btn-primary btn-lg margin-r2" target="_blank" action="/apex/igi_hc_agreement?id={!item.Id}">  
+                     <apex:commandButton value="Send to Signer" />
+                </apex:commandlink>
+                
+               <!--<apex:outputLink value="/apex/igi_tipp_phase_detail?dpid={!item.Id}&val={!validate}" ><apex:outputText value="{!item.Name}"/></apex:outputLink>-->
+               </apex:column>
+                <apex:column style="min-width:100px;" headerValue="Name">
+                   <apex:outputLink value="/apex/igi_hc_update_contact?Id={!item.Id}" >
+                    <apex:outputText id="Position_Name" value="{!item.Name}"/>
+                   </apex:outputLink>
+                </apex:column>
+                <apex:column style="min-width:100px;"  headerValue="Title">
+                <apex:outputField id="Status" value="{!item.Title}"/>
+                </apex:column>
+                <apex:column style="min-width:100px;"  headerValue="Email">
+                <apex:outputField id="End" value="{!item.Email}"/>
+                </apex:column>   
+                 
+              </apex:pageBlockTable>
+              </div>
+          </apex:pageBlock>
+        </apex:outputPanel>
+          
+             <apex:commandlink styleClass="btn btn-link btn-lg margin-t2" action="{!hca_navigator}">  
+                  <apex:param name="nextPage" value="/apex/igi_hc_add_contact"/>
+                  <apex:param name="reDirectPage" value="true"/> 
+                   <apex:param name="Id" value="{!Account.Id}"/>
+                   <i class="fa fa-plus-circle"></i><span>Add New Contact</span>
+            </apex:commandlink>
+            
+              <div class="row margin-t2">
+                <div class="col-sm-12">
+                       <apex:commandlink styleClass="btn btn-link btn-lg" action="{!hca_navigator}">  
+                             <apex:param name="nextPage" value="/apex/igi_hc_companyinfo"/>
+                             <apex:param name="reDirectPage" value="true"/> 
+                             <apex:param name="Id" value="{!Account.Id}"/>
+                               <i class="fa fa-chevron-left"></i> <span>Company Info</span>
+                        </apex:commandlink>
+
+                        <apex:commandlink styleClass="btn btn-default btn-lg pull-right" onClick="window.top.close();">  
+                              <apex:commandButton value="Finish Later" />
+                       </apex:commandlink>
+                  </div>
+            </div>
+
+        </apex:form>
+              
+          </div>
+        </div>
+        </apex:define> 
+    </apex:composition>
+</apex:page>

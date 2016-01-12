@@ -1,0 +1,118 @@
+<apex:component layout="none" controller="theme_controller" allowDML="true" id="template_region_nav_apc_hf_vs3">
+
+<!-- <apex:attribute name="appendset" description="" type="string" required="false" default="false"/>
+<apex:attribute name="user" description="" type="User" required="false" default="false"/>
+<apex:attribute name="isMatchingStage" description="" type="boolean" required="false" default="false"/>
+<apex:attribute name="engagementId" description="" type="Id" required="false" default="false"/>  -->
+<apex:variable var="vOriginalApp" id="varOriginalApp" value="{!OriginalApp}" rendered="{!$Site.Name == 'AuPairCare'}"/>
+<apex:variable var="latestApp" id="varLastedApp" value="{!CurrentApp}" rendered="{!$Site.Name == 'AuPairCare'}"/>
+<apex:variable var="vUnreadCount" id="idUnreadCount" value="{!UnreadCount}" rendered="{!$Site.Name == 'AuPairCare'}"/>
+
+ <!-- For Authenticated Users -->
+<apex:outputText rendered="{!(NOT(ISPICKVAL($User.UserType,'Guest')) || NOT(ISPICKVAL($User.UserType,'Standard')))}">
+  <div id="branding-zone">
+    <div id="branding-zone-inner">
+     <div id="custom-header">
+      <div class="container">
+      <button class="hidden-md hidden-lg" id="mobile-menu-toggle" data-toggle="offcanvas" data-target="#navigation" type="button"><i class="fa fa-bars"></i></button>
+              
+ 
+      <!-- Logo -->
+      <div id="program-logo">
+      <apex:outputText rendered="{!vOriginalApp.Application_Type__c == 'Original' && vOriginalApp.Application_Level__c == 'Basic'}">
+      <apex:outputLink value="apc_hf_app_personal_info?Id={!vOriginalApp.Id}" target="_top">
+        <apex:image width="228" height="45" url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/logos/myaupaircare-logo.svg')}" alt="AuPairCare" title="AuPairCare" />
+      </apex:outputLink>
+      </apex:outputText>
+      
+      <apex:outputText rendered="{!vOriginalApp.Application_Type__c != 'Original' || vOriginalApp.Application_Level__c != 'Basic'}">
+      <apex:outputLink value="{!$Site.Prefix}/apc_hf_home?{!appendset}" target="_top">
+        <apex:image width="228" height="45" url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/logos/myaupaircare-logo.svg')}" alt="AuPairCare" title="AuPairCare" />
+      </apex:outputLink>
+      </apex:outputText>
+      </div>
+    
+     <!-- Navigation -->
+     <div  role="navigation" class="sidebar-offcanvas">
+      <div id="navigation">
+      <ul id="user-nav">
+        <apex:outputText rendered="{!latestApp.Application_Level__c!='Basic' }">
+          <li>
+            <apex:outputLink value="{!$Site.Prefix}/apc_hf_home?{!appendset}" target="_top">Home</apex:outputlink>
+          </li>
+        </apex:outputText>
+       
+         <apex:outputText rendered="{!latestApp.Application_Level__c == 'Basic'}"> 
+        <li>
+          <apex:outputLink value="apc_hf_app_personal_info?Id={!latestApp.Id}"> Your Childcare Application</apex:outputLink>
+        </li>
+        </apex:outputText>
+        
+        <li>
+          <apex:outputLink value="{!$Site.Prefix}/message_center?{!appendSet}"> Messages
+            <apex:outputPanel styleClass="inbox-count" layout="block" rendered="{!vUnreadCount != 0}">{!vUnreadCount}</apex:outputPanel>
+          </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink value="{!$Site.Prefix}/account_overview?{!appendSet}">Account Settings</apex:outputLink>
+        </li>
+        <li class="hidden-sm hidden-xs">
+          <apex:outputLink value="{!$Site.Prefix}/AppEngine_Logout" target="_top">Logout</apex:outputLink>
+        </li>
+      </ul>
+      <ul id="program-nav">
+        <apex:outputText rendered="{!latestApp.Application_Type__c == 'Original' && vOriginalApp!=null && vOriginalApp.Application_Level__c != null && (vOriginalApp.Application_Level__c != 'Basic' && vOriginalApp.Application_Stage__c != 'Accepted')}">
+          <li>
+            <apex:outputLink value="apc_hf_app_home?Id={!vOriginalApp.Id}">Your Application</apex:outputLink>
+          </li>
+        </apex:outputText>
+        <apex:outputText rendered="{!vOriginalApp.Application_Stage__c == 'Accepted' || latestApp.Application_Type__c != 'Original'}">
+          <li>
+            <apex:outputLink value="apc_hf_profile?Id={!latestApp.Position__c}">Family Profile</apex:outputLink>
+          </li>
+        </apex:outputText>
+        <apex:outputText rendered="{!HADConfirmedMatch || latestApp.Application_Type__c != 'Original'}" >
+          <li>
+            <apex:outputLink value="apc_hf_current_au_pairs">Your Au Pairs</apex:outputLink>
+          </li>
+        </apex:outputText>
+        <apex:outputText rendered="{!(latestApp.Id!=null && latestApp.Application_Level__c == 'Main')}">
+          <li>
+            <apex:outputLink value="apc_hf_search_au_pairs" >Search Au Pairs</apex:outputLink>
+          </li>
+        </apex:outputText>
+        <apex:outputText rendered="{!(latestApp.Id!=null && latestApp.Application_Level__c == 'Main')}">
+          <li>
+            <apex:outputLink value="apc_hf_interviews" >Interviews</apex:outputLink>
+          </li>
+        </apex:outputText>
+        <apex:outputText rendered="{!(latestApp.Id!=null && latestApp.Application_Level__c == 'Main')}">
+          <li>
+            <apex:outputLink value="apc_resources" >Resources</apex:outputLink>
+          </li>
+        </apex:outputText>
+        <apex:outputText rendered="{!(latestApp.Id!=null && latestApp.Application_Level__c == 'Main')}">
+          <li>
+            <apex:outputLink value="apc_hf_contact" >Contact Us</apex:outputLink>
+          </li>
+        </apex:outputText>
+        <li class="hidden-md hidden-lg">
+          <apex:outputLink value="{!$Site.Prefix}/AppEngine_Logout" target="_top">Logout</apex:outputLink>
+        </li>
+      </ul>
+      </div>
+      </div>
+      <!-- end navigation -->
+      
+     
+</div>
+<!-- end custom header -->      
+      </div>
+      <!-- end container -->
+    </div>
+    <!--  end branding zone inner --> 
+  </div>
+  <!--  end branding zone -->
+</apex:outputText>
+
+</apex:component>

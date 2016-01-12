@@ -1,0 +1,38 @@
+<apex:page docType="html-5.0" standardStylesheets="true" showHeader="false" standardController="Engagement__c" extensions="IGI_PT_Controller" action="{!checkLogin}">
+<apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper">
+		<div class="page-header clearfix">
+		<h1><apex:outputText value="Welcome, {!$User.FirstName}"/></h1> 
+		</div>
+          <div class="white-box clearfix">
+          <c:PT_Sub_Navigation />
+	          <div class="panel two_thirds">
+	             <c:Content_IGI_PT_Home />	
+	          
+	          </div>
+          
+	          <div class="panel one_third last aside">
+	         <!--  As per IGI 373
+	         <div class="badge">
+	         	<c:MyMatchesComponent />
+	         </div> 
+	         
+	         <div class="badge">
+	         	<c:MyInterviewsComponent />
+	         </div> 
+	         -->
+            <!--  <div class="badge">
+	         	<c:MyApplicationsComponent />
+	         </div>  -->
+	         	          
+	         
+	         
+          
+                  
+	         </div>  
+         </div>
+       </div>
+     </apex:define>
+   </apex:composition>
+</apex:page>

@@ -1,0 +1,153 @@
+<apex:page docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+<apex:includeScript value="{!URLFOR($Resource.MJQuery, 'jquery-ui-1.9.2.custom/js/jquery-1.8.3.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.MJQuery, 'jquery-ui-1.9.2.custom/js/jquery-ui-1.9.2.custom.min.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.MJQuery, 'jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css')}"/>
+    
+     <script type="text/javascript">
+         var j$ = jQuery.noConflict();
+ 
+        j$(document).ready(function(){
+            j$("#nosubmit").click(function() {
+                 $( '<div id="dialog" title="Centers Application"><p>{!$Label.T_0329}</p></div>' ).dialog({
+			      resizable: false,
+			      height:220,width:350,
+			      modal: true,
+			      buttons: {
+			        "Continue": function() {
+			          $( this ).dialog( "close" );
+			        }
+			      }
+			    });
+            });
+        });
+     </script>   
+    <apex:composition template="IntraxTemplate_Vs1">
+        <apex:define name="body">
+            <div class="wrapper" id="ayusa-student-preapp-home">
+                <apex:form >
+                    
+                    <!-- Header -->
+                    <div class="page-header clearfix" id="intrax_centers_app_title">
+                        <h1><apex:outputText value="{!$Label.T_0053}" /></h1>
+                    </div>
+                    
+                    <!-- Panel -->
+                    <div class="white-box clearfix">
+                    
+                        <!-- Basic Instruction's Message -->
+                        <div class="panel two_thirds">
+                            <apex:Messages />
+                            <p><apex:outputText value="{!$Label.T_0054}" />
+                            <ol>
+                                <li><apex:outputText value="{!$Label.T_0214}" /></li>
+                                <li><apex:outputText value="{!$Label.T_0215}" /></li>
+                                <li><apex:outputText value="{!$Label.T_0216}" /></li>
+                                <li><apex:outputText value="{!$Label.T_0217}" /></li>
+                                <li><apex:outputText value="{!$Label.T_0218}" /></li>
+                            </ol>
+                            </p>
+                            <p><apex:outputText value="{!$Label.T_0219}" /></p>
+                            <p><apex:outputText value="{!$Label.T_0055}" />
+                            <ul>
+                            	<li> <apex:outputText value="{!$Label.T_0220}" /> </li>
+                            	<li> <apex:outputText value="{!$Label.T_0221}" /></li>
+                            	<li> <apex:outputText value="{!$Label.T_0222}" /></li>
+                            	<li> <apex:outputText value="{!$Label.T_0223}" /> </li>
+                            </ul>
+                            </p>
+                            
+                            <p> <ol><li><strong><apex:outputText value="{!$Label.T_0054}" /></strong></li></ol></p>
+                           
+                            
+                            <!-- Section Link for Centers preApp My Information Page -->
+                            <div class="form-row">
+                              <apex:commandlink styleClass="accordion-button" action="{!navigator}">
+                                <apex:param name="nextPage" value="/apex/centers_preapp_my_information"/>
+                                <apex:param name="reDirectPage" value="true"/>
+                                <apex:commandButton value="{!$Label.T_0057}" />
+                                <apex:outputPanel id="not_started_1" layout="block"  styleClass="not-started" rendered="{! IF((ISBLANK(personInfo.Gender__c)), true, false)}"><span><apex:commandButton value="{!$Label.T_0062}" /></span> <i class="icon-chevron-right"></i></apex:outputPanel>
+                                <apex:outputPanel id="completed_1" layout="block"  styleClass="finished" rendered="{! IF(NOT(ISBLANK(personInfo.Gender__c)), true, false)}"><span><apex:commandButton value="{!$Label.T_0063}" /></span> <i class="icon-ok"></i></apex:outputPanel>
+                              </apex:commandlink>
+                            </div>
+                
+                            <!-- Section Link for Centers preApp My Academic Plan Page -->
+                            <div class="form-row">
+                              <apex:commandlink styleClass="accordion-button" action="{!navigator}">
+                                <apex:param name="nextPage" value="/apex/centers_preapp_my_academic_plan"/>
+                                <apex:param name="reDirectPage" value="true"/>
+                                <apex:commandButton value="{!$Label.T_0058}" />
+                                <apex:outputPanel id="not_started_2" layout="block"  styleClass="not-started" rendered="{! IF((ISBLANK(applicantInfo.Visa_Category__c)), true, false)}"><span><apex:commandButton value="{!$Label.T_0062}" /></span> <i class="icon-chevron-right"></i></apex:outputPanel>
+                                <apex:outputPanel id="completed_2" layout="block"  styleClass="finished" rendered="{! IF(NOT(ISBLANK(applicantInfo.Visa_Category__c)), true, false)}"><span><apex:commandButton value="{!$Label.T_0063}" /></span> <i class="icon-ok"></i></apex:outputPanel>
+                              </apex:commandlink>
+                            </div>
+                            
+                            <!-- Section Link for Centers preApp My Terms Page -->
+                            <div class="form-row">
+                              <apex:commandlink styleClass="accordion-button" action="{!navigator}">
+                                <apex:param name="nextPage" value="/apex/centers_preapp_my_terms"/>
+                                <apex:param name="reDirectPage" value="true"/>
+                                <apex:commandButton value="{!$Label.T_0059}" />
+                                <apex:outputPanel id="not_started_3" layout="block"  styleClass="not-started" rendered="{! IF(applicantInfo.Terms_Accepted__c == false, true, false)}"><span><apex:commandButton value="{!$Label.T_0062}" /></span> <i class="icon-chevron-right"></i></apex:outputPanel>
+                                <apex:outputPanel id="completed_3" layout="block"  styleClass="finished" rendered="{! IF(applicantInfo.Terms_Accepted__c == true, true, false)}"><span><apex:commandButton value="{!$Label.T_0063}" /></span> <i class="icon-ok"></i></apex:outputPanel>
+                              </apex:commandlink>
+                            </div>
+                            
+                            <div class="form-row">
+                              <apex:commandlink styleClass="accordion-button" action="{!navigator}">
+                                <apex:param name="nextPage" value="/apex/centers_preapp_my_travel_services"/>
+                                <apex:param name="reDirectPage" value="true"/>
+                                <apex:commandButton value="{!$Label.T_0060}" />
+                                <apex:outputPanel id="not_started_4" layout="block"  styleClass="not-started" rendered="{! NOT(CheckCtrTravelServices)}"><span><apex:commandButton value="{!$Label.T_0062}" /></span> <i class="icon-chevron-right"></i></apex:outputPanel>
+                                <apex:outputPanel id="completed_4" layout="block"  styleClass="finished" rendered="{! CheckCtrTravelServices}"><span><apex:commandButton value="{!$Label.T_0063}" /></span> <i class="icon-ok"></i></apex:outputPanel>
+                              </apex:commandlink>
+                            </div>
+                            
+                            <!-- <apex:outputPanel layout="block" styleClass="form-row" rendered="{!checkCtrHomestay}">  -->
+                            <apex:outputPanel layout="block" styleClass="form-row">
+                              <apex:commandlink styleClass="accordion-button" action="{!navigator}">
+                                <apex:param name="nextPage" value="/apex/centers_preapp_accommodations"/>
+                                <apex:param name="reDirectPage" value="true"/>
+                                <apex:commandButton value="{!$Label.T_0061}" />
+                                <apex:outputPanel id="not_started_5" layout="block"  styleClass="not-started" rendered="{! IF(ISBLANK(applicantInfo.Intrax_Accommodations__c), true, false)}"><span><apex:commandButton value="{!$Label.T_0062}" /></span> <i class="icon-chevron-right"></i></apex:outputPanel>
+                                <apex:outputPanel id="completed_5" layout="block"  styleClass="finished" rendered="{! IF(NOT(ISBLANK(applicantInfo.Intrax_Accommodations__c)), true, false)}"><span><apex:commandButton value="{!$Label.T_0063}" /></span> <i class="icon-ok"></i></apex:outputPanel>
+                              </apex:commandlink>
+                          	</apex:outputPanel>
+                            
+                            
+                
+                            <!-- Section Link for Centers preApp Summary Page -->
+                            <div class="form-row">
+                              <apex:commandlink styleClass="accordion-button" action="{!navigator}">
+                                <apex:param name="nextPage" value="/apex/centers_preapp_summary"/>
+                                <apex:param name="reDirectPage" value="true"/>
+                                <apex:commandButton value="{!$Label.T_0067}" />
+                              </apex:commandlink>
+                            </div>
+                            
+                            <!-- Command Button for Submit Application -->
+                            <div class="form-row">
+                              <apex:outputPanel layout="block" styleClass="form-button no-float inline-block" rendered="{! checkPreAppCenters}">
+                                <apex:commandlink styleClass="submit" action="{!navigator}">  
+	                                <apex:param name="nextPage" value="/apex/centers_preapp_submitted" />
+	                                <apex:param name="SubmitApp" value="PA" assignTo="{!SubmitApp}"/>
+	                                <apex:param name="reDirectPage" value="true"/>
+	                                <apex:commandButton value="{!$Label.T_0068}"/>                      
+                                </apex:commandlink>
+                            </apex:outputPanel>
+                  
+                            <apex:outputPanel styleClass="form-button" layout="block" rendered="{!NOT(checkPreAppCenters)}">
+                                
+                                <a id="nosubmit" href="" class="no-submit" style="cursor: pointer;"><apex:outputText value="{!$Label.T_0068}" /></a>
+                            </apex:outputPanel>
+                        </div>
+                    </div>
+
+                    <div class="panel one_third last aside">
+                        <c:Badge_Centers_Contact />             
+                    </div>
+                    </div>
+                </apex:form>
+            </div>
+        </apex:define>
+    </apex:composition>
+</apex:page>

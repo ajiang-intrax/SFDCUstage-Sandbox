@@ -1,0 +1,235 @@
+<apex:page id="centers_app_accommodations" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+    <apex:composition template="IntraxTemplate_Vs1">
+        <apex:define name="body">
+            <div class="wrapper" id="centers_preapp_welcome_to_intrax">
+                <apex:form id="form" >
+                    
+                    <div class="page-header clearfix">
+                        <h1 class="page-title"><apex:outputText value="{!$Label.T_0053}" /></h1>
+                        <div class="back-to-main"><apex:outputLink id="backToMain" value="apex/centers_app_home?id={!applicantInfo.Id}"><apex:outputText value="{!$Label.T_0075}" /></apex:outputLink></div>
+                    </div>
+           
+                        <div class="section-header clearfix">
+                            <h2><apex:outputText value="{!$Label.T_0126}" /> </h2>
+                        </div>
+              
+                        <div class="white-box clearfix">
+                            <div class="panel two_thirds"> 
+                               <p><apex:outputText value="{!$Label.T_0127}" /></p>
+                               <!-- <p>{!siteTexts}</p>-->
+                               
+                                <p><em><apex:outputText value="{!$Label.T_0128}" /></em></p>
+                                <apex:Messages id="errorMessages" styleClass="custom-error-pagelevel"/>
+                                <p><em> <apex:outputText value="{!$Label.T_0003}" /></em></p><br/> 
+                      
+                                     
+                                 <div class="form-row">
+                                     <div class="form-label left "><strong><apex:outputText value="{!$Label.T_0129}" /></strong><span class="required">*</span></div>
+                                    <div class="form-field">
+                                        <apex:actionRegion >
+                                        <apex:selectRadio id="Intrax_Accommodations" value="{!applicantInfo.Intrax_Accommodations__c}" required="true" disabled="TRUE">
+                                                <apex:selectOption itemValue="Yes" itemLabel="{!$Label.T_0327}"/>
+                                                <apex:selectOption itemValue="No" itemLabel="{!$Label.T_0328}"/>
+                                                <apex:actionSupport event="onclick" rerender="intrax-accommodation-arrangement" status="waitMsg"/>
+                                            </apex:selectRadio>
+                                            <apex:message id="errorIntrax_Accommodations" for="Intrax_Accommodations" styleClass="custom-error-radio"/> 
+                                        </apex:actionRegion>   
+                                    </div>
+                                 </div>                                 
+                                                                
+                                
+                                <apex:pageBlock id="intrax-accommodation-arrangement">
+                                <apex:outputPanel layout="block" rendered="{!applicantInfo.Intrax_Accommodations__c == 'Yes'}">
+                                	<!-- As per story 150 -->
+									<p><apex:outputText value="{!$Label.T_0130}" /></p>
+                                    <p><strong><apex:outputText value="{!$Label.T_0131}" />:</strong></p>
+                                    
+                                 <div class="form-row">
+                                    <div class="form-label left "><apex:outputText value="{!$Label.T_0132}" /></div>
+                                    <div class="form-field">
+                                        <apex:outputField id="Check_in_Date" value="{!applicantInfo.Check_in_Date__c}" />
+                                    </div>                                        
+                                 </div>
+                                  
+                                 <div class="form-row">
+                                    <div class="form-label left"><apex:outputText value="{!$Label.T_0133}" /></div>
+                                    <div class="form-field">
+                                        <apex:outputField id="Check_out_Date" value="{!applicantInfo.Check_out_Date__c}" />
+                                    </div>                                     
+                                 </div>     
+                      
+                                 <!--  COMMENTED OUT AS PER CN 95
+                                 <div class="form-row">
+                                      <div class="form-label top"><strong>Below are the price ranges you have previously chosen:</strong></div>
+                                    <div class="form-field no-float">
+                                        <apex:outputField id="Accommodation_Price_Range" value="{!applicantInfo.Accommodation_Price_Range__c}" />
+                                    </div>
+                                 </div> 
+                                --> 
+                                
+                                <div class="form-row">
+                                    <div class="form-label top"><strong><apex:outputText value="{!$Label.T_0136}" /><span class="required">*</span></strong></div>
+                                    <div class="form-field no-float">
+                                        <apex:actionRegion >
+                                        <apex:selectRadio id="Accommodation_Preference" value="{!applicantInfo.Accommodation_Preference__c}" required="true" disabled="TRUE">
+										    <apex:selectOption itemValue="Homestay" itemLabel="{!$Label.T_0330}"/>
+										    <apex:selectOption itemValue="Residence Club" itemLabel="{!$Label.T_0331}"/>
+										    <apex:actionSupport event="onclick" rerender="intrax-accommodation-preference" status="acc-pref"/>
+										</apex:selectRadio>
+                                        </apex:actionRegion>
+                                    </div>
+                                </div>
+                                
+                               <apex:pageBlock id="intrax-accommodation-preference">
+                               		<apex:outputPanel layout="block" rendered="{!CheckCtrHomestay}">
+                                	
+	                                	<!--  Do You Smoke? (Y/N) -->
+	                               		<div class="form-row">
+		                                    <div class="form-label left "><apex:outputText value="{!$Label.T_0138}" /><span class="required">*</span></div>
+		                                    <div class="form-field">
+		                                        <apex:selectRadio value="{!applicantInfo.Smoker_Student__c}" id="Smoker_Student" required="true" disabled="TRUE">
+		                                            <apex:selectOption itemValue="Yes" itemLabel="{!$Label.T_0327}"/>
+		                                            <apex:selectOption itemValue="No" itemLabel="{!$Label.T_0328}"/>
+		                                        </apex:selectRadio>
+		                                        <apex:message for="Smoker_Student" styleClass="custom-error-radio"/> 
+		                                    </div>
+	                               		</div>
+	                               
+		                               	<!-- Are you allergic to animals? -->
+		                               	<div class="form-row">
+		                                    <div class="form-label left "><apex:outputText value="{!$Label.T_0234}" /></div>
+		                                    <div class="form-field">
+		                                        <apex:outputField id="Allergies_from_Applicant" value="{!applicantInfo.Allergies_from_Applicant__c}"/>
+		                                    </div>
+		                               	</div>
+		                       
+		                               	<!-- Do You have any health concerns --> 
+			                            <div class="form-row">
+		                                   <div class="form-label left "><apex:outputText value="{!$Label.T_0140}" /><span class="required">*</span></div>
+		                                   <div class="form-field">
+		                                         <apex:actionRegion >
+		                                         <apex:selectRadio value="{!applicantInfo.Health_Needs_Indicated__c}" id="Health_Needs_Indicated" required="true" disabled="TRUE">
+		                                            <apex:selectOption itemValue="Yes" itemLabel="{!$Label.T_0327}"/>
+		                                            <apex:selectOption itemValue="No" itemLabel="{!$Label.T_0328}"/>
+		                                            <apex:actionSupport event="onclick" rerender="other-health-concerns"/>
+		                                        </apex:selectRadio>
+		                                        <apex:message for="Health_Needs_Indicated" styleClass="custom-error-radio"/> 
+		                                       
+		                                       </apex:actionRegion>
+		                                   </div>
+		                               	</div>
+	                       
+	                              		<apex:pageBlock id="other-health-concerns">
+	                                    	<apex:outputPanel layout="block" rendered="{!applicantInfo.Health_Needs_Indicated__c == 'Yes'}">    
+	                                       		<div class="form-row">
+	                                           		<div class="form-label top"><apex:outputText value="{!$Label.T_0141}" />:</div>
+	                                           		<div class="form-field"><apex:outputField id="Health_Needs_Description" value="{!applicantInfo.Health_Needs_Description__c}"/></div>
+	                                       		</div>
+	                                     	</apex:outputPanel>
+	                                	</apex:pageBlock>
+	                        
+		                                <!-- Are there any foods you can not eat -->
+		                                <div class="form-row">
+		                                    <div class="form-label left "><apex:outputText value="{!$Label.T_0142}" /><span class="required">*</span></div>
+		                                    <div class="form-field">
+		                                        <apex:actionRegion >
+		                                            <apex:selectRadio value="{!applicantInfo.Special_Diet_Indicated__c}" id="Special_Diet_Indicated" required="true" disabled="TRUE">
+		                                                <apex:selectOption itemValue="Yes" itemLabel="{!$Label.T_0327}"/>
+		                                                <apex:selectOption itemValue="No" itemLabel="{!$Label.T_0328}"/>
+		                                                <apex:actionSupport event="onclick" rerender="special-foods"/>
+		                                            </apex:selectRadio>
+		                                            <apex:message for="Special_Diet_Indicated" styleClass="custom-error-radio"/> 
+		                                        </apex:actionRegion>
+		                                    </div>
+		                                </div>
+	           
+	                                	<apex:pageBlock id="special-foods">
+	                                		<apex:outputPanel layout="block" rendered="{!applicantInfo.Special_Diet_Indicated__c == 'Yes'}">    
+	                                			<div class="form-row">
+				                                    <div class="form-label left "><apex:outputText value="{!$Label.T_0143}" /></div>
+				                                    <div class="form-field"><apex:outputField id="Special_Diet" value="{!applicantInfo.Special_Diet__c}"/></div>
+	                                			</div>
+	                                		</apex:outputPanel>
+	                                	</apex:pageBlock>
+	                                    
+		                                <div class="form-row dotted-box">
+	                                        <apex:outputField id="Center_Disclosure_Accepted" value="{!applicantInfo.Center_Disclosure_Accepted__c}" label="" />
+	                                        <apex:outputText value="{!$Label.T_0144}" /><span class="required">*</span>
+		                                </div>
+	                            	</apex:outputPanel>
+	                            	
+	                            	<!-- CT-111-->
+                                	<apex:outputPanel layout="block" rendered="{!CheckCtrResidenceClub}">
+                       		   			<div class="content-group-title"><apex:outputText value="{!$Label.T_0145}" /> </div> 
+		                                                      
+		                               	<div id="productsAccommodation">
+		                               		<div class="content-group-body"> 
+		                                		<ul class="no-bullets no-indent">
+		                                   			<apex:repeat id="Accommodation_Repeat" value="{!mapApplicantProduct['Accommodation']}" var="item">
+			                                    		<li>
+					                                        <span style="padding-right:5px;">
+					                                        	<input type="radio" id="chkAcc" name="rdSelectedAcc" value="{!item.applicantProduct.Product__c}" disabled="TRUE"/>
+					                                        </span>
+			                                        		<!-- <apex:outputText id="Accommodation_Description" value="{!item.applicantProduct.Description__c}"/>
+			                                        		 -->
+			                                        		<apex:variable var="n" value="{!item.applicantProduct.Product_Description_Label__c}" />                                                    
+															<apex:outputText id="ApplicantProduct_Description_Label" value="{!$Label[n]}" rendered="{!IF(n!=null, true, false)}"/>
+															<apex:outputText id="ApplicantProduct_Description" value="{!item.applicantProduct.Description__c}" rendered="{!IF(n==null, true, false)}"/>
+															
+			                                         		<b><em>
+			                                         		<!-- <apex:outputText id="Accommodation_Promo_CTA" value="{!item.applicantProduct.Promo_CTA__c}"/>
+			                                         		 -->
+			                                         		<apex:variable var="o" value="{!item.applicantProduct.Promo_CTA_Label__c}" />                                                    
+															<apex:outputText id="ApplicantProduct_Promo_CTA_Label" value="{!$Label[o]}" rendered="{!IF(o!=null, true, false)}"/>
+															<apex:outputText id="ApplicantProduct_Promo_CTA" value="{!item.applicantProduct.Promo_CTA__c}" rendered="{!IF(o==null, true, false)}"/>
+															
+															</em></b>
+			                                       		</li>
+		                                			</apex:repeat>
+		                                    	</ul>
+										    
+											    <script>
+											        var divObj = document.getElementById("productsAccommodation");
+											        if(divObj  != null) {
+											            var inputs = divObj.getElementsByTagName("input"); 
+											        
+											            for (var i = 0; i < inputs.length; i++) {       
+											                if(inputs[i].value == '{!selectedAccommodationProductId}') {
+											                    inputs[i].checked = "checked";
+											                }
+											            }
+											        }
+											    </script>
+		                               		</div>
+		                               </div>  
+		                           </apex:outputPanel>
+                       		   	   <!-- CT-111 End-->
+                       		   	
+                         		</apex:pageBlock>
+                                
+                                </apex:outputPanel>
+                                </apex:pageBlock>
+                                <div class="form-row">
+                                    <div class="form-link">
+                                        <apex:outputLink id="backLink" value="/apex/centers_app_my_travel_services?id={!applicantInfo.Id}"><i class="icon-chevron-left"></i> <span><apex:outputText value="{!$Label.T_0086}" /></span></apex:outputLink>
+                                    </div>
+                              
+                                    <div class="form-button">
+                                        <apex:commandlink id="saveContinue" styleClass="next" action="{!navigator}">
+                                        	<apex:param name="nextPage" value="/apex/centers_app_home"/>
+                                        	<apex:param name="reDirectPage" value="true"/>
+                                            <apex:commandButton value="{!$Label.T_0087}" />
+                                            <i class="icon-chevron-right"></i>
+                                        </apex:commandlink>
+                                    </div>  
+                                </div>
+                            </div>
+                        <div class="panel one_third last aside">
+                            <c:Badge_Centers_Contact />            
+                        </div>
+                    </div>
+                </apex:form>    
+            </div>
+        </apex:define>
+    </apex:composition>
+</apex:page>

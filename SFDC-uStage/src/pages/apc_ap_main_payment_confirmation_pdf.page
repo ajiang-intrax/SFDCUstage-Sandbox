@@ -1,0 +1,89 @@
+<apex:page applyHTMLTag="false" applyBodyTag="false" showHeader="false" renderas="pdf" id="apc_ap_main_payment_confirmation_pdf">
+
+<head>
+<style type="text/css" media="print">
+@page {
+size: portrait;
+margin: 4cm 2cm 4cm 2cm;
+padding: 0 0 1em 0;
+
+@top-left {
+content: element(header);
+}
+
+@bottom-center {
+content: element(footer);
+}
+}
+
+div.master {
+	display:block;
+	position: running(header);
+}
+
+div.footer {
+    display:block;
+	position: running(footer);
+}
+
+html, body {
+	margin: 0;
+	padding: 0;
+	font-family: 'Trebuchet', Arial Unicode MS;
+	font-size: 12px
+}
+
+.content{font-family: 'Trebuchet', Arial Unicode MS;}
+strong{font-weight:bold;}
+</style>
+
+
+	</head>
+
+<body>
+		
+		<div class="master">
+		 <table width="100%" border="0"><apex:image style="width:4cm;"
+				url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/pdf/pdf-logo-aupaircare.gif')}"
+				alt="AuPairCare" title="AuPairCare" />	
+		</table>			
+		</div>
+		<div class="footer">
+		<table width="100%" border="0">
+		<apex:image style="width:100%;" url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/pdf/pdf-footer-aupaircare.gif')}"
+				alt="AuPairCare" title="AuPairCare" />
+		</table>		
+		</div>
+		 
+
+       <div class="content">
+		<h1>
+           <apex:outputText value="{!$CurrentPage.parameters.title}" />
+           </h1>
+
+		<h2>Payment Confirmation</h2>
+
+		<p>
+			Please keep the following transaction ID for future reference:<br />
+			<strong><apex:outputText value="{!$CurrentPage.parameters.paymentTxId}" /></strong>
+		</p>
+
+		<p>
+			Charged Amount:<br /> 
+			<strong><!--<apex:outputText value=" {0, number, #,##0.00}">
+                             <apex:param value="{!$CurrentPage.parameters.paymentAmount}"/>
+                    </apex:outputText>
+					-->
+                	$<apex:outputText value="{!$CurrentPage.parameters.paymentAmount}"/>                    
+            </strong>
+		</p>
+
+		<p>
+			Transaction date:<br /> 
+			<strong><apex:outputText value="{!$CurrentPage.parameters.paymentDate}" /></strong>
+		</p>
+ 
+        </div>
+		
+</body>
+</apex:page>

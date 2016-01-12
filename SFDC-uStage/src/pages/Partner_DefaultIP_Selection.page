@@ -1,0 +1,87 @@
+<apex:page id="Partner_DefaultIP_Selection" standardStylesheets="false" showHeader="false" action="{!CheckLogin}" controller="TemplateController">
+
+        <apex:composition template="intraxtemplate_vs3" >
+            <apex:define name="body">
+      
+      <style>
+      .wborder{border:#ccc solid 1px;}
+      
+      </style>
+            
+               <div class="row margin-b4">
+          <div class="col-md-9 center-block center-text">
+            <h1>Welcome <apex:outputText value=" {!User.LastName}" /></h1>
+			<h2>Where would you like to start?</h2>
+			 </div>
+          </div><!--  end row -->
+            
+            	
+            	
+           <div class="row"> 	
+           <div class="col-sm-12"> 	
+           <div class="center-text">
+           <apex:form id="Form">
+           
+           <apex:commandLink action="{!UpdateToAPC}" id="APCCommandLink">
+            	  <apex:outputText rendered="{!((CONTAINS(ContactIP,'AuPairCare')) && (NOT(CONTAINS(DefaultIP,'AuPairCare')) || DefaultIP=='') )}">
+				    <div class="inline-block wborder margin-r margin-b4">				      
+				      <apex:image url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/partner/gateway-thumbs/apc.jpg')}" alt="AuPairCare" title="AuPairCare"/> 
+				      <div class="box left-text">
+				      <h3 class="no-margin-t">AuPairCare ></h3>				      				      
+                      </div>
+				    </div>
+				  </apex:outputText>
+				  </apex:commandLink>
+				  
+				    <apex:commandLink action="{!UpdateToAyusa}" id="AyusaCommandLink">
+				  <apex:outputText rendered="{!((CONTAINS(ContactIP,'Ayusa')) && (NOT(CONTAINS(DefaultIP,'Ayusa')) || DefaultIP=='' ))}">
+				    <div class="inline-block wborder margin-r margin-b4">
+				      <apex:image url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/partner/gateway-thumbs/ayu.jpg')}" alt="Ayusa" title="Ayusa"/>
+				      <div class="box left-text">
+				      <h3 class="no-margin-t">Ayusa ></h3>				      
+                     </div>
+				    </div>
+				  </apex:outputText>
+				  </apex:commandLink>
+				  
+				    <apex:commandLink action="{!UpdateToEA}" id="EACommandLink">
+				  <apex:outputText rendered="{!((CONTAINS(ContactIP,'English and Professional Skills')) && (NOT(CONTAINS(DefaultIP,'English Academy')) || DefaultIP==''))}">
+				    <div class="inline-block wborder margin-r margin-b4">
+				      <apex:image url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/partner/gateway-thumbs/ea.jpg')}" alt="English Academy" title="English Academy"/>
+				      <div class="box left-text">
+				      <h3 class="no-margin-t">English Academy ></h3>				     
+                     </div>
+				    </div>
+				  </apex:outputText>
+				  </apex:commandLink>
+				  
+				  <apex:commandLink action="{!UpdateToIntern}" id="InternCommandLink">
+				  <apex:outputText rendered="{!((CONTAINS(ContactIP,'Internship')) && (NOT(CONTAINS(DefaultIP,'Global Internships')) || DefaultIP==''))}">
+				    <div class="inline-block wborder margin-r margin-b4">
+				      <apex:image url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/partner/gateway-thumbs/igi.jpg')}" alt="Global Internships" title="Global Internships"/>
+				      <div class="box left-text">
+				      <h3 class="no-margin-t">Global Internships ></h3>				      
+                      </div>
+				    </div>
+				  </apex:outputText>
+				  </apex:commandLink>
+				  
+				   <apex:commandLink action="{!UpdateToWT}" id="WTCommandLink">	
+				  <apex:outputText rendered="{!((CONTAINS(ContactIP,'Work Travel')) && (NOT(CONTAINS(DefaultIP,'Work Travel')) || DefaultIP==''))}">
+				    <div class="inline-block wborder margin-r margin-b4">
+				      <apex:image url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/partner/gateway-thumbs/wt.jpg')}" alt="Work Travel" title="Work Travel"/>
+				      <div class="box left-text">
+				      <h3 class="no-margin-t">Work Travel ></h3>				                          
+                     </div>
+				    </div>
+				  </apex:outputText>
+				  </apex:commandLink>
+				  
+				  </apex:form>
+				  </div>
+				  </div><!--  end col -->
+</div><!--  end row -->
+            </apex:define>
+        </apex:composition>
+
+</apex:page>

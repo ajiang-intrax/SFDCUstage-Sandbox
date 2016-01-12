@@ -1,0 +1,141 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" title="Experience" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="false" showHeader="false" id="apc_ap_main_home">
+<apex:composition template="intraxtemplate_vs3">
+<apex:define name="body">
+<c:block_header_apc_ap_application />
+<div class="row">
+<div class="col-sm-6">
+<h1>Your Application</h1>
+</div>
+</div>
+
+<div class="row">
+<div class="col-xs-12">
+<div class="pull-right"><em>What do the icons mean?</em>&nbsp;&nbsp; &nbsp;  
+<span class="margin-r"><i style="color:#ccc;" class="fa fa-exclamation-circle"></i> Partially Completed</span>
+<span><i class="fa fa-check"></i> 100% Completed</span>
+</div>
+</div>
+
+</div>
+<hr/>
+<c:block_app_completion ApplicantInfo="{!applicantInfo}" userProfileName="{!userProfileName}"  />
+<div class="row margin-t6">
+<div class="col-md-3">
+<i style="font-size:100px;" class="fa fa-lightbulb-o margin-b"></i>
+<div class="h3">About You</div>
+<ul class="nav nav-list vs1">
+<li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '012'), 'complete', '')}" value="/apex/apc_ap_basic_personal_info?id={!ApplicantInfo.Id}" id="linkpersonalinfomain"> <i class="fa"></i> <span>Personal Information</span> </apex:outputLink>
+        </li>
+  <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '013'), 'complete', '')}" value="/apex/apc_ap_basic_contact_info?id={!ApplicantInfo.Id}" id="linkcontactinfomain"> <i class="fa"></i> <span>Contact Information</span> </apex:outputLink>
+        </li>
+ <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '024'), 'complete', '')}" value="/apex/apc_ap_main_interests?id={!ApplicantInfo.Id}" id="linkhobbies"> <i class="fa"></i> <span>Interests and Hobbies</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '017'), 'complete', '')}" value="/apex/apc_ap_main_family_info?id={!ApplicantInfo.Id}" id="linkfamily"> <i class="fa"></i> <span>Your Family</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '026'), 'complete', '')} {!IF(contains(applicantinfo.PageStatus_Started__c, '026'), 'started', '')}" value="/apex/apc_ap_main_essays?id={!ApplicantInfo.Id}" id="linkessays"> <i class="fa"></i> <span>Match Questions</span> </apex:outputLink>
+        </li>										
+</ul>
+</div><!--  end column -->
+
+<div class="col-md-3">
+<i style="font-size:100px;" class="fa fa-heart-o margin-b"></i>
+<div class="h3">Your Health</div>
+<ul class="nav nav-list vs1">
+        <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '016'), 'complete', '')}" value="/apex/apc_ap_basic_health_info?id={!ApplicantInfo.Id}" id="linkhealthmain"> <i class="fa"></i> <span>Health Overview</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '027'), 'complete', '')}" value="/apex/apc_ap_main_illness_history?id={!ApplicantInfo.Id}" id="linkillness"> <i class="fa"></i> <span>Medical History</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '028'), 'complete', '')}" value="/apex/apc_ap_main_health_info?id={!ApplicantInfo.Id}" id="linkhealthinfo"> <i class="fa"></i> <span>Medical Release</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '029'), 'complete', '')}" value="/apex/apc_ap_main_physician_form?id={!ApplicantInfo.Id}&docType=Health" id="linkphysician"> <i class="fa"></i> <span>Physician Review</span> </apex:outputLink>
+        </li>
+</ul>
+</div><!--  end column -->
+
+<div class="col-md-3">
+<i style="font-size:100px;" class="fa fa-flag-o margin-b"></i>
+<div class="h3">Your Experience</div>
+<ul class="nav nav-list vs1">
+         
+        <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '020'), 'complete', '')}" value="/apex/apc_ap_main_training?id={!ApplicantInfo.Id}&docType=Transcripts" id="linktraining"> <i class="fa"></i> <span>Education and Training</span> </apex:outputLink>
+        </li>
+         
+        <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '021'), 'complete', '')} {!IF(contains(applicantinfo.PageStatus_Started__c, '021'), 'started', '')}" value="/apex/apc_ap_main_experience?id={!ApplicantInfo.Id}" id="linkexperience"> <i class="fa"></i> <span>Childcare Experience</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '018'), 'complete', '')}" value="/apex/apc_ap_main_driving_experience?id={!ApplicantInfo.Id}" id="linkdriveexperience"> <i class="fa"></i> <span>Driving Experience</span> </apex:outputLink>
+        </li>
+		
+	      <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '019'), 'complete', '')}" value="/apex/apc_ap_main_swimming_experience?id={!ApplicantInfo.Id}&docType=Lifeguard" id="linkswimexperience"> <i class="fa"></i> <span>Swimming Experience</span> </apex:outputLink>
+        </li>				
+</ul>
+</div><!--  end column -->
+
+<div class="col-md-3">
+<i style="font-size:100px;" class="fa fa-laptop margin-b"></i>
+<div class="h3">Your Program</div>
+<ul class="nav nav-list vs1">
+	    <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '015'), 'complete', '')}" value="/apex/apc_ap_basic_program_preferences?id={!ApplicantInfo.Id}" id="linkprogramprefmain"> <i class="fa"></i> <span>Program Preferences</span> </apex:outputLink>
+        </li>
+		   <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '014'), 'complete', '')}" value="/apex/apc_ap_basic_eligibility?id={!ApplicantInfo.Id}" id="linkprogramelegmain"> <i class="fa"></i> <span>Eligibility</span> </apex:outputLink>
+        </li>
+		  <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '025'), 'complete', '')} {!IF(contains(applicantinfo.PageStatus_Started__c, '025'), 'started', '')}" value="/apex/apc_ap_main_references?id={!ApplicantInfo.Id}" id="linkreferences"> <i class="fa"></i> <span>References</span> </apex:outputLink>
+        </li>
+		 <li>
+          <apex:outputLink styleClass="{!IF(ApplicantInfo.Terms_Accepted__c==True, 'complete', '')}" value="/apex/apc_ap_main_ext_agreements?id={!ApplicantInfo.Id}" id="linkagreements"> <i class="fa"></i> <span>Agreements</span> </apex:outputLink>
+        </li>
+         <!-- 
+         <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '032'), 'complete', '')}" value="/apex/apc_ap_main_payment?id={!ApplicantInfo.Id}" id="ExlNinkmainpayment"> <i class="fa"></i> <span>Payment</span> </apex:outputLink>
+        </li>
+         -->						
+</ul>
+</div><!--  end column -->
+
+<apex:outputpanel layout="block" id="modalSubmit" rendered="{!$CurrentPage.parameters.vstate == 'newprf'}" >
+          <div class="modal fade vs1" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-body">
+                <div class="h1">What's Next?</div>
+<p>Congratulations, you have successfully submitted your pre-application to become an au pair.</p>
+<p>Please continue filling out the rest of your application until you see a check mark <i class="fa fa-check"></i> next to each topic.</p>
+              </div>
+              <div class="modal-footer">
+                  
+                <button type="button" class="btn btn-default" data-dismiss="modal">Continue</button>
+                                
+              </div>
+            </div>
+          </div>
+        </div> 
+        </apex:outputpanel> <!--  end modal window -->
+<script>
+var j$ = jQuery.noConflict();
+j$(window).load(function() {
+  j$('#myModal').modal();
+});
+</script>      
+
+
+
+
+</div><!--  end row -->
+</apex:define>  
+</apex:composition>
+</apex:page>

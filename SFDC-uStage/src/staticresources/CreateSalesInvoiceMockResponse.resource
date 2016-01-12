@@ -1,0 +1,24 @@
+<response>
+      <control>
+            <status>success</status>
+            <senderid>Intrax</senderid>
+            <controlid>Create_Sales_Invoice</controlid>
+            <uniqueid>false</uniqueid>
+            <dtdversion>3.0</dtdversion>
+      </control>
+      <operation>
+            <authentication>
+                  <status>success</status>
+                  <userid>SupriyaSoni_CRM</userid>
+                  <companyid>intrax-sandbox</companyid>
+                  <locationid>apc</locationid>
+                  <sessiontimestamp>2015-04-19T23:46:39-07:00</sessiontimestamp>
+            </authentication>
+            <result>
+                  <status>success</status>
+                  <function>create_sotransaction</function>
+                  <controlid>1</controlid>
+                  <key>Sales Invoice-INV0189</key>
+            </result>
+      </operation>
+</response>

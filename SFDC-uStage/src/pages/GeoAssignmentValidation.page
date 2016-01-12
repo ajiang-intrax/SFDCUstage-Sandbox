@@ -1,0 +1,20 @@
+<apex:page standardController="Account" extensions="geoAssignmentValidation" action="{!load}">
+<apex:form id="formFull">
+	<br/>
+	<b><apex:outputText value="{!status}" /></b>
+	<br/>
+	<br/>
+	<Apex:commandLink value="Back to Account" action="{!ViewAccount}"/>
+	
+	<!-- 
+	<apex:commandButton action="{!load}" value="Start Validation" reRender="formFull"/>
+	
+	<apex:commandButton action="{!Match}" value="Match" rendered="{!status!='Geo Match Exists' && status!='Matching Done'}" reRender="formFull"/>
+			
+	<br/>
+	<apex:commandButton action="{!Validate}" value="Validate" rendered="{!status=='Geo Match Exists'}" reRender="formFull">
+		<apex:param name="sType" value="{!sTypeParam}" assignTo="{!sType}"/>
+	</apex:commandButton>
+	 -->
+</apex:form>	
+</apex:page>

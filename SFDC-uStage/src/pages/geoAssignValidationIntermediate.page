@@ -1,0 +1,9 @@
+<apex:page standardController="Account" extensions="geoAssignmentValidation" action="{!load}">
+<apex:form >
+	<br/>
+	<b><apex:outputText value="{!status}" /></b>
+	<br/>
+	<br/>
+	<Apex:commandLink value="Back to Account" action="{!ViewAccount}"/>
+</apex:form>
+</apex:page>

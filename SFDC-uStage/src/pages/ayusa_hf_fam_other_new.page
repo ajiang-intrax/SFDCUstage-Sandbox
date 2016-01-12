@@ -1,0 +1,164 @@
+<apex:page id="ayusa_hf_fam_other_new" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+  
+  
+                           
+    <apex:define name="body">
+        <div class="wrapper">
+    <apex:form id="form" >
+       <div class="page-header clearfix">
+<h1 class="page-title">Ayusa Host Family Application</h1>
+<div class="back-to-main"><apex:outputLink value="apex/ayusa_hf_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+</div>
+        <h2>Add More Family Members</h2>
+<div class="white-box">
+    <div class="panel-container clearfix">    
+            <div class="panel two_thirds">
+            <p>List all other members of the home including dependents, extended family and other household residents. Please do not list yourself in this section.</p>
+            <apex:Messages styleClass="custom-error-pagelevel" rendered="{!customMessage = false}"/>
+            <apex:Messages styleClass="errorMsg" style="list-style-type:none;" rendered="{!customMessage = true}"/>
+            <p><em> All fields marked with an asterisk (<span class="required no-padding">*</span>) are required</em></p><br/>
+    
+    
+          <div class="two-panels"> 
+             <div class="form-row">
+                <div class="form-label left"> Member First Name<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="FirstName" value="{!familyInfo.First_Name__c}" required="TRUE"/>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-label left "> Member Middle Name</div>
+                <div class="form-field">
+                  <apex:inputField id="MiddleName" value="{!familyInfo.Middle_Name__c}" required="false"/>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-label left "> Member Last Name<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="LastName" value="{!familyInfo.Last_Name__c}" required="TRUE"/>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-label left"> Email </div>
+                <div class="form-field">
+                  <apex:inputField id="Email" value="{!familyInfo.Email__c}" required="FALSE"/>
+                </div>
+              </div>              
+              
+              <div class="form-row">
+                <div class="form-label left"> Date of Birth<span class="required">*</span> </div>
+                <div class="form-field">
+                  <apex:inputField id="DOB" value="{!familyInfo.Date_of_Birth__c}" required="TRUE"/>
+                </div>
+              </div>              
+              
+              <div class="form-row">
+                <div class="form-label left">Gender<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="Gender" value="{!familyInfo.Gender__c}" required="TRUE"/>
+                </div>
+              </div> 
+              
+             
+                
+              <div class="form-row">
+                <div class="form-label left"> Relationship<span class="required">*</span> </div>
+                <div class="form-field">
+                  <apex:actionRegion >
+                  <apex:selectList id="Relationship" multiselect="false" size="1" value="{!familyInfo.Role__c}" required="TRUE" styleClass="inform">
+                     <apex:selectOptions value="{!rolelist}"/>
+                     <apex:actionSupport event="onchange" rerender="role"/>
+                  </apex:selectList>
+                  </apex:actionRegion>
+                </div>
+                <div class="dropt"> <i class="icon-question-sign"></i>  
+                   <span>{!$ObjectType.Person_Info__c.Fields.Role__c.inlineHelpText}</span>
+                </div>
+              </div>
+              
+              <apex:pageBlock id="role">
+                    <apex:outputPanel layout="block" rendered="{!familyInfo.Role__c == 'Other'}">
+                      <div class="form-row">
+                        <div class="form-label left"> If 'Other', please describe:<span class="required">*</span> </div>
+                        <div class="form-field">
+                          <apex:inputField id="Other" value="{!familyInfo.Role_Other__c}" required="TRUE"/>
+                        </div>
+                      </div>    
+                    </apex:outputPanel>       
+              </apex:pageBlock> 
+              
+              <div class="form-row">
+                <div class="form-label left"> Profession <span class="required">*</span> </div>
+                <div class="form-field">
+                  <apex:inputField id="Profession" value="{!familyInfo.Profession__c}" required="TRUE" styleClass="inform"/>
+                </div>
+                <div class="dropt"> <i class="icon-question-sign"></i>  
+                   <span>{!$ObjectType.Person_Info__c.Fields.Profession__c.inlineHelpText}</span>
+                </div>
+              </div>  
+              
+              <div class="form-row">
+                <div class="form-label left"> Employer<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="Employer" value="{!familyInfo.Employer_Name__c}" required="TRUE"/>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-label left"> Job Title<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="Title" value="{!familyInfo.Title__c}" required="TRUE"/>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-label left"> Supervisor<span class="required">*</span> </div>
+                <div class="form-field">
+                  <apex:inputField id="Supervisor" value="{!familyInfo.Work_Supervisor__c}" required="TRUE"/>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-label left"> Residency Status <span class="required">*</span> </div>
+                <div class="form-field">
+                  <apex:inputField id="ResidencyStatus" value="{!familyInfo.Residency_Status__c}" required="TRUE" styleClass="inform"/>
+                </div>
+                <div class="dropt"> <i class="icon-question-sign"></i>  
+                   <span>{!$ObjectType.Person_Info__c.Fields.Residency_Status__c.inlineHelpText}</span>
+                </div>
+               
+              </div>           
+                                         
+              <div class="form-row">
+               
+              <div class="form-link">
+                <apex:outputLink id="Back" styleClass="back" value="/apex/ayusa_hf_fam_other?id={!applicantInfo.Id}">
+                <i class="icon-chevron-left"></i>
+                <span>Back</span>
+                </apex:outputLink>
+              </div> 
+              <div class="form-button">
+                <apex:commandlink styleClass="save" action="{!validator}">
+                  <apex:param name="nextPage" value="/apex/ayusa_hf_fam_other"/>
+                  <!--<apex:param name="add" value="false" assignTo="{!add}"/>-->
+                  <!--<apex:param name="role" value="Sibling" assignTo="{!role}"/>--> 
+                  <apex:param name="familyMember" value="true" assignTo="{!familyMember}"/>       
+                  <apex:param name="reDirectPage" value="true"/>
+                  <apex:commandButton id="SaveContinue" value="Save & Continue"/>
+                  <i class="icon-chevron-right"></i> 
+                </apex:commandlink>
+              </div> 
+              </div>
+            </div> 
+        </div>
+    </div>
+        </div>
+       </apex:form>
+        </div>
+        </apex:define>
+  </apex:composition>
+</apex:page>

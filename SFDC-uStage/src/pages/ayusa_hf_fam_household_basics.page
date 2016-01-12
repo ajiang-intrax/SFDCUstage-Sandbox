@@ -1,0 +1,191 @@
+<apex:page id="ayusa_hf_fam_household_basics" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper">
+            <apex:form id="form">
+        <div class="page-header clearfix">
+<h1 class="page-title">Ayusa Host Family Application</h1>
+<div class="back-to-main"><apex:outputLink id="BacktoMain" value="apex/ayusa_hf_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+</div>
+          <h2>About Your Household</h2>
+          <div class="white-box clearfix">
+          <div class="panel two_thirds">
+          
+            <apex:Messages styleClass="custom-error-pagelevel"/>
+            <p><em> All fields marked with an asterisk (<span class="required no-padding">*</span>) are required</em></p><br/>
+            
+              
+              <div class="form-row">
+              <div class="form-label left">Please select your type of home<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="HomeType" value="{!applicantInfo.Home_Type__c}" required="TRUE"/> 
+                </div>
+              </div>
+                  
+              <div class="form-row">
+                <div class="form-label left">Number of Bedrooms<span class="required">*</span> </div>
+                <div class="form-field">
+                  <apex:inputField id="Bedrooms" value="{!applicantInfo.Bedrooms__c}" required="TRUE"/>
+                </div>
+              </div>
+               <div class="form-row">
+                <div class="form-label left ">Will the exchange student share a bedroom?<span class="required">*</span></div>
+                <div class="form-field">
+                    <apex:actionRegion >
+                    <apex:selectRadio value="{!applicantInfo.Bedroom_Shared_Indicated__c}" id="bedroom-sahre-indicated" required="true">
+                        <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                        <apex:selectOption itemValue="No" itemLabel="No"/>
+                         <apex:actionSupport event="onclick" rerender="share-bedroom-with" status="status"/>
+                    </apex:selectRadio>
+                    </apex:actionRegion>
+                    <apex:message for="bedroom-sahre-indicated" styleClass="custom-error-radio"/>
+                </div>                 
+              </div>
+              
+               <apex:pageBlock id="share-bedroom-with">
+                     <apex:outputPanel layout="block" rendered="{!ApplicantInfo.Bedroom_Shared_Indicated__c == 'Yes'}">   
+              <div class="form-row">
+                <div class="form-label left">If yes, with whom?<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="BedroomSharedWith" value="{!applicantInfo.Bedroom_Shared_With__c}" required="true"/>
+                </div>
+              </div>
+               </apex:outputPanel>
+               </apex:pageBlock> 
+                
+              <div class="form-row">
+                <div class="form-label left">Number of Bathrooms<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="Bathrooms" value="{!applicantInfo.Bathrooms__c}" required="TRUE"/>
+                </div>
+              </div>
+                  
+              <div class="form-row">
+                <div class="form-label left">Number of Household Members<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="FamilyMembers" value="{!applicantInfo.Family_Member_Count__c}" required="TRUE"/>
+                </div>
+              </div>
+    
+              <div class="form-row">
+                <div class="form-label left">Average Annual Income Range<span class="required">*</span></div>
+                <div class="form-field">
+                  <apex:inputField id="HouseholdIncome" value="{!applicantInfo.Household_Income_Range__c}" required="TRUE"/>
+                </div>
+                       <div class="dropt"> <i class="icon-question-sign"></i>
+                   <span>Federal regulations require Ayusa to collect income data.  The information obtained is for internal use only and will be kept confidential to protect personal information. Income will be used solely for the purposes of ensuring that the basic needs of the exchange student can be met, including meals and transportation to school.
+                   </span>
+                </div> 
+              </div>
+                  
+              <div class="form-row">
+                <div class="form-label left">Does any household member receive needs-based government subsidies for food or housing?<span class="required">*</span> </div>
+                <div class="form-field">
+                    <apex:selectRadio value="{!applicantInfo.Government_Assistence_Indicated__c}" id="asistance-indicated" required="true">
+                        <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                        <apex:selectOption itemValue="No" itemLabel="No"/>
+                    </apex:selectRadio>
+                    <apex:message for="asistance-indicated" styleClass="custom-error-radio"/>  
+                </div>
+                   <div class="dropt"> <i class="icon-question-sign"></i>
+                   <span>{!$ObjectType.Applicant_Info__c.Fields.Government_Assistence_Indicated__c.inlineHelpText}</span>
+                </div>
+                
+              </div>
+               
+              <div class="form-row">
+                <div class="form-label left">Has any member of the household been convicted of a crime?<span class="required">*</span></div>
+                <div class="form-field">
+                    <apex:actionRegion >
+                    <apex:selectRadio value="{!applicantInfo.Criminal_Convictions_Indicated__c}" id="criminal-convicted" required="true">
+                        <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                        <apex:selectOption itemValue="No" itemLabel="No"/>
+                         <apex:actionSupport event="onclick" rerender="criminal-convictions" status="status"/>
+                    </apex:selectRadio>
+                    </apex:actionRegion>
+                    <apex:message for="criminal-convicted" styleClass="custom-error-radio"/>  
+                </div>                 
+              </div>
+              
+               
+          <apex:pageBlock id="criminal-convictions"> 
+               <apex:outputPanel layout="block" rendered="{!ApplicantInfo.Criminal_Convictions_Indicated__c == 'Yes'}">
+              <div class="form-row">
+                <div class="form-label top">If yes, please describe:<span class="required">*</span> </div>
+                <div class="form-field">
+                  <!--  <apex:inputField value="{!applicantInfo.Criminal_Convictions_Description__c}" required="true"/>-->
+                  <apex:inputTextarea id="crimConvDesc" value="{!applicantInfo.Criminal_Convictions_Description__c}" required="TRUE" onkeyup="countChar(this, 255, 'crimConvDescCount')"/> 
+                  </div>
+                  <div class="char-limit"><span class="char-count-label">Characters left:</span>
+                  <span id="crimConvDescCount" class="char-count">
+                  {!255-len(applicantInfo.Criminal_Convictions_Description__c) }
+                  </span>
+                  </div>
+              </div>
+              </apex:outputPanel>
+                  </apex:pageBlock> 
+                        
+              <div class="form-row">
+                <div class="form-label left">Has any of the household ever been investigated for and/or charged with child abuse, neglect, crimes against children or assault?<span class="required">*</span> </div>
+                <div class="form-field">
+                    <apex:actionRegion >
+                    <apex:selectRadio value="{!applicantInfo.Criminal_Investigation_Indicated__c}" id="investigation-indicated" required="true">
+                        <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                        <apex:selectOption itemValue="No" itemLabel="No"/>
+                         <apex:actionSupport event="onclick" rerender="criminal-investigation" status="status"/>
+                    </apex:selectRadio>
+                    </apex:actionRegion>
+                     <apex:message for="investigation-indicated" styleClass="custom-error-radio"/>  
+                </div>               
+              </div>
+              
+                         
+         <apex:pageBlock id="criminal-investigation"> 
+                 <apex:outputPanel layout="block" rendered="{!ApplicantInfo.Criminal_Investigation_Indicated__c == 'Yes'}"> 
+              <div class="form-row">
+                <div class="form-label top">If yes, please describe:<span class="required">*</span> </div>
+                <div class="form-field">
+                  <!--  <apex:inputField value="{!applicantInfo.Criminal_Investigation_Description__c}" required="true"/>-->
+                  <apex:inputTextarea id="crimInvestDesc" value="{!applicantInfo.Criminal_Investigation_Description__c}" required="TRUE" onkeyup="countChar(this, 255, 'crimInvestDescCount')"/> 
+                  </div>
+                  <div class="char-limit"><span class="char-count-label">Characters left:</span>
+                  <span id="crimInvestDescCount" class="char-count">
+                  {!255-len(applicantInfo.Criminal_Investigation_Description__c) }
+                  </span>
+                  </div>
+              </div>
+              </apex:outputPanel>
+                  </apex:pageBlock> 
+                        
+            <div class="form-row">
+                                      
+              <div class="form-link">
+                    <apex:outputLink id="BackLink" rendered="{!NOT(ISBLANK(personInfo.Date_of_Birth__c))}" styleClass="back" value="/apex/ayusa_hf_fam_other?id={!applicantInfo.Id}">
+                    <i class="icon-chevron-left"></i>
+                    <span>Back</span>
+                    </apex:outputLink>
+                    
+                    <apex:outputLink id="BackLink2" rendered="{!(ISBLANK(personInfo.Date_of_Birth__c))}" styleClass="back" value="/apex/ayusa_hf_fam_prev_address?id={!applicantInfo.Id}">
+                    <i class="icon-chevron-left"></i>
+                    <span>Back</span>
+                    </apex:outputLink>
+              </div>
+              
+              <div class="form-button">
+                <apex:commandlink styleClass="next" action="{!navigator}">
+                  <apex:param name="nextPage" value="/apex/ayusa_hf_fam_household_details"/>
+                  <apex:param name="reDirectPage" value="true"/>
+                  <apex:commandButton id="SaveContinue" value="Save & Continue" />
+                    <i class="icon-chevron-right"></i> 
+                </apex:commandlink> 
+              </div>
+            </div>
+            
+           
+         </div>
+       </div>
+      </apex:form>
+     </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

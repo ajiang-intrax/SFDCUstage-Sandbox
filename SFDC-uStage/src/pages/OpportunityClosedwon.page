@@ -1,0 +1,25 @@
+<apex:page sidebar="false" controller="OppStageController" action="{!loaddata}">
+   <apex:form >
+      <apex:sectionHeader title="Opportunity -- Positions -- Matches"/>
+      <apex:pagemessages />
+      <apex:pageBlock >
+            
+          <br/>
+          
+       <apex:pageblocktable value="{!oppId}" var="opp" rendered="{!NOT(ISNULL(oppId))}">
+          <apex:column headerValue="Opportunity Id">
+              <apex:outputlink value="https://cs45.salesforce.com/{!opp}">https://cs45.salesforce.com/{!opp}</apex:outputLink>
+          </apex:column>
+          <apex:column headerValue="Total Positions">
+              <apex:outputtext value="{!OppId[opp].PosCount}"/>
+          </apex:column>
+          <apex:column headerValue="Total Matches">
+              <apex:outputtext value="{!OppId[opp].TotalMatches}"/>
+          </apex:column>
+          
+         
+      </apex:pageblocktable> 
+     
+      </apex:pageBlock>       
+   </apex:form>   
+</apex:page>

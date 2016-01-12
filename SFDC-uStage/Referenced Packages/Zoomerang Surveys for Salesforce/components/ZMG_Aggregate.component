@@ -1,0 +1,28 @@
+<apex:component >
+<apex:attribute name="theWidget" type="ZMG.ZMG_Widget_Renderer" required="true" description="the widget to be rendered" />
+
+<style>
+body {
+	background-color: #{!theWidget.widget.Background_Color__c};
+}
+</style>
+
+<apex:outputPanel layout="block" rendered="{!NOT(ISNULL(theWidget))}" style="width: 100%;">
+
+<!-- 	<div id="surveyTitle">
+		<span style="font-size: 9px;"><apex:outputText value="{!$Organization.Name}" /></span>
+		<br/>
+		<span style="font-size: 12px; font-weight: bold;">Accounts Overview</span>
+	</div> -->
+
+	<div style="margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px; background-color: transparent;">
+		<script type="text/javascript"
+		src="{!theWidget.gatewayUrl}?TargetURL=organizationoverview&SessionID={!$Api.Session_ID}&ServerURL={!URLENCODE($Api.Partner_Server_Url_160)}&applicationid=3e3617b7-4a18-4e6a-83e7-dc23ae77cc36"
+		></script>
+	</div>
+
+	<c:ZMG_PoweredBy theWidget="{!theWidget}" />
+	
+</apex:outputPanel>
+
+</apex:component>

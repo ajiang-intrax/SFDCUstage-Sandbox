@@ -1,0 +1,19 @@
+<apex:component id="block_hostcompany_agreement" controller="User_Controller">
+     <div class="block"> 
+       <div class="block-header"><h3> Intrax Global Internship Host Company Agreement</h3></div>
+        
+         <div class="block-body">
+         <apex:outputText rendered="{!if(DocusignStatus,true,false)}">
+            <p> A new HCA has been sent for electronic signature </p>
+          </apex:outputText>
+            <p>Our records indicate that it is time for you to complete an Intrax Host Company Agreement. 
+             This agreement specifies the terms of hosting an Intrax Intern or Trainee. You will be asked to verify information about your organization,
+             preview the document and select a signer, who will be able to sign electronically. Please contact an Intrax representative with any questions you may have.
+             </p>
+                <div class="form-button" >
+                    <apex:outputLink target="_blank" value="/apex/igi_hc_companyinfo?Id={!activeuser.Contact.AccountId}"><span align="center">Start Agreement Process</span></apex:outputLink>
+                 </div>   
+          </div>
+       </div>
+        
+</apex:component>

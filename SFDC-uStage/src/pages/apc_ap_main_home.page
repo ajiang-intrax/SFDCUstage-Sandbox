@@ -1,0 +1,91 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" title="Application Homepage" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="false" showHeader="false" id="apc_ap_main_home">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_apc_ap_application />
+      <div id="app-page" class="row">
+        <div id="app-focus" class="col-md-8 col-md-push-3">
+          <c:block_app_completion ApplicantInfo="{!applicantInfo}" userProfileName="{!userProfileName}"  />
+          <style>
+   td{vertical-align:top;}
+   .circ-numb{font-size: 40px; margin-top: 10px;}
+   .circ-numb.last i:before{color:#d2eab6;}
+   .circ-numb.last i.fa-check:before{color:#87b64f;}
+   .circ-numb .fa-stack-2x{color: #e5e5e5;}
+   .circ-numb .fa-stack-1x{color:#7d7d7d;}
+   .ix-aupair:before {
+    line-height: inherit;
+}
+</style>
+          <apex:outputText rendered="{!ApplicantInfo.Application_Type__c=='Original'}">
+            <h1>Complete Your Au Pair Application</h1>
+            <p class="lead margin-b3">Below are the main steps involved in completing your au pair application.</p>
+            <table>
+              <tbody>
+                <tr>
+                  <td><span class="fa-stack circ-numb margin-r"> <i class="fa fa-circle fa-stack-2x"></i> <i class="fa-stack-1x fa fa-user"></i> </span></td>
+                  <td><h3 class="margin-b1">Tell Us More About Yourself</h3>
+                    <p class="margin-b2">Answer short questions, upload photos and a video resume to introduce yourself to potential host families. </p></td>
+                </tr>
+                <tr>
+                  <td><span class="fa-stack circ-numb margin-r"> <i class="fa fa-circle fa-stack-2x"></i> <i class="fa-stack-1x ix-aupair"></i> </span></td>
+                  <td><h3 class="margin-b1">Add Childcare Experience and Education</h3>
+                    <p class="margin-b3">Provide at least two unique, non family childcare references.</p></td>
+                </tr>
+                <tr>
+                  <td><span class="fa-stack circ-numb margin-r"> <i class="fa fa-circle fa-stack-2x"></i> <i class="fa-stack-1x fa fa-file-text-o"></i> </span></td>
+                  <td><h3 class="margin-b1">Prepare Documents For Your Application</h3>
+                    <p>Scan or take photos of the documents below for upload.</p>
+                    <ul>
+                      <li>Your high school diploma</li>
+                      <li>Your driver's license</li>
+                      <li>Bio page of your passport</li>
+                      <li>Physician's report&nbsp;<apex:outputLink value="/apex/apc_ap_main_physician_form?id={!ApplicantInfo.Id}&docType=Doctor" id="linkphysician2">(Learn more)</apex:outputLink></li>
+                      <li>Background check&nbsp;<apex:outputLink value="/apex/apc_ap_main_bgc_form?id={!ApplicantInfo.Id}&docType=BackgroundCheck" id="linkbgc2">(Learn more)</apex:outputLink></li>
+                    </ul></td>
+                </tr>
+                <tr>
+                  <td><span class="fa-stack circ-numb last margin-r"> <i class="fa fa-circle fa-stack-2x"></i> <i class="fa fa-check fa-stack-1x"></i> </span></td>
+                  <td><h3 class="margin-b1">What Happens Next?</h3>
+                    <p>Your local agency will contact you to schedule an in-person interview. Once your application and interview are completed, you will be asked to take a short personality quiz. Lastly, you will sign a program agreement and submit your application for review! </p></td>
+                </tr>
+              </tbody>
+            </table>
+          </apex:outputText>
+        </div>
+        <!--  end column -->
+        
+        <div id="app-side" class="col-md-3 col-md-pull-8">
+          <apex:form >
+            <c:menu_side_apc_ap_basic ApplicantInfo="{!applicantInfo}" />
+          </apex:form>
+        </div>
+        <!--  end column --> 
+      </div>
+      <!--  end row -->
+      
+      <apex:outputpanel layout="block" id="modalSubmit" rendered="{!$CurrentPage.parameters.vstate == 'newprf'}" >
+        <div class="modal fade vs1" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-body">
+                <div class="h1">What's Next?</div>
+                <p>Congratulations, you have successfully submitted your pre-application to become an au pair.</p>
+                <p>Please continue filling out the rest of your application until you see a check mark <i class="fa fa-check"></i> next to each topic.</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Continue</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </apex:outputpanel>
+      <!--  end modal window --> 
+      <script>
+				var j$ = jQuery.noConflict();
+				j$(window).load(function() {
+				  j$('#myModal').modal();
+				});
+				</script> 
+    </apex:define>
+  </apex:composition>
+</apex:page>

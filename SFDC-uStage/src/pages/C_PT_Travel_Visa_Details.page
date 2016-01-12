@@ -1,0 +1,197 @@
+<apex:page title="Home | Intrax" standardStylesheets="false" showHeader="false" controller="IGI_HC_Controller" action="{!checkLogin}">
+    
+        <apex:composition template="IntraxTemplate_Vs2" >
+            <apex:define name="body">                   
+                <apex:form >
+                <!-- begin row -->
+                <div class="row">
+                    <apex:outputPanel styleClass="span9" layout="block">
+                        <h1>
+                            <apex:outputText rendered="{!IF($CurrentPage.parameters.PTId == null, false, true)}" value="{!PartID.Name}"/>
+                            <apex:outputText rendered="{!IF($CurrentPage.parameters.PTId == null, true, false)}" value="No Individual Participant Selected"/>
+                        </h1>
+                    </apex:outputPanel>
+                    
+                </div>
+                <!-- end row -->   
+            
+                <!-- begin row -->
+                <div class="row">
+                    <apex:outputPanel styleClass="span3" layout="block">
+                    <!-- begin span3 -->
+                    <div class="form-link no-float">
+		              <apex:commandLink action="{!load}" styleClass="center" rerender="" target="_blank" rendered="{!(NOT(ISBLANK(PTR)) && (engagementInfo.Intrax_Program__c =='Internship'))}" immediate="true">
+		                <apex:param name="docGuid" value="{!PTR}"/>
+		                <i class="icon-file"></i> <span>View Resume</span> </apex:commandLink>
+		                <apex:outputText styleClass="center" rendered="{!((PTR==null || PTR=='') && engagementInfo.Intrax_Program__c =='Internship')}">                           
+			                <i class="icon-file"></i> <span>No Resume</span><br/><br/>
+			            </apex:outputText>
+		            </div>
+                    <c:Badge_Participant_Photo photoUrl="{!returnUrl}"  rendered="{!PartID.Intrax_Program__c !='Internship'}"/>
+           			<c:Menu_HC_Sidebar participant="{!PartID}"  />
+                    </apex:outputPanel>
+                    <!-- end span3 -->
+                    
+                    <!-- begin span9 -->
+                    <div class="span9">
+           
+                        <!-- begin block --> 
+                        <apex:outputPanel styleClass="block" layout="block">
+                            <div class="block-header"> 
+                                <h3 >Travel and Visa Information</h3>  </div>
+                                <div class="block-body">
+                        
+                                
+                                
+                                <apex:actionStatus id="waitMsg" startStyleClass="feedback" layout="block">
+                                    <apex:facet name="start" >   
+                                        <i class="no-float icon-spinner icon-spin icon-2x pull-left"></i>  <strong>Please Wait.....</strong>
+                                    </apex:facet>
+                                </apex:actionStatus>
+                           
+                                
+                            
+                                <apex:outputPanel id="myPanel1">
+                                    <apex:outputPanel rendered="{!IF($CurrentPage.parameters.isView == 'true', true, false)}" layout="block">
+                                    
+                                        <apex:pageBlock id="pb1">
+                                            <apex:pageMessages id="validationMsg"/>
+                                                    
+                                            <div class="data-row">
+                                                    <div class="data-label left ">Departure Airport Code</div>
+                                                <div class="data-field">
+                                                  <apex:outputField value="{!trip.Departing_From__c}"/>
+                                                </div>
+                                                </div>
+                                            
+                                            <div class="data-row">
+                                                <div class="data-label left ">Departure City</div>
+                                                <div class="data-field">
+                                                        <apex:outputField value="{!trip.Departing_City__c}"/>
+                                                </div>
+                                            </div>
+                                        
+                                            <!-- <div class="data-row">
+                                                <div class="data-label left ">Departure Date</div>
+                                                <div class="data-field">
+                                                        <apex:outputField value="{!trip.Departing_Date__c}"/>
+                                                </div>
+                                            </div>
+                                               -->  
+                                               
+                                             <div class="data-row">
+                                                <div class="data-label left ">Departure Date</div>
+                                                <div class="data-field">
+                                                        <apex:outputField value="{!trip.Departure_Date_Time__c}"/>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="data-row">
+                                                <div class="data-label left ">Airline</div>
+                                                <div class="data-field">
+                                                  <apex:outputField value="{!trip.Carrier__c}"/>
+                                                </div>
+                                            </div>
+                                      
+                                            <div class="data-row">
+                                                <div class="data-label left ">Flight Number</div>
+                                                <div class="data-field">
+                                                  <apex:outputField value="{!trip.Carrier_Number__c}"/>
+                                                </div>
+                                            </div> 
+                                            
+                                            <div class="data-row">
+                                                <div class="data-label left ">Arrival Airport Code</div>
+                                                <div class="data-field">
+                                                  <apex:outputField value="{!trip.Arriving_At__c}"/>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="data-row">
+                                                <div class="data-label left ">Arrival City</div>
+                                                <div class="data-field">
+                                                  <apex:outputField value="{!trip.Arriving_City__c}"/>
+                                                </div>
+                                            </div>
+                                            
+                                            <!--  <div class="data-row">
+                                                <div class="data-label left ">Arrival Date</div>
+                                                <div class="data-field">
+                                                  <apex:outputField value="{!trip.Arriving_Date__c}"/>
+                                                </div>
+                                            </div>
+                                            -->
+                                            <div class="data-row">
+                                                <div class="data-label left ">Arrival Date</div>
+                                                <div class="data-field">
+                                                  <apex:outputField value="{!trip.Arrival_Date_Time__c}"/>
+                                                </div>
+                                            </div>
+                                            <!-- <div class="data-row">
+                                                <div class="data-label left ">Arrival to Host Community </div>
+                                                <div class="data-field">
+                                                  <apex:outputField value="{!trip.Arrival_to_Host_Community__c}"/>
+                                                </div>
+                                            </div>
+                                            <div class="data-row">
+                                                <div class="data-label left ">Arrival to Host Country</div>
+                                                <div class="data-field">
+                                                  <apex:outputField value="{!trip.Arrival_to_Host_Country__c}"/>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="data-row">
+                                                <div class="data-label left ">Departure from Host Community</div>
+                                                <div class="data-field">
+                                                  <apex:outputField value="{!trip.Departure_from_Host_Community__c}"/>
+                                                </div>
+                                            </div>
+                                             -->
+                                            <!--
+                                            <div class="data-row">
+                                                <div class="data-label left ">International Travel</div>
+                                                <div class="data-field">
+                                                  <apex:outputField value="{!trip.International_Leg__c}"/>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="data-row">
+                                                <div class="data-label left ">Record Locator</div>
+                                                <div class="data-field">
+                                                  <apex:outputField value="{!trip.Record_Locator__c}"/>
+                                                </div>
+                                            </div>
+                                            -->
+                                            <div class="data-row">
+                                                <div class="data-label left ">Description</div>
+                                                <div class="data-field">
+                                                  <apex:outputField value="{!trip.Description__c}"/>
+                                                </div>
+                                            </div>
+                                   
+                                        </apex:pageBlock>
+                                    
+                                    </apex:outputPanel>
+                                </apex:outputPanel>
+                                <apex:outputPanel id="buttonPanel" layout="block">
+                                   <apex:outputPanel rendered="{!IF($CurrentPage.parameters.isView == 'true', true, false)}" styleClass="form-link no-float">
+                                       <apex:outputLink value="/apex/C_PT_Travel_Visa?PTId={!PartID.Id}">
+                                           <i class="icon-chevron-left"></i> <span>Back To Trips</span>
+                                       </apex:outputLink>
+                                   </apex:outputPanel>
+                                </apex:outputPanel> 
+                            </div>
+                             
+                        </apex:outputPanel>
+                        <!-- end block --> 
+                        
+                    </div>   
+                    <!-- end span9 -->
+            
+                </div>
+                <!-- end row -->   
+                </apex:form>  
+            </apex:define>
+        </apex:composition>
+    
+</apex:page>

@@ -1,0 +1,224 @@
+<apex:page standardcontroller="Area__c" extensions="googleGeoHelper">
+ <apex:stylesheet value="{!URLFOR($Resource.intrax_themes_standard_community, '/intrax_themes_standard_community/custom.css')}" />
+  <head>
+  <style type="text/css">
+     .cmdBtn{
+         color:white !important;
+         background:#343d36 !important;
+      }
+   </style>
+  <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDhHJveUM7lfcyYvhdzrMnWN_pEvbjnQ24">
+    </script>
+  <script type="text/javascript">
+      function initialize() {
+      var centerLatLng = new google.maps.LatLng({!iGeoForZip.GeoAddress__Latitude__s},{!iGeoForZip.GeoAddress__Longitude__s});
+        var mapOptions = {
+          center: centerLatLng,
+          zoom: 12
+        };
+        
+        // Load a GeoJSON from the same server as our demo.
+  
+          
+        var map = new google.maps.Map(document.getElementById('map-canvas'),
+            mapOptions);
+            
+            //map.data.loadGeoJson('https://storage.googleapis.com/maps-devrel/google.json');
+            <apex:repeat value="{!selectedZips}" var="aZip">
+            	<apex:outputText rendered="{!if(aZip.Boundaries__c !=null,true,false)}">
+	                var boundaryObj = JSON.parse('{!aZip.Boundaries__c}');
+	                map.data.addGeoJson(boundaryObj);
+	                // Set the stroke width, and fill color for each polygon
+	              var featureStyle = {
+	                  fillColor: '#' + (function co(lor){   return (lor +=
+	  [0,1,2,3,4,5,6,7,8,9,'a','b','c','d','e','f'][Math.floor(Math.random()*16)])
+	  && (lor.length == 6) ?  lor : co(lor); })(''),
+	                  strokeWeight: 1
+	              }
+	              map.data.setStyle(featureStyle);
+	            </apex:outputText>
+            </apex:repeat>
+            
+            <apex:outputText rendered="{!if(zipCode !=null,true,false)}">
+                var boundaryObj = JSON.parse('{!zipCode.Boundaries__c}');
+                map.data.addGeoJson(boundaryObj);
+            </apex:outputText>
+          
+          var contentString = '<div class="popover"><div class="popover-type-family">Zip Code</div><div class="popover-title">A Zip Code</div><div class="popover-address">An Address<br/>More Address<br/>More Info, More Info</div></div>';   
+			
+          //var myLatlng = new google.maps.LatLng({!iGeoForZip.GeoAddress__Latitude__s},{!iGeoForZip.GeoAddress__Longitude__s});
+          //var familymarker = new google.maps.Marker({position: myLatlng,map: map,title: 'Some Title',zIndex: 1});
+          //familymarker['infofocus'] = new google.maps.InfoWindow({content: '{!iGeoForZip.zip_Code__r.Zip_Code__c}'});
+          //google.maps.event.addListener(familymarker, 'click', function() {this['infofocus'].open(map,this);});
+          
+          //All Zips
+          var zipimage = {url: 'https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/documents/portals/maps/pins/dark-green-zip.png',size: new google.maps.Size(44, 53),
+    origin: new google.maps.Point(0,0),anchor: new google.maps.Point(0,32)};
+          <apex:repeat value="{!iGeoForAllZipsInAnArea}" var="aZipiGeo">
+	          var zipLatLng = new google.maps.LatLng({!aZipiGeo.GeoAddress__Latitude__s},{!aZipiGeo.GeoAddress__Longitude__s});
+	          var zipMarker = new google.maps.Marker({position: zipLatLng,map: map,icon: zipimage, title: 'Some Title',zIndex: 1});
+	          zipMarker['infofocus'] = new google.maps.InfoWindow({content: '{!aZipiGeo.Zip_Code__r.Zip_Code__c}'});
+	          google.maps.event.addListener(zipMarker, 'click', function() {this['infofocus'].open(map,this);});
+          </apex:repeat>
+          
+          //All HF's
+          var hfimage = {url: 'https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/documents/portals/maps/pins/pink-hf.png',size: new google.maps.Size(44, 53),
+    origin: new google.maps.Point(0,0),anchor: new google.maps.Point(0,32)};
+          <apex:repeat value="{!iGeoHfsInMatchForArea}" var="aHFiGeo">
+	          var HFLatLng = new google.maps.LatLng({!aHFiGeo.FromiGeoLocate__r.GeoAddress__Latitude__s},{!aHFiGeo.FromiGeoLocate__r.GeoAddress__Longitude__s});
+	          var HFMarker = new google.maps.Marker({position: HFLatLng,map: map,icon: hfimage, title: 'Some Title',zIndex: 1});
+	          var contentString = '<div class="popover"><div class="popover-type-ad">Host Family</div><div class="popover-title">{!JSINHTMLENCODE(aHFiGeo.FromiGeoLocate__r.Account__r.Name)}</div><div class="popover-address">{!JSINHTMLENCODE(aHFiGeo.FromiGeoLocate__r.Account__r.PersonMailingStreet)}<br/>{!JSINHTMLENCODE(aHFiGeo.FromiGeoLocate__r.Account__r.PersonMailingCity)}<br/>{!JSINHTMLENCODE(aHFiGeo.FromiGeoLocate__r.Account__r.PersonMailingState)}, {!JSINHTMLENCODE(aHFiGeo.FromiGeoLocate__r.Account__r.PersonMailingPostalCode)}</div></div>';
+	          HFMarker['infofocus'] = new google.maps.InfoWindow({content: contentString});
+	          google.maps.event.addListener(HFMarker, 'click', function() {this['infofocus'].open(map,this);});
+          </apex:repeat>
+                    
+          //AD Marker
+          //iGeoForAD
+          var ADPin = {url: 'https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/documents/portals/maps/pins/orange-ad.png',size: new google.maps.Size(44, 53),
+    origin: new google.maps.Point(0,0),anchor: new google.maps.Point(0,32)};
+          var ADLatLng = new google.maps.LatLng({!iGeoForAD.GeoAddress__Latitude__s},{!iGeoForAD.GeoAddress__Longitude__s});
+          var ADMarker = new google.maps.Marker({position: ADLatLng,icon: ADPin,map: map,title: 'Some Title',zIndex: 1});
+          ADMarker['infofocus'] = new google.maps.InfoWindow({content: '{!iGeoForAD.Contact__r.Name}'});
+          google.maps.event.addListener(ADMarker, 'click', function() {this['infofocus'].open(map,this);});
+          
+          //Other AD's image, lat and long and marker	
+          var otheradimage = {url: 'https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/documents/portals/maps/pins/blue-ad.png',size: new google.maps.Size(44, 53),
+    origin: new google.maps.Point(0,0),anchor: new google.maps.Point(0,32)};
+          <apex:repeat value="{!iGeoAllAds}" var="anADGeo">
+          	var otherADLatlng = new google.maps.LatLng({!anADGeo.GeoAddress__Latitude__s},{!anADGeo.GeoAddress__Longitude__s});
+          	var otherADMarker = new google.maps.Marker({position: otherADLatlng,map: map,icon: otheradimage,title: 'Some Title',zIndex: 1});
+          	otherADMarker['infofocus'] = new google.maps.InfoWindow({content: '{!areaADNames[anADGeo.Contact__c]}'});
+          	google.maps.event.addListener(otherADMarker, 'click', function() {this['infofocus'].open(map,this);});
+          </apex:repeat>
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+  </head>
+  <body>
+  <apex:pageBlock >
+<div class="map-container">  
+<div id="map-canvas" style="width: 100%; min-height: 600px"></div>
+   <apex:form styleClass="form-vertical">
+  <div class="map-controls">
+         <div class="h3"><apex:outputText value="{!area.Name}"/></div>
+         <div class="margin-b1">
+         <!-- <b>Viewing Area: </b><br/>
+         <apex:outputText value="{!area.Name}"/> -->
+         <b>Currently Assigned to </b><br/>
+         <apex:outputText value="{!area.Area_Director__r.Name}"/>
+         </div>
+         <div class="margin-b1">
+         <b>Number of Families:</b>&nbsp;<apex:outputText value="{!iGeoHfsInMatchForArea.size}"/>
+         </div>
+         <div class="margin-b1">
+         <b>New Families:</b>&nbsp;<apex:outputText value="{!newHFCount}"/>
+         </div>
+         <div class="margin-b1">
+         <b>Existing Families:</b>&nbsp;<apex:outputText value="{!existingHFCount}"/>
+         </div>
+       <apex:outputPanel styleClass="margin-b1" layout="block" rendered="{!iGeoHfsInMatchForArea.size>0}">  
+      <b>Pick a New Area Director</b><br/>
+      <!-- 
+     <apex:selectList styleClass="form-control" value="{!areas}" multiselect="false" size="1" >
+        <apex:selectOptions value="{!areaValues}"/>
+    </apex:selectList> -->
+    <apex:selectList styleClass="form-control" value="{!ADs}" multiselect="false" size="1" >
+        <apex:selectOptions value="{!ADValues}"/>
+    </apex:selectList>
+    <br/><br/>
+    <b>Choose Assignment Type</b>
+    	<apex:selectList styleClass="form-control" value="{!assignmentType}" multiselect="false" size="1" >
+        <apex:selectOptions value="{!assignmentTypeValues}"/>
+    </apex:selectList>
+    </apex:outputPanel>
+    <div>
+	    <apex:commandButton action="{!assignZipToNewArea}" styleClass="cmdBtn" value=" Preview New Assignment " rendered="{!iGeoHfsInMatchForArea.size>0}">
+	    </apex:commandButton>
+    </div>
+</div><!-- map controls -->
+	<br/>
+	<div class="h3"><apex:outputText value="List of Zipcodes in This Area"/></div>
+	<br/>
+       <!-- <apex:commandButton value="Show Selected Zip Codes" action="{!displaySelectedZipCodes}"/> &nbsp; -->
+       
+    <!-- 
+    <apex:pageBlockSection >
+       <apex:outputPanel layout="block" rendered="{!hasSelZip}">
+          <apex:outputText value="Below are the selected Zip Codes:"/>
+          <br/>
+          <apex:outputText value="{!selZipNames}"/>
+        </apex:outputPanel>
+        <apex:outputPanel layout="block" rendered="{!NOT(hasSelZip)}">
+           <br/>
+           <apex:outputText value="No Zipcode Selected."/>
+        </apex:outputPanel>
+    </apex:pageBlockSection>
+     -->
+	<apex:pageBlockTable value="{!newAreaZipList}" var="zipWrapper" id="ZipTableWrapper">	
+		<apex:facet name="header"></apex:facet>
+		<apex:column >
+               <apex:inputCheckbox value="{!zipWrapper.isSelected}"/>
+            </apex:column> 
+		<apex:column headerValue="Name">
+		  <apex:outputLink value="googlezipvisualizer?id={!zipWrapper.cZipCode.Id}">{!zipWrapper.cZipCode.Zip_Code__c}</apex:outputLink>
+		</apex:column>
+		<apex:column value="{!zipWrapper.cZipCode.Area__r.Area_Director__r.Contact.Name}" headerValue="Area Director" />
+		<apex:column value="{!zipWrapper.cZipCode.Area__r.Name}" headerValue="Name of Area" />
+		<apex:column value="{!zipCodeToHF[zipWrapper.cZipCode.Zip_Code__c]}" headerValue="Number of HFs"/>
+		<apex:column value="{!zipWrapper.cZipCode.Area__r.Area_Director__r.ManagerId}" headerValue="Regional Manager" />
+	</apex:pageBlockTable>	
+	<!-- 
+	
+	
+	<div class="h3"><apex:outputText value="List of Zipcodes in This Area"/></div>
+	
+	<apex:pageBlockTable value="{!allZipWithADInfo}" var="aZip" id="ZipTable">
+		<apex:facet name="header"></apex:facet>
+		<apex:column headerValue="Name">
+		<apex:outputLink value="googlezipvisualizer?id={!aZip.id}">{!aZip.Zip_Code__c}</apex:outputLink>
+		</apex:column>
+		<apex:column value="{!aZip.Area__r.Area_Director__r.Contact.Name}" headerValue="Area Director" />
+		<apex:column value="{!aZip.Area__r.Name}" headerValue="Name of Area" />
+		<apex:column value="{!zipCodeToHF[aZip.Zip_Code__c]}" headerValue="Number of HFs"/>
+		<apex:column value="{!aZip.Area__r.Area_Director__r.ManagerId}" headerValue="Regional Manager" />
+	</apex:pageBlockTable>	
+	 -->
+	 <br/>
+	<apex:commandButton styleClass="cmdBtn" value="Create New Area From Selected Zipcodes" action="{!createNewAreaFromSelectedZipCodes}"/>
+    <br/>
+</apex:form>
+</div><!-- end map container -->
+  <script>
+    var j$ = jQuery.noConflict();
+    
+    function SetHeight() {
+        var winH = j$(document).height();
+        var winA = j$('#globalHeaderBar').height();
+        var winB = j$('#AppBodyHeader').height();
+        var winC = j$('#backLink').height(); 
+        var winD = j$('.bPageFooter').height(); 
+        var winT = winH - winA - winB - winC - 50;
+        j$('#map-canvas').css('height', winT);
+    }
+    
+    j$(function () {
+        // on change resize
+        j$(window).resize(function () {
+            SetHeight();
+        });
+        SetHeight();
+    });
+    
+    SetHeight();
+    
+    j$(document).ready(function () {
+        j$('.match-close').click(function () {
+            j$('.match-list').toggle();
+        });
+    });
+    
+    </script>
+    </apex:pageBlock>
+  </body>
+</apex:page>

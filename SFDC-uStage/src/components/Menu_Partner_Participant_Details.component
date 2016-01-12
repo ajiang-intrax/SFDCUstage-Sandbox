@@ -1,0 +1,46 @@
+<!--  
+Class: Menu_Side_ManagePax
+
+Description: Intrax Partner Portal Participant Page side menu navigator.
+
+-->
+<apex:component layout="none">
+
+	<apex:attribute name="participant" description="Contains the Engagament.IP for the match in context" type="Engagement__c" required="false" default=""/>
+	<apex:attribute name="applicationRecord" description="Contains the Engagament.IP for the match in context" type="Applicant_Info__c" required="false" default=""/>
+		
+	<apex:variable var="Participant_Profile" value="active" rendered="{! IF($CurrentPage.Name=='Partner_PT_Profile', true, false)}"/>     
+	<apex:variable var="Match_Information" value="active" rendered="{! IF($CurrentPage.Name=='Partner_Match_Information', true, false)}"/>  
+	<apex:variable var="Match_Information" value="active" rendered="{! IF($CurrentPage.Name=='Partner_Matches', true, false)}"/>  
+	<apex:variable var="Travel_And_Visa" value="active" rendered="{! IF($CurrentPage.Name=='Partner_PT_Travel_Visa', true, false)}"/>
+	<apex:variable var="Travel_And_Visa" value="active" rendered="{! IF($CurrentPage.Name=='Partner_PT_Travel_Visa_Details', true, false)}"/>
+	<apex:variable var="Travel_And_Visa" value="active" rendered="{! IF($CurrentPage.Name=='Partner_PT_Travel_Visa_New', true, false)}"/>
+	<apex:variable var="Assessment" value="active" rendered="{! IF($CurrentPage.Name=='Partner_Assessments' || $CurrentPage.Name=='Partner_Assessment_Details', true, false)}"/>
+	<apex:variable var="DocUploads" value="active" rendered="{! IF($CurrentPage.Name=='Partner_Docs_Upload', true, false)}"/>
+    
+	<ul class="nav nav-list bs-docs-sidenav affix">
+		<!-- <li class="{!Participant_Profile}"><apex:outputLink value="/apex/Partner_PT_Profile?participantId={!participantId}&isInputType=false{!IF($CurrentPage.parameters.isPhotoAvailable!= null,'&isPhotoAvailable='&$CurrentPage.parameters.isPhotoAvailable,'')}"><i class="icon-chevron-right"></i> Summary</apex:outputLink></li> -->
+		<li class="{!Participant_Profile}"><apex:outputLink value="/apex/Partner_PT_Profile?participantId={!participant.Id}&isInputType=false"><i class="icon-chevron-right"></i> Profile</apex:outputLink></li>
+        <li> 
+        	<apex:outputLink value="/apex/Ayusa_app_Home?Id={!applicationRecord.Id}&isInputType=false&IsPartner=true" rendered="{!IF(applicationRecord.Intrax_Program__c == 'Ayusa' && (applicationRecord.Application_Stage__c == 'Working' || applicationRecord.Application_Stage__c == 'Submitted' || applicationRecord.Application_Stage__c == 'Conditional'), true, false)}"><i class="icon-chevron-right"></i> Application</apex:outputLink>
+        	<apex:outputLink value="/apex/Ayusa_app_summary?Id={!applicationRecord.id}&participantId={!applicationRecord.Engagement__r.Id}&view=true&backURL=PT" rendered="{!IF(applicationRecord.Intrax_Program__c == 'Ayusa' && !(applicationRecord.Application_Stage__c == 'Working' || applicationRecord.Application_Stage__c == 'Submitted' || applicationRecord.Application_Stage__c == 'Conditional') , true, false)}"><i class="icon-chevron-right"></i> Application</apex:outputLink>
+        	<apex:outputLink value="/apex/Participant_Preapp_Home?Id={!applicationRecord.Id}&isInputType=false" rendered="{!IF(applicationRecord.Intrax_Program__c == 'Internship' && applicationRecord.Application_Stage__c == 'Working' , true, false)}"><i class="icon-chevron-right"></i> Application</apex:outputLink>
+        	<apex:outputLink value="/apex/Participant_Preapp_Summary?Id={!applicationRecord.id}&participantId={!applicationRecord.Engagement__r.Id}&view=true&backURL=PT" rendered="{!IF(applicationRecord.Intrax_Program__c == 'Internship' && !(applicationRecord.Application_Stage__c == 'Working') , true, false)}"><i class="icon-chevron-right"></i> Application</apex:outputLink>
+        	<apex:outputLink value="/apex/Participant_Preapp_Home?Id={!applicationRecord.Id}&isInputType=false" rendered="{!IF(applicationRecord.Intrax_Program__c == 'Work Travel' && applicationRecord.Application_Stage__c == 'Working' , true, false)}"><i class="icon-chevron-right"></i> Application</apex:outputLink>
+        	<apex:outputLink value="/apex/Participant_Preapp_Summary?Id={!applicationRecord.id}&participantId={!applicationRecord.Engagement__r.Id}&view=true&backURL=PT" rendered="{!IF(applicationRecord.Intrax_Program__c == 'Work Travel' && !(applicationRecord.Application_Stage__c == 'Working') , true, false)}"><i class="icon-chevron-right"></i> Application</apex:outputLink>
+        </li>
+        <li class="{!Match_Information}"><apex:outputLink value="/apex/Partner_Matches?participantId={!participant.Id}&isInputType=false"><i class="icon-chevron-right"></i> Matches</apex:outputLink></li>
+		<li class="{!Travel_And_Visa}"><apex:outputLink value="/apex/Partner_PT_Travel_Visa?participantId={!participant.Id}"><i class="icon-chevron-right"></i> Travel and Visas</apex:outputLink></li>
+		
+		<li class="{!Assessment}"><apex:outputLink rendered="{!IF(participant.Intrax_Program__c == 'Ayusa', true, false)}" value="/apex/Partner_Assessments?isAssessments=true&participantId={!participant.Id}&isInputType=false"><i class="icon-chevron-right"></i> Assessments</apex:outputLink></li>
+
+        <li class="{!DocUploads}"><apex:outputLink value="/apex/Partner_Docs_Upload?participantId={!participant.Id}&isInputType=false"><i class="icon-chevron-right"></i> Documents Uploads</apex:outputLink></li>
+		 
+        <!-- 
+        <li class="{!Match_Information}"><apex:outputLink value="/apex/Partner_Match_Information?participantId={!participantId}&isInputType=false{!IF($CurrentPage.parameters.isPhotoAvailable!= null,'&isPhotoAvailable='&$CurrentPage.parameters.isPhotoAvailable,'')}"><i class="icon-chevron-right"></i> Match Information</apex:outputLink></li>
+		<li class="{!Travel_And_Visa}"><apex:outputLink value="/apex/Partner_PT_Travel_Visa?participantId={!participantId}&isInputType=false{!IF($CurrentPage.parameters.isPhotoAvailable!= null,'&isPhotoAvailable='&$CurrentPage.parameters.isPhotoAvailable,'')}"><i class="icon-chevron-right"></i> Travel and Visas</apex:outputLink></li>
+		<li class="{!Assessment}"><apex:outputLink value="/apex/Partner_Assessments?isAssessments=true&participantId={!participantId}&isInputType=false{!IF($CurrentPage.parameters.isPhotoAvailable!= null,'&isPhotoAvailable='&$CurrentPage.parameters.isPhotoAvailable,'')}"><i class="icon-chevron-right"></i> Assessments</apex:outputLink></li>
+        <li class="{!DocUploads}"><apex:outputLink value="/apex/Partner_Docs_Upload?participantId={!participantId}&isInputType=false{!IF($CurrentPage.parameters.isPhotoAvaialable!= null,'&isPhotoAvailable='&$CurrentPage.parameters.isPhotoAvailable,'')}"><i class="icon-chevron-right"></i> Documents Uploads</apex:outputLink></li>
+		 -->
+	</ul> 
+</apex:component>

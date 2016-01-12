@@ -1,0 +1,609 @@
+<apex:page tabStyle="Your_Profile_AD__tab" controller="CommunityApcController" showHeader="true" id="ad_profile">
+<style>
+.apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader .showListButton,
+.apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader .hideListButton{background-color: #A1CE53;}
+.dataCol a{
+color: #428bca;
+font-weight: bold;
+}
+.grey{
+color: grey!important;
+}
+.blue{
+color: #428bca!important;
+font-weight: bold;
+text-decoration:underline;
+}
+.red{
+color: red!important;
+font-weight: bold;
+text-decoration:underline;
+}
+
+</style>
+
+<style type="text/css">
+ table.exceptionText td {
+                 font-size:14px;
+                 font-weight:bold;
+                 text-align:left;
+                 color:red;}
+</style>
+<!--jQuery basics-->
+     
+    <!-- 
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" />
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+     -->
+     <!-- SFDC STATIS RESOURCES -->
+    
+    <apex:includeScript value="{!URLFOR($Resource.module_jquery, 'module_jquery/scripts/jquery-1.8.0.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.module_jquery, 'module_jquery/scripts/jquery-ui-1.8.23.custom.min.js')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.module_jquery, 'module_jquery/styles/jquery-ui-1.8.23.custom.css')}" />
+    <!--Numeric module to prevent alpa characters from being added to number fields-->
+    <apex:includeScript value="{!URLFOR($Resource.module_numeric, '/module_numeric/jquery.numeric.js')}" />
+    
+<!-- Fontawesome module for icons -->
+    <apex:stylesheet value="{!URLFOR($Resource.module_fontawesome, '/module_fontawesome/vs-4.0.3/css/font-awesome.min.css')}" />
+
+<apex:pageMessages />
+
+<apex:form id="myForm">
+         
+        <apex:commandLink target="_self" action="{!redirectUser}" id="linkteam" rendered="{!IF(ProfileName == 'APC AD PC',false,true)}">
+        <apex:param name="teamParam" value="true"/>
+        Return to Team Page 
+        </apex:commandLink>
+        
+     
+        
+        <apex:sectionHeader title="Area Director Profile" subtitle="{!user.Name}"/>
+        
+        <apex:pageBlock id="pgBlockButtons" mode="maindetail">
+        <apex:pageBlockButtons location="top">
+        <!-- <apex:commandButton value="Save" action="{!saveProf}" id="saveButton"/> -->
+        <apex:commandButton value="Save" action="{!AddressValidation_UpdateController}" reRender="myform,dialogform" onComplete="confAddress();" id="saveButton"/>
+        <apex:commandButton value="Cancel" action="{!cancel}" id="cancelButton"/>
+        </apex:pageBlockButtons>
+        </apex:pageBlock>
+        
+        <apex:panelGrid columns="2" width="100%"> 
+            
+            
+            <apex:pageblock mode="maindetail" id="blockPhoto">
+            <div style="text-align:center;">
+            <apex:outputPanel layout="block" id="blockNoPhoto" rendered="{!IF(DocList.Size < 1, true, false)}">
+            <div class="border-icon" style="background-color: lightgrey;width: 120px;padding: 25px; display:inline-block;">
+            <i class="fa fa-user" style="font-size: 150px;"/>
+            </div>
+            </apex:outputPanel>
+            
+            <apex:outputPanel layout="block" id="blockYesPhoto" rendered="{!IF(DocList.Size > 0, true, false)}">
+            <apex:image styleClass="pho-pre-img" style="width: 200px;"  url="{!returnURL}" >
+            </apex:image>
+            </apex:outputPanel>
+         <span id="opener" class="btn" style="display:inline-block; margin-top:10px;" >Add a Photo</span>   
+                    <apex:outputPanel >
+                           <span class="helpButton" id="helpButtonforPhoto-_help"> 
+                                 <img class="helpOrb" src="/s.gif" />
+                                 <script>
+                                      sfdcPage.setHelp('helpButtonforPhoto', 'Please upload a business appropriate, high resolution head shot');
+                                 </script>
+                           </span>
+                    </apex:outputPanel>
+            </div>  
+            </apex:pageblock>
+            
+            
+            <apex:pageblock id="blockUser" mode="inlineEdit">
+            <apex:pageBlockSection columns="1" >
+                <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="First Name" for="fname"/>
+                        <apex:outputField value="{!user.FirstName}" id="fname"/>
+                </apex:pageBlockSectionItem>    
+                
+                            <apex:pageBlockSectionItem >   
+                        <apex:outputLabel value="Last Name" for="lname"/>
+                        <apex:outputField value="{!user.LastName}" id="lname"/>
+                 </apex:pageBlockSectionItem>
+    
+                 <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Username" for="username"/>
+                        <apex:outputField value="{!user.Username}" id="username">
+                        <apex:inlineEditSupport disabled="true" />
+                        </apex:outputField> 
+                 </apex:pageBlockSectionItem>
+                 
+                 <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Email" for="email"/>
+                        <apex:outputField value="{!user.Email}" id="email"/> 
+                 </apex:pageBlockSectionItem>
+                 
+                 <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Position" for="position"/>
+                        <apex:outputField value="{!user.Title}" id="position">
+                        <apex:inlineEditSupport disabled="{!IF(ProfileName == 'APC AD PC',true,false)}" />
+                        </apex:outputField>
+                 </apex:pageBlockSectionItem>
+                 
+                 <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Manager" for="manager"/>
+                        <apex:outputField value="{!user.ManagerId}" id="manager">
+                        <apex:inlineEditSupport disabled="{!IF(ProfileName == 'APC AD PC',true,false)}" />
+                        </apex:outputField> 
+                 </apex:pageBlockSectionItem>
+                 
+                 <apex:pageBlockSectionItem rendered="{!IF(ProfileName == 'APC AD PC',false,true)}" >
+                        <apex:outputLabel value="Area Name" for="area"/>
+                        <apex:outputField value="{!userProf.Area_Profile__c}" id="area">
+                        <apex:inlineEditSupport disabled="{!IF(ProfileName == 'APC AD PC',true,false)}" />
+                        </apex:outputField> 
+                 </apex:pageBlockSectionItem>
+                 
+                 
+                 <apex:pageBlockSectionItem rendered="{!IF(ProfileName == 'APC AD PC',true,false)}" >
+                        <apex:outputLabel value="Area Name" for="areaName"/>
+                        <apex:outputField value="{!area.Name}" id="areaName">
+                        <apex:inlineEditSupport disabled="true" />
+                        </apex:outputField> 
+                 </apex:pageBlockSectionItem>
+                 
+                 <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Region" for="region"/>
+                        <apex:outputField value="{!area.APC_Field_Region__c}" id="region">
+                        <apex:inlineEditSupport disabled="{!IF(ProfileName == 'APC AD PC',true,false)}"/>
+                        </apex:outputField> 
+                 </apex:pageBlockSectionItem>
+                 
+                   <apex:pageBlockSectionItem rendered="{!IF(ProfileName == 'APC AD PC',false,true)}">
+                        <apex:outputLabel value="Employment Status" for="Employment"/>
+                        <apex:outputField value="{!userProf.Employment_Status__c}" id="Employment">
+                       <!-- <apex:inlineEditSupport disabled="{!IF(ProfileName == 'APC AD PC',true,false)}"/> --> 
+                        </apex:outputField> 
+                 </apex:pageBlockSectionItem>
+                            
+            </apex:pageBlockSection>
+            </apex:pageblock>
+        </apex:panelGrid>
+        
+       
+        <apex:pageBlock id="pgBlockBio" mode="inlineEdit">
+       
+            <apex:pageblocksection title="Biography" columns="1" collapsible="true">                            
+                
+                <apex:pageBlockSectionItem >
+                    <apex:inputTextarea id="biodesc" value="{!userProf.Profile_Bio__c}" rows="8" cols="100" onkeyup="countChar(this, 1000, 'biodescCount')" onfocus="countChar(this, 1000, 'biodescCount')"/>
+                    <apex:outputPanel >
+                           <span class="helpButton" id="helpButtonforIcon-_help"> 
+                                 <img class="helpOrb" src="/s.gif" />
+                                 <script>
+                                      sfdcPage.setHelp('helpButtonforIcon', 'Please note APs, HFs, APC staff and partners will view this information');
+                                 </script>
+                           </span>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+             
+                    <div class="char-limit bb">
+                    <span class="char-count-label">Characters left:</span>
+                    <span id="biodescCount" class="char-count"> {!1000-len(userProf.Profile_Bio__c) }</span>
+                    </div>
+             
+                </apex:pageBlockSectionItem>
+                
+                
+                <apex:pageBlockSectionItem id="blockHidden" >
+                <div class="pbSubheader brandTertiaryBgr first tertiaryPalette">
+                    <!-- 
+                    <img src="/s.gif" alt="Hide Section - Template" class="hideListButton" id="hideBlock" 
+                    onclick="twistBlock(event.target);" style="cursor:pointer;" tabindex="0" title="Hide Template"/>
+                     -->
+                    <b>Please copy, paste and complete the following template into your bio.</b>
+                    <a class="hideText" >Show template</a>
+                </div>
+                <div id="blockHidden">
+                <!-- 
+                <p><b>Please copy, paste and complete the following template into your bio.</b></p>
+                 -->
+                <!--
+                <p><b>Please copy, paste and complete the following template into your biography. Note that APs, HFs, APC staff and partners will view this information.</b></p>
+                -->
+               
+                <p style="width:50%;">My name is <span style="color: red">NAME</span> and I am an AuPairCare representative in <span style="color: red">CITY/AREA AND STATE</span>.
+                I am excited about developing and building strong relationships within the <span style="color: red">CITY</span> community.
+                <span style="color: red">INSERT ONE SENTENCE DESCRIBING YOU</span>. As an AuPairCare representative, my role is to provide personal
+                and proactive support to families and au pairs. I am responsible for interviewing host families,
+                conducting an arrival orientation, organizing monthly activities, maintaining monthly contact,
+                and providing other support as needed. Au pairs can enjoy <span style="color: red">ACTIVITY #1, ACTIVITY #2 AND ACTIVITY #3</span> in our community.
+                </p>
+                </div>
+                </apex:pageBlockSectionItem>
+                
+                
+               
+            </apex:pageblocksection>
+            </apex:pageBlock> 
+            
+        
+        <apex:pageBlock id="pgBlockContact" mode="inlineEdit">
+            
+            <apex:pageblocksection title="Contact Information" columns="2" collapsible="true">                            
+                
+                 
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Phone" for="phone"/>
+                    <apex:outputField value="{!user.Contact.Phone}" id="phone">
+                    </apex:outputField>
+                </apex:pageBlockSectionItem>
+                
+                 <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Phone Type" for="phoneType"/>
+                    <apex:outputField value="{!user.Contact.Phone_Type__c}" id="phoneType">
+                    </apex:outputField>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Alternative Phone" for="phonealter"/>
+                    <apex:outputField value="{!user.Contact.OtherPhone}" id="phonealter">
+                    </apex:outputField>
+                </apex:pageBlockSectionItem>
+                
+                 <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Alternative Phone Type" for="phonealterType"/>
+                    <apex:outputField value="{!user.Contact.Other_Phone_Type__c}" id="phonealterType">
+                    </apex:outputField>
+                </apex:pageBlockSectionItem>
+               
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Skype Username" for="skype"/>
+                    <apex:outputField value="{!user.Contact.Skype_ID__c}" id="skype">
+                    </apex:outputField>
+                </apex:pageBlockSectionItem>
+                
+                
+                <apex:pageBlockSectionItem helpText="Please provide a physical address. PO boxes are not acceptable" >
+                    <apex:outputLabel value="Street" for="address"/>
+                    <apex:outputField value="{!user.Contact.MailingStreet}" id="address">
+                    </apex:outputField>
+                </apex:pageBlockSectionItem>
+              
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="City" for="city"/>
+                    <apex:outputField value="{!user.Contact.MailingCity}" id="city">
+                    </apex:outputField>
+                </apex:pageBlockSectionItem>
+                
+                 <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="ZIP" for="zip"/>
+                    <apex:outputField value="{!user.Contact.MailingPostalCode}" id="zip">
+                    </apex:outputField>
+                </apex:pageBlockSectionItem>
+                
+                 <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Country" for="country"/>
+                    <apex:outputField value="{!user.Contact.MailingCountry}" id="country">
+                    <apex:inlineEditSupport disabled="true" />
+                    </apex:outputField>
+                </apex:pageBlockSectionItem>
+                
+                 <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="State" for="State"/>
+                    <apex:outputField value="{!user.Contact.MailingState}" id="State">
+                    </apex:outputField>
+                </apex:pageBlockSectionItem>
+                
+            </apex:pageblocksection>
+            </apex:pageBlock>
+            
+           <apex:pageBlock id="pgBlockDocu" mode="inlineEdit">
+                <apex:pageblocksection title="Employee Information" columns="2" collapsible="true">                            
+                
+                
+                <apex:pageBlockSectionItem >   
+                    <apex:outputLabel value="Employment Contract" for="contract"/>
+                    <apex:outputPanel layout="block" id="blockIduser">
+                        <apex:outputLink disabled="{!IF(ProfileName == 'APC AD PC',false,true)}" rendered="{!docusUserRec2AD.dsfs__Recipient_Status__c !=null || NOT(isblank(docusUserRec2AD.dsfs__Recipient_Status__c)) }" target="_blank" value="/apex/ds_apc_ad_agreement_gate?uProfileID={!userProf.Id}&utype=AD">
+                        <apex:outputText rendered="{!(docusUserRec2AD.dsfs__Recipient_Status__c =='Sent' || docusUserRec2AD.dsfs__Recipient_Status__c =='Delivered') && ProfileName == 'APC AD PC'}" value="Sign Contract" id="contract1"/>
+                        <apex:outputText rendered="{!(docusUserRec2AD.dsfs__Recipient_Status__c =='Sent' || docusUserRec2AD.dsfs__Recipient_Status__c =='Delivered') && ProfileName != 'APC AD PC'}" value="Not Signed Yet" id="contract2"/>
+                        <apex:outputText rendered="{!docusUserRec2AD.dsfs__Recipient_Status__c =='Completed'}" value="Contract is Signed" id="contract3"/>
+                        </apex:outputLink> 
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                
+                    
+                  <apex:pageBlockSectionItem >
+                  <apex:outputLabel value="Contract Signed on" for="signed"/>
+                    <apex:outputPanel layout="block" id="blockContract">
+                    <apex:outputField value="{!userProf.Contract_Signed_Date__c}" id="signed">
+                    <apex:inlineEditSupport disabled="{!IF(ProfileName == 'APC AD PC',true,false)}" />
+                    </apex:outputField>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                
+                <!--   <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Monthly Stipend" for="stip"/>
+                    <apex:outputField value="{!userProf.Monthly_Stipend__c}" id="stip">
+                    <apex:inlineEditSupport disabled="{!IF(ProfileName == 'APC AD PC',true,false)}" />
+                    </apex:outputField>
+                    
+                </apex:pageBlockSectionItem>  -->
+                
+                 <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Direct Deposit" for="deposit"/>
+                    <apex:outputField value="{!userProf.Direct_Deposit_Setup__c}" id="deposit">
+                    <apex:inlineEditSupport disabled="{!IF(ProfileName == 'APC AD PC',true,false)}" />
+                    </apex:outputField>
+                    
+                </apex:pageBlockSectionItem>
+                
+                 <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Start Date" for="sdate"/>
+                    <apex:outputField value="{!userProf.Start_Date__c}" id="sdate">
+                    <apex:inlineEditSupport disabled="{!IF(ProfileName == 'APC AD PC',true,false)}" />
+                    </apex:outputField> 
+                    
+                </apex:pageBlockSectionItem>
+                  
+                 <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Employment Term" for="eterm"/>
+                    <apex:outputField value="{!userProf.Employment_Term_Length__c}" id="eterm">
+                    <apex:inlineEditSupport disabled="{!IF(ProfileName == 'APC AD PC',true,false)}" />
+                    </apex:outputField>
+                </apex:pageBlockSectionItem>
+                
+                 <apex:pageBlockSectionItem rendered="{!IF(ProfileName == 'APC AD PC',false,true)}">
+                        <apex:outputLabel value="Intrax HR#" for="IntraxHR"/>
+                        <apex:outputField value="{!user.Contact.Intrax_HR_Number__c}" id="IntraxHR">
+                        </apex:outputField> 
+                 </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Employment End Date" for="enddate"/>
+                    <apex:outputField value="{!userProf.End_Date__c}" id="enddate">
+                    <apex:inlineEditSupport disabled="{!IF(ProfileName == 'APC AD PC',true,false)}" />
+                    </apex:outputField>
+                </apex:pageBlockSectionItem>
+               
+                <apex:pageBlockSectionItem id="interviewBlock1" rendered="{!userProf.End_Date__c!=null}" >
+                    <apex:outputLabel value="Employment Exit Interview Date" for="exitint"/>
+                    <apex:outputField value="{!userProf.Exit_Interview_Date__c}" id="exitint">
+                    <apex:inlineEditSupport disabled="{!IF(ProfileName == 'APC AD PC',true,false)}" />
+                    </apex:outputField>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem id="interviewBlock2" rendered="{!userProf.End_Date__c!=null}" >
+                    <apex:outputLabel value="Employment Exit Interview Notes" for="exitnotes"/>
+                    <apex:outputField value="{!userProf.Exit_Interview_Notes__c}" id="exitnotes">
+                    <apex:inlineEditSupport disabled="{!IF(ProfileName == 'APC AD PC',true,false)}" />
+                    </apex:outputField>
+                </apex:pageBlockSectionItem>
+                
+                </apex:pageblocksection>
+            </apex:pageBlock>
+            
+            <apex:pageBlock id="pgBlockPaper" mode="inlineEdit" rendered="{!IF(ProfileName == 'APC AD PC',false,true)}">
+                <apex:pageblocksection title="Paperwork Status" columns="2" collapsible="true">                            
+                
+                  <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Resume Received On" for="resume"/>
+                    <apex:outputField value="{!userProf.Resume_Received__c}" id="resume">
+                    </apex:outputField>
+                </apex:pageBlockSectionItem>
+                
+                 <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Cover Letter Received On" for="cover"/>
+                    <apex:outputField value="{!userProf.Cover_Letter_Received__c}" id="cover"/>
+                </apex:pageBlockSectionItem>
+                    
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="References Checked On" for="reference"/>
+                    <apex:outputField value="{!userProf.References_Checked__c}" id="reference"/>
+                </apex:pageBlockSectionItem>
+                
+                 <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Intrax Candidate Assesment Done On" for="asses"/>
+                    <apex:outputField value="{!userProf.Candidate_Assessment__c}" id="asses"/>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="New Hire Form Completed On" for="hiref"/>
+                    <apex:outputField value="{!userProf.New_Hire_Form_Completed__c}" id="hiref"/>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="W-4 Signed On" for="w4"/>
+                    <apex:outputField value="{!userProf.W_4_Signed__c}" id="w4"/>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="I-9 Completed On" for="i9"/>
+                    <apex:outputField value="{!userProf.I_9_Completed__c}" id="i9"/>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Paperwork to HR Submitted On" for="paper"/>
+                    <apex:outputField value="{!userProf.Paperwork_Submitted_to_HR__c}" id="paper"/>
+                </apex:pageBlockSectionItem>
+                
+                </apex:pageblocksection>
+            </apex:pageBlock>
+            
+            <apex:pageBlock id="pgBlockCheck" mode="inlineEdit" rendered="{!IF(ProfileName == 'APC AD PC',false,true)}">
+                <apex:pageblocksection title="Employee Checklist" columns="2" collapsible="true">                            
+                    
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Database Walkthrough" for="data"/>
+                    <apex:outputField value="{!userProf.Database_Walkthrough__c}" id="data">
+                    </apex:outputField>
+                </apex:pageBlockSectionItem>
+                
+                 <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Outlook Distribution" for="outlook"/>
+                    <apex:outputField value="{!userProf.Outlook_Distribution__c}" id="outlook"/>
+                </apex:pageBlockSectionItem>
+                
+                 <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Survey Update" for="survey"/>
+                    <apex:outputField value="{!userProf.Survey_Update__c}" id="survey"/>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Training Course Instructions" for="train"/>
+                    <apex:outputField value="{!userProf.Training_Course_Instruction__c}" id="train"/>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Profile Update" for="proUp"/>
+                    <apex:outputField value="{!userProf.Profile_Update__c}" id="proUp"/>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Direct Line Service Update" for="direct"/>
+                    <apex:outputField value="{!userProf.Direct_Line_Service_Update__c}" id="direct"/>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Marketing Materials" for="mkt"/>
+                    <apex:outputField value="{!userProf.Marketing_Materials__c}" id="mkt"/>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Business Cards" for="bcards"/>
+                    <apex:outputField value="{!userProf.Business_Cards__c}" id="bcards"/>
+                </apex:pageBlockSectionItem>
+                
+                <!-- <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="RM Training" for="train"/>
+                    <apex:outputField value="{!userProf.RM_Training__c}" id="train"/>
+                </apex:pageBlockSectionItem> -->
+                
+                </apex:pageblocksection>
+            </apex:pageBlock>
+            
+    <apex:actionPoller enabled="{!docusignRefresh}" action="{!buildDSflag}" reRender="blockIduser, blockContract" interval="5"/>
+    
+    </apex:form>
+    <div id="dialog" title="Add a Photo">
+ <iframe src="{!fileUploadUrl}pid=upload_usr_pro&aid={!userProf.Id}&orgid={!$Organization.Id}&docType=Participant-Photo&rType=usr_pro&retparam={!retParam}" frameborder="0" width="400" height="420" scrolling="no"/>
+</div>
+
+
+
+	<div id="addressdialog" style="text-align:center;">
+        <apex:form id="dialogform">
+        <apex:variable value="{!0}" var="addIndex" id="rowCounterF"/>
+	 		
+	 	<apex:outputPanel layout="block" rendered="{!IF(avProcessor.status=='UNKNOWN', true, false)}">
+            <p><strong>There are no addresses that match what you entered.</strong></p>
+           <apex:commandlink styleClass="blue"><strong>Update Address</strong></apex:commandlink>
+	    </apex:outputPanel>
+     
+        <apex:outputPanel layout="block" rendered="{!IF(avProcessor.status=='CONFIRMED', true, false)}">
+					<i style="font-size:60px;" class="fa fa-refresh fa-spin"></i>
+					<p class="margin-t2"><label>Please wait while we verify Area Director address.</label></p>
+					 	 <apex:actionPoller interval="5" action="{!saveProf}">
+		         </apex:actionPoller>
+		</apex:outputPanel>
+				
+		<apex:outputPanel layout="block" rendered="{!IF(avProcessor.status=='PARTIAL' ||avProcessor.status=='REVIEW' || avProcessor.status=='MULTIPLE', true, false)}">
+               <p><strong>Please select the right address below</strong></p>
+                <apex:repeat id="addtable"  value="{!avProcessor.potentialMatchesList}" var="ptAddress">
+                 
+                    <apex:commandLink action="{!saveProf}">
+	                    <span id="select" class="btn" style="display:inline-block; margin-top:5px;" >Select</span> 
+			            <apex:param name="addressid" value="{!addIndex}" assignTo="{!addressid}"/> 
+			            <apex:param name="addconfirmed" value="confirmed" assignTo="{!addconfirmed}" />		
+                    </apex:commandLink>
+				<p>{!ptAddress['address1']}
+				{!ptAddress['address2']}<br/> 
+				{!ptAddress['city']}<br/>
+				{!ptAddress['state']} {!ptAddress['postalCode']}
+				</p>
+			<apex:variable var="addIndex" value="{!addIndex + 1}"/>
+			</apex:repeat>
+		</apex:outputPanel>
+
+				 
+		</apex:form>		 
+	</div>
+
+<script>
+var j$ = jQuery.noConflict();
+
+j$( document ).ready(function() {
+    j$('#blockHidden').hide();
+    
+    //Function added by Jose to show/hide template text
+    j$('.hideText').click(function(){
+                
+                var flag=j$('.hideText').text();
+                console.log(flag);
+                j$('#blockHidden').toggle();
+                if(flag == "Hide template"){
+                    j$('.hideText').text("Show template");
+                }else{
+                    j$('.hideText').text("Hide template");
+                }
+            });
+});
+
+
+// Text field character counter 
+    function countChar(val, maxchars, elem) {
+        var len = val.value.length;
+        if (len > maxchars) {
+            val.value = val.value.substring(0, maxchars);
+        } else {
+            var elem1 = '#'+elem;
+            j$(elem1).text(maxchars - len);
+        }
+    };
+
+
+j$(function() {
+    j$( "#dialog" ).dialog({
+      autoOpen: false,
+      height:460,
+      width:450,
+      modal:true
+    });
+ 
+    j$( "#opener" ).click(function() {
+      j$( "#dialog" ).dialog( "open" );
+    });
+});
+
+/*
+ function setResult(){
+    document.getElementById('thePage:theForm:theBlock:theSec:accName').readOnly=true;
+           }
+ window.onload = setResult;
+*/ 
+
+//Address Validation function
+
+ j$(function() {
+    j$( "#addressdialog" ).dialog({
+      title:'Address Validation',
+      autoOpen: false,
+      height:270,
+      width:380,
+      modal:true
+    });
+});
+
+function confAddress(){
+	var auxerr= j$('.exceptionText').attr("role");
+	//alert(auxerr);
+	 if(auxerr=="alert"){
+	 }else{
+	  j$('#addressdialog').dialog("open");
+	 }
+  }
+
+</script>
+</apex:page>

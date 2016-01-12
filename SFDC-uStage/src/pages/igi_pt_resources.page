@@ -1,0 +1,45 @@
+<apex:page docType="html-5.0" id="IGIocumentResources" controller="ResourcesController" standardStylesheets="false" showHeader="false" title="Documents and Resources" action="{!allWTDocuments}">
+<apex:composition template="intraxtemplate_vs3">
+<apex:define name="body">
+<c:block_header_igi_pt_application />
+<div class="row">
+ <div class="col-md-9 center-block center-text">
+  <h1>Your Internship Resources</h1>
+   <p class="lead">During each phase of your program, Intrax provides you with resources to support you on your program. Please check back regularly for helpful information! </p>
+  <apex:form styleClass="form-vertical">
+    <apex:repeat value="{!KeyTags}" var="itemTag">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">{!itemTag}</h4>
+        </div>
+        <div class="panel-body">
+        
+            <apex:repeat value="{!DocumentList}" var="itemDoc">
+              <!-- <apex:outputText rendered="{!IF(itemTag=itemDoc.Keywords,true,false)}"> -->
+              <apex:outputText rendered="{!IF(KeyTagMapping[itemDoc.Keywords] != NULL && itemTag=KeyTagMapping[itemDoc.Keywords],true,false)}">
+                           
+                <p> <apex:commandlink title="{!itemDoc.Description}" id="rpt_Name" value="{!itemDoc.Name}" action="{!getDocumentUrl}" target="_blank">
+                    <apex:param name="guid" value="{!itemDoc.id}"/>
+                  </apex:commandlink>
+                  <span style="text-transform:uppercase;">({!itemDoc.type})</span> 
+                 
+                  <apex:outputText rendered="{!IF(KeyPhaseMapping[itemDoc.id] != NULL && PhaseStr=KeyPhaseMapping[itemDoc.id],true,false)}">
+                  <span class="highlighted"><strong><em>New!</em></strong></span>
+                  </apex:outputText>
+               
+                  </p>
+                  
+              </apex:outputText>
+            </apex:repeat>
+        
+        </div> <!--  end panel body -->
+      </div> <!--  end panel -->
+    </apex:repeat>
+  </apex:form>
+</div>
+<!--  end column -->
+
+</div> <!--  end row -->
+</apex:define>
+</apex:composition>
+</apex:page>

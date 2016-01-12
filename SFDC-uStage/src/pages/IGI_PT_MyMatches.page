@@ -1,0 +1,137 @@
+<apex:page docType="html-5.0" standardController="Engagement__c" extensions="IGI_PT_Controller" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper">
+          <apex:form >   
+             <div class="page-header clearfix">
+                 <h1>Your Internship Matches</h1>
+             </div>
+            <div class="white-box clearfix">
+                 <c:PT_Sub_Navigation />
+                <div class="panel full clearfix">
+                <div class="panel two_thirds">
+                    <apex:outputPanel layout="block" rendered="{!IF(matchInfoList.Size > 0, true, false)}"> 
+                        <p>Below are positions which our matching specialist has identified as a good fit for you. Click on the link(s) to learn more.</p> </apex:outputPanel>
+                    <apex:outputPanel layout="block" rendered="{!IF(matchInfoList.Size > 0, false, true)}"> 
+                        <p class="dotted-box">You have not yet been matched with a position. Please check back regularly, as this page will be updated when a match has been made. At that time, you will be able to learn more about the position(s) and next steps.</p> 
+                    </apex:outputPanel>
+                    </div>     
+                    </div> 
+                <div class="panel full clearfix">
+                                      
+                        <apex:pageBlock rendered="{!IF(matchInfoList.Size > 0, true, false)}">
+                              <apex:pageBlockTable styleClass="pageblocktable" value="{!matchInfoList}" var="item">
+                                   <apex:column headerValue="Company Name">
+                                        <apex:outputLabel value="{!item.Position_Name__r.Host_Company_Id__r.Name}" />
+                                   </apex:column>
+                                   <apex:column value="{!item.Position_Name__r.Regional_Location__c}" headerValue="Location"/>
+                                   <apex:column headerValue="Position Title"> 
+                                        <apex:commandlink styleClass="inline-link" action="{!navigator}" rendered="{!if(item.Interview_Status__c=='Initiated',true,false)}">
+                                            <apex:param name="nextPage" value="/apex/IGI_PT_Scheduling?detail=true&Sched=true"/>
+                                             <apex:param name="detail" value="true" assignTo="{!detail}"/>
+                                               <apex:param name="Sched" value="true" assignTo="{!Sched}" />  
+                                            <apex:param name="mId" value="{!item.Id}" />                                       
+                                            <apex:commandButton value="{!item.Position_Name__r.Name}" />                                        
+                                        </apex:commandlink>
+                                        <apex:commandlink styleClass="inline-link" action="{!navigator}" rendered="{!if(item.Interview_Status__c=='Scheduled',true,false)}">
+                                            <apex:param name="nextPage" value="/apex/IGI_PT_Scheduling?detail=true&schCancel=true"/>
+                                             <apex:param name="detail" value="true" assignTo="{!detail}"/>
+                                              <apex:param name="schCancel" value="true" assignTo="{!schCancel}" /> 
+                                            <apex:param name="mId" value="{!item.Id}" />                                       
+                                            <apex:commandButton value="{!item.Position_Name__r.Name}" />                                        
+                                        </apex:commandlink>
+                                        <apex:commandlink styleClass="inline-link" action="{!navigator}" rendered="{!if(item.Interview_Status__c=='Awaiting Decision',true,false)}">
+                                            <apex:param name="nextPage" value="/apex/IGI_PT_Scheduling?detail=true"/>
+                                             <apex:param name="detail" value="true" assignTo="{!detail}"/>
+                                            <apex:param name="mId" value="{!item.Id}" />                                       
+                                            <apex:commandButton value="{!item.Position_Name__r.Name}" />                                        
+                                        </apex:commandlink>
+                                        <apex:commandlink styleClass="inline-link" action="{!navigator}" rendered="{!if(item.Interview_Status__c=='Position Offered',true,false)}">
+                                            <apex:param name="nextPage" value="/apex/IGI_PT_Scheduling?detail=true&RevAccept=true"/>
+                                             <apex:param name="detail" value="true" assignTo="{!detail}"/>
+                                              <apex:param name="RevAccept" value="true" assignTo="{!RevAccept}" />  
+                                            <apex:param name="mId" value="{!item.Id}" />                                       
+                                            <apex:commandButton value="{!item.Position_Name__r.Name}" />                                        
+                                        </apex:commandlink>
+                                        <apex:commandlink styleClass="inline-link" action="{!navigator}" rendered="{!if(item.Interview_Status__c=='Company Declined Interview' || item.Interview_Status__c=='Participant Declined Interview' || item.Interview_Status__c=='Company No Show' || item.Interview_Status__c=='Participant No Show' || item.Interview_Status__c=='No Offer' || item.Interview_Status__c=='New' || item.Interview_Status__c=='Position Accepted' || item.Interview_Status__c=='Position Declined' || item.Interview_Status__c == 'On Hold' ,true,false)}">
+                                            <apex:param name="nextPage" value="/apex/IGI_PT_Scheduling?detail=true"/>
+                                             <apex:param name="detail" value="true" assignTo="{!detail}"/>
+                                            <apex:param name="mId" value="{!item.Id}" />                                       
+                                            <apex:commandButton value="{!item.Position_Name__r.Name}" />                                        
+                                        </apex:commandlink>
+                                   </apex:column>
+                                   <apex:column value="{!item.Interview_Status__c}" headerValue="Status"/>
+                                   <apex:column headerValue="Action">
+                                   
+                                      
+                                        <apex:commandlink styleClass="inline-link" action="{!navigator}" rendered="{!if(item.Interview_Status__c=='Initiated',true,false)}">
+                                            <apex:param name="nextPage" value="/apex/IGI_PT_Scheduling?Sched=true"/>
+                                            <apex:param name="mId" value="{!item.Id}" assignTo="{!mId}" />  
+                                            <apex:param name="Sched" value="true" assignTo="{!Sched}" />                                            
+                                            <apex:commandButton value="Schedule Interview" />                                           
+                                        </apex:commandlink>
+                                        <apex:outputtext value=" - " rendered="{!if(item.Interview_Status__c=='Initiated',true,false)}"/>                                                                      
+                                        <apex:commandlink styleClass="inline-link" action="{!navigator}" rendered="{!if(item.Interview_Status__c=='Initiated',true,false)}">                                        
+                                            <apex:param name="nextPage" value="/apex/IGI_PT_Scheduling"/>
+                                            <apex:param name="mId" value="{!item.Id}" assignTo="{!mId}" /> 
+                                            <apex:param name="remove" value="true" assignTo="{!remove}" />                                          
+                                            <apex:commandButton value="Remove Position" />                                         
+                                        </apex:commandlink>                                        
+                                      
+                                         <apex:commandlink styleClass="inline-link" action="{!navigator}" rendered="{!if(item.Interview_Status__c=='Scheduled',true,false)}">
+                                            <apex:param name="nextPage" value="/apex/IGI_PT_Scheduling?schCancel=true" />
+                                            <apex:param name="mId" value="{!item.Id}" assignTo="{!mId}" />  
+                                            <apex:param name="schCancel" value="true" assignTo="{!schCancel}" />                                           
+                                            <apex:commandButton value="Cancel Interview" />                                         
+                                         </apex:commandlink>
+                                         <apex:outputtext value=" - " rendered="{!if(item.Interview_Status__c=='Scheduled',true,false)}"/>                              
+                                         <apex:commandlink styleClass="inline-link" action="{!navigator}" rendered="{!if(item.Interview_Status__c=='Scheduled',true,false)}">                                        
+                                            <apex:param name="nextPage" value="/apex/IGI_PT_Scheduling" assignTo="{!nextPage}"/>
+                                            <apex:param name="mId" value="{!item.Id}" assignTo="{!mId}" /> 
+                                            <apex:param name="remove" value="true" assignTo="{!remove}" />                                         
+                                            <apex:commandButton value="Remove Position" />                                         
+                                        </apex:commandlink>
+                                        
+                                          <apex:commandlink styleClass="inline-link" action="{!navigator}" rendered="{!if(item.Interview_Status__c=='Awaiting Decision',true,false)}">
+                                            <apex:param name="nextPage" value="/apex/IGI_pt_MyMatches"/>
+                                            <apex:param name="mId" value="{!item.Id}" assignTo="{!mId}" />  
+                                            <apex:param name="noShow" value="true" assignTo="{!noShow}" />                                           
+                                            <apex:commandButton value="No Show" />                                           
+                                         </apex:commandlink>                                       
+                                         <apex:outputtext value=" - " rendered="{!if(item.Interview_Status__c=='Awaiting Decision',true,false)}"/>                                  
+                                         <apex:commandlink styleClass="inline-link" action="{!navigator}" rendered="{!if(item.Interview_Status__c=='Awaiting Decision',true,false)}">
+                                            <apex:param name="nextPage" value="/apex/IGI_PT_Scheduling"/>
+                                            <apex:param name="mId" value="{!item.Id}" assignTo="{!mId}" />  
+                                             <apex:param name="remove" value="true" assignTo="{!remove}" /> 
+                                             <apex:commandButton value="Remove Position" />                                         
+                                         </apex:commandlink>
+                                         
+                                          <apex:commandlink styleClass="inline-link" action="{!navigator}" rendered="{!if(item.Interview_Status__c=='Position Offered',true,false)}">
+                                            <apex:param name="nextPage" value="/apex/IGI_PT_Scheduling?RevAccept=true"/>
+                                            <apex:param name="mId" value="{!item.Id}" assignTo="{!mId}" />  
+                                            <apex:param name="RevAccept" value="true" assignTo="{!RevAccept}" />                                           
+                                            <apex:commandButton value="Review and Accept" />                                           
+                                         </apex:commandlink>                                       
+                                         <apex:outputtext value=" - " rendered="{!if(item.Interview_Status__c=='Position Offered',true,false)}"/>                                  
+                                         <apex:commandlink styleClass="inline-link" action="{!navigator}" rendered="{!if(item.Interview_Status__c=='Position Offered',true,false)}">
+                                            <apex:param name="nextPage" value="/apex/IGI_PT_Scheduling"/>
+                                            <apex:param name="mId" value="{!item.Id}" assignTo="{!mId}" />  
+                                             <apex:param name="remove" value="true" assignTo="{!remove}" /> 
+                                             <apex:commandButton value="Remove Position" />                                         
+                                         </apex:commandlink>
+                                      
+                                   
+                                   </apex:column> 
+                                   
+				              	   
+                              </apex:pageBlockTable>  
+                         </apex:pageBlock>
+                                          
+                    </div>
+                </div>
+            
+          </apex:form>
+      </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

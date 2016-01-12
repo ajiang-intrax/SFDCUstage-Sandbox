@@ -1,0 +1,4 @@
+<!-- This component is part of Invoice IT Deployment -->
+<apex:page showHeader="false" standardController="invoiceit_s__Invoice__c" sidebar="false" standardStylesheets="false" renderAs="pdf">
+    <c:componentInvoiceEmailIntrax invoiceId="{!$CurrentPage.parameters.Id}" />
+</apex:page>

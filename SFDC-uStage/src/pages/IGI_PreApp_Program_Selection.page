@@ -1,0 +1,71 @@
+<apex:page docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+    
+    <!-- UI Blocker component for Background processing -->
+    <c:BlockUI />
+    
+    <apex:composition template="IntraxTemplate_Vs1">
+        <apex:define name="body">
+            <div class="wrapper">    
+                <apex:form >
+                
+                    <!-- Heading -->
+                    <div class="page-header clearfix">
+                        <h1 class="page-title">Intrax Global Internship Application</h1>
+                        
+                        <!-- Back To Main Page Link -->
+                        <div class="back-to-main"><apex:outputLink value="apex/igi_preapp_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+                    </div>  
+                       <!-- Section Header -->  
+                       <div class="section-header clearfix">
+                            <h2>Program Selection</h2>
+                            <!--  
+                            <div class="progress-bar">Page 1 <em>of</em> 6</div>
+                            -->
+                       </div> 
+                        
+                       <!-- Panel -->   
+                       <div class="white-box clearfix">   
+                            <div class="panel two_thirds">
+
+                            	<apex:Messages styleClass="custom-error-pagelevel"/>
+            					<p><em> All fields marked with an asterisk (<span class="required no-padding">*</span>) are required</em></p><br/>
+            				
+                            <div class="form-row">
+                                <div class="form-label top">Which program are you applying for?<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:selectRadio layout="pageDirection" value="{!ipo_options}" id="ipo" required="TRUE" >
+                                    	<p><apex:selectOptions value="{!ProgramOptions}"/></p>
+                                    </apex:selectRadio>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+          
+                                <!-- Back Command Link -->
+                                <div class="form-link">
+				              		<apex:outputLink value="/apex/IGI_preapp_home?id={!applicantInfo.Id}"><i class="icon-chevron-left"></i> <span>Back</span></apex:outputLink>
+				                </div>
+                                  
+                                <!-- Next Command Link --> 
+                                <div class="form-button">
+                                    <apex:commandlink styleClass="next" action="{!navigator}"> 
+                                        <apex:param name="nextPage" value="/apex/IGI_preapp_Program_Preferences"/> 
+                                        <apex:param name="reDirectPage" value="true"/> 
+                                        <apex:commandButton value="Save & Continue" />
+                                        <i class="icon-chevron-right"></i>
+                                    </apex:commandlink>
+                                </div> 
+                                
+                                
+                            </div>  
+                        </div>  
+                            
+                        <div class="panel one_third last aside">
+                           <!--  <c:Badge_Centers_Contact />    -->  
+                        </div>
+                    </div>
+                </apex:form>
+            </div>
+        </apex:define>
+    </apex:composition>
+</apex:page>

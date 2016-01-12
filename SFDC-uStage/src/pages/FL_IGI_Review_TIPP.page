@@ -1,0 +1,5 @@
+<apex:page standardController="Match__c" >
+    <flow:interview name="IGI_Review_TIPP" finishLocation="/{!$CurrentPage.parameters.Id}">
+      <apex:param name="Match_Id" value="{!$CurrentPage.parameters.Id}"/>
+  </flow:interview>
+</apex:page>

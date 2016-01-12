@@ -1,0 +1,37 @@
+<apex:page docType="html-5.0" showHeader="false" standardStylesheets="false" controller="SiteLoginController" title="File Not Found" cache="false">
+<apex:composition template="intraxtemplate_vs3">
+<apex:define name="body">
+<div class="row margin-t">
+<div class="col-sm-7 col-md-6 col-lg-5 no-float center-block">  
+<div class="portal-entry clearfix">
+<div class="row">
+<div class="col-md-10 col-md-offset-1"> 
+<c:block_header_registration userAgentCheck="{!userAgentCheck}" uInParameter="{!uInParameter}"/>        			
+
+<h2>Sorry, but we can't find the page you are looking for.</h2> 
+       
+<p class="lead text-center"><em>This page may have moved or is no longer available. Please check the web address you entered to make sure if it's correct.</em></p>
+<div class="form-nolabel">
+<apex:outputLink styleClass="btn btn-link btn-lg btn-block margin-t"
+										value="{!$Site.Prefix}/AppEngine_SiteLoginPage" target="_self">
+										<i class="fa fa-home"></i>
+										<span>Return to Homepage</span>
+									</apex:outputLink>
+									</div>
+</div>
+<!--  end column -->
+</div>
+<!--  end row -->  
+</div>
+<!--  end registration -->
+</div>
+<!--  end column -->
+</div>
+<!--  end row -->
+        
+
+        
+</apex:define>
+</apex:composition>
+<site:previewAsAdmin />
+</apex:page>

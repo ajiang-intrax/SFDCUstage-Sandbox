@@ -1,0 +1,137 @@
+<apex:page docType="html-5.0" standardController="Applicant_Info__c"
+           extensions="AppEngine_Controller" action="{!checkLogin}"
+           standardStylesheets="false" showHeader="false"  title="Extennsion Preference" id="apc_hf_app_extension_pref">
+    <apex:composition template="intraxtemplate_vs3">
+        <apex:define name="body">
+            <c:block_header_apc_hf_application userAgentCheck="{!userAgentCheck}"/>
+            <div id="app-page" class="row">
+                <div id="app-focus" class="col-md-8 col-md-push-3">
+                    <h1>Extension Preferences</h1>
+                    <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+                    <p class="lead"> Thank you for choosing to extend your AuPairCare program. Please
+                        confirm and select the details of your extension.</p>
+                    <apex:form styleClass="form-vertical ws-validate" >
+                        
+                        
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label class="control-label">This is an application to extend your match with {!APCPtName}</label>
+                                </div>
+                            </div>
+                        </div><!--  end row -->
+                        
+                        <apex:pageBlock id="aupair_block">
+                            
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Please select your length of extension</label>
+                                        <apex:selectList styleClass="form-control" value="{!applicantInfo.Extension_Length__c}" multiselect="false" required="TRUE" id="ExtensionPref" size="1">
+                                            <apex:selectOption itemValue="" itemLabel="Select Extension Length"/>
+                                            <apex:selectOption itemValue="6" itemLabel="6 months" />
+                                            <apex:selectOption itemValue="9" itemLabel="9 months" />
+                                            <apex:selectOption itemValue="12" itemLabel="12 months" />
+                                        </apex:selectList>
+                                        <apex:message for="ExtensionPref" styleClass="custom-error-radio" id="prefexterror"/>
+                                    </div>
+                                </div>
+                            </div><!--  end row -->
+                            
+                            <p>&nbsp;</p>
+                          <!--
+                            <div class="section-title">Application Fee</div>
+                            <p>The Department of State charges each au pair a non-refundable application fee in the amount of ${!totalamount}</p>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label class="control-label"> Will you be paying this fee on behalf of your au pair?</label>
+                                        <apex:selectRadio styleClass="radio" value="{!applicantinfo.Extension_DOS_Fee_Indicated__c}" id="payfee" required="true">
+                                            <apex:selectOption itemValue="Yes" itemLabel="Yes" />
+                                            <apex:selectOption itemValue="No" itemLabel="No" />
+                                            <apex:actionSupport event="onclick" rerender="pay_block" status="pleasewait4" />
+                                        </apex:selectRadio>
+                                        <apex:message for="payfee" styleClass="custom-error-radio" id="erroremer" />
+                                    </div>
+                                </div>
+                            </div>  end row -->
+                            
+                            <!--
+<div class="row">
+<div class="col-sm-12">
+<div class="form-group">
+<label class="control-label"> Will you be paying this fee on behalf of your au pair?</label>
+<apex:actionRegion >
+<apex:selectRadio styleClass="radio" value="{!applicantinfo.Extension_DOS_Fee_Indicated__c}" id="payfee" required="true">
+<apex:selectOption itemValue="Yes" itemLabel="Yes" />
+<apex:selectOption itemValue="No" itemLabel="No" />
+<apex:actionSupport event="onclick" rerender="pay_block" status="pleasewait4" />
+</apex:selectRadio>
+</apex:actionRegion>
+<apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="pleasewait4"/> 
+<apex:message for="payfee" styleClass="custom-error-radio" id="erroremer" />
+</div>
+</div>
+</div><!--  end row --
+-->
+                            <!-- 
+<apex:pageBlock id="pay_block">
+<apex:outputPanel layout="block" rendered="{!ApplicantInfo.Extension_DOS_Fee_Indicated__c == 'No'}">
+<p class="alert alert-info">Please note, your au pair will be required to pay this fee before this application can be submitted to the Department of State for approval.
+Talk with your au pair today to make sure she understands her application and associated fees.</p>
+</apex:outputPanel>
+</apex:pageBlock>
+
+<p>&nbsp;</p>
+
+<div class="section-title">Program Fee</div>
+
+<p>When your application and your au pair's application are approved by the Department of State,
+AuPairCare will charge you program fees in the amount of ${!totalamount}. Please tell us your payment preferences now so that we can process payment accordingly.
+It takes 4-6 weeks for applications to be approved. AuPairCare will send you a notification when you application is approved and remind you of any pending charges.
+</p>
+
+<div class="row">
+<div class="col-sm-6">
+<div class="form-group">
+<label class="control-label">Choose a Payment Option </label>
+<apex:inputField styleClass="form-control" value="{!ApplicantInfo.Payment_Option__c}" required="true" id="payoption" />
+</div>
+</div>
+
+<div class="col-sm-6">
+<div class="form-group">
+<label class="control-label">Choose a Payment Method </label>
+<apex:inputField styleClass="form-control" value="{!ApplicantInfo.Payment_Method__c}" required="true" id="paymethod"  />
+</div>
+</div>
+</div><!--  end row --
+
+
+<!--    </apex:outputPanel> --
+-->
+                        </apex:pageBlock> 
+                        
+                        
+                        <div class="row">
+                            <div class="col-sm-12 margin-t">
+                                <apex:commandlink styleClass="btn btn-primary btn-lg" action="{!navigator}" id="nextlink" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                                    <apex:param name="nextPage" value="/apex/apc_hf_app_personal_info"/>
+                                    <apex:param name="reDirectPage" value="true" />
+                                    <apex:param name="syncToPT" value="true" />
+                                    <apex:param name="pageId" value="008"/>
+                                    <apex:commandButton value="Save & Continue" id="continuebutton" />
+                                </apex:commandlink>
+                            </div>
+                        </div> 
+                    </apex:form>
+                </div>
+                <!-- end column -->
+                <div id="app-side" class="col-md-3 col-md-pull-8">
+                    <apex:form ><c:menu_apc_hf_app ApplicantInfo="{!applicantInfo}" /></apex:form> 
+                </div> <!--  end column -->
+            </div>
+            <!-- end row -->
+        </apex:define>
+    </apex:composition>
+</apex:page>

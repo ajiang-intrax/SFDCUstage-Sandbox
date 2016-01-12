@@ -1,0 +1,274 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="false" showHeader="false" id="apc_ap_main_health_review">
+<apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_apc_ap_application />
+      <div id="app-page" class="row">
+        <div id="app-focus" class="col-md-8 col-md-push-3">
+          
+          <c:block_app_completion ApplicantInfo="{!applicantInfo}" userProfileName="{!userProfileName}"  />
+          
+          <!-- AUDIT BLOCK PARTNER --> 
+          <c:block_apc_pr_audit flaggedList="{!flaggedList}" rendered="{!userProfileName == 'OCPM Agent Portal' && applicantInfo.Application_Level__c == 'Basic' && applicantInfo.Application_Stage__c == 'Submitted'}"/>
+          
+          <h1>Health Review</h1>
+          <p class="lead">Please review the applicants Health and Physician Verified Medical History. 
+          					If the form indicates a history or current illness, disease or condition 
+          					please have the applicant complete the <a href="https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/documents/portals/apc/pt/app/Supplementary-Medical-Form.pdf" target="_blank"><b>supplemental questionnaire</b></a> and upload below for further consideration. 
+          					Translated documents may also be uploaded at this time.</p>
+          <apex:form styleClass="form-vertical ws-validate" id="webform">
+            <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+            
+            <apex:outputPanel layout="block" id="outputpane4">
+			    <div class="row">
+					<div class="col-sm-6">			        
+						<div class="form-group">
+		                    <label class="control-label">Date of Au Pair Physical</label>
+		                    <div class="datepicker" locale="{!user.localeSidKey}">
+		                      <apex:inputField styleClass="form-control" html-placeholder="Physical Exam Date" value="{!personInfo.Physical_Exam_Date__c}" required="TRUE" id="PhysicalExamDate" />
+		                    </div>
+		                </div>
+					</div>					
+				</div><!--  end row -->
+				
+				<div class="row">
+					<div class="col-sm-12">			        
+						<div class="form-group">
+		                    <label class="control-label">How does physician describe au pair's overall health?</label>
+		                    <div class="row">
+							<div class="col-sm-6">
+		                    <apex:inputField styleClass="form-control"  value="{!personInfo.Overall_Health_From_Doctor__c}" required="TRUE" id="HealthFromDoctor" />
+		                    </div>					
+							</div><!--  end row -->
+		                </div>
+					</div>					
+				</div><!--  end row -->
+				
+				<div class="row">  
+		          	<div class="col-sm-6">
+		            <div class="form-group">
+		              <label class="control-label">Height</label>
+		                <div class="input-group">
+		                  <apex:inputField styleClass="form-control heightin" value="{!personInfo.Height_cm__c}"  required="TRUE" id="hei" > </apex:inputField>
+		                  <span class="input-group-addon">cm</span> </div>
+		                <p class="help-block convertHE"></p>
+		           		</div>
+		           	</div>
+		           	<div class="col-sm-6">            
+		            <div class="form-group">
+		              <label class="control-label">Weight</label>
+		                <div class="input-group">
+		                  <apex:inputField styleClass="form-control weightin" value="{!personInfo.Weight_kg__c}" required="TRUE" id="wei" > </apex:inputField>
+		                  <span class="input-group-addon">kg</span> </div>
+		                <p class="help-block convertWE"></p>
+		              </div>
+		              </div>
+		           </div><!--  end row -->
+		           
+				</apex:outputPanel>
+				<div class="row">
+					<div class="col-sm-12">			        
+						<div class="form-group">
+		                    <label class="control-label">Does the au pair or physician indicate any history of illness, disease or pre-existing condition?</label>
+		                    <apex:actionRegion >
+		                    <apex:selectRadio styleClass="radio" value="{!personInfo.History_Of_Illness_Indicated__c}" id="IllessIndicated" required="TRUE">
+								<apex:selectOption itemValue="Yes" itemLabel="Yes" />
+								<apex:selectOption itemValue="No" itemLabel="No" />
+								<apex:actionSupport event="onclick" rerender="IllnessDetails" status="showIllness" />
+							</apex:selectRadio> 	
+							</apex:actionRegion>
+							<apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showIllness" /> 
+							<apex:message for="IllessIndicated" styleClass="custom-error-radio" id="errormessswimming1" />						
+		                </div>
+					</div>					
+				</div><!--  end row -->
+				<apex:pageBlock id="IllnessDetails">
+				<apex:outputPanel layout="block" rendered="{!personInfo.History_Of_Illness_Indicated__c == 'Yes'}" id="IllnessDetailsQues">
+				<div class="row">
+					<div class="col-sm-12">			        
+						<div class="form-group">
+		                    <label class="control-label">If yes, please provide additional notes on disease, illness or condition listed above</label>
+		                    <div class="row">
+							<div class="col-sm-6">
+		                    <apex:inputField styleClass="form-control"  value="{!personInfo.History_Of_Illness_Details__c}" id="HistoryOfIllenssDetails" required="{!personInfo.History_Of_Illness_Indicated__c == 'Yes'}"/>
+		                    </div>					
+							</div>
+		                </div>
+					</div>					
+				</div>
+				</apex:outputPanel>
+				</apex:pageBlock>
+				<div class="row">
+                        <div class="col-sm-12">
+                                <apex:commandLink styleClass="btn btn-link vs2 btn-lg margin-r1" 
+                                action="{!savePersonInfo}" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit">
+                                <i class="fa fa-plus"></i> <span>Upload Health Form(s)</span>
+                                </apex:commandLink>
+                            </div>
+                        </div><!--  end row -->
+                        <apex:outputPanel styleClass="margin-t3" layout="block" rendered="{!IF(DocList.Size > 0, true, false)}">
+                            <apex:pageBlock id="Block_ListExperience" >
+                                <div class="table-responsive margin-t4">
+                                    <apex:pageBlockTable styleClass="table vs2" value="{!DocList}" var="item">
+                                        <apex:column headerValue="Uploaded Documents">
+                                            <apex:commandLink action="{!load}" immediate="true" rerender="" target="_blank">
+                                                <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                                <apex:outputText value="{!item.Document_Name__c}"/>
+                                            </apex:commandLink>
+                                        </apex:column>
+                                        <apex:column headerValue="Remove">
+                                            <div class="btn-toolbar no-margin">
+                                                <apex:commandLink rendered="{!NOT(userProfileName == 'OCPM Agent Portal' && item.Document_Type__c == 'Doctor' )}" immediate="true" action="{!iWantMyJSValues}" styleClass="btn-lg" oncomplete="confDelete();" rerender="">
+                                                <i class="fa fa-trash-o"></i>
+                                                    <apex:param name="docGuid" value="{!item.Document_GUID__c}" assignTo="{!docGuid}"/>
+                                                </apex:commandLink>
+                                            </div>
+                                        </apex:column>
+                                    </apex:pageBlockTable>
+                                </div>
+                            </apex:pageBlock>
+                        </apex:outputPanel>
+                        <apex:outputText value="{!disableFileUploadText}" rendered="{!disableFileUpload}"/>
+                        
+                        <apex:outputPanel styleClass="margin-t3" layout="block" >
+                        <div class="row">
+							<div class="col-sm-12">			
+							<div class="well">		        
+								<div class="form-group no-margin">				                    				                    			                      
+			                      <apex:inputCheckbox styleClass="form-control" required="FALSE" value="{!DoctorFormReviewed}" id="DoctorReviewed"/>
+			                      <label> I verify that I have reviewed this au pair's physician form. </label>			                      
+				                </div>
+				                </div>
+							</div>					
+						</div><!--  end row -->
+						</apex:outputPanel>
+						
+                        <div class="row  margin-t4">
+						<div class="col-sm-12"><apex:outputLink styleClass="btn btn-link btn-lg" value="/apex/apc_ap_main_reference_check?id={!applicantInfo.Id}" id="backlink">
+							<i class="fa fa-chevron-left"></i>
+							<span>Back</span>
+						</apex:outputLink> 
+						<apex:commandlink styleClass="btn btn-primary btn-lg" action="{!navigator}" id="nextlink" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+							<apex:param name="nextPage" value="/apex/apc_ap_main_bgc_review" />							
+							<apex:param name="reDirectPage" value="true" />
+							<apex:param name="docType" value="BackgroundCheck" assignTo="{!docType}"/>
+							<apex:commandButton value="Save & Continue" id="continuebutton" />
+							<apex:param name="pageId" value="041" />
+						</apex:commandlink></div>
+						</div>
+													
+				
+                        <div class="modal vs1 fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-sm">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <p>Are you sure you want to remove this file?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <apex:commandLink styleClass="btn btn-primary" action="{!deletefile}" immediate="true">
+                                            <apex:param name="healthformparam" value="true" assignTo="{!healthformparam}" />
+                                            <apex:commandButton value="Yes" id="yesbutton"/>
+                                        </apex:commandLink>
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--  end modal -->
+                        
+                        <div class="modal vs1 fade modal-widget" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Upload Health Form</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <iframe width="100%" height="400" frameborder="0" scrolling="no" src="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType={!$CurrentPage.parameters.docType}&retparam={!retParam}"></iframe>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--  end modal --> 
+                        
+<script>
+var j$ = jQuery.noConflict();
+ 
+function hwsize(){
+j$(document).ready(function(){
+	
+	var val1weight= j$('.weightin').val();
+	var val2weight= parseInt(val1weight) * 2.2046;
+	var val3weight= val2weight.toString().substring(0,6)+" pounds(lb)";
+	j$('.convertWE').text(val3weight);
+	if(val1weight.length == 0){
+	j$('.convertWE').hide();
+	}
+	
+	var val1height= j$('.heightin').val();
+	var val2height= parseInt(val1height) * 0.032808;
+	var val3height= val2height.toString().substring(0,6)+" feet(ft)";
+	j$('.convertHE').text(val3height);
+	if(val1height.length == 0){
+	j$('.convertHE').hide();
+	}
+		
+	j$('.weightin').change(function(){
+    var wlb= j$('.weightin').val();
+    if(wlb.length == 0){
+	j$('.convertWE').hide();
+	}else{
+    var wlbInt = parseInt(wlb)*2.2046;
+    var wlbText = wlbInt.toString().substring(0,6)+" pounds(lb)"; 
+    j$('.convertWE').text(wlbText);
+    j$('.convertWE').show();
+    }
+  });
+  
+  j$('.heightin').change(function(){
+    var hft= j$('.heightin').val();
+    if(hft.length == 0){
+	j$('.convertHE').hide();
+	}else{
+    var hftInt = parseInt(hft)*0.0328084;
+    var hftText = hftInt.toString().substring(0,6)+" feet(ft)"; 
+    j$('.convertHE').text(hftText);
+    j$('.convertHE').show();
+    }
+  });
+  
+});
+}
+
+hwsize();
+                        
+function confDelete(){
+j$('#myModal').modal();
+} 
+
+function popModal(){
+var auxerr= j$('.custom-error-pagelevel').attr('role');
+//alert(auxerr);
+	if(auxerr=="alert"){
+	}else{
+		j$('.modal-widget').modal();
+	}
+} 
+                        
+//activate tooltip
+j$('.linkpdf').tooltip();
+
+</script> 
+			  
+          </apex:form>
+        </div>
+        <!-- end column -->
+        
+         <div id="app-side" class="col-md-3 col-md-pull-8">
+          <c:menu_side_apc_ap_basic ApplicantInfo="{!applicantInfo}" />
+        </div>
+        <!-- end column  --> 
+      </div>
+      <!-- end row --> 
+      
+    </apex:define>
+  </apex:composition>      
+</apex:page>

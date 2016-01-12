@@ -1,0 +1,27 @@
+<apex:component id="block_participant_address_update">
+	
+	<apex:attribute name="engagementId" description="Contains the EngagementId related to the last Accepted App" type="string" required="false" default=""/>
+	<apex:attribute name="accommodation" description="Contains the last Accommodation related to the Engagement in context" type="Accommodation__c" required="false" default=""/>
+	
+	
+	<div class="block"> 
+		<div class="block-header"><h3>Your Address</h3></div>
+		<div class="block-body">
+			<div class="row-fluid">
+				<div class="span12">
+					<p>Our records indicate that this is your most current address in the United States. Please update this information if it is no longer accurate.</p>
+					<p>
+						<em>{!accommodation.Accommodation_Site__r.Street__c} {!accommodation.Accommodation_Site__r.Street_2__c}<br/>
+						{!accommodation.Accommodation_Site__r.City__c}<br/>
+						{!accommodation.Accommodation_Site__r.State__c}, {!accommodation.Accommodation_Site__r.Postal_Code__c}, {!accommodation.Accommodation_Site__r.Country__c}
+						</em>
+					</p>
+					<div class="form-link no-margin">
+						<apex:outputlink value="/participant_us_address_update?engagementId={!engagementId}&isAddressUpdate=true"><i class="icon-pencil"></i><span>Update Address</span></apex:outputlink>
+					</div>
+			
+				</div>
+			</div>    
+		</div>
+	</div> 
+</apex:component>

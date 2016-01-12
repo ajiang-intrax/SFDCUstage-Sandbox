@@ -1,0 +1,182 @@
+<apex:component layout="none" controller="LoginRedirectionController">
+<style>
+.announce.vs1 .item + .item{margin-top:20px;}
+.announce.vs1.page .item + .item {
+  padding-top: 25px;
+  border-top: #ccc solid 1px;
+}
+.announce.vs1.page .item .h4{margin-bottom:10px; font-size:20px;}
+.announce.vs1.page .item .lead{margin-bottom:10px;}
+.announce.vs1 .item .h4{margin:0; font-size:20px;}
+.announce.vs1 .item .lead{margin:0;}
+.announce.featured.vs1{  
+  padding: 40px 40px;
+  border-radius: 2px;
+  background: #fcf8e3;
+  color: #8a6d3b !important;
+  position:relative;}
+.announce.featured.vs1 .notify-icon{ position: absolute; top: -18px; left: -12px;}
+.announce.featured.vs1 .notify-icon .fa-stack{font-size:30px;}
+.announce.featured.vs1 .notify-icon .fa-stack-2x{color: #8a6d3b;}
+.announce.vs1  a.notify-detail,
+.announce.vs1  a.notify-detail:hover{display:inline; font-size:15px; font-family:'milowebbold'; color:#8a6d3b;}
+.announce.vs1 a.notify-view-all,
+.announce.vs1 a.notify-view-all:hover{display:block; font-size:15px; margin-top:20px; font-family:'milowebbold'; color:#8a6d3b;}
+</style>
+
+<apex:outputPanel layout="block" rendered="{! IF($CurrentPage.Name=='pr_home', true, false)}">
+
+<apex:outputPanel layout="block" rendered="{!(lstPriorAnn.size==0 && lstAnn.size==0)}">
+<div class="gray box margin-b6 center-text">
+  <div class="h4">There are currently no new announcements from Intrax.</div>
+</div>
+</apex:outputPanel>
+
+    <apex:outputPanel layout="block" rendered="{!(lstPriorAnn.size>0 || lstAnn.size>0)}">
+    <div class="announce featured vs1">
+    <div class="notify-icon hidden-xs">
+                       
+
+<span class="fa-stack">
+  <i class="fa fa-circle fa-stack-2x"></i>
+  <i class="fa fa-bell-o fa-stack-1x fa-inverse"></i>
+</span>
+                       </div>
+    
+    <div class="row">
+        <div class="col-sm-12">             
+                <apex:outputText rendered="{!PriorAnn_Top3.size>0}">
+                    <apex:repeat value="{!PriorAnn_Top3}" var="PriorAnn">
+                    <div class="item">  
+                       <div class="h4"><apex:outputField value="{!PriorAnn.Title__c}"/></div> 
+                       <div class="lead"><apex:outputField value="{!PriorAnn.Summary__c}"/>                       
+                            <apex:outputText rendered="{!PriorAnn.Message__c!='' && PriorAnn.Message__c!= NULL}">
+                                 <a class="notify-detail" data-toggle="modal" data-target="#dochelp">Read&nbsp;More</a>
+                                  <div id="dochelp" class="modal vs1 fade in">
+                                   <div class="modal-dialog ">
+                                   <div class="modal-content">
+                                   <a class="closebtn" data-dismiss="modal">
+                                        <span class="fa-stack fa-lg ">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-times fa-stack-1x fa-inverse"></i>
+                                        </span>
+                                    </a>
+                                   <div class="modal-body">
+                                    <div class="row">                          
+                                    <div class="col-lg-12"> 
+                                    
+                                    <div class="h1 no-margin-t"><apex:outputField value="{!PriorAnn.Title__c}"/></div> 
+                                    <div class="lead margin-b2"><apex:outputField value="{!PriorAnn.Summary__c}"/></div>
+                                    <div><apex:outputField value="{!PriorAnn.Message__c}"/></div>
+                                   </div>
+                                 
+                                </div>  <!--  end row -->
+                                </div> <!--  end modal body -->
+                                </div> <!--  end modal content -->
+                                </div> <!--  end modal dialog -->
+                                </div> <!-- end modal -->   
+                            </apex:outputText> 
+                       </div>                                         
+                       </div>        
+                    </apex:repeat>
+                </apex:outputText>
+                
+                <apex:outputText rendered="{!nonPriorAnn_Top3.size>0 && PriorAnn_Top3.size<3}">
+                    <apex:repeat value="{!nonPriorAnn_Top3}" var="Ann">
+                       <div class="item">
+                        <div class="h4"><apex:outputField value="{!Ann.Title__c}"/></div> 
+                        <div class="lead"><apex:outputField value="{!Ann.Summary__c}"/>                         
+                              <apex:outputText rendered="{!Ann.Message__c!='' && Ann.Message__c!= NULL}">
+                                 <a class="notify-detail" data-toggle="modal" data-target="#dochelpNonPrior">Read&nbsp;More</a>
+                                  <div id="dochelpNonPrior" class="modal vs1 fade in">
+                                   <div class="modal-dialog">
+                                   <div class="modal-content">
+                                   <a class="closebtn" data-dismiss="modal">
+                                        <span class="fa-stack fa-lg ">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-times fa-stack-1x fa-inverse"></i>
+                                        </span>
+                                    </a>
+                                   <div class="modal-body">
+                                    <div class="row">                          
+                                    <div class="col-lg-12"> 
+                                    
+                                    <div class="h1 no-margin-t"><apex:outputField value="{!Ann.Title__c}"/></div> 
+                                    <div class="lead margin-b2"><apex:outputField value="{!Ann.Summary__c}"/></div>
+                                    
+                                    <div><apex:outputField value="{!Ann.Message__c}"/></div>
+                                   </div>
+                                 
+                                </div>  <!--  end row -->
+                                </div> <!--  end modal body -->
+                                </div> <!--  end modal content -->
+                                </div> <!--  end modal dialog -->
+                                </div> <!-- end modal -->   
+                            </apex:outputText> 
+                        </div>           
+                        </div>     
+                     </apex:repeat>  
+                 </apex:outputText> 
+                 
+      <apex:outputText rendered="{!(lstPriorAnn.size+lstAnn.size)>3}">
+            <apex:outputLink styleClass="notify-view-all" value="apex/pr_inbox">See all announcements ></apex:outputLink>
+            </apex:outputText>
+                   
+        </div><!--  end column -->
+    </div> <!-- end row -->   
+    </div>
+  
+    
+    
+    </apex:outputPanel>
+</apex:outputPanel>
+
+
+<apex:outputPanel layout="block" rendered="{! IF($CurrentPage.Name=='pr_inbox', true, false)}">
+    <div class="row margin-b2">
+    <div class="col-sm-9 center-block center-text">
+    <h1>Announcements</h1>
+    </div>
+    </div><!-- end row -->
+    
+    
+    <apex:outputPanel layout="block" rendered="{!(lstPriorAnn.size == 0 && lstAnn.size == 0)}">
+    <div class="row">
+        <div class="col-sm-9 center-block center-text">
+        <div class="box gray h3">There are no announcements at this time.</div>
+        </div>
+    </div>
+    </apex:outputPanel>
+    
+    <apex:outputPanel layout="block" rendered="{!(lstPriorAnn.size>0 || lstAnn.size>0)}">
+    <div class="row">
+    <div class="col-sm-9 center-block">
+                    <div class="announce vs1 page">
+                        <apex:repeat rendered="{!lstPriorAnn.size>0}" value="{!lstPriorAnn}" var="PriorAnn">
+                        <div class="item">
+                           <div class="tcell">
+                            <div class="h4"><apex:outputField value="{!PriorAnn.Title__c}"/></div>
+                            <div class="lead"><apex:outputField value="{!PriorAnn.Summary__c}"/></div>
+                            <div class="lead"><apex:outputField value="{!PriorAnn.Message__c}"/></div> 
+                            </div>  
+                            </div> 
+                        </apex:repeat>     
+                         <apex:repeat value="{!lstAnn}" var="Ann" rendered="{!lstAnn.size>0}">
+                       <div class="item">
+                        <div class="tcell">
+                        <div class="h4"><apex:outputField value="{!Ann.Title__c}"/></div> 
+                        <div class="lead"><apex:outputField value="{!Ann.Summary__c}"/></div>
+                        <div class="lead"><apex:outputField value="{!Ann.Message__c}"/></div> 
+                        </div> 
+                        </div>     
+                        </apex:repeat>    
+                    </div>     
+    </div>
+    </div><!-- end row -->
+    </apex:outputPanel>
+    
+</apex:outputPanel>
+
+
+
+</apex:component>

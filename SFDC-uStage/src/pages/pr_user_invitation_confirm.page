@@ -1,0 +1,30 @@
+<apex:page title="Invitation Sent" id="Page" applyBodyTag="false" applyHtmlTag="false" controller="User_Invitation_Controller" action="{!checklogin}"
+    standardStylesheets="false" showHeader="false">
+	<apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+     
+      <script>
+                function disableBtn(sender){
+                    sender.disabled = true;
+                }
+                
+                function SendNewInvitation() {
+                    document.getElementById('loadingImage').style.display = 'block';
+                }
+             </script>
+      <apex:form styleClass="form-vertical">
+      <div class="row margin-b2">
+        <div class="col-sm-9 center-text center-block">
+          <h1 class="margin-b4">Invitation Successfully Sent</h1>
+             <apex:commandlink styleClass="btn btn-link btn-lg" action="{!return1}">
+          <i class="fa fa-chevron-left"></i> <span>Return</span>
+       </apex:commandlink>
+         </div>
+        <!--  end column --> 
+      </div>
+      <!--  end row -->
+
+      </apex:form>
+     </apex:define>
+     </apex:composition>    
+</apex:page>

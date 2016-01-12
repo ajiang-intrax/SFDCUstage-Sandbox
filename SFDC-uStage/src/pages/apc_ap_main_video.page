@@ -1,0 +1,354 @@
+<apex:page docType="html-5.0" title="Health Information Release" id="apc_ap_main_video" applyBodyTag="false" applyHtmlTag="false" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="false" showHeader="false">
+    <apex:composition template="intraxtemplate_vs3">
+        <apex:define name="body">
+            <c:block_header_apc_ap_application />
+             <div id="app-page" class="row">
+        <div id="app-focus" class="col-md-8 col-md-push-3">
+                    <c:block_app_completion ApplicantInfo="{!applicantInfo}" userProfileName="{!userProfileName}"  />
+                    
+                    <!-- Jose-Adding Tips for Partners  (Profile "OCPM Agent Portal")
+          			<apex:outputPanel rendered="{!userProfileName == 'OCPM Agent Portal' && applicantInfo.Application_Level__c == 'Main'}" layout="block" id="blockTip">
+			          
+			        <div class="lead alert alert-warning clearfix">
+					<div class="margin-b1"><b>Tips</b></div>
+					<ul>
+					<li>Does the au pair discuss his/her childcare qualifications and motivation?</li>
+					<li>Did you verify that the au pair has not smoked in at least 3 months?</li>
+					<li>The best videos include clips of the au pair interacting with children and engaging in interests or hobbies.</li>
+					</ul>
+					</div>
+			          
+		          </apex:outputPanel>
+		          -->
+                    
+                    <h1>Video Resume</h1>
+                    <p class="lead">Create and upload a video resume for host families by following the steps below!</p>
+                    <apex:form styleClass="form-vertical ws-validate" id="webform">
+   
+   <style>
+   .upload-btn1{display:inline-block;}
+          .upload-btn1 .fa-stack{
+              background: #efefef;
+              display: block;
+              border: 8px #fff solid;}
+          .upload-btn1 i:before{color:#ccc;}
+   .circ-numb i:before{color:#87b64f; }
+   .circ-numb .numb{color: #fff; font-family:'milowebbold';}
+   </style>
+ 
+   
+   
+    
+                        <div class="h3"> 
+    <span class="fa-stack fa-lg circ-numb">
+    <i class="fa fa-circle fa-stack-2x"></i>
+    <span class="fa-stack-1x numb">1</span>
+    </span> Before You Start</div> 
+                        <div class="row">
+                        <div class="col-sm-12">
+		                        <ul style="margin-left:60px;"> 
+		                        <li>Find a quite place with good lighting</li>
+		                        <li>Dress nicely</li>
+		                        <li>Think about answering 1 or 2 of the following questions:
+			                         <ul class="margin-t" style="list-style-type:lower-latin;"> 
+			                         <li>Why do you want to be an au pair?</li>
+			                         <li>Why should a host family choose you to be their au pair?</li>
+			                         <li>Share your childcare experience, and why you like caring for children</li>
+			                         <li>Share your personal interests, skills, educational background and goals</li>
+			                         <li>Talk about your home country</li>
+			                         
+			                         </ul>  
+			                         </li>
+		                         </ul>  
+                        </div><!--  end column --> 
+                      
+                        </div><!--  end row -->
+                        
+                        <div class="row">
+                        <div class="col-sm-12">
+	                            <div class="h3">
+	                             <span class="fa-stack fa-lg circ-numb">
+    <i class="fa fa-circle fa-stack-2x"></i>
+    <span class="fa-stack-1x numb">2</span>
+    </span> Action!</div> 
+		                        <ul style="margin-left:60px;">
+		                        <li>Maintain eye contact with the camera</li>
+		                        <li>Speak slowly and smile</li>
+		                        <li>Begin your video by greeting the host family and stating your name, age and your home country</li>
+		                        <li>Answer 1 or 2 of the questions listed above</li>
+		                        <li>Thank the host family for watching your video and tell them you look forward to hearing from the soon</li>
+			                    </ul>  
+                        </div><!--  end column --> 
+                        </div><!--  end row -->
+                        
+                        <div class="row">
+                        <div class="col-sm-12">
+	                    <div class="h3">
+	                    <span class="fa-stack fa-lg circ-numb">
+					    <i class="fa fa-circle fa-stack-2x"></i>
+					    <span class="fa-stack-1x numb">3</span>
+					    </span>
+	                             Add More to Your Video</div> 
+		                        <ul style="margin-left:60px;"> 
+		                        <li>Include clips of yourself playing with children</li>
+		                        <li>Include clips of yourself playing an instrument, painting, or playing your favorite sport</li>
+		                        </ul>
+                        </div><!--  end column --> 
+                        </div><!--  end row -->
+						
+						
+						<div class="row">
+                        <div class="col-sm-12">
+	                            <div class="h3"> <span class="fa-stack fa-lg circ-numb">
+							    <i class="fa fa-circle fa-stack-2x"></i>
+							    <span class="fa-stack-1x numb">4</span>
+							    </span> Edit, Save and Upload</div> 
+		                        <div style="margin-left:60px;">
+		                        <ul>
+		                        <li>Make sure that the final video is <strong>at least 1 minute in length and no more than 5 minutes</strong></li>
+		                        <li>Save the video in one of the following file types: mp4, flv ,3gp, avi, divx, mpeg, mpeg2, mxf, vob, mov ,wmv and ogg</li>
+		                        </ul>  
+	                    
+	                    <apex:outputPanel layout="block" id="blockNoPhoto" rendered="{!IF(MapVideoSize = 0, true, false)}">
+		                  <div class="row">
+		                      <div class="col-sm-12">
+		                      <apex:commandlink styleClass="btn btn-link btn-lg vs2 margin-t2" immediate="TRUE" reRender="webform" onComplete="popModal();" status="onsubmit" onclick="disableSubmit();">
+		                      <apex:param name="doctype2" value="Introductory-Video"/>
+		                      <i class="fa fa-file-video-o"></i> <span>Upload Your Video</span>
+		                      </apex:commandlink>
+		                      </div>
+		                  </div>  <!-- end row -->
+		                 </apex:outputPanel>
+		                 
+		                 <apex:outputText value="{!disableFileUploadText}" rendered="{!disableFileUpload}"/>
+		                </div>
+                        </div><!--  end column --> 
+                        </div><!--  end row -->
+		              
+		                <div id="video">
+		                </div>
+		                <apex:outputPanel layout="block" id="blockYesPhoto" rendered="{!IF(MapVideoSize > 0, true, false)}">
+		                
+		                <div class="row">
+                        <div class="col-sm-12">
+	                            <div class="h3"> <span class="fa-stack fa-lg circ-numb">
+							    <i class="fa fa-circle fa-stack-2x"></i>
+							    <span class="fa-stack-1x numb">5</span>
+							    </span> Preview Your Masterpiece</div> 
+		                        <div style="margin-left:60px;">
+                        		
+                        		<apex:repeat id="AlbumPicKeyThumb"  value="{!MapPTVideoThumb}" var="keyURLThumb">
+                        		<apex:repeat id="AlbumPicKey"  value="{!MapPTVideoThumb[keyURLThumb]}" var="keyURLVideo">
+		                  		<apex:repeat id="AlbumPic"  value="{!MapPTVideoThumb[keyURLThumb][keyURLVideo]}" var="item">
+		                  		<!-- 
+		                  		<p>Source:{!keyURLVideo}</p>
+		                  		 -->
+		                  		<apex:outputPanel layout="block" id="blockVideoNotReady" rendered="{!isVideo == false}">
+		                  		<div class="row">
+								<p class="alert alert-info">Your video is being processed.
+								This may take a while, please check this page again later to preview your video.</p>
+								<!-- 
+								<div id="sys-msg" class="col-md-6 col-lg-5">
+								<div id="sys-msg-inner">
+								<i class="fa fa-refresh fa-spin"></i>
+								<p class="lead">Your video is being processed.<br/> You will see your video soon</p>
+								</div>
+								</div><!--  end column --
+								 -->
+								</div><!--  end row -->
+		                  		</apex:outputPanel>
+		                  		
+		                  		<apex:outputPanel layout="block" id="blockVideoReady" rendered="{!isVideo == true}">
+		                  		<div class="embed-responsive embed-responsive-16by9">
+				                	<video id="videoPt" class="embed-responsive-item video-js vjs-default-skin " controls="true" height="300px" width="100%" preload="auto" poster="{!keyURLThumb}" data-setup='{"example_option":true}'>
+				                        <source src="{!keyURLVideo}" type='rtmp/mp4' />
+				                        <!--<source src="rtmp://your.streaming.provider.net/cfx/st/&mp4:path/to/video.mp4" type='rtmp/mp4' />-->
+				                        <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that 
+				                        <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+			                        	</p>
+			                       </video>
+			                   </div> 
+			                       
+			                   <p class="margin-t">Not happy with your video?
+			                   		<apex:commandLink action="{!iWantMyJSValues}" oncomplete="confDelete();" immediate="true" rerender="">
+			                    	<strong>Remove it</strong>
+				                	<apex:param name="docGuid" value="{!item.Document_Guid__c}" assignTo="{!docGuid}"/>
+				               		</apex:commandLink> and upload another.
+			                   </p>
+			                   </apex:outputPanel>  
+				     			</apex:repeat>
+								</apex:repeat>
+								</apex:repeat>
+								</div>
+								
+                        </div><!--  end column -->
+                        </div><!--  end row --> 
+		                </apex:outputPanel>
+		                
+		                <apex:actionPoller action="{!isVideoSuccess}" oncomplete="videojs('#videoPt');reloadPage();" reRender="blockYesPhoto,menuside" interval="5" enabled="{!MapVideoSize > 0 && NOT(isVideo)}"/>
+		                
+		                
+                        <div class="row margin-t6">
+                            <div class="col-sm-12">
+                                
+                                <apex:outputLink styleClass="btn btn-link btn-lg" value="/apex/apc_ap_main_media?id={!applicantInfo.Id}&docType=Participant-Photo" id="backlink"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                                
+                                <apex:outputText rendered="{!applicantInfo.Application_Type__c=='Original'}">
+                                <apex:commandlink styleClass="btn btn-primary btn-lg" action="{!navigator}" id="nextlink" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                                    <apex:param name="nextPage" value="/apex/apc_ap_main_training" />
+                                    <apex:param name="reDirectPage" value="true" />
+                                    <apex:param name="docType" value="Transcripts" assignTo="{!docType}"/>
+                                    <apex:commandButton value="Continue" id="continuebutton"/>
+                                </apex:commandlink>
+                                &nbsp;&nbsp;
+                                <apex:commandlink styleClass="btn btn-default pull-right btn-lg" action="{!skipPage}" id="skiplink" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                                    <apex:param name="nextPage" value="/apex/apc_ap_main_training" />
+                                    <apex:param name="reDirectPage" value="true" />
+                                    <apex:param name="pageId" value="036"/>
+                                    <apex:param name="docType" value="Transcripts" assignTo="{!docType}"/> 
+                                    <apex:commandButton value="Skip Video Upload" id="skipbutton"/>
+                                </apex:commandlink>
+                                </apex:outputText>
+                                
+                                <apex:outputText rendered="{!contains(applicantinfo.PageStatus_Complete__c, '036') && applicantInfo.Application_Type__c=='Extension'}">
+                                <apex:commandlink styleClass="btn btn-primary btn-lg" action="{!navigator}" id="nextlink22" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                                    <apex:param name="nextPage" value="/apex/apc_ap_main_ext_agreements" />
+                                    <apex:param name="reDirectPage" value="true" />
+                                    <apex:commandButton value="Continue" id="continuebutton2"/> 
+                                </apex:commandlink>
+                                </apex:outputText>
+                                
+                                <!--<apex:outputText rendered="{!contains(applicantinfo.PageStatus_Complete__c, '036') && applicantInfo.Application_Type__c=='Renewal'}">
+                                <apex:commandlink styleClass="btn btn-primary btn-lg" action="{!navigator}" id="nextlink23" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                                    <apex:param name="nextPage" value="/apex/apc_ap_main_ext_agreements" />
+                                    <apex:param name="reDirectPage" value="true" />
+                                    <apex:commandButton value="Continue" id="continuebutton23"/> 
+                                </apex:commandlink>
+                                </apex:outputText>-->
+                                
+                                <apex:outputText rendered="{!applicantInfo.Application_Type__c=='Renewal'}">
+                                <apex:commandlink styleClass="btn btn-primary btn-lg" action="{!navigator}" id="nextlink23" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                                    <apex:param name="nextPage" value="/apex/apc_ap_main_ext_agreements" />
+                                    <apex:param name="reDirectPage" value="true" />
+                                    <apex:param name="pageId" value="036"/>
+                                    <apex:commandButton value="Continue" id="continuebutton23"/> 
+                                </apex:commandlink>
+                                 &nbsp;&nbsp;
+                                <apex:commandlink styleClass="btn btn-default pull-right btn-lg" action="{!skipPage}" id="renewalSkiplink" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                                    <apex:param name="nextPage" value="/apex/apc_ap_main_ext_agreements" />
+                                    <apex:param name="reDirectPage" value="true" />
+                                    <apex:param name="pageId" value="036"/>
+                                    <!--<apex:param name="docType" value="Transcripts" assignTo="{!docType}"/> -->
+                                    <apex:commandButton value="Skip Video Upload" id="renewalSkipbutton"/>
+                                </apex:commandlink>
+                                </apex:outputText>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-sm">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <p>Are you sure you want to remove this video?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <apex:commandLink styleClass="btn btn-primary" action="{!deletevideo}" immediate="true">
+                                            <apex:param name="Videoparam" value="true" assignTo="{!Videoparam}" />
+                                            <apex:commandButton value="Yes" id="yesbutton"/>
+                                        </apex:commandLink>
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!--  start modal -->
+                        
+                        <apex:includeScript value="{!URLFOR($Resource.module_videoJs, '/videojs/video.min.js')}"/>
+                        <apex:stylesheet value="{!URLFOR($Resource.module_videoJs, '/videojs/video-js.css')}"/>
+                       
+                        <div class="modal vs1 fade modal-widget" id="myModalUpload" tabindex="-1" role="dialog" aria-hidden="true">
+			              <div class="modal-dialog">
+			                <div class="modal-content">
+			                  <div class="modal-header">
+			                    <h4 class="modal-title">Upload Video</h4>
+			                  </div>
+			                  <div class="modal-body"> 
+			                    <iframe width="100%" height="350" frameborder="0" scrolling="no" src="{!videoUploadUrl}pid={!ProgId}&edu_id={!edu_id}&anchor=video&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&desc=no&docType={!$CurrentPage.parameters.docType2}&retparam={!retParam}"></iframe>
+			                  </div>
+			                </div>
+			              </div>
+			            </div>
+			            <!--  end modal // anchor=video& --> 
+			            
+			            
+                        
+<script>
+var j$ = jQuery.noConflict();
+
+
+j$(document).ready(function() {
+
+window.addEventListener( "message",
+    function (e) {
+        if(e.origin == '{!awsVideoWebBaseUrl}'){
+            var hash=  window.top.location.hash;
+            if(hash == null || hash == ''){
+                var d = window.top.location + '#'+e.data;
+                 window.location.href = d ;
+                 window.top.location.reload();
+            }else{
+                window.top.location.reload();
+                window.top.location.hash = hash;
+            }                               
+        } 
+        
+},false);    
+
+/*    
+var anchor = {!isVideo};
+if(anchor){
+//alert("video-status = Success");
+j$('html, body').animate({'scrollTop': j$('#video').offset().top});
+}
+*/
+
+
+});
+
+
+function reloadPage(){
+var anchor = {!isVideo};
+if(anchor){
+    	location.reload(true);
+    }
+}
+
+function popModal(){
+var auxerr= j$('.custom-error-pagelevel').attr('role');
+//alert(auxerr);
+    if(auxerr=="alert"){
+    }else{
+        j$('#myModalUpload').modal();
+    }
+}
+
+function confDelete(){
+j$('#myModal').modal();
+} 
+</script> 
+ 
+                    </apex:form>
+                </div>
+                <!-- end column -->
+                <apex:outputPanel layout="block" id="menuside">
+                <div id="app-side" class="col-md-3 col-md-pull-8">
+                    <c:menu_side_apc_ap_basic ApplicantInfo="{!applicantInfo}" />
+                </div>
+                </apex:outputPanel>
+            </div>
+            <!-- end row --> 
+        </apex:define>
+    </apex:composition>
+</apex:page>

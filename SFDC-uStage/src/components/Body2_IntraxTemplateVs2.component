@@ -1,0 +1,127 @@
+<!--  
+Component: Body2_IntraxTemplateVs2
+
+Description: This component comes right before the closing body tag on pages using IntraxTemplate_Vs2.
+
+-->
+
+<!-- This component comes right before the closing body tag on pages using IntraxTemplate_Vs2-->
+<apex:component layout="none">
+    
+    <!-- Colorbox module integration script -->    
+    <script>
+    var j$ = jQuery.noConflict();
+    var j$scaledWidth = j$(window).width()*0.8;
+    var j$scaledHeight = j$(window).width()*0.45;
+    j$(document).ready(function(){
+        //Examples of how to assign the Colorbox event to elements
+        j$(".youtube").colorbox({iframe:true, innerWidth:(j$scaledWidth), innerHeight:(j$scaledHeight)});
+    });
+    </script>
+    
+    <!-- Page help popups -->     
+    <script type="text/javascript">
+    function openPopup(url) {
+        newwindow=window.open(url,'name','height=400,width=400,resizable=yes,toolbar=no,status=no,scrollbars=yes,menubar=no,directories=no,location=no,dependant=no');
+        if (window.focus) {newwindow.focus()}
+        return false;
+    }
+    function ConfirmDelete(strLabel)
+    {
+        if(!confirm(strLabel))
+        {
+            return false;
+        }                      
+    }
+    </script>   
+    
+    <!-- Start new application button -->     
+    <script type="text/javascript">
+    var j$ = jQuery.noConflict(); 
+    j$(document).ready(function(){
+        j$( ".accordion" ).accordion({
+            collapsible: true,
+            autoHeight: false,
+            active:false
+        });
+    });
+    </script>
+    
+    <!-- Datepicker year extension -->     
+    <script type="text/javascript"> 
+    var j$ = jQuery.noConflict(); 
+    j$(document).ready(function() { 
+        var startYear=1900;
+        var endYear=2015;  
+        var optionsString='';  
+        if(startYear<endYear){   
+            for(i=startYear;i<endYear+1;i++){  
+                optionsString += "<option value=\""+i+"\">"+i+"</option>";  
+            }  
+            j$('#calYearPicker').html(optionsString); 
+        }  
+        //Hide the home page component;  
+        j$('#sidebarDiv #hideMyParent').parent().parent().hide();  
+    });  
+    </script>            
+    
+    <!-- Text field character counter -->      
+    <script>
+    var j$ = jQuery.noConflict();
+    function countChar(val, maxchars, elem) {
+        var len = val.value.length;
+        if (len > maxchars) {
+            val.value = val.value.substring(0, maxchars);
+        } else {
+            var elem1 = '#'+elem;
+            j$(elem1).text(maxchars - len);
+        }
+    };
+    </script>
+    
+    <!-- Field help text auto display -->     
+    <script>
+    var j$ = jQuery.noConflict(); 
+    j$('.inform').bind('focus blur', function () {
+        //         console.log('toggle');
+        j$(this).closest('.form-row').find('.dropt').toggleClass('active-help');
+    });
+    </script>   
+
+
+    <script>
+    //datepicker
+	    var j$ = jQuery.noConflict();
+	    j$(document).ready(function () {
+	        var tags = j$('.datepicker');
+	        for (var i = tags.length - 1; i >= 0; i--) {
+	            datetimepickerInitializer(tags[i]);
+	        };
+	    });
+    </script>    
+    
+    
+  <!--  http://www.woothemes.com/flexslider/ -->  
+     <script type="text/javascript">
+      var j$ = jQuery.noConflict();
+       j$(window).load(function(){
+       	  parameter = {
+	        animation: "slide",
+	        animationLoop: false,
+	        slideshow: true, 
+	        pauseOnAction: true,
+			pauseOnHover: true, 
+	        useCSS: true, 
+	        itemMargin: 15,
+	        touch: true, 
+	        pausePlay: false,
+	        directionNav: false,
+	        start: function(slider){
+	          j$('body').removeClass('loading');
+	        }
+	      }
+       parameter['itemWidth'] = 162;
+      j$('.flex-small .flexslider').flexslider(parameter);
+    });
+  </script>
+</apex:component>

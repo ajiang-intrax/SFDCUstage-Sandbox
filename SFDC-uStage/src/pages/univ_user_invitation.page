@@ -1,0 +1,106 @@
+<apex:page id="univ_user_invitation" docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardController="Communication__c"
+	extensions="User_Invitation_Controller" action="{!checkLogin}" standardStylesheets="false" showHeader="false"  title="University - User Invitation">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+    	<script>
+           function disableBtn(sender){
+               sender.disabled = true;
+           }
+           
+           function SendNewInvitation() {
+               document.getElementById('loadingImage').style.display = 'block';
+           }
+        </script>
+
+  
+      <c:block_header_igi_pt_application />
+      
+      <div class="row margin-b4">
+        <div class="col-md-9 center-block center-text">
+              <h1>Invite a Student</h1>
+              <p class="lead">Invite an individual student to apply to Intrax Global Internships. Enter the information below to send a brief invitation email containing a link to our online application. After registering for a MyIntrax account and starting the application process, the student's records will be linked to your institution so that we can provide any appropriate services and benefits. Using this invite feature will also allow us to build a historical view of your Intrax internship participants in order to help you better understand your students.
+              </p>
+       </div>
+        </div><!-- end row --> 
+      
+      <hr class="margin-b6"/>
+      <div class="row">
+        <div class="col-md-7 center-block">
+          	<apex:form styleClass="form-vertical ws-validate" id="webform">
+            	<apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+            
+            	<div class="row">
+            		<div class="col-sm-6">
+            			<div class="form-group">
+              				<label class="control-label">First Name</label>
+                			<apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!comInfo.Recipient_First_Name__c}" required="TRUE" id="firstName" />
+            			</div>
+            		</div><!--  end col -->
+            	<div class="col-sm-6">
+             		<div class="form-group">
+              			<label class="control-label">Last Name </label>
+                		<apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!comInfo.Recipient_Last_Name__c}" required="TRUE" id="lastName" />
+            		</div>
+            	</div><!--  end col -->
+            </div><!--  end row -->
+            
+            <div class="row">
+	            <div class="col-sm-12">
+	              	<div class="form-group">
+	              		<label class="control-label">Email</label>
+	                	<apex:inputField styleClass="form-control" value="{!comInfo.To_Address__c}" required="TRUE" id="email" />                
+            		</div>
+            	</div> <!--  end col -->
+            	
+            </div> <!--  end row -->
+            <!-- 
+            <div class="row">
+            <div class="col-sm-6">
+	              	<div class="form-group">
+	              		<label class="control-label">Program</label>
+	                	<apex:selectRadio layout="pageDirection" value="{!ipo_options}" id="ipo" required="false">
+                            <p>
+                                <apex:selectOptions value="{!ProgramOptions}" />
+                            </p>
+                        </apex:selectRadio>
+                        <apex:message for="ipo" styleClass="custom-error-radio" />              
+            		</div>
+            	</div>
+            </div> 
+            -->
+            <div class="row">
+            	<div class="col-sm-12">            	
+	            	<div class="form-group">
+	              		<label class="control-label">Message <span class="info">(Optional)</span></label>
+	                	<apex:inputField styleClass="form-control" value="{!comInfo.Message__c}" required="FALSE" id="message" onkeyup="countChar(this, 500, 'messageCount')" />
+	                	<div class="char-limit">
+                            <span class="char-count-label">Characters left:</span> <span
+                                id="messageCount" class="char-count">
+                                {!500-len(comInfo.Message__c) } </span>
+                        </div>                
+	            	</div>
+            	</div> <!--  end col -->
+            </div>
+            <div style="display: none;" class="feedback" id="loadingImage">
+                <i class="icon-spinner icon-spin icon-2x"></i> <span>Sending invitation</span>
+            </div>
+               
+            <div class="form-group">
+            	
+            	<apex:outputLink styleClass="btn btn-link btn-lg float"  value="/apex/univ_home" id="backlink"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+               	
+               	<apex:commandlink styleClass="btn btn-primary btn-lg" action="{!CreateCommunication}" onclick="SendNewInvitation();">
+                 	<apex:commandButton id="SendInvitation" value="Send invitation" onClick="disableBtn();" />
+             	</apex:commandlink>
+            </div>
+            
+          </apex:form>
+        </div>
+        <!-- end column -->
+        
+      </div>
+      <!-- end row --> 
+      
+    </apex:define>
+  </apex:composition>
+</apex:page>

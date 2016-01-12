@@ -1,0 +1,201 @@
+<apex:page id="Participant_PreApp_Program_Preferences" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+    
+    <!-- UI Blocker component for Background processing --> 
+    <c:BlockUI />
+    
+    <apex:composition template="IntraxTemplate_Vs1">
+        <apex:define name="body">
+            <div class="wrapper" id="Participant_PreApp_Program_Preferences">    
+                <apex:form id="form" >
+                
+                    <!-- Heading -->
+                    <div class="page-header clearfix">
+                        <h1>  
+                          <apex:outputText value="Intrax Global Internship Application" rendered="{! IF(applicantInfo.Intrax_Program__c == 'Internship', true, false)}"/>
+                          <apex:outputText value="Work and Travel Application" rendered="{! IF(applicantInfo.Intrax_Program__c == 'Work Travel' , true, false)}"/>
+                          <!--  <apex:outputText value=" - {!personInfo.First_Name__c} {!personInfo.Last_Name__c}" rendered="{!IsPartner}" />-->
+                         </h1>
+                       
+                        
+                        <!-- Back To Main Page Link -->
+                        <div class="back-to-main"><apex:outputLink id="BackToMain" value="/apex/Participant_preapp_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+                        </div>
+                       
+                       <!-- Section Header -->  
+                       <div class="section-header clearfix">
+                            <h2>Program Preferences</h2>
+                       </div> 
+                        
+                       <!-- Panel -->   
+                       <div class="white-box clearfix">   
+                            <div class="panel two_thirds"> 
+                            
+                            <apex:Messages styleClass="custom-error-pagelevel" rendered="{!customMessage = false}"/>
+                            <apex:Messages styleClass="errorMsg" style="list-style-type:none;" rendered="{!customMessage = true}"/>
+                            
+                   <apex:outputPanel layout="block" styleClass="form-row" rendered="{! applicantInfo.Intrax_Program_Options__c == 'Business Internship' || applicantInfo.Intrax_Program_Options__c == 'Hospitality Internship' }">
+                          <div class="form-label left ">Have you already secured an internship offer from a company?<span class="required">*</span></div>
+                                <div class="form-field">
+                                 <apex:selectRadio id="ServiceLevel_IGI" value="{!selectedServiceLevel}" required="true">
+                                  <apex:selectOptions value="{!listServiceLevel}"></apex:selectOptions>
+                                 </apex:selectRadio>
+                          </div>
+                  </apex:outputPanel> 
+                  <apex:outputPanel layout="block" styleClass="form-row" rendered="{! IF(applicantInfo.Intrax_Program__c == 'Work Travel', true, false)}">
+                      
+                      <div >How will you secure a position?<span class="required">*</span> 
+                       
+                         <apex:selectRadio id="ServiceLevel_WT" value="{!selectedServiceLevel}" style="width:900px;margin-top:8px;" layout="pageDirection" required="true">
+                          <!--<apex:selectOptions value="{!listServiceLevel}"></apex:selectOptions> -->
+                         
+                           <apex:selectOption itemValue="No" itemLabel="I plan to secure a position through an Intrax Hiring Event, in person or via Skype (“Intrax Premium”)"/>  <br/>
+                      
+                          <apex:selectOption itemValue="Yes" itemLabel="I have already secured my own position independently of Intrax (“Intrax Independent”)"/> 
+                         
+                         </apex:selectRadio>
+                     
+                        <apex:message for="ServiceLevel_WT" styleClass="custom-error-radio"/>
+                     </div>
+                </apex:outputPanel>
+                            
+                            <!-- Engagement Start -->
+                            <div class="form-row">
+                                <div class="form-label left ">Earliest Start Date<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField id="Engagement_Start" value="{!applicantInfo.Engagement_Start__c}" required="TRUE"/>
+                                </div>
+                            </div>
+                            
+                            <!-- Engagement End -->
+                            <div class="form-row">
+                                <div class="form-label left ">Latest End Date<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField id="Engagement_End" value="{!applicantInfo.Engagement_End__c}" required="TRUE"/>
+                                </div>
+                            </div>
+                            
+                            <!-- Requested Duration -->
+                            <apex:outputPanel layout="block" styleClass="form-row" rendered="{! IF(applicantInfo.Intrax_Program__c == 'Internship', true, false)}">
+                                <div class="form-label left ">Requested Duration<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField id="Program_Duration" value="{!applicantInfo.Program_Duration__c}" required="TRUE"/>
+                                </div>
+                            </apex:outputPanel>
+                            
+                            <!-- Do you have Flexible Dates? -->
+                            <apex:outputPanel layout="block" styleClass="form-row" rendered="{! IF(applicantInfo.Intrax_Program__c == 'Internship', true, false)}">
+                                <div class="form-label left ">Do you have flexible dates?<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:selectRadio id="Flexible_Dates" value="{!applicantInfo.Flexible_Dates__c}" required="TRUE">
+                                        <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                                        <apex:selectOption itemValue="No" itemLabel="No"/>
+                                    </apex:selectRadio>
+                                </div>
+                            </apex:outputPanel>
+                            
+                            <!-- What is your desired destination country?  -->
+                            <apex:pageBlock id="Block_Desired_Country" rendered="{!applicantInfo.Intrax_Program_Options__c == 'ProWorld Internship' || applicantInfo.Intrax_Program_Options__c == 'Business Internship'}" >
+                            <div class="form-row">
+                                <div class="form-label left ">What is your desired destination country?</div>
+                                <div class="form-field">
+                                    <apex:inputField id="Country_of_Interest" value="{!applicantInfo.Country_of_Interest__c}" required="FALSE"/>
+                                </div>
+                            </div>
+                            </apex:pageBlock>
+                            
+                            <!-- Desired location notes -->
+                            <div class="form-row">
+                                <div class="form-label left ">Desired location notes</div>
+                                <div class="form-field">
+                                    <apex:inputField id="Location_of_Interest" value="{!applicantInfo.Location_of_Interest__c}" required="FALSE"/>
+                                </div>
+                            </div>
+                            
+                            <apex:pageBlock id="Block_Project_Interest" rendered="{!applicantInfo.Intrax_Program_Options__c == 'ProWorld Internship'}" >
+                            <div class="form-row">
+                                <div class="form-label left ">Select project(s) of interest</div>
+                                <div class="form-field">
+                                    <apex:inputField id="Projects_of_Interest" value="{!applicantInfo.Projects_of_Interest__c}" required="FALSE"/>
+                                </div>
+                            </div>
+                            </apex:pageBlock>
+                            
+                            <apex:pageBlock id="Block_Functional_Areas" rendered="{!applicantInfo.Intrax_Program_Options__c == 'WEST' || applicantInfo.Intrax_Program_Options__c == 'Business Internship'}" >
+                            <div class="form-row">
+                                <div class="form-label left ">Select Functional Area(s)</div>
+                                <div class="form-field">
+                                    <apex:inputField id="Functional_Areas" value="{!applicantInfo.Functional_Areas__c}" required="FALSE"/>
+                                </div>
+                            </div>
+                            </apex:pageBlock>
+                            
+                            <apex:pageBlock id="Block_Position_Types" rendered="{!applicantInfo.Intrax_Program__c == 'Work Travel' || applicantInfo.Intrax_Program_Options__c == 'Hospitality Internship'}" >
+                            <div class="form-row">
+                                <div class="form-label left ">Select Position Type(s)</div>
+                                <div class="form-field">
+                                    <apex:inputField id="Position_Types" value="{!applicantInfo.Position_Types__c}" required="FALSE"/>
+                                </div>
+                            </div>
+                            </apex:pageBlock>
+                        
+                            <!-- Location 1st Choice -->
+                            <apex:outputPanel rendered="{! applicantInfo.Intrax_Program_Options__c == 'WEST'}" >
+                            <div class="form-row">
+                                <div class="form-label left ">Intrax Center First Choice</div>
+                                <div class="form-field">
+                                    <apex:inputField id="Location_Preference_1" value="{!applicantInfo.Location_Preference_1__c}" required="FALSE"/>
+                                </div>
+                            </div>
+                            
+                             <!-- Location 2nd Choice -->
+                            <div class="form-row">
+                                <div class="form-label left ">Intrax Center Second Choice</div>
+                                <div class="form-field">
+                                    <apex:inputField id="Location_Preference_2" value="{!applicantInfo.Location_Preference_2__c}" required="FALSE"/>
+                                </div>
+                            </div>
+                            
+                             <!-- Location 3rd Choice -->
+                            <div class="form-row">
+                                <div class="form-label left ">Intrax Center Third Choice</div>
+                                <div class="form-field">
+                                    <apex:inputField id="Location_Preference_3" value="{!applicantInfo.Location_Preference_3__c}" required="FALSE"/>
+                                </div>
+                            </div>
+                            </apex:outputPanel>
+                            <!-- Program Preferences Comments -->
+                            <div class="form-row">
+                                <div class="form-label left ">Program Preferences Comments</div>
+                                <div class="form-field">
+                                    <apex:inputField id="Location_Preference_Comment" value="{!applicantInfo.Program_Preference_Comment__c}" required="FALSE"/>
+                                </div>
+                            </div>
+                        
+                            <div class="form-row">
+                      <div class="form-link">
+                          <apex:outputLink id="BackLinkIGI" value="/apex/Participant_preApp_Program_Selection?id={!applicantInfo.Id}" rendered="{! IF(applicant_Info__c.Intrax_Program__c == 'Internship', true, false)}"><i class="icon-chevron-left"></i> <span>Back</span></apex:outputLink>
+                          <apex:outputLink id="BackLinkWT" value="/apex/Participant_preApp_Home?id={!applicantInfo.Id}" rendered="{! IF(applicant_Info__c.Intrax_Program__c == 'Work Travel', true, false)}"><i class="icon-chevron-left"></i> <span>Back</span></apex:outputLink>
+                        </div>
+                               
+                                <!-- Command Link for Save & Continue  -->      
+                                <div class="form-button">
+                                    <apex:commandlink id="SaveContinue" styleClass="next" action="{!PPvalidator}">
+                                        <apex:param name="nextPage" value="/apex/Participant_preApp_Biographical_Details"/>
+                                        <apex:param name="reDirectPage" value="true"/> 
+                                        <apex:commandButton value="Save & Continue" />
+                                       <!-- <apex:param name="pageId" value="001"/>-->
+                                        <i class="icon-chevron-right"></i>
+                                    </apex:commandlink>
+                                </div>    
+                            </div>  
+                        </div>
+                            
+                        <div class="panel one_third last aside">
+                          <!--   <c:Badge_Centers_Contact />     --> 
+                        </div>
+                    </div>
+                </apex:form>
+            </div>
+        </apex:define>
+    </apex:composition>
+</apex:page>

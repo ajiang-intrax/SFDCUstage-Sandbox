@@ -1,0 +1,35 @@
+<apex:page docType="html-5.0" StandardController="Applicant_Info__c" extensions="FlowTomadachiInfoController" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper" id="TomadachiHF_App">
+          <h1>Tomodachi Homestay Family Application</h1>
+          <div class="white-box clearfix">
+        <div class="flow two_thirds">
+                <flow:interview name="TMD_HF_App" buttonLocation="bottom" finishLocation="{!FinishPage}">
+                </flow:interview>
+              </div>
+        </div>
+      </div> 
+    </apex:define>
+  </apex:composition>
+</apex:page>
+
+<!-- <apex:page docType="html-5.0" standardStylesheets="true" showHeader="false">
+ <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div id="global-header">
+    <div id="global-header-logo">
+        <apex:outputLink value="{!$Site.Prefix}/AppEngine_SiteLoginPage" target="_self"><apex:image url="{!URLFOR($Resource.intrax_themes, '/intrax_themes/images/intrax-logo-white-small.png')}" alt="Intrax" title="Intrax"/></apex:outputLink></div>
+    </div>
+   
+      <div class="wrapper">
+     <h1>Tomodachi Homestay Family Application</h1>
+      <div class="white-box">
+  <flow:interview buttonLocation="bottom" Name="TMD_HF_App">
+  </flow:interview>
+  </div>
+  </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>
+-->

@@ -1,0 +1,224 @@
+<apex:page docType="html-5.0" title="Swimming Experience" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="false" showHeader="false" id="apc_ap_main_swimming_experience">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_apc_ap_application />
+       <div id="app-page" class="row">
+        <div id="app-focus" class="col-md-8 col-md-push-3">
+          <c:block_app_completion ApplicantInfo="{!applicantInfo}" userProfileName="{!userProfileName}"  />
+          <h1>Swimming Experience</h1>
+          <p class="lead">Many host families have pools or love water sports. Tell us about your swimming experience to help you match with the right family.</p>
+          <apex:form id="webform" styleClass="form-vertical ws-validate" >
+            <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+            
+            <div class="row">
+            <div class="col-sm-12">
+            <div class="form-group">
+              <label class="control-label">Can you swim?</label>
+                <apex:actionRegion >
+                  <apex:selectRadio styleClass="radio" value="{!applicantInfo.Swimming_Indicated__c}" id="swimmingindi" required="true">
+                    <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                    <apex:selectOption itemValue="No" itemLabel="No"/>
+                    <apex:actionSupport event="onclick" rerender="swimming_description" status="showswim"/>
+                  </apex:selectRadio>
+                </apex:actionRegion>
+                <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showswim"/>
+                <apex:message for="swimmingindi" styleClass="custom-error-radio" id="errormessswimming1"/>
+              </div>
+              </div>
+              </div><!--  end row -->
+              
+            <apex:pageBlock id="swimming_description">
+              <apex:outputPanel layout="block" rendered="{!applicantInfo.Swimming_Indicated__c == 'Yes'}" id="outputpanelswimming" >
+                
+                 <div class="row">
+                 <div class="col-sm-6">
+                <div class="form-group">
+                  <label class="control-label">How well do you swim?</label>
+                    <apex:inputField styleClass="form-control" value="{!applicantInfo.Swimming_Level__c}" required="TRUE" id="swimminglevel" />
+                  </div>
+                  </div>
+                   </div><!--  end row -->
+                
+                 <!-- 
+                 <div class="row">  
+                 <div class="col-sm-12">
+                <div class="form-group no-margin">
+                  <label class="control-label">Any additional information about your swimming abilities?</label>
+                    <apex:inputTextarea styleClass="form-control" id="swiminfo" value="{!applicantInfo.Swimming_Description__c}" required="FALSE" onkeyup="countChar(this, 510, 'swiminfoCount')" onfocus="countChar(this, 510, 'swiminfoCount')"/>
+                    <div class="char-limit bb"><span class="char-count-label">Characters left:</span> <span id="swiminfoCount" class="char-count">{!510-len(applicantInfo.Swimming_Description__c)}</span> </div>
+                    <apex:message for="swiminfo" styleClass="custom-error-text" id="errormessswiminfo"/>
+                  </div>
+                  </div>
+                   </div><!--  end row --
+                 -->
+                 
+                 <div class="row">  
+                 <div class="col-sm-12">
+                <div class="form-group">
+                  <label class="control-label">Do you have a lifeguard certification?</label>
+                     <!--<apex:actionRegion >-->
+                      <apex:selectRadio styleClass="radio" value="{!applicantInfo.Swimming_Lifeguard_Indicated__c}" id="certification" required="true" >
+                        <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                        <apex:selectOption itemValue="No" itemLabel="No"/>
+                        <!-- <apex:actionSupport event="onclick" rerender="Swimming_Document" status="showcertif"/>-->
+                      </apex:selectRadio>
+                    <!-- </apex:actionRegion> -->
+                    <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showcertif"/>
+                    <apex:message for="certification" styleClass="custom-error-radio" id="errormesscertification"/>
+                  </div>
+                  </div>
+                   </div><!--  end row -->
+               
+<!--  
+                <apex:pageBlock id="Swimming_Document">
+                  <apex:outputPanel layout="block" rendered="{!applicantInfo.Swimming_Lifeguard_Indicated__c == 'Yes'}" id="outputpanelSwimming" >
+                    <apex:outputPanel layout="block" rendered="{!applicantInfo.Swimming_Lifeguard_Indicated__c == 'Yes' && CheckSwimCert}" id="outputpanelupCert">
+                          <div class="row">
+                          <div class="col-sm-12">
+                          <apex:commandlink styleClass="btn btn-link vs2 btn-lg margin-r1" action="{!saveApplication}" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit">
+                            <i class="fa fa-plus"></i> <span>Upload Certification</span>
+                          </apex:commandlink>
+                          
+                            <i class="infobtn fa fa-question-circle" data-toggle="modal" data-target="#drivehelp"></i>
+                     
+                      <div id="drivehelp" class="modal vs1 fade in">
+                       <div class="modal-dialog modal-dialog-lg">
+                       <div class="modal-content">
+                       <a class="closebtn" data-dismiss="modal">
+                            <span class="fa-stack fa-lg ">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-times fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                       <div class="modal-body">
+                        <div class="row">
+                     <div class="col-lg-6"> 
+                     <h3 class="inline-block">Sample Document</h3>&nbsp;<a target="_blank" href="https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/documents/portals/apc/pt/app/lifeguard-certificate.jpg"><b>(See Full Size)</b></a>
+                     <div class="margin-t4 margin-b4">
+                     </div>
+                     <img src="https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/documents/portals/apc/pt/app/lifeguard-certificate.jpg"/></div>  
+                     
+                     <div class="col-lg-6">   
+                     <h3>Tips for Photographing Documents</h3>
+
+<p>If you do not have access to a scanner you can use a digital camera or smartphone camera to capture the required documents. Please note that the copy must be clear with all text being readable. Below are a few tips for achieving this.</p>
+  <ul>
+<li>Do not use the flash when copying documents, as that will wash them out.</li>
+<li>The best source of light is sunlight as it is bright enough to get a sharp, readable image.</li>
+<li>Use a dark background for the image. You can place a piece of black or gray poster board or paper below the documents when you photograph them if you don't have dark surface.</li>
+    <li>Keep the images square and centered in the photograph.</li>
+</ul>
+</div>
+</div>
+</div>
+</div> 
+</div> 
+</div> 
+                          
+                          </div>
+                   </div>
+                    </apex:outputPanel>
+                    
+                    <apex:outputPanel layout="block" rendered="{!IF(DocList.Size > 0, true, false)}">
+                      <apex:pageBlock id="Block_ListExperience">
+                        <div class="table-responsive">
+                          <apex:pageBlockTable styleClass="table vs2" value="{!DocList}" var="item">
+                            <apex:column headerValue="Document Name">
+                              <apex:commandLink action="{!load}" rerender="" target="_blank"> 
+                                <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                <apex:outputText value="{!item.Document_Name__c}"/>
+                              </apex:commandLink>
+                            </apex:column>
+                            <apex:column headerValue="Remove" >
+                              <div class="btn-toolbar no-margin">
+                                <apex:commandLink action="{!iWantMyJSValues}" styleClass="btn-lg" oncomplete="confDelete();" immediate="true" rerender=""> <i class="fa fa-trash-o"></i>
+                                  <apex:param name="docGuid" value="{!item.Document_GUID__c}" assignTo="{!docGuid}"/>
+                                </apex:commandLink>
+                              </div>
+                            </apex:column>
+                          </apex:pageBlockTable>
+                        </div>
+                      </apex:pageBlock>
+                    </apex:outputPanel>
+                    <apex:outputText value="{!disableFileUploadText}" rendered="{!disableFileUpload}"/> 
+                  </apex:outputPanel>
+                </apex:pageBlock>
+                -->
+                <!--  end swimming doc upload --> 
+                
+              </apex:outputPanel>
+            </apex:pageBlock>
+            <div class="row  margin-t2">
+              <div class="col-sm-12">
+                <apex:outputLink styleClass="btn btn-link btn-lg" value="/apex/apc_ap_main_experience?id={!applicantInfo.Id}" id="backlink"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                <apex:commandlink styleClass="btn btn-primary btn-lg" action="{!navigator}" id="nextlink" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                  <apex:param name="nextPage" value="/apex/apc_ap_main_driving_experience" />
+                  <apex:param name="docType" value="Drivers-License" assignTo="{!docType}"/>
+                  <apex:param name="reDirectPage" value="true" />
+                  <apex:commandButton value="Save & Continue" id="continuebutton"/>
+                  <apex:param name="pageId" value="019"/>
+                </apex:commandlink>
+              </div>
+            </div>
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                  <div class="modal-body">
+                    <p>Are you sure you want to remove this file?</p>
+                  </div>
+                  <div class="modal-footer">
+                    <apex:commandLink styleClass="btn btn-primary" action="{!deletefile}" immediate="true">
+                      <apex:param name="swimparam" value="true" assignTo="{!swimParam}" />
+                      <apex:commandButton value="Yes" id="yesbutton"/>
+                    </apex:commandLink>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--  end modal -->
+            
+            <div class="modal fade modal-widget" id="myModalUpload" tabindex="-1" role="dialog" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title">Upload Certification</h4>
+                  </div>
+                  <div class="modal-body">
+                    <iframe width="100%" height="400" frameborder="0" scrolling="no" src="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType={!$CurrentPage.parameters.docType}&retparam={!retParam}"></iframe>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--  end modal --> 
+            
+          </apex:form>
+        </div>
+        <!-- end column  -->
+        
+        <div id="app-side" class="col-md-3 col-md-pull-8">
+          <c:menu_side_apc_ap_basic ApplicantInfo="{!applicantInfo}" />
+        </div>
+        <!-- end column  --> 
+      </div>
+      <!-- end row --> 
+      <script>
+            var j$ = jQuery.noConflict();
+            
+            function confDelete(){
+                j$('#myModal').modal();
+            } 
+            
+            function popModal(){
+                var auxerr= j$('.custom-error-pagelevel').attr('role');
+                //alert(auxerr);
+                if(auxerr=="alert"){
+                }else{
+                    j$('#myModalUpload').modal();
+                }
+            } 
+            
+            </script> 
+    </apex:define>
+  </apex:composition>
+</apex:page>

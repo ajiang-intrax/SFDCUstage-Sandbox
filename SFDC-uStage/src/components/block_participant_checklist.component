@@ -1,0 +1,173 @@
+<apex:component id="block_participant_checklist" controller="User_Controller">
+    <!-- <apex:attribute name="engchecklist" description="Contains the EngagementId related to the last Accepted App" type="Engagement__c" required="false" default=""/> -->
+     <div class="block"> 
+       <div class="block-header"><h3>Program Requirements</h3></div>
+        
+         <div class="block-body">
+            <table>
+              <tr> <td style="width:10%">
+                  <apex:outputtext rendered="{!IF(engchecklist!=null && checkNotificationlist!=null && RenderTerms,true,false)}">
+                   <apex:outputtext rendered="{!IF( checkNotificationlist['Terms and Conditions']!=null && (checkNotificationlist['Terms and Conditions'] == 'Complete' || checkNotificationlist['Terms and Conditions'] == 'Confirmed'), true, false)}">
+                   <i class="icon-ok"></i> 
+                   </apex:outputtext>
+                   </apex:outputtext>
+                  </td>
+                   <td style="width:40%">   Terms and Conditions  </td>
+                   <td style="width:50%" class="dropt">  
+                        <i class="icon-question-sign"></i>
+                           <span>Once your application has been marked as Accepted, you will have the chance to review the program Terms and Conditions, to which you will need to agree to take part in the program.</span>
+                   </td>  
+                </tr>
+               <apex:outputtext rendered="{!IF(engchecklist!=null && engchecklist.Service_Level__c='Premium', true, false)}">
+                <tr>
+                   <td style="width:10%">
+                    <apex:outputtext rendered="{!IF(engchecklist!=null && checkNotificationlist!=null && RenderOffer,true,false)}">
+                    <apex:outputtext rendered="{!IF(checkNotificationlist['Offer Extended']!=null && (checkNotificationlist['Offer Extended'] == 'Complete' || checkNotificationlist['Offer Extended'] == 'Confirmed'), true, false)}">
+                   <i class="icon-ok"></i> </apex:outputtext>
+                  </apex:outputtext>
+                   </td>
+                   <td style="width:40%">  Job Placement Agreement  </td>
+                   <td style="width:50%" class="dropt">  
+                           <i class="icon-question-sign"></i>
+                           <span> 
+                               Once you have secured a job with a  Host Company (employer) and Intrax has proof of this offer, then this requirement will be marked as complete. This could require that you take action. Ask your Intrax representative in your home country if you have questions.
+                           </span>
+                   </td>  
+                 </tr>
+                </apex:outputtext>
+              <tr>
+                  <td style="width:10%">
+                   <apex:outputtext rendered="{!IF(engchecklist!=null && checkNotificationlist!=null && RenderOrient,true,false)}">
+                    <apex:outputtext rendered="{!IF(checkNotificationlist['Orientation']!=null && (checkNotificationlist['Orientation'] == 'Complete' || checkNotificationlist['Orientation'] == 'Confirmed'), true, false)}">
+                   <i class="icon-ok"></i> 
+                  </apex:outputtext>  
+                   </apex:outputtext> 
+                  </td>
+                   <td style="width:40%"> Orientation</td>
+                   <td style="width:50%" class="dropt">  
+               
+                           <i class="icon-question-sign"></i>
+                           <span>  	Once your application has been marked as Accepted, you will need to take the Orientation before a DS-2019 form can be issued to you.
+                           </span>
+                  </td>  
+                </tr>
+               <tr>
+                  <td style="width:10%"> 
+                    <apex:outputtext rendered="{!IF(engchecklist!=null && checkNotificationlist!=null && Rendervisa,true,false)}">
+                    <apex:outputtext rendered="{!IF(checkNotificationlist['Visa Support Letter']!=null && (checkNotificationlist['Visa Support Letter'] == 'Complete' || checkNotificationlist['Visa Support Letter'] == 'Confirmed'), true, false)}">
+                   <i class="icon-ok"></i> </apex:outputtext>
+                  </apex:outputtext>  
+                   </td>
+                   <td style="width:40%">Visa Support Letter </td>
+                   <td style="width:50%" class="dropt">  
+                         <i class="icon-question-sign"></i>
+                           <span> 
+                             	After your DS-2019 Form is issued, you will have access to this letter, which can help with visa interviews, your school, or even while in the U.S.
+                           </span>
+                    </td>  
+                </tr>
+                   <tr>
+                  <td style="width:10%"> 
+                    <apex:outputtext rendered="{!IF(engchecklist!=null && checkNotificationlist!=null && Rendervisaresult,true,false)}">
+                    <apex:outputtext rendered="{!IF(checkNotificationlist['Visa Result']!=null && (checkNotificationlist['Visa Result'] == 'Complete' || checkNotificationlist['Visa Result'] == 'Confirmed'), true, false)}">
+                   <i class="icon-ok"></i> </apex:outputtext>
+                  </apex:outputtext>  
+                   </td>
+                   <td style="width:40%">Visa Interview Result </td>
+                   <td style="width:50%" class="dropt">  
+                         <i class="icon-question-sign"></i>
+                           <span> 
+                             	After you complete your visa interview, you will need to inform us of the result.
+                           </span>
+                    </td>  
+                </tr>
+                
+                <tr>
+                  <td style="width:10%">
+                   <apex:outputtext rendered="{!IF(engchecklist!=null && checkNotificationlist!=null && Rendertravel,true,false)}">
+                   <apex:outputtext rendered="{!IF(checkNotificationlist['Travel Info Needed']!=null && ( checkNotificationlist['Travel Info Needed'] == 'Complete' || checkNotificationlist['Travel Info Needed'] == 'Confirmed'), true, false)}">
+                   <i class="icon-ok"></i> 
+                  </apex:outputtext>  
+                   </apex:outputtext> 
+                  </td>
+                   <td style="width:40%">Travel Information</td>
+                   <td style="width:50%" class="dropt">  
+                    
+                           <i class="icon-question-sign"></i>
+                           <span> 
+                            After your DS-2019 Form is issued, we will need to know your confirmed flight and travel information to preserve your placement
+                           </span>
+                   </td>  
+                </tr>
+                <tr>
+                  <td style="width:10%"> 
+                  <apex:outputtext rendered="{!IF(engchecklist!=null && checkNotificationlist!=null && Rendercheckin,true,false)}">
+                  <apex:outputtext rendered="{!IF(checkNotificationlist['Check-In Assessment']!=null && ( checkNotificationlist['Check-In Assessment'] == 'Complete' || checkNotificationlist['Check-In Assessment'] == 'Confirmed'), true, false)}">
+                   <i class="icon-ok"></i> </apex:outputtext>
+                  </apex:outputtext>  
+                  </td>
+                   <td style="width:40%">Check-In</td>
+                   <td style="width:50%" class="dropt">  
+                 
+                           <i class="icon-question-sign"></i>
+                           <span> 
+                            Complete within 3 days of Arriving to the U.S. to avoid losing good standing. This will show 14 days prior to your SEVIS/ program start date.
+                             This is a Department of State requirement.
+                           </span>
+                  </td>  
+                </tr> 
+              </table>
+             <apex:outputtext rendered="{!IF(engchecklist!=null && engchecklist.Status__c='On Program', false, true)}">
+              <div class="form-button" >
+	               <apex:outputLink value="/apex/iwt_notification_history?eid={!engCheckList.ID}"><span align="center">Notification History</span></apex:outputLink>
+	             </div>  
+            </apex:outputtext>        
+          </div>
+                 
+       <apex:outputtext rendered="{!IF(engchecklist!=null && engchecklist.Status__c='On Program', true, false)}">   
+         <div class="block-header"><h3>Monthly Contact</h3></div>
+        
+          <div class="block-body">
+            <table>
+              <tr>
+                  <td style="width:20%"> Last Confirmed </td>
+                  <td style="width:30%">  
+                     <apex:outputtext rendered="{!IF(c_date!=null , true, false)}"> 
+                        <apex:outputText value="{0, date, MM'/'dd'/'yyyy}">                                            
+                           <apex:param value="{!c_date}"/>  
+                        </apex:outputText>
+                      </apex:outputtext>
+                   </td>
+                   <td style="width:50%" class="dropt">  
+                  
+                           <i class="icon-question-sign"></i>
+                           <span>Completed monthly contacts must be confirmed by Intrax. Once confirmed, this date will be updated and we will estimate when the next one is due.
+                           This is a Department of State requirement.</span>
+                    </td>  
+                </tr>
+                  <tr>
+                  <td style="width:20%"> Next Due </td>
+                   <td style="width:30%"> 
+                    <apex:outputtext rendered="{!IF(due_date!=null , true, false)}"> 
+                        <apex:outputText value="{0, date, MM'/'dd'/'yyyy}">                                            
+                           <apex:param value="{!due_date}"/>  
+                        </apex:outputText>
+                      </apex:outputtext>  
+                      
+                   </td>
+                   <td style="width:50%" class="dropt">  
+                   
+                           <i class="icon-question-sign"></i>
+                           <span>This is an estimated due date. Your first monthly contact is due 30 days after your successful Check-In. Additional monthly contacts are due every month. Complete when due during your program to avoid losing good standing.
+                                  This is a Department of State requirement.</span>
+                   </td>  
+                  </tr>  
+                </table>
+                <div class="form-button" >
+                    <apex:outputLink value="/apex/iwt_notification_history?eid={!engCheckList.ID}"><span align="center">Notification History</span></apex:outputLink>
+	             </div>   
+                </div>
+            </apex:outputtext> 
+        
+    </div> 
+</apex:component>

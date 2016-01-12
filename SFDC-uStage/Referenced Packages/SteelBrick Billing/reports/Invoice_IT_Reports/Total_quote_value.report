@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>FK_$Account.TotalQuoteValue__c</field>
+    </columns>
+    <description>Total quote value</description>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>FK_NAME</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Total quote value</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$Quote__c@Quote__c.Account__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <timeFrameFilter>
+        <dateColumn>Quote__c.Start_Date__c</dateColumn>
+        <endDate>2011-12-26</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2011-06-07</startDate>
+    </timeFrameFilter>
+</Report>

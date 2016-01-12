@@ -1,0 +1,83 @@
+<apex:component controller="myApplicationsController">
+	<h3 class="badge-title">Your Applications 
+		<apex:outputLink value="/apex/your_applications?isPartner=false" styleclass="badge-view-all"><i class="icon-chevron-right"></i> View All</apex:outputLink>
+	</h3>	
+    <div class="badge-content">
+     	<apex:form >
+     		
+       		<apex:outputLabel rendered="{!IF(applicantInfo.Size > 0, false, true)}"><span class="no-records">No record(s) to display.</span></apex:outputLabel>
+       	   
+	     	 
+	     	<apex:repeat value="{!applicantInfo}" var="item">
+	     		<p> <strong><apex:outputText value="{!item.Name}" /> </strong> <br/> 	
+                    <apex:outPutText value="Status: {!item.Application_Stage__c}" /><br/>
+	     		
+	     		<!-- These are the same links we use in appEngine _Home, but adapted to the needs of these application -->
+	     		
+	     		<apex:commandLink styleClass="inline-link" action="{!navigator}" rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Basic', true, false)}">
+						<apex:param name="nextPage" value="/ayusa_preapp_home"/> 
+						<apex:param name="Id" value="{!item.Id}" />
+						<apex:commandButton value="Continue" />			
+				</apex:commandLink>
+				
+				<apex:commandLink styleClass="inline-link" action="{!navigator}" rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Participant' && NOT(item.Application_Stage__c == 'Working') && item.Application_Level__c == 'Basic', true, false)}">
+						<apex:param name="nextPage" value="/ayusa_app_home"/> 
+						<apex:param name="Id" value="{!item.Id}" />
+						<apex:commandButton value="Continue" />			
+				</apex:commandLink>				
+				
+				<apex:commandLink styleClass="inline-link" action="{!navigator}" rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Main', true, false)}">
+						<apex:param name="nextPage" value="/ayusa_app_home"/> 
+						<apex:param name="Id" value="{!item.Id}" />
+						<apex:commandButton value="Continue" />			
+				</apex:commandLink>
+				
+				<apex:commandLink styleClass="inline-link" action="{!navigator}" rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Basic', true, false)}">
+						<apex:param name="nextPage" value="/ayusa_preapp_summary"/> 
+						<apex:param name="Id" value="{!item.Id}" />
+						<apex:commandButton value="View" />			
+				</apex:commandLink>
+				
+				<apex:commandLink styleClass="inline-link" action="{!navigator}" rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Participant' && NOT(item.Application_Stage__c == 'Working') && item.Application_Level__c == 'Basic', true, false)}">
+						<apex:param name="nextPage" value="/ayusa_preapp_summary"/> 
+						<apex:param name="Id" value="{!item.Id}" />
+						<apex:commandButton value="View" />			
+				</apex:commandLink>				
+				
+				<apex:commandLink styleClass="inline-link" action="{!navigator}" rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Main', true, false)}">
+						<apex:param name="nextPage" value="/ayusa_main_submitted_view"/> 
+						<apex:param name="Id" value="{!item.Id}" />
+						<apex:commandButton value="View" />			
+				</apex:commandLink>
+				
+				<apex:commandLink styleClass="inline-link" action="{!navigator}" rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Participant' && NOT(item.Application_Stage__c == 'Working') && item.Application_Level__c == 'Main', true, false)}">
+						<apex:param name="nextPage" value="/ayusa_main_submitted_view"/> 
+						<apex:param name="Id" value="{!item.Id}" />
+						<apex:commandButton value="View" />			
+				</apex:commandLink>
+              
+                <apex:commandLink styleClass="inline-link" action="{!navigator}" rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Host Family' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Main', true, false)}">
+						<apex:param name="nextPage" value="/ayusa_hf_home"/> 
+						<apex:param name="Id" value="{!item.Id}" />
+						<apex:commandButton value="Continue" />			
+				</apex:commandLink>
+              	
+              	<apex:commandLink styleClass="inline-link" action="{!navigator}" rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Host Family' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Main', true, false)}">
+						<apex:param name="nextPage" value="/ayusa_hf_submitted_view"/> 
+						<apex:param name="Id" value="{!item.Id}&view" />
+						<apex:commandButton value="Continue" />			
+				</apex:commandLink>
+				
+				<apex:commandLink styleClass="inline-link" action="{!navigator}" rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Host Family' &&  NOT(item.Application_Stage__c == 'Working') && item.Application_Level__c == 'Main', true, false)}">
+						<apex:param name="nextPage" value="/ayusa_hf_submitted_view"/> 
+						<apex:param name="Id" value="{!item.Id}&view" />
+						<apex:commandButton value="View" />			
+				</apex:commandLink>
+				</p>             
+								
+	     	</apex:repeat>
+	     	
+	     	 
+     	</apex:form> 
+    </div> 
+</apex:component>

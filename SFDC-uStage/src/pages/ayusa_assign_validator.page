@@ -1,0 +1,90 @@
+<!-- 
+    Purpose         :   Ranking Match.
+                
+    Created Date    :   06/06/2012
+    
+    Current Version :   v1.0
+    
+    Revision Log    :   V_1.1 Created
+ -->
+<apex:page standardController="Match__c" extensions="AyusaAssignValidatorController" id="AyusaAssignValidator" action="{!FetchValidators}">
+<div class="wrapper">
+<!--MAINT 344. Added this after Summer 14 release -->
+<apex:includeScript VALUE="https://code.jquery.com/jquery-1.11.0.min.js"/>
+<script>   
+   
+  
+ function getSelectedContact()
+        {
+           var $radio = $('input[name=group1]:checked');
+            var updateDay = $radio.val();
+            var selected = $radio.attr('id');
+           
+           
+              
+             afAssign(selected);
+
+        }
+
+
+  
+  
+
+</script>
+    <!-- Form -->
+     
+    <apex:form >
+        
+        <apex:pageBlock >
+            <apex:pageMessages id="validationMsg" />
+            
+         <apex:pageBlockSection columns="1" title="Assigned Validator" collapsible="false" id="pbs1" rendered="{!if(match.Validator__c!=null,true,false)}">
+         <apex:outputText value="{!match.validator__r.name}"  />
+            </apex:pageBlockSection>
+         
+             <apex:pageBlockSection columns="1" title="Choose Validator" collapsible="false" id="pbs">
+                <apex:actionStatus startText="Please Wait....." startStyle="font-weight: bold;color: green;" id="loadingMsg"/>
+                
+                <apex:pageBlockTable value="{!lstGeoMatchWrapper}" var="item" rendered="{!IF(lstGeoMatchWrapper.Size > 0, true, false)}">
+                    
+                    <apex:column >    
+                                  
+                        <input type="radio" name="group1" id="{!item.ValidatorId}" value="{item.SelectedValidator}"/>
+                      
+                    </apex:column>
+                   
+                    
+               <apex:column >
+                <apex:facet name="header">
+                 ValidatorName
+              </apex:facet>
+                 <apex:outputtext value="{!item.strValidatorName}" >
+                 </apex:outputtext>
+                 </apex:column>
+              <apex:column >
+                    <apex:facet name="header">
+                 DistanceInMiles
+              </apex:facet>
+                 <apex:outputtext value="{!item.DistanceInMiles}" >
+                 </apex:outputtext>
+                 </apex:column>
+                   
+                              
+                   
+              
+                </apex:pageBlockTable>
+                
+             </apex:pageBlockSection>
+        </apex:pageBlock>
+        
+        <apex:commandButton onclick="getSelectedContact();"  value="Assign" id="btn3"  onComplete="Window.close();">
+        </apex:commandButton>
+        <apex:commandButton id="cancel" value="{!$Label.site.cancel}" action="{!Cancel}" immediate="true"/>
+         
+<apex:actionFunction name="afAssign" action="{!Assign}" rerender="pbs">
+    <apex:param name="selected" value="" assignTo="{!selected}"/>
+    
+</apex:actionFunction>
+    </apex:form>
+</div>
+</apex:page>

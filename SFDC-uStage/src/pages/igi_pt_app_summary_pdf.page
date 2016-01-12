@@ -1,0 +1,105 @@
+<apex:page id="igi_pt_app_summary" docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardController="Applicant_Info__c"
+	extensions="AppEngine_Controller" action="{!checkLogin}"
+	standardStylesheets="false" showHeader="false"  title="Application Summary"
+	renderAs="pdf">
+<head>
+<style type="text/css" media="print">
+
+@page { size: portrait; margin: 3cm 1cm 4cm 1cm;  
+
+@top-left {
+content: element(header);
+width:2.5cm;
+}
+
+@top-right {
+content: "Internship Application Summary | Page " counter(page) " of " counter(pages);
+vertical-align:top;
+line-height:1;
+font-weight: lighter;
+font-size:8pt;
+font-family: Dialog, Arial Unicode MS;
+font-size:7pt;
+}
+@bottom-center {
+content: element(footer);
+}
+}
+div.master { display: block; position: running(header); }
+div.footer { display: block; position: running(footer); }
+html,
+body { margin: 0; padding: 0; font-family: Dialog, Arial Unicode MS; font-size: 8pt; line-height: 12pt; }
+h1 { font-size: 13pt; margin: 0 0 20pt 0; }
+h2,
+h3 { margin: 0 0 20pt 0; }
+h4,
+h5,
+h6 { margin: 0; }
+p { margin: 0 0 8pt 0; }
+strong { font-weight: bold; }
+img { display: block; }
+table { width: 100%; border: solid 1px #ccc; border-collapse: collapse; }
+td,
+th { vertical-align: top; text-align: left; border-spacing: 0; padding: 8pt; border-top: solid 1px #ccc; page-break-inside: avoid; }
+tr { page-break-inside: avoid; }
+th { vertical-align: bottom; border: none; }
+td.divider, th.divider{padding-left:12pt; border-left:3px solid #ccc;}
+table.noborder td { border: none; padding: 4pt 8pt 4pt 0; }
+table.nopadding td { padding: 0; }
+table#boilerplate { }
+table#logo { }
+table#logo td { vertical-align: top; }
+.callout.box { padding: 20pt; border: #ccc solid 1pt; margin: 20pt 0; page-break-inside: avoid; }
+.checkbox { width: 10pt; height: 10pt; border: 2pt #ccc solid; margin: 0 auto; }
+.pull-left { float: left; }
+.pull-right { float: right; }
+.margin-b { margin-bottom: 20pt; }
+.clearfix:after { visibility: hidden; content: "."; display: block; width: 1px; height: 1px; clear: both; }
+.no-pgbr-in { page-break-inside: avoid; }
+.pgbr-bf{page-break-before: always;}
+.doctitle { font-size: 11pt; line-height: 1; font-weight: bold; }
+
+.form-vertical{}
+.form-vertical .row{}
+.form-vertical .row:after{content:"."; width:1px; height:1px; display:block; clear:both; visibility:hidden; }
+.form-vertical .col-sm-6{width:50%; float:left; box-sizing:border-box; -webkit-box-sizing:border-box;}
+.form-vertical .form-group{ padding-left:10pt; margin-bottom:8pt; page-break-inside:avoid; }
+.form-vertical  .control-label{ font-weight:bold; display:block;} 
+.form-vertical  .form-control{display:block; }
+.form-vertical .col-sm-6 .control-label{ width:50%; max-width:50%; display:block; float:left;} 
+.form-vertical .col-sm-6 .form-control{ margin-left:10pt; }
+.form-vertical .section-title{ background:#d5d5d5; padding:10pt;  font-weight:bold; margin:20pt 0 20pt 0; font-size:10pt; border-bottom:#ccc solid 1pt;}
+.info, .popover-html{display:none;}
+.form-vertical .section-title.sec,
+.form-vertical .panel-title a{background:none; margin:10pt 0 10pt 10pt; margin-top:0; padding:10pt 0 10pt 0; border-bottom:#ccc solid 1pt; color:#000; display:block; font-weight:normal; text-decoration:none; font-size:10pt;}
+.form-vertical .panel-group .panel:first-child .panel-title a{padding-top:0;}
+.form-vertical .panel-group .panel:first-child{page-break-before:avoid;}
+</style>
+
+	</head>
+<body>
+	<div class="master">
+		 <table class="noborder nopadding" id="logo">
+		 <tr>
+		 <td>
+		 <apex:image width="100%" url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/pdf/pdf-logo-intrax.gif')}"
+				alt="Intrax" title="Intrax" />
+		 </td>
+		 </tr>	
+		</table>			
+		</div>
+
+    <div class="content">
+    <h1>Internship Application Summary</h1> 
+        <apex:form styleClass="form-vertical ws-validate" id="webform">
+        	<c:block_content_summary_pt_igi applicantInfo="{!applicantInfo}" personInfo="{!personInfo}" educationMap="{!educationMap}" 
+        									experienceMap="{!experienceMap}" emergencyMap="{!emergencyMap}" user="{!user}" positionInfo="{!positionInfo}" positionInfoSecond="{!positionInfoSecond}"
+        									experienceMapLast="{!experienceMapLast}" emergencyMapLast="{!emergencyMapLast}" educationMapLast="{!educationMapLast}"/>
+        </apex:form>
+    </div>
+
+</body>
+      	
+
+
+</apex:page>

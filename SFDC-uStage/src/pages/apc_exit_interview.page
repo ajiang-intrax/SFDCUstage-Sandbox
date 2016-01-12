@@ -1,0 +1,23 @@
+<apex:page docType="html-5.0" title="Exit Interview" id="apc_exit_interview" applyBodyTag="false" applyHtmlTag="false" standardController="Match__c" extensions="FlowMatchController" standardStylesheets="false" showHeader="false">
+ <apex:composition template="intrax_visual_work_flows_vs2">
+    <apex:define name="body">
+       
+         <div id="apc_pt_checkin" class="standalone"> 
+          <div class="center-text margin-b2"><apex:image styleClass="center-block" url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/logos/medium-logo-aupaircare.png')}"/></div>
+        <h1 class="center-text">Exit Interview</h1>
+        <apex:messages />
+          
+          <flow:interview buttonLocation="bottom" name="APC_Exit_Interview_by_AD" finishLocation="{!FinishPageAPCMatch}" rendered="{!ProfileName != NULL && ProfileName == 'APC AD PC'}">
+            <apex:param name="MatchId" value="{!match.id}"/>
+            <apex:param name="ProfileName" value="{!ProfileName}"/> 
+            </flow:interview>
+            
+            <flow:interview buttonLocation="bottom" name="APC_Exit_Interview_by_RM" finishLocation="{!FinishPageAPCMatch}" rendered="{!ProfileName != NULL && ProfileName == 'APC RM PC'}">
+            <apex:param name="MatchId" value="{!match.id}"/>
+            <apex:param name="ProfileName" value="{!ProfileName}"/> 
+            </flow:interview>
+          
+      </div>
+    </apex:define>
+  </apex:composition> 
+</apex:page>

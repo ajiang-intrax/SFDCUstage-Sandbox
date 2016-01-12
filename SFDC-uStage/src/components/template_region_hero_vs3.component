@@ -1,0 +1,147 @@
+<apex:component layout="none" id="heroComponent" allowDML="true">
+<!--  variables for header images -->
+<apex:variable var="ptr_portal" value="true" rendered="{!$Site.SiteId == '0DMa0000000TOEA'}"/> 
+<!--  variables for generic page header images -->
+<apex:variable var="your_applications" value="true" rendered="{!$Site.Name == 'AuPairCare' && CONTAINS($CurrentPage.Name,'your_applications') }"/>
+<apex:variable var="settings" value="true" rendered="{!$Site.Name == 'AuPairCare' && CONTAINS($CurrentPage.Name,'account_') }"/>
+<apex:variable var="resource" value="true" rendered="{!$Site.Name == 'AuPairCare' && CONTAINS($CurrentPage.Name,'resource_') }"/>
+<!--  variables for APC HF header images -->
+<apex:variable var="aupaircare" value="true" rendered="{!$Site.Name == 'AuPairCare' && $CurrentPage.Name !='Exception'}"/>
+<apex:variable var="apc_hf_app" value="true" rendered="{!$Site.Name == 'AuPairCare' && CONTAINS($CurrentPage.Name,'apc_hf_app') }"/>
+<apex:variable var="apc_hf_search" value="true" rendered="{!$Site.Name == 'AuPairCare' && CONTAINS($CurrentPage.Name,'apc_hf_search_au_pairs') }"/>
+<apex:variable var="apc_hf_ap_profile" value="true" rendered="{!$Site.Name == 'AuPairCare' && CONTAINS($CurrentPage.Name,'apc_hf_au_pair_profile') }"/>
+<apex:variable var="apc_resources" value="true" rendered="{!$Site.Name == 'AuPairCare' && $CurrentPage.Name =='apc_resources' }"/>
+<apex:variable var="apc_hf_inbox" value="true" rendered="{!$Site.Name == 'AuPairCare' && $CurrentPage.Name =='message_center' }"/>
+<apex:variable var="apc_hf_home" value="true" rendered="{!$Site.Name == 'AuPairCare' && $CurrentPage.Name =='apc_hf_home' }"/>
+<apex:variable var="apc_hf_profile" value="true" rendered="{!$Site.Name == 'AuPairCare' && $CurrentPage.Name =='apc_hf_profile' }"/>
+<apex:variable var="apc_hf_current_au_pairs" value="true" rendered="{!$Site.Name == 'AuPairCare' && $CurrentPage.Name =='apc_hf_current_au_pairs' }"/>
+<apex:variable var="apc_hf_interviews" value="true" rendered="{!$Site.Name == 'AuPairCare' && $CurrentPage.Name =='apc_hf_interviews' }"/>
+<apex:variable var="apc_hf_contact" value="true" rendered="{!$Site.Name == 'AuPairCare' && $CurrentPage.Name =='apc_hf_contact' }"/>
+<apex:variable var="apc_hf_match" value="true" rendered="{!$Site.Name == 'AuPairCare' && CONTAINS($CurrentPage.Name,'apc_hf_match') }"/>  
+<!--  variables for APC AP header images -->
+<apex:variable var="apc_hf_au_pair_profile" value="true" rendered="{!$Site.Name == 'AuPairCare' && CONTAINS($CurrentPage.Name,'apc_hf_au_pair_profile') }"/>
+<apex:variable var="apc_ap_basic_app" value="true" rendered="{!$Site.Name == 'AuPairCare' && CONTAINS($CurrentPage.Name,'apc_ap_basic') }"/>
+<apex:variable var="apc_ap_main_app" value="true" rendered="{!$Site.Name == 'AuPairCare' && CONTAINS($CurrentPage.Name,'apc_ap_main') }"/>
+<apex:variable var="apc_ap_home" value="true" rendered="{!$Site.Name == 'AuPairCare' && CONTAINS($CurrentPage.Name,'apc_ap_home') }"/>
+<apex:variable var="apc_ap_contact" value="true" rendered="{!$Site.Name == 'AuPairCare' && CONTAINS($CurrentPage.Name,'apc_ap_contact') }"/>
+<apex:variable var="apc_ap_interviews" value="true" rendered="{!$Site.Name == 'AuPairCare' && CONTAINS($CurrentPage.Name,'apc_ap_interviews') }"/>
+<apex:variable var="apc_ap_community" value="true" rendered="{!$Site.Name == 'AuPairCare' && CONTAINS($CurrentPage.Name,'apc_ap_community') }"/>
+<apex:variable var="apc_resources" value="true" rendered="{!$Site.Name == 'AuPairCare' && CONTAINS($CurrentPage.Name,'apc_resources') }"/>
+<apex:variable var="apc_ap_flight_booking" value="true" rendered="{!$Site.Name == 'AuPairCare' && CONTAINS($CurrentPage.Name,'apc_ap_flight_booking') }"/>
+<apex:variable var="apc_ap_travel_payment" value="true" rendered="{!$Site.Name == 'AuPairCare' && CONTAINS($CurrentPage.Name,'apc_ap_travel_payment') }"/>
+<apex:variable var="apc_ap_travel_payment_confirmation" value="true" rendered="{!$Site.Name == 'AuPairCare' && CONTAINS($CurrentPage.Name,'apc_ap_travel_payment_confirmation') }"/>
+<apex:variable var="apc_ap_match_request" value="true" rendered="{!$Site.Name == 'AuPairCare' && CONTAINS($CurrentPage.Name,'apc_ap_match_request') }"/>
+
+
+<apex:variable var="exception" value="true" rendered="{!$Site.Name == 'AuPairCare' && CONTAINS($CurrentPage.Name,'Exception') }"/>
+
+ 
+<apex:outputText rendered="{!NOT(ISPICKVAL($User.UserType,'Guest'))}">
+<style>
+.customer-community .hero-area {
+	height: 380px;
+	background: #000 no-repeat 50% 0;
+}
+
+<apex:outputText rendered="{!ptr_portal == 'true'}"> .pr-portal #branding-zone {
+background:  url("/globalpartners/resource/1421279900000/intrax_portal_images/intrax_portal_images/company/headers/narrow-1.jpg") no-repeat 50% 0;
+height: 280px;
+}
+</apex:outputText> 
+
+<apex:outputText rendered="{!aupaircare == 'true'}"> .hero-area {
+background-image:  url("/aupaircare/resource/intrax_portal_images/intrax_portal_images/apc/headers/narrow-3.jpg") !important;
+}
+</apex:outputText> 
+
+<apex:outputText rendered="{!settings == 'true'}"> .hero-area {
+background-image:  url("/aupaircare/resource/intrax_portal_images/intrax_portal_images/apc/headers/narrow-3.jpg") !important;
+}
+</apex:outputText> 
+<apex:outputText rendered="{!your_applications == 'true'}"> .hero-area {
+background-image:  url("/aupaircare/resource/intrax_portal_images/intrax_portal_images/apc/headers/narrow-3.jpg") !important;
+}
+</apex:outputText> <apex:outputText rendered="{!apc_hf_app == 'true'}"> .hero-area {
+background-image:  url("/aupaircare/resource/intrax_portal_images/intrax_portal_images/apc/headers/narrow-5.jpg") !important;
+}
+</apex:outputText> <apex:outputText rendered="{!apc_hf_match == 'true'}"> .hero-area {
+background-image:  url("/aupaircare/resource/intrax_portal_images/intrax_portal_images/apc/headers/narrow-3.jpg") !important;
+}
+</apex:outputText> <apex:outputText rendered="{!apc_hf_search == 'true'}"> .hero-area {
+background-image:  url("/aupaircare/resource/intrax_portal_images/intrax_portal_images/apc/headers/narrow-3.jpg") !important;
+}
+</apex:outputText> <apex:outputText rendered="{!apc_hf_ap_profile == 'true'}"> .hero-area {
+background-image:  url("/aupaircare/resource/intrax_portal_images/intrax_portal_images/apc/headers/narrow-3.jpg") !important;
+}
+</apex:outputText> <apex:outputText rendered="{!apc_hf_home == 'true'}"> .hero-area {
+background-image:  url("/aupaircare/resource/intrax_portal_images/intrax_portal_images/apc/headers/narrow-3.jpg") !important;
+}
+</apex:outputText> <apex:outputText rendered="{!apc_resources == 'true'}"> .hero-area {
+background-image:  url("/aupaircare/resource/intrax_portal_images/intrax_portal_images/apc/headers/narrow-3.jpg") !important;
+}
+</apex:outputText> <apex:outputText rendered="{!apc_hf_contact == 'true'}"> .hero-area {
+background-image:  url("/aupaircare/resource/intrax_portal_images/intrax_portal_images/apc/headers/narrow-3.jpg") !important;
+}
+</apex:outputText> <apex:outputText rendered="{!apc_hf_inbox == 'true'}"> .hero-area {
+background-image:  url("/aupaircare/resource/intrax_portal_images/intrax_portal_images/apc/headers/narrow-3.jpg") !important;
+}
+</apex:outputText> <apex:outputText rendered="{!apc_hf_profile == 'true'}"> .hero-area {
+background-image:  url("/aupaircare/resource/intrax_portal_images/intrax_portal_images/apc/headers/narrow-3.jpg") !important;
+}
+</apex:outputText> <apex:outputText rendered="{!apc_hf_current_au_pairs == 'true'}"> .hero-area {
+background-image:  url("/aupaircare/resource/intrax_portal_images/intrax_portal_images/apc/headers/narrow-3.jpg") !important;
+}
+</apex:outputText> <apex:outputText rendered="{!apc_hf_interviews == 'true'}"> .hero-area {
+background-image:  url("/aupaircare/resource/intrax_portal_images/intrax_portal_images/apc/headers/narrow-3.jpg") !important;
+}
+</apex:outputText> <apex:outputText rendered="{!apc_ap_basic_app == 'true'}"> .hero-area {
+background-image:  url("/aupaircare/resource/intrax_portal_images/intrax_portal_images/apc/headers/narrow-4.jpg") !important;
+}
+</apex:outputText> <apex:outputText rendered="{!apc_ap_main_app == 'true'}"> .hero-area {
+background-image:  url("/aupaircare/resource/intrax_portal_images/intrax_portal_images/apc/headers/narrow-4.jpg") !important;
+}
+</apex:outputText> <apex:outputText rendered="{!apc_ap_home == 'true'}"> .hero-area {
+background-image:  url("/aupaircare/resource/intrax_portal_images/intrax_portal_images/apc/headers/narrow-3.jpg") !important;
+}
+</apex:outputText> <apex:outputText rendered="{!apc_ap_interviews == 'true'}"> .hero-area {
+background-image:  url("/aupaircare/resource/intrax_portal_images/intrax_portal_images/apc/headers/narrow-3.jpg") !important;
+}
+</apex:outputText> <apex:outputText rendered="{!apc_ap_community == 'true'}"> .hero-area {
+background-image:  url("/aupaircare/resource/intrax_portal_images/intrax_portal_images/apc/headers/narrow-3.jpg") !important;
+}
+</apex:outputText> <apex:outputText rendered="{!apc_ap_match_request == 'true'}"> .hero-area {
+background-image:  url("/aupaircare/resource/intrax_portal_images/intrax_portal_images/apc/headers/narrow-3.jpg") !important;
+}
+</apex:outputText> <apex:outputText rendered="{!apc_ap_contact == 'true'}"> .hero-area {
+background-image:  url("/aupaircare/resource/intrax_portal_images/intrax_portal_images/apc/headers/narrow-3.jpg") !important;
+}
+</apex:outputText> <apex:outputText rendered="{!apc_resources == 'true'}"> .hero-area {
+background-image:  url("/aupaircare/resource/intrax_portal_images/intrax_portal_images/apc/headers/narrow-3.jpg") !important;
+}
+</apex:outputText> <apex:outputText rendered="{!apc_hf_au_pair_profile == 'true'}"> .hero-area {
+background-image: url("/aupaircare/resource/intrax_portal_images/intrax_portal_images/apc/headers/narrow-3.jpg") !important;
+}
+</apex:outputText> <apex:outputText rendered="{!apc_ap_flight_booking == 'true'}"> .hero-area {
+background-image:  url("/aupaircare/resource/intrax_portal_images/intrax_portal_images/apc/headers/narrow-3.jpg") !important;
+}
+</apex:outputText> <apex:outputText rendered="{!apc_ap_travel_payment == 'true'}"> .hero-area {
+background-image:  url("/aupaircare/resource/intrax_portal_images/intrax_portal_images/apc/headers/narrow-3.jpg") !important;
+}
+</apex:outputText> <apex:outputText rendered="{!apc_ap_travel_payment_confirmation == 'true'}"> .hero-area {
+background-image:  url("/aupaircare/resource/intrax_portal_images/intrax_portal_images/apc/headers/narrow-3.jpg") !important;
+}
+</apex:outputText> <apex:outputText rendered="{!resource == 'true'}"> .hero-area {
+background-image:  url("/aupaircare/resource/intrax_portal_images/intrax_portal_images/apc/headers/narrow-3.jpg") !important;
+}
+</apex:outputText>
+<apex:outputText rendered="{!exception == 'true'}"> 
+.hero-area {
+background-image: none !important;
+background-color: transparent !important;
+height: 120px!important;
+}
+#footer-zone{display:none;}
+</apex:outputText> 
+</style>
+</apex:outputText>
+</apex:component>

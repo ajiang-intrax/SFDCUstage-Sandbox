@@ -1,0 +1,190 @@
+<apex:page title="Start Here" sidebar="true">
+    <script>
+    function toggleDiv(showHideDiv, switchTextDiv) {
+        var ele = document.getElementById(showHideDiv);
+        var text = document.getElementById(switchTextDiv);
+            if(ele.style.display == "block") {
+                ele.style.display = "none";
+                text.innerHTML = "<strong> {!$Label.startHere_ReadMore} »</strong>";
+            }
+            else {
+                ele.style.display = "block";
+                text.innerHTML = "<strong> {!$Label.startHere_Close} «</strong>";
+            }
+    }
+    </script>  
+           
+    <style type="text/css">
+        a.ReadMore {text-decoration:none; color:orange; font-weight:bold;}
+        a.GoThere {text-decoration:none; color:#56C6EB; font-weight:bold;}       
+        div.HeadingBorder {border-bottom:solid #56C6EB 0pt; color:#1797C0; font-size:14pt; font-weight:bold;}
+        div.HeadingSmall {border-bottom:solid #56C6EB 0pt; color:#1797C0; font-size:11pt; font-weight:bold;}
+        div.GettingStarted  h2 {
+            line-height:115%;
+            margin:10pt 0 0.0001pt;
+            page-break-after:avoid;
+        }
+        div.GettingStarted h4 {
+            color:#4F81BD;
+            line-height:115%;
+            margin:10pt 0 0.0001pt;
+            page-break-after:avoid;
+        }
+    </style>
+    <div style="background-color:#F7F8FA">    
+    <div style="width:1000px; margin-left:50px; margin-right:175px; margin-right:auto; background-color:white; padding-left:50px; padding-right:50px; padding-bottom:20px;border-right:solid thin #D8D8D8;border-left:solid thin #D8D8D8;">
+        <div style="border-bottom:solid #1797C0 3pt;padding:0 0 3pt 0;font-weight:bold;">
+            <span style="font-size: 18pt; color: #1797C0"><br />{!$Label.startHere_GettingStarted}</span></div>
+            <p>
+                {!$Label.startHere_RecommendSteps}
+                </p>
+             <p>
+                 {!$Label.startHere_AdditionInformation} <a class="ReadMore" href="javascript:openPopupFocusEscapePounds('http://www.weinvoiceit.com/support/', 'Help', 700, 600, 'width=700,height=600,resizable=yes,toolbar=yes,status=no,scrollbars=yes,menubar=yes,directories=no,location=no,dependant=no', false, false);">{!$Label.startHere_supportdocumentationLink} »</a>
+                 
+                </p>           
+        <div class="HeadingBorder">{!$Label.startHere_AboutInvoiceIT}</div>
+            <p>
+                {!$Label.startHere_DeploymentWays}</p>
+                 <div style="border-bottom:solid #1797C0 3pt;padding:0 0 3pt 0;font-weight:bold;">
+                  </div>  
+                   <br />      
+                   <div class="HeadingBorder">
+           {!$Label.startHere_WhatToDo}
+        </div>
+        <p>
+           {!$Label.startHere_WhatToDoSubHeading}
+        </p>
+        <p>
+            <div class="HeadingSmall">
+                {!$Label.startHere_Step} 1: {!$Label.startHere_Step1Heading}                  
+            </div>
+            <p>
+                {!$Label.startHere_Step1Description} <a class="ReadMore" href="javascript:openIntegration('/packaging/installPackage.apexp?p0=04td0000000N0Cm', 'height=600,location=no,resizable=yes,toolbar=no,status=no,menubar=no,scrollbars=1', 1);">{!$Label.startHere_Here} »</a>
+            </p>           
+            <div class="HeadingSmall">
+                {!$Label.startHere_Step} 2: {!$Label.startHere_Step2Heading}
+            </div>
+            <p>
+                {!$Label.startHere_Step2Description}<a class="ReadMore" href="javascript:openPopupFocusEscapePounds('http://www.weinvoiceit.com/support/1239/configuring-the-crm-extension/', 'Help', 700, 600, 'width=700,height=600,resizable=yes,toolbar=yes,status=no,scrollbars=yes,menubar=yes,directories=no,location=no,dependant=no', false, false);"> {!$Label.startHere_Here} »</a>
+            </p>
+        </p>
+        <div style="border-bottom:solid #1797C0 3pt;padding:0 0 3pt 0;font-weight:bold;">
+        </div>  
+        <br />
+        <div class="HeadingBorder">
+              {!$Label.startHere_TabsHeading}
+        </div>
+        <br/>
+        <div class="HeadingSmall">
+            <img src="{!URLFOR($Resource.InvoiceIt, 'images/account.png')}" width="25" height="25" /> &nbsp; {!$Label.startHere_TabAccount} 
+        </div>
+        <p>
+            {!$Label.startHere_AccountDescription}
+        </p>
+        <div class="HeadingSmall">
+            <img src="{!URLFOR($Resource.InvoiceIt, 'images/contact.png')}" width="25" height="25" /> &nbsp;{!$Label.startHere_TabContact} 
+        </div>
+        <p>
+           {!$Label.startHere_ContactDescription}
+        </p>
+        <div class="HeadingSmall">
+            <img src="{!URLFOR($Resource.InvoiceIt, 'images/opportunity.png')}" width="25" height="25" /> &nbsp; {!$Label.startHere_TabOpportunities}
+        </div>
+        <p>
+            {!$Label.startHere_OpportunityDescription}
+        </p>
+        <p>
+          <strong>{!$Label.startHere_NOTE}:</strong>  {!$Label.startHere_OpportunityNote}
+        </p>
+        <div class="HeadingSmall">
+            <img src="{!URLFOR($Resource.InvoiceIt, 'images/product.png')}" width="25" height="25" /> &nbsp; {!$Label.startHere_TabInvoiceITProducts}
+        </div>
+        <p>
+            {!$Label.startHere_ProductDescription}
+            <a class="ReadMore" href="javascript:openPopupFocusEscapePounds('http://www.weinvoiceit.com/support/category/3-product-catalogue/', 'Help', 700, 600, 'width=700,height=600,resizable=yes,toolbar=yes,status=no,scrollbars=yes,menubar=yes,directories=no,location=no,dependant=no', false, false);">{!$Label.startHere_Here} »</a>
+        </p>
+        <div class="HeadingSmall">
+            <img src="{!URLFOR($Resource.InvoiceIt, 'images/quote.png')}" width="25" height="25" /> &nbsp; {!$Label.startHere_TabQuote}
+        </div>
+        <p>
+            {!$Label.startHere_QuoteDescription} 
+            <a class="ReadMore" id="sectionC" href="javascript:toggleDiv('divC','sectionC');" ><strong> {!$Label.startHere_ReadMore} »</strong></a>
+        </p>
+        <div id="divC" style="display:none;">
+            {!$Label.startHere_YouCan}
+            <ul>
+                <li>{!$Label.startHere_QuoteReadMorePoint1}</li>
+                <li>{!$Label.startHere_QuoteReadMorePoint2}</li>
+                <li>{!$Label.startHere_QuoteReadMorePoint3}</li>
+                <li>{!$Label.startHere_QuoteReadMorePoint4}</li>
+                <li>{!$Label.startHere_QuoteReadMorePoint5}</li>
+                <li>{!$Label.startHere_QuoteReadMorePoint6}</li>
+            </ul>
+        </div>
+        <p>
+            {!$Label.starthere_YouCanMoreHelp} <a class="ReadMore" href="javascript:openPopupFocusEscapePounds('http://www.weinvoiceit.com/support/category/5-quotes/', 'Help', 700, 600, 'width=700,height=600,resizable=yes,toolbar=yes,status=no,scrollbars=yes,menubar=yes,directories=no,location=no,dependant=no', false, false);">{!$Label.startHere_Here} »</a>
+        </p>
+        <div class="HeadingSmall">
+            <img src="{!URLFOR($Resource.InvoiceIt, 'images/order.png')}" width="25" height="25" /> &nbsp; {!$Label.startHere_TabOrder}
+        </div>
+        <p>
+            {!$Label.startHere_OrderDescription}
+            <a class="ReadMore" id="sectionD" href="javascript:toggleDiv('divD','sectionD');" ><strong> {!$Label.startHere_ReadMore} »</strong></a>
+        </p>
+        <div id="divD" style="display:none;">
+            {!$Label.startHere_YouCan}
+            <ul>
+                <li>{!$Label.startHere_OrderReadMorePoint1}</li>
+                <li>{!$Label.startHere_OrderReadMorePoint2}</li>
+            </ul>
+        </div>
+        <p>
+            {!$Label.starthere_YouCanMoreHelp} <a class="ReadMore" href="javascript:openPopupFocusEscapePounds('http://www.weinvoiceit.com/support/category/6-orders/', 'Help', 700, 600, 'width=700,height=600,resizable=yes,toolbar=yes,status=no,scrollbars=yes,menubar=yes,directories=no,location=no,dependant=no', false, false);">{!$Label.startHere_Here} »</a>
+        </p>
+        <div class="HeadingSmall">
+            <img src="{!URLFOR($Resource.InvoiceIt, 'images/invoice.png')}" width="25" height="25" /> &nbsp; {!$Label.startHere_TabInvoice}
+        </div>
+        <p>
+            {!$Label.startHere_InvoiceDescription}
+        </p>
+        <p>
+            {!$Label.starthere_YouCanMoreHelp} <a class="ReadMore" href="javascript:openPopupFocusEscapePounds('http://www.weinvoiceit.com/support/category/7-invoices/', 'Help', 700, 600, 'width=700,height=600,resizable=yes,toolbar=yes,status=no,scrollbars=yes,menubar=yes,directories=no,location=no,dependant=no', false, false);">{!$Label.startHere_Here} »</a>
+        </p>
+        <div class="HeadingSmall">
+            <img src="{!URLFOR($Resource.InvoiceIt, 'images/payment.png')}" width="25" height="25" /> &nbsp; {!$Label.startHere_TabPayment}
+        </div>
+        <p>
+            {!$Label.startHere_PaymentDescription}
+        </p>
+        <p>
+            {!$Label.starthere_YouCanMoreHelp} <a class="ReadMore" href="javascript:openPopupFocusEscapePounds('http://www.weinvoiceit.com/support/category/8-payments/', 'Help', 700, 600, 'width=700,height=600,resizable=yes,toolbar=yes,status=no,scrollbars=yes,menubar=yes,directories=no,location=no,dependant=no', false, false);">{!$Label.startHere_Here} »</a>
+        </p>
+        <div class="HeadingSmall">
+            <img src="{!URLFOR($Resource.InvoiceIt, 'images/scheduler.png')}" width="25" height="25" /> &nbsp; {!$Label.startHere_TabInvoiceRun}
+        </div>
+        <p>
+            {!$Label.startHere_SchedulerDescription}
+        </p>
+        <div class="HeadingSmall">
+            <img src="{!URLFOR($Resource.InvoiceIt, 'images/currency.png')}" width="25" height="25" /> &nbsp; {!$Label.startHere_TabCurrencies}
+        </div>
+        <p>
+            {!$Label.startHere_CurrencyDescription}
+        </p>
+        <p>
+            {!$Label.startHere_TaxDescription}
+        </p>
+        <div class="HeadingSmall">
+            <img src="{!URLFOR($Resource.InvoiceIt, 'images/dashboard.png')}" width="25" height="25" /> &nbsp; {!$Label.startHere_TabReportsDashboards}
+        </div>
+        <p>
+            {!$Label.startHere_ReportDescription}
+        </p>
+        <p>
+            {!$Label.starthere_YouCanMoreHelp} <a class="ReadMore" href="javascript:openPopupFocusEscapePounds('http://www.salesforce.com/us/developer/docs/workbook_analytics/workbook_analytics.pdf', 'Help', 700, 600, 'width=700,height=600,resizable=yes,toolbar=yes,status=no,scrollbars=yes,menubar=yes,directories=no,location=no,dependant=no', false, false);">{!$Label.startHere_Here} »</a>
+        </p>
+        <div style="border-bottom:solid #1797C0 3pt;padding:0 0 3pt 0;font-weight:bold;">
+        </div>
+    </div>
+    </div>
+</apex:page>

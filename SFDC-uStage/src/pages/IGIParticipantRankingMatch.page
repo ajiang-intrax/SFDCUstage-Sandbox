@@ -1,0 +1,274 @@
+<!-- 
+    Purpose         :   Engagement Ranking Match.
+                
+    Created Date    :   08/12/2012
+    
+    Current Version :   v1.0
+    
+    Revision Log    :   V_1.1 Created
+ -->
+<apex:page standardController="Engagement__c" extensions="ParticipantRankingMatchScreen" title="{!Engagement__c.Name}" showHeader="true" >
+<script>
+    
+    //This javascript method is to select/unselect all the check boxes if header level check box is selected.
+    function checkAll(selectAll) {
+        
+        var inputElem = document.getElementsByTagName("input");
+        for(var i=0; i<inputElem.length; i++) {
+                if(inputElem[i].id.indexOf("selectedRecords")!=-1)
+                    inputElem[i].checked = selectAll.checked;
+        }
+    }
+    
+    //validate next button
+    function validateBeforeSave() {
+            
+        var inputElem = document.getElementsByTagName("input");
+        for(var i=0; i<inputElem.length; i++) {
+            if(inputElem[i].id.indexOf("selectedRecords")!=-1 && inputElem[i].checked) {
+                matchSelected();
+                return false;
+            }
+        }
+        matchSelected();  
+        //show error message
+        //alert('Please select at least one record.');
+        return false;
+    }
+    window.onload = setFocus
+function setFocus() {
+        document.getElementById("{!$Component.postype}").focus();
+}
+</script>
+
+    <!-- Form -->
+    <apex:form >
+        
+        <!-- Action Function -->
+        <apex:actionFunction name="matchSelected" action="{!save}" status="loadingMsg" />
+        
+        <apex:pageBlock >
+            <apex:pageMessages id="validationMsg" />
+            <apex:commandLink action="{!cancel}" value="Back to previous page" />
+            <table width="100%">
+                <tr>
+                    <th width="11%">
+                        Participant
+                    </th>
+                    <th width="10%">
+                        Location
+                    </th>
+                    <th width="13%">
+                        Intrax Program Category
+                    </th>
+                     <th width="13%">
+                       Intrax Program Options
+                    </th>
+                    <th width="10%">
+                        Engagement Start
+                    </th>
+                    <th width="10%">
+                        Engagement End
+                    </th>
+                   
+                    <th width="10%">
+                        Compensation
+                    </th>
+                    <th width="11%">
+                        Functional Areas
+                    </th>
+                    <th width="12%">
+                        Position Types
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        <apex:outputField value="{!match.Engagement__c}" />
+                    </td>
+                    <td>
+                        <apex:outputField value="{!participant.Location_of_Interest__c}" />
+                    </td>
+                    <td>
+                        <apex:outputField value="{!participant.Intrax_Program_Category__c}" />
+                    </td>
+                     <td>
+                        <apex:outputField value="{!participant.Intrax_Program_Options__c}" />
+                    </td>
+                    <td>
+                        <apex:outputField value="{!participant.Engagement_Start__c}" />
+                    </td>
+                    <td>
+                        <apex:outputField value="{!participant.Engagement_End__c}" />
+                    </td>
+                   
+                    <td>
+                        <apex:outputField value="{!participant.Compensation_Type__c}" />
+                    </td>
+                    <td>
+                        <apex:outputField value="{!participant.Functional_Areas__c}" />
+                    </td>
+                    <td>
+                        <apex:outputField value="{!participant.Position_Types__c}" />
+                    </td>
+                </tr>
+            </table>
+       
+      
+                
+                 
+           <br/>
+             <table width="100%">
+             <tr><th>Filter By:</th></tr>
+            <tr>
+            <th> <apex:outputLabel value="Program Category" /></th>
+            <th> <apex:outputLabel value="Position Types" /></th>
+            <th> <apex:outputLabel value="Functional Areas"/></th>
+            
+            <th> <apex:outputLabel value="Engagement Dates" /></th>  
+             <th> <apex:outputLabel value="Country" /></th> 
+             <th><apex:outputLabel value="Countries of Interest" /> </th> 
+           
+          
+                               
+            </tr>
+            <tr>
+            <td>
+                 <apex:actionRegion >
+                        <apex:selectList value="{!selectProgramCategory}" size="1" multiselect="false">                           
+                            <apex:selectOptions value="{!lstIntraxProgCategory}" /> 
+                            <apex:actionSupport event="onchange" rerender="postype,funarea" status="status"/>
+                        </apex:selectList>
+                  </apex:actionRegion>
+            </td>
+            <td>       
+                  
+                        <apex:selectList value="{!selectPositionTypes}"  id="postype" size="3" multiselect="true" disabled="{!NOT(selectProgramCategory=='Hospitality & Tourism')}" >
+                             <apex:selectOptions value="{!PositionType}" /> 
+                        </apex:selectList>
+                  
+                     
+            </td>
+            <td>
+              
+                        <apex:selectList value="{!selectAreas}"  id="funarea" size="3"  multiselect="True"  disabled="{!NOT(selectProgramCategory!='Hospitality & Tourism')}">
+                              <apex:selectOptions value="{!lstFuncAreas}" /> 
+                        </apex:selectList>    
+                                                 
+            </td>
+          
+             <td>
+                     <apex:outputLabel value="Start" style="font-weight: bold;"/>&nbsp;
+                     <apex:inputField value="{!DummyObj.Engagement_Start__c}" />
+                     <br/>
+                      <apex:outputLabel value="End" style="font-weight: bold;" />&nbsp;&nbsp;&nbsp;
+                     <apex:inputField value="{!DummyObj.Engagement_End__c}"/>
+             </td>  
+             <td>   <apex:selectList value="{!selectIntCountries}" size="3" multiselect="True">
+                           <apex:selectOptions value="{!lstIntCountries}" /> 
+                  </apex:selectList> </td> 
+             
+              
+            <td>       
+                  
+                    <apex:selectList value="{!selectInterestedCountries}" size="3" multiselect="True">
+                           <apex:selectOptions value="{!lstInterestedCountries}" /> 
+                  </apex:selectList> 
+                  
+                     
+            </td>
+                      
+            </tr>
+                <tr>
+            <th> <apex:outputLabel value="Regional Location" /></th> 
+             <th> <apex:outputLabel value="Compensation Types" /></th>
+            </tr>
+             <tr>
+           
+             <td>                      
+                    <apex:inputtext value="{!regLocation}"/>
+              </td>
+               <td>       
+                                     
+               <apex:selectList value="{!selectCompensationTypes}"   size="3" multiselect="true" >
+               <apex:selectOptions value="{!CompensationType}" /> 
+                 </apex:selectList>
+                   
+            </td>
+            </tr>
+            </table>
+             <table width="100%">
+            <tr>
+              </tr>
+            
+            <tr>
+           
+          
+            </tr>
+                     <tr><td>
+                     <apex:commandButton value="Search" action="{!initIntern}" reRender="pbs, validationMsg" status="loadingMsg" />
+                   </td>  
+                </tr>                    
+            </table>
+            
+            <BR/>
+            <apex:pageBlockSection columns="1" title="Result" collapsible="false" id="pbs">
+                <apex:actionStatus startText="Please Wait....." startStyle="font-weight: bold;color: green;" id="loadingMsg"/>
+        
+                <!-- Resultant table -->
+                <apex:pageBlockTable value="{!PossibleMatchesList}" var="item" rendered="{!IF(PossibleMatchesList.Size > 0, true, false)}">
+                    <apex:column >
+                        <apex:facet name="header">
+                            <input type="checkbox" id="headerCheck" onclick="checkAll(this);" />
+                        </apex:facet>
+                        <apex:inputCheckBox value="{!item.selected}" id="selectedRecords"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:commandLink action="{!sortResults}" value="Rank{!IF(sortDir='ASC','?','?')}" reRender="pbs, validationMsg" status="loadingMsg" />
+                        </apex:facet>
+                        <apex:outputText value="{!item.ranking}" />
+                    </apex:column>
+                    <apex:column value="{!item.position.Host_Opportunity_Id__c}" />
+                    <apex:column value="{!item.position.Regional_Location__c}" />
+                    <apex:column value="{!item.mat.Position_Name__c}" />
+                    <apex:column value="{!item.position.Engagement_Start__c}" />
+                      <apex:column value="{!item.position.Intrax_Program_Category__c}" />
+                       <apex:column value="{!item.position.Intrax_Program_Options__c}" />
+                    <apex:column value="{!item.position.Skills_Required__c}" />
+                    <apex:column value="{!item.position.Functional_Areas__c}" />
+                    <apex:column value="{!item.position.Position_Types__c}" />
+                  
+                    <apex:column value="{!item.position.Flexible_Dates__c}" />
+                    <apex:column value="{!item.position.Compensation_Type__c}" />
+                </apex:pageBlockTable>
+                
+                <!-- Panel to render Paging functionality -->
+                <apex:outputPanel rendered="{!IF(totalResults > 0,true,false)}" >
+                    <table border="0" align="center">
+                        <tr>
+                            <td align="left" >
+                                <B><apex:commandLink action="{!getPrevious}" value="Previous" rendered="{!IF(resultsStartNumber = 1, false, true)}" reRender="pbs, validationMsg" status="loadingMsg"/> </B>
+                            </td>
+                            <td width="50">
+                            </td>
+                            <td >
+                                <B>Record(s) {!resultsStartNumber}-{!resultsStopNumber} of {!totalResults}</B>
+                            </td>
+                            <td width="50">
+                            </td>
+                            <td align="right">
+                                <B><apex:commandLink action="{!getNext}" value="Next" rendered="{!IF(resultsStopNumber = totalResults, false, true)}" reRender="pbs, validationMsg" status="loadingMsg" /></B>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" align="center" >
+                                <apex:image url="{!$Resource.MatchSelected}" style="cursor:pointer;" onclick="validateBeforeSave(); return false;"/>
+                            </td>
+                        </tr>
+                    </table>
+                </apex:outputPanel>
+                <apex:outputLabel rendered="{!IF(totalResults > 0, false, true)}" > {!searchResultMessage} </apex:outputLabel>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>    
+</apex:page>

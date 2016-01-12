@@ -1,0 +1,12 @@
+<apex:page standardController="invoiceit_s__Quote__c" extensions="invoiceit_s.CreateQuoteController">
+    <apex:pageMessages id="messages"/>
+    <apex:form >
+        <apex:pageBlock title="{!$Label.ConfirmQuoteAndConvert}">
+            <apex:pageBlockSection >
+                {!$Label.startHere_Note}: {!$Label.quoteConfirmationMessage}
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        <apex:commandButton action="{!convertQuote}" value="{!$Label.ButtonConfirm}"/>
+        <apex:commandButton action="{!cancel}" value="{!$Label.ButtonCancel}"/>         
+    </apex:form>
+</apex:page>

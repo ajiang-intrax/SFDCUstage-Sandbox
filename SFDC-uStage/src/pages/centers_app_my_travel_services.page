@@ -1,0 +1,105 @@
+<apex:page id="centers_app_my_travel_services" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+    
+    <apex:composition template="IntraxTemplate_Vs1">
+        <apex:define name="body" >
+    
+            <div class="wrapper" id="centers_preapp_welcome_to_intrax">          
+                <apex:form id="form">     
+                    <div class="page-header clearfix">
+                        <h1 class="page-title"><apex:outputText value="{!$Label.T_0053}" /></h1>
+                        <div class="back-to-main"><apex:outputLink value="apex/centers_app_home?id={!applicantInfo.Id}"><apex:outputText value="{!$Label.T_0075}" /></apex:outputLink></div>
+                    </div>
+
+                        <div class="section-header clearfix">
+                            <h2><apex:outputText value="{!$Label.T_0122}" /></h2>
+                        </div>
+                       
+                        <div class="white-box clearfix">
+                            <div class="panel two_thirds">
+                            <apex:Messages id="errorMessages" styleClass="custom-error-pagelevel"/>
+                            <p><em> <apex:outputText value="{!$Label.T_0003}" /></em></p><br/>
+                                
+                                <!-- Select Options for Products of "Package Delivery" Type -->
+                                <!-- Centers 153 story -->
+                                <apex:outputPanel id="packageDelivery" rendered="{!IF(applicantInfo.Visa_Category__c=='Student (F)',True,False)}"> 
+                                <div class="form-row">
+                                    <div class="form-label top"><strong><apex:outputText value="{!$Label.T_0123}" /><span class="required">*</span></strong></div>
+                                <div class="form-field">
+                                    <!-- <apex:selectRadio id="selectedPackageDelivery" value="{!selectedPackageDelivery}" layout="pageDirection" required="true" disabled="TRUE">
+	                                    <apex:selectOptions value="{!listPackageDelivery}" />
+	                                </apex:selectRadio>
+	                                 -->
+	                                <apex:dynamicComponent componentValue="{!CustomPackageDelivery}"/>
+                                 </div>    
+                                </div>
+                                </apex:outputPanel>      
+                                <!-- Select Options for Products of "Insurance" Type -->
+                                <div class="form-row">
+                                    <div class="form-label top"><strong><apex:outputText value="{!$Label.T_0124}" /><span class="required">*</span></strong>  <span class="dropt no-float"> <i class="icon-question-sign"></i>
+                  <span><apex:outputText value="{!$Label.T_0228}" /></span>
+                </span>    </div>
+                                <div class="form-field">
+                                    <!-- <apex:selectRadio id="selectedInsurancePackage" value="{!selectedInsuarancePackage}" layout="pageDirection" required="true" disabled="TRUE">
+		                                    <apex:selectOptions value="{!listInsurancePackage}" />
+		                                </apex:selectRadio>
+	                                 -->
+	                                <apex:dynamicComponent componentValue="{!CustomInsuranceProducts}"/>
+                                </div>
+                               
+                               </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-label top"><strong><apex:outputText value="{!$Label.T_0125}" /><span class="required">*</span></strong><span class="dropt no-float"> <i class="icon-question-sign"></i>
+                   <span><apex:outputText value="{!$Label.T_0229}" /></span>
+                </span></div>
+                                    <apex:actionRegion >
+                                	<apex:selectRadio id="AirportTransport" value="{!applicantInfo.Airport_Transfer__c}" layout="pageDirection" required="true" disabled="true">                                                                       
+                                            <apex:selectOption itemValue="Yes" itemLabel="{!$Label.T_0327}"/>
+                                            <apex:selectOption itemValue="No" itemLabel="{!$Label.T_0328}"/>                                        
+                                        <apex:actionSupport event="onclick" reRender="wrapper_panel" />
+                                	</apex:selectRadio>  
+                                	</apex:actionRegion>                             	
+                					<apex:outputPanel id="wrapper_panel">
+                                	<apex:outputPanel id="Travel_block" rendered="{!IF(applicantInfo.Airport_Transfer__c == 'Yes',true,false)}" >
+	                                    <apex:repeat id="TravelNeeded" value="{!mapApplicantProduct['Travel']}" var="item" >	                                
+	                                    <div class="repeat-line-break">
+	                                    &nbsp;
+	                                    <apex:inputCheckbox id="Selected" value="{!item.selected}" disabled="true"/>
+	                                    <!-- <apex:outputText id="ApplicantProduct_Description" value="{!item.applicantProduct.Description__c}"/> 
+	                                     --> 
+	                                    <apex:variable var="f" value="{!item.applicantProduct.Product_Description_Label__c}" />                                                    
+										<apex:outputText id="ApplicantProduct_Description_Label" value="{!$Label[f]}" rendered="{!IF(f!=null, true, false)}"/>
+										<apex:outputText id="ApplicantProduct_Description" value="{!item.applicantProduct.Description__c}" rendered="{!IF(f==null, true, false)}"/>
+										  
+	                                    </div>    
+	                                    </apex:repeat>
+                                    </apex:outputPanel>
+                                    </apex:outputPanel>
+                                </div>
+         
+                                <div class="form-row">
+                                  
+                                <div class="form-link">
+                                    <apex:outputLink id="backLink" value="/apex/centers_app_home?id={!applicantInfo.Id}"><i class="icon-chevron-left"></i> <span><apex:outputText value="{!$Label.T_0086}" /></span></apex:outputLink>
+                                </div>
+                      
+                                <div class="form-button">
+                                    <apex:commandlink id="SaveContinue" styleClass="next" action="{!callValidatePlanAAndMyTravelService}">
+                                        <apex:commandButton value="{!$Label.T_0087}" />
+                                        <i class="icon-chevron-right"></i>
+                                    </apex:commandlink>
+                                   
+                                </div>    
+                    
+                            </div>
+                        </div>
+                        
+                        <div class="panel one_third last aside">
+                            <c:Badge_Centers_Contact />     
+                        </div> 
+                    </div>
+                </apex:form>    
+            </div>
+        </apex:define>
+    </apex:composition>
+</apex:page>

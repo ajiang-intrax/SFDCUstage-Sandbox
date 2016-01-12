@@ -1,0 +1,66 @@
+<apex:page id="References" title="References To Review" docType="html-5.0" controller="IntraxPartnerPortalEngineController" action="{!checkLogin}" standardStylesheets="false" showHeader="false" applyBodyTag="false" applyHtmlTag="false" >
+    <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+        <div class="row margin-b4">
+        <div class="col-sm-9 center-block center-text">
+          <h1>References To Review</h1>
+          </div>
+        <!-- end column -->
+      </div>
+      <!-- end row -->  
+          
+          
+          
+            <div class="row">
+        <div class="col-md-10 center-block"> 
+          <apex:form styleClass="form-vertical ws-validate" id="webform">
+            <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+            
+           <apex:outputPanel layout="block" rendered="{!IF(referenceListCheck.Size > 0, true, false)}">
+              <apex:pageBlock id="Block_ListExperience" >
+                <div class="table-responsive vs3">
+                  <apex:pageBlockTable styleClass="table vs3" value="{!referenceListCheck}" var="item">
+                    <apex:column headerValue="Name">
+                    
+                    <apex:outputLink disabled="{!IF(item.Status__c=='Not Started' || item.Status__c=='Incomplete' || item.Status__c==null, true, false )}" id="linktoccRef" rendered="{!item.Experience_Name__c != null && item.Person_Info__c == null}" 
+                    value="/apex/apc_ap_form_cc_reference_pview?id={!item.id}&quickLink=yes">
+                    <apex:outputText value="{!item.Name}"/> 
+                    </apex:outputLink>
+                    
+                    <apex:outputLink disabled="{!IF(item.Status__c=='Not Started' || item.Status__c=='Incomplete' || item.Status__c==null, true, false )}" id="linktoPersonRef" rendered="{!NOT(item.Experience_Name__c != null && item.Person_Info__c == null)}" 
+                    value="/apex/apc_ap_form_personal_reference_pview?id={!item.id}&quickLink=yes">
+                    <apex:outputText value="{!item.Name}"/> 
+                    </apex:outputLink>
+                    
+                    </apex:column>
+                    <apex:column headerValue="Type of Reference">
+                        <apex:outputText value="Childcare" rendered="{!item.Experience_Name__c != null && item.Person_Info__c == null}"/>
+                        <apex:outputText value="Personal" rendered="{!NOT(item.Experience_Name__c != null && item.Person_Info__c == null)}"/>
+                    </apex:column>
+                    <apex:column headerValue="Status" value="{!item.Status__c}"/>
+                    <apex:column headerValue="Requested On" value="{!item.CreatedDate}"/> 
+                    <apex:column headerValue="Completed On" value="{!item.Reference_Created_Date__c}"/>
+                    
+                    <apex:column >
+                    <apex:facet name="header">Application Name</apex:facet>
+                    <apex:outputLink value="/apex/apc_ap_main_home?Id={!item.Applicant_Info__c}&IsPartner=true">
+                        <apex:outputText value="{!item.Applicant_Info__r.Name}" />
+                    </apex:outputLink>
+                    </apex:column>
+            
+                  </apex:pageBlockTable>
+                </div>
+              </apex:pageBlock>
+            </apex:outputPanel>
+            
+            <apex:outputPanel layout="block" styleClass="lead box gray center-text" rendered="{!IF(referenceListCheck.Size==0, true, false)}">
+                <apex:outputText value="There are currently no references for you to review."/>
+            </apex:outputPanel>
+          </apex:form>
+        </div>
+        <!-- end column -->
+      </div>
+      <!-- end row --> 
+    </apex:define>
+    </apex:composition>
+</apex:page>

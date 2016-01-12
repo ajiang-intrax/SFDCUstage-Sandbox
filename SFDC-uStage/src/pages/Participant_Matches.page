@@ -1,0 +1,148 @@
+<apex:page title="Participant's Travel and Visa | Intrax" standardStylesheets="false" showHeader="false" controller="ParticipantPortalController" action="{!checkLogin}">
+  
+    <apex:composition template="IntraxTemplate_Vs2" >
+      <apex:define name="body">
+      <apex:form >
+        <!-- begin row -->
+          <div class="row">
+          <apex:outputPanel styleClass="span9" layout="block">
+            <h1>
+                <apex:outputText value="Placements"/>
+            </h1>
+          </apex:outputPanel>
+          <apex:outputPanel layout="block" styleClass="form-button no-float no-margin" rendered="{!IF(partSecondJob.Size == 0, false,true)}">
+          	<div>
+          	<apex:outputLink value="participant_second_job_Info?id={!partSecondJob[0].ID}&isPrimarySOA=false" title="If you have secured a secondary job, you are required to report the job details to Intrax. Please use this form to provide the required information and documents. Before you can begin working at this additional job, Intrax will need to review and approve the details you have provided.">
+	       		<apex:outputText value="Submit Secondary Job Info" />
+	      	</apex:outputLink>
+	      	</div>
+	      	<br />
+          </apex:outputPanel>
+        </div>
+        <!-- end row -->
+        <!-- begin row --> 
+        <div class="row">
+          <!-- begin span3 -->
+          <!-- <apex:outputPanel styleClass="span3" layout="block">
+            <c:Menu_Participant_Side_Navigator />
+          </apex:outputPanel>
+           -->
+          <!-- end span3 -->
+          <!-- begin span9 -->
+            <div class="span12">
+            <apex:outputPanel styleClass="block" layout="block">
+              <div class="block-body">
+                
+                 
+                <div>
+                  <apex:actionStatus id="waitMsg" startStyleClass="feedback">
+                    <apex:facet name="start" > <i class="no-float icon-spinner icon-spin icon-2x pull-left"></i> <strong>Please Wait.....</strong> </apex:facet>
+                  </apex:actionStatus>
+                </div>
+                
+                
+                <apex:outputPanel id="myPanel2">
+                  <apex:outputPanel rendered="{!IF(selectedMatches.Size == 0, true, false)}" layout="block"> <span class="no-records">No record(s) to display.</span></apex:outputPanel>
+                </apex:outputPanel>
+                <apex:outputPanel id="myPanel1" layout="block">
+                  <apex:pageBlock id="pb1">
+                    <apex:outputPanel layout="block" rendered="{!IF(selectedMatches.Size > 0, true, false)}">
+                    <div id="flight-list" class="list-view container-fluid">
+                    <apex:repeat value="{!selectedMatches}" var="item">
+                   
+                  <div class="row-fluid">
+                   
+                  <div class="list-view-header span12">
+                   <div class="title pull-left"><apex:outputText value="{!item.Name}"/></div> 
+                   <div class="controls pull-right clearfix">    
+                   <apex:outputLink styleClass="btn btn-primary btn-lg" value="/apex/c_match_details?mId={!item.id}&fpage=ptmatches" rendered="{!item.Intrax_Program__c == 'Work Travel'}">Hiring Profile</apex:outputLink>
+                   <apex:outputLink styleClass="btn btn-primary btn-lg" value="/apex/Participant_Match_Information?matchId={!item.id}">View Details</apex:outputLink>
+                   <apex:outputLink styleClass="btn btn-primary btn-lg" value="/apex/WT_Agreement_PDF?envelopeID={!DocuSignEnvMap[item.id]}" target="_blank" rendered="{!IF(DocuSignEnvMap[item.id] != null && DocuSignEnvMap[item.id] != 'no-Envelope', true, false)}">Job Placement Agreement</apex:outputLink>
+                   
+                   </div>      
+                   </div>  <!-- end list-view-header -->
+                 
+                   <div class="span12">      
+                  
+                   <div class="span4">
+                       <div class="list-field">
+                           <label><apex:outputText value="Position"/></label>
+                       <apex:outputField value="{!item.Position_Name__r.Name}"/>&nbsp;
+                       </div>
+                       <div class="list-field">
+                           <label><apex:outputText value="Match Stage"/></label>
+                       <apex:outputText value="{!item.Status__c}"/>
+                       </div> 
+                       <!-- 
+                       <div class="list-field">
+                       <label><apex:outputText value="Departure Airport"/></label>
+                       <apex:outputText value="{!item.Departing_From__c}"/>&nbsp;
+                       </div>    
+                       -->   
+                           
+                  </div> 
+                  <div class="span4">
+                      
+                       <div class="list-field">
+                           <label><apex:outputText value="Start Date"/></label>
+                       <apex:outputField value="{!item.Start_Date__c}"/>&nbsp;
+                       </div> 
+                       <div class="list-field">
+                          <label><apex:outputText value="Interview Status" rendered="{!IF(item.Engagement__r.Intrax_Program__c == 'Internship' || item.Engagement__r.Intrax_Program__c == 'Work Travel',true,false)}"/></label>
+                       <apex:outputField value="{!item.Interview_Status__c}" rendered="{!IF(item.Engagement__r.Intrax_Program__c == 'Internship' || item.Engagement__r.Intrax_Program__c == 'Work Travel',true,false)}"/>
+                       </div>
+                       <!-- <div class="list-field">
+                           <label><apex:outputText value="Arrival Trip Needed"/></label>
+                       <apex:outputField value="{!item.Engagement__r.Arrival_Trip_Needed__c}"/>
+                       </div>  -->
+                       
+                          
+                 </div> 
+                 <div class="span4"> 
+                      
+                      <div class="list-field">
+                          <label><apex:outputText value="End Date"/></label>
+                       <apex:outputField value="{!item.End_Date__c}"/>
+                       </div>  
+                     <div class="list-field">  
+                     <label><apex:outputText value="Offer Status" rendered="{!IF(item.Engagement__r.Intrax_Program__c == 'Internship' || item.Engagement__r.Intrax_Program__c == 'Work Travel',true,false)}"/></label>
+                       <apex:outputText value="{!item.Offer_Status__c}" rendered="{!IF(item.Engagement__r.Intrax_Program__c == 'Internship' || item.Engagement__r.Intrax_Program__c == 'Work Travel',true,false)}"/>
+                         </div> 
+                     <!--  <div class="list-field">
+                           <label><apex:outputText value="Departure Trip Needed"/></label>
+                       <apex:outputField value="{!item.Engagement__r.Departure_Trip_Needed__c}"/>
+                       </div>    -->
+                     
+                 </div>
+                 <!--
+                 <div class="span3"> 
+                     <div class="form-button no-float no-margin">
+	                 <apex:outputLink value="/apex/C_Match_Details?mId={!item.Id}&fpage=ptmatches">
+	                 <apex:outputText value="Hiring Profile"/>
+	                 </apex:outputLink>
+                     </div>
+                 </div>
+                 -->
+                   
+                   </div> <!-- end span12 -->
+                      
+                 
+                        </div>
+                     
+                      </apex:repeat>
+                        </div>
+                      </apex:outputPanel>
+                    
+                  </apex:pageBlock>
+                </apex:outputPanel>
+              </div>
+            </apex:outputPanel>
+          </div>
+          <!-- end span9 -->
+        </div>
+        <!-- end row -->
+        </apex:form>
+      </apex:define>
+    </apex:composition>
+  
+</apex:page>

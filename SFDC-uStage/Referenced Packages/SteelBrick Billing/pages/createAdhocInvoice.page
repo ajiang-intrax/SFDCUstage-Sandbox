@@ -1,0 +1,31 @@
+<apex:page standardController="invoiceit_s__Job__c" extensions="invoiceit_s.ControllerCreateAdhocInvoice" tabStyle="invoiceit_s__Invoice__c">
+<apex:form >
+    <apex:sectionHeader title="Generate Ad-hoc Invoice" subtitle="Generate Ad-hoc Invoice"/>
+        <apex:pageMessages id="messages"/>
+        <apex:pageBlock title="Choose Invoice Date and Target Date.">
+            <apex:pageBlockSection columns="1">
+                <apex:outputField value="{!order.Name}" />
+                <apex:inputField value="{!job.invoiceit_s__Service_Activation_Date__c}" label="Invoice Date" required="true"/>
+                <apex:inputField value="{!job.invoiceit_s__Service_End_Date__c}"  label="Target Date" required="true"/> 
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons location="bottom">
+                    <!--
+                    Modified By     : Rama Krishna.v
+                    Modified Date   : 28-10-2013
+                    JIRA Task       : INVOICEIT-269
+                    Comments        : previously when user clicks twice on the button it creates two invoices, 
+                                         disable the button when user click on button
+                    -->
+                <apex:actionStatus id="saveStatus">
+                    <apex:facet name="stop">
+                        <apex:commandButton action="{!createAdhocInvoice}" value="Generate Invoice" reRender="messages" status="saveStatus"/>
+                    </apex:facet>
+                    <apex:facet name="start">
+                        <apex:commandButton value="Processing..." disabled="true" status="saveStatus"/>
+                    </apex:facet>
+                </apex:actionStatus>
+            <apex:commandButton action="{!cancel}" value="{!$Label.ButtonCancel}"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

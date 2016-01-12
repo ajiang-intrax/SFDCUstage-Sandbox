@@ -1,0 +1,95 @@
+<apex:page docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+   <apex:composition template="IntraxTemplate_Vs1">
+   <apex:define name="body">
+      <div class="wrapper" id="centers_preapp_welcome_to_intrax">
+              
+          <apex:form >
+         <div class="page-header clearfix">
+             <h1 class="page-title"><apex:outputText value="{!$Label.T_0053}" /></h1>
+             <div class="back-to-main"><apex:outputLink value="apex/centers_app_home?id={!applicantInfo.Id}"><apex:outputText value="{!$Label.T_0075}" /></apex:outputLink></div>
+          </div>
+
+            <div class="section-header clearfix">
+             <h2><apex:outputText value="{!$Label.T_0199}" /></h2>
+              </div>
+          <div class="white-box clearfix"> 
+              <div class="panel two_thirds">
+          <p><apex:outputText value="{!$Label.T_0200}" /></p> 
+                  
+            <p class="divider-bottom"><apex:Messages styleClass="custom-error-pagelevel"/>
+            <p><em> <apex:outputText value="{!$Label.T_0003}" /></em></p><br/></p>  
+            <div class="form-row">
+            <div class="form-label left "><apex:outputText value="{!$Label.T_0201}" /> <span class="required">*</span></div>
+            <div class="form-field">
+              <apex:inputField value="{!applicantInfo.Arriving_Date__c}" required="true"/>
+            </div>
+           </div>
+          
+        
+           <div class="form-row">
+            <div class="form-label left "><apex:outputText value="{!$Label.T_0202}" /> <span class="required">*</span></div>
+            <div class="form-field">
+              <apex:inputField value="{!applicantInfo.Arrival_Time__c}" required="true"/>
+            </div>
+           </div>
+        
+           <div class="form-row">
+            <div class="form-label left "><apex:outputText value="{!$Label.T_0203}" /> <span class="required">*</span></div>
+            <div class="form-field">
+              <apex:inputField value="{!applicantInfo.Carrier__c}" required="true"/>
+            </div>
+           </div>
+          
+        
+           <div class="form-row">
+            <div class="form-label left "><apex:outputText value="{!$Label.T_0204}" /> <span class="required">*</span></div>
+            <div class="form-field">
+              <apex:inputField value="{!applicantInfo.Carrier_Number__c}" required="true"/>
+            </div>
+           </div>  
+           
+           <div class="form-row">
+            <div class="form-label left "><apex:outputText value="{!$Label.T_0205}" /> <span class="required">*</span></div>
+            <div class="form-field">
+              <apex:inputField value="{!applicantInfo.Airport__c}" required="true"/>
+            </div>
+           </div>
+           
+       
+             <div class="form-row">
+             
+              <div class="form-link">
+              	<apex:outputLink value="/apex/centers_preapp_my_travel_services?id={!applicantInfo.Id}"><i class="icon-chevron-left"></i> <span><apex:outputText value="{!$Label.T_0086}" /></span></apex:outputLink>
+              </div>
+                          
+              <div class="form-button">
+              	<apex:commandlink styleClass="next" action="{!navigator}" rendered="{!CheckCtrHomestay}">
+                  <apex:param name="nextPage" value="/apex/centers_preapp_my_homestay_accommodation"/>
+                  <apex:param name="reDirectPage" value="true"/>
+                  <apex:commandButton value="{!$Label.T_0087}"/>
+                    <i class="icon-chevron-right"></i>
+                </apex:commandlink> 
+                
+                <apex:commandlink styleClass="next" action="{!navigator}" rendered="{!NOT(CheckCtrHomestay)}">
+                  <apex:param name="nextPage" value="/apex/centers_app_home"/>
+                  <apex:param name="reDirectPage" value="true"/>
+                  <apex:commandButton value="{!$Label.T_0087}"/>
+                    <i class="icon-chevron-right"></i>
+                </apex:commandlink> 
+                <!--  
+            	<apex:commandlink styleClass="next" action="{!validateHomeStayPage}">
+                	<apex:commandButton value="Save & Continue" />
+                    <i class="icon-chevron-right"></i>
+                </apex:commandlink>
+                -->
+            </div>    
+		</div>
+              </div>
+              </div>
+        </apex:form>    
+         </div>
+    </apex:define>
+  </apex:composition>
+ 
+
+</apex:page>

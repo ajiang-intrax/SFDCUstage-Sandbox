@@ -1,0 +1,17 @@
+<apex:page docType="html-5.0" title="Host Family Monthly Contact" applyBodyTag="false" applyHtmlTag="false" standardController="Match__c" extensions="FlowMatchController" standardStylesheets="false" showHeader="false">
+ <apex:composition template="intrax_visual_work_flows_vs2">
+    <apex:define name="body">
+       
+         <div id="apc_pt_checkin" class="standalone"> 
+          <div class="center-text margin-b2"><apex:image styleClass="center-block" url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/logos/medium-logo-aupaircare.png')}"/></div>
+        <h1 class="center-text">Host Family Monthly Contact</h1>
+        <apex:messages />
+          
+          <flow:interview buttonLocation="bottom" name="APC_PT_Check_In" finishLocation="{!FinishPageAPCMatch}">
+            <apex:param name="MatchId" value="{!match.id}"/>
+            </flow:interview>
+          
+      </div>
+    </apex:define>
+  </apex:composition> 
+</apex:page>

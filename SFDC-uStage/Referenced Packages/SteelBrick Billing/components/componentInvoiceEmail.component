@@ -1,0 +1,288 @@
+<apex:component controller="invoiceit_s.ControllerEmailInvoice" access="global" selfClosing="">
+     
+    <apex:attribute name="invoiceId" description="Invoice Id" type="String" required="required" assignTo="{!sInvoiceId}"/>
+    <apex:attribute name="sImage" description="Image" type="String" assignTo="{!sImage}"/>
+    
+    <apex:stylesheet value="{!URLFOR($Resource.invoiceit_s__InvoiceIt,'pdf/web/css/style.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.invoiceit_s__InvoiceIt,'pdf/web/css/codainvoiceprint.css')}"/>
+    <apex:variable value="{!invoice.Shipping_Contact__r}" var="InvoiceShip" /> 
+    <apex:variable value="{!invoice.Billing_Contact__r}" var="InvoiceBill" />
+    <apex:outputText value="{!invoice.invoiceit_s__Invoice_Date__c}" rendered="false" /> 
+    <apex:outputText value="{!invoice.invoiceit_s__Due_Date__c}" rendered="false" /> 
+    <apex:outputText value="{!invoice.invoiceit_s__VAT__c}" rendered="false" /> 
+
+    <table>
+        <tr>
+            <td>
+                <div><apex:image value="{!sLogo}"  width="180" height="60" />
+                </div>
+            </td>
+            <td class="alignright title">{!$Label.Invoice}
+            </td>
+        </tr>
+    </table><br/>
+    <table>
+        <tr>
+            <td class="zeropadding">{!$Organization.Name}&nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td class="zeropadding">{!$Organization.Street}&nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td class="zeropadding">{!$Organization.City}&nbsp;{!$Organization.State} 
+            </td>
+        </tr>
+        <tr>
+            <td class="zeropadding">{!$Organization.Postalcode}&nbsp;{!$Organization.Country}                
+            </td>
+        </tr>
+        <tr>
+            <td class="zeropadding">&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="zeropadding">&nbsp;</td>
+        </tr>
+    </table>
+    <div class="hspacer"></div>
+    <table>
+        <tr>
+            <td class="strong">{!$Label.InvoiceAddress}</td>
+            <td class="strong"><apex:outputText value="{!$Label.ShippingAddress}" rendered="false" /></td>
+            <td class="aligntop" rowspan="2" style="padding-right:0;width:42%;"><span>
+                <table>   
+                    <tr>
+                        <td class="strong alignright bgcolor boxed boxedtop">
+                            <nobr>{!$Label.InvoiceNumber}</nobr>
+                        </td>
+                        <td class="boxed boxedtop"><apex:outputField value="{!invoice.Name}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="strong alignright bgcolor boxed" height="10">
+                            <nobr>{!$Label.InvoiceDate}</nobr>
+                        </td>
+                        <td class="boxed"><apex:outputField value="{!invoice.invoiceit_s__Invoice_Date__c}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="strong alignright bgcolor boxed" height="10">
+                            <nobr>{!$Label.Customer}</nobr>
+                        </td>
+                        <td class="boxed"><apex:outputField value="{!invoice.Account__r.invoiceit_s__VAT_No__c}" />
+                        </td>
+                    </tr>
+                </table></span>        
+            </td>
+        </tr>
+        <tr>
+            <td class="aligntop"> {!InvoiceBill.Salutation}{!InvoiceBill.Name}
+                <br /><table class="nopadding" border="0" cellpadding="0" cellspacing="0"><colgroup span="1"></colgroup><tbody><tr class=""><td class="" colspan="1"></td></tr></tbody></table>
+                <apex:outputLabel value="{!InvoiceBill.MailingStreet}<br>"  rendered="{!InvoiceBill.MailingStreet != null}" escape="false" />
+                <apex:outputLabel value="{!InvoiceBill.MailingCity}<br>" rendered="{!InvoiceBill.MailingCity != null}" escape="false"/>
+                <apex:outputLabel value="{!InvoiceBill.MailingState}<br>" rendered="{!InvoiceBill.MailingState != null}" escape="false"/>
+                <apex:outputLabel value="{!InvoiceBill.MailingCountry}<br>" rendered="{!InvoiceBill.MailingCountry != null}" escape="false"/>
+                <apex:outputLabel value="{!InvoiceBill.MailingPostalCode}<br>" rendered="{!InvoiceBill.MailingPostalCode != null}" escape="false"/>
+            </td>
+            <td class="aligntop">
+            </td>
+        </tr>
+    </table>
+    <div class="hspacer"></div>
+    <table class="boxedtable">
+        <thead>
+            <tr>
+                <td class="aligncenter">{!$Label.CustomerReference}
+                </td>
+                <td class="aligncenter">{!$Label.InvoiceCurrency}
+                </td>
+                <td class="aligncenter rightline">{!$Label.DueDate}
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="aligncenter bottomline"><apex:outputField value="{!invoice.Order__r.Name}" />
+                </td>
+                <td class="aligncenter bottomline"><apex:outputText value="{!invoice.CurrencyL__r.Name}({!invoice.CurrencyL__r.invoiceit_s__Currency_Symbol__c})" />
+                </td>
+                <td class="aligncenter rightline bottomline"><apex:outputField value="{!invoice.invoiceit_s__Due_Date__c}" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="hspacer"></div>
+  <table class="boxedtable" border="0" cellpadding="0" cellspacing="0" width="100%">
+    <colgroup span="7"></colgroup>
+    <thead class="rich-table-thead">
+    <tr class="">
+        <th class="" scope="col" colspan="1">
+            <div>&nbsp;</div>
+        </th>
+    
+        <th class="" scope="col" colspan="1"><div><div class="alignleft headerpadding">&nbsp;{!$Label.ProductName}</div></div>
+        </th>
+    
+        <th class="" scope="col" colspan="1"><div><div class="alignleft headerpadding">&nbsp;{!$Label.Quantity}</div></div>
+        </th>
+        
+        <apex:repeat value="{!$ObjectType.invoiceit_s__Invoice_Lines__c.FieldSets.invoiceit_s__Invoice_Email_Fields}" var="fieldAPI">
+          <th class="" scope="col" colspan="1"><div><div class="alignleft headerpadding">&nbsp;{!fieldAPI.Label}</div></div>
+          </th>
+        </apex:repeat>
+    
+        <th class="" scope="col" colspan="1"><div><div class="alignleft rightline headerpadding">&nbsp;{!$Label.NetValue}</div></div>
+        </th>
+    </tr>
+    </thead>
+    
+    <tbody>
+    <!-- this is used for displaying the sequence numbers -->
+    <apex:variable value="{!1}" var="rowNum"/>
+    <apex:repeat value="{!listOfInvoiceLines}" var="iLines">
+        
+      <tr class="">
+      <td class="aligntop widthsupersmall aligncenter bottomline" colspan="1">
+      <span><apex:outputText value="{!FLOOR(rowNum)}"/></span>
+      </td>
+    
+      <td class="aligntop bottomline" colspan="1">{!iLines.invoiceit_s__Product_Name__c}
+          <span class="description">
+            <apex:outputText value="{!iLines.invoiceit_s__Line_Name__c}" rendered="{!iLines.Job_Rate_Plan_Charge__r.invoiceit_s__Price_Type__c == 'One Time'}"/>
+            <apex:outputText value="{!iLines.invoiceit_s__Line_Name__c} {!iLines.invoiceit_s__Service_Start_Date__c} - {!iLines.invoiceit_s__Service_End_Date__c}" rendered="{!iLines.Job_Rate_Plan_Charge__r.invoiceit_s__Price_Type__c == 'Recurring'}"/>
+          </span>
+      </td>
+    
+      <td class="alignright aligntop widthsmall bottomline" colspan="1">
+         <span>
+             <apex:outputText value="{0, number, 0}">
+                    <apex:param value="{!iLines.invoiceit_s__Quantity__c}" />
+                </apex:outputText>
+          </span>
+      </td>
+      
+       <apex:repeat value="{!$ObjectType.invoiceit_s__Invoice_Lines__c.FieldSets.invoiceit_s__Invoice_Email_Fields}" var="fieldAPI">
+        <td class="alignright aligntop widthsmall bottomline" colspan="1">
+         <span>
+             <apex:outputField value="{!iLines[fieldAPI]}" />
+          </span>
+        </td>
+      </apex:repeat>
+    
+      <td class="alignright alignright aligntop widthmedium rightline bottomline" colspan="1">
+       <apex:outputField value="{!iLines.invoiceit_s__Line_Amount__c}" />
+      </td>
+     </tr>
+    
+    <apex:variable var="rowNum" value="{!rowNum + 1}"/>
+    </apex:repeat>
+    </tbody>
+  </table>
+
+    <apex:outputPanel rendered="{!invoice.invoiceit_s__Discount_Value__c > 0}">
+    <table>
+        <tr>
+            <td class="aligntop generalnopadding">
+                <table>
+                    <tr>
+                        <td class="strong alignright">{!$Label.NetTotal}
+                        </td>
+                        <td class="widthmedium boxed boxedtopnone alignright"><apex:outputText value="{!invoice.CurrencyL__r.invoiceit_s__Currency_Symbol__c}" />&nbsp;
+                            <apex:outputField value="{!invoice.invoiceit_s__Amount__c}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="strong alignright">{!$Label.Discount}
+                        </td>
+                        <td class="widthmedium boxed boxedtopnone alignright"><apex:outputText value="{!invoice.CurrencyL__r.invoiceit_s__Currency_Symbol__c}" />&nbsp;
+                            <apex:outputField value="{!invoice.invoiceit_s__Discount_Value__c}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="strong alignright">{!$Label.Vat}
+                        </td>
+                        <td class="widthmedium boxed alignright"><apex:outputText value="{!invoice.CurrencyL__r.invoiceit_s__Currency_Symbol__c}" />&nbsp;
+                             <apex:outputField value="{!invoice.invoiceit_s__VAT__c}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="strong alignright">{!$Label.Tax}
+                        </td>
+                        <td class="widthmedium boxed alignright"><apex:outputText value="{!invoice.CurrencyL__r.invoiceit_s__Currency_Symbol__c}" />&nbsp;
+                             <apex:outputField value="{!invoice.invoiceit_s__Tax__c}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="strong alignright">{!$Label.InvoiceTotal}
+                        </td>
+                        <td class="widthmedium boxed alignright"><apex:outputText value="{!invoice.CurrencyL__r.invoiceit_s__Currency_Symbol__c}" />&nbsp;
+                            <apex:outputField value="{!invoice.invoiceit_s__Total_Invoice_Value__c}" />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    </apex:outputPanel>
+    <apex:outputPanel rendered="{!invoice.invoiceit_s__Discount_Value__c <= 0}">
+    <table>
+        <tr>
+            <td class="aligntop generalnopadding">
+                <table>
+                    <tr>
+                        <td class="strong alignright">{!$Label.NetTotal}
+                        </td>
+                        <td class="widthmedium boxed boxedtopnone alignright"><apex:outputText value="{!invoice.CurrencyL__r.invoiceit_s__Currency_Symbol__c}" />&nbsp;
+                            <apex:outputField value="{!invoice.invoiceit_s__Amount__c}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="strong alignright">{!$Label.Vat}
+                        </td>
+                        <td class="widthmedium boxed alignright"><apex:outputText value="{!invoice.CurrencyL__r.invoiceit_s__Currency_Symbol__c}" />&nbsp;
+                             <apex:outputField value="{!invoice.invoiceit_s__VAT__c}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="strong alignright">{!$Label.Tax}
+                        </td>
+                        <td class="widthmedium boxed alignright"><apex:outputText value="{!invoice.CurrencyL__r.invoiceit_s__Currency_Symbol__c}" />&nbsp;
+                             <apex:outputField value="{!invoice.invoiceit_s__Tax__c}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="strong alignright">{!$Label.InvoiceTotal}
+                        </td>
+                        <td class="widthmedium boxed alignright"><apex:outputText value="{!invoice.CurrencyL__r.invoiceit_s__Currency_Symbol__c}" />&nbsp;
+                            <apex:outputField value="{!invoice.invoiceit_s__Total_Invoice_Value__c}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="strong alignright">{!$Label.InvoicePaidAmount}
+                        </td>
+                        <td class="widthmedium boxed alignright"><apex:outputText value="{!invoice.CurrencyL__r.invoiceit_s__Currency_Symbol__c}" />&nbsp;
+                            <apex:outputField value="{!invoice.invoiceit_s__Paid_Amount__c}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="strong alignright">{!$Label.InvoiceBalance}
+                        </td>
+                        <td class="widthmedium boxed alignright"><apex:outputText value="{!invoice.CurrencyL__r.invoiceit_s__Currency_Symbol__c}" />&nbsp;
+                            <apex:outputField value="{!invoice.invoiceit_s__Unpaid_Amount__c}" />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    </apex:outputPanel>
+    
+    <div class="hspacer"></div>
+    <div class="hspacer"></div>
+    <div class="hspacer"></div>
+    <div class="hspacer"></div>
+    <table>
+        <tr><td width="68%"></td><td class="blank"></td></tr>
+    </table>
+</apex:component>

@@ -1,0 +1,152 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardController="Match__c"  extensions="IGI_TIPP_Controller" 
+                standardStylesheets="false" showHeader="false"
+                title="TIPP Information" id="igi_tipp_main" action="{!preLoad}">
+<apex:composition template="intraxtemplate_vs3">
+  <apex:define name="body">
+  
+ <style>
+ #branding-zone, #footer-zone{display:none;}
+#content-zone {
+background: #f8f8f8;
+}
+.standalone{background: #fff;
+border:#ccc solid 1px;   
+border-radius: 5px;
+padding:60px;}
+</style>        
+  
+    <div class="row">
+        <div class="col-md-8 center-block standalone"> 
+         <apex:image styleClass="center-block" url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/logos/medium-logo-intrax.png')}"/>
+             <h1 class="center-text">Phase List </h1>
+     <apex:Messages rendered="{!if(customMessage,false,true)}" styleClass="custom-error-pagelevel" id="messageapex" />
+                    <apex:Messages rendered="{!if(customMessage,true,false)}" styleClass="errorMsg" style="list-style-type:none;" id="message1" /> 
+         <div class="h2">Participant Info</div>
+         <hr class="margin-b3"/> 
+              <apex:form styleClass="form-vertical ws-validate" id="webform">     
+                  
+                <div class="row">
+                    <div class="col-sm-4">
+                     <div class="form-group">
+                             <label class="control-label">Given Name</label>
+                              <apex:outputField styleClass="form-control" value="{!sMatch.Participant_Id__r.FirstName}"/> &nbsp;
+                               <apex:outputField styleClass="form-control" value="{!sMatch.Participant_Id__r.Middle_Name__pc}" />
+                       </div>
+                   </div>
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                             <label class="control-label">Last Name</label>
+                             <apex:outputField styleClass="form-control" value="{!sMatch.Participant_Id__r.LastName}" />
+                      </div>
+                     </div>
+                     
+                   <div class="col-sm-4">
+                      <div class="form-group">
+                             <label class="control-label">Program Category</label>
+                            <apex:outputText rendered="{!(CONTAINS(sMatch.Engagement__r.SEVIS_Program__c,'15-Intern'))}">
+                                <apex:outputText value="Intern" />
+                           </apex:outputText>   
+                          <apex:outputText rendered="{!(CONTAINS(sMatch.Engagement__r.SEVIS_Program__c,'14-Trainee'))}">
+                                <apex:outputText value="Trainee" />
+                           </apex:outputText>   
+                        </div>
+                     </div>
+               </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                             <label class="control-label">Program Start</label>
+                             <apex:outputField styleClass="form-control" value="{!sMatch.Engagement__r.Engagement_Start__c}"/>
+                        </div>
+                     </div>
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                             <label class="control-label">Program End</label>
+                             <apex:outputField styleClass="form-control" value="{!sMatch.Engagement__r.Engagement_End__c}"/>
+                        </div>
+                     </div>
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                             <label class="control-label">Field of Training/Internship</label>
+                             <apex:outputField styleClass="form-control" value="{!PositionInfo.Functional_Areas__c}"/>
+                        </div>
+                     </div>
+                </div>
+                 
+                 <div class="h2">Summary Info</div>
+                  <span class="info">In order to submit the T/IPP, Host Organization Info must be complete and all phases must have dates. Please be sure there are no gaps between phase dates.
+                  </span>
+                     <hr class="margin-b3"/> 
+                     
+             <apex:outputPanel layout="block" id="myPanel2">
+               <apex:outputPanel layout="block" rendered="{!IF(selectedPlans.Size == 0, true, false)}">
+                  <div class="h3 box gray center-text">No record(s) to display.</div>
+              </apex:outputPanel>
+            </apex:outputPanel>
+       <apex:outputPanel layout="block" id="myPanel1">
+        <apex:pageBlock id="pb1" rendered="{!IF(selectedPlans.Size > 0, true, false)}">
+          <div class="table-responsive vs3">
+              <apex:pageBlockTable styleClass="table vs3" value="{!selectedPlans}" var="item" rendered="{!IF(selectedPlans.Size > 0, true, false)}">
+               <apex:column style="min-width:200px;" headerValue="Name">
+               <apex:outputLink value="/apex/igi_tipp_phase_detail?dpid={!item.Id}&val={!validate}" ><apex:outputText value="{!item.Name}"/></apex:outputLink>
+               </apex:column>
+                <apex:column style="min-width:100px;" headerValue="Phase">
+                <apex:outputField id="Position_Name" value="{!item.Phase__c}"/>
+                </apex:column>
+                <apex:column style="min-width:100px;"  headerValue="Start">
+                <apex:outputField id="Status" value="{!item.Start__c}"/>
+                </apex:column>
+                <apex:column style="min-width:100px;"  headerValue="End">
+                <apex:outputField id="End" value="{!item.End__c}"/>
+                </apex:column>   
+                 <apex:column style="min-width:100px;" >
+                <a href="javascript:if (window.confirm('Are you sure want to delete?')) DeletePlan('{!item.Id}');" >Delete</a>
+                </apex:column>   
+              </apex:pageBlockTable>
+              </div>
+          </apex:pageBlock>
+        </apex:outputPanel>
+          <apex:actionFunction action="{!DeletePlan}" name="DeletePlan" reRender="webform" onComplete="rerunjs();" status="onsubmit" >
+           <apex:param name="planid" value="" assignTo="{!SelectedPlanId}"/>
+          </apex:actionFunction>    
+             <apex:commandlink styleClass="btn btn-link btn-lg margin-t2" action="{!navigator}">  
+                                        <apex:param name="nextPage" value="/apex/igi_tipp_new_phase"/>
+                                        <apex:param name="reDirectPage" value="true"/> 
+                                         <apex:param name="mId" value="{!matchId}"/>
+                                        <apex:param name="val" assignto="{!validate}" value="{!validate}"/>
+                                       <i class="fa fa-plus-circle"></i><span>Add New Phase</span>
+                              </apex:commandlink>
+            
+              <div class="row margin-t2">
+                <div class="col-sm-12">
+                    
+                            <apex:commandlink styleClass="btn btn-primary btn-lg margin-r2" action="{!validator}">  
+                                        <apex:param name="nextPage" value="/apex/igi_tipp_thanks"/>
+                                        <apex:param name="pId" value="{!posId}"/> 
+                                         <apex:param name="reDirectPage" value="true"/> 
+                                        <apex:commandButton value="Submit Training Plan" />
+                               </apex:commandlink>
+                             
+                    
+                                    <apex:commandlink styleClass="btn btn-link btn-lg" action="{!navigator}">  
+                                        <apex:param name="reDirectPage" value="true"/> 
+                                        <apex:param name="nextPage" value="/apex/igi_tipp_host_company_info"/>
+                                        <apex:param name="val" assignto="{!validate}" value="{!validate}"/>
+                                        <i class="fa fa-chevron-left"></i> <span>Company Info</span>
+                                    </apex:commandlink>
+
+                            <apex:commandlink styleClass="btn btn-default btn-lg pull-right" onClick="window.top.close();">  
+                                        <apex:commandButton value="Finish Later" />
+                               </apex:commandlink>
+
+                    
+                    </div><!--  end col -->
+                  </div><!--  end row -->
+                  
+               </apex:form>
+         </div><!--  end col -->
+                  </div><!--  end row -->
+        </apex:define> 
+    </apex:composition>
+
+</apex:page>

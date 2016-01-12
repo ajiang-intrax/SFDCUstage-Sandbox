@@ -1,0 +1,91 @@
+<apex:page standardController="Match__c" extensions="IGI_HC_Controller" docType="html-5.0" standardStylesheets="true" showHeader="false">
+   
+<script type="text/javascript">
+
+
+</script>
+
+    <apex:composition template="IntraxTemplate_Vs1">
+      <apex:define name="body">
+      <div class="wrapper">
+        <apex:form >
+    
+                 <div class="page-header clearfix">
+            <h1><apex:outputText >Your Interviews</apex:outputText></h1> 
+          </div>
+          
+          <div class="white-box clearfix">
+            <c:HC_Sub_Navigation />
+            <div class="panel two_thirds">
+                  <apex:outputPanel layout="block" rendered="{!IF(ConfirmedMatches.Size > 0, false, true)}" styleClass="dotted-box">
+       			<apex:outputText >You currently do not have any upcoming interviews.</apex:outputText>
+       	    </apex:outputPanel>      
+                  <apex:outputPanel layout="block" rendered="{!IF(ConfirmedMatches.Size > 0, true, false)}">             
+                 <div class="content-group">
+                <div class="content-group-title">Confirmed Interviews</div>
+                <div class="content-group-body">
+                 
+               
+       			<p><apex:outputText >Below is a list of your upcoming interviews.</apex:outputText></p>
+       	   
+                   
+                         <apex:repeat value="{!ConfirmedMatches}" var="ConfMatch"> 
+                         <div class="divider-top">
+              			<h2><apex:outputField value="{!ConfMatch.Position_Name__r.Name}" /></h2>
+              			 <strong>Participant:</strong>
+                        <apex:commandlink styleClass="inline-link" action="{!navigator}">
+                                            <apex:param name="nextPage" value="/apex/SC_Scheduling?detail=true"/>
+                                            <apex:param name="mId" value="{!ConfMatch.Id}" assignTo="{!mId}"/>   
+                                            <apex:param name="detail" value="true" assignTo="{!detail}"/>                                    
+                                            <apex:commandButton value="{!ConfMatch.Participant_Id__r.LastName} , {!ConfMatch.Participant_Id__r.FirstName}" />                                           
+                                        </apex:commandlink>
+                 		<br/>
+                        <strong>Interview Date/Time:</strong>&nbsp;<apex:outputText value="{!ConfMatch.Interview_Date__c}" /><br/> 
+              			<strong>Interviewer:</strong>&nbsp;<apex:outputLabel value="{!ConfMatch.Position_Name__r.Position_Supervisor__r.Name}" /><br/>
+                     	<strong>Skype:</strong>&nbsp;<apex:outputText value="{!ConfMatch.Participant_Id__r.Skype_ID__pc}" /><br/>
+                		<div class="clearfix"> 
+                		 <apex:outputPanel styleClass="form-link" layout="block" rendered="{!if(ConfMatch.Interview_Status__c=='Scheduled',true,false)}">
+                		<apex:commandlink action="{!navigator}" >
+                                         <i class="icon-calendar"></i> 
+                                          <apex:param name="nextPage" value="/apex/SC_Scheduling?schreSched=true" />
+                                            <apex:param name="mId" value="{!ConfMatch.Id}" assignTo="{!mId}" />  
+                                            <apex:param name="schreSched" value="true" assignTo="{!schreSched}" />
+                                            <apex:param name="compOffset" value="" assignTo="{!compOffset}" />
+                                            <apex:param name="compOffset1" value="" assignTo="{!compOffset1}" />
+                                            <apex:param name="compOffset2" value="" assignTo="{!compOffset2}" />
+                                            <apex:commandButton value="Reschedule" />                                           
+                                        </apex:commandlink>
+                                        </apex:outputPanel>
+                                     <apex:outputPanel styleClass="form-link" layout="block" rendered="{!if(ConfMatch.Interview_Status__c=='Scheduled',true,false)}">  
+                                    <apex:commandlink action="{!navigator}">
+                                        <i class="icon-remove"></i> 
+                                        <apex:param name="nextPage" value="/apex/SC_Scheduling?schCancel=true" />
+                                            <apex:param name="mId" value="{!ConfMatch.Id}" assignTo="{!mId}" />  
+                                             <apex:param name="schCancel" value="true" assignTo="{!schCancel}" />
+                                            <apex:param name="compOffset" value="" assignTo="{!compOffset}" />
+                                            <apex:param name="compOffset1" value="" assignTo="{!compOffset1}" />
+                                            <apex:param name="compOffset2" value="" assignTo="{!compOffset2}" />
+                                            <apex:commandButton value="Cancel Interview" />                                         
+                                        </apex:commandlink>
+                                        </apex:outputPanel>
+                                        </div>
+                                     </div>
+                		                  </apex:repeat>
+                  
+                   </div>  
+                </div>
+                  </apex:outputPanel>  
+                  
+              
+                 </div> 
+              
+             
+				
+             
+            </div>
+          </apex:form>
+         
+        </div>
+      </apex:define>
+  </apex:composition>
+</apex:page>

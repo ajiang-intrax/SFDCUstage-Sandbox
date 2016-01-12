@@ -1,0 +1,21 @@
+<messaging:emailTemplate subject="Your invoice {!relatedTo.Name} for period ending {!relatedTo.invoiceit_s__Target_Date__c}" recipientType="User" relatedToType="invoiceit_s__Invoice__c">
+    <messaging:plainTextEmailBody >
+        {!relatedTo.Shipping_Contact__r.Salutation} {!relatedTo.Shipping_Contact__r.Name},
+        
+        Please find your invoice attached, the details of which are mentioned below :-
+        
+        Total Invoice value: {!relatedTo.invoiceit_s__Invoice_Currency_Symbol__c} {!relatedTo.invoiceit_s__Total_Invoice_Value__c}
+        Due Date: <apex:outputText value="{0,date,dd/MM/yyyy}">
+                      <apex:param value="{!relatedTo.invoiceit_s__Due_Date__c}"/>
+                  </apex:outputText>
+
+        Thanks,
+        {!$User.FirstName} {!$User.LastName}
+        {!$Organization.Name}
+    </messaging:plainTextEmailBody>
+         
+   
+   <messaging:attachment renderAs="PDF" filename="{!relatedTo.Account__r.Name} - {!relatedTo.Name}">
+       <c:componentInvoiceEmail invoiceId="{!relatedTo.Id}" />
+   </messaging:attachment> 
+</messaging:emailTemplate>

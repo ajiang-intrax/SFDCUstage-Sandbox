@@ -1,0 +1,71 @@
+<apex:page docType="html-5.0" showHeader="false" standardStylesheets="false" id="flowtemplate_vs2">
+<!--[if lte IE 7]> <html class="no-js oldbrowser" lang="en"> <![endif]-->   
+<!--[if gt IE 7]><!-->  <html class="no-js"> <!--<![endif]-->
+<head> 
+<meta charset="utf-8" />
+<!--[if lte IE 8]>
+<script src="https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/themes/ie-warning/warning.js"></script>
+<script>window.onload=function(){e('ie-warning')}</script>
+<!--[endif]-->
+    
+<!--Intrax base theme used to set the right fonts etc. for Bootstrap to be loaded on  -->
+<apex:stylesheet value="{!URLFOR($Resource.intrax_visual_flows_vs2, '/intrax_visual_flows_vs2/styles/base.css')}" />
+    
+<!--jQuery basics-->
+<apex:includeScript value="{!URLFOR($Resource.module_jquery, '/module_jquery/scripts/jquery-1.8.0.min.js')}" />
+<apex:includeScript value="{!URLFOR($Resource.module_jquery, '/module_jquery/scripts/jquery-ui-1.8.23.custom.min.js')}" />
+<apex:stylesheet value="{!URLFOR($Resource.module_jquery, '/module_jquery/styles/jquery-ui-1.8.23.custom.css')}" />
+    
+<!-- Fontawesome module for icons -->
+<apex:stylesheet value="{!URLFOR($Resource.module_fontawesome, '/module_fontawesome/vs-4.3.0/css/font-awesome.min.css')}" />
+
+<!--Modernizr module for feature detection-->
+<apex:includeScript value="{!URLFOR($Resource.module_modernizr, '/module_modernizr/1-3-2014/modernizr.js')}" />
+
+<!--Datepicker module for custom jQuery datepicker-->
+<apex:includeScript value="{!URLFOR($Resource.module_datepicker, '/module_datepicker/Timepicker.js')}" />
+<apex:includeScript value="{!URLFOR($Resource.module_datepicker, '/module_datepicker/jQuery-ui.datetimepicker_localization.js')}" />
+<apex:includeScript value="{!URLFOR($Resource.module_datepicker, '/module_datepicker/SFdatepicker_patch.js')}" />
+
+<!--Intrax theme customization -->
+<apex:stylesheet value="{!URLFOR($Resource.intrax_visual_flows_vs2, '/intrax_visual_flows_vs2/styles/custom.css')}" />        
+
+</head>
+
+<body>
+<p class="noscript" style="display:none;"><strong>Warning:</strong> You do not have Javascript enabled. Please enable it for a better browsing experience.</p>
+
+<apex:insert name="body"/>
+
+</body> 
+
+ 
+<script type="text/javascript"> 
+var j$ = jQuery.noConflict(); 
+
+ // Custom datepicker initializer 
+    
+    function dpInitiate(){
+        j$(document).ready(function () {
+            var tags = j$('.dateInput');
+            for (var i = tags.length - 1; i >= 0; i--) {
+                datetimepickerInitializer(tags[i]);
+            };
+        });
+    };
+    dpInitiate();
+
+j$(document).ready(function() { 
+var startYear=1900;
+var endYear=2020;  
+var optionsString='';  
+if(startYear<endYear){   
+for(i=startYear;i<endYear+1;i++){  
+optionsString += "<option value=\""+i+"\">"+i+"</option>";  
+}  
+j$('#calYearPicker').html(optionsString); 
+}  
+});  
+</script> 
+</html>  
+</apex:page>

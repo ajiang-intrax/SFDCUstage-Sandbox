@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>false</plural>
+        <value><!-- Payment --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>true</plural>
+        <value><!-- Payment --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>false</plural>
+        <value><!-- Payment --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>true</plural>
+        <value><!-- Payment --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>false</plural>
+        <value><!-- Payment --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>true</plural>
+        <value><!-- Payment --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>false</plural>
+        <value><!-- Payment --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>true</plural>
+        <value><!-- Payment --></value>
+    </caseValues>
+    <fields>
+        <help><!-- The account/customer who has made this payment --></help>
+        <label>Konto</label>
+        <name>Account__c</name>
+        <relationshipLabel>Zahlungen</relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The amount that has already been allocated. --></help>
+        <label>Gewährte Betrag</label>
+        <name>Allocated_Amount__c</name>
+    </fields>
+    <fields>
+        <label>Betrag</label>
+        <name>Amount__c</name>
+    </fields>
+    <fields>
+        <label>Name der Bank</label>
+        <name>Bank_Name__c</name>
+    </fields>
+    <fields>
+        <label>Scheck Datum</label>
+        <name>Cheque_Date__c</name>
+    </fields>
+    <fields>
+        <label>Scheck-Nummer</label>
+        <name>Cheque_Number__c</name>
+    </fields>
+    <fields>
+        <help><!-- The payment currency --></help>
+        <label>Währung</label>
+        <name>Currency__c</name>
+        <relationshipLabel>Zahlungen</relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Exchange Rate Applied --></label>
+        <name>Exchange_Rate_Applied__c</name>
+    </fields>
+    <fields>
+        <help><!-- Optionally choose the contact who made this payment. This contact must belong to the same Account. --></help>
+        <label>Bezahlt durch</label>
+        <name>Paid_by__c</name>
+        <relationshipLabel>Zahlungen</relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The date this payment was made. --></help>
+        <label>Zahltag</label>
+        <name>Payment_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Payment Description --></label>
+        <name>Payment_Description__c</name>
+    </fields>
+    <fields>
+        <label>Zahlungsart</label>
+        <name>Payment_Type__c</name>
+        <picklistValues>
+            <masterLabel>ACH</masterLabel>
+            <translation><!-- ACH --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Bank Transfer</masterLabel>
+            <translation><!-- Bank Transfer --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Cash</masterLabel>
+            <translation><!-- Cash --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Cheque</masterLabel>
+            <translation><!-- Cheque --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Credit Card</masterLabel>
+            <translation><!-- Credit Card --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Status --></label>
+        <name>Status__c</name>
+        <picklistValues>
+            <masterLabel>Cancelled</masterLabel>
+            <translation><!-- Cancelled --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Completed</masterLabel>
+            <translation><!-- Completed --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Initiated</masterLabel>
+            <translation><!-- Initiated --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label>Transaktion</label>
+        <name>Transaction__c</name>
+        <relationshipLabel>Zahlungen</relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The amount that is un-allocated and can be used. --></help>
+        <label>Verfügbaren Menge</label>
+        <name>Unallocated_Amount__c</name>
+    </fields>
+    <gender><!-- Neuter --></gender>
+    <layouts>
+        <layout>Payment Layout</layout>
+        <sections>
+            <label><!-- Cheque Details (Valid only for Cheque Payments) --></label>
+            <section>Cheque Details (Valid only for Cheque Payments)</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- Payment Number --></nameFieldLabel>
+    <validationRules>
+        <errorMessage>&quot;Sie können nicht ändern, den Status einer Zahlung storniert&quot;</errorMessage>
+        <name>Cannot_change_status_from_Cancelled</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage>&quot;Sie können nicht ändern, die Höhe der Zahlungen. Alternativ können Sie diese Zahlung stornieren und eine neue Zahlung mit einer anderen Menge.&quot;</errorMessage>
+        <name>Cannot_change_the_Amount</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage>&quot;Scheck-Nummer, Scheck Datum und Name der Bank kann nur für die Zahlungsart &quot;&quot;Scheck&quot;&quot; bevölkert werden&quot;</errorMessage>
+        <name>Cheque_Details_valid_for_cheque_payments</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Enter the Cheque number --></errorMessage>
+        <name>Cheque_Number_Req_For_Cheque_Payment</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage>Sie können keine Status als die Zahlung storniert</errorMessage>
+        <name>Payment_status_cannot_be_Cancelled</name>
+    </validationRules>
+    <webLinks>
+        <label><!-- Payment_Allocation --></label>
+        <name>Payment_Allocation</name>
+    </webLinks>
+</CustomObjectTranslation>

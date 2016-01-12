@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Invoice Line</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Invoice Lines</value>
+    </caseValues>
+    <fields>
+        <label><!-- Accounting Code --></label>
+        <name>Accounting_Code__c</name>
+    </fields>
+    <fields>
+        <help><!-- This indicates the actual number of times the charge is being applied for the line. If you bill a monthly invoice for 45 days this value will be 1.5 --></help>
+        <label><!-- Calculated Quantity --></label>
+        <name>Calculated_Quantity__c</name>
+    </fields>
+    <fields>
+        <label><!-- Charge Date --></label>
+        <name>Charge_Date__c</name>
+    </fields>
+    <fields>
+        <help><!-- The discount value to be applied on the subtotal. --></help>
+        <label><!-- Discount Value --></label>
+        <name>Discount_Value__c</name>
+    </fields>
+    <fields>
+        <label><!-- Invoice --></label>
+        <name>Invoice__c</name>
+        <relationshipLabel><!-- Invoice Lines --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Order Rate Plan Charge --></label>
+        <name>Job_Rate_Plan_Charge__c</name>
+        <relationshipLabel><!-- Invoice Lines --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Order --></label>
+        <name>Job__c</name>
+        <relationshipLabel><!-- Invoice Lines --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Quantity * Unit Price --></help>
+        <label><!-- Subtotal --></label>
+        <name>Line_Amount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Line Name --></label>
+        <name>Line_Name__c</name>
+    </fields>
+    <fields>
+        <help><!-- This would be Subtotal - Discount value --></help>
+        <label><!-- Net Total --></label>
+        <name>Net_Total__c</name>
+    </fields>
+    <fields>
+        <label><!-- Product  Name --></label>
+        <name>Product_Name__c</name>
+    </fields>
+    <fields>
+        <label><!-- Product Rate Plan Charge --></label>
+        <name>Product_Rate_Plan_Charge__c</name>
+        <relationshipLabel><!-- Invoice Lines --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Product --></label>
+        <name>Product__c</name>
+        <relationshipLabel><!-- Invoice Lines --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Quantity --></label>
+        <name>Quantity__c</name>
+    </fields>
+    <fields>
+        <help><!-- This holds the sequence in which the charges are created and appears on the pdf files. --></help>
+        <label><!-- Sl No --></label>
+        <name>Sequence_No__c</name>
+    </fields>
+    <fields>
+        <help><!-- The ending date for the period of calculation of this charge. Applicable only to Recurring Charges. --></help>
+        <label><!-- Charge End Date --></label>
+        <name>Service_End_Date__c</name>
+    </fields>
+    <fields>
+        <help><!-- The starting date for the period of calculation of this charge. Applicable only to Recurring Charges. --></help>
+        <label><!-- Charge Start Date --></label>
+        <name>Service_Start_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Status --></label>
+        <name>Status__c</name>
+        <picklistValues>
+            <masterLabel>Active</masterLabel>
+            <translation><!-- Active --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Cancelled</masterLabel>
+            <translation><!-- Cancelled --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Draft</masterLabel>
+            <translation><!-- Draft --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Posted</masterLabel>
+            <translation><!-- Posted --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Tax Code --></label>
+        <name>Tax_Code__c</name>
+    </fields>
+    <fields>
+        <label><!-- Tax --></label>
+        <name>Tax__c</name>
+    </fields>
+    <fields>
+        <help><!-- Subtotal - Discount + VAT + Tax --></help>
+        <label><!-- Total Line Value --></label>
+        <name>Total_Line_Amount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Unit Price --></label>
+        <name>Unit_Price__c</name>
+    </fields>
+    <fields>
+        <label><!-- UOM --></label>
+        <name>Unit_of_Measurement__c</name>
+        <picklistValues>
+            <masterLabel>Ounce</masterLabel>
+            <translation><!-- Ounce --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Pound</masterLabel>
+            <translation><!-- Pound --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Stone</masterLabel>
+            <translation><!-- Stone --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Ton</masterLabel>
+            <translation><!-- Ton --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Unit</masterLabel>
+            <translation><!-- Unit --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- VAT --></label>
+        <name>VAT__c</name>
+    </fields>
+    <layouts>
+        <layout>Invoice Lines Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <startsWith>Vowel</startsWith>
+</CustomObjectTranslation>

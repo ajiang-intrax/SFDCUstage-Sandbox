@@ -1,0 +1,485 @@
+<apex:page id="igi_pt_app_education" docType="html-5.0" applyBodyTag="false" applyHtmlTag="false"
+    standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}"
+    standardStylesheets="false" showHeader="false"  title="Education Details">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_igi_pt_application userAgentCheck="{!userAgentCheck}"/>
+      <div class="row">
+        <div class="col-md-7 col-md-push-3">
+            
+            <c:block_app_completion_igi applicantInfo="{!applicantInfo}" isIGIMainReady="{!CheckMainIGIApp}"/>
+            
+            <apex:outputText rendered="{!IF(applicantInfo.Application_Level__c = 'Basic', true, false)}">  
+                <h1>Education Information</h1>
+            </apex:outputText>
+            <apex:outputText rendered="{!IF(applicantInfo.Application_Level__c = 'Main', true, false)}">  
+                <h1>Education and Skills</h1>
+            </apex:outputText>
+            
+            <p class="lead">Your education experience will help us determine the type of internship you are eligible for.</p>
+            <apex:form styleClass="form-vertical ws-validate" id="webform">
+            <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+            
+            <apex:variable var="varGraduation" value="{!educationInfo.Graduation_Date__c!=null}"/>
+            <apex:variable var="varProgType" value="{!educationInfo.Program_Type__c!=null}"/>
+            <apex:variable var="varInstitutionType" value="{!educationInfo.Institution_Type__c!=null}"/>
+            <apex:variable var="varInstitutionValue" value="{!If(varInstitutionType && (educationInfo.Institution_Type__c=='University/College' || educationInfo.Institution_Type__c == 'High/Secondary School') , true,false) }"/>         
+            <apex:variable var="varGradDate" value="{!If(varGraduation && varProgType && educationInfo.Graduation_Date__c > today() && educationInfo.Program_Type__c == 'Bachelor',true,false)}"/>
+            
+            <apex:outputPanel layout="block" rendered="{!IF(applicantInfo.Application_Level__c = 'Basic', true, false)}">            
+                <div class="row">
+                    <div class="col-sm-6">
+                    <div class="form-group">     
+                        <label class="control-label">Are you currently studying?</label>             
+                        <apex:actionRegion >                                             
+                            <apex:selectRadio styleClass="radio" value="{!applicantInfo.Currently_Studying__c}" required="TRUE" id="currentlyStudying">
+                                <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                                <apex:selectOption itemValue="No" itemLabel="No"/> 
+                                <apex:actionSupport event="onchange" onComplete="rerunjs();" rerender="currentlyStudyingBlock" status="pleasewait01"/>                                      
+                            </apex:selectRadio>
+                            <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();"  startStyleClass="feedback-st" startText="Loading. Please wait..." id="pleasewait01"/>
+                        </apex:actionRegion>
+                    </div>
+                    </div><!--  end col -->
+                </div><!--  end row -->
+                
+                <apex:pageBlock id="currentlyStudyingBlock">
+                    <apex:outputPanel layout="block" rendered="{!applicantInfo.Currently_Studying__c == 'Yes'}">
+                        <div class="section-title">
+                         Please tell us about your current studies.
+                        </div>
+                    
+                        <div class="row">
+                        <div class="col-sm-6">
+                             <div class="form-group">   
+                             <label class="control-label">Type of Institution </label>  
+                            <apex:actionRegion >                 
+                                <apex:inputField styleClass="form-control" value="{!educationInfo.Institution_Type__c}" required="TRUE" id="institutionType">
+                                    <apex:actionSupport event="onchange" onComplete="rerunjs();" rerender="typeofdegree" status="pleasewait02"/>      
+                                </apex:inputField>
+                                <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="pleasewait02"/>
+                            </apex:actionRegion>
+                            
+                            </div>
+                        </div><!--  end col --> 
+                        
+                        <apex:pageBlock id="typeofdegree">
+                            <apex:outputPanel layout="block" rendered="{!educationInfo.Institution_Type__c == 'University/College' || educationInfo.Institution_Type__c == 'High/Secondary School' }">
+                            <div class="col-sm-6">
+                                 <div class="form-group restoreclass">  
+                                 <label class="control-label">Type of Degree </label>   
+                                    <apex:actionRegion >            
+                                        <apex:inputField styleClass="form-control" value="{!educationInfo.Program_Type__c}" required="TRUE" id="degreeTypeYes">
+                                            <apex:actionSupport event="onchange" rerender="studyLevelBlockYes" onComplete="rerunjs();" status="pleasewait03"/>
+                                        </apex:inputField>
+                                        <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="pleasewait03"/>
+                                    </apex:actionRegion>
+                                </div>
+                            </div><!--  end col --> 
+                            </apex:outputPanel>
+                        </apex:pageBlock>
+                        
+                        </div> <!-- end row -->   
+                        
+                    
+                        <div class="row">
+                        <div class="col-sm-12">
+                             <div class="form-group">   
+                             <label class="control-label">Name of Institution </label>                   
+                                <apex:inputField styleClass="form-control" value="{!educationInfo.Institution_Name__c}" required="TRUE" id="institutionName"/>
+                            </div>
+                        </div><!--  end col --> 
+                        </div> <!-- end row -->
+                        
+                        <div class="row">
+                        <div class="col-sm-6">
+                             <div class="form-group">   
+                             <label class="control-label">Field of Study </label>                    
+                                <apex:inputField styleClass="form-control" value="{!educationInfo.Field_of_Study__c}" required="TRUE" id="fieldStudy"/>
+                            </div>
+                        </div><!--  end col --> 
+                        <div class="col-sm-6">
+                             <div class="form-group">   
+                             <label class="control-label">Approximate Graduation Date </label>  
+                                <div class="datepicker" locale="{!user.localeSidKey}">                              
+                                    <apex:actionRegion >                 
+                                        <apex:inputField styleClass="form-control" value="{!educationInfo.Graduation_Date__c}" required="TRUE" id="graduationDateYes">
+                                            <apex:actionSupport event="onchange" onComplete="rerunjs();" rerender="studyLevelBlockYes" status="pleasewait03"/>                                  
+                                        </apex:inputField>
+                                        <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="pleasewait03"/>
+                                    </apex:actionRegion>
+                                </div>
+                            </div>
+                        </div><!--  end col --> 
+                        </div> <!-- end row -->
+                        <apex:pageBlock id="studyLevelBlockYes">
+                            <apex:outputPanel layout="block" rendered="{!varGradDate}"> 
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                         <div class="form-group restoreclass">  
+                                         <label class="control-label">Years of University/College Study Completed </label>                   
+                                            <apex:inputField styleClass="form-control" value="{!educationInfo.Study_Level__c}" required="TRUE" id="studyLevelYes"/>
+                                        </div>
+                                    </div>  
+                                </div>
+                            </apex:outputPanel>                                 
+                        </apex:pageBlock>
+                                
+                    </apex:outputPanel>
+                    
+                    <apex:outputPanel layout="block" rendered="{!applicantInfo.Currently_Studying__c == 'No'}">
+                    
+                        <div class="section-title">
+                         Please tell us about your highest level of education
+                        </div>
+                        
+                        <div class="row">
+                        <div class="col-sm-6">
+                             <div class="form-group">   
+                             <label class="control-label">Type of Institution </label>  
+                            <apex:actionRegion >                 
+                                <apex:inputField styleClass="form-control" value="{!educationInfo.Institution_Type__c}" required="TRUE" id="institutionType2">
+                                    <apex:actionSupport event="onchange" onComplete="rerunjs();" rerender="typeofdegree2" status="pleasewait04"/>      
+                                </apex:inputField>
+                                <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="pleasewait04"/>
+                            </apex:actionRegion>
+                            
+                            </div>
+                        </div><!--  end col --> 
+                        
+                        
+                        <apex:pageBlock id="typeofdegree2">
+                        <apex:outputPanel layout="block" rendered="{!varInstitutionValue}">
+                        <div class="col-sm-6">
+                             <div class="form-group restoreclass">  
+                             <label class="control-label">Type of Degree </label>                    
+                                <apex:actionRegion >             
+                                    <apex:inputField styleClass="form-control" value="{!educationInfo.Program_Type__c}" required="TRUE" id="degreeTypeNo">
+                                        <apex:actionSupport event="onchange" rerender="experiencePeriodBlockNo" onComplete="rerunjs();" status="pleasewait05"/>
+                                    </apex:inputField>
+                                    <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="pleasewait05"/>
+                                </apex:actionRegion>
+                            </div>
+                        </div><!--  end col --> 
+                        </apex:outputPanel>
+                        </apex:pageBlock>
+                        </div> <!-- end row -->   
+                        
+                        <div class="row">
+                        <div class="col-sm-12">
+                             <div class="form-group">   
+                             <label class="control-label">Name of Institution </label>                   
+                                <apex:inputField styleClass="form-control" value="{!educationInfo.Institution_Name__c}" required="TRUE" id="institutionNameNo"/>
+                            </div>
+                        </div><!--  end col --> 
+                        </div> <!-- end row -->
+                        
+                        <div class="row">
+                        <div class="col-sm-6">
+                             <div class="form-group">   
+                             <label class="control-label">Field of Study </label>                    
+                                <apex:inputField styleClass="form-control" value="{!educationInfo.Field_of_Study__c}" required="TRUE" id="fieldStudyNo"/>
+                            </div>
+                        </div><!--  end col --> 
+                        <div class="col-sm-6">
+                             <div class="form-group">   
+                             <label class="control-label">Graduation Date </label>  
+                                <div class="datepicker" locale="{!user.localeSidKey}">
+                                    <apex:actionRegion >                 
+                                        <apex:inputField styleClass="form-control" value="{!educationInfo.Graduation_Date__c}" required="TRUE" id="graduationDateNo">
+                                            <apex:actionSupport event="onchange" onComplete="rerunjs();" rerender="experiencePeriodBlockNo" status="pleasewait06"/>                                             
+                                        </apex:inputField>
+                                        <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="pleasewait06"/>
+                                    </apex:actionRegion>                                    
+                                </div>
+                            </div>
+                        </div><!--  end col --> 
+                        </div> <!-- end row -->
+                        
+                     <apex:pageBlock id="experiencePeriodBlockNo">      
+                                            
+                             
+                        <apex:outputPanel layout="block" rendered="{!varGradDate}"> 
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                         <div class="form-group restoreclass">  
+                                         <label class="control-label">Years of University/College Study Completed </label>                   
+                                            <apex:inputField styleClass="form-control" value="{!educationInfo.Study_Level__c}" required="TRUE" id="studyLevelNo"/>
+                                        </div>
+                                    </div>  
+                                </div>
+                            </apex:outputPanel> 
+                            
+                            <apex:outputPanel layout="block" rendered="{!IF(PastGraduation, true, false)}">
+                                <div class="section-title"> Please tell us about your experience </div>         
+                            </apex:outputPanel>
+                            <apex:outputPanel layout="block" rendered="{!IF(PastGraduation, true, false)}">  
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                         <div class="form-group">   
+                                         <label class="control-label">When you start your program, will you have at least one year of professional experience related to your field of study? </label>                     
+                                            <apex:selectRadio styleClass="radio" value="{!one_year_exp}" required="TRUE" id="oneYearExp">
+                                                <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                                                <apex:selectOption itemValue="No" itemLabel="No"/>                                                                          
+                                            </apex:selectRadio>
+                                        </div>
+                                    </div><!--  end col -->                     
+                                </div> <!-- end row -->
+                            </apex:outputPanel>
+                            
+                            <apex:outputPanel layout="block" rendered="{!IF(FourYearsFromGraduation, true, false)}">          
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                         <div class="form-group">   
+                                         <label class="control-label">When you start your program, will you have at least five years of professional experience in the area of your desired internship?</label>                    
+                                            <apex:selectRadio styleClass="radio" value="{!five_years_exp}" required="TRUE" id="fiveYearsExp">
+                                                <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                                                <apex:selectOption itemValue="No" itemLabel="No"/>                                  
+                                            </apex:selectRadio>
+                                        </div>
+                                    </div><!--  end col -->                     
+                                </div> <!-- end row --> 
+                            </apex:outputPanel>             
+                         </apex:pageBlock>
+                                        
+                    </apex:outputPanel>
+                </apex:pageBlock>
+            
+            </apex:outputPanel> <!-- End of BASIC block -->
+            
+            <apex:outputPanel rendered="{!IF(applicantInfo.Application_Level__c == 'Main', true, false)}">
+
+                  <apex:outputpanel layout="block" id="wrappertable" styleClass="panel-group group1">
+                    <apex:repeat id="wtable"  value="{!educationMap}" var="wrapper">
+                      <apex:variable var="rowLast" value="{!IF( educationMapLast == wrapper, 'in','')}"/>
+                      <div class="panel panel-default">
+                        <div class="panel-heading">
+                          <h4 class="panel-title">
+                              <apex:outputLink styleClass="accordion-toggle" html-data-toggle="collapse" html-data-parent=".group1" value="#collapse1{!wrapper}">
+                              <apex:outputText rendered="{!IF(ISBLANK(educationMap[wrapper].Institution_Name__c), true, false)}" value="School {!wrapper}"> </apex:outputText>
+                              <apex:outputText rendered="{!IF(ISBLANK(educationMap[wrapper].Institution_Name__c), false, true)}" value=" {!educationMap[wrapper].Institution_Name__c}"> </apex:outputText>
+                            </apex:outputLink>
+                          </h4>
+                        </div>
+                        <!--  end panel heading -->
+                        <div id="collapse1{!wrapper}" class="panel-collapse collapse {!rowLast}">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Type of Institution </label>                                       
+                                            <apex:actionRegion >                 
+                                                <apex:inputField styleClass="form-control" value="{!educationMap[wrapper].Institution_Type__c}" required="TRUE" id="institutionType2">
+                                                <apex:actionSupport event="onchange" onComplete="rerunjs();" rerender="typeofdegree3" status="pleasewait07"/>      
+                                                </apex:inputField>
+                                                <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="pleasewait07"/>
+                                            </apex:actionRegion>
+                                        </div>
+                                    </div> <!--  end col -->
+                                 <apex:pageBlock id="typeofdegree3">
+                                  <apex:outputPanel layout="block" rendered="{!educationMap[wrapper].Institution_Type__c == 'University/College' || educationMap[wrapper].Institution_Type__c == 'High/Secondary School' }">  
+                                    <div class="col-sm-6">
+                                      <div class="form-group restoreclass">
+                                          <label class="control-label">Type of Degree </label>
+                                          <apex:inputField styleClass="form-control" value="{!educationMap[wrapper].Program_Type__c}" required="TRUE" id="degreeType" />
+                                      </div>
+                                    </div> <!--  end col -->
+                                    </apex:outputPanel>
+                                    </apex:pageBlock>
+                                </div> <!--  end row -->
+                                
+                                <div class="row">
+                                 <div class="col-sm-12">
+                                          <div class="form-group">
+                                              <label class="control-label">Institution Name </label>
+                                              <apex:inputField styleClass="form-control" value="{!educationMap[wrapper].Institution_Name__c}" required="TRUE" id="SchoolName" />
+                                          </div>
+                                    </div> <!--  end col -->
+                                 </div> <!--  end row -->
+                                 
+                                 
+                                <div class="row">
+                                    
+                                    <div class="col-sm-6">
+                                          <div class="form-group">
+                                              <label class="control-label">Field of Study </label>
+                                              <apex:inputField styleClass="form-control" value="{!educationMap[wrapper].Field_of_Study__c}" required="TRUE" id="fieldStudy" />
+                                          </div>
+                                    </div> <!--  end col -->    
+                             
+                                    <div class="col-sm-6">
+                                          <div class="form-group">
+                                              <label class="control-label">Approximate Graduation Date</label>
+                                              <div class="datepicker" locale="{!user.localeSidKey}">
+                                                <apex:inputField styleClass="form-control" value="{!educationMap[wrapper].Graduation_Date__c}" required="true" id="graduationDate"/>
+                                              </div>    
+                                          </div>
+                                    </div> <!--  end col -->                                                                    
+                                </div> <!--  end row -->                                
+                                                            
+                                <apex:outputText id="outputpanel1" rendered="{! NOT(wrapper == 1)}">
+                                  <apex:commandlink styleClass="btn btn-link btn-lg pull-right" action="{!removeEducationRecord}" rerender="wrappertable" onComplete="dpInitiate();" immediate="true" id="linkdelWrapper" status="status"> <i class="fa fa-trash-o"></i> <span>Remove</span>
+                                    <apex:param name="toDelIdent" value="{!wrapper}" assignTo="{!toDelIdent}"/>
+                                  </apex:commandlink>
+                                </apex:outputText>
+                            </div>
+                        </div>
+
+                        <!-- end panel collapse --> 
+                      </div>
+                      <!--  end panel -->
+                      
+                    </apex:repeat>
+                    <apex:outputPanel layout="block" id="addButtonP">
+                      <!-- <apex:outputPanel layout="block" rendered="{!wrapperParsize < 2}" id="outputpaneladd">-->
+                      <apex:outputPanel layout="block" id="outputpaneladd">
+                        <apex:commandlink styleClass="btn btn-link btn-lg margin-b" action="{!addEducationRecord}" onComplete="rerunjs();dpInitiate();" immediate="true" rerender="wrappertable, emergencyblock, rowCounter" id="linkaddlWrapper" status="status">
+                          <apex:param name="addCount" value="1" assignTo="{!addCount}"/>
+                          <apex:commandButton value="" id="addbutton"/><i class="fa fa-plus-circle"></i><span>Add Another Institution</span>
+                        </apex:commandlink>
+                      </apex:outputPanel>
+                    </apex:outputPanel>
+ 
+                  </apex:outputpanel>
+                  <!--  end panel group --> 
+                
+                <div class="section-title">What languages do you speak?</div>
+                
+                <div class="row">  
+                     <div class="col-sm-6"> 
+                        <div class="form-group">                            
+                            <label class="control-label">Native Language</label>
+                            <apex:inputField styleClass="form-control" value="{!applicantInfo.Primary_Language__c}" required="TRUE" id="nativeLang" />
+                        </div>
+                    </div> <!--  end col -->
+                    
+               </div> <!--  end row -->
+               <apex:outputPanel layout="block" id="languagebox" >
+                   <apex:outputPanel layout="block" rendered="{!addLanguage == 1 || addLanguage == 2 || addLanguage == 3}">
+                    <div class="row">  
+                         <div class="col-sm-6"> 
+                            <div class="form-group">                            
+                                <label class="control-label">Language 1 
+                                    <apex:commandlink rendered="{!addLanguage == 1}" action="{!deletelanguagesIGI}" onComplete="dpInitiate();" immediate="true" rerender="languagebox, langLink" id="buttonlanguageDel1" status="showaddLanguage">
+                                        <span>Remove</span>
+                                    </apex:commandlink>
+                                </label>
+                                <apex:inputField styleClass="form-control" value="{!applicantInfo.Language_1__c}" required="true" id="lang1" />
+                            </div>
+                        </div> <!--  end col -->
+                        
+                        <div class="col-sm-6"> 
+                            <div class="form-group">
+                                <label class="control-label">Language 1 Proficiency </label>
+                                <apex:inputField styleClass="form-control" value="{!applicantInfo.Language_1_Proficiency__c}" required="true" id="lang1_prof" />    
+                            </div>
+                        </div> <!--  end col -->
+                   </div> <!--  end row -->
+                   </apex:outputPanel>
+               
+                  <apex:outputPanel layout="block" rendered="{!addLanguage == 2 || addLanguage == 3}">
+                      <div class="row">  
+                    <div class="col-sm-6"> 
+                    <div class="form-group">
+                      <label class="control-label">Language 2 
+                        <apex:commandlink rendered="{!addLanguage == 2}" action="{!deletelanguagesIGI}" onComplete="dpInitiate();" immediate="true" rerender="languagebox, langLink" id="buttonlanguageDel2" status="showaddLanguage">
+                            <span>Remove</span>
+                        </apex:commandlink></label>
+                        <apex:inputField styleClass="form-control" html-maxlength="10" value="{!applicantInfo.Language_2__c}" required="TRUE" id="lang2" />
+                    </div>
+                       </div> <!--  end col -->
+                   <div class="col-sm-6"> 
+                    <div class="form-group">
+                      <label class="control-label">Language 2 Proficiency </label>
+                        <apex:inputField styleClass="form-control" value="{!applicantInfo.Language_2_Proficiency__c}" required="TRUE" id="lan2_prof" />
+                    </div>
+                     </div> <!--  end col -->
+                      </div> <!--  end row -->
+                  </apex:outputPanel>
+                
+                  <apex:outputPanel layout="block" rendered="{!addLanguage == 3}">
+                      <div class="row">  
+                    <div class="col-sm-6"> 
+                    <div class="form-group">
+                      <label class="control-label">Language 3 
+                        <apex:commandlink action="{!deletelanguagesIGI}" onComplete="dpInitiate();" immediate="true" rerender="languagebox, langLink" id="buttonlanguageDel3" status="showaddLanguage">
+                            <span>Remove</span>
+                        </apex:commandlink>
+                      </label>
+                        <apex:inputField styleClass="form-control" html-maxlength="10" value="{!applicantInfo.Language_3__c}" required="TRUE" id="lang3" />
+                    </div>
+                       </div> <!--  end col -->
+                   <div class="col-sm-6"> 
+                    <div class="form-group">
+                      <label class="control-label">Language 3 Proficiency </label>
+                        <apex:inputField styleClass="form-control" value="{!applicantInfo.Language_3_Proficiency__c}" required="TRUE" id="lang3_prof" />
+                    </div>
+                     </div> <!--  end col -->
+                      </div> <!--  end row -->
+                  </apex:outputPanel>
+                </apex:outputPanel>
+                                    
+                <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showaddLanguage"/>
+                
+                <apex:outputPanel layout="block" id="langLink">
+                    <apex:commandlink rendered="{!addlanguage < 3 }" immediate="true" styleClass="btn btn-link btn-lg add" action="{!addlanguages}" rerender="languagebox,langLink" status="showaddLanguage" id="linkLanguage">
+                    <i class="fa fa-plus-circle"></i>
+                    <span>Add Another Language</span>
+                    </apex:commandlink>
+                </apex:outputPanel>
+                
+                
+                
+            
+            </apex:outputPanel> <!-- END MAIN BLOCK -->
+            
+            <div class="form-group margin-t">
+                
+                <apex:outputText rendered="{!applicantInfo.Application_Level__c == 'Basic'}">
+                <apex:outputLink styleClass="btn btn-link btn-lg float"  value="/apex/igi_pt_app_personal_Info?id={!applicantInfo.Id}" id="backlink"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                </apex:outputText>
+                
+                
+                <apex:outputText rendered="{!applicantInfo.Application_Level__c == 'Basic'}">
+                <apex:commandlink styleClass="btn btn-primary btn-lg"
+                                    action="{!navigator}" id="nextlink"  onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                  <apex:param name="nextPage" value="/apex/igi_pt_app_program_pref"/>
+                  <apex:param name="reDirectPage" value="true" />
+                  <apex:param name="pageId" value="052"/>
+                  <apex:commandButton value="Save & Continue" id="continuebutton" />
+                </apex:commandlink>
+                </apex:outputText>
+                
+                <apex:outputText rendered="{!applicantInfo.Application_Level__c == 'Main'}">
+                <apex:commandlink styleClass="btn btn-primary btn-lg"
+                                    action="{!navigator}" id="nextlink2"  onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                  <apex:param name="nextPage" value="/apex/igi_pt_app_experience"/>
+                  <apex:param name="reDirectPage" value="true" />
+                  <apex:param name="pageId" value="052"/>
+                  <apex:commandButton value="Save & Continue" id="continuebutton2" />
+                </apex:commandlink>
+                </apex:outputText>               	
+
+            </div>
+            
+          </apex:form>
+          
+          <apex:form >          	     
+          	<c:block_app_coedit_authorization ApplicantInfo="{!applicantInfo}" pageController="{!AEC}" rendered="{!applicantInfo.Apply_on_Behalf_of_PT__c && applicantInfo.Application_Stage__c == 'Working'}"/>
+          </apex:form>
+          
+        </div>
+        <!-- end column -->
+        
+           <div class="col-md-3 col-md-pull-7">
+          <apex:form >
+            <c:menu_igi_pt_app ApplicantInfo="{!applicantInfo}" personInfo="{!personInfo}" />
+          </apex:form>
+        </div>
+        <!-- end column  --> 
+      </div>
+      <!-- end row --> 
+      
+    </apex:define>
+  </apex:composition>
+</apex:page>

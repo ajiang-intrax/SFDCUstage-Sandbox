@@ -1,0 +1,256 @@
+<apex:page title="Campaigns | Intrax" standardStylesheets="false"   showHeader="false" controller="IGI_HC_Controller"   action="{!checkLoginWithCampaignSearch}">
+    
+        <apex:composition template="IntraxTemplate_Vs2">
+            <apex:define name="body">
+            <apex:form >
+                
+               <apex:pageblock >
+                <apex:pageBlockSection >
+                 <apex:pageBlockSectionItem >
+                  <h1>Hiring Event</h1>
+                 </apex:pageBlockSectionItem>
+                 
+                 <apex:pageBlockSectionItem >
+                  <apex:outputText > <h4>Find your company’s upcoming and past hiring events for Intrax participants.</h4>
+                  </apex:outputText>
+                 </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+               </apex:pageblock>
+                <div class="row-fluid">
+                    <div class="span3">
+
+                        <div class="block filter-group">
+                            <div class="block-header">
+                                <h3>Search Filters</h3>
+                            </div>
+                            
+                                
+                            <div class="block-body"> 
+                                <div class="filter">
+                                   <div class="filter-name">Hiring Event</div>
+                                   <div class="filter-field">
+                                    <apex:selectList value="{!CampaignSelected}" multiselect="false" size="1"  >
+                                   <apex:selectOption itemValue="" itemLabel="--None--"/>
+                                   <apex:selectOptions value="{!activeCampaigns}"/>
+                                   <apex:actionSupport event="onchange" rerender="AyusaFilters, AppStage, AppLevel" status="waitMsg" onComplete="doSearch();return false;"/>
+                                   </apex:selectList>
+                                    </div> 
+                                </div> 
+                                <!--  <apex:pageBlock id="SessionFilters" >
+                                <apex:outputPanel rendered="{!IF(campaignOnlySessions.Size == 0 , false, true)}" > --->
+                                    <div class="filter">
+                                       <div class="filter-name">Session</div>
+                                       <div class="filter-field">
+                                        <apex:selectList value="{!CampaignSessionSelected}" multiselect="false" size="1"  id="selSession">
+                                       <apex:selectOption itemValue="" itemLabel="--None--"/>
+                                       <apex:selectOptions value="{!activeCampaignsSession}"/>
+                                       <apex:actionSupport event="onchange" rerender="AyusaFilters, AppStage, AppLevel" status="waitMsg" onComplete="doSearch();return false;"/>
+                                       </apex:selectList>
+                                        </div> 
+                                    </div>
+                                   <!-- </apex:outputPanel>
+                                  </apex:pageBlock>  -->
+                                
+
+                            </div>
+                            <!-- end block body -->
+                        </div>
+                        <!-- end block -->
+                    </div>
+                    <!-- end span3 -->
+                    <div class="span9">
+
+                           <apex:actionStatus id="waitMsg" startStyleClass="alert alert-info">
+                            <apex:facet name="start" >
+                                <i class="icon-spinner icon-spin"></i>  <strong>Please Wait.....</strong>
+                            </apex:facet>
+                        </apex:actionStatus>
+
+                        <apex:pageBlock id="pb">
+
+                            <apex:pageMessages id="validationMsg" />
+                            <apex:outputPanel rendered="{!IF(campaignRecords.Size == 0, true, false)}"
+                                layout="block" styleClass="block">
+                                <div class="block-body">No record(s) to display.</div>
+                            </apex:outputPanel>
+
+                                
+                           <!-- <apex:actionFunction name="callAction" action="{!pageNavigationforCampaign}" status="waitMsg" reRender="pb, validationMsg"/> --> 
+                            <apex:actionFunction name="doSearch" action="{!doSearchCampaignsForPageSize}" status="waitMsg" reRender="pb, validationMsg, selSession"/>
+                            
+                            <!-- begin sorting fields -->
+
+                            
+                            <div id="app-list" class="list-view">
+
+                                
+                                <apex:repeat id="CampaignList" value="{!CampaignIdList}" var="item">
+                                    <div class="block">
+                                        <div class="block-header">
+                                            <h3>
+                                                <apex:outputText value="{!campaignSessionWrapper[item][0].Campaign_Name__c}" />
+                                            </h3>
+                                        </div>
+                                        <div class="block-body">
+                                            <div class="row-fluid margin-b">
+                                                <div class="span4">
+                                                    <label> Partner Name</label>
+                                                    <apex:outputText value="{!campaignSessionWrapper[item][0].Partner_Name__c}" />
+                                                </div>
+                                                <!--  <div class="span4">
+                                                    <label> Start Date</label>
+                                                    <apex:outputField value="{!campaignSessionWrapper[item][0].Campaign_StartDate__c}" />
+                                                </div>
+                                                <div class="span4">
+                                                    <label> End Date</label>
+                                                    <apex:outputField value="{!campaignSessionWrapper[item][0].Campaign_EndDate__c}" />
+                                                </div> -->
+                                            </div>
+                                            <p class="divider-bottom"><strong>Available Sessions</strong>&nbsp;(<a data-toggle="collapse"  data-target=".{!item}">Expand All</a>)</p> 
+                                            <div class="list-view">
+                                            <apex:repeat id="CampaignSessionList" value="{!campaignSessionWrapper[item]}" var="cpw">
+                                                <div class="row-fluid">
+                                                    <div data-toggle="collapse"  data-target="#{!cpw.Name}{!item}" class="list-view-header collapsed span12">
+                                                        <div class="title pull-left">
+                                                            <apex:outputField value="{!cpw.Session_Label__c}" />
+                                                            <apex:outputtext value=" : {!cpw.Session_Start__c} - {!cpw.Session_End__c}" />
+                                                        </div>  <!--  end title --> 
+                                                        <div class="controls pull-right clearfix"> 
+                                                            <div class="arrows margin-r">
+                                                            <span class="arrow-up"><i class="icon-caret-up"></i></span>
+                                                            <span class="arrow-down"><i class="icon-caret-down"></i></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                
+                                                    <div class="no-margin span12 collapse {!item}" id="{!cpw.Name}{!item}">
+                                                        <apex:repeat id="CampaignMatchList" value="{!campaignMatchWrapper[cpw.id]}" var="cpwMatch">
+                                                            <div class="block">
+                                                                <div class="block-body"> 
+                                                                    <div class="row-fluid">
+                                                                        <div class="span3">
+                                                                        <apex:outputLink styleClass="ph-thumb sm" value="/apex/C_Match_Details?mId={!cpwMatch.Id}" rendered="{!IF(ProfilePhotoCampMap[cpwMatch.Engagement__c] != 'no-picture', true, false)}">
+                                                                            <apex:image url="{!ProfilePhotoCampMap[cpwMatch.Engagement__c]}"></apex:image> 
+                                                                        </apex:outputLink>
+                                                                        </div>
+                                                                        <div class="span3">
+                                                                            <label>Participant Name:</label>
+                                                                            <apex:outputLink value="/apex/C_Match_Details?mId={!cpwMatch.Id}&fpage=hevents"> <apex:outputText value="{!cpwMatch.Participant_Id__r.LastName}, {!cpwMatch.Participant_Id__r.FirstName}"/></apex:outputLink>
+                                                                            
+                                                                            <label>Position:</label>
+                                                                            <apex:outputField value="{!cpwMatch.Position_Name__r.Name}" />
+                                                                        </div>
+                                                                         <div class="span3">
+                                                                            <label>Engagement Start:</label>
+                                                                            <apex:outputField value="{!cpwMatch.Engagement__r.Engagement_Start__c}" />
+                                                                            
+                                                                            <label>Engagement End:</label>
+                                                                            <apex:outputField value="{!cpwMatch.Engagement__r.Engagement_End__c}" />
+                                                                            <label>Partner Agency:</label>
+                                                                            <apex:outputField value="{!cpwMatch.Engagement__r.Partner_Account__r.Name}" />
+                                                                        </div> 
+                                                                        <div class="span3">
+                                                                            <label>Match Status:</label>
+                                                                            <apex:outputField value="{!cpwMatch.Status__c}" />      
+                                                                            <label>Offer Status:</label>
+                                                                            <apex:outputField value="{!cpwMatch.Offer_Status__c}" />
+                                                                            <label>Citizenship:</label>
+                                                                            <apex:outputField value="{!cpwMatch.Participant_Id__r.Citizenship__pc}" />
+                                                                        </div> 
+                                                                    </div>
+                                                                </div>
+                                                                <div class="block-footer">            
+                                                            <div class="row-fluid no-padding">
+                                                                <div class="span12">
+                                                                    <div class="float">
+                                                                        <!-- <apex:outputText value="{!map_match_rating['701190000000ePVAAY']}" /> -->
+                                                                        <c:block_rating extId="{!cpwMatch.Id}" read_only="false" ratingScore="{!map_match_rating[cpwMatch.Id]}"/>
+                                                                    </div>
+                                                                    <div class="float-r">
+                                                                    <div class="form-link no-margin margin-r">
+                                                                        <apex:outputLink value="/apex/C_Offer_New_Position?mid={!cpwMatch.Id}&Offer=true&fpage=hevents" rendered="{!IF(cpwMatch.Offer_Status__c == 'Offered' || cpwMatch.Offer_Status__c == 'Accepted', false, true)}"> <i class="icon-thumbs-up-alt"></i> <span>Offer Position</span></apex:outputLink>
+                                                                        <apex:outputLink value="/apex/C_Offer_New_Position?mid={!cpwMatch.Id}&Offer=true&fpage=hevents" rendered="{!IF(cpwMatch.Offer_Status__c == 'Offered' || cpwMatch.Offer_Status__c == 'Accepted', true, false)}"> <i class="icon-thumbs-up-alt"></i> <span>Update Offer</span></apex:outputLink>
+                                                                   </div>  
+                                                                    <div class="form-link no-margin margin-r">
+                                                                    <apex:commandlink action="{!rejectCandidate}" rendered="{!IF(cpwMatch.Offer_Status__c == 'Offered' || cpwMatch.Offer_Status__c == 'Accepted', false, true)}">
+                                                                        <i class="icon-thumbs-down-alt"></i>
+                                                                        <apex:param name="mId" value="{!cpwMatch.Id}" assignTo="{!mId}" />
+                                                                        <apex:param name="fpage" value="hevents" assignTo="{!fpage}" />
+                                                                        <apex:commandButton value="Reject the Candidate"/>
+                                                                    </apex:commandlink>
+                                                                    <apex:commandlink action="{!rejectCandidate}" rendered="{!IF(cpwMatch.Offer_Status__c == 'Offered' || cpwMatch.Offer_Status__c == 'Accepted', true, false)}">
+                                                                        <i class="icon-thumbs-down-alt"></i>
+                                                                        <apex:param name="mId" value="{!cpwMatch.Id}" assignTo="{!mId}" />
+                                                                        <apex:param name="fpage" value="hevents" assignTo="{!fpage}" />
+                                                                        <apex:commandButton value="Cancel Offer"/>
+                                                                    </apex:commandlink>
+                                                                    </div>
+                                                                </div>
+                                                                </div>
+                                                             </div>
+                                                           </div> <!-- end block footer --> 
+                                                            </div>
+                                                            
+                                                        </apex:repeat>  
+                                                    
+                                                    <!--  end row -->
+                                                    
+                                                    <!--  <div class="row-fluid margin-b">
+                                                        <apex:outputLink styleClass="btn" id="nameLink" value="/apex/campaign_position_details?pid={!cpw.Position__c}&CampId={!item}">Go to Position</apex:outputLink>
+                                                    </div> 
+                                                    -->
+                                                    <!--  end row -->
+                                                    
+                                                </div>       <!--  end span 12 -->
+
+                                                </div>      
+                                            </apex:repeat>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </apex:repeat>
+                                
+                            </div>
+                            
+
+
+
+                        </apex:pageBlock>
+
+
+
+
+
+                    </div>
+                    <!-- end span9 -->
+                </div>
+                <!-- end row -->
+
+
+                <div class="row">
+                    <div class="span12"></div>
+                    <!-- end span12 -->
+                </div>
+                <!-- end row -->
+                <script>
+
+                function runScript(obj){
+                    
+                    //alert(obj.keyCode);
+                    if(obj.keyCode == 13){
+                        callAction();   // call action function
+                        return false;
+                    }else if((obj.keyCode > 34 && obj.keyCode < 40) || (obj.keyCode > 95 && obj.keyCode < 106) || (obj.keyCode > 47 && obj.keyCode < 58) || obj.keyCode == 8 || obj.keyCode == 46 ){
+                        return true;
+                    }else{
+                        return false;
+                    }
+                }
+            </script>
+    
+        </apex:form>
+            </apex:define>
+        </apex:composition>
+
+        
+</apex:page>

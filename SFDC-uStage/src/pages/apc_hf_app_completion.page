@@ -1,0 +1,83 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardController="Applicant_Info__c"
+	extensions="AppEngine_Controller" action="{!checkLogin}"
+	standardStylesheets="false" showHeader="false"  title="Application Confirmation" id="apc_hf_app_completion">
+	<apex:composition template="intraxtemplate_vs3">
+		<apex:define name="body">
+			<c:block_header_apc_hf_application userAgentCheck="{!userAgentCheck}"/>
+
+			
+			<div class="row">
+				<apex:outputpanel layout="block" rendered="{!applicantInfo.Application_Level__c == 'Main' && applicantInfo.Application_Stage__c == 'Working'}">	
+				<div class="col-md-7 col-md-push-3">
+					<h1>You are almost there!</h1>		
+					<p class="lead">You are about to submit your application. 
+					Please make sure that all the information you have provided is correct. 
+					You can review and/or change your answers using the links on the left.</p>
+				 
+				 <apex:form styleClass="form-horizontal ws-validate" id="webform">	
+					
+                     <div class="margin-t">
+                         <apex:commandlink styleClass="btn btn-lg btn-primary"  rendered="{!applicantInfo.Application_Type__c=='Original'}" action="{!navigator}" id="gotononqualified" reRender="webform" status="onsubmit">
+                             <apex:param name="nextPage" value="/apex/apc_hf_app_completion" />
+                             <apex:param name="reDirectPage" value="true" />
+                             <apex:param name="viewpage" value="true" />
+                             <apex:param name="SubmitApp" value="APCHF" />
+                             <apex:commandButton value="Submit Application" id="continuebuttonqualified"/>
+                         </apex:commandlink>
+                         
+                         <apex:commandlink styleClass="btn btn-lg btn-primary"  rendered="{!applicantInfo.Application_Type__c!='Original'}" id="gotohome" action="{!navigator}"  reRender="webform" status="onsubmit">
+                             <apex:param name="nextPage" value="/apex/apc_hf_home" />
+                             <apex:param name="reDirectPage" value="true" />
+                             <apex:param name="viewpage" value="true" />
+                             <apex:param name="SubmitApp" value="APCHFEXT" />
+                             <apex:commandButton value="Submit Application" id="continuebuttonExt"/>
+                         </apex:commandlink>
+                         
+                     </div>	
+				
+				</apex:form>
+				
+				</div><!-- end column -->
+				
+				 
+				<div class="col-md-3 col-md-pull-7">
+			    <c:menu_apc_hf_app PersonInfo="{!personInfo}" ApplicantInfo="{!applicantInfo}" />
+			    </div>
+				</apex:outputpanel>
+			</div>
+				
+				<apex:outputpanel layout="block" rendered="{!applicantInfo.Application_Level__c == 'Main' && applicantInfo.Application_Stage__c == 'Submitted'}">		
+				<div class="row">
+				<div class="col-md-2 hidden-xs hidden-sm">
+					<i class="fa fa-check-circle pull-right" style="font-size: 100px;"></i>
+				</div>
+				<!-- end column -->
+				<div class="col-md-8">
+					<h1>Thank You</h1>		
+					<p class="lead">Your application is being reviewed by the AuPairCare team. We will keep you posted!</p>
+				</div>
+				<!-- end column -->
+				</div>
+				<!-- end row -->
+				</apex:outputpanel>
+				
+				<!-- Jose: B-03072 Stop families if they fail HF eligibility and send then to a sorry page -->
+				<apex:outputpanel layout="block" rendered="{!applicantInfo.Application_Level__c == 'Basic' && applicantInfo.Application_Stage__c == 'Declined'}">		
+				<div class="row">
+				<div class="col-md-2 hidden-xs hidden-sm">
+					<i class="fa fa-check-circle pull-right" style="font-size: 100px;"></i>
+				</div>
+				<!-- end column -->
+				<div class="col-md-8">
+					<h1>Thank you for your application</h1>		
+					<p class="lead">Based on the information you provided, it appears you do not meet the US Department of State minimum requirements to host an au pair.
+					 If you would like more information or an opportunity to edit your application, please contact us at 1-800-428-7247 or by email us at customercare@aupaircare.com.</p>
+				</div>
+				<!-- end column -->
+				</div>
+				<!-- end row -->
+				</apex:outputpanel>		
+            
+		</apex:define>
+	</apex:composition>
+</apex:page>

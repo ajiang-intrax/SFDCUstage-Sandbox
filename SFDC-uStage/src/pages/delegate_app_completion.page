@@ -1,0 +1,99 @@
+<apex:page id="delegate_app_completion" docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardController="Applicant_Info__c"
+	extensions="AppEngine_Controller" action="{!checkLogin}"
+	standardStylesheets="false" showHeader="false">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_igi_pt_application userAgentCheck="{!userAgentCheck}" />
+      <div class="row">
+      	<div class="col-md-7 col-md-push-3">
+        	
+          <!-- <c:block_app_completion_igi applicantInfo="{!applicantInfo}" isIGIMainReady="{!CheckMainIGIApp}"/> -->
+       			  
+          		<apex:form styleClass="form-vertical ws-validate" id="webform">
+          			
+          			<apex:outputPanel layout="block" rendered="{!IF(ISPICKVAL($User.UserType,'Standard'), true, false)}">
+          				<h1>Not Authorized</h1>
+          				<p class="lead">This applicant has not authorized Intrax staff to edit and submit the Application. Authorization must be given through MyIntrax before the portal version of this Application is available to internal users.</p>
+          				
+			            <div class="form-group margin-t">
+				        	<apex:outputLink value="#" onClick="window.close();" styleClass="btn btn-primary btn-lg margin-r">
+				        		Close Window
+				        	</apex:outputLink>	      	
+				            			                
+						</div>
+			           
+          			</apex:outputPanel>
+          			          			
+          			<apex:outputPanel layout="block" rendered="{!IF(ISPICKVAL($User.UserType,'Standard'), false, true)}">
+			            <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+			            
+			            <apex:outputPanel layout="block" rendered="{!$CurrentPage.parameters.reload == 'false' || $CurrentPage.parameters.reload == ''}">
+				            <h1>Intrax Authorization</h1>
+				            <div class="row">
+					            <div class="col-sm-12">
+						            <div class="form-group">
+						              <label class="control-label">Intrax can submit a Global Internships application on your behalf based on information you have provided to our representatives. Please choose an option below and click Save. </label>
+						                <apex:actionRegion >
+							                <!-- 
+							                <apex:inputCheckBox value="{!applicantInfo.Allow_Intrax_to_Apply__c}" id="AuthIndicated">
+							                	<apex:actionSupport event="onchange" rerender="webform" status="pleasewait01"/>
+							                </apex:inputCheckBox>
+							                
+							                -->
+							                <apex:selectRadio styleClass="radio" value="{!applicantInfo.Allow_Intrax_to_Apply__c}" required="TRUE" id="AuthIndicated" layout="pageDirection">
+							                	<apex:selectOption itemLabel="I authorize Intrax to edit and submit an Application on my behalf" itemValue="true"/>
+							                	<apex:selectOption itemLabel="I will submit my own Application" itemValue="false"/>
+							                	<apex:actionSupport event="onchange" rerender="webform" status="pleasewait01"/>
+							                </apex:selectRadio>
+							                
+							                <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="pleasewait01"/>
+						            	</apex:actionRegion>
+						            	<apex:message for="AuthIndicated" styleClass="custom-error-radio" id="errormessage1"/>
+						            </div>		            
+						                        
+					            </div><!--  end col -->	            
+				            </div><!--  end row -->
+				            
+				            <div class="form-group margin-t">
+					        	<apex:pageBlock id="submitBlock">
+					        		<apex:outputPanel rendered="{!ApplicantInfo.Allow_Intrax_to_Apply__c}"	>		        	
+							            <apex:commandlink styleClass="btn btn-primary btn-lg margin-r" 
+															action="{!navigator}" id="nextlink" onComplete="rerunjs();" rerender="webform" status="onsubmit" >
+						                  <apex:param name="nextPage" value="/apex/delegate_app_completion?reload=true"/>
+						                  <apex:param name="reDirectPage" value="true" />						                  	                  
+						                  <apex:commandButton value="Save" id="continuebutton" />						                  
+						                </apex:commandlink>
+					                </apex:outputPanel>
+					                
+					                <apex:outputPanel rendered="{!NOT(ApplicantInfo.Allow_Intrax_to_Apply__c)}">			                
+					                	<apex:commandlink styleClass="btn btn-primary btn-lg margin-r" 
+														action="{!navigator}" id="nextlink2"  onComplete="rerunjs();" reRender="webform" status="onsubmit">
+						                  <apex:param name="nextPage" value="/apex/igi_pt_app_personal_info"/>
+						                  <apex:param name="reDirectPage" value="true" />		                  
+						                  <apex:commandButton value="Save" id="continuebutton2" />						                  
+						                </apex:commandlink>
+						            </apex:outputPanel>
+				                </apex:pageBlock>
+							</div>
+			           </apex:outputPanel>
+			            
+			            <apex:outputPanel layout="block" rendered="{!applicantInfo.Allow_Intrax_to_Apply__c && $CurrentPage.parameters.reload == 'true'}">
+				            <h1>Intrax Authorization</h1>
+				            <p class="lead">Thank you for authorizing Intrax to help you with the Application process. We will begin entering your information right away. Once we submit the Application, we will notify you of the next steps. If you have any questions, please contact your Intrax representative.</p> 
+						   
+				            <apex:outputText >
+				                <apex:outputLink styleClass="btn btn-link btn-lg float"  value="/apex/delegate_app_completion?id={!applicantInfo.Id}&reload=false" id="backlink"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+				            </apex:outputText>
+			            </apex:outputPanel>
+			            
+			            
+					</apex:outputPanel>
+            	</apex:form>            	
+            
+            
+            
+      	</div>      		
+      	</div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

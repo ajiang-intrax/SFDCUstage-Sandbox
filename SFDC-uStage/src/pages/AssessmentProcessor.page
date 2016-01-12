@@ -1,0 +1,18 @@
+<apex:page controller="Notification_Generator">
+	<apex:define name="body">
+		<apex:pageBlock >
+			<apex:form >
+				<apex:pageBlockTable value="{!matchList}" var="item">
+					<apex:column headerValue="Id">
+						<apex:outputText value="{!item.Id}"/>
+					</apex:column>
+				</apex:pageBlockTable>
+				<apex:commandlink styleClass="next" action="{!processAssessments}">
+					<apex:param name="nextPage" value="/apex/AssessmentProcessor"/>
+					<apex:param name="reDirectPage" value="true"/>
+					<apex:commandButton value="Process Assessments" />
+				</apex:commandlink>
+			</apex:form>
+		</apex:pageBlock>
+	</apex:define>
+</apex:page>

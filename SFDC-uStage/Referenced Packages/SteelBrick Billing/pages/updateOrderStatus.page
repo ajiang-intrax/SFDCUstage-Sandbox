@@ -1,0 +1,116 @@
+<apex:page standardController="invoiceit_s__Job__c" extensions="invoiceit_s.CreateJobController" tabStyle="invoiceit_s__Job__c">
+    <apex:sectionHeader title="Update Order Status for " subtitle="{!job.Name}" />
+    <apex:form >    
+    <apex:pageBlock >
+     <apex:pageMessages />
+        <apex:pageBlockButtons >   
+           <apex:commandButton value="{!$Label.ButtonSave}" action="{!saveJob}"/>
+           <apex:commandButton value="{!$Label.ButtonCancel}" action="{!cancel}" onclick="return confirmCancel()" immediate="true" />
+         </apex:pageBlockButtons>
+             
+         <apex:pageBlockSection title="Update Order Status">
+             <!--Modified By     : Sagarika Rout
+                Modified Date   : 12-09-2013
+                JIRA Task       : INVOICEIT-232
+                Comments        : To add custom fields in Update Order Status page, 
+                                    we have created new Field set - Update_Order_Status in order. -->
+             <apex:repeat value="{!$ObjectType.invoiceit_s__Job__c.FieldSets.invoiceit_s__Update_Order_Status}" var="fieldAPI">
+                 <apex:inputField value="{!job[fieldAPI]}" required="{!OR(fieldAPI.required, fieldAPI.dbrequired)}"/>
+             </apex:repeat>
+         </apex:pageBlockSection><br/>
+         <table cellspacing="0" cellpadding="0" border="0" class="list" width="100%">
+            <thead class="rich-table-thead">
+            <tr class="headerRow">
+                <th colspan="1" scope="col" class="headerRow">
+                  <div>
+                   {!$Label.ProductName}
+                  </div>
+                </th>
+                <th colspan="1" scope="col" class="headerRow">
+                  <div>
+                  {!$Label.ProductCode}
+                  </div>
+                </th>
+                <th colspan="1" scope="col" class="headerRow">
+                  <div>
+                  {!$Label.Quantity}
+                  </div>
+                </th>               
+            <!--Modified By     : Rama Krishna.v
+                Modified Date   : 04-7-2013
+                JIRA Task       : INVOICEIT-210/sup-6
+                Comments        : previously we are using same Field Sets for the both 'order detail page' and 'Update Order Status', 
+                                    now we changed new Field set - Update_Order_Status. -->                
+                <apex:repeat value="{!$ObjectType.invoiceit_s__Job_Rate_Plan_Charge__c.FieldSets.invoiceit_s__Update_Order_Status}" var="fieldAPI">
+                    <apex:outputPanel rendered="{!fieldAPI != 'invoiceit_s__Discount_Value__c' && fieldAPI != 'invoiceit_s__Tax__c' && fieldAPI != 'invoiceit_s__VAT__c' && fieldAPI != 'invoiceit_s__Price__c'}">
+                    <th colspan="1" scope="col" class="headerRow">
+                        <div>
+                            <apex:outputText value="{!fieldAPI.Label}" rendered="{!fieldAPI != 'invoiceit_s__Discount_Value__c' && fieldAPI != 'invoiceit_s__Tax__c' && fieldAPI != 'invoiceit_s__VAT__c'}"/> 
+                        </div>
+                    </th>
+                    </apex:outputPanel>
+                </apex:repeat>
+                <th colspan="1" scope="col" class="headerRow">
+                  <div>
+                    Service Start Date
+                  </div>
+                </th>
+                <th colspan="1" scope="col" class="headerRow">
+                  <div>
+                   Service End Date
+                  </div>
+                </th>
+                <th colspan="1" scope="col" class="headerRow">
+                  <div>
+                   Status
+                  </div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <apex:repeat value="{!jobClass.jobProducts}" var="jobproduct">
+                <apex:repeat value="{!jobproduct.jobRatePlans}" var="jobrateplan">
+                    <apex:repeat value="{!jobrateplan.jobRatePlanCharges}" var="jobrateplancharge">
+                        <tr onfocus="if (window.hiOn){hiOn(this);}" onblur="if (window.hiOff){hiOff(this);}" onmouseout="if (window.hiOff){hiOff(this);}" onmouseover="if (window.hiOn){hiOn(this);}" class="dataRow even odd first">
+                            <td colspan="1" class="dataCell">
+                                <apex:outputField value="{!jobproduct.jobProduct.Name}" rendered="{!jobrateplancharge.jobrateplancharge.invoiceit_s__Sequence_No__c <= 1}"/>
+                            </td>
+                            <td colspan="1" class="dataCell">
+                                <apex:outputField value="{!jobproduct.jobproduct.invoiceit_s__Product_Code__c}" rendered="{!jobrateplancharge.jobrateplancharge.invoiceit_s__Sequence_No__c <= 1}"/>
+                            </td>
+                            <td colspan="1" class="dataCell">
+                                <apex:outputField value="{!jobrateplancharge.jobrateplancharge.invoiceit_s__Quantity__c}">
+                                    <apex:param value="{0,number,0}" />
+                                </apex:outputField>
+                            </td>                                
+                            <!--Modified By     : Rama Krishna.v
+                                Modified Date   : 11 June 2013
+                                JIRA Task       : INVOICEIT-210/sup-6
+                                Comments        : previously we are using same Field Sets for the both 'order detail page' and 'Update Order Status', 
+                                                    now we changed new Field set - Update_Order_Status. -->  
+                            <apex:repeat value="{!$ObjectType.invoiceit_s__Job_Rate_Plan_Charge__c.FieldSets.invoiceit_s__Update_Order_Status}" var="fieldAPI">
+                                <apex:outputPanel rendered="{!fieldAPI != 'invoiceit_s__Discount_Value__c' && fieldAPI != 'invoiceit_s__Tax__c' && fieldAPI != 'invoiceit_s__VAT__c' && fieldAPI != 'invoiceit_s__Price__c'}">
+                                <td colspan="1" class="dataCell">
+                                    <apex:outputField value="{!jobrateplancharge.jobrateplancharge[fieldAPI]}" rendered="{!BEGINS(fieldAPI,'invoiceit_s__') || fieldAPI == 'Name'}"/>
+                                    <apex:inputField value="{!jobrateplancharge.jobrateplancharge[fieldAPI]}" rendered="{!!BEGINS(fieldAPI,'invoiceit_s__') && fieldAPI != 'Name'}"/>
+                                </td>
+                                </apex:outputPanel>
+                            </apex:repeat>
+                            <td colspan="1" class="dataCell">
+                                <apex:inputField value="{!jobrateplancharge.jobrateplancharge.invoiceit_s__Service_Activation_Date__c}" />
+                            </td>
+                            <td colspan="1" class="dataCell">
+                                <apex:inputField value="{!jobrateplancharge.jobrateplancharge.invoiceit_s__Service_End_Date__c}" />
+                            </td>
+                            <td colspan="1" class="dataCell">
+                                <apex:inputField value="{!jobrateplancharge.jobrateplancharge.invoiceit_s__Status__c}" />
+                            </td>                  
+                        </tr>
+                    </apex:repeat>
+                </apex:repeat>
+            </apex:repeat>
+        </tbody>
+        </table>
+    </apex:pageBlock> 
+    </apex:form> 
+</apex:page>

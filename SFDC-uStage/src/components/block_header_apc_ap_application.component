@@ -1,0 +1,12 @@
+<apex:component layout="none">
+<apex:attribute name="userAgentCheck" description="Checking for user agent to detect mobile devices etc." type="string" required="false" default="" /> 
+<apex:outputText rendered="{!IF((userAgentCheck!='mobile') && ($Site.SiteId == '0DM30000000TNbh'), true, false)}">
+<style>
+#header-zone {
+background: url("{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/apc/headers/narrow-2.jpg')}") no-repeat scroll 50% 0 transparent; 
+height: 200px;}
+</style> 
+</apex:outputText>
+
+
+</apex:component>

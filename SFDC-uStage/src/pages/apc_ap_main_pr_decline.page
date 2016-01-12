@@ -1,0 +1,99 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardStylesheets="false" showHeader="false"  title="Decline Application" id="apc_ap_main_pr_decline" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_apc_ap_application />
+       <div id="app-page" class="row">
+        <div id="app-focus" class="col-md-8 col-md-push-3">
+          
+           <c:block_app_completion ApplicantInfo="{!applicantInfo}" userProfileName="{!userProfileName}"  /> 
+          
+          <h1>Decline Application</h1>
+             <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+             Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+          <apex:variable var="ReasonValue" value="Failed Requirements" />
+          <apex:form styleClass="form-vertical ws-validate" id="webform">
+            <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+            <apex:pageBlock id="Reasonblock">
+             <div class="row">
+             <div class="col-sm-12">
+              <div class="form-group">
+                <label class="control-label">Reason for Declining</label>
+                  <apex:actionRegion >
+                    <apex:inputField styleClass="form-control reformat" value="{!applicantInfo.Reason__c}"   required="TRUE" id="reason" >
+                    	<apex:actionSupport event="onchange" rerender="Reasonblock" status="showdesc" />
+                    </apex:inputField>
+                    <!--   -->
+                  </apex:actionRegion>
+                   <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showdesc"/> 
+                </div>
+                </div>
+                </div><!--  end row -->
+            
+             <apex:outputPanel layout="block" rendered="{!applicantInfo.Reason__c != 'Other' && applicantInfo.Reason__c != '' && applicantInfo.Reason__c != NULL}">
+             <div class="row">
+             <div class="col-sm-12">
+            <div class="form-group restoreclass">
+              <label class="control-label">Which requirement does the au pair not meet?</label>
+                <apex:actionRegion >
+                  <apex:inputField styleClass="form-control" value="{!applicantInfo.Reason_Detail__c}" required="TRUE" id="reasondetails" >
+                  </apex:inputField>
+                </apex:actionRegion>
+                
+              </div>
+              </div>
+              </div><!--  end row -->
+              </apex:outputPanel>
+              
+              <apex:outputPanel layout="block" rendered="{!applicantInfo.Reason__c == 'Other'}">
+             <div class="row">
+             <div class="col-sm-12">
+            <div class="form-group">
+              <label class="control-label">Please describe</label>
+                <apex:actionRegion >
+                  <apex:inputField styleClass="form-control" value="{!applicantInfo.Reason_Other_Description__c}" required="TRUE" id="otherddetails" >
+                  </apex:inputField>
+                </apex:actionRegion>
+                
+              </div>
+              </div>
+              </div><!--  end row -->
+              </apex:outputPanel>
+              <script>
+			    var j$ = jQuery.noConflict();
+			    j$('.reformat option[value="Lost Interest"]').remove();
+			    j$('.reformat option[value="Unresponsive"]').remove();
+			    j$('.reformat option[value="Cost"]').remove();
+			    j$('.reformat option[value="Decision Maker Objection"]').remove();
+			    j$('.reformat option[value="Timing"]').remove();
+			    j$('.reformat option[value="Legal Concerns"]').remove();
+			    j$('.reformat option[value="Competitor"]').remove();
+			    j$('.reformat option[value="No Visa Waiver"]').remove();
+			    j$('.reformat option[value="Incomplete Info"]').remove();
+			    j$('.reformat option[value="Preferences Not Met"]').remove();
+			    //j$('.reformat option[value="Other"]').remove();
+			    j$('.reformat option[value="Bad Data"]').remove();
+			</script>
+              </apex:pageBlock>
+           
+           <div class="row">
+              <div class="col-sm-12">
+                <apex:commandlink styleClass="btn btn-primary btn-lg" action="{!saveAPCApptoDeclined}" id="declinelink"  onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                 Decline Application
+                </apex:commandlink>
+              </div>
+            </div>
+           
+          </apex:form>
+        </div>
+        <!-- end column  -->
+        
+       <div id="app-side" class="col-md-3 col-md-pull-8">
+          <c:menu_side_apc_ap_basic ApplicantInfo="{!applicantInfo}" />
+        </div>
+        <!-- end column  --> 
+      </div>
+      <!-- end row --> 
+      
+    </apex:define>
+  </apex:composition>
+</apex:page>

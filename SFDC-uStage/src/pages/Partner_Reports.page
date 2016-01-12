@@ -1,0 +1,39 @@
+<apex:page title="Reports | Intrax" standardStylesheets="false" showHeader="false" controller="IntraxPartnerPortalEngineController" action="{!checkLoginWithReportSearch}">
+        <style>
+            table.pageblk { border-collapse:collapse !important; margin-bottom:10px !important; width:100% !important; }
+            .pageblk th, .pageblk td { padding:10px 5px !important; border: 1px solid #ccc !important; }
+            .pageblk th { background: none repeat scroll 0 0 #efefef !important; border:none !important; }
+          }
+         </style>                               
+        <apex:composition template="IntraxTemplate_Vs2" >
+            <apex:define name="body">
+                <div class="wrapper"> 
+                    <apex:form >
+                    <div class="page-header clearfix">
+                        <h1>Reports</h1>
+                        <div class="white-box clearfix">
+                            <apex:pageBlock id="docListBlock" rendered="{!if(allpartnerreports.Size > 0, true, false)}" >
+                                <apex:pageBlockTable id="docListTable" styleClass="pageblk" value="{!allpartnerreports}" var="item" >
+                                    <apex:column headerValue="Name" >
+                                    <apex:commandlink id="rpt_Name" styleClass="inline-link" action="{!getReportUrl}" target="_blank">
+                                        <apex:param name="guid" value="{!item.id}"/>
+                                        <apex:param name="csv" value="1"/>
+                                        <apex:commandButton value="{!item.Name}" />
+                                    </apex:commandlink>
+                                    </apex:column>
+                                    
+                                    <apex:column headerValue="Description" >
+                                        <apex:outputText id="rpt_Desc" value="{!item.description}"/>
+                                    </apex:column>
+                                </apex:pageBlockTable>
+                             </apex:pageBlock>
+                                                          
+                              
+                        </div><!-- end row -->
+                     </div>
+                     </apex:form>
+                 </div>
+                 
+            </apex:define>
+        </apex:composition>
+</apex:page>

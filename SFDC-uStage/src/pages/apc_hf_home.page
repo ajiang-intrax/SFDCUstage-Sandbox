@@ -1,0 +1,111 @@
+<apex:page title="Host Family Home" standardStylesheets="false" showHeader="false" controller="apc_home_controller" action="{!myHome.checkLogin}"  id="apc_hf_home">
+<apex:composition template="intraxtemplate_vs3">
+<apex:define name="body">
+<apex:form >
+
+
+ 
+<div class="row">
+<div class="col-sm-12 col-lg-11 center-block">
+<div class="row">
+<div class="col-sm-12">
+ <h4 class="no-margin-t margin-b2">The <em>{!$User.LastName}</em> Family Room</h4>
+</div>
+</div>
+<div class="row">
+<div id="hp-body" class="col-md-9">
+<!-- Block for Extension/Renewal List -->
+<c:block_apc_hf_ext_renew PageController="{!myHome}" />
+<!-- Block for Match Status -->
+<!-- <c:block_apc_hf_match PageController="{!myHomeMatch}" /> -->
+<c:block_apc_hf_match_process PageController="{!myHomeMatch}" />
+<!-- Block for Recommendations -->
+
+ <!--   <c:block_apc_hf_suggestions PageController="{!myHomeMatch}" /> -->
+
+<apex:outputPanel layout="block" rendered="{!(myHomeMatch.ApplicantInfoList[0].Position__r.id != null && myHomeMatch.ApplicantInfoList[0].Position__r.Status__c != 'Closed - Filled'  && myHomeMatch.ApplicantInfoList[0].Position__r.Status__c != 'Withdrawn' )}">    
+    <c:block_apc_hf_suggestions PageController="{!myHomeMatch}" />
+</apex:outputPanel>
+
+<!-- Match deadlines -->
+<apex:outputPanel layout="block" rendered="{!(myHomeMatch.ApplicantInfoList[0].Application_Type__c == 'Original' ||  myHomeMatch.ReMatchAppExists) && ((myHomeMatch.AllMatches.size>0 && myHomeMatch.AllMatches[0].Status__c=='Withdrawn') || myHomeMatch.AllMatches.size==0)}">
+<c:block_portal_msg_early_match APCArrivalDates="{!APCArrivalDates}"/>
+</apex:outputPanel>
+<!-- Block for profile update -->
+<c:block_apc_hf_update_profile PageController="{!myHomeMatch}" />
+
+<!-- Early Match Discount -->
+ <apex:outputPanel layout="block" rendered="{!myHomeMatch.MatchConfOld != null && myHomeMatch.MatchConfOld.size > 0 && myHomeMatch.MatchConfOld[0].End_Date__c - 90 >= TOday()}">
+<c:block_portal_msg_match_deadline PreviousMatch="{!myHomeMatch.MatchConfOld}"/>
+ </apex:outputPanel>
+</div>
+<div id="hp-sidebar" class="col-md-3">
+
+
+<div  class="row ">
+
+<div class="col-sm-4 col-md-12 margin-b4">
+      <h2 class="no-margin-t margin-b1">Have Questions? </h2>
+<p class="lead margin-b1">We are here to help!</p>
+<apex:outputLink styleClass="btn btn-link btn-lg vs2 margin-t1" value="apex/apc_hf_contact"><span>Contact AuPairCare</span></apex:outputLink>
+</div>
+
+
+
+
+
+      <div class="col-sm-4 col-md-12 margin-b4">
+<c:block_apc_hf_resources PageController="{!myHome}" /> 
+</div>
+
+
+
+  <div  class="col-sm-4 col-md-12 margin-b4">
+      <h2 class="no-margin-t margin-b1">Refer a Friend</h2>
+      <div class="margin-b1"><apex:image url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/apc/badges/referafriend.jpg')}"
+                                alt="Refer a Friend" title="Refer a Friend" /></div>
+      <p class="lead margin-b1">Refer a friend to match with an au pair and earn cash or program fee savings!</p>
+      <a class="margin-t1 btn btn-link btn-lg vs2" href="http://www.aupaircare.com/refer-a-friend" target="_blank"><span>Refer a Friend</span></a> 
+      </div>
+</div>
+<!--  end row --> 
+
+
+</div>
+</div><!--  end row -->
+</div>
+</div>
+<!--  end row --> 
+
+
+
+
+
+</apex:form>
+
+ <apex:outputpanel layout="block" id="modalSubmit" rendered="{!$CurrentPage.parameters.vstate == 'newprf'}" >
+          <div class="modal fade vs1" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-body">
+   <h1 class="h1">Welcome to Your Family Room </h1>
+      <p class="lead">Family Room provides you with access to au pair applicants, interview information and other valuable resources to prepare you for your program year and to use throughout your placement with your au pair.</p>
+              </div>
+              <div class="modal-footer">
+                  
+                <button type="button" class="btn btn-default" data-dismiss="modal">Continue</button>
+                                
+              </div>
+            </div>
+          </div>
+        </div> 
+        </apex:outputpanel> <!--  end modal window -->
+<script>
+var j$ = jQuery.noConflict();
+j$(window).load(function() {
+  j$('#myModal').modal();
+});
+</script>     
+</apex:define>
+</apex:composition>
+</apex:page>

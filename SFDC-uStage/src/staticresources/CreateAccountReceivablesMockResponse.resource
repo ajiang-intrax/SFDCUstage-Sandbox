@@ -1,0 +1,24 @@
+<response>
+      <control>
+            <status>success</status>
+            <senderid>Intrax</senderid>
+            <controlid>update_invoice</controlid>
+            <uniqueid>false</uniqueid>
+            <dtdversion>2.1</dtdversion>
+      </control>
+      <operation>
+            <authentication>
+                  <status>success</status>
+                  <userid>SupriyaSoni_CRM</userid>
+                  <companyid>intrax-sandbox</companyid>
+                  <locationid>apc</locationid>
+                  <sessiontimestamp>2015-04-20T00:48:37-07:00</sessiontimestamp>
+            </authentication>
+            <result>
+                  <status>success</status>
+                  <function>create_arpayment</function>
+                  <controlid>1</controlid>
+                  <key>1062</key>
+            </result>
+      </operation>
+</response>

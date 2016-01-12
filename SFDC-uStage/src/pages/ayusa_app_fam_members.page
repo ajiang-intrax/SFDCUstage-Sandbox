@@ -1,0 +1,89 @@
+<apex:page id="ayusa_app_fam_members" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper">
+          <apex:form id="form">   
+             <div class="page-header clearfix">
+ <h1>Ayusa Student Application</h1>
+<div class="back-to-main"><apex:outputLink id="BacktoMain" value="apex/ayusa_app_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+</div>
+              <h2>Your Family Members</h2>
+                     
+            <div class="white-box clearfix">
+             <div class="panel two_thirds">
+                 <p>Please enter information for all family members you live with, as well as any other legal guardians.</p>    
+                <div class="form-row">
+                    <apex:outputLabel rendered="{!IF(familyInfoList.Size > 0, false, true)}"><span class="no-records">No record(s) to display.</span></apex:outputLabel>
+                </div>
+                
+                
+                     <apex:pageBlock id="PageBlock" rendered="{!IF(familyInfoList.Size > 0, true, false)}">
+                     <apex:pageBlockTable id="PageBlockTable" styleClass="pageblocktable" value="{!familyInfoList}" var="item">
+                     
+                            <apex:column >
+                                <B><apex:outputLink id="Edit" value="/apex/ayusa_app_fam_add_new?id={!item.Applicant_Info__c}&perid={!item.id}&role={!item.Role__c}">Edit</apex:outputLink></B>
+                            </apex:column>
+                            
+                            <!--  Link for Delete -->
+                            <apex:column >
+                                <apex:commandLink id="Delete" value="Delete" action="{!deleteFamilyMember}" immediate="true" onclick="return ConfirmDelete('Are You Sure ?');">
+                                    <apex:param name="familyMemberId" value="{!item.id}" assignTo="{!familyMemberId}"/>
+                                </apex:commandLink>
+                            </apex:column>
+                                
+                           <apex:column id="FirstName" value="{!item.First_Name__c} {!item.Last_Name__c}" headerValue="Name" /> 
+                           <apex:column id="Role" value="{!item.Role__c}" headerValue="Relationship" />
+                           <apex:column id="Email" value="{!item.Email__c}" headerValue="Email"/>                         
+                     </apex:pageBlockTable>      
+                </apex:pageBlock>
+                
+                <!-- Checkbox for user input -->
+                <div class="form-row" style="float:right;">
+                    <apex:inputField id="FamilyMembersComplete" value="{!applicantInfo.Family_Members_Complete__c}" required="false"/>
+                    <apex:outputText value="I have added all of my family members" rendered="{!IF(familyInfoList.Size > 0, true, false)}" />
+                    <apex:outputText value="I do not have any family members" rendered="{!IF(familyInfoList.Size > 0, false, true)}" />
+                </div> 
+            
+                   <div class="form-row">
+                       <div class="form-link">
+                        <apex:commandlink styleClass="add" action="{!navigator}">
+                            <i class="icon-plus-sign"></i>
+                          <apex:param name="nextPage" value="/apex/ayusa_app_fam_add_new"/>                     
+                          <apex:param name="prePopulation" value="false"/>
+                          <apex:param name="add" value="true" assignTo="{!add}"/>
+                          <apex:param name="role" value="Other" assignTo="{!role}"/>
+                          <apex:param name="reDirectPage" value="true"/>
+                          <apex:commandButton value="Add Family Member" />
+                        </apex:commandlink>   
+                      </div>
+                        </div>
+                                         
+                    <div class="form-row">                      
+                                      
+                      <div class="form-link">
+                        <apex:outputLink id="Back" styleClass="back" value="/apex/ayusa_app_parent_info?id={!applicantInfo.Id}">
+                        <i class="icon-chevron-left"></i>
+                        <span>Back</span>
+                        </apex:outputLink>
+                      </div>
+                                          
+                      <div class="form-button">
+                        <apex:commandlink styleClass="next" action="{!navigator}">
+                          <apex:param name="nextPage" value="/apex/ayusa_app_fam_photos_videos"/>
+                          
+                        
+                          <apex:param name="reDirectPage" value="true"/>
+                          <apex:param name="docType" value="Family" assignTo="{!docType}"/>
+                          <apex:commandButton id="Continue" value="Continue" />
+                          <i class="icon-chevron-right"></i>   
+                        </apex:commandlink>
+                      </div>                      
+                </div>
+            </div>
+                </div>
+            
+          </apex:form>
+      </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

@@ -1,0 +1,275 @@
+<apex:page id="igi_pt_app_personal_info" docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardController="Applicant_Info__c"
+	extensions="AppEngine_Controller" action="{!checkLogin}"
+	standardStylesheets="false" showHeader="false"  title="Personal Information">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <!-- <c:block_header_apc_hf_application userAgentCheck="{!userAgentCheck}"/> -->
+      <c:block_header_igi_pt_application userAgentCheck="{!userAgentCheck}"/>
+      <div class="row">
+        <div class="col-md-7 col-md-push-3">
+        
+        <c:block_app_completion_igi applicantInfo="{!applicantInfo}" isIGIMainReady="{!CheckMainIGIApp}"/>
+        
+       	<apex:outputText rendered="{!IF(applicantInfo.Application_Level__c = 'Basic', true, false)}">  
+          		<h1>Please tell us about yourself</h1>
+           	</apex:outputText>
+           	<apex:outputText rendered="{!IF(applicantInfo.Application_Level__c = 'Main', true, false)}">  
+          		<h1>Personal Information</h1>
+          	</apex:outputText>
+          	
+          
+			<p class="lead">Make sure that the information you provide below matches any official documents you may have such as your passport.</p>
+          	<apex:form styleClass="form-vertical ws-validate" id="webform">
+            <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+            
+            <div class="row">
+            <div class="col-sm-6">
+            <div class="form-group">
+              <label class="control-label">First Name</label>
+                <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!personInfo.First_Name__c}" required="TRUE" id="firstName" />
+            </div>
+            </div><!--  end col -->
+            <div class="col-sm-6">
+             <div class="form-group">
+              <label class="control-label">Last Name </label>
+                <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!personInfo.Last_Name__c}" required="TRUE" id="lastName" />
+            </div>
+            </div><!--  end col -->
+            </div><!--  end row -->
+            
+            <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+              <label class="control-label">Middle Name <span class="info">(Optional)</span></label>
+                <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!personInfo.Middle_Name__c}" required="FALSE" id="middleName" />
+                
+            </div>
+            </div> <!--  end col -->
+            <div class="col-sm-6">
+            <div class="form-group">
+              <label class="control-label">Nickname <span class="info">(Optional)</span></label>
+                <apex:inputField styleClass="form-control" value="{!personInfo.Nick_Name__c}" required="FALSE" id="nickname" />
+                
+            </div>
+            </div> <!--  end col -->
+            </div> <!--  end row -->
+            
+            <hr/>
+                    
+            <div class="row">
+            <div class="col-sm-6">
+	              <div class="form-group">
+	              
+	              
+	              <label class="control-label">Birth Date </label>
+	              	<div class="datepicker" locale="{!user.localeSidKey}">
+	                	<apex:inputField styleClass="form-control" value="{!personInfo.Date_of_Birth__c}" required="TRUE" id="birthDate" />
+	              	</div>
+	              	
+	              	
+	            </div>
+	            </div> <!--  end col -->
+	            <div class="col-sm-6">
+	                <div class="form-group">
+	              <label class="control-label">Gender </label>
+	                <apex:selectRadio styleClass="radio" value="{!personInfo.Gender__c}" required="TRUE" id="gender" >
+	                	<apex:selectOption itemValue="Male" itemLabel="Male"/>
+	                	<apex:selectOption itemValue="Female" itemLabel="Female"/>
+	                </apex:selectRadio>
+	            </div>
+	            </div> <!--  end col -->
+            </div> <!--  end row -->
+            
+             <hr/>
+          <apex:outputText rendered="{!applicantInfo.Application_Level__c == 'Basic'}">
+             <div class="row"> 
+            	<div class="col-sm-6">
+            		<div class="form-group">
+            			<label class="control-label">Phone Country Code</label>
+			                <apex:actionRegion >
+			                  <apex:selectList styleClass="form-control" style="height:40px;" value="{!personInfo.Phone_Country_Code__c}" multiselect="false" required="TRUE" id="countrycode" size="1">
+			                    <apex:selectOption itemValue="" itemLabel="Select Country Code"/>
+			                    <apex:selectOptions value="{!listCountryCodeOptions}"/>
+			                    <apex:actionSupport event="onchange" rerender="phonecode" status="showcode" />
+			                  </apex:selectList>
+			                  <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showcode"/>
+			                </apex:actionRegion>			                
+			                <apex:message for="countrycode" styleClass="custom-error-radio" id="apexmess1"/>
+		              </div>
+            	</div> 
+            	
+             	<div class="col-sm-6"> 
+		            <div class="form-group">
+		              <label class="control-label">Phone Number</label>
+		                <!-- <apex:inputField styleClass="form-control onlynumber" value="{!personInfo.Phone__c}" required="TRUE" id="phone" /> -->
+		                <apex:outputpanel id="phonecode" layout="block">
+		                  <div class="input-group"> <span class="input-group-addon">{!personInfo.Phone_Country_Code__c}</span>
+		                    <apex:inputField styleClass="form-control" value="{!personInfo.Phone__c}" required="TRUE" id="phone" />
+		                  </div>
+		                </apex:outputpanel>             
+		            </div>
+            	</div> <!--  end col -->
+            </div>
+            
+            <div class="row">
+	            <div class="col-sm-6"> 
+		            <div class="form-group">
+		              <label class="control-label">Phone Type</label>
+		                <apex:inputField styleClass="form-control" value="{!personInfo.Phone_Type__c}" required="TRUE" id="phoneType" />
+		
+		            </div>
+	            </div> <!--  end col -->
+            </div> <!--  end row -->
+            <hr/>
+            </apex:outputText>
+            <div class="row">
+            <div class="col-sm-6">          
+	            <div class="form-group">
+	              <label class="control-label">Where are you currently living?</label>
+	                <apex:inputField styleClass="form-control" value="{!personInfo.Country_of_Residence__c}" required="TRUE" id="legalResidence" />
+	            </div>
+            </div> <!--  end col -->
+            <div class="col-sm-6">
+              <div class="form-group">
+              <label class="control-label">Are you a citizen of that country?</label>
+              <apex:actionRegion >
+                <apex:selectRadio styleClass="radio" value="{!citizen}" id="citizen" required="true" >
+                  <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                  <apex:selectOption itemValue="No" itemLabel="No"/>
+                  <apex:actionSupport event="onchange" rerender="set-citizenship" status="pleasewait01" />
+                </apex:selectRadio>
+                <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="pleasewait01"/>
+              </apex:actionRegion>
+              <apex:message for="citizen" styleClass="custom-error-radio" id="errormess1"/>
+            </div>
+            </div> <!--  end col -->
+            
+            </div> <!--  end row -->
+            <apex:pageBlock id="set-citizenship">
+            <apex:outputPanel layout="block" rendered="{!citizen == 'No'}">
+            <div class="row">
+            
+            	  <div class="col-sm-12">
+		            <div class="form-group">
+		              <label class="control-label">What is your citizenship?</label>
+		                <apex:inputField styleClass="form-control" value="{!personInfo.Citizenship__c}" required="TRUE" id="citizenship" />
+		            </div>
+		            </div>
+            
+              </div>
+              <!--  end row -->	 
+              </apex:outputPanel>
+              </apex:pageBlock>
+            
+             <hr/>
+              <div class="row">
+            	  
+            	  
+            	  <div class="col-sm-6">
+            	  <label class="control-label">Where would you like to do an internship? <br/><span class="info">(For now, please select your top choice)</span></label>
+            	  
+			      <!-- B-02010 - Added reformat class -->
+			      
+			        <apex:actionRegion >
+			        
+					<apex:inputField styleClass="form-control reformat" value="{!applicantInfo.Country_of_Interest__c}" required="TRUE" id="countryInterest2">
+            	  	<apex:actionSupport action="{!loadIGICategory}" event="onchange" rerender="igiCategories" />
+            	  	</apex:inputField> 
+            	 
+           
+            	 </apex:actionRegion>
+            	              	  
+            	 		 
+       				 <script>
+					    var j$ = jQuery.noConflict();
+					    j$('.reformat option[value="Peru"]').remove();
+					    j$('.reformat option[value="Belize"]').remove();
+					    j$('.reformat option[value="Ghana"]').remove();
+					</script>
+	                 		    
+            	 
+            	  </div>
+            	
+            	<div class="col-sm-6">
+            	     <apex:outputpanel styleClass="alert alert-info" layout="block" id="igiCategories" >
+            	  <b>Internships available in {!applicantInfo.Country_of_Interest__c}:</b><br/>	
+            	  <ul>
+            	  <apex:repeat id="CatList" value="{!listProgramCategories}" var="CatName">
+            	  	<li>{!CatName}</li>
+            	  	</apex:repeat>
+            	  	</ul>
+            	  </apex:outputpanel>
+            	   </div>	
+            	
+            	  
+            	</div> 
+            	 <hr/> 
+              <div class="row">	  
+            	
+          		<div class="col-sm-6">
+	             	<div class="form-group">	
+	             		<label class="control-label">Have you already secured an internship offer from a company? </label>			             
+		              
+			                <apex:selectRadio styleClass="radio" value="{!applicantInfo.Service_Level__c}" required="TRUE" id="serviceLevel">
+			                	<apex:selectOption itemValue="Independent" itemLabel="Yes"/>  
+			                	<apex:selectOption itemValue="Premium" itemLabel="No"/>	      		                	
+			                </apex:selectRadio>	
+			                 <apex:Message for="serviceLevel" styleClass="custom-error-radio"/>	  
+		                
+	            	</div>
+	        	</div>
+          
+            	  
+            	  
+            	   
+              </div>
+              <!--  end row -->	 
+            
+            <div class="form-group margin-t3">
+            
+           <apex:outputText rendered="{!applicantInfo.Application_Level__c == 'Basic'}">
+                <apex:commandlink styleClass="btn btn-primary btn-lg"
+									action="{!navigator}" id="nextlink"  onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                  <apex:param name="reDirectPage" value="true" />
+                  <apex:param name="pageId" value="051"/>
+                  <apex:param name="nextPage" value="/apex/igi_pt_app_education"/>
+                  <apex:commandButton value="Save & Continue" id="continuebutton" />
+                </apex:commandlink>
+                </apex:outputText>
+                
+              <apex:outputText rendered="{!applicantInfo.Application_Level__c == 'Main'}">
+                <apex:commandlink styleClass="btn btn-primary btn-lg"
+									action="{!navigator}" id="nextlink2"  onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                  <apex:param name="reDirectPage" value="true" />
+                  <apex:param name="pageId" value="051"/>
+                  <apex:param name="nextPage" value="/apex/igi_pt_app_contact_info"/>
+                  <apex:commandButton value="Save & Continue" id="continuebutton2" />
+                </apex:commandlink>
+                </apex:outputText>     
+               
+            </div>
+            
+          </apex:form>
+          <apex:form >
+          	<c:block_app_coedit_authorization ApplicantInfo="{!applicantInfo}" pageController="{!AEC}" rendered="{!applicantInfo.Apply_on_Behalf_of_PT__c && applicantInfo.Application_Stage__c == 'Working'}"/>
+          </apex:form>
+        </div>
+        <!-- end column -->
+        
+        <div class="col-md-3 col-md-pull-7">
+          <apex:form >
+            <c:menu_igi_pt_app ApplicantInfo="{!applicantInfo}" personInfo="{!personInfo}" />
+          </apex:form>
+        </div>
+        <!-- end column  --> 
+      </div>
+      <!-- end row --> 
+      <script>
+	      j$('.reformat option[value="Peru"]').hide();
+	      j$('.reformat option[value="Belize"]').hide();
+	      j$('.reformat option[value="Ghana"]').hide();	
+      </script>
+      
+    </apex:define>
+  </apex:composition>
+</apex:page>

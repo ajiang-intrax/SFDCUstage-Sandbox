@@ -1,0 +1,26 @@
+<apex:page id="Help_ayusa_app_stu_photos_videos" docType="html-5.0" standardStylesheets="true" showHeader="false">
+
+    <apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/reset.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/fonts.css')}"/> 
+    <apex:stylesheet value="{!URLFOR($Resource.module_colorbox, '/module-colorbox/css/colorbox.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/vs1.css')}"/> 
+    <apex:outputText value="<" escape="false"/>!--[if IE]<apex:outputText value=">" escape="false"/>
+    <link rel="stylesheet" href="/intraxappengine/resource/intrax_themes/intrax_themes/styles/ie.css"/>  
+    <apex:outputText value="<" escape="false"/>![endif]--<apex:outputText value=">" escape="false"/>      
+     
+    <apex:outputText value="<" escape="false"/>!--[if lt IE 8]<apex:outputText value=">" escape="false"/>      
+    <link rel="stylesheet" href="/intraxappengine/resource/intrax_themes/intrax_themes/styles/ie-7.css"/>
+    <apex:outputText value="<" escape="false"/>![endif]--<apex:outputText value=">" escape="false"/>
+    
+    <apex:define name="body">
+      <div class="wrapper">
+        <apex:form >
+        <h2>Photos of You Help</h2>
+        <div class="white-box">
+            <p>Please attach a passport-style photo, 4.5x3.5 centimeters. Your face should be clearly visible without anything covering it. Be neatly groomed and be sure to SMILE for the photograph even if it makes you feel a little silly. This photo of you will be the first image the host family and school officials will receive. </p>
+            
+        </div>
+    </apex:form>
+    </div>
+    </apex:define>
+</apex:page>

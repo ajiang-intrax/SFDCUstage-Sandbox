@@ -1,0 +1,210 @@
+<apex:page id="Participant_PreApp_Experience" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+    
+    <!-- UI Blocker component for Background processing -->
+    <c:BlockUI />
+    
+    <apex:composition template="IntraxTemplate_Vs1">
+        <apex:define name="body">
+            <div class="wrapper" id="IGI_PreApp_Exp">    
+                <apex:form id="form">
+                
+                    <!-- Heading -->
+                    <div class="page-header clearfix">
+                        <h1>  
+                          <apex:outputText value="Intrax Global Internship Application" rendered="{! IF(applicantInfo.Intrax_Program__c == 'Internship', true, false)}"/>
+                          <apex:outputText value="Work and Travel Application" rendered="{! IF(applicantInfo.Intrax_Program__c == 'Work Travel' , true, false)}"/>
+                          <!--  <apex:outputText value=" - {!personInfo.First_Name__c} {!personInfo.Last_Name__c}" rendered="{!IsPartner}" />-->
+                         </h1>
+                        
+                        <!-- Back To Main Page Link -->
+                        <div class="back-to-main"><apex:outputLink id="BackToMain" value="/apex/Participant_preapp_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+                    </div>
+                       
+                       <!-- Section Header -->  
+                       <div class="section-header clearfix">
+                            <h2>Experience Details</h2>
+                       </div> 
+                        
+                       <!-- Panel -->   
+                       <div class="white-box clearfix">   
+                            <div class="panel two_thirds"> 
+                            
+                            
+                          <apex:outputPanel layout="block" styleClass="form-row"  rendered="{! IF(applicantInfo.Intrax_Program__c == 'Work Travel', true, false)}">
+                                <div class="form-label left ">Have you ever participated on the Summer Work Travel program before?<span class="required">*</span></div>
+                                <div class="form-field">
+                  <apex:selectRadio id="Prior_Exchange_Experience" value="{!applicantInfo.Prior_Exchange_Experience__c}" required="true">
+                          <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                                        <apex:selectOption itemValue="No" itemLabel="No"/>
+                      </apex:selectRadio>
+                    </div>
+                    <div class="dropt"> <i class="icon-question-sign"></i>
+                            <span>{!$ObjectType.Applicant_Info__c.Fields.Prior_Exchange_Experience__c.inlineHelpText}</span>
+                        </div>
+                    <apex:message for="Prior_Exchange_Experience" styleClass="custom-error-radio"/>
+                            </apex:outputPanel>
+                                                 
+                                            
+                            <!-- Resume Upload -->
+                            <apex:outputPanel rendered="{! IF(applicantInfo.Intrax_Program__c == 'Internship', true, false)}" >
+                              <p>Please upload your resume here:</p>
+                                  
+                              <!-- Case when we do not have ant photo in prior -->
+                              <div class="form-row">
+                                  <apex:outputLabel id="NoRecords" rendered="{!NOT(DocList.Size > 0)}"> <span class="no-records">No record(s) to display.</span></apex:outputLabel>
+                              </div>  
+               
+                              <!-- Table having details of documents -->
+                              <apex:pageBlock id="Block_DocList" rendered="{!if(DocList.Size > 0, true, false)}">
+                                  <apex:pageBlockTable id="Table_DocList" styleClass="pageblocktable" value="{!DocList}" var="item">
+                                      
+                                      <!-- File Name -->
+                                      <apex:column headerValue="File Name">
+                                          <apex:outputText id="docName" value="{!item.Document_Name__c}"/>
+                                      </apex:column>
+                                      
+                                      <!-- Description -->
+                                      <apex:column headerValue="Description">
+                                          <apex:outputText id="Description" value="{!item.Description__c}"/>
+                                      </apex:column>
+                                      
+                                      <!-- Document GUID -->
+                                      <apex:column >
+                                          <apex:commandlink id="ViewLink" styleClass="inline-link" action="{!load}" target="_blank">
+                                              <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                              <apex:commandButton value="View" />
+                                          </apex:commandlink>
+                                          
+                                          <apex:outputText id="line" value=" | " />
+                                              
+                                              <apex:commandlink id="DeleteLink" styleClass="inline-link" action="{!deletefile}"  onclick="return ConfirmDelete('Are You Sure ?');">
+                                                  <apex:param name="docGuid"  value="{!item.Document_GUID__c}"/>      
+                                                  <apex:commandButton value="Delete" />
+                                              </apex:commandlink>
+                                      </apex:column>
+                                      
+                                  </apex:pageBlockTable>
+                              </apex:pageBlock>    
+              
+                              <apex:outputText id="disableFileUpload" value="{!disableFileUploadText}" rendered="{!disableFileUpload}"/>          
+                              <div class="form-row">
+                                  <div class="form-link">
+                      
+                                      <!-- Add a new photo link -->
+                                      <apex:outputLink value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType=Resume&retparam={!retParam}" id="theLink" target="_self" disabled="{!disableFileUpload}"><i class="icon-plus-sign"></i><span>Upload Resume</span></apex:outputLink>
+                                </div>
+                              </div>   
+                            </apex:outputPanel> <!--  End of resume upload section -->
+                            
+                            
+                            <p>List of applicant experience details:</p>
+              
+              <apex:outputPanel styleClass="form-row" layout="block" rendered="{!IF(listExperience.Size > 0, false, true)}">
+                <p class="no-records"><apex:inputField id="NoExperience" value="{!applicantInfo.Experience_Complete__c}" required="false"/> <strong>I do not currently have any work experience</strong></p>  
+                <div class="no-records" style="padding:10px 15px;">
+                  <p>Please add Experience Details (If Any)</p>
+                  <div class="form-link no-margin no-float">
+                    <apex:commandlink id="AddExperience" styleClass="no-padding" action="{!navigator}">
+                      <i class="icon-plus-sign"></i>
+                      <apex:param name="nextPage" value="/apex/Participant_Preapp_Experience_New"/>                      
+                      <apex:param name="reDirectPage" value="true"/>
+                      <apex:commandButton value="Add Experience Details"/>
+                    </apex:commandlink>
+                  </div>
+                </div>
+              </apex:outputPanel>
+              
+              <apex:outputPanel layout="block" styleClass="form-row" rendered="{!IF(listExperience.Size > 0, true, false)}">
+                <apex:pageBlock id="Block_ListExperience" >
+                  <apex:pageBlockTable id="Table_ListExperience" styleClass="pageblocktable" value="{!listExperience}" var="item">
+                    <apex:column >
+                      <apex:outputLink id="EditLink" value="/apex/Participant_Preapp_Experience_New?id={!item.Applicant_Info__c}&eid={!item.id}">Edit</apex:outputLink>
+                    </apex:column>
+                    <apex:column >
+                                  <apex:commandLink value="Delete" action="{!deleteExperience}" immediate="true" onclick="return ConfirmDelete('Are You Sure ?');">
+                                      <apex:param name="experienceId" value="{!item.id}" assignTo="{!experienceId}"/>
+                                  </apex:commandLink>
+                                </apex:column>
+                      <apex:column value="{!item.Employer_Name__c}" /> 
+                      <apex:column value="{!item.City__c}"  />
+                      <apex:column value="{!item.Country__c}"/>
+                      <apex:column value="{!item.Start_Date__c}"/>
+                    <apex:column value="{!item.End_Date__c}"/>
+                    <apex:column value="{!item.Position_Title__c}"/>
+                  </apex:pageBlockTable>  
+                </apex:pageBlock>
+
+                <div class="form-link no-margin">
+                  <apex:commandlink id="AddExperienceDetails" action="{!navigator}">
+                    <i class="icon-plus-sign"></i>
+                    <apex:param name="nextPage" value="/apex/Participant_Preapp_Experience_new"/>                      
+                    <apex:param name="reDirectPage" value="true"/>
+                    <apex:commandButton value="Add Experience Details" />
+                  </apex:commandlink>
+                 </div>   
+                   
+                 <p style="padding:10px;float:right;"><apex:inputField id="ExperienceComplete" value="{!applicantInfo.Experience_Complete__c}" required="false"/> I am done adding experience details.</p>
+              </apex:outputPanel>
+    
+                            <div class="form-row">
+                      <div class="form-link">
+                          <apex:outputLink id="BackLink" value="/apex/Participant_preApp_Language_Skills?id={!applicantInfo.Id}"><i class="icon-chevron-left"></i> <span>Back</span></apex:outputLink>
+                        </div>
+                                <!-- Back Command Link 
+                                <div class="form-link">
+                                    <apex:commandlink action="{!navigator}" immediate="true">
+                                        <apex:param name="nextPage" value="/apex/IGI_App_Program_Determination"/>
+                                        <apex:param name="reDirectPage" value="true"/> 
+                                        <i class="icon-chevron-left"></i>
+                                        <apex:commandButton value="Back" immediate="true"/>
+                                    </apex:commandlink>
+                                </div>
+                                -->      
+                                <!-- Next Command Link -->
+                                 <!--   
+                                 <apex:outputPanel styleClass="form-button" rendered="{!ISBLANK(applicantInfo.Service_Level__c) }">
+                                    <apex:commandlink styleClass="next" action="{!navigator}">
+                                        <apex:param name="nextPage" value="/apex/IGI_PreApp_summary"/>
+                                        <apex:param name="reDirectPage" value="true"/> 
+                                        <apex:commandButton value="Save & Continue" />
+                                        <i class="icon-chevron-right"></i>
+                                    </apex:commandlink>
+                                </apex:outputPanel>
+                                -->
+                                <apex:outputPanel styleClass="form-button" rendered="{!applicantInfo.Intrax_Program__c == 'Internship' && (applicantInfo.Service_Level__c == 'Premium' || ISBLANK(applicantInfo.Service_Level__c))}">
+                                    <apex:commandlink id="SaveContinuePremium" styleClass="next" action="{!navigator}">
+                                        <apex:param name="nextPage" value="/apex/Participant_PreApp_Home"/>
+                                        <apex:param name="reDirectPage" value="true"/> 
+                                        <apex:commandButton value="Save & Continue" />
+                                        <i class="icon-chevron-right"></i>
+                                    </apex:commandlink>
+                                </apex:outputPanel>
+                                   
+                                <apex:outputPanel styleClass="form-button" rendered="{!applicantInfo.Intrax_Program__c == 'Internship' && applicantInfo.Service_Level__c == 'Independent' }">
+                                    <apex:commandlink id="SaveContinueIndependent" styleClass="next" action="{!navigator}">
+                                        <apex:param name="nextPage" value="/apex/Participant_preApp_Placement_Information"/>
+                                        <apex:param name="reDirectPage" value="true"/> 
+                                        <apex:commandButton value="Save & Continue" />
+                                        <i class="icon-chevron-right"></i>
+                                    </apex:commandlink>
+                                </apex:outputPanel>  
+                                <apex:outputPanel styleClass="form-button" rendered="{!IF(applicantInfo.Intrax_Program__c == 'Work Travel', true, false)}">
+                                    <apex:commandlink id="SaveContinueWT" styleClass="next" action="{!navigator}">
+                                        <apex:param name="nextPage" value="/apex/Participant_Preapp_Essays"/>
+                                        <apex:param name="reDirectPage" value="true"/> 
+                                        <apex:commandButton value="Save & Continue" />
+                                        <i class="icon-chevron-right"></i>
+                                    </apex:commandlink>
+                                </apex:outputPanel>   
+                            </div>  
+                        </div>
+                            
+                        <div class="panel one_third last aside">
+                           <!-- <c:Badge_Centers_Contact />  -->  
+                        </div>
+                    </div>
+                </apex:form>
+            </div>
+        </apex:define>
+    </apex:composition>
+</apex:page>

@@ -1,0 +1,94 @@
+<apex:page docType="html-5.0" standardController="Applicant_Info__c"
+    extensions="AppEngine_Controller" action="{!checkLogin}"
+    standardStylesheets="false" showHeader="false"  title="Extension Preference" id="apc_ap_extension_pref">
+    <apex:composition template="intraxtemplate_vs3">
+        <apex:define name="body">
+            <c:block_header_apc_ap_application />
+
+                <div class="row">
+                    
+                    <div class="col-md-8 col-md-push-3">
+                    <c:block_app_completion ApplicantInfo="{!applicantInfo}" userProfileName="{!userProfileName}"  />
+                            <h1>Extension Preferences</h1>
+                            <apex:Messages styleClass="custom-error-pagelevel"
+                                id="messageapex" />
+                                <p class="lead">Congratulations, you have almost completed your first year as an au pair and are making a great decision extending your stay! Please take your
+                                time answering the questions in this application. The information will be submitted to the Department of State for approval. We will
+                                use your answers to tell potential host families about your experience this year.</p>
+                                   <apex:form styleClass="form-vertical ws-validate" id="webform">
+                                                
+                                              	<!-- 
+                                              	<div class="form-group">
+                                                  <label class="control-label"> What would you like to do?</label>
+                                                      <apex:actionRegion >
+                                                      <apex:selectRadio layout="pageDirection" styleClass="radio" value="{!applicantinfo.Extension_Preferences__c}" id="Extby" required="true">
+                                                        <apex:selectOption itemValue="Existing Family" itemLabel="Extend your au pair program with your current host family."/>
+                                                        <apex:selectOption itemValue="New Family" itemLabel="Apply for an extension and look for a new host family." />
+                                                        <apex:actionSupport event="onclick" rerender="Extend_by" status="showmeds"/>
+                                                      </apex:selectRadio>
+                                                      </apex:actionRegion>
+                                                      <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showmeds"/>
+                                                    <apex:message for="Extby" styleClass="custom-error-radio" id="errorextby" />
+                                                </div>
+                                                 -->
+                                                
+                                                
+                                                <div class="row">
+                                                 <div class="col-sm-12">
+                                                <div class="form-group">
+                                                  <label class="control-label">How long would you like to extend your stay?</label>
+                                                     <div class="row">
+                                                 <div class="col-sm-6"> 
+                                                      <apex:selectList styleClass="form-control" value="{!applicantInfo.Extension_Length__c}" multiselect="false" required="TRUE" id="ExtensionPref" size="1">
+                                                        <apex:selectOption itemValue="" itemLabel="Select Extension Length"/>
+                                                        <apex:selectOption itemValue="6" itemLabel="6 months" />
+                                                        <apex:selectOption itemValue="9" itemLabel="9 months" />
+                                                        <apex:selectOption itemValue="12" itemLabel="12 months" />
+                                                      </apex:selectList>
+                                                    <apex:message for="ExtensionPref" styleClass="custom-error-radio" id="prefexterror"/>
+                                                  </div>
+                                                  </div>
+                                                  </div> <!--  end row -->
+                                                  </div>
+                                                  </div> <!--  end row -->
+                                              
+                                              <apex:pageBlock id="Extend_by">
+                                              <apex:outputPanel layout="block" rendered="{!applicantinfo.Extension_Preferences__c == 'Existing Family'}" id="outputpanel">
+                                                <div class="section-title">The Department of state charges a non-refundable fee of $367 to process your application to extend. Please tell us your payment preferences.</div>
+                                                
+                                                 <div class="row">
+                                                 <div class="col-sm-6"> 
+                                                <div class="form-group">
+                                                <label class="control-label">Payment Preference <span class="info">(Dummy field)</span></label>
+                                                <select class="form-control" id="j_id0:SiteTemplate:webform:phonetype" name="j_id0:SiteTemplate:webform:phonetype" required="required">
+                                                <option value="Mobile">I will pay the department of State application fee.</option>
+                                                <option value="Home">My host family will pay the Department of State application fee.</option>
+                                                </select>
+                                                </div>
+                                                  </div>
+                                                  </div> <!--  end row -->
+                                             </apex:outputPanel>
+                                             </apex:pageBlock>
+                                                <div class="row">
+                                                    <div class="col-sm-12 margin-t">
+                                                    <apex:commandlink styleClass="btn btn-primary btn-lg"
+                                                        action="{!navigator}" id="nextlink" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                                                        <apex:param name="nextPage" value="/apex/apc_ap_main_education_proof?docType=Proof-of-Education"/>
+                                                        <apex:param name="reDirectPage" value="true" />
+                                                        <apex:param name="docType" value="Proof-of-Education" assignTo="{!docType}" />
+                                                        <apex:param name="pageId" value="008"/>
+                                                        <apex:commandButton value="Save & Continue" id="continuebutton" />
+                                                    </apex:commandlink>
+                                                </div>
+                                            </div>  
+                               </apex:form>
+                     </div>
+                    <!-- end column -->
+                    <div class="col-md-3 col-md-pull-8">
+                        
+                    </div> <!--  end column -->
+                </div>
+                <!-- end row -->
+        </apex:define>
+    </apex:composition>
+</apex:page>

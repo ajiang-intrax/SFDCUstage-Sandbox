@@ -1,0 +1,5 @@
+<apex:page StandardController="Applicant_Info__c" extensions="FlowController">
+  <flow:interview name="AppSync" finishLocation="{!FinishPageAppInfo}">
+  <apex:param name="pApplicationID" value="{!Id}"/>
+  </flow:interview>
+</apex:page>

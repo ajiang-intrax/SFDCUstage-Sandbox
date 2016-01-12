@@ -1,0 +1,9 @@
+<apex:page standardController="Opportunity" extensions="IntAcctOppSyncHelper" action="{!syncBackIntacctObjForOpp}">
+<apex:repeat value="{!responseFromIntacct}" var="aRes">
+	<apex:outputText value="----------------------------------------------------------------------------------------------"><br/></apex:outputText>
+	<apex:outputText value="Record Id: {!aRes}"><br/></apex:outputText>
+	<apex:outputText value="{!responseFromIntacct[aRes]}"><br/></apex:outputText>
+	<apex:outputText value="----------------------------------------------------------------------------------------------"><br/></apex:outputText>
+</apex:repeat>
+
+</apex:page>

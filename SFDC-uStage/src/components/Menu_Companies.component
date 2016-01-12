@@ -1,0 +1,45 @@
+<!--  
+Component: Menu_Companies
+
+-->
+<apex:component layout="none" controller="User_Controller"> 
+    
+    <apex:variable var="Hiring" value="active" rendered="{! IF($CurrentPage.Name=='Hiring_Event', true, false)}"/> 
+    <apex:variable var="Candidates" value="active" rendered="{! IF($CurrentPage.Name=='C_Matches', true, false)}"/> 
+    <apex:variable var="Matches" value="active" rendered="{! IF($CurrentPage.Name=='C_Matches_final', true, false)}"/>      
+    <apex:variable var="Events" value="active" rendered="{! IF($CurrentPage.Name=='Company_Events', true, false)}"/>  
+    <apex:variable var="resources" value="active" rendered="{! IF($CurrentPage.Name=='resources', true, false)}"/>  
+    <apex:variable var="reports" value="active" rendered="{! IF($CurrentPage.Name=='Reports', true, false)}"/>
+    <apex:variable var="positions" value="active" rendered="{! IF($CurrentPage.Name=='C_Positions', true, false)}"/>
+    
+    <ul class="clearfix pull-right">
+        
+        <apex:outputText rendered="{!IsWTUser}">
+	        <li class="{!Hiring}">
+	            <apex:outputLink value="Hiring_Event">Hiring Events</apex:outputLink>
+	        </li>
+	    </apex:outputText>
+	    
+        <li class="{!Candidates}">
+            <apex:outputLink value="C_Matches">Candidates</apex:outputLink>
+        </li>
+        <li class="{!Matches}">
+            <apex:outputLink value="C_Matches_final">Matches</apex:outputLink>
+        </li>
+        
+        <li class="{!Positions}">
+            <apex:outputLink value="C_Positions">Positions</apex:outputLink>
+        </li>
+        <apex:outputText rendered="{!IsWTUser || IsIGIUser}">
+	        <li class="{!resources}">
+	            <apex:outputLink value="resources">Resources</apex:outputLink>
+	        </li>
+        </apex:outputText>
+        <apex:outputText rendered="{!IsWTUser}">
+	        <li class="{!reports}">
+	            <apex:outputLink value="Reports">Reports</apex:outputLink>
+	        </li>
+       </apex:outputText>                  
+    </ul>
+    
+</apex:component>

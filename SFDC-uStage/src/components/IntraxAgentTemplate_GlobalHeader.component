@@ -1,0 +1,65 @@
+<apex:component id="headerComponent">
+  <div id="global-header">
+    <div id="global-header-logo">
+        <apex:outputLink value="{!$Site.Prefix}/AppEngine_SiteLoginPage" target="_self"><apex:image url="{!URLFOR($Resource.intrax_themes, '/intrax_themes/images/intrax-logo-white-small.png')}" alt="Intrax" title="Intrax"/></apex:outputLink></div>
+    <div id="global-header-links">
+      <div id="new-user-links">
+      <apex:panelGroup rendered="{!AND(ISPICKVAL($User.UserType,'Guest'), $Site.LoginEnabled)}">
+        <apex:outputLink value="{!$Site.Prefix}/AppEngine_SiteLoginPage" target="_self">Login</apex:outputLink>
+        |&nbsp;
+        <apex:outputLink value="{!$Site.Prefix}/AppEngine_ForgotPassword" target="_self">Forgot Your Password?</apex:outputLink>
+      </apex:panelGroup>
+      </div>
+      
+      <div id="current-user-links">
+      <apex:panelGroup rendered="{!NOT(ISPICKVAL($User.UserType,'Guest'))}">
+          <apex:outputLink value="{!$Site.Prefix}/ApplicantsInfo"  target="_top" rendered="{!NOT(ISPICKVAL($User.UserType,'Guest'))}">Intrax Home</apex:outputLink>
+          <apex:outputText value=" | "/>
+          <apex:outputLink value="{!$Site.Prefix}/secur/logout.jsp" target="_top" rendered="{!NOT(ISPICKVAL($User.UserType,'Guest'))}">Logout</apex:outputLink>
+          <!-- <apex:outputText value=" | "/>
+          <apex:outputText value="NextPage = {!$CurrentPage.parameters.nextPage}"/>
+          <apex:outputText value=" | "/>
+          <apex:outputText value="Redirect Page = {!$CurrentPage.parameters.reDirectPage}"/>
+          <apex:outputText value=" | "/>
+          <apex:outputText value="App = {!$CurrentPage.parameters.App}"/>
+          <apex:outputText value=" | "/>
+          <apex:outputText value="Role = {!$CurrentPage.parameters.role}"/>-->
+      </apex:panelGroup>
+      </div>
+   </div>
+      
+    </div>
+    <!--NOTE!!! This version of the code is commented so you can see what's going on.  
+        For some reason, comments will break the javascript when pasted into the SFDC  
+        Home Page Component Editor. Be sure and remove all comments before saving the  
+        Home Page Component.  
+    -->  
+    <!--Import the Google hosted jQuery LIbrary-->  
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>  
+    <!--We need something with a known id so we can navigate up in the dom to hide the sidebar component.-->  
+    <!--Anything with an id will do. I used a span tag-->  
+    <span id="hideMyParent"></span>
+    <!--this is where the magic happens-->  
+    <script type="text/javascript">  
+        //You need to wrap everything in document.ready because the select tag we are taregting needs to  
+        //be loaded in the DOM befire we can access it.  
+        $(document).ready(function() {  
+            //-----EDIT THE NEXT TWO LINES-----  
+            var startYear=1900; //replace 1982 with whatever year you want to start with;  
+            var endYear=2011; //replace 2011 with whatever year you want to end with;  
+            //-----EDIT BELLOW HERE AT YOUR OWN RISK-----  
+            var optionsString='';  
+            //Make sure that the endYear comes after the startYear  
+            if(startYear<endYear){  
+                //Loops through each date and renders the string for an option tag and addes it to the Optrionsstring variable  
+                for(i=startYear;i<endYear+1;i++){  
+                    optionsString += "<option value=\""+i+"\">"+i+"</option>";  
+                }  
+                //Replace the innerHTML of the calendar picker year select tag with the Optionsstring we constructed.  
+                $('#calYearPicker').html(optionsString);  
+            }  
+            //Hide the home page componet;  
+            $('#sidebarDiv #hideMyParent').parent().parent().hide();  
+        });  
+    </script>    
+</apex:component>

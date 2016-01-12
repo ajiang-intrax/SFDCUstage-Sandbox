@@ -1,0 +1,148 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" controller="apc_home_controller" 
+           standardStylesheets="false" showHeader="false" action="{!myInvoiceController.CreateIntacctAccount}" id="apc_ap_main_payment">
+  <apex:composition template="intraxtemplate_vs3">
+        <apex:define name="body">
+		<c:block_header_apc_ap_application />
+                <div id="app-page" class="row">
+                    <div  id="app-focus" class="col-md-9 col-md-push-3">
+                        <c:block_app_completion ApplicantInfo="{!myInvoiceController.applicantInfo}" userProfileName="{!myInvoiceController.userProfileName}" />
+                        <apex:form styleClass="form-vertical ws-validate" id="webform">
+                        <apex:Messages styleClass="custom-error-pagelevel" />
+                        <div class="row margin-t2">  
+                            
+                            
+                            <!-- call the block_cc_payment component here 
+							      we have to pass all the required attributes-->
+                             <apex:outputPanel id="creditCardBlock" rendered="{!myInvoiceController.PTRenewalPaymentMade == false}">
+                                 <div class="box margin-b2" style="background: #777777; color: #fff;">
+                                    <h4 class="no-margin">
+                                        Au Pair Extension Fee - Payment Due Now
+                                    </h4>
+                                                <div class="h3 no-margin">
+                                                            $<apex:outputText value="{0, number, #,##0.00}">
+                                                                <apex:param value="{!myInvoiceController.selectedItemsTotalPrice}"/>
+                                                            </apex:outputText>
+                                                </div>
+                                                
+                                </div>
+                                 <c:block_cc_payment applicationObj="{!myInvoiceController.ApplicantInfo}"
+                                                childOppObj="{!myInvoiceController.ChildOpportunity}"
+                                                personInfoObj="{!myInvoiceController.personInfo}"
+                                                matchObj="{!myInvoiceController.ConfMatch}"
+                                                nextPageURLObj1="apc_ap_main_payment_confirmation"
+                                                nextPageURLObj2="apc_ap_main_payment_confirmation_pdf"
+                                                pymntconfirmEmailTempIdObj="APC_Payment_Confirmation_ID"
+                                                selectedOppProdCartListObj="{!myInvoiceController.selectedOppProdCartList}"
+                                                totalAmount="{!myInvoiceController.selectedItemsTotalPrice}"
+                                                >
+                            </c:block_cc_payment> 
+                            </apex:outputPanel>
+                            
+                            <apex:outputPanel layout="block" id="RenewalPaymentMade" rendered="{!myInvoiceController.PTRenewalPaymentMade == true}" >
+                        <div class="row">
+                            <div class="row">
+                                <h2>You have already paid the Au Pair Extension Fee. Thank you!</h2>
+                                <!--<apex:outputLink value="/apex/apc_ap_home"><b>Return to Homepage ></b></apex:outputLink>-->
+                            </div>	
+                            
+                            <div class="col-md-10">
+                                <div class="well lead margin-t">
+                                    <p> Please keep the following transaction ID for future reference: <strong>{!myInvoiceController.PTRenewalPayments[0].Txn_Id__c}</strong> </p>
+                                    <p> Charged Amount: <strong>$<apex:outputText value=" {0, number, #,##0.00}">
+                                        <apex:param value="{!myInvoiceController.PTRenewalPayments[0].Txn_Amount__c}"/>
+                                        </apex:outputText>
+                                        
+                                        </strong>
+                                    </p>
+                                    <p> Transaction date: <strong>{!myInvoiceController.PTRenewalPayments[0].Txn_Date__c}</strong> </p>
+                                    
+                                </div>
+                                <!--  end well --> 
+                            </div> <!--  end column -->
+                        </div> <!--  end row -->
+                        
+                  
+                        <div class="form-group">
+                            <div class="col-sm-12 margin-t">
+                                <apex:outputLink styleClass="btn btn-link btn-lg" value="/apex/apc_ap_main_ext_agreements?id={!myInvoiceController.applicantInfo.Id}" id="backlink"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                                <apex:commandlink styleClass="btn btn-primary btn-lg" action="{!myInvoiceController.navigator}" id="nextlink" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                                    <apex:param name="nextPage"	value="/apex/apc_ap_main_completion?id={!myInvoiceController.applicantInfo.Id}" />
+                                    <apex:param name="Id"	value="{!myInvoiceController.applicantInfo.Id}" />
+                                    <apex:param name="reDirectPage" value="true" />
+                                    <apex:param name="pageId" value="032"/>
+                                    <apex:commandButton value="Save & Continue" id="continuebutton"/>
+                                </apex:commandlink>
+                            </div>
+                        </div>
+                  
+                                
+                    </apex:outputPanel>
+                                                      
+                         <!--  <div class="col-sm-4">
+                       
+                                
+                                <div class="box margin-b2" style="background: #777777; color: #fff;">
+                                    <h3>
+                                        Au Pair Extension Fee
+                                    </h3>
+                                    <h4 class="no-margin">Payment Due Now</h4>
+                                                <div class="h3 no-margin">
+                                                            $<apex:outputText value="{0, number, #,##0.00}">
+                                                                <apex:param value="{!myInvoiceController.selectedItemsTotalPrice}"/>
+                                                            </apex:outputText>
+                                                </div>
+                                                
+                                </div>
+                                
+                            <apex:outputPanel id="schdPaymentsAvailable" rendered="{!(myInvoiceController.schdPaymentsAvailable==True)}">
+                                <div class="box gray margin-b2">
+                                    <h4>Next Scheduled Payment(s)</h4>
+                                                <apex:repeat var="datekey" value="{!myInvoiceController.SelectedItemsPriceMapDueLater}">
+                                                  <hr/>   
+                                                       <div class="h3 no-margin">     
+                                                            $<apex:outputText value="{0, number, #,##0.00}">
+                                                                <apex:param value="{!myInvoiceController.SelectedItemsPriceMapDueLater[datekey]}"/>
+                                                            </apex:outputText>
+                                                       </div> 
+                                                       <div> 
+                                                       <label>Scheduled for</label>
+                                                            <apex:outputText value=" {0,date,MM/dd/yyyy}">
+                                                                <apex:param value="{!datekey}"/>
+                                                            </apex:outputText>
+                                                       </div>
+                                                </apex:repeat>  
+                                </div>
+                           </apex:outputPanel>
+                                
+                                <div class = "box gray">
+                                                <div class="h4 no-margin">Program Total</div>
+                                                <div class="h3 no-margin">
+                                                    $<apex:outputText value=" {0, number, #,##0.00}">
+                                                        <apex:param value="{!myInvoiceController.selectedItemsTotalPrice}"/>
+                                                    </apex:outputText>
+                                                </div>
+                                </div>
+                            </div>--><!--end col-->
+                            
+                            
+                        </div><!--end row-->
+                    
+                    
+                    </apex:form>
+                    </div>
+                
+                    <div id="app-side" class="col-md-3 col-md-pull-9">
+          			<c:menu_side_apc_ap_basic ApplicantInfo="{!myInvoiceController.ApplicantInfo}" />
+       				</div>
+                
+                </div>      
+                
+                <!-- end col --> 
+                
+                <!-- end row --> 
+                
+                
+            
+        </apex:define>
+    </apex:composition>
+</apex:page>

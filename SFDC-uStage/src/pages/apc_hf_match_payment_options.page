@@ -1,0 +1,584 @@
+<apex:page id="apc_hf_match_payment_options" docType="html-5.0" applyHtmlTag="false" applyBodyTag="false" title="Payment Options" 
+           standardStylesheets="false" showHeader="false" controller="apc_portal_controller">
+<apex:composition template="intraxtemplate_vs3">
+<apex:define name="body">
+    <apex:outputText rendered="{!ApplicantInfo.Application_Type__c <> 'Extension'}">
+        <c:menu_apc_hf_match_checkout />
+    </apex:outputText>   
+<style>
+.last{text-align:right;}
+</style>
+<div class="row">
+  <div class="col-sm-8 center-block">
+    <apex:form styleClass="form-vertical ws-validate" id="webform">
+
+      <div class="center-text">
+        <div class="h2 margin-b1">Review Your Program Costs Below</div>
+        <p class="margin-b4 lead">Payments are accepted via credit card</p>
+      </div>
+        <apex:outputPanel id="UserAlreadyPaid" rendered="{!userPaidAlready}">
+        	<div class="lead alert alert-warning clearfix">
+                Looks like you have already paid the fee for this match finalization. But your account is not reflected with the match details.
+                Please contact your Area Director or Regional Manager.
+            </div>
+        </apex:outputPanel>
+        
+        <apex:outputPanel id="AccountBalanceNotMatching" rendered="{!IF(isAccountBalanceMatched == false && ApplicantInfo.Application_Type__c == 'Rematch' && userPaidAlready==false,true,false)}">
+        	<div class="lead alert alert-warning clearfix">
+                Looks like your account balance and service credit balance are not matching. 
+                Please contact your area director or regional manager.
+            </div>
+        </apex:outputPanel>
+        
+        <apex:outputPanel id="AccountBalanceMatching" rendered="{!IF(isAccountBalanceMatched ==true && userPaidAlready == false,true, false)}">
+        
+        <apex:outputText rendered="{!ApplicantInfo.Application_Type__c == 'Rematch'}">
+            <div class="lead alert alert-warning clearfix">
+                Looks like you previously had a match break. Therefore we have applied the 
+                following service credits against one or more of your scheduled payments below.<br/><br/>
+                <b>$<apex:outputText value=" {0, number, #,##0.00}">
+                    <apex:param value="{!totalServiceCredit}"/> 
+                    </apex:outputText></b>  service credit
+            </div>
+        </apex:outputText>
+            <apex:outputPanel layout="block" styleClass="alert alert-info" rendered="{!ConfMatch.Engagement__r.In_Country__c=='Yes'}">
+            <div class="margin-b1"><b class="sm">
+                Match finalization details with an in-country au pair:
+  </b></div>
+            
+            <div class="margin-b1">
+            <b class="sm">
+                Program Start Date:</b><apex:outputText value=" {0,date,MM/dd/yyyy}">
+                             <apex:param value="{!confmatch.Start_Date__c}"/>
+                            </apex:outputText> &nbsp;
+                <b class="sm">Program End Date:</b><apex:outputText value=" {0,date,MM/dd/yyyy}">
+                             <apex:param value="{!confmatch.End_Date__c}"/>
+                </apex:outputText>  
+             </div>       
+          
+           <apex:outputPanel layout="block" rendered="{!ConfMatch.Engagement__r.In_Country__c=='Yes'}">
+			  	<apex:commandLink id="incountryProgramFeeCalclink" onclick="IncountryModal();" rerender="none"> 
+			  	<b class="sm">How are in-country au pair program fees calculated?</b>
+			  	</apex:CommandLink>
+              </apex:outputPanel>
+          
+                
+            </apex:outputPanel>
+      <!-- TAB SECTION -->
+      <apex:tabPanel switchType="client" selectedTab="StandardPlan" id="PaymentTabPanel" inactiveTabClass="inactiveTab" rendered="{!paymentPlanAvailable}">
+        <apex:tab label="Standard Fee Payment" name="StandardPlan" id="StandardPlanTab" >
+          <apex:pageBlock >
+            <table class="table vs4">
+              <thead>
+                <tr>
+                  <th><h4>What's included</h4></th>
+                  <th class="last"><h4>Amount in U.S. Dollars</h4></th>
+                </tr>
+              </thead>
+              <tbody>
+              <div id='StandardPlanDueNowItems'>
+                <apex:variable value="False" var="itemsAvailable1" id="itemsAvailable1"/>
+                <apex:repeat var="datekey" value="{!StandardItemsDateMap}">
+                 <apex:variable value="False" var="itemsAvailable1"/>
+                 <apex:repeat var="item" value="{!StandardItemsDateMap[datekey]}" rendered="{!IF(datekey < pc.match.Start_Date__c,true,false)}">
+                  <apex:outputText rendered="{!IF(item.paymentMethod == 'Standard' || item.paymentMethod == 'All',true,false)}">
+                    <apex:variable value="True" var="itemsAvailable1"/>
+                    <tr>
+                      <td>{!item.productDescription}</td>
+                      <td class="last">
+                            <apex:outputText value=" {0, number, #,##0.00}">
+                             <apex:param value="{!item.unitPrice}"/>
+                            </apex:outputText>
+                          <!--date {!item.duedate}-->
+                      </td>
+                      </tr>
+                  </apex:outputText>
+                  </apex:repeat>
+                    <apex:outputText rendered="{!isServiceCreditApplicable == true}">
+                        <apex:outputText rendered="{!StandardItemsPriceMap[datekey] > StandardItemsPriceMapWithSC[datekey]}">
+                            <tr>
+                                <td>Service Credit</td>
+                                <td class="last">
+                                    <apex:outputText value=" {0, number, #,##0.00}">
+                                        <apex:param value="{!(StandardItemsPriceMapWithSC[datekey] - StandardItemsPriceMap[datekey])}"/>
+                                    </apex:outputText>
+                                    <!--date {!datekey}-->
+                                </td>
+                            </tr>
+                        </apex:outputText>
+						<apex:outputText rendered="{!StandardItemsPriceMapWithSC[datekey] > StandardItemsPriceMap[datekey]}">
+                            <tr>
+                                <td>Service Credit</td>
+                                <td class="last">
+                                    <apex:outputText value=" {0, number, #,##0.00}">
+                                        <apex:param value="{!(StandardItemsPriceMap[datekey] - StandardItemsPriceMapWithSC[datekey])}"/>
+                                    </apex:outputText>
+                                    <!--date {!datekey}-->
+                                </td>
+                            </tr>
+                        </apex:outputText>                        
+                    </apex:outputText>
+                 <apex:outputText rendered="{!( itemsAvailable1=='True')}">
+                  <tr>
+                    <td class="currenttotal"><b>PAYMENT</b><br/>
+                     
+                     <apex:outputText rendered="{!datekey<=Today()}">Due Now </apex:outputText>
+                      <apex:outputText rendered="{!datekey>Today()}">Due on 
+                      <apex:outputText value=" {0,date,MM/dd/yyyy}">
+                            <apex:param value="{!datekey}"/>
+                          </apex:outputText>
+                      </apex:outputText>
+                      </td>
+                      <apex:outputText rendered="{!isServiceCreditApplicable}">
+                          <td class="currenttotal last"><b>
+                              <apex:outputText rendered="{!StandardItemsPriceMap[datekey] != StandardItemsPriceMapWithSC[datekey]}">
+                                  <Strike><apex:outputText value=" {0, number, #,##0.00}">
+                                      <apex:param value="{!StandardItemsPriceMap[datekey]}"/>
+                                      </apex:outputText>
+                                  </Strike>
+                                  <br/>
+                              </apex:outputText>
+                              <apex:outputText value=" {0, number, #,##0.00}">
+                                  <apex:param value="{!StandardItemsPriceMapWithSC[datekey]}"/>
+                              </apex:outputText></b>
+                          </td>
+                      </apex:outputText>
+                      <apex:outputText rendered="{!isServiceCreditApplicable == false}">
+                          <td class="currenttotal last"><b>
+                              <apex:outputText value=" {0, number, #,##0.00}">
+                                  <apex:param value="{!StandardItemsPriceMap[datekey]}"/>
+                              </apex:outputText>
+                              </b></td>
+                      </apex:outputText>                   
+                  </tr>
+                </apex:outputText>
+                </apex:repeat>
+                
+              </div>
+           </tbody>
+           </table>
+              <table class="table vs4">
+              <tr>
+                    <td class="finaltotal"><b>PROGRAM TOTAL</b>
+                    </td>
+                    <td class="finaltotal last"><b>
+                            <apex:outputText value=" {0, number, #,##0.00}">
+                             <apex:param value="{!StandardItemsTotalPrice}"/>
+                            </apex:outputText>
+                    </b></td>
+                  </tr>
+              </table>
+             <!--   <apex:outputPanel rendered="{!ConfMatch.Engagement__r.In_Country__c=='Yes'}">
+			  	<apex:commandLink id="incountryProgramFeeCalclink" onclick="IncountryModal();" rerender="none"> See In-country Au Pair Program Fees calculation </apex:CommandLink>
+              </apex:outputPanel>
+              -->
+          </apex:pageBlock>
+              
+          <div class="center-text">
+          <!--<apex:outputLink id="StandardPaymentSubmit" styleClass="btn btn-primary btn-lg margin-r2" value="apex/apc_hf_match_payment_checkout?Id={!applicantInfo.Id}">
+                Select this Option
+          </apex:outputLink>-->
+              
+          <apex:commandlink styleClass="btn btn-primary btn-lg margin-t2"
+                                          id="StandardPaymentSubmit"  status="onsubmit" action="{!populateSelectedItems}">
+            <apex:param name="nextPage" value="/apex/apc_hf_match_payment_checkout" />
+             <apex:param name="reDirectPage" value="false" />
+             <apex:param name="viewpage" value="true" />
+             <apex:param name="sAppId" value="{!applicantInfo.Id}" />
+              <apex:param name="mId" value="{!confmatch.Id}" />
+              <apex:param name="SelectedPayment" value="Standard"/>
+             <apex:commandButton id="StandardContinuebutton">
+              Select Standard Fee Payment
+              </apex:commandButton>
+        </apex:commandlink>    
+              
+      </div>
+        </apex:tab>
+        <apex:tab label="Family Friendly Payment Plan" name="PaymentPlan" id="PaymentPlanTab">
+          <!-- PAYMENT PLAN TAB -->
+            <apex:pageBlock >
+            <table class="table vs4">
+              <thead>
+                <tr>
+                  <th><h4>Whats included</h4></th>
+                  <th class="last"><h4>Amount in USD</h4></th>
+                </tr>
+              </thead>
+              <tbody>
+              <div id='PaymentPlanDueNowItems'>
+                <apex:variable value="False" var="itemsAvailable4" id="itemsAvailable4"/>
+                <apex:repeat var="datekey" value="{!PaymentPlanItemsDateMap}">
+                 <apex:variable value="False" var="itemsAvailable4"/>
+                 <apex:repeat var="item" value="{!PaymentPlanItemsDateMap[datekey]}" rendered="{!IF(datekey < pc.match.Start_Date__c,true,false)}">
+                  <apex:outputText rendered="{!IF(item.paymentMethod == 'Installment' || item.paymentMethod == 'All',true,false)}">
+                    <apex:variable value="True" var="itemsAvailable4"/>
+                    <tr>
+                      <td>{!item.productDescription}</td>
+                      <td class="last">
+                            <apex:outputText value=" {0, number, #,##0.00}">
+                             <apex:param value="{!item.unitPrice}"/>
+                            </apex:outputText>
+                           <!--date {!item.duedate}-->
+                      </td>
+                      </tr>
+                  </apex:outputText>
+                  </apex:repeat>
+                 <apex:outputText rendered="{!isServiceCreditApplicable == true}">
+                        <apex:outputText rendered="{!PaymentPlanItemsPriceMap[datekey] > PaymentPlanItemsPriceMapWithSC[datekey]}">
+                            <tr>
+                                <td>Service Credit</td>
+                                <td class="last">
+                                    <apex:outputText value=" {0, number, #,##0.00}">
+                                        <apex:param value="{!(PaymentPlanItemsPriceMapWithSC[datekey] - PaymentPlanItemsPriceMap[datekey])}"/>
+                                    </apex:outputText>
+                                    <!--date {!datekey}-->
+                                </td>
+                            </tr>
+                        </apex:outputText>
+						<apex:outputText rendered="{!PaymentPlanItemsPriceMapWithSC[datekey] > PaymentPlanItemsPriceMap[datekey]}">
+                            <tr>
+                                <td>Service Credit</td>
+                                <td class="last">
+                                    <apex:outputText value=" {0, number, #,##0.00}">
+                                        <apex:param value="{!(PaymentPlanItemsPriceMap[datekey] - PaymentPlanItemsPriceMapWithSC[datekey])}"/>
+                                    </apex:outputText>
+                                    <!--date {!datekey}-->
+                                </td>
+                            </tr>
+                        </apex:outputText>                        
+                    </apex:outputText>
+                 <apex:outputText rendered="{!( itemsAvailable4=='True')}">
+                  <tr>
+                    <td class="currenttotal"><b>PAYMENT</b><br/>
+                      <apex:outputText rendered="{!datekey<=Today()}">Due Now </apex:outputText>
+                      <apex:outputText rendered="{!datekey>Today()}">Due on 
+                      <apex:outputText value=" {0,date,MM/dd/yyyy}">
+                            <apex:param value="{!datekey}"/>
+                          </apex:outputText>
+                      </apex:outputText>
+                      </td>
+                      <apex:outputText rendered="{!isServiceCreditApplicable == true}">
+                          <td class="currenttotal last"><b>
+                              <apex:outputText rendered="{!PaymentPlanItemsPriceMap[datekey] != PaymentPlanItemsPriceMapWithSC[datekey]}">
+                                  <strike>
+                                      <apex:outputText value=" {0, number, #,##0.00}">
+                                          <apex:param value="{!PaymentPlanItemsPriceMap[datekey]}"/>
+                                      </apex:outputText>
+                                  </strike><br/>
+                              </apex:outputText>
+                              <apex:outputText value=" {0, number, #,##0.00}">
+                                  <apex:param value="{!PaymentPlanItemsPriceMapWithSC[datekey]}"/>
+                              </apex:outputText>
+                              </b></td>
+                      </apex:outputText>
+                      <apex:outputText rendered="{!isServiceCreditApplicable == false}">
+                          <td class="currenttotal last"><b>
+                              <apex:outputText value=" {0, number, #,##0.00}">
+                                  <apex:param value="{!PaymentPlanItemsPriceMap[datekey]}"/>
+                              </apex:outputText>
+                              </b></td>
+                      </apex:outputText>
+                      
+                  </tr>
+                </apex:outputText>
+                </apex:repeat>
+                
+              </div>
+         
+                  
+              <div id='Installments'>
+                <td>Installments</td>
+                <td class="last">
+                    <apex:outputText value=" {0, number, #,##0.00}">
+                             <apex:param value="{!InstallmentItemsTotalPrice}"/>
+                            </apex:outputText> 
+                    <br/>
+                  Collected in {!NoOfInstallments} Installments.<br/>
+                  <apex:commandLink id="nextlink" onclick="confInstallment();" rerender="none"> See amounts and schedule </apex:CommandLink></td>
+              </div>
+                </tbody>
+              
+            </table>
+                <table class="table vs4">
+              <tr>
+                    <td class="finaltotal"><b>PROGRAM TOTAL</b>
+                    </td>
+                    <td class="finaltotal last"><b>
+                            <apex:outputText value=" {0, number, #,##0.00}">
+                             <apex:param value="{!paymentplanItemsTotalPrice}"/>
+                            </apex:outputText>
+                    </b></td>
+                  </tr>
+              </table>
+               <!--  
+                <apex:outputPanel rendered="{!ConfMatch.Engagement__r.In_Country__c=='Yes'}">
+			  	<apex:commandLink id="incountryProgramFeeCalclink" onclick="IncountryModal();" rerender="none"> See In-country Au Pair Program Fees calculation </apex:CommandLink>
+              </apex:outputPanel>
+              -->
+          </apex:pageBlock>
+          <div class="center-text">
+          <!--<apex:outputLink id="PaymentPlanSubmit" styleClass="btn btn-primary btn-lg margin-r2" value="apex/apc_hf_match_payment_checkout?Id={!applicantInfo.Id}">
+                Select this Option
+           </apex:outputLink>-->
+          <apex:commandlink styleClass="btn btn-primary btn-lg margin-t2"
+                                          id="PaymentPlanSubmit"  status="onsubmit" action="{!populateSelectedItems}">
+            <apex:param name="nextPage" value="/apex/apc_hf_match_payment_checkout" />
+             <apex:param name="reDirectPage" value="false" />
+             <apex:param name="viewpage" value="true" />
+             <apex:param name="sAppId" value="{!applicantInfo.Id}" />
+              <apex:param name="mId" value="{!confmatch.Id}" />
+              <apex:param name="SelectedPayment" value="PaymentPlan"/>
+             <apex:commandButton id="PaymentPlanContinueButton">
+              Select Family Friendly Payment Plan
+              </apex:commandButton>
+        </apex:commandlink> 
+              
+           </div>
+        </apex:tab>
+      </apex:tabPanel>
+
+        <apex:pageBlock rendered="{!(paymentPlanAvailable == False)}">
+            <table class="table vs4">
+              <thead>
+                <tr>
+                  <th><h4>Whats included</h4></th>
+                  <th class="last"><h4>Amount in USD</h4></th>
+                </tr>
+              </thead>
+              <tbody>
+              <div id='PaymentPlanDueNowItems'><!--the id here has to be changed. This is Standard payment option for ICAP-->
+                <apex:variable value="False" var="itemsAvailable1" id="itemsAvailable1"/>
+                <apex:repeat var="datekey" value="{!StandardItemsDateMap}">
+                 <apex:variable value="False" var="itemsAvailable1"/>
+                 <apex:repeat var="item" value="{!StandardItemsDateMap[datekey]}" rendered="{!IF(datekey < pc.match.Start_Date__c,true,false)}">
+                  <apex:outputText rendered="{!IF(item.paymentMethod == 'Standard' || item.paymentMethod == 'All',true,false)}">
+                    <apex:variable value="True" var="itemsAvailable1"/>
+                    <tr>
+                      <td>{!item.productDescription}</td>
+                      <td class="last">
+                            <apex:outputText value=" {0, number, #,##0.00}">
+                             <apex:param value="{!item.unitPrice}"/>
+                            </apex:outputText>
+                           <!--date {!item.duedate}-->
+                      </td>
+                      </tr>
+                  </apex:outputText>
+                  </apex:repeat>
+                 <apex:outputText rendered="{!isServiceCreditApplicable == true}">
+                        <apex:outputText rendered="{!StandardItemsPriceMap[datekey] > StandardItemsPriceMapWithSC[datekey]}">
+                            <tr>
+                                <td>Service Credit</td>
+                                <td class="last">
+                                    <apex:outputText value=" {0, number, #,##0.00}">
+                                        <apex:param value="{!(StandardItemsPriceMapWithSC[datekey] - StandardItemsPriceMap[datekey])}"/>
+                                    </apex:outputText>
+                                    <!--date {!datekey}-->
+                                </td>
+                            </tr>
+                        </apex:outputText>
+						<apex:outputText rendered="{!StandardItemsPriceMapWithSC[datekey] > StandardItemsPriceMap[datekey]}">
+                            <tr>
+                                <td>Service Credit</td>
+                                <td class="last">
+                                    <apex:outputText value=" {0, number, #,##0.00}">
+                                        <apex:param value="{!(StandardItemsPriceMap[datekey] - StandardItemsPriceMapWithSC[datekey])}"/>
+                                    </apex:outputText>
+                                    <!--date {!datekey}-->
+                                </td>
+                            </tr>
+                        </apex:outputText>                        
+                    </apex:outputText>
+                    
+                 <apex:outputText rendered="{!( itemsAvailable1=='True')}">
+                  <tr>
+                    <td class="currenttotal"><b>PAYMENT</b><br/>
+                      <apex:outputText rendered="{!datekey<=Today()}">Due Now </apex:outputText>
+                      <apex:outputText rendered="{!datekey>Today()}">Due on 
+                      <apex:outputText value=" {0,date,MM/dd/yyyy}">
+                            <apex:param value="{!datekey}"/>
+                          </apex:outputText>
+                      </apex:outputText>
+                      </td>
+                      <apex:outputText rendered="{!isServiceCreditApplicable == true}">
+                          <td class="currenttotal last"><b>
+                              <apex:outputText rendered="{!StandardItemsPriceMap[datekey] != StandardItemsPriceMapWithSC[datekey]}">
+                                  <strike>
+                                      <apex:outputText value=" {0, number, #,##0.00}">
+                                  		<apex:param value="{!StandardItemsPriceMap[datekey]}"/>
+                                 	  </apex:outputText>
+                              	  </strike>
+                                  <br/>
+                              </apex:outputText>
+                              <apex:outputText value=" {0, number, #,##0.00}">
+                                  <apex:param value="{!StandardItemsPriceMapWithSC[datekey]}"/>
+                              </apex:outputText>
+                              </b></td>
+                      </apex:outputText>
+                      <apex:outputText rendered="{!isServiceCreditApplicable == false}">
+                          <td class="currenttotal last"><b>
+                              <apex:outputText value=" {0, number, #,##0.00}">
+                                  <apex:param value="{!StandardItemsPriceMap[datekey]}"/>
+                              </apex:outputText>
+                              </b></td>
+                      </apex:outputText>
+                    
+                  </tr>
+                </apex:outputText>
+                </apex:repeat>
+                
+              </div>
+           </tbody>
+              
+            </table>
+            <table class="table vs4">
+              <tr>
+                    <td class="finaltotal"><b>PROGRAM TOTAL</b>
+                    </td>
+                    <td class="finaltotal last"><b>
+                            <apex:outputText value=" {0, number, #,##0.00}">
+                             <apex:param value="{!StandardItemsTotalPrice}"/>
+                            </apex:outputText>
+                    </b></td>
+                  </tr>
+              </table>
+           
+            <div class="center-text">
+          <!--<apex:outputLink id="ICAPStandardPaymentSubmit" styleClass="btn btn-primary btn-lg margin-r2" value="apex/apc_hf_match_payment_checkout?Id={!applicantInfo.Id}">
+            Continue to Payment  
+          </apex:outputLink>-->
+        
+                
+                
+        <apex:commandlink styleClass="btn btn-primary btn-lg margin-t2"
+                                          id="ICAPStandardPaymentSubmit"  status="onsubmit" action="{!populateSelectedItems}">
+            <apex:param name="nextPage" value="/apex/apc_hf_match_payment_checkout" />
+             <apex:param name="reDirectPage" value="false" />
+             <apex:param name="viewpage" value="true" />
+             <apex:param name="sAppId" value="{!applicantInfo.Id}" />
+              <apex:param name="mId" value="{!confmatch.Id}" />
+              <apex:param name="SelectedPayment" value="Standard"/>
+             <apex:commandButton id="SingleOptionContinueButton">
+              Continue to Payment
+              </apex:commandButton>
+        </apex:commandlink>         
+                
+      </div>
+      </apex:pageBlock>
+       
+      
+      <div class="modal fade vs1"  id="myInstallmentPay1" tabindex="-1"
+           role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+           >
+        <div class="modal-dialog">
+          <div class="modal-content">
+              <apex:commandLink styleClass="closebtn" html-data-dismiss="modal" reRender="none"> <span class="fa-stack fa-lg "> <i class="fa fa-circle fa-stack-2x"></i> <i class="fa fa-times fa-stack-1x fa-inverse"></i> </span> </apex:commandLink> 
+            <div class="modal-body"> 
+              <div id='PaymentPlanDueLateritems'>
+                <apex:variable value="False" var="itemsAvailable1" id="itemsAvailable1"/>
+                 <table class="table vs4">
+                    <tbody> 
+                <apex:repeat var="datekey" value="{!InstallmentItemsPriceMap}">
+                      <tr>
+                      <td>
+                          <div>Date 
+                            <apex:outputText value=" {0,date,MM/dd/yyyy}">
+                             <apex:param value="{!datekey}"/>
+                            </apex:outputText>
+                          </div>
+                          <div> 
+                              <apex:outputText rendered="{!isServiceCreditApplicable == false}">
+                                  <apex:outputText value=" {0, number, #,##0.00}">
+                             		<apex:param value="{!InstallmentItemsPriceMap[datekey]}"/>
+                            		</apex:outputText>
+                              </apex:outputText>
+                              <apex:outputText rendered="{!isServiceCreditApplicable == true}">
+                                  <apex:outputText rendered="{!InstallmentItemsPriceMap[datekey] != InstallmentItemsPriceMapWithSC[datekey]}">
+                                      <strike>
+                                      <apex:outputText value=" {0, number, #,##0.00}">
+                             			<apex:param value="{!InstallmentItemsPriceMap[datekey]}"/>
+                            		</apex:outputText>
+                                  </strike><br/>
+                                  </apex:outputText>
+                                  <apex:outputText value=" {0, number, #,##0.00}">
+                             			<apex:param value="{!InstallmentItemsPriceMapWithSC[datekey]}"/>
+                            		</apex:outputText>
+                              </apex:outputText>
+                          </div>
+                      </td>
+                      </tr>
+                     
+                </apex:repeat>
+                 </tbody>
+                 </table>
+              </div>
+              
+              </div>
+          </div>
+        </div>
+      </div>
+		
+             
+      <div class="modal fade vs1"  id="IncountryAupairFeeCalculation" tabindex="-1"
+           role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+           >
+        <div class="modal-dialog">
+          <div class="modal-content">
+              <apex:commandLink styleClass="closebtn" html-data-dismiss="modal" reRender="none"> <span class="fa-stack fa-lg "> <i class="fa fa-circle fa-stack-2x"></i> <i class="fa fa-times fa-stack-1x fa-inverse"></i> </span> </apex:commandLink> 
+            <div class="modal-body"> 
+                <h3>
+                    In Country Au Pair Program Fees Calculation
+                </h3>
+                
+              <p class="margin-b3">
+              The au pair daily rate is calculated at $650 x 12 months divided by 365 days.<br/>
+              The in-country program period is the number of days between program start date and program end date.
+              </p>
+              
+               <p class="margin-b3">
+               <b>In country au pair program fee = daily au pair rate x program period</b>
+               </p> 
+                
+              <p>Note:</p>
+              
+              <ol>
+              <li><b>Host family is responsible for booking and payment for any domestic travel including ground transportation.</b></li>
+              <li>If the program period is more than or equal to 305 days, the Host Family has the option to use the Family Friendly Payment Plan.<br/> <em>*Includes a total $400 in payment plan fees.</em></li>
+              
+              </ol>  
+                
+              </div>
+          </div>
+        </div>
+      </div>
+            
+      </apex:outputPanel>
+      <!-- End Modal Window --> 
+    </apex:form>
+  </div>
+  <!-- end col --> 
+</div>
+<!-- end row --> 
+<script>
+            
+            
+            function confInstallment(){
+                var auxerr= j$('.custom-error-pagelevel').attr('role');
+                //alert(auxerr);
+                if(auxerr=="alert"){
+                }else{
+                    j$('#myInstallmentPay1').modal();
+                }
+            } 
+			
+			function IncountryModal(){
+                var auxerr= j$('.custom-error-pagelevel').attr('role');
+                //alert(auxerr);
+                if(auxerr=="alert"){
+                }else{
+                    j$('#IncountryAupairFeeCalculation').modal();
+                }
+            } 
+            </script>
+</apex:define>
+</apex:composition>
+</apex:page>

@@ -1,0 +1,599 @@
+<apex:page standardController="Match__c" extensions="WT_Job_Content_Extn"  standardStylesheets="false" showHeader="false" renderas="pdf" applyHtmlTag="false" applyBodyTag="false">
+<head>
+<style type="text/css" >
+@page {
+ size:portrait;
+font-family:Trebuchet MS, Arial, Helvetica, sans-serif;
+margin:2cm 1cm 3cm 1cm;
+padding:1em 1em 1em 1em;
+@top-left {
+ content: element(header);
+}
+@bottom-center {
+ content: element(footer);
+}
+}
+ @page:first {
+@top-left {
+content: element(master);
+}
+.header {
+display:none;
+}
+}
+div.master { position: running(master); padding:2em 1em 1em 1em; }
+div.header { position: running(header); padding:1em; }
+div.footer { display: block; padding: 1em; position: running(footer); font-family:Trebuchet MS, Arial, Helvetica, sans-serif; color:#7d7d7d; }
+.page-numbers { text-align:center; padding-top:0.5cm; width:100%; }
+.pagenumber:before { content: counter(page); font-size:9pt; }
+.pagecount:before { content: counter(pages); font-size:9pt; }
+.title { text-align:center; background:#b8d459; margin-bottom:2em; }
+.title div { color:#202020; display:inline-block; font-size:18pt; background:#fff; padding:0 1em; text-align:center; }
+h2 { background:#76923C; font-size:11pt; color:white; padding:0.5em 1em; margin-bottom:1em; page-break-inside:avoid;  page-break-after: avoid;}
+.trow{ background:#76923C; font-size:11pt; color:white; padding:0.5em 0.5em; margin-bottom:1em; page-break-inside:avoid;  page-break-after: avoid;}
+.container { width:100%; font-family:Trebuchet MS, Arial, Helvetica, sans-serif; font-size:10pt; }
+.left-column { width:40%; margin-right:10%; float:left; }
+.right-column { width:40%; float:left; }
+.data-row { margin-bottom:1em; }
+.repeat-last { border-bottom:1px solid #e3edd4; }
+.data-row.last { border-bottom:none; }
+.data-row:after { display:block; visibility:hidden; content:"."; clear:both; width:1px; height:1px; }
+.data-label { float:left; font-weight:bold; }
+.data-label.left { margin-left:1em; }
+.data-field { float:left; margin-left:1em; font-style:italic; }
+.essay { margin-right:1em; margin-left:1em; }
+.essay.answer{border-bottom:1px solid #e3edd4; padding-bottom:1em; }
+.clearfix:after { content:"."; width:1px; height:1px; display:block; visibility:hidden; clear:both; }
+.regular{font-weight:normal;}
+.page-break { page-break-before: always; }
+.page-break-inside { page-break-inside: avoid; }
+.page-title-small { float:right; font-family:Trebuchet MS, Arial, Helvetica, sans-serif; font-size:9pt; color:#7d7d7d; }
+.white { color:white; font-size:1px; }
+</style>
+</head>
+<body>
+   <form>
+   	<div class="header"> 
+   	<span align="left"><apex:image id="IntraxLogo" style="width:2.5cm;" url="{!URLFOR($Resource.intrax_themes, '/intrax_themes/images/pdf-intrax.gif')}" alt="Intrax" title="Intrax"/></span>
+   	<span class="page-title-small">{!OpportunityDtlsSession}&nbsp;&nbsp;{!OpportunityDtlsProgramYear}&nbsp;Job Placement Agreement</span> </div>
+    <div class="container clearfix">
+    	<div class="master">
+          <apex:image id="IntraxLogoBody" style="width:2.5cm;" url="{!URLFOR($Resource.intrax_themes, '/intrax_themes/images/pdf-intrax.gif')}" alt="Intrax" title="Intrax"/>
+        </div>
+    	<div class="title">
+            <div>{!OpportunityDtlsSession}&nbsp;&nbsp;{!OpportunityDtlsProgramYear}&nbsp;Job Placement Agreement</div>
+        </div>
+       <table cellpadding="1" cellspacing="1" width="100%" bgcolor="76923C">
+            <tr>
+                <td valign="top" colspan="2" class="trow">
+                    <b>Sponsor Information</b>
+                </td>
+            </tr>
+            <tr>
+                <td valign="top" bgcolor="white">Sponsor Address<br /><br />
+                	Intrax Work Travel<br />
+                    600 California Street, 10th Floor<br />
+                    San Francisco, CA 94108
+                </td>
+                <td>
+                    <table cellpadding="0" cellspacing="0" width="100%" >
+                        <tr>
+                            <td valign="top" bgcolor="white">Sponsor Support Email Address <br />
+                            iwtsupport@intraxinc.com
+                            <br /><br />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top" bgcolor="white">Sponsor Support Phone Number<br />
+                            1.888.224.0450
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <table cellpadding="0" cellspacing="0" width="100%">
+            <tr>
+                <td valign="top" >
+                    &nbsp;
+                </td>
+            </tr>
+        </table>
+        <table cellpadding="1" cellspacing="1" width="100%" bgcolor="76923C">
+            <tr>
+                <td valign="top" colspan="4" class="trow">
+                    <b>Participant Information</b>
+                </td>
+            </tr>
+            <tr>
+                <td valign="top" colspan="3" bgcolor="white">
+                    <b>Exchange Visitor Name</b> <br />
+                    {!ParticipantName}
+                </td>
+                <td valign="top" bgcolor="white">
+                <b>Exchange Visitor Intrax ID</b><br />
+                {!ParticipantIntraxID}
+                </td>
+            </tr>
+            <tr>
+                <td valign="top" bgcolor="white">
+                    <b>Program Start Date</b><br />
+                    <apex:outputText value="{0,date,MM/dd/yyyy}">
+       					<apex:param value="{!EngagementStartDate}" />
+   					</apex:outputText>
+                </td>
+                <td valign="top" bgcolor="white">
+                    <b>Program End Date</b><br />
+                    <apex:outputText value="{0,date,MM/dd/yyyy}">
+       					<apex:param value="{!EngagementEndDate}" />
+   					</apex:outputText>
+                </td>
+                <td valign="top" bgcolor="white">
+                    <b>Birthdate</b><br />
+                    <apex:outputText value="{0,date,MM/dd/yyyy}">
+       					<apex:param value="{!ParticipantBDate}" />
+   					</apex:outputText>
+                </td>
+                <td valign="top" bgcolor="white">
+                    <b>Gender</b><br />
+                    {!Participantgender}
+                </td>
+            </tr>
+            <tr>
+                <td valign="top" colspan="2" bgcolor="white">
+                <b>SEVIS ID</b><br />
+                {!ParticipantSEVISID}
+                </td>
+                <td valign="top" bgcolor="white">
+                    <b>Birth City</b><br />
+                    {!ParticipantBirthCity}
+                </td>
+                <td valign="top" bgcolor="white">
+                    <b>Birth Country</b><br />
+                    {!ParticipantBirthCountry}
+                </td>
+            </tr>
+            <tr>
+                <td valign="top" colspan="2" bgcolor="white">
+                <b>Mailing Address</b><br />
+                {!ParticipantStreet}<br />
+                {!ParticipantCity},&nbsp;{!ParticipantState},&nbsp;{!ParticipantZip},&nbsp;{!ParticipantCountry}
+                </td>
+                <td valign="top" bgcolor="white">
+                    <table cellpadding="1" cellspacing="1" width="100%">
+                        <tr>
+                            <td><b>Citizenship</b><br />
+                            {!ParticipantCitizenship}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>Phone</b><br />
+                            {!ParticipantPhone}
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td valign="top" bgcolor="white">
+                    <table cellpadding="1" cellspacing="1" width="100%">
+                        <tr>
+                            <td><b>Legal Residence</b><br />
+                            {!ParticipantResidence}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>Mobile</b><br />
+                            {!ParticipantPersonMobile}
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+            	<td valign="top" colspan="2" bgcolor="white">
+            		<b>School Name</b><br />
+            		{!ParticipantSchool}
+            	</td>
+            	<td valign="top" colspan="2" bgcolor="white">
+            		<b>Email</b><br />
+            		{!ParticipantEmail} 
+            	</td>
+            </tr>
+        </table>
+        <table cellpadding="0" cellspacing="0" width="100%">
+            <tr>
+                <td valign="top" >
+                    &nbsp;
+                </td>
+            </tr>
+        </table>
+        <table cellpadding="1" cellspacing="1" width="100%" bgcolor="76923C">
+            <tr>
+                <td valign="top" colspan="3" class="trow">
+                    <b>Employer Information</b>
+                </td>
+            </tr>
+            <tr>
+            	<td valign="top" colspan="2" bgcolor="white">
+            		<b>Host Company Name</b><br />
+            		{!HCName}
+            	</td>
+            	<td valign="top" bgcolor="white">
+            		<b>Industry</b><br />
+            		{!HCIndustry}
+            	</td>
+            </tr>
+            <tr>
+            	<td valign="top" colspan="2" bgcolor="white" >
+            		<b>Host Company Address</b><br />
+            		{!HCStreet}<br />
+            		{!HCCity},&nbsp;{!HCState},&nbsp;{!HCZip},&nbsp;{!HCCountry}
+            	</td>
+            	<td valign="top" bgcolor="white">
+            		<table cellpadding="1" cellspacing="1" width="100%"> 
+            			<tr>
+            				<td valign="top" bgcolor="white">
+            				<b>Host Company Phone</b><br />
+            				{!HCPhone}
+            				<br />
+            				</td>
+            			</tr>
+            			<tr>
+            				<td valign="top" bgcolor="white">
+            				<b>Host Company Email</b><br />
+            				{!HCEmail}
+            				<br />
+            				</td>
+            			</tr>
+            			<tr>
+            				<td valign="top" bgcolor="white">
+            				<b>Host Company Website (if available)</b><br />
+            				{!HCWebsite}
+            				</td>
+            			</tr>
+            		</table>
+            	</td>
+            </tr>
+            <tr>
+            	<td valign="top" bgcolor="white">
+            		<b>EIN (Employer ID Number/Federal Tax ID)</b><br />
+            		{!HCEIN}
+            	</td>
+            	<td valign="top" bgcolor="white">
+            		<b>Workers Compensation Policy Number</b><br />
+            		{!HCWorkerComp}
+            	</td>
+            	<td valign="top" bgcolor="white">
+            		<b>Workers Compensation Policy Carrier</b><br />
+            		{!HCWorkerCompCarrier}
+            	</td>
+            </tr>
+        </table>
+        <table cellpadding="0" cellspacing="0" width="100%">
+            <tr>
+                <td valign="top" >
+                    &nbsp;
+                </td>
+            </tr>
+        </table>
+        <table cellpadding="1" cellspacing="1" width="100%" bgcolor="76923C">
+            <tr>
+                <td valign="top" colspan="4" class="trow">
+                    <b>Position Details</b>
+                </td>
+            </tr>
+            <tr>
+            	<td valign="top" bgcolor="white">
+            		<b>Position Title</b><br />
+            		{!PositionTitle}
+            	</td>
+            	<td valign="top" bgcolor="white">
+            		<b>Intrax Position Code</b><br />
+            		{!PositionCode}
+            	</td>
+            	<td valign="top" bgcolor="white">
+            		<b>Start Date</b><br />
+            		<apex:outputText value="{0,date,MM/dd/yyyy}">
+       					<apex:param value="{!PositionStartDate}" />
+   					</apex:outputText>
+            	</td>
+            	<td valign="top" bgcolor="white">
+            		<b>End Date</b><br />
+            		<apex:outputText value="{0,date,MM/dd/yyyy}">
+       					<apex:param value="{!PositionEndDate}" />
+   					</apex:outputText>
+            	</td>
+            </tr>
+            <tr>
+            	<td valign="top" colspan="4" bgcolor="white">
+            		<b>Site of Activity (Employer address where work will take place – not a P.O. Box unless a national park)</b><br />
+            		{!PositionStreet}&nbsp;,&nbsp;{!PositionStreet2}&nbsp;,&nbsp;{!PositionCity}&nbsp;{!PositionState}&nbsp;,&nbsp;{!PositionPostalCode}&nbsp;,&nbsp;{!PositionCountry}
+            	</td>
+            </tr>
+            <tr>
+            	<td valign="top" colspan="4" bgcolor="white">
+            		<b>Position Description</b><br />
+            		<apex:outputText id="pdesc" value="{!PositionDesc}" escape="false" />
+            	</td>
+            </tr>
+            <tr>
+            	<td valign="top" colspan="4" bgcolor="white">
+            		<b>Required Duties</b><br />
+            		{!PositionDuties}
+            	</td>
+            </tr>
+            <tr>
+            	<td valign="top" bgcolor="white">
+            		<b>Pay Frequency</b><br />
+            		{!PositionPayfrq}
+            	</td>
+            	<td valign="top" bgcolor="white">
+            		<b>Average Employment Hrs/Week</b><br />
+            		{!PositionHrsWk}
+            	</td>
+            	<td valign="top" bgcolor="white">
+            		<b>Starting Hourly Pay Rate</b><br />
+            		{!PositionRate}
+            	</td>
+            	<td valign="top" bgcolor="white">
+            		<b>Hourly Overtime Rate</b><br />
+            		{!PositionOvertimeRate}
+            	</td>
+            </tr>
+            <tr>
+            	<td valign="top" colspan="2" bgcolor="white">
+            		<b>Additional Details on Employment Hours </b><br />
+            		
+            	</td>
+            	<td valign="top" bgcolor="white">
+            		<b>Tipped Position</b><br />
+            		{!PositionTipped}
+            	</td>
+            	<td valign="top" bgcolor="white">
+            		<b>Overtime Available</b><br />
+            		{!PositionOverTime}
+            	</td>
+            </tr>
+            <tr>
+            	<td valign="top" colspan="4" bgcolor="white">
+            		<b>Typical Schedule</b><br />
+            		{!PositionTypical}
+            	</td>
+            </tr>
+            <tr>
+            	<td valign="top" colspan="4" bgcolor="white">
+            		<b>Pay Notes</b><br />
+            		{!PositionNotes}
+            	</td>
+            </tr>
+            <tr>
+            	<td valign="top" colspan="2" bgcolor="white">
+            		<b>Position Supervisor Name</b><br />
+            		{!PositionSupervisorFname}&nbsp;{!PositionSupervisorLname}
+            	</td>
+            	<td valign="top" colspan="2" bgcolor="white">
+            		<b>Supervisor Role</b><br />
+            		{!PositionSupervisorRole}
+            	</td>
+            </tr>
+        </table>
+        <table cellpadding="0" cellspacing="0" width="100%">
+            <tr>
+                <td valign="top" >
+                    &nbsp;
+                </td>
+            </tr>
+        </table>
+        <table cellpadding="1" cellspacing="1" width="100%" bgcolor="76923C">
+            <tr>
+                <td valign="top" colspan="2" class="trow">
+                    <b>Other Position Information</b>
+                </td>
+            </tr>
+            <tr>
+            	<td valign="top" bgcolor="white">
+            		<b>Supplies Required</b><br />
+            		{!PositionSupplies}
+            	</td>
+            	<td valign="top" bgcolor="white">
+            		<b>Estimated Supplies Cost</b><br />
+            		{!PositionSuppliesCost}
+            	</td>
+            </tr>
+            <tr>
+             	<td valign="top" colspan="2" bgcolor="white">
+            		<b>Special Notes</b><br />
+            		{!PositionSpecialNotes}
+            	</td>
+            </tr>
+            <tr>
+             	<td valign="top" colspan="2" bgcolor="white">
+            		<b>Company Policies</b><br />
+            		{!HCPolicies}
+            	</td>
+            </tr>
+            <tr>
+             	<td valign="top" colspan="2" bgcolor="white">
+            		<b>Is Company Provided Housing Available?</b><br />
+            		{!HCProvidedHousing}
+            	</td>
+            </tr>
+        </table>
+        <table cellpadding="0" cellspacing="0" width="100%">
+            <tr>
+                <td valign="top" >
+                    &nbsp;
+                </td>
+            </tr>
+        </table>
+        <apex:pageBlock id="pb">
+        <apex:repeat id="HList" value="{!AccOptionInfo}" var="item" rendered="{!IF(AccOptionInfo.Size > 0, true, false)}">
+        <table cellpadding="1" cellspacing="1" width="100%" bgcolor="76923C">
+            <tr>
+                <td valign="top" colspan="4" class="trow">
+                    <b>Housing and Transportation – {!item.Name}</b>
+                </td>
+            </tr>
+            <tr>
+            	<td valign="top" colspan="2" bgcolor="white">
+            		<b>Host Recommended Housing</b><br />
+            		<apex:outputText value="Yes" rendered="{!IF(item.Host_Recommended__c == true, true, false)}" />
+            		<apex:outputText value="No" rendered="{!IF(item.Host_Recommended__c == false, true, false)}" />
+            		<!-- {!AccomodateHCRecommended}  -->
+            	</td>
+            	<td valign="top" bgcolor="white">
+            		<b>Host Arranged Housing</b><br />
+            		<apex:outputText value="Yes" rendered="{!IF(item.Host_Arranged__c == true, true, false)}" />
+            		<apex:outputText value="No" rendered="{!IF(item.Host_Arranged__c == false, true, false)}" />
+            		<!--  {!AccomodateHCArranged} -->
+            	</td>
+            	<td valign="top" bgcolor="white">
+            		<b>Type of Housing</b><br />
+            		{!item.Accommodation_Site__r.Type__c}
+            		<!--  {!AccomodateSiteHCType} -->
+            	</td>
+            </tr>
+            <tr>
+            	<td valign="top" colspan="2" bgcolor="white">
+            		<b>Estimated Cost per Week</b><br />
+            		{!item.Estimated_Cost__c}
+            		<!-- {!AccomodateHCEstimatedCost} -->
+            	</td>
+            	<td valign="top" bgcolor="white">
+            		<b>Additional Costs (if available)</b><br />
+            		{!item.Additional_Costs_Description__c} <!--  {!AccomodateHCAdditionalCostsDesc} --><br />
+            		Estimated Weekly Cost:<br />
+            		{!item.Additional_Costs__c} <!--  {!AccomodateHCAdditionalCosts} -->
+            	</td>
+            	<td valign="top" bgcolor="white">
+            		&nbsp;
+            	</td>
+            </tr>
+            <tr>
+            	<td valign="top" bgcolor="white">
+            		<b>Commute Options</b><br />
+            		{!item.Commute_Options__c} <!-- {!AccomodateHCCommuteOptions} -->
+            	</td>
+            	<td valign="top" bgcolor="white">
+            		<b>Estimated Commute Cost</b><br />
+            		{!item.Commute_Cost__c} <!-- {!AccomodateHCCommuteCost} -->
+            	</td>
+            	<td valign="top" bgcolor="white">
+            		<b>Estimated Distance</b><br />
+            		 {!item.Estimated_Distance__c} <!-- {!AccomodateHCEstimatedDistance} -->
+            	</td>
+            	<td valign="top" bgcolor="white">
+            		<b>Transportation Provided</b><br />
+            		<apex:outputText value="Yes" rendered="{!IF(item.Transportation_Provided__c == true, true, false)}" />
+            		<apex:outputText value="No" rendered="{!IF(item.Transportation_Provided__c == false, true, false)}" />
+            		<!-- {!AccomodateHCTransportationProvided} -->
+            	</td>
+            </tr>
+            <tr>
+            	<td valign="top" colspan="3" bgcolor="white">
+            		<b>Features (if available)</b><br />
+            		{!item.Accommodation_Site__r.Features__c} <!-- {!AccomodateSiteHCFeatures} -->
+            	</td>
+            	<td valign="top"  bgcolor="white">
+            		<b>Gender Restriction (if any)</b><br />
+            		{!item.Gender_Restriction__c} <!-- {!AccomodateHCGenderRestriction} -->
+            	</td>
+            </tr>
+            <tr>
+            	<td valign="top" colspan="4" bgcolor="white">
+            		<b>Description and Details (if available)</b><br />
+            		{!item.Description__c} <!-- {!AccomodateHCDescription} -->
+            	</td>
+            </tr>
+             <tr>
+            	<td valign="top" colspan="4" bgcolor="white">
+            		<b>Additional Information (if any)</b><br />
+            		{!item.Accommodation_Site__r.Additional_Information__c} <!-- {!AccomodateSiteHCAddlInfo} -->
+            	</td>
+            </tr>
+        </table>
+        <table cellpadding="0" cellspacing="0" width="100%">
+            <tr>
+                <td valign="top" >
+                    &nbsp;
+                </td>
+            </tr>
+        </table>
+        </apex:repeat>
+        </apex:pageBlock>
+        <table cellpadding="1" cellspacing="1" width="100%" bgcolor="76923C">
+            <tr>
+                <td valign="top" colspan="2" class="trow">
+                    <b>Contract Agreement</b>
+                </td>
+            </tr>
+            <tr>
+            	<td valign="top" colspan="2" bgcolor="white">
+            		<b>Sponsor Statement:</b><br /><br />
+            		Intrax has contacted the employer by phone or in person to verify the employment offer and information in this agreement. As a designated J-1 visa sponsor for the U.S. Department of State regulated Summer Work Travel Program (22 C.F.R., Part 62), Intrax has approved this Job Placement Agreement and determined the participant is eligible to accept the employment offer. Continued sponsorship of the participant is dependent on adherence to the agreement made here between the employer and participant.
+            	</td>
+            </tr>
+            <tr>
+            	<td valign="top" colspan="2" bgcolor="white">
+            		<b>Summer Work Travel Participant - I certify the following:</b><br /><br />
+            		<ul>
+            			<li>I acknowledge I have reviewed, understood and agree to all the terms of this job agreement;</li>
+            			<li>I understand that, while they will make good faith efforts, neither the employer nor Intrax can guarantee the terms of this agreement and that my duties and responsibilities are subject to change according to the needs of the employer or other unforeseen circumstances;</li>
+            			<li>I agree to hold the employer and Intrax harmless for any financial loss I incur as a result of a change in terms of this agreement;</li>
+            			<li>I understand that either myself or the employer may end the employment relationship at any time with or without prior notice according to applicable employment laws;</li>
+            			<li>I agree to contact Intrax immediately if I am let go by my employer (fired) or if I plan to end my employment voluntarily;</li>
+            			<li>I agree that I will not begin work at a new job until Intrax has approved the job placement and company; and</li>
+            			<li>I understand that, while I will always receive Intrax’s support, I am responsible for securing housing on my own if it is not provided by the employer as indicated in this agreement.</li>
+            		</ul>
+            	</td>
+            </tr>
+            <tr>
+            	<td valign="top" bgcolor="white">
+            		<b>Summer Work Travel Participant Signature</b><br /><br /><br /><br />
+            		<apex:outputPanel styleClass="white">JobPart-Signature</apex:outputPanel>
+            		<br />
+            	</td>
+            	<td valign="top" bgcolor="white">
+            		<b>Date (mm/dd/yyyy)</b><br /><br /><br />
+            		<apex:outputPanel styleClass="white">JobPart-DateSigned</apex:outputPanel>
+            		<br />
+            	</td>
+            </tr>
+            <tr>
+            	<td valign="top" colspan="2" bgcolor="white">
+            		<b>Print Name</b><br />
+            		{!ParticipantName}
+            	</td>
+            </tr>
+            <tr>
+            	<td valign="top" colspan="2" bgcolor="white">
+            		<b>Employer - I certify the following:</b><br /><br />
+            		<ul>
+            			<li>I have reviewed and approved and will follow this Job Placement Agreement;</li>
+            			<li>I will adhere to all applicable regulatory provisions that govern this program (22 CFR Part 62, http://j1visa.state.gov/sponsors/current/regulations-compliance/); and</li>
+            			<li>I will notify the designated sponsor (1) when participant arrives at the work site to begin program; (2) regarding any concerns about, changes in, or deviations from the Job Placement Agreement; and (3) in the event of any emergency involving a summer work travel participant.</li>
+            		</ul>
+            	</td>
+            </tr>
+            <tr>
+            	<td valign="top" bgcolor="white">
+            		<b>Employer Signature</b><br /><br /><br /><br />
+            		<apex:outputPanel styleClass="white">JobEmpr-Signature</apex:outputPanel>
+            		<br />
+            	</td>
+            	<td valign="top" bgcolor="white">
+            		<b>Date (mm/dd/yyyy)</b><br /><br /><br />
+            		<apex:outputPanel styleClass="white">JobEmpr-DateSigned</apex:outputPanel>
+            		<br />
+            	</td>
+            </tr>
+            <tr>
+            	<td valign="top" colspan="2" bgcolor="white">
+            		<b>Print Name and Title</b><br />
+            		{!HCSigningName}&nbsp;/&nbsp;{!HCSigningTitle}
+            	</td>
+            </tr>
+        </table>
+       </div>
+    </form>
+</body>
+</apex:page>

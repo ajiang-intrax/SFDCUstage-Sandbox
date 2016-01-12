@@ -1,0 +1,69 @@
+<apex:component layout="none">
+<apex:variable var="agreements" value="active" rendered="{! IF($CurrentPage.Name=='apc_hf_match_agreement', true, false)}"/>
+<apex:variable var="addons" value="active" rendered="{! IF($CurrentPage.Name=='apc_hf_match_payment_addons', true, false)}"/>
+<apex:variable var="payoptions" value="active" rendered="{! IF($CurrentPage.Name=='apc_hf_match_payment_options', true, false)}"/>
+<apex:variable var="payoptions" value="inactive" rendered="{! IF($CurrentPage.Name=='apc_hf_match_payment_options', false, true)}"/>        
+<apex:variable var="paycheckout" value="active" rendered="{!AND($CurrentPage.Name=='apc_hf_match_payment_checkout')}"/>
+<apex:variable var="payconfirm" value="active" rendered="{! IF($CurrentPage.Name=='apc_hf_match_payment_confirmation', true, false)}"/>
+
+<apex:variable var="secstep_a" value="complete" rendered="{! IF($CurrentPage.Name=='apc_hf_match_payment_addons', true, false)}"/>
+<apex:variable var="secstep_b" value="complete" rendered="{! IF($CurrentPage.Name=='apc_hf_match_payment_options', true, false)}"/>
+<apex:variable var="thirdstep_a" value="complete" rendered="{! IF($CurrentPage.Name=='apc_hf_match_payment_checkout', true, false)}"/>
+
+
+
+<style>
+.checkout.vs1{position:relative; text-align:center;}
+.checkout.vs1 .fa-stack{font-size: 1.4em;
+background: #fff;
+z-index: 10;
+padding: 0 28px;}
+.checkout.vs1 i.fa-stack-2x{color:#e8e8e8;}
+.checkout.vs1 .complete i.fa-stack-2x{color:#87b64f;}
+.checkout.vs1 i.fa-stack-1x{visibility:hidden; color: #fff; font-size: 0.8em;}
+.checkout.vs1 .complete i.fa-stack-1x{visibility:visible;}
+.checkout-step{margin-right:40px; display:inline-block;}
+.checkout-step-title{font-size:18px; margin-bottom:15px;}
+.checkout-step-title.active{font-family:'milowebbold';}
+.checkout-step-title.active + .fa-stack .fa-stack-2x{color:#87b64f;}
+.checkout-bar{height:8px; display:block; width:100%; background:#e8e8e8; position:absolute; bottom:18px;}
+</style>
+
+<div class="row margin-b4 hidden-xs">
+ <div class="col-md-8 center-block">
+
+<div class="checkout vs1">
+ 
+   <div class="checkout-step {!secstep_a} {!secstep_b} {!thirdstep_a}">
+   <div class="checkout-step-title {!agreements} ">Childcare Agreement</div>
+  <span class="fa-stack">
+  <i class="fa fa-circle fa-stack-2x"></i>
+  <i class="fa fa-check fa-stack-1x"></i>
+</span>
+   </div>
+   <div class="checkout-step {!thirdstep_a}">
+   <div class="checkout-step-title {!addons} {!payoptions} ">Review Costs</div>
+   <span class="fa-stack">
+  <i class="fa fa-circle fa-stack-2x"></i>
+  <i class="fa fa-check fa-stack-1x"></i>
+</span>
+   </div>
+   <div class="checkout-step">
+   <div class="checkout-step-title {!paycheckout}{!payconfirm}">Make Payment</div>
+   <span class="fa-stack">
+  <i class="fa fa-circle fa-stack-2x"></i>
+  <i class="fa fa-check fa-stack-1x"></i>
+</span>
+   </div>
+<div class="checkout-bar"></div>
+
+</div> <!--  end checkout -->
+  
+  </div><!--  end column -->
+</div><!--  end row -->
+
+
+
+
+
+</apex:component>

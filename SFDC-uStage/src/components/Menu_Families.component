@@ -1,0 +1,44 @@
+<!--  
+Component: Menu_Families
+
+-->
+<apex:component layout="none"> 
+
+    <apex:variable var="Students" value="active" rendered="{! IF($CurrentPage.Name=='profiles', true, false)}"/>
+    <apex:variable var="MyStudents" value="active" rendered="{! IF($CurrentPage.Name=='MyStudents', true, false)}"/> 
+    <!-- <apex:variable var="Students" value="active" rendered="{! IF($CurrentPage.Name=='profile', true, false)}"/> -->      
+    <apex:variable var="Application" value="active" rendered="{! IF($CurrentPage.Name=='your_applications', true, false)}"/>
+    <apex:variable var="Resources" value="active" rendered="{! IF($CurrentPage.Name=='IntraxPartnerPortal_Resources', true, false)}"/> 
+    
+    <ul class="clearfix pull-right">
+        
+        <li class="{!Application}">
+            <apex:outputLink value="your_applications">Applications</apex:outputLink>
+        </li>
+        
+        <li class="{!Students}">
+            <apex:outputLink value="profiles">View Students</apex:outputLink>
+        </li>
+         <li class="{!MyStudents}">
+            <apex:outputLink value="MyStudents">Your Students
+            <apex:param name="ConfMatch" value="true"/>
+            </apex:outputLink>
+        </li>
+         
+        
+        <!-- 
+        <li class="{!Matches}">
+            <apex:outputLink value="IntraxPartnerPortal_Matches">Your Students</apex:outputLink>
+        </li>
+        
+        
+              
+        <li class="{!Resources}">
+            <apex:outputLink value="Resources">Resources</apex:outputLink>
+        </li>
+        -->
+      
+                 
+    </ul>
+    
+</apex:component>

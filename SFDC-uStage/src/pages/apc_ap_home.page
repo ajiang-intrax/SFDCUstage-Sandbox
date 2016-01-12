@@ -1,0 +1,85 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardStylesheets="false" showHeader="false"  title="AP Home" id="apc_ap_home" controller="apc_home_controller" action="{!myHome.checkLogin}">
+<apex:composition template="intraxtemplate_vs3">
+<apex:define name="body">
+  
+  
+<div class="row">
+<div class="col-sm-12 col-lg-11 center-block">
+<div class="row">
+<div class="col-sm-12">
+ <h4 class="no-margin-t margin-b2">Your Au Pair Room</h4>
+</div>
+</div><!-- end row --> 
+
+<div class="row">
+<div id="hp-body" class="col-md-8">
+<apex:form > 
+<!-- BLOCK MATCH INTERVIEW (App Accepted & Eng.Interview availability is null)-->
+<c:block_apc_ap_profile_update PageController="{!myHome}" />
+<!-- BLOCK RENEWAL AND EXTENSION -->
+<c:block_apc_ap_ext_renew PageController="{!myHome}" />
+<!-- BLOCK HOST FAMILY INFO (conf match)-->
+<c:block_apc_ap_match_interview PageController="{!myHome}" />  
+<!-- BLOCK TRAVEL DETAILS -->
+<c:block_apc_ap_travel_details PageController="{!myHome}" />
+<!-- BLOCK PT EDUCATIONAL CERTIFICATION-->
+<c:block_apc_ap_educational_certification PageController="{!myHome}" />
+<!-- REMATCH UPDATE PROFILE -->
+<c:block_apc_ap_hf_info PageController="{!myHome}" /> 
+<!-- BLOCK HOST COMMUNITY (All)--> 
+<c:block_apc_ap_community PageController="{!myHome}" /> 
+
+</apex:form>
+</div>
+<div id="hp-sidebar" class="col-md-4">
+
+<!-- BLOCK CONTACT US (All)--> 
+<c:block_apc_ap_sevis PageController="{!myHome}" />
+<c:block_apc_ap_contact PageController="{!myHome}" /> 
+<!-- BLOCK resources (conf match)-->
+<c:block_apc_ap_resources PageController="{!myHome}" />
+
+
+</div>
+</div><!-- end row --> 
+
+
+</div>
+</div><!-- end row --> 
+   
+
+
+
+
+     
+
+
+      
+<!--  Start modal window -->
+<apex:outputpanel layout="block" id="modalSubmit" rendered="{!$CurrentPage.parameters.vstate == 'welcomehome'}" >
+<div class="modal fade vs1" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-body">
+<div class="h1">Congratulations!</div>
+<p>You have successfully completed your application to become an au pair. </p>
+<p>Please visit this page often to find useful information regarding your program including the your au pair checklist, resources, match notifications and more.</p>
+</div>
+<div class="modal-footer">
+<button type="button" class="btn btn-default" data-dismiss="modal">Continue</button>
+</div>
+</div>
+</div>
+</div> 
+</apex:outputpanel> <!--  end modal window -->
+
+<script>
+var j$ = jQuery.noConflict();
+j$(window).load(function() {
+j$('#myModal').modal();
+});
+</script>   
+      
+</apex:define>
+</apex:composition>
+</apex:page>

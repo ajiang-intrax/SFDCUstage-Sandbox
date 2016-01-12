@@ -1,0 +1,248 @@
+<apex:page cache="false" sidebar="false" controller="invoiceit_s.ControllerSitePaymentProcess" showHeader="false" tabStyle="Account" title="Checkout">
+  <!-- script to disable right click -->
+  <script> 
+      var message="Function Disabled!"; function clickIE4(){ if (event.button==2){ alert(message); return false; } } function clickNS4(e){ if (document.layers||document.getElementById&&!document.all){ if (e.which==2||e.which==3){ alert(message); return false; } } } if (document.layers){ document.captureEvents(Event.MOUSEDOWN); document.onmousedown=clickNS4; } else if (document.all&&!document.getElementById){ document.onmousedown=clickIE4; } document.oncontextmenu=new Function("alert(message);return false") 
+  </script>
+    
+  <script>
+    function disableTextBoxes() {
+        var firstname = document.getElementById('{!$Component.form1.firstname}'); 
+        firstname.setAttribute("autocomplete", "off");
+        
+        var lastname = document.getElementById('{!$Component.form1.lastname}'); 
+        lastname.setAttribute("autocomplete", "off");
+        
+        var card = document.getElementById('{!$Component.form1.card}'); 
+        card.setAttribute("autocomplete", "off");
+        
+        var cvv = document.getElementById('{!$Component.form1.cvv}'); 
+        cvv.setAttribute("autocomplete", "off");
+    }
+    
+    function validateSaveCard() 
+    {
+       var isSaveCard = document.getElementById('{!$Component.form1.selectList}').value; 
+       if(isSaveCard == 'yes' || isSaveCard == 'no')
+       {
+           return true;
+       }
+       else
+       {
+           alert('Please confirm if you want to store the credit card details on the file?');
+           return false;           
+       }
+    }
+   </script>
+  
+  <!-- Load the customer css -->
+  <apex:outputpanel rendered="{!sPaymentCss != null}">
+      <apex:stylesheet value="{!sBaseURL}{!$Site.Prefix}/resource/payment_defaultcss"/>
+  </apex:outputpanel>
+  
+  <!-- Load our default css -->
+  <apex:outputpanel rendered="{!sPaymentCss == null}">
+      <apex:stylesheet value="{!URLFOR($Resource.invoiceit_s__InvoiceIt, 'css/payment_css.css')}"/>
+  </apex:outputpanel>
+  
+  <apex:form forceSSL="true" id="form1">
+  <div class="payment_MainFrame">
+      <apex:image rendered="{!isLogoExist}" url="{!sBaseURL}{!$Site.Prefix}/resource/logo"/><br/><br/>  
+      <div class="payment_InnerFrame">
+        <apex:pageMessages id="pageMesaages"/>
+        <!-- Payment Panel-->
+        <apex:outputPanel rendered="{!!isPaymentSucessfull && $CurrentPage.parameters.Id != null}" id="cardDetails">
+         <!-- Modified as per jira INVOICEIT-194-->
+        <apex:outputPanel rendered="{!NOT(isAcountPayment)}">
+        <h2>
+            <apex:outputLabel value="{!$Label.Payment_Invoice_Details}" />
+        </h2><br/>
+        <p>
+            <apex:outputLabel value="{!$Label.Payment_Invoice} : {!invoice.Name}" /><br/>
+            <h2>
+                <apex:outputLabel value="{!$Label.Payment_Amount_Due}" /> 
+                <apex:outputLabel value="{!invoice.CurrencyL__r.invoiceit_s__Currency_Symbol__c}" />
+                <apex:outputField value="{!invoice.invoiceit_s__Payment_Request_Amount__c}" />
+                &nbsp;(<apex:outputLabel value="{!invoice.CurrencyL__r.name}" />)
+            </h2>    
+        </p>
+        </apex:outputPanel>
+        <table>
+              <tbody>
+                <tr>
+                  <td><h2><apex:outputLabel value="{!$Label.Payment_Billing_Contact}" /></h2></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <br/>
+                  <td><apex:outputLabel value="{!$Label.Payment_Enter_Card_Information}" /></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td><apex:outputLabel value="{!$Label.Payment_First_Name}" /></td>
+                  <td><apex:inputField value="{!paymentMethod.invoiceit_s__Billing_First_Name__c}" id="firstname"/></td>
+                  <td><apex:outputLabel value=" * ({!$Label.Payment_As_Name_Appears_On_Card})" /></td>
+                </tr>
+                <tr>
+                  <td><apex:outputLabel value="{!$Label.Payment_Last_Name}" /></td>
+                  <td><apex:inputField value="{!paymentMethod.invoiceit_s__Billing_Last_Name__c}" id="lastname"/></td>
+                  <td><apex:outputLabel value=" * ({!$Label.Payment_As_Name_Appears_On_Card})" /></td>
+                </tr>
+                <tr>
+                  <td><apex:outputLabel value="{!$Label.Payment_Address}" /></td>
+                  <td><apex:inputText value="{!paymentMethod.invoiceit_s__Billing_Address__c}"/></td>
+                </tr>
+                <tr>
+                  <td><apex:outputLabel value="{!$Label.Payment_City}" /></td>
+                  <td><apex:inputField value="{!paymentMethod.invoiceit_s__Billing_City__c}"/></td>
+                </tr>
+                <tr>
+                  <td><apex:outputLabel value="{!$Label.Payment_State_Provision}" /></td>
+                  <td><apex:inputField value="{!paymentMethod.invoiceit_s__Billing_State_Province__c}"/></td>
+                </tr>
+                <tr>
+                  <td><apex:outputLabel value="{!$Label.Payment_Postal_Code}" /></td>
+                  <td><apex:inputField value="{!paymentMethod.invoiceit_s__Billing_Zip_Postal__c}"/></td>
+                </tr>
+                <tr>
+                  <td><apex:outputLabel value="{!$Label.Payment_Country}" /></td>
+                  <td><apex:inputText value="{!paymentMethod.invoiceit_s__Billing_Country__c}"/></td>
+                </tr>
+                <tr>
+                  <td><apex:outputLabel value="{!$Label.Payment_Card_Type}" /></td>
+                  <td><apex:inputField value="{!paymentMethod.invoiceit_s__Card_Type__c}" /></td>
+                  <td> * &nbsp;<apex:image url="{!URLFOR($Resource.invoiceit_s__InvoiceIt, 'images/credit_cards.gif')}" height="28" width="153"/></td>
+                </tr>
+                <tr>
+                  <td><apex:outputLabel value="{!$Label.Payment_Card_Number}" /></td>
+                  <td><apex:inputField value="{!paymentMethod.invoiceit_s__Card_Number__c}" id="card"/></td>
+                  <td> * </td>
+                </tr>
+                <tr>
+                  <td><apex:outputLabel value="{!$Label.Payment_CVV}" /></td>
+                  <td><apex:inputSecret value="{!paymentMethod.invoiceit_s__CVV__c}" maxlength="4" id="cvv"/></td>
+                  <td> * </td>
+                </tr>
+                <tr>
+                  <td><apex:outputLabel value="{!$Label.Payment_Card_Expiration_Date}" /></td>
+                  <td><apex:inputField value="{!paymentMethod.invoiceit_s__Card_Expiration_Month__c}" /><apex:inputField value="{!paymentMethod.invoiceit_s__Card_Expiration_Year__c}"/></td>
+                  <td> * </td>
+                </tr>
+                 <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td><br/><apex:outputLabel value="{!$Label.Payment_Save_Card_Details}" rendered="{!isSavePaymentDetails}"/></td>
+                  <td><br/>
+                      <apex:selectList required="true" value="{!sSaveCardDetails}" size="1" multiselect="false" id="selectList" rendered="{!isSavePaymentDetails}">
+                          <apex:selectOption itemLabel="--None--" itemValue="none" />
+                          <apex:selectOption itemLabel="Yes" itemValue="yes" />
+                          <apex:selectOption itemLabel="No" itemValue="no" />
+                      </apex:selectList>
+                  </td>
+                  <td><apex:outputtext value="*" rendered="{!isSavePaymentDetails}"/> </td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>
+                       <br/>
+                       <apex:commandButton value="{!$Label.Button_Submit_Payment}" action="{!processPayment}" status="refreshContent" styleClass="button" onclick="return validateSaveCard()"/><br/>
+                  </td>
+                </tr>
+              </tbody>
+        </table>
+        </apex:outputPanel> 
+        
+        <!-- Sucess Panel -->
+        <apex:outputPanel id="sucessDetails" rendered="{!isPaymentSucessfull}">
+          <!-- 
+          Modified By   : Rama Krishna
+          Modified Date : 19 june 2013
+          JIRA Task     : INVOICEIT-194
+          Comments      : account id is null, rendering the invoice Transaction details.
+          --> 
+          <apex:outputPanel rendered="{!NOT(isAcountPayment)}">
+                <h1><apex:outputLabel value="{!$Label.Payment_Transaction_Details} : "/></h1><br/><br/>
+                <h2>
+                    <apex:outputLabel value="{!$Label.Payment_Transaction_Amount} :" /> 
+                    <apex:outputLabel value="{!invoice.CurrencyL__r.invoiceit_s__Currency_Symbol__c}"/>
+                    <apex:outputField value="{!invoice.invoiceit_s__Payment_Request_Amount__c}"/>
+                    &nbsp;(<apex:outputLabel value="{!invoice.CurrencyL__r.name}"/>)<br/>
+                </h2>
+             </apex:outputPanel>
+                <!-- 
+                Modified By     : Rama Krishna
+                Created  Date   : 12 june 2013 (created Below Out panel)
+                Modified Date   : 19 june 2013
+                JIRA Task       : INVOICEIT-194
+                Comments        : displaying the account details for the Request Advance Payment.
+                --> 
+             <apex:outputPanel rendered="{!isAcountPayment}">
+                <h1><apex:outputLabel value="{!$Label.Payment_Transaction_Details} : "/></h1><br/><br/>
+                <h2>
+                    <apex:outputLabel value="{!$Label.Payment_Transaction_Amount} : " /> 
+                   <!-- <apex:outputText value="{0, number, .00}">
+                        <apex:param value="{!dAmount}"/>
+                    </apex:outputText>(USD)<br/> -->
+                    <apex:outputField value="{!account.invoiceit_s__Advance_Requested_Amount__c}"/>  (USD)<br/> 
+                </h2>
+             </apex:outputPanel>
+            <br/>
+            <h2><apex:outputLabel value="{!$Label.Payment_Received_From} : " /></h2><br/>
+            <p>
+                <apex:outputLabel value="{!paymentMethod.invoiceit_s__Billing_First_Name__c}" />&nbsp; <apex:outputLabel value="{!paymentMethod.invoiceit_s__Billing_Last_Name__c}"/><br/>
+                <apex:outputLabel value="{!paymentMethod.invoiceit_s__Billing_Address__c}"  rendered="{!paymentMethod.invoiceit_s__Billing_Address__c != null}" /><br/>
+                <apex:outputLabel value="{!paymentMethod.invoiceit_s__Billing_City__c}" rendered="{!paymentMethod.invoiceit_s__Billing_City__c != null}" /><br/>
+                <apex:outputLabel value="{!paymentMethod.invoiceit_s__Billing_State_Province__c}" rendered="{!paymentMethod.invoiceit_s__Billing_State_Province__c != null}"/><br/>
+                <apex:outputLabel value="{!paymentMethod.invoiceit_s__Billing_Country__c}" rendered="{!paymentMethod.invoiceit_s__Billing_Country__c != null}"/><br/>
+                <apex:outputLabel value="{!paymentMethod.invoiceit_s__Billing_Zip_Postal__c}" rendered="{!paymentMethod.invoiceit_s__Billing_Zip_Postal__c != null}"/><br/>
+            </p>
+            
+            <br/><br/>
+            <h2><apex:outputLabel value="{!$Label.Payment_Paid_To} : " /></h2><br/>
+            <p>
+                <apex:outputLabel value="{!$Organization.Name}" /><br/>
+                <apex:outputLabel value="{!$Organization.Street}"  rendered="{!$Organization.Street != null}" /><br/>
+                <apex:outputLabel value="{!$Organization.City}" rendered="{!$Organization.City != null}" /><br/>
+                <apex:outputLabel value="{!$Organization.State}" rendered="{!$Organization.State != null}" /><br/>
+                <apex:outputLabel value="{!$Organization.Country}" rendered="{!$Organization.Country != null}" /><br/>
+                <apex:outputLabel value="{!$Organization.PostalCode}" rendered="{!$Organization.PostalCode != null}" /> <br/>
+            </p>    
+        </apex:outputPanel>
+       
+        <!-- Authorize.net seal panel -->
+        <!-- (c) 2005, 2012. Authorize.Net is a registered trademark of CyberSource Corporation --> 
+        <apex:outputPanel rendered="{!sMerchantSealId != null && gateWayToUse.invoiceit_s__Gateway_Type__c == 'Authorize.net'}">
+          <br/>
+          <center>
+          <div class="AuthorizeNetSeal"> 
+              <script type="javascript" language="javascript">var ANS_customer_id="{!sMerchantSealId}";</script> 
+              <script type="javascript" language="javascript" src="//verify.authorize.net/anetseal/seal.js"></script> 
+              <style type="text/css">
+                div.AuthorizeNetSeal{text-align:center;margin:0;padding:0;width:90px;font:normal 9px arial,helvetica,san-serif;line-height:10px;}
+                div.AuthorizeNetSeal a{text-decoration:none;color:black;}
+                div.AuthorizeNetSeal a:visited{color:black;}
+                div.AuthorizeNetSeal a:active{color:black;}
+                div.AuthorizeNetSeal a:hover{text-decoration:underline;color:black;}
+                div.AuthorizeNetSeal a img{border:0px;margin:0px;text-decoration:none;}
+              </style>
+              
+              <a href="{!sMerchantURL}" onclick="window.open('{!sMerchantURL}','AuthorizeNetVerification','width=600,height=430,dependent=yes,resizable=yes,scrollbars=yes,menubar=no,toolbar=no,status=no,directories=no,location=yes'); return false;" target="_blank">
+                 <img src="//verify.authorize.net/anetseal/images/secure90x72.gif" width="90" height="72" border="0" alt="Authorize.Net Merchant - Click to Verify"/>
+              </a>
+              <a href="http://www.authorize.net/" id="AuthorizeNetText" target="_blank">
+                  {!$Label.Payment_Accept_Credit_Cards_Online}
+              </a> 
+          </div>
+          </center>
+       </apex:outputPanel>
+       
+      </div>
+   </div>  
+   </apex:form>
+   
+   <apex:iframe src="{!sBaseURL}{!$Site.Prefix}/resource/payment_footer" rendered="{!isFooterExist}"/>
+ 
+   <body onload="disableTextBoxes()" /> 
+   </apex:page>

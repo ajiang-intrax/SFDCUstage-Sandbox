@@ -1,0 +1,150 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" title="Experience" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="false" showHeader="false" id="apc_ap_main_add_work">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_apc_ap_application />
+      <div id="app-page" class="row">
+        <div id="app-focus" class="col-md-8 col-md-push-3">
+          <h1>
+            <apex:outputText rendered="{!$CurrentPage.Parameters.eid != null}" value="Edit Work Experience"/>
+            <apex:outputText rendered="{!$CurrentPage.Parameters.eid == null}" value="Add New Work Experience"/>
+          </h1>
+          <p>&nbsp;</p>
+          <apex:form id="webform" styleClass="form-vertical ws-validate">
+            <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+            <apex:outputpanel layout="block" id="work">
+            
+               <div class="row">
+               <div class="col-sm-6">
+              <div class="form-group">
+                <label class="control-label">Job Title</label>
+                  <apex:inputField styleClass="form-control"  onblur="CapitalizeName(event.target);" value="{!experience.Position_Title__c}" required="TRUE" id="jobtittle" />
+                </div>
+                </div>
+                <div class="col-sm-6"> 
+              <div class="form-group">
+                <label class="control-label">Organization Name</label>
+                  <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!experience.Employer_Name__c}" required="TRUE" id="companyname" />
+                </div>
+                </div>
+                </div><!--  end row -->
+              
+                
+              <apex:outputpanel layout="block" id="common">
+                  <div class="section-title">Dates&nbsp;&nbsp;(&nbsp;<apex:actionRegion >
+                      <apex:inputField styleclass="boxdate no-margin" value="{!experience.Current_Job__c}" required="FALSE" id="current" >
+                        <apex:actionSupport event="onchange" onComplete="dpInitiate();restoreclass();" action="{!setCurrentDate}" rerender="common" status="showjob"/>
+                      </apex:inputField>
+                    </apex:actionRegion><label class="control-label inline-block">&nbsp;I currently work here</label>)</div>
+                 
+           
+                <apex:outputPanel layout="block" rendered="{!experience.Current_Job__c == true}"  >
+                   <div class="row">
+                 <div class="col-sm-6">
+                  <div class="form-group">
+                    <label class="control-label">Start Date</label>
+                    <div class="margin-r datepicker" locale="{!user.localeSidKey}">
+                      <apex:inputField styleClass="form-control" value="{!experience.Start_Date__c}" required="true" id="startdate1"/>
+                    </div>
+                  </div>
+                  </div>
+                  </div><!--  end row -->
+                </apex:outputPanel>
+                
+               
+               
+                <apex:outputPanel layout="block" rendered="{!experience.Current_Job__c == false}"  >
+                 <div class="row">
+                  <div class="dp-group">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Start Date</label>
+                        <div class="datepicker start" locale="{!user.localeSidKey}">
+                          <apex:inputField styleClass="form-control" value="{!experience.Start_Date__c}" required="true" id="startdate"/>
+                        </div>
+                      </div>
+                      </div>
+                      <div class="col-sm-6"> 
+                    <div class="form-group">
+                      <label class="control-label">End Date</label>
+                        <div class="datepicker end" locale="{!user.localeSidKey}">
+                          <apex:inputField styleClass="form-control" value="{!experience.End_Date__c}" required="true" id="enddate"/>
+                        </div>
+                    </div>
+                    </div>
+                  </div><!--  end dp group -->
+                  </div><!--  end row -->
+                </apex:outputpanel>
+                
+                
+                <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showjob"/>
+               <div class="row">
+                <div class="col-sm-12">
+                <div class="form-group">
+                  <label class="control-label">Please describe your responsibilities in this position</label>
+                    <apex:inputTextarea styleClass="form-control" id="PositionDesc" value="{!experience.Position_Description__c}" required="TRUE" onkeyup="countChar(this, 500, 'PositionDescCount')"/>
+                    <div class="char-limit bb"><span class="char-count-label">Characters left:</span> <span id="PositionDescCount" class="char-count"> {!500-len(experience.Position_Description__c) }</span> </div>
+                    <apex:message for="PositionDesc" styleClass="custom-error-text" id="errormesPositDesc"/>
+                  </div>
+                  </div>
+                  </div><!--  end row -->
+                  
+              </apex:outputPanel>
+             
+               
+                  <div class="section-title">Employer's Contact Information</div>
+
+                <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label class="control-label">Phone Country Code</label>
+                      <apex:actionRegion >
+                        <apex:selectList styleClass="form-control"  value="{!experience.Phone_Country_Code__c}" multiselect="false" required="TRUE" id="countrycode" size="1">
+                          <apex:selectOption itemValue="" itemLabel="Select Country Code"/>
+                          <apex:selectOptions value="{!listCountryCodeOptions}"/>
+                          <apex:actionSupport event="onchange" rerender="phonecode" status="showcode" />
+                        </apex:selectList>
+                      </apex:actionRegion>
+                      <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showcode"/>
+                      <apex:message for="countrycode" styleClass="custom-error-radio" id="apexmess1"/>
+                    </div>
+                    </div>
+                  <div class="col-sm-6">  
+                  <div class="form-group">
+                    <label class="control-label">Phone Number</label>
+                      <apex:outputpanel id="phonecode" layout="block">
+                        <div class="input-group"> <span class="input-group-addon">{!experience.Phone_Country_Code__c}</span>
+                          <apex:inputField styleClass="form-control onlynumber" value="{!experience.Phone__c}" required="TRUE" id="phone" />
+                        </div>
+                      </apex:outputpanel>
+                    </div>
+                    </div>
+               </div><!--  end row -->
+
+            </apex:outputpanel>
+            <div class="row">
+              <div class="col-sm-12 margin-t">
+                <apex:outputLink styleClass="btn btn-link btn-lg" value="/apex/apc_ap_main_experience?id={!applicantInfo.Id}" id="backlink"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                <apex:commandlink id="SaveContinueGroup" styleClass="btn btn-primary btn-lg" action="{!navigator}" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                  <apex:param name="nextPage" value="/apex/apc_ap_main_experience"/>
+                  <apex:param name="reDirectPage" value="true"/>
+                  <apex:param name="isExperienced" value="true" assignTo="{!isExperienced}"/>
+                  <apex:param name="isWorkExperienced" value="true" assignTo="{!isWorkExperienced}"/>
+                  <apex:commandButton value="Save & Continue" />
+                  <i class="icon-chevron-right"></i> </apex:commandlink>
+              </div>
+            </div>
+          </apex:form>
+        </div>
+        <!-- end column  -->
+        
+        <div id="app-side" class="col-md-3 col-md-pull-8">
+          <c:menu_side_apc_ap_basic ApplicantInfo="{!applicantInfo}" />
+        </div>
+        <!-- end column  --> 
+        
+      </div>
+      <!-- end row --> 
+      
+    </apex:define>
+  </apex:composition>
+</apex:page>

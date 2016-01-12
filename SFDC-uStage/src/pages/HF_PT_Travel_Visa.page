@@ -1,0 +1,160 @@
+<apex:page title="Student Travel Plans| Intrax" standardStylesheets="false" showHeader="false" controller="HFPortal_Controller" action="{!checkLogin}">
+  
+    <apex:composition template="IntraxTemplate_Vs2" >
+            <apex:define name="body">
+            <apex:form >
+            <script>
+                j$(function(){
+                
+                j$(".hide-next").click(function(){
+                j$(this).parent().next(".block-body").toggleClass('hide');
+                
+                });
+                
+                });
+             </script>
+                <div class="row">
+                
+                    <apex:outputPanel styleClass="span6" layout="block">
+                        <h1>
+                        <apex:outputText value="{!engagementInfo.Account_Id__r.FirstName} "/>&nbsp;
+                        <apex:outputText value="{!LEFT(engagementInfo.Account_Id__r.LastName,1)}"/>
+                        </h1>
+                    </apex:outputPanel> <!--  end span -->
+                </div>    
+                
+                <div class="row">
+                    <apex:outputPanel styleClass="span3" layout="block">
+                    <c:block_profile_thumb_pt_ayu photoUrl="{!returnURL}" gender="{!engagementInfo.Gender__c}" HFStatus="{!checkHFStatus}" userType="Host Family"/> 
+                    <c:Menu_HF_Participant_Details participant="{!engagementInfo}" />                    
+                    </apex:outputPanel> 
+                    <div class="span9">
+                    <apex:outputPanel styleClass="block" layout="block">
+                      <div class="block-header">
+                        <h3>Travel Plans</h3>
+                      </div>
+                      
+                      <div class="block-body">
+                <apex:outputPanel id="buttonPanel" styleClass="form-row" layout="block">
+                   <apex:outputPanel rendered="{!IF(listTrips.size > 0, true,false)}">   
+                   <div class="block alert fade in">
+                        <div class="block-body"> 
+                            <!--<strong><apex:outputText value="Engagement Start Date: "/></strong><apex:outputField value="{!match.Position_Name__r.Engagement_Start__c}"/>&nbsp;-->
+                            <strong><apex:outputText value="Match Start Date: "/></strong><apex:outputField value="{!match.Start_Date__c}"/>&nbsp;
+                            <br/><br/>
+                            <strong><apex:outputText value="Match End Date: "/></strong><apex:outputField value="{!match.End_Date__c}"/>&nbsp;
+                        </div> 
+                    </div> 
+                    
+                      </apex:outputPanel>
+                        
+                    </apex:outputPanel>
+                 
+                    <div>
+                      <apex:actionStatus id="waitMsg" startStyleClass="feedback">
+                        <apex:facet name="start" > <i class="no-float icon-spinner icon-spin icon-2x pull-left"></i> <strong>Please Wait.....</strong> </apex:facet>
+                      </apex:actionStatus>
+                    </div>
+                    
+                <apex:outputPanel id="myPanel2">
+                  <apex:outputPanel rendered="{!IF(listTrips.Size == 0 && showTravelForm == false, true, false)}" layout="block"> <span class="no-records">No record(s) to display.</span></apex:outputPanel>
+                </apex:outputPanel>
+                <apex:outputPanel id="myPanel1" layout="block">
+                  <apex:pageBlock id="pb1" rendered="{!IF(showTravelForm == false, true, false)}">
+                    <apex:outputPanel layout="block" rendered="{!IF(listTrips.Size > 0, true, false)}">
+                    <div id="flight-list" class="list-view container-fluid">
+                    
+                    <apex:repeat value="{!listTrips}" var="item">
+                   
+                  <div class="row-fluid">
+                   
+                  <div class="list-view-header span12">
+                  <!-- <div class="title pull-left"><apex:outputText value="{!item.Name}"/></div> -->
+                   <div class="title pull-left"><apex:outputText value="{!item.Departing_From__c}"/>-<apex:outputText value="{!item.Arriving_At__c}"/></div>
+                   <div class="controls pull-right clearfix">    
+                   
+                      
+                   </div>      
+                   </div>  <!-- end list-view-header -->
+                                      
+                  <div class="span12">      
+                  
+                   <div class="span4">
+                      
+                       
+                       <div class="list-field">
+                           <label><apex:outputText value="Departure Date and Time"/></label>
+                       <apex:outputField value="{!item.Departure_Date_Time__c}"/>&nbsp;
+                       </div>
+                       
+                       
+                       <div class="list-field">
+                           <label><apex:outputText value="Departure City"/></label>
+                       <apex:outputText value="{!item.Departing_City__c}"/>&nbsp;
+                       </div> 
+                       <div class="list-field">
+                       <label><apex:outputText value="Departure Airport Code"/></label>
+                       <apex:outputText value="{!item.Departing_From__c}"/>&nbsp;
+                       </div>
+                         
+                           
+                  </div> 
+                  <div class="span4">   
+                       
+                       <div class="list-field">
+                           <label><apex:outputText value="Arrival Date and Time"/></label>
+                       <apex:outputField value="{!item.Arrival_Date_Time__c}"/>&nbsp;
+                       </div>
+                       <div class="list-field">
+                          <label><apex:outputText value="Arrival City"/></label>
+                       <apex:outputText value="{!item.Arriving_City__c}"/>&nbsp;
+                       </div> 
+                      <div class="list-field"> 
+                      <label><apex:outputText value="Arrival Airport Code"/></label>
+                       <apex:outputText value="{!item.Arriving_At__c}"/>&nbsp;
+                      </div>  
+                     
+                       
+                 </div> 
+                 <div class="span4">      
+                     <div class="list-field">  
+                     <label><apex:outputText value="Airline"/></label>
+                       <apex:outputText value="{!item.Carrier__c}"/>&nbsp;
+                         </div> 
+                     <div class="list-field">  
+                         <label><apex:outputText value="Flight Number"/></label>
+                       <apex:outputField value="{!item.Carrier_Number__c}"/>&nbsp;
+                         </div> 
+                     
+                     <div class="list-field">  
+                       <label><apex:outputText value="Record Locator" rendered="{!IF(item.Engagement__r.Intrax_Program__c == 'Ayusa',true,false)}" /></label>
+                       <apex:outputtext value="{!item.Record_Locator__c}" rendered="{!IF(item.Engagement__r.Intrax_Program__c == 'Ayusa',true,false)}" />
+                      </div>
+                      
+                     
+                 </div>
+                   
+                   </div> <!-- end span12 -->
+                      
+                 
+                        </div>
+                     
+                      </apex:repeat>
+                        </div>
+                      </apex:outputPanel>
+                    
+                  </apex:pageBlock>
+                </apex:outputPanel>
+              </div>
+                  
+                    </apex:outputPanel>
+                    
+                    
+                    </div> <!--  end span9 -->
+                 </div> 
+                </apex:form>
+            </apex:define>
+        </apex:composition>    
+       
+  
+</apex:page>

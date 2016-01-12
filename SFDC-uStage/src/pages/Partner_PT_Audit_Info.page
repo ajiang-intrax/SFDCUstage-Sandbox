@@ -1,0 +1,281 @@
+<apex:page title="Participant's Matches | Intrax" standardStylesheets="false" showHeader="false" controller="IntraxPartnerPortalEngineController" action="{!checkLoginWithMatchSearch}">
+	
+    	<apex:composition template="IntraxTemplate_Vs2" >
+      		<apex:define name="body">
+      			<apex:form >
+        		<div class="row">
+		            <apex:outputPanel styleClass="span9" layout="block">
+		          		<h1>
+		          			<apex:outputText rendered="{!IF($CurrentPage.parameters.participantId == null, false, true)}" value="{!participant.Name}"/>
+                        	<!-- <apex:outputText rendered="{!IF($CurrentPage.parameters.participantId == null, true, false)}" value="No Individual Participant Selected"/> -->
+                        	<apex:outputText rendered="{!IF($CurrentPage.parameters.participantId == null, true, false)}" value="{!application.Name}"/>
+		          		</h1>
+		            </apex:outputPanel>
+            		<apex:outputPanel styleClass="span3" layout="block">
+         			</apex:outputPanel>
+        		</div>    
+        		
+        		<div class="row">
+          			<apex:outputPanel styleClass="span3" layout="block">
+                    <c:Badge_Participant_Photo photoURL="{!returnURL}"/>    
+		            <!-- <c:Menu_Partner_Participant_Details />  -->
+          			</apex:outputPanel>
+          			<!-- end span3 -->
+          
+          			<!-- begin span9 -->  
+          			<div class="span9"> 
+            
+              			<!-- begin block -->
+            			<apex:outputPanel styleClass="block" layout="block">
+              				
+              				<apex:outputPanel styleClass="block-header" layout="block">
+                				<h3>Audit Information </h3>
+              				</apex:outputPanel>
+              				
+              				<apex:outputPanel styleClass="block-body" layout="block">
+				               
+                				<apex:outputPanel id="myPanel" layout="block">
+                  					
+                  					<apex:pageBlock id="pb">
+                    					
+                    					<apex:pageMessages id="validationMsg"/>
+                    					<apex:outputPanel rendered="{!IF(ISBLANK(auditInfo.Id), true, false)}" layout="block">
+                                			<apex:outputLabel ><span class="no-records">No record(s) to display.</span></apex:outputLabel>
+                            			</apex:outputPanel>
+                            			
+                            			<apex:outputPanel rendered="{!IF(ISBLANK(auditInfo.Id), false, true)}" layout="block">
+                    						<div id="flight-list" class="list-view container-fluid">
+                    							<div class="row-fluid">
+			                    					<div class="span6">
+			                    						<div class="list-field">
+									                       <label> <strong><apex:outputText value="Audit Name"/></strong></label>
+									                       <apex:outputField value="{!auditInfo.Name}"/>&nbsp;
+									                    </div>
+									                    <div class="list-field">
+									                       <label><strong><apex:outputText value="Audit Status"/></strong></label>
+									                       <apex:outputField value="{!auditInfo.Audit_Status__c}"/>&nbsp;
+									                    </div>
+								                    </div>
+								                    <div class="span6">
+									                    <div class="list-field">
+									                       <label><strong><apex:outputText value="Type"/></strong></label>
+									                       <apex:outputField value="{!auditInfo.Type__c}"/>&nbsp;
+									                    </div>
+								                    </div>
+						                    	</div> <!-- end row fluid -->
+					                    
+                    				
+                    							<h3>Basic Eligibility</h3>
+			                    					<div class="row-fluid">
+									                    <div class="span6">
+									                    	<div class="list-field">
+										                       <label><strong><apex:outputText value="School Years"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.School_Years__c}"/>&nbsp; <br/>
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="School Years Note"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.School_Years_Note__c}"/>&nbsp; <br/>
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Academic"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.Academic__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Academic Note"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.Academic_Note__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="English Ability"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.English_Ability__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="English Ability Note"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.English_Ability_Note__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Citizenship"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.Citizenship__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Citizenship Note"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.Citizenship_Note__c}"/>&nbsp;
+										                    </div>
+										                    
+										                </div>
+										                <div class="span6">
+									                    	<div class="list-field">
+										                       <label><strong><apex:outputText value="Age"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.Age__c}"/>&nbsp; <br/>
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Age Note"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.Age_Note__c}"/>&nbsp; <br/>
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Health"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.Health__c}"/>&nbsp;
+										                    </div>
+										                     <div class="list-field">
+										                       <label><strong><apex:outputText value="Health Note"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.Health_Note__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Prior Exchange"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.Prior_Exchange__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Prior Exchange Note"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.Prior_Exchange_Note__c}"/>&nbsp;
+										                    </div>
+										                    
+										                </div>
+										            </div>  
+										            
+										            <h3>Applicant Quality</h3>
+										              
+			                    					<div class="row-fluid">
+									                	<div class="span6">
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Interests"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.Interests__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Interests Note"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.Interests_Note__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Pets"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.Pets__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Pets Note"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.Pets_Note__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Diet"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.Diet__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Diet Note"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.Diet_Note__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Student Letter"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.Student_Letter__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Student Letter Note"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.Student_Letter_Note__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Parent Letter"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.Parent_Letter__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Parent Letter Note"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.Parent_Letter_Note__c}"/>&nbsp;
+										                    </div>
+										                </div>
+										                
+										                <div class="span6">
+										                 	<div class="list-field">
+										                       <label><strong><apex:outputText value="Volunteer Essay"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.Volunteer_Essay__c}"/>&nbsp;
+										                    </div> 
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Volunteer Essay Note"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.Volunteer_Essay_Note__c}"/>&nbsp;
+										                    </div> 
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Homesick Essay"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.Homesick_Essay__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Volunteer Essay Note"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.Homesick_Essay_Note__c}"/>&nbsp;
+										                    </div> 
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Interest Essay"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.Interest_Essay__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Interest Essay Note"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.Interest_Essay_Note__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Goal Essay"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.Goal_Essay__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Goal Essay Note"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.Goal_Essay_Note__c}"/>&nbsp;
+										                    </div>  
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Interview"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.Interview__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Interview Note"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.Interview_Note__c}"/>&nbsp;
+										                    </div> 
+										                </div> 
+										            </div>
+										            
+										            <h3>Document Quality</h3>
+								                    
+									                <div class="row-fluid">
+									                	
+										                <div class="span6">						                    
+										                   	<div class="list-field">
+										                       <label><strong><apex:outputText value="Student Photos"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.Student_Photos__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Student Photos Note"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.Student_Photos_Note__c}"/>&nbsp;
+										                    </div> 
+										                </div>
+										                
+										                 <div class="span6">						                    
+										                   	<div class="list-field">
+										                       <label><strong><apex:outputText value="Activity Photos"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.Activity_Photos__c}"/>&nbsp;
+										                    </div>
+										                    <div class="list-field">
+										                       <label><strong><apex:outputText value="Activity Photos Note"/></strong></label>
+										                       <apex:outputField value="{!auditInfo.Activity_Photos_Note__c}"/>&nbsp;
+										                    </div> 
+										                </div>
+									                </div>
+									                </div>
+								                    
+                 						 </apex:outputPanel>   
+                  					</apex:pageBlock>
+                  					
+                  					<apex:outputPanel id="buttonPanel1" layout="block">
+					                    <apex:outputPanel styleClass="form-link no-float">
+					                        <apex:outputLink value="/apex/pr_app_list">
+					                            <i class="icon-chevron-left"></i> <span>Back To Applications</span>
+					                        </apex:outputLink>
+					                    </apex:outputPanel>
+					                
+						                <apex:outputPanel styleClass="form-link">
+					                        <apex:outputLink value="/apex/ayusa_App_Home?id={!application.Id}">
+					                            <span>Review Participant Application</span> <i class="icon-chevron-right"></i> 
+					                        </apex:outputLink>
+					                    </apex:outputPanel>
+					                 </apex:outputPanel> 
+					                 
+                				</apex:outputPanel>
+                				
+               				</apex:outputPanel>
+              			</apex:outputPanel>
+          			</div>
+          			<!-- end span9 -->
+       			</div>
+        		<!-- end row -->
+        		</apex:form>
+      		</apex:define>
+    	</apex:composition>
+	
+</apex:page>

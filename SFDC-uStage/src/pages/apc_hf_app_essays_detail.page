@@ -1,0 +1,42 @@
+<apex:page title="Essay Detail" applyBodyTag="false" applyHtmlTag="false" id="apc_hf_essay_detail" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="false" showHeader="false">
+  <apex:composition template="intraxtemplate_vs3">
+
+    <apex:define name="body">
+          <c:block_header_apc_hf_application userAgentCheck="{!userAgentCheck}"/>
+      <div class="row">
+        <div class="col-md-9 col-md-push-3">
+        <h1>Essay Question</h1>
+          <apex:form id="form" styleClass="form-horizontal ws-validate">
+            <apex:messages StyleClass="custom-error-essays" />
+            <h3><apex:outputText value="{!EssayInfo.Label__c}" /></h3>
+            <div class="form-group">
+              <div class="col-sm-12">
+                <apex:inputTextarea rows="10" styleClass="form-control" id="Narrative" value="{!EssayNarrative}" required="TRUE" onkeyup="countChar(this, 5000, 'NarrativeCount')"/>
+                <div class="char-limit"><span class="char-count-label">Characters left:</span> <span id="NarrativeCount" class="char-count"> {!5000-len(EssayNarrative) } </span> </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-12">
+                <apex:outputLink styleClass="btn btn-link btn-lg" id="Back"  value="/apex/apc_hf_app_essays?id={!applicantInfo.Id}"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                <apex:commandLink styleClass="btn btn-primary btn-lg" action="{!navigator}">
+                  <apex:param name="nextPage" value="/apex/apc_hf_app_essays?id={!applicantInfo.Id}" />
+                  <apex:param name="reDirectPage" value="true"/>
+                  <apex:param name="essayType" value="APC" assignTo="{!EssayType}"/>
+                  <apex:commandButton id="Save" value="Save & Return" />
+                </apex:commandLink>
+              </div>
+            </div>
+          </apex:form>
+        </div>
+        <!-- end column  -->
+        <div class="col-md-3 col-md-pull-9">
+          <apex:form >
+          <c:menu_apc_hf_app ApplicantInfo="{!applicantInfo}" />
+           </apex:form>
+        </div>
+        <!-- end column  --> 
+        
+      </div>
+    </apex:define>
+    </apex:composition>
+    </apex:page>

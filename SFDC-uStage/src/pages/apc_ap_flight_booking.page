@@ -1,0 +1,431 @@
+<apex:page id="apc_ap_flight_booking" docType="html-5.0" applyHtmlTag="false" applyBodyTag="false" title="Host Community" standardStylesheets="false" showHeader="false" action="{!myHome.CreateEOPChildOpp}" controller="apc_home_controller">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <div class="row margin-b2">
+        <div class="col-sm-8 center-block">
+          <apex:form styleClass="form-vertical ws-validate" id="webform">
+            
+            <apex:outputPanel layout="block" rendered="{!myHome.isBeforeEndDate == true || myHome.isDuplicateDate == true }">
+                <p class="alert alert-danger vs2 header">
+                We were unable to save your request. Please scroll down to learn more.
+                </p>
+            </apex:outputPanel>
+            
+            <apex:Messages styleClass="custom-error-pagelevel vs2" id="error"/>
+            <div class="row margin-b4">
+              <div class="col-sm-12">
+                <h1 class="no-margin-t center-text">Book Your Return Flight</h1>
+                <div class="box yellow">
+                  <p>You have requested AuPairCare to book your return flight home. Before you continue with your flight request, please confirm you understand the following:</p>
+                  <ul class="no-margin">
+                    <li>Once the flight is booked is not possible to change travel dates, departure city or destination city. AuPaircare is 
+                      immediately notified by the airline if the passenger attempts to change the flight</li>
+                    <li>AuPaircare is immediately notified by the airline when the passenger does not board the flight. Au pairs who do not depart US on the flight provided are
+                      reported to immigration and Custom Enforcement as a visa overstay and the program will be negatively ended in SEVIS</li>
+                  </ul> 
+                </div>
+              </div>
+              <!-- end column --> 
+            </div>
+            <!--  end row -->
+           
+           <apex:outputPanel layout="block" rendered="{!myHome.applicant.Engagement__r.Departure_Request_Deadline__c != null && NOW() > myHome.applicant.Engagement__r.Departure_Request_Deadline__c}" id="outputpanelDead"> 
+           <div class="row">
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label class="control-label">Late Flight Booking Fee</label>
+                      <div class="margin-b1">You will be charged <strong>${!myHome.LateFlightPrice}</strong> for this request.</div>
+                      </div>
+                  </div>
+                </div>
+           <!--  end row -->
+           </apex:outputPanel>
+            
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="form-group">
+                  <label class="control-label">Would you like AuPairCare to schedule your return flight?</label>
+                  <apex:actionRegion >
+                    <apex:selectRadio styleClass="radio" value="{!myHome.applicant.Engagement__r.Flight_booking_needed__c}" id="flightBook" required="true">
+                      <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                      <apex:selectOption itemValue="No" itemLabel="No"/>
+                      <apex:actionSupport action="{!myHome.resetNoFlights}" onComplete="dpInitiate();activateTypehead();" event="onclick" rerender="block_flight, webform" status="show"/>
+                    </apex:selectRadio>
+                  </apex:actionRegion>
+                  <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();"  startStyleClass="feedback-st" startText="Loading. Please wait..." id="show"/>
+                  <apex:outputLink id="linkrBackHome" value="/apex/apc_ap_home"><b>I'm not ready to decide, return to previous page</b></apex:outputLink>
+          		  <apex:message for="flightBook" styleClass="custom-error-radio" id="errormess4"/>
+                </div>
+              </div>
+            </div>
+            <!--  end row -->
+            
+        
+            
+            <apex:pageBlock id="block_flight">
+            
+	            <apex:outputPanel layout="block" rendered="{!myHome.applicant.Engagement__r.Flight_booking_needed__c == 'No'}" id="outputpanel5">
+	            <div class="row">
+	                  <div class="col-sm-12">
+	                    <apex:commandlink styleClass="btn btn-primary btn-lg"  action="{!myHome.saveFlights}" id="nextlink3" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+	                      <apex:param name="nextPage" value="/apex/apc_ap_home" />
+	                      <apex:param name="noflight" value="true" />
+	                      <apex:commandButton value="Save & Continue" id="continuebutton4"/>
+	                    </apex:commandlink>
+	                  </div>
+	                </div>
+	            </apex:outputPanel>
+            
+              <apex:outputPanel layout="block" rendered="{!myHome.applicant.Engagement__r.Flight_booking_needed__c == 'Yes'}" id="outputpanel4">
+                <div class="section-title">
+                  <div><strong>Provide 3 different preferred flight dates</strong></div>  
+                  <div>Weekend and US holidays are not available</div>
+                </div>
+               
+               <div class="row">
+                  <div class="col-sm-6">
+               
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label class="control-label">First Preference</label>
+                      <div class="datepicker" locale="en_US">
+                        <apex:inputField styleClass="form-control" html-placeholder="MM/DD/YYYY" id="choice1" value="{!myHome.applicant.Engagement__r.Requested_Departure_1__c}" required="true"/>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!--  end row -->
+                
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label class="control-label">Second Preference</label>
+                      <div class="datepicker" locale="en_US">
+                        <apex:inputField styleClass="form-control" html-placeholder="MM/DD/YYYY" id="choice2" value="{!myHome.applicant.Engagement__r.Requested_Departure_2__c}" required="true"/>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!--  end row -->
+                
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label class="control-label">Third Preference</label>
+                      <div class="datepicker" locale="en_US">
+                        <apex:inputField styleClass="form-control" html-placeholder="MM/DD/YYYY" id="choice3" value="{!myHome.applicant.Engagement__r.Requested_Departure_3__c}" required="true"/>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!--  end row -->
+              
+               </div>
+               <div class="col-sm-6">
+               <apex:outputPanel layout="block" id="blockHFFlight">
+               <apex:outputPanel layout="block" rendered="{!myHome.isBeforeEndDate == true}">
+                <p class="alert alert-danger vs2 margin-t3">You can't request a flight before your program end date (
+                <strong>
+                <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+    			<apex:param value="{!myHome.applicant.Engagement__r.Engagement_End__c}" /> 
+				</apex:outputText>
+				</strong>
+				) unless your host family signs an
+				<apex:outputLink id="linkrEarlyDep" target="_blank" value="/apex/resource_article?cname=Early%20Departure%20Agreement"> Early Departure Agreement</apex:outputLink>
+				. Please contact your area director if you need to depart early.</p>
+               
+               </apex:outputPanel>
+               
+               <apex:outputPanel layout="block" rendered="{!myHome.isDuplicateDate == true}">
+                <p class="alert alert-danger vs2 margin-t3">You cannot choose the same flight date twice. Please try another.</p>
+               </apex:outputPanel>
+              
+               </apex:outputPanel> 
+               </div>
+              
+              </div>
+              <!--  end row -->
+                
+                <div class="section-title">
+                  <div><strong>Select departure and arrival airports</strong></div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Domestic Departure Airport</label>
+                       <div id="typeahead-wrapper">
+                      <apex:inputText style="background:#fff;" styleClass="typeahead instance1 form-control" html-placeholder="Select your departure airport" id="depairport" value="{!myHome.applicant.Engagement__r.Domestic_Departure_Airport__c}" required="true"/>
+                      <apex:message for="depairport" styleClass="custom-error-text" id="errormess5"/>
+                   </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">International Destination Airport</label>
+                       <div id="typeahead-wrapper">
+                      <apex:inputText style="background:#fff;" styleClass="typeahead instance2 form-control" html-placeholder="Select your destination airport" id="destirport"  value="{!myHome.applicant.Engagement__r.International_Destination_Airport__c}" required="true"/>
+                      <apex:message for="destirport" styleClass="custom-error-text" id="errormess6"/>
+                   </div>
+                    </div>
+                  </div>
+                    
+	            </div>
+	            <!--  end row -->
+	             
+                
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label class="control-label">Would you like to purchase insurance during your one-month extension?</label>
+                      <div class="margin-b1">This will cost and additional <strong>${!myHome.InsurancePrice}</strong>
+                      <apex:outputLink id="linkrBackHome" target="_blank" value="/apex/resource_article?cname=Extension%20Insurance%20FAQ"> (Why do I need this?)</apex:outputLink>
+                      </div>
+                      <apex:selectRadio styleClass="radio" value="{!myHome.insuranceSelector}" id="insurance" required="true">
+                        <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                        <apex:selectOption itemValue="No" itemLabel="No"/>
+                      </apex:selectRadio>
+                      <apex:message for="insurance" styleClass="custom-error-radio" id="errormess4"/>
+                    </div>
+                  </div>
+                </div>
+                <!--  end row -->
+                
+                <div class="row">
+                  <div class="col-sm-12">
+                    <apex:commandlink styleClass="btn btn-primary btn-lg"  action="{!myHome.saveFlights}" id="nextlink2" onComplete="rerunjs();activateTypehead();checkAlert();" reRender="webform" status="onsubmit">
+                      <apex:commandButton value="Save & Continue" id="continuebutton2"/>
+                    </apex:commandlink>
+                  </div>
+                </div>
+              </apex:outputPanel>
+            </apex:pageBlock>
+            
+            <!--  FUNCTION to check datepicker criteria -->
+            <apex:actionFunction name="applyAction" action="{!myHome.checkFlights}" status="show" rerender="blockHFFlight"> </apex:actionFunction>
+          </apex:form>
+        </div>
+        <!-- end column --> 
+      </div>
+      <!--  end row -->
+      <script>
+
+//@@@@ ARRAY THAT CONTAINS THE AIRPORTS -- we are putting Airports__c from USA (variable in the controller)
+
+var airportsUS = {!myHome.USairportscode};
+var airportsNoUS = {!myHome.NoUSairportscode};
+
+//@@@@*****************END OF ARRAY
+
+//@@@@ MATCH FUNCTION
+
+var substringMatcher = function(strs) {
+return function findMatches(q, cb) {
+var matches, substrRegex;
+ 
+// an array that will be populated with substring matches
+matches = [];
+ 
+// regex used to determine if a string contains the substring `q`
+substrRegex = new RegExp(q, 'i');
+ 
+// iterate through the pool of strings and for any string that
+// contains the substring `q`, add it to the `matches` array
+j$.each(strs, function(i, str) {
+if (substrRegex.test(str)) {
+// the typeahead jQuery plugin expects suggestions to a
+// JavaScript object, refer to typeahead docs for more info
+
+//####TEST CONSOLE.LOG####
+
+//console.log('airport: ' + str.slice( 0, str.indexOf("--") ));
+//console.log('country: ' + str.slice( str.indexOf("--") + 2, str.length ));
+           
+matches.push({ value: str });
+
+}
+});
+ 
+cb(matches);
+};
+};
+
+//@@@@*********************END
+
+//RUNING JQUERY FUNCTION USING TYPEAHEAD.JS AND HANDLEBARS.JS
+
+function activateTypehead(){
+
+j$('.typeahead.instance1').typeahead({
+  hint: true,
+  highlight: true,
+  minLength: 3
+}, {
+  
+  name: 'airports',
+  displayKey: 'value',
+  source: substringMatcher(airportsUS),
+  templates: {
+    empty: [
+      '<div class="empty-message">',
+      'Unable to find any airport',
+      '</div>'
+    ].join('\n'),
+    suggestion: Handlebars.compile('<p><strong>{{value}}</strong></p>'),
+    
+  }
+  
+});
+
+j$('.typeahead.instance2').typeahead({
+  hint: true,
+  highlight: true,
+  minLength: 3
+}, {
+  
+  name: 'airports',
+  displayKey: 'value',
+  source: substringMatcher(airportsNoUS),
+  templates: {
+    empty: [
+      '<div class="empty-message">',
+      'Unable to find any airport',
+      '</div>'
+    ].join('\n'),
+    suggestion: Handlebars.compile('<p><strong>{{value}}</strong></p>'),
+    
+  }
+  
+});
+
+j$('.typeahead').css('background', '#fff');
+
+}
+
+// We use this funtion to re-activate all funtions after the ajax call
+activateTypehead();
+
+
+//******************************** Code for timepicker
+
+var disabledDays = [];
+
+//Set MAx day to Engament_End_Date + 30 days
+var dayEnd = {!DAY(myHome.applicant.Engagement__r.Engagement_End__c + 30)};
+var monthEnd = {!MONTH(myHome.applicant.Engagement__r.Engagement_End__c + 30)};
+var yearEnd = {!YEAR(myHome.applicant.Engagement__r.Engagement_End__c + 30)};
+//console.log("Engament End Date: " + dayEnd + "/"+ monthEnd + "/"+ yearEnd);
+
+//get disable Holidays from Custom Stetting
+
+//code for disable next 7 days
+
+for(i = 0; i <= 7; i++){
+	var d = new Date();
+	d.setDate(d.getDate() + i);
+	var month = d.getMonth()+1;
+	var day = d.getDate();
+	var currentday = month  + '-' + day + '-' + d.getFullYear();
+	//console.log(currentday);
+	disabledDays.push(currentday);
+}
+//console.log(disabledDays);
+
+//getting ApcHolydays from controller
+var holydays = {!myHome.ApcHolydays};
+//console.log('holydays:' + holydays);
+
+//adding Custon Settings
+for (i = 0; i < holydays.length; i++) {
+//console.log(holydays[i]);
+disabledDays.push(holydays[i]);
+}
+//console.log('disabledDays:' + disabledDays);
+
+
+/* utility functions */
+function disaDays(date) {
+	var m = date.getMonth(), d = date.getDate(), y = date.getFullYear();
+	//console.log('Checking (raw): ' + m + '-' + d + '-' + y);
+	for (i = 0; i < disabledDays.length; i++) {
+		if(j$.inArray((m+1) + '-' + d + '-' + y,disabledDays) != -1 || new Date() > date) {
+			//console.log('bad:  ' + (m+1) + '-' + d + '-' + y + ' / ' + disabledDays[i]);
+			return [false];
+		}
+	}
+	//console.log('good:  ' + (m+1) + '-' + d + '-' + y);
+	return [true];
+}
+function noWeekendsOrHolidays(date) {
+	var noWeekend = jQuery.datepicker.noWeekends(date);
+	return noWeekend[0] ? disaDays(date) : noWeekend;
+}
+
+
+function datetimepickerInitializer(tag) {
+    var locale = j$(tag).attr('locale');
+    var classes = j$(tag).attr('class');
+    //console.log(locale);
+    //default
+    var endYear = (new Date).getFullYear() + 10;
+
+    var attrib = {
+        changeMonth: true,
+        changeYear: true,
+        yearRange: (new Date).getFullYear() + ":" + endYear,
+        //Set MAx day to Engament_End_Date + 30 days
+        maxDate: new Date(yearEnd, monthEnd, dayEnd),
+    };
+	
+	//%%%%%%%%% HERE %%%%%%%%%% We add the condition to disable Days
+	attrib['beforeShowDay'] = noWeekendsOrHolidays;
+	//%%%%%%%%%
+	
+	attrib['currentText'] = 'Today';
+    attrib['showTimepicker'] = false;
+    
+    //%%%%%%%%% HERE %%%%%%%%%%
+    //call jquery funtion to check Dates and End Date
+    attrib['onSelect'] = function() {
+            //alert("Hi there");
+            //%%%%%%%%%%%%%%%%%%% We use this function to use on-line date validation
+            //applyAction();
+    }
+	//%%%%%%%%%
+	
+    j$.timepicker.setDefaults(j$.timepicker.regional[locale]);
+    j$.datepicker.setDefaults(j$.datepicker.regional[locale]);
+
+    var inputbox = j$(tag).find('input');
+    inputbox.attr('onfocus', ' ');
+    //console.log(attrib);
+    inputbox.datetimepicker(attrib);
+}
+
+function dpInitiate(){
+   j$(document).ready(function () {
+   	var tags = j$('.datepicker');
+    for (var i = tags.length - 1; i >= 0; i--) {
+                datetimepickerInitializer(tags[i]);
+    };
+   });
+};
+
+dpInitiate();
+
+function checkAlert(){
+	if(j$('ul[role="alert"]').length == 1){
+	j$('.alert.header').hide();
+	}else{
+	j$('.alert.header').show();
+	}
+}
+
+j$('.typeahead').css('background', '#fff');
+
+</script> 
+
+    </apex:define>
+  </apex:composition>
+</apex:page>

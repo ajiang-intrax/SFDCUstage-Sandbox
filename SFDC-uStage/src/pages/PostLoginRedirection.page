@@ -1,0 +1,11 @@
+<apex:page docType="HTML-5.0" showHeader="false" standardStylesheets="true" title="PostLogin | Intrax" controller="SiteLoginController" id="postloginRedirect">
+
+<apex:form >
+
+<apex:actionFunction name="checkType" action="{!checklogin}"/>
+
+</apex:form>
+
+<script>window.setTimeout(checkType,100)</script>
+
+</apex:page>

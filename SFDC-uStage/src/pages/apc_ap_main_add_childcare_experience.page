@@ -1,0 +1,1026 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" title="Experience" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="false" showHeader="false" id="apc_ap_main_add_childcare">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_apc_ap_application />
+      <div id="app-page" class="row">
+        <div id="app-focus" class="col-md-8 col-md-push-3">
+          <h1>
+            <apex:outputText rendered="{!$CurrentPage.Parameters.eid != null}" value="Edit Childcare Experience"/>
+            <apex:outputText rendered="{!$CurrentPage.Parameters.eid == null}" value="Add New Childcare Experience"/>
+          </h1>
+          <p>&nbsp;</p>
+          <apex:form styleClass="form-vertical ws-validate" id="webform">
+            <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+            <apex:outputpanel layout="block" id="blockexperience">
+              <apex:outputpanel layout="block" rendered="{!$CurrentPage.Parameters.eid == null}">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label class="control-label">Please select type of experience</label>
+                      <apex:actionRegion >
+                        <apex:selectList styleClass="form-control" value="{!experience.Experience_Type__c}" multiselect="false" required="TRUE" id="typeexper" size="1">
+                          <apex:selectOption itemValue="" itemLabel="--Select Experience Type--"/>
+                          <apex:selectOption itemValue="Daycare" itemLabel="Daycare"/>
+                          <apex:selectOption itemValue="Camp" itemLabel="Camp"/>
+                          <apex:selectOption itemValue="Preschool/Kindergarten" itemLabel="Preschool/Kindergarten"/>
+                          <apex:selectOption itemValue="Teaching/Tutoring" itemLabel="Teaching/Tutoring"/>
+                          <apex:selectOption itemValue="Coaching" itemLabel="Coaching"/>
+                          <apex:selectOption itemValue="Church" itemLabel="Church"/>
+                          <apex:selectOption itemValue="Orphanage" itemLabel="Orphanage"/>
+                          <apex:selectOption itemValue="Babysitting" itemLabel="Babysitting"/>
+                          <apex:selectOption itemValue="Nanny" itemLabel="Nanny"/>
+                          <apex:selectOption itemValue="Au Pair" itemLabel="Au Pair"/>
+                          <apex:selectOption itemValue="Sibling/Family" itemLabel="Sibling/Family"/>
+                          <apex:actionSupport event="onchange" onComplete="dpInitiate();restoreclass();boxInitiate();" rerender="experiencepanel, individual,group,companygroup, common, buttons, blockexperience" status="showexper"/>
+                        </apex:selectList>
+                      </apex:actionRegion>
+                      <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showexper"/>
+                      <apex:message for="typeexper" styleClass="custom-error-radio" id="errormestype"/>
+                    </div>
+                  </div>
+                
+                </div>
+                <!--  end row --> 
+               <apex:outputPanel layout="block" rendered="{!experience.Experience_Type__c == 'Camp'}">
+                  <p class="alert alert-info">Each camp work experience must be listed separately. 
+                    For example: If you've worked as a summer camp counselor for the past 3 years, you must enter this as 3 separate experiences.</p>
+                </apex:outputPanel>  
+              </apex:outputpanel>
+            </apex:outputpanel>
+            
+            
+              <apex:outputpanel layout="block" id="companygroup">
+              <apex:outputPanel layout="block" rendered="{!experience.Experience_Type__c == 'Daycare' || experience.Experience_Type__c == 'Camp' || experience.Experience_Type__c == 'Preschool/Kindergarten'
+              || experience.Experience_Type__c == 'Teaching/Tutoring' || experience.Experience_Type__c == 'Coaching' || experience.Experience_Type__c == 'Church' || experience.Experience_Type__c == 'Orphanage'}"  >
+               <div class="row">
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label class="control-label">Name of Organization<span class="info"> (Optional)</span></label>
+                      <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!experience.Employer_Name__c}" required="FALSE" id="companyname" />
+                    </div>
+                  </div>
+                </div><!--  end row -->
+              </apex:outputPanel>
+            </apex:outputPanel>
+            
+            <apex:outputpanel layout="block" id="common">
+              <apex:outputPanel layout="block" rendered="{!experience.Experience_Type__c != null}" >
+              <div class="section-title margin-t2">Dates&nbsp;&nbsp;(&nbsp;<apex:actionRegion >
+                        <apex:inputField styleclass="boxdate no-margin" value="{!experience.Current_Job__c}" required="FALSE" id="current" >
+                          <apex:actionSupport event="onchange" onComplete="dpInitiate();restoreclass();" action="{!setCurrentDate}" rerender="common" status="showjob"/>
+                        </apex:inputField>
+                      </apex:actionRegion><label class="control-label inline-block">&nbsp;I currently work here</label>)</div>
+               
+                <apex:outputPanel layout="block" rendered="{!experience.Current_Job__c == true}"  >
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <div class="form-group">
+                        <label class="control-label">Start Date</label>
+                        <div class="datepicker dp-DOB" locale="{!user.localeSidKey}">
+                          <apex:actionRegion >
+                          <apex:inputField styleClass="form-control" value="{!experience.Start_Date__c}" required="true" id="startdate1">
+                          <apex:actionSupport event="onchange" onComplete="dpInitiate();restoreclass();" rerender="AgeBlock" status="showjob"/>
+                          </apex:inputField>
+                          </apex:actionRegion>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!--  end row --> 
+                </apex:outputPanel>
+                <apex:outputPanel layout="block" rendered="{!experience.Current_Job__c == false}"  >
+                  <div class="dp-group">
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <div class="form-group">
+                          <label class="control-label">Start Date</label>
+                          <div class="datepicker start" locale="{!user.localeSidKey}">
+                            <apex:actionRegion >
+                            <apex:inputField styleClass="form-control" value="{!experience.Start_Date__c}" required="true" id="startdate">
+                            <apex:actionSupport event="onchange" onComplete="dpInitiate();restoreclass();" rerender="AgeBlock" status="showjob"/>
+                            </apex:inputField>
+                            </apex:actionRegion>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-6">
+                        <div class="form-group">
+                          <label class="control-label">End Date</label>
+                          <div class="datepicker end" locale="{!user.localeSidKey}">
+                            <apex:inputField styleClass="form-control" value="{!experience.End_Date__c}" required="true" id="enddate"/>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!--  end row --> 
+                  </div>
+                  <!--  end dp group --> 
+                </apex:outputpanel>
+                <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showjob"/>
+             
+             
+             <apex:outputPanel layout="block" id="AgeBlock">
+                 <!-- 
+                <apex:outputText value="{!(experience.Start_Date__c - applicantinfo.Date_of_Birth__c )/365.2425}"/>
+                  -->
+                <apex:outputPanel layout="block" rendered="{!experience.Start_Date__c != null}">
+                <apex:outputPanel layout="block" rendered="{!AND(((experience.Start_Date__c - applicantinfo.Date_of_Birth__c )/365.2425 >= 13 || (experience.Start_Date__c - applicantinfo.Date_of_Birth__c )/365.2425 >= 12.999), (experience.Start_Date__c - applicantinfo.Date_of_Birth__c)/365.2425 < 14, experience.Start_Date__c != null)}">
+                    <p class="alert alert-info">You cannot enter any childcare experience you had before you were 14 years old.</p>
+                </apex:outputPanel>
+                </apex:outputPanel>
+                
+             </apex:outputPanel>
+             
+             <div class="section-title margin-t2">Experience Details</div>  
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Tell us how often you cared for children <i class="infobtn fa fa-question-circle" data-toggle="popover" data-content="Please average your hours by week or month.
+                                             If you just cared for the child/ren one time, choose the one time option. If you need help with this part of your application, please contact your local agency. "></i> </label>
+                      <apex:actionRegion >
+                        <apex:inputField styleClass="form-control" value="{!experience.Frequency__c}" required="TRUE" id="frecu" >
+                          <apex:actionSupport event="onchange" onComplete="dpInitiate();restoreclass();" rerender="hourspanel" status="showhours"/>
+                        </apex:inputField>
+                      </apex:actionRegion>
+                      <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showhours"/>
+                    </div>
+                  </div> 
+                <apex:outputpanel layout="block" id="hourspanel">
+                    <div class="col-sm-6">
+                      <div class="form-group">
+                        <label class="control-label">Average Hours of Work
+                        <!--  As per Story B-02598, the "Daily" option is being removed: 
+                          <apex:outputText value="{!IF(experience.Frequency__c=='Daily', ' per Day',IF(experience.Frequency__c=='Weekly', ' per Week',IF(experience.Frequency__c=='Monthly', ' per Month','')))}"/></label>
+						-->
+                          <apex:outputText value="{!IF(experience.Frequency__c=='Weekly', ' per Week',IF(experience.Frequency__c=='Monthly', ' per Month',''))}"/></label>
+                        <apex:inputField styleClass="form-control short" value="{!experience.Employment_Hrs__c}" required="TRUE" id="weeklyhours" />
+                      </div>
+                    </div>
+                </apex:outputpanel>
+                </div>
+                  <!--  end row --> 
+                  
+                
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label class="control-label">Please describe your experience</label>
+                      <apex:inputTextarea styleClass="form-control" id="PositionDesc" value="{!experience.Position_Description__c}" required="TRUE" onkeyup="countChar(this, 2000, 'PositionDescCount')"/>
+                      <div class="char-limit bb"><span class="char-count-label">Characters left:</span> <span id="PositionDescCount" class="char-count"> {!2000-len(experience.Position_Description__c) }</span> </div>
+                      <apex:message for="PositionDesc" styleClass="custom-error-text" id="errormesPositDesc"/>
+                    </div>
+                  </div>
+                </div>
+                <!--  end row --> 
+              </apex:outputPanel>
+            </apex:outputpanel>
+            <apex:outputpanel id="experiencepanel" layout="block">
+              <apex:outputpanel layout="block" rendered="{!NOT(experience.Experience_Type__c == null)}" >
+                <apex:outputPanel id="panelresponsindiv" layout="block" rendered="{!experience.Experience_Type__c == 'Babysitting' || experience.Experience_Type__c == 'Nanny' || experience.Experience_Type__c == 'Au Pair'
+              || experience.Experience_Type__c == 'Sibling/Family'}"  >
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <div class="form-group">
+                        <label class="control-label">Please describe your responsibilities in this position</label>
+                        <apex:inputField styleClass="form-control" value="{!experience.Position_Responsibilities__c}" required="TRUE" id="respons" />
+                      </div>
+                    </div>
+                  </div>
+                  <!--  end row -->
+                  
+                  <div class="section-title margin-t2">Please add each child you cared for</div>
+                  <apex:outputpanel layout="block" id="wrappertable">
+                    <apex:variable value="{!1}" var="rowNum" id="rowCounter"/>
+                    <div class="panel-group group1">
+                      <apex:repeat id="wtable"  value="{!wrappersExp}" var="wrapper">
+                        <apex:variable value="{!IF(wrappersExp.size==rowNum, 'in', '')}" var="rowLast" id="rowLast" />
+                        <div class="panel panel-default">
+                          <apex:outputpanel styleClass="panel-heading" layout="block" >
+                            <h4 class="panel-title">
+                              <apex:outputLink styleClass="accordion-toggle" html-data-toggle="collapse" html-data-parent=".group1" value="#collapse{!rowNum}">Child {!rowNum}</apex:outputLink>
+                            </h4>
+                          </apex:outputpanel>
+                          <div id="collapse{!rowNum}" class="collapse {!rowLast}">
+                            <div class="panel-body">
+                              <div class="row">
+                                <div class="col-sm-6">
+                                  <div class="form-group">
+                                    <label class="control-label">Date of Birth </label>
+                                    <div class="datepicker dp-DOB" locale="{!user.localeSidKey}">
+                                      <apex:inputField styleClass="form-control" value="{!wrapper.ExperienceDetailChild.Date_of_Birth__c}" required="true" id="dob"/>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-sm-6">
+                                  <div class="form-group">
+                                    <label class="control-label"> Gender</label>
+                                    <apex:inputField styleClass="form-control" value="{!wrapper.ExperienceDetailChild.Gender__c}" required="true"
+                                                            id="genderchild" />
+                                  </div>
+                                </div>
+                              </div>
+                              <!--  end row -->
+                              
+                              <div class="row">
+                                <div class="col-sm-6">
+                                  <div class="form-group">
+                                    <label class="control-label">Does this child have special needs? <i class="infobtn fa fa-question-circle" data-placement="auto right" data-toggle="popover" data-content="This includes speech and/ or language delays, autism spectrum disorder, cognitive delays, social & emotional disorders, learning differences and medical treatments such as insulin shots."></i></label>
+                                    <apex:actionRegion >
+                                      <apex:selectRadio styleClass="radio" value="{!wrapper.ExperienceDetailChild.Special_Needs_Indicated__c}" id="needs" required="true">
+                                        <apex:selectOption itemValue="Yes" itemLabel="Yes" />
+                                        <apex:selectOption itemValue="No" itemLabel="No" />
+                                        <apex:actionSupport event="onclick" rerender="needsdescription" status="showneeds" />
+                                      </apex:selectRadio>
+                                    </apex:actionRegion>
+                                    <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showneeds"/>
+                                    <apex:message for="needs" styleClass="custom-error-radio" id="errorneeds" />
+                                  </div>
+                                </div>
+                              </div>
+                              <!--  end row -->
+                              
+                              <apex:outputpanel layout="block" id="needsdescription">
+                                <apex:outputpanel layout="block" rendered="{!wrapper.ExperienceDetailChild.Special_Needs_Indicated__c == 'Yes'}">
+                                  <div class="row">
+                                    <div class="col-sm-12">
+                                      <div class="form-group">
+                                        <label class="control-label">If yes, please describe</label>
+                                        <apex:inputField styleClass="form-control" value="{!wrapper.ExperienceDetailChild.Special_Needs_Description__c}" id="needsDesc" required="true" />
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <!--  end row --> 
+                                </apex:outputpanel>
+                              </apex:outputpanel>
+                              <apex:outputPanel rendered="{!NOT(wrapperExpsize==1)}" layout="block" styleClass="pull-right" id="outputpanel1">
+                                <apex:commandlink styleClass="btn btn-link btn-lg" action="{!delWrapperExp}" rerender="wrappertable, rowCounter" onComplete="rerunjs();" immediate="true"  id="linkdelWrapper" status="status"> <i class="fa fa-trash-o"></i> <span>Remove</span>
+                                  <apex:param name="toDelIdent" value="{!wrapper.ident}" assignTo="{!toDelIdent}"/>
+                                </apex:commandlink>
+                              </apex:outputPanel>
+                            </div>
+                            <!--  end panel body --> 
+                          </div>
+                          <!-- end accordion body --> 
+                        </div>
+                        <!--  end panel -->
+                        <apex:variable var="rowNum" value="{!rowNum + 1}"/>
+                      </apex:repeat>
+                    </div>
+                    <apex:commandlink styleClass="btn btn-lg btn-link margin-b3" action="{!addRowsExp}" onComplete="dpInitiate();" immediate="true" rerender="wrappertable, rowCounter" id="linkaddlWrapper" status="status"> <i class="fa fa-plus-circle"></i> <span>Add Another Child</span>
+                      <apex:param name="addCount" value="1" assignTo="{!addCount}"/>
+                      <apex:commandButton id="addbutton"/>
+                    </apex:commandlink>
+                    
+                    <apex:outputPanel layout="block" id="panelblock" rendered="{!reference.Reference_Requested__c == false}">
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h4 class="panel-title">Please tell us about your employer</h4>
+                      </div>
+                      <div class="panel-body">
+                        <div class="row">
+                          <div class="col-sm-6">
+                            <div class="form-group">
+                              <label class="control-label">First Name</label>
+                              <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!experience.First_Name__c}" required="TRUE" id="firstsupervisor" />
+                            </div>
+                          </div>
+                        
+                          <div class="col-sm-6">
+                            <div class="form-group">
+                              <label class="control-label">Last Name</label>
+                              <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!experience.Last_Name__c}" required="TRUE" id="lastsupervisorind" />
+                            </div>
+                          </div>
+                        </div>
+                        <!--  end row -->
+                        
+                       
+                        
+                        <!--
+                        This is being removed as per Story B-02598: PM desires that this text show up always, even if the experience is Siblings/Family
+                        <apex:outputPanel layout="block" rendered="{!experience.Experience_Type__c!='Sibling/Family'}">
+                        !-->
+                        <apex:outputPanel layout="block">
+                          <div class="row">
+                            <div class="col-sm-12">
+                              <div class="form-group margin-b">
+                              <apex:actionRegion >
+                                  <apex:inputField styleClass="no-margin" value="{!experience.IsReference__c}" id="ReferenceContact">
+                                    <apex:actionSupport event="onclick" rerender="ReferenceNoteBlock" status="showref"/>
+                                  </apex:inputField>
+                                </apex:actionRegion>
+                                <label class="control-label inline-block">This employer is not a family member or a relative. I'd like to use them as a reference.</label>
+                                <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showref"/>
+                              </div>
+                            </div>
+                          </div>
+                          <!--  end row -->
+                          
+                          <apex:pageBlock id="ReferenceNoteBlock">
+                            <apex:outputPanel layout="block"  rendered="{!experience.IsReference__c == true}">
+                              
+                              <div class="row">
+                                
+                                <div class="col-sm-12">
+                                  <div class="form-group">
+                                    <label class="control-label">Email</label>
+                                    <apex:inputField styleClass="form-control" value="{!experience.Email__c}" required="TRUE" id="employemail" />
+                                  </div>
+                                </div>
+                                
+                                <!-- 
+                                <div class="col-sm-6">
+                                  <div class="form-group">
+                                    <label class="control-label">Employers's Language
+                                    <i class="infobtn fa fa-question-circle" data-toggle="popover" 
+                                    data-content="Your employer will see your reference request in the language you choose."></i>
+                                    </label>
+		                              <apex:selectList styleClass="form-control" value="{!experience.Reference_Language__c}" multiselect="false" required="TRUE" id="refLang" size="1">
+				                          <apex:selectOption itemValue="" itemLabel="--Select Reference Language--"/>
+				                          <apex:selectOption itemValue="en_US" itemLabel="English"/>
+				                          <apex:selectOption itemValue="es_SP" itemLabel="Spanish"/>
+				                          <apex:selectOption itemValue="pt_BR" itemLabel="Portuguese"/>
+				                      </apex:selectList>
+		                            <apex:message for="refLang" styleClass="custom-error-radio" id="apexmess1refLang" />
+		                            </div>
+	                             </div>
+	                              -->
+	                           
+	                           </div>
+	                              <!--  end row -->
+                              
+                              <div class="row">
+                                <div class="col-sm-12">
+                                  <div class="form-group">
+                                    <label class="control-label">Please leave a brief message <span class="info">(Optional)</span> <i class="infobtn fa fa-question-circle" data-toggle="popover" data-content="This message will be sent to your reference."></i> </label>
+                                    <apex:inputTextarea styleClass="form-control" id="RefNote" value="{!experience.Reference_Request_Note__c}" required="false" onkeyup="countChar(this, 255, 'RefNoteCount')" onfocus="countChar(this, 255, 'RefNoteCount')"/>
+                                    <div class="char-limit bb"><span class="char-count-label">Characters left:</span> <span id="RefNoteCount" class="char-count">{!255-len(experience.Reference_Request_Note__c)}</span> </div>
+                                    <apex:message for="RefNote" styleClass="custom-error-text" id="errormesReferDesc"/>
+                                  </div>
+                                </div>
+                              </div>
+                              <!--  end row --> 
+                              
+                                
+                              
+                            </apex:outputPanel>
+                          </apex:pageBlock>
+                          
+                        </apex:outputPanel>
+                        <div class="section-title">Supervisor's Phone <span class="info">(Optional)</span></div>
+                      
+                         <div class="row">
+                          <div class="col-sm-6">
+                            <div class="form-group">
+                              <label class="control-label">Phone Country Code</label>
+                              <apex:actionRegion >
+                                <apex:selectList styleClass="form-control" value="{!experience.Phone_Country_Code__c}" multiselect="false"  id="countrycode" size="1">
+                                  <apex:selectOption itemValue="" itemLabel="Select Country Code"/>
+                                  <apex:selectOptions value="{!listCountryCodeOptions}"/>
+                                  <apex:actionSupport event="onchange" rerender="phonecode" status="showcode" />
+                                </apex:selectList>
+                              </apex:actionRegion>
+                              <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showcode"/>
+                              <apex:message for="countrycode" styleClass="custom-error-radio" id="apexmess1"/>
+                            </div>
+                          </div>
+                          <div class="col-sm-6">
+                            <div class="form-group">
+                              <label class="control-label">Phone Number</label>
+                              <apex:outputpanel id="phonecode" layout="block">
+                                <div class="input-group"> <span class="input-group-addon">{!experience.Phone_Country_Code__c}</span>
+                                  <apex:inputField styleClass="form-control onlynumber" value="{!experience.Phone__c}"  id="phone" />
+                                </div>
+                              </apex:outputpanel>
+                            </div>
+                          </div>
+                        </div>
+                        <!--  end row -->
+                        
+                      </div>
+                      <!--  end panel body --> 
+                    </div>
+                    <!--  end panel  --> 
+                  
+                  </apex:outputPanel>
+                  <!--  end panelBlock  -->
+                
+                  
+                  <apex:outputPanel layout="block" id="panelblockRefAct" rendered="{!reference.Reference_Requested__c == true}">
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h4 class="panel-title">Please tell us about your employer</h4>
+                      </div>
+                      <div class="panel-body">
+                        
+                        <apex:outputPanel layout="block" id="panRequestedNonComplete" rendered="{!NOT(reference.Status__c == 'Complete' || reference.Status__c == 'Confirmed')}">
+                        <p>A request for reference was sent to <strong>{!reference.Name}</strong> at <strong>{!reference.Email__c}</strong> on 
+                        <strong>
+                        <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                        <apex:param value="{!reference.CreatedDate}" /> 
+                        </apex:outputText>
+                        </strong>
+                        .
+                        </p>
+                        
+                        <apex:commandLink action="{!iWantMyJSValues}" oncomplete="confDelete();" rerender="">
+                        Cancel Reference
+                        <apex:param name="ReferenceId" value="{!reference.id}" assignTo="{!referenceId}"/>
+                        <apex:param name="ExperienceId" value="{!experience.id}" assignTo="{!experienceId}"/>
+                        </apex:commandLink>
+                        
+                        <br/>
+                        <hr/>
+                        
+                        <div class="row">
+                          <div class="col-sm-6">
+                            <div class="form-group">
+                              <label class="control-label">First Name</label>
+                               <div data-toggle="tooltip" data-placement="top" title="You need to cancel the existing reference request to edit this field.">
+                              <apex:inputField styleClass="form-control" value="{!experience.First_Name__c}" id="firstsupervisor1" />
+                              <script>document.getElementById('{!$Component.firstsupervisor1}').disabled = true; </script>
+                              </div>
+                            </div>
+                          </div>
+                        
+                          <div class="col-sm-6">
+                            <div class="form-group">
+                              <label class="control-label">Last Name</label>
+                               <div data-toggle="tooltip" data-placement="top" title="You need to cancel the existing reference request to edit this field.">
+                              <apex:inputField styleClass="form-control" value="{!experience.Last_Name__c}" id="lastsupervisorind1" />
+                              <script>document.getElementById('{!$Component.lastsupervisorind1}').disabled = true; </script>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <!--  end row -->
+                          
+                          <apex:pageBlock id="ReferenceNoteBlock1">
+                            
+                              <div class="row">
+                                <div class="col-sm-12">
+                                  <div class="form-group">
+                                    <label class="control-label">Email</label>
+                                     <div data-toggle="tooltip" data-placement="top" title="You need to cancel the existing reference request to edit this field.">
+                                    <apex:inputField styleClass="form-control" value="{!experience.Email__c}" id="employemail1" />
+                                    <script>document.getElementById('{!$Component.employemail1}').disabled = true; </script>
+                                    </div>
+                                  </div>
+                                </div>
+                              <!-- 
+                              <div class="col-sm-6">
+                                  <div class="form-group">
+                                    <label class="control-label">Employers's Language
+                                    <i class="infobtn fa fa-question-circle" data-toggle="popover" 
+                                    data-content="Your employer will see your reference request in the language you choose."></i>
+                                    </label>
+		                            	<div data-toggle="tooltip" data-placement="top" title="You need to cancel the existing reference request to edit this field.">
+                                      	<apex:selectList styleClass="form-control" value="{!experience.Reference_Language__c}" multiselect="false" required="TRUE" id="refLang1" size="1">
+				                          <apex:selectOption itemValue="" itemLabel="--Select Reference Language--"/>
+				                          <apex:selectOption itemValue="en_US" itemLabel="English"/>
+				                          <apex:selectOption itemValue="es_SP" itemLabel="Spanish"/>
+				                          <apex:selectOption itemValue="pt_BR" itemLabel="Portuguese"/>
+				                      	</apex:selectList>
+				                      	<script>document.getElementById('{!$Component.refLang1}').disabled = true; </script>
+				                      	</div>
+		                            <apex:message for="refLang1" styleClass="custom-error-radio" id="apexmessrefLang1" />
+		                            
+		                            </div>
+	                             </div>
+	                              -->
+                              
+                              </div>
+                              <!--  end row -->
+                              
+                              <div class="row">
+                                <div class="col-sm-12">
+                                  <div class="form-group">
+                                    <label class="control-label">Please leave a brief message <span class="info">(Optional)</span> <i class="infobtn fa fa-question-circle" data-toggle="popover" data-content="This message will be sent to your reference."></i> </label>
+                                     <div data-toggle="tooltip" data-placement="top" title="You need to cancel the existing reference request to edit this field.">
+                                    <apex:inputTextarea disabled="true" styleClass="form-control" id="RefNote1" value="{!experience.Reference_Request_Note__c}" required="false" onkeyup="countChar(this, 255, 'RefNoteCount1')" onfocus="countChar(this, 255, 'RefNoteCount1')"/>
+                                    </div>
+                                    <div class="char-limit bb"><span class="char-count-label">Characters left:</span> <span id="RefNoteCount1" class="char-count">{!255-len(experience.Reference_Request_Note__c)}</span> </div>
+                                    <apex:message for="RefNote1" styleClass="custom-error-text" id="errormesReferDesc1"/>
+                                  </div>
+                                </div>
+                              </div>
+                              <!--  end row --> 
+                              
+                         
+                          </apex:pageBlock>
+                        </apex:outputPanel> 
+                        
+                               
+                        <apex:outputPanel layout="block" id="panRequestedComplete" rendered="{!reference.Status__c == 'Complete' || reference.Status__c == 'Confirmed'}">
+                        <p>We received a reference from <strong>{!reference.Name}</strong> at <strong>{!reference.Email__c}</strong>
+                                <!-- 
+                                on
+                                <strong>
+                                <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                                <apex:param value="{!reference.LastModifiedDate}" /> 
+                                </apex:outputText>
+                                </strong>
+                                 -->
+                                </p>
+                                
+                        </apex:outputPanel> 
+                        
+                        <div class="section-title">Supervisor's Phone <span class="info">(Optional)</span></div>
+                        
+                         <div class="row">
+                          <div class="col-sm-6">
+                            <div class="form-group">
+                              <label class="control-label">Phone Country Code</label>
+                              <apex:actionRegion >
+                                <apex:selectList styleClass="form-control" value="{!experience.Phone_Country_Code__c}" multiselect="false"  id="countrycode1" size="1">
+                                  <apex:selectOption itemValue="" itemLabel="Select Country Code"/>
+                                  <apex:selectOptions value="{!listCountryCodeOptions}"/>
+                                  <apex:actionSupport event="onchange" rerender="phonecode1" status="showcode1" />
+                                </apex:selectList>
+                              </apex:actionRegion>
+                              <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showcode1"/>
+                              <apex:message for="countrycode" styleClass="custom-error-radio" id="apexmess11"/>
+                            </div>
+                          </div>
+                          <div class="col-sm-6">
+                            <div class="form-group">
+                              <label class="control-label">Phone Number</label>
+                              <apex:outputpanel id="phonecode1" layout="block">
+                                <div class="input-group"> <span class="input-group-addon">{!experience.Phone_Country_Code__c}</span>
+                                  <apex:inputField styleClass="form-control onlynumber" value="{!experience.Phone__c}"  id="phone1" />
+                                </div>
+                              </apex:outputpanel>
+                            </div>
+                          </div>
+                        </div>
+                        <!--  end row -->
+                        
+                      </div>
+                      <!--  end panel body --> 
+                    </div>
+                    <!--  end panel  --> 
+                  
+                  </apex:outputPanel>
+                  <!--  end panelBlock  -->
+                    
+                  </apex:outputpanel>
+                  <!--  end "wrappertable" block --> 
+                  
+                </apex:outputPanel>
+         
+         
+                <apex:outputPanel id="panelgroup" layout="block" rendered="{!experience.Experience_Type__c == 'Daycare' || experience.Experience_Type__c == 'Camp' || experience.Experience_Type__c == 'Preschool/Kindergarten'
+                                || experience.Experience_Type__c == 'Teaching/Tutoring' || experience.Experience_Type__c == 'Coaching' || experience.Experience_Type__c == 'Church' || experience.Experience_Type__c == 'Orphanage'}"  >
+                 
+                    <div class="row">
+                    <div class="col-sm-12">
+                      <div class="form-group">
+                        <label class="control-label">How many children did you care for at this location?</label>
+                        <apex:inputField styleClass="form-control short" value="{!experience.Number_of_Children__c}" required="TRUE" id="numberchildren" />
+                      </div>
+                    </div>
+                  </div>
+                  <!--  end row -->
+                   
+                   <apex:pageBlock id="frequencyblock">  
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <div class="form-group">
+                          <label class="control-label">What were the ages of the children you cared for at this location?
+                          <i data-toggle="popover" data-content="Experience caring for children under 2 will encourage more host families to view your profile and match you with a family faster." class="infobtn fa fa-question-circle"></i>
+                          </label>
+                          <apex:actionRegion >
+                            <apex:inputField styleClass="form-control" value="{!experience.Children_Ages__c}" required="TRUE" id="childrenages" >
+                              <apex:actionSupport event="onchange" rerender="frequencyblock" status="showfreq"/>
+                            </apex:inputField>
+                          </apex:actionRegion>
+                          <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showfreq"/>
+                        </div>
+                      </div>
+                    </div>
+                    <!--  end row -->
+                    
+                    <apex:outputPanel layout="block" rendered="{!(contains(experience.Children_Ages__c, '0 - 1') || contains(experience.Children_Ages__c, '1 - 2')) && experience.Children_Ages__c != null}">
+                      <div class="row">
+                        <div class="col-sm-12">
+                          <div class="form-group">
+                            <label class="control-label">What percentage of the time did you spend caring for children under the age of 2?</label>
+                            <apex:inputField styleClass="form-control" value="{!experience.Under_2_Percentage__c}" required="TRUE" id="porcentage" />
+                          </div>
+                        </div>
+                      </div>
+                      <!--  end row --> 
+                      
+                    </apex:outputPanel>
+                  </apex:pageBlock>
+                  
+                  
+                  <div class="row">
+                    <div class="col-sm-7">
+                      <div class="form-group">
+                        <label class="control-label">Did you work with children with specials needs? 
+                        <i class="infobtn fa fa-question-circle"  data-toggle="popover" data-content="This includes speech and/ or language delays, autism spectrum disorder, cognitive delays, social & emotional disorders, learning differences and medical treatments such as insulin shots."></i>
+                        </label>
+                        <apex:actionRegion >
+                          <apex:selectRadio styleClass="radio" value="{!experience.Special_Needs_Indicated__c}" id="needs" required="true">
+                            <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                            <apex:selectOption itemValue="No" itemLabel="No"/>
+                            <apex:actionSupport event="onclick" rerender="needs_description" status="showneeds"/>
+                          </apex:selectRadio>
+                        </apex:actionRegion>
+                        <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showneeds"/>
+                        <apex:message for="needs" styleClass="custom-error-radio" id="errormess3"/>
+                      </div>
+                    </div>
+                  </div>
+                  <!--  end row -->
+                  
+                  <apex:pageBlock id="needs_description">
+                    <apex:outputPanel layout="block" rendered="{!experience.Special_Needs_Indicated__c == 'Yes'}" id="outputpanel2" >
+                      <div class="row">
+                        <div class="col-sm-12">
+                          <div class="form-group">
+                            <label class="control-label">If yes, please describe</label>
+                            <apex:inputTextarea styleClass="form-control" id="needsDesc" value="{!experience.Special_Needs_Description__c}" required="TRUE" onkeyup="countChar(this, 255, 'needsDescCount')" onfocus="countChar(this, 255, 'needsDescCount')"/>
+                            <div class="char-limit bb"><span class="char-count-label">Characters left:</span> <span id="needsDescCount" class="char-count"> {!255-len(experience.Special_Needs_Description__c) }</span> </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!--  end row --> 
+                    </apex:outputPanel>
+                  </apex:pageBlock>
+                </apex:outputPanel>
+                <apex:outputpanel layout="block" id="group">
+                  <apex:outputPanel layout="block" rendered="{!experience.Experience_Type__c == 'Daycare' || experience.Experience_Type__c == 'Camp' || experience.Experience_Type__c == 'Preschool/Kindergarten'
+              || experience.Experience_Type__c == 'Teaching/Tutoring' || experience.Experience_Type__c == 'Coaching' || experience.Experience_Type__c == 'Church' || experience.Experience_Type__c == 'Orphanage'}"  >
+                    
+                  <apex:outputPanel layout="block" id="panelblockGroup" rendered="{!reference.Reference_Requested__c == false}">    
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h4 class="panel-title">Please tell us about your supervisor</h4>
+                      </div>
+                      <div class="panel-body">
+                        <div class="row">
+                          <div class="col-sm-6">
+                            <div class="form-group">
+                              <label class="control-label">Supervisor's First Name</label>
+                              <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!experience.First_Name__c}" required="TRUE" id="firstsupervisorgroup"  />
+                            </div>
+                          </div>
+                        
+                          <div class="col-sm-6">
+                            <div class="form-group">
+                              <label class="control-label">Supervisor's Last Name</label>
+                              <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!experience.Last_Name__c}" required="TRUE" id="lastsupervisorgroup" />
+                            </div>
+                          </div>
+                        </div>
+                        <!--  end row -->
+                       
+                       <div class="row">
+                            <div class="col-sm-12">
+                              <div class="form-group margin-b">
+                              <apex:actionRegion >
+                                  <apex:inputField styleClass="no-margin" value="{!experience.IsReference__c}" id="ReferenceContact1">
+                                    <apex:actionSupport event="onclick" rerender="ReferenceNoteBlockGroup" status="showref11"/>
+                                  </apex:inputField>
+                                </apex:actionRegion>
+                                <label class="control-label inline-block">This employer is not a family member or a relative. I'd like to use them as a reference.</label>
+                                <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showref11"/>
+                              </div>
+                            </div>
+                          </div>
+                          <!--  end row -->
+                          
+                        
+                        <apex:pageBlock id="ReferenceNoteBlockGroup">
+                          <apex:outputPanel layout="block"  rendered="{!experience.IsReference__c == true}">
+                            <div class="row">
+	                              	<div class="col-sm-12">
+	                                <div class="form-group">
+	                                  <label class="control-label">Supervisor's Email</label>
+	                                  <apex:inputField styleClass="form-control" value="{!experience.Email__c}" required="TRUE" id="employemailgroup" />
+	                                </div>
+	                            	</div>
+                            		<!-- 
+                            		<div class="col-sm-6">
+                                    <div class="form-group">
+                                    <label class="control-label">Supervisor's Language
+                                    <i class="infobtn fa fa-question-circle" data-toggle="popover" 
+                                    data-content="Your employer will see your reference request in the language you choose."></i>
+                                    </label>
+		                              <apex:selectList styleClass="form-control" value="{!experience.Reference_Language__c}" multiselect="false" required="TRUE" id="refLang2" size="1">
+				                          <apex:selectOption itemValue="" itemLabel="--Select Reference Language--"/>
+				                          <apex:selectOption itemValue="en_US" itemLabel="English"/>
+				                          <apex:selectOption itemValue="es_SP" itemLabel="Spanish"/>
+				                          <apex:selectOption itemValue="pt_BR" itemLabel="Portuguese"/>
+				                      </apex:selectList>
+		                            <apex:message for="refLang2" styleClass="custom-error-radio" id="apexmessrefLang2" />
+		                            </div>
+	                             	</div>
+	                             	 -->
+                            
+                            </div>
+                            <!--  end row -->
+                            
+                            <div class="row">
+                              <div class="col-sm-12">
+                                <div class="form-group no-margin">
+                                  <label class="control-label">Please leave a brief message <span class="info">(Optional)</span> <i class="infobtn fa fa-question-circle" data-toggle="popover" data-content="This message will be sent to your reference."></i></label>
+                                  <apex:inputTextarea styleClass="form-control" id="RefNotegroup" value="{!experience.Reference_Request_Note__c}" required="false" onkeyup="countChar(this, 255, 'RefNotegroupCount')" onfocus="countChar(this, 255, 'RefNotegroupCount')"/>
+                                  <div class="char-limit bb"><span class="char-count-label">Characters left:</span> <span id="RefNotegroupCount" class="char-count">{!255-len(experience.Reference_Request_Note__c)}</span> </div>
+                                  <apex:message for="RefNotegroup" styleClass="custom-error-text" id="errormesReferDescGroup"/>
+                                </div>
+                              </div>
+                            </div>
+                            <!--  end row --> 
+                            
+                          </apex:outputPanel>
+                        </apex:pageBlock>
+                          
+                        
+                        <div class="section-title">Supervisor's Phone <span class="info">(Optional)</span></div>
+                         <div class="row">
+                          <div class="col-sm-6">
+                            <div class="form-group">
+                              <label class="control-label">Country Code</label>
+                              <apex:actionRegion >
+                                <apex:selectList styleClass="form-control"  value="{!experience.Phone_Country_Code__c}" multiselect="false"  id="countrycodesuper" size="1">
+                                  <apex:selectOption itemValue="" itemLabel="Select Country Code" />
+                                  <apex:selectOptions value="{!listCountryCodeOptions}" />
+                                  <apex:actionSupport event="onchange" rerender="phonecodesuper" status="showcodesuper" />
+                                </apex:selectList>
+                              </apex:actionRegion>
+                              <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showcodesuper" />
+                              <apex:message for="countrycodesuper" styleClass="custom-error-radio" id="apexmess1super" />
+                            </div>
+                          </div>
+                          <div class="col-sm-6">
+                            <div class="form-group">
+                              <label class="control-label">Phone Number</label>
+                              <apex:outputpanel id="phonecodesuper" layout="block">
+                                <div class="input-group"><span class="input-group-addon">{!experience.Phone_Country_Code__c}</span>
+                                  <apex:inputField styleClass="form-control onlynumber"
+                            value="{!experience.Phone__c}"  id="phonesuper" />
+                                </div>
+                              </apex:outputpanel>
+                            </div>
+                          </div>
+                        </div>
+                        <!--  end row -->
+                        
+                        
+                      </div>
+                      <!-- end panel body --> 
+                    </div>
+                    <!-- end panel --> 
+                    </apex:outputPanel><!-- end panelBlock Is Reference requested == true --> 
+                    
+                    <apex:outputPanel layout="block" id="panelblockGroupRefYes" rendered="{!reference.Reference_Requested__c == true}">    
+                    
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h4 class="panel-title">Please tell us about your supervisor</h4>
+                      </div>
+                      <div class="panel-body">
+                      
+                      <apex:outputPanel layout="block" id="panRequestedNonCompleteGroup" rendered="{!NOT(reference.Status__c == 'Complete' || reference.Status__c == 'Confirmed')}">
+                      <p>A request for reference was sent to <strong>{!reference.First_Name__c} {!reference.Last_Name__c}</strong> at <strong>{!reference.Email__c}</strong> on 
+                        <strong>
+                        <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                        <apex:param value="{!reference.CreatedDate}" /> 
+                        </apex:outputText>
+                        </strong>
+                        .
+                        </p>
+                        
+                        <apex:commandLink action="{!iWantMyJSValues}" oncomplete="confDelete();" rerender="">
+                        Cancel Reference
+                        <apex:param name="ReferenceId" value="{!reference.id}" assignTo="{!referenceId}"/>
+                        <apex:param name="ExperienceId" value="{!experience.id}" assignTo="{!experienceId}"/>
+                        </apex:commandLink>
+                        
+                        <br/>
+                        <hr/>
+                        
+                        <div class="row">
+                          <div class="col-sm-6">
+                            <div class="form-group">
+                              <label class="control-label">Supervisor's First Name</label>
+                               <div data-toggle="tooltip" data-placement="top" title="You need to cancel the existing reference request to edit this field.">
+                              <apex:inputField styleClass="form-control" value="{!experience.First_Name__c}" id="firstsupervisorgroup1"/>
+                              <script>document.getElementById('{!$Component.firstsupervisorgroup1}').disabled = true; </script>
+                              </div>
+                            </div>
+                          </div>
+                        
+                          <div class="col-sm-6">
+                            <div class="form-group">
+                              <label class="control-label">Supervisor's Last Name</label>
+                              <div data-toggle="tooltip" data-placement="top" title="You need to cancel the existing reference request to edit this field.">
+                              <apex:inputField styleClass="form-control" value="{!experience.Last_Name__c}" id="lastsupervisorgroup1" />
+                              <script>document.getElementById('{!$Component.lastsupervisorgroup1}').disabled = true; </script>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <!--  end row -->
+                        
+                        <apex:pageBlock id="ReferenceNoteBlockGroup1">
+                        
+                            <div class="row">
+                              <div class="col-sm-12">
+                                <div class="form-group">
+                                  <label class="control-label">Supervisor's Email</label>
+                                  <div data-toggle="tooltip" data-placement="top" title="You need to cancel the existing reference request to edit this field.">
+                                  <apex:inputField styleClass="form-control" value="{!experience.Email__c}" id="employemailgroup1" />
+                                  <script>document.getElementById('{!$Component.employemailgroup1}').disabled = true; </script>
+                                  </div>
+                                </div>
+                              </div>
+                            	
+                             <!-- 
+                             <div class="col-sm-6">
+                                  <div class="form-group">
+                                    <label class="control-label">Supervisor's Language
+                                    <i class="infobtn fa fa-question-circle" data-toggle="popover" 
+                                    data-content="Your employer will see your reference request in the language you choose."></i>
+                                    </label>
+		                            	<div data-toggle="tooltip" data-placement="top" title="You need to cancel the existing reference request to edit this field.">
+                                      	<apex:selectList styleClass="form-control" value="{!experience.Reference_Language__c}" multiselect="false" required="TRUE" id="refLang3" size="1">
+				                          <apex:selectOption itemValue="" itemLabel="--Select Reference Language--"/>
+				                          <apex:selectOption itemValue="en_US" itemLabel="English"/>
+				                          <apex:selectOption itemValue="es_SP" itemLabel="Spanish"/>
+				                          <apex:selectOption itemValue="pt_BR" itemLabel="Portuguese"/>
+				                      	</apex:selectList>
+				                      	<script>document.getElementById('{!$Component.refLang3}').disabled = true; </script>
+				                      	</div>
+		                            <apex:message for="refLang3" styleClass="custom-error-radio" id="apexmessrefLang3" />
+		                            </div>
+	                             </div>
+	                              -->	
+                            
+                            
+                            </div>
+                            <!--  end row -->
+                            
+                            <div class="row">
+                              <div class="col-sm-12">
+                                <div class="form-group margin-b">
+                                  <label class="control-label">Please leave a brief message <span class="info">(Optional)</span> <i class="infobtn fa fa-question-circle" data-toggle="popover" data-content="This message will be sent to your reference."></i></label>
+                                  <div data-toggle="tooltip" data-placement="top" title="You need to cancel the existing reference request to edit this field.">
+                                  <apex:inputTextarea disabled="true" styleClass="form-control" id="RefNotegroup" value="{!experience.Reference_Request_Note__c}" required="false" onkeyup="countChar(this, 255, 'RefNotegroupCount')" onfocus="countChar(this, 255, 'RefNotegroupCount')"/>
+                                  </div>
+                                  <div class="char-limit bb"><span class="char-count-label">Characters left:</span> <span id="RefNotegroupCount" class="char-count">{!255-len(experience.Reference_Request_Note__c)}</span> </div>
+                                  <apex:message for="RefNotegroup" styleClass="custom-error-text" id="errormesReferDescGroup"/>
+                                </div>
+                              </div>
+                            </div>
+                            <!--  end row --> 
+                            
+                          
+                        </apex:pageBlock> 
+                        </apex:outputPanel>
+                        
+                                
+                        <apex:outputPanel layout="block" id="panRequestedCompleteGroup" rendered="{!reference.Status__c == 'Complete' || reference.Status__c == 'Confirmed'}">
+                        <p>We received a reference from <strong>{!reference.First_Name__c} {!reference.Last_Name__c}</strong> at <strong>{!reference.Email__c}</strong>
+                                <!-- 
+                                on
+                                <strong>
+                                <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                                <apex:param value="{!reference.LastModifiedDate}" /> 
+                                </apex:outputText>
+                                </strong>
+                                 -->
+                                </p>
+                                
+                        </apex:outputPanel> 
+                          
+                        
+                        <div class="section-title">Supervisor's Phone <span class="info">(Optional)</span></div>
+                         <div class="row">
+                          <div class="col-sm-6">
+                            <div class="form-group">
+                              <label class="control-label">Country Code</label>
+                              <apex:actionRegion >
+                                <apex:selectList styleClass="form-control"  value="{!experience.Phone_Country_Code__c}" multiselect="false"  id="countrycodesuper1" size="1">
+                                  <apex:selectOption itemValue="" itemLabel="Select Country Code" />
+                                  <apex:selectOptions value="{!listCountryCodeOptions}" />
+                                  <apex:actionSupport event="onchange" rerender="phonecodesuper1" status="showcodesuper1" />
+                                </apex:selectList>
+                              </apex:actionRegion>
+                              <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showcodesuper1" />
+                              <apex:message for="countrycodesuper" styleClass="custom-error-radio" id="apexmess1super1" />
+                            </div>
+                          </div>
+                          <div class="col-sm-6">
+                            <div class="form-group">
+                              <label class="control-label">Phone Number</label>
+                              <apex:outputpanel id="phonecodesuper1" layout="block">
+                                <div class="input-group"><span class="input-group-addon">{!experience.Phone_Country_Code__c}</span>
+                                  <apex:inputField styleClass="form-control onlynumber"
+                            value="{!experience.Phone__c}"  id="phonesuper1" />
+                                </div>
+                              </apex:outputpanel>
+                            </div>
+                          </div>
+                        </div>
+                        <!--  end row -->
+                        
+                        
+                      </div>
+                      <!-- end panel body --> 
+                    </div>
+                    <!-- end panel --> 
+                    </apex:outputPanel> <!-- end panelBlock Is Reference requested == true --> 
+                    
+                    
+                    
+                    
+                    
+                  </apex:outputpanel>
+                </apex:outputpanel>
+              </apex:outputpanel>
+            </apex:outputpanel>
+            <div class="row">
+              <div class="col-sm-12 margin-t">
+                <apex:outputPanel layout="block" id="buttons">
+                  <apex:outputLink styleClass="btn btn-link btn-lg float"  value="/apex/apc_ap_main_experience?id={!applicantInfo.Id}" id="backlink"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                  <apex:outputText rendered="{!experience.Experience_Type__c == 'Babysitting' || experience.Experience_Type__c == 'Nanny' || experience.Experience_Type__c == 'Au Pair'
+              || experience.Experience_Type__c == 'Sibling/Family'}"  >
+                    <apex:commandlink styleClass="btn btn-primary btn-lg" id="SaveContinueInd"  action="{!navigator}" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                      <apex:param name="nextPage" value="/apex/apc_ap_main_experience"/>
+                      <apex:param name="reDirectPage" value="true"/>
+                      <apex:param name="isExperienced" value="true" assignTo="{!isExperienced}"/>
+                      <apex:param name="saveExperienceDetail" value="true" />
+                      <apex:param name="pageId" value="021"/>
+                      <apex:commandButton value="Save & Continue" />
+                    </apex:commandlink>
+                  </apex:outputText>
+                  <apex:outputText rendered="{!experience.Experience_Type__c == 'Daycare' || experience.Experience_Type__c == 'Camp' || experience.Experience_Type__c == 'Preschool/Kindergarten'
+              || experience.Experience_Type__c == 'Teaching/Tutoring' || experience.Experience_Type__c == 'Coaching' || experience.Experience_Type__c == 'Church' || experience.Experience_Type__c == 'Orphanage' || experience.Experience_Type__c == null}"  >
+                    <apex:commandlink styleClass="btn btn-primary btn-lg"  id="SaveContinueGroup" action="{!navigator}" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                      <apex:param name="nextPage" value="/apex/apc_ap_main_experience"/>
+                      <apex:param name="reDirectPage" value="true"/>
+                      <apex:param name="isExperienced" value="true" assignTo="{!isExperienced}"/>
+                      <apex:param name="pageId" value="021"/>
+                      <apex:commandButton value="Save & Continue" />
+                    </apex:commandlink>
+                  </apex:outputText>
+                </apex:outputPanel>
+              </div>
+            </div>
+            
+          <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                  <div class="modal-body">
+                    <p>Are you sure you want to cancel this reference?</p>
+                  </div>
+                  <div class="modal-footer">
+                    <apex:commandLink styleClass="btn btn-primary" action="{!deleteReferenceAPC}" style="text-decoration: none;" immediate="true">
+                      <apex:commandButton value="Yes" id="yesbutton"/>
+                    </apex:commandLink>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--  end modal window --> 
+            
+          </apex:form>
+        </div>
+        <!-- end column  -->
+        
+        <div id="app-side" class="col-md-3 col-md-pull-8">
+          <c:menu_side_apc_ap_basic ApplicantInfo="{!applicantInfo}" />
+        </div>
+        <!-- end column  --> 
+        
+      </div>
+      <!-- end row --> 
+      
+<script>     
+var j$ = jQuery.noConflict();
+
+function confDelete(){
+    j$('#myModal').modal();
+} 
+
+function changedate(){
+    var aux = j$('.boxdate').is(':checked');
+    if(aux === true){
+    j$('.dp-group').hide();
+    j$('.current').show();
+    }else{
+    j$('.dp-group').show();
+    j$('.current').hide();
+    }
+}
+
+
+</script> 
+    </apex:define>
+  </apex:composition>
+</apex:page>

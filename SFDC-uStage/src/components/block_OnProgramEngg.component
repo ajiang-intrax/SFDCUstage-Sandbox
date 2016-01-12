@@ -1,0 +1,21 @@
+<apex:component id="block_OnProgramEngg">
+	<apex:attribute name="OnProgramEngg" description="Decides Second Job option" type="boolean" required="false" default="false"/>
+	<apex:attribute name="engagementId" description="Contains the EngagementId related to the last Accepted App" type="string" required="false" default=""/>
+	<div class="block">
+		<apex:outputPanel >
+            <div class="block-header">
+                <div class="title">Report a Secondary Job</div>
+            </div>
+            <div class="block-body">
+            	<apex:outputPanel layout="block" styleClass="form-button no-float no-margin" >
+            		<p class="app-teaser">
+						If you have secured a secondary job, you are required to report the job details to Intrax. Please use this form to provide the required information and documents. Before you can begin working at this additional job, Intrax will need to review and approve the details you have provided.
+					</p>
+	                    <apex:outputLink value="participant_second_job_Info?id={!engagementId}&isPrimarySOA=false" >
+	                    	<apex:outputText value="Submit Secondary Job Info"/>
+	                    </apex:outputLink>
+	            </apex:outputPanel>   
+            </div>
+     	</apex:outputPanel>
+     </div>
+</apex:component>

@@ -1,0 +1,26 @@
+<apex:page docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper" id="ayusa-student-preapp-academic-language-skills">
+        <apex:messages />
+        <h1>IGI Audit Partner Application</h1>
+        <h2>Audit Form</h2>
+        <div class="white-box clearfix">
+            <div class="flow two_thirds">
+          <flow:interview buttonLocation="bottom" name="IGI_PartnerAppAUDIT" finishLocation="{!pageThankyouIGI}">
+          	<apex:param name="pApplicantID" value="{!$CurrentPage.parameters.Id}"/>
+          	<!--  <apex:param name="pType" value="Partner"/>--> 
+          </flow:interview>
+            </div>
+        </div>
+      </div>
+    </apex:define>
+  </apex:composition> 
+</apex:page>
+
+
+<!--  <apex:page StandardController="Applicant_Info__c" extensions="FlowController">
+  <flow:interview name="IGI_PartnerAppAUDIT" finishLocation="{!finishPage}">
+     <apex:param name="pApplicantID" value="{!Id}"/>
+     </flow:interview>
+</apex:page>-->

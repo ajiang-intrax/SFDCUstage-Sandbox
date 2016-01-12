@@ -1,0 +1,155 @@
+<apex:page docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+    
+    <!-- UI Blocker component for Background processing -->
+    <c:BlockUI />
+    
+    <apex:composition template="IntraxTemplate_Vs1">
+        <apex:define name="body">
+            <div class="wrapper" id="IGI_PreApp_Experience">    
+                <apex:form >
+                
+                    <!-- Heading -->
+                    <div class="page-header clearfix">
+                        <h1 class="page-title">Intrax Global Internship Application</h1>
+                        
+                        <!-- Back To Main Page Link -->
+                        <div class="back-to-main"><apex:outputLink value="apex/igi_preapp_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+                        </div>
+                       
+                       <!-- Section Header -->  
+                       <div class="section-header clearfix">
+                            <h2>Language Skills</h2>
+                            <!-- 
+                            <div class="progress-bar">Page 5 <em>of</em> 6</div>
+                             -->
+                       </div> 
+                        
+                       <!-- Panel -->   
+                       <div class="white-box clearfix">   
+                            <div class="panel two_thirds">
+                                                 
+                            <ul>Explanation of Language Levels:
+									<li>Language Level 5 = Native/Fluent Proficiency </li>
+									<li>Language Level 4 = Advanced Proficiency</li>
+									<li>Language Level 3 = Working Proficiency </li>
+									<li>Language Level 2 = Limited Proficiency </li>
+									<li>Language Level 1 = Elementary Proficiency</li>
+							</ul>
+							<br/>
+                            <!-- Primary Language -->
+                            <div class="form-row">
+                                <div class="form-label left ">Primary Language<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!applicantInfo.Language_1__c}" required="TRUE"/>
+                                </div>
+                                <div class="dropt"> <i class="icon-question-sign"></i>
+                                    <span>{!$ObjectType.Applicant_Info__c.Fields.Language_1__c.inlineHelpText}</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Primary language Level -->
+                            <div class="form-row">
+                                <div class="form-label left ">Primary Language Level<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!applicantInfo.Language_1_Proficiency__c}" required="TRUE"/>
+                                </div>
+                            </div>
+                            
+                            <!-- Secondary language -->
+                            <div class="form-row">
+                                <div class="form-label left ">Second Language</div>
+                                <div class="form-field">
+                                <apex:ActionRegion >
+                                    <apex:inputField value="{!applicantInfo.Language_2__c}" required="FALSE">
+                                    <apex:ActionSupport event="onchange" rerender="secondLangLevel" status="secondlangstatus"/>
+                                    </apex:inputField>
+                                </apex:ActionRegion>
+                                </div>
+                            </div>
+                            <p>
+                            <apex:actionStatus id="secondlangstatus" startStyleClass="feedback">
+                            <apex:facet name="start" >
+                                <i class="no-float icon-spinner icon-spin icon-2x pull-left"></i>  <strong>Please Wait.....</strong>
+                                </apex:facet>
+                            </apex:actionStatus>
+                            </p>
+                            <!-- Secondary language level -->
+                            <apex:PageBlock id="secondLangLevel" >
+                            <apex:outputPanel layout="block" rendered="{!NOT(ISBLANK(applicantInfo.Language_2__c))}">
+                            <div class="form-row">
+                                <div class="form-label left ">Second Language Level<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!applicantInfo.Language_2_Proficiency__c}" required="true"/>
+                                </div>
+                            </div>
+                            </apex:outputPanel>
+                            </apex:PageBlock>
+                            <!-- Tertiary language -->
+                            <div class="form-row">
+                                <div class="form-label left ">Third Language</div>
+                                <div class="form-field">
+                                <apex:ActionRegion >
+                                    <apex:inputField value="{!applicantInfo.Language_3__c}" required="FALSE">
+                                    <apex:ActionSupport event="onchange" rerender="thirdLangLevel" status="thirdlangstatus"/>
+                                    </apex:inputField>
+                                </apex:ActionRegion>
+                                </div>
+                            </div>
+                            
+                            <p>
+                            <apex:actionStatus id="thirdlangstatus" startStyleClass="feedback">
+                            <apex:facet name="start" >
+                                <i class="no-float icon-spinner icon-spin icon-2x pull-left"></i>  <strong>Please Wait.....</strong>
+                                </apex:facet>
+                            </apex:actionStatus>
+                            </p>
+                            
+                            <!-- Tertiary language level -->
+                            <apex:PageBlock id="thirdLangLevel" >
+                            <apex:outputPanel layout="block" rendered="{!NOT(ISBLANK(applicantInfo.Language_3__c))}">
+                            <div class="form-row">
+                                <div class="form-label left ">Third Language Level<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!applicantInfo.Language_3_Proficiency__c}" required="TRUE"/>
+                                </div>
+                            </div>
+                            </apex:outputPanel>
+                            </apex:PageBlock>
+                            
+                              <!-- Other languages -->
+                            <div class="form-row">
+                                <div class="form-label left ">Other languages</div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!applicantInfo.Other_Languages__c}" required="FALSE"/>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+          
+                                <!-- Back Command Link -->
+                                <div class="form-link">
+				              		<apex:outputLink value="/apex/IGI_PreApp_Education_Details?id={!applicantInfo.Id}"><i class="icon-chevron-left"></i> <span>Back</span></apex:outputLink>
+				                </div>
+                                      
+                                <!-- Next Command Link -->      
+                                <div class="form-button">
+                                    <apex:commandlink styleClass="next" action="{!navigator}">
+                                        <apex:param name="nextPage" value="/apex/IGI_Preapp_Experience"/>
+                                        <apex:param name="docType" value="Resume" assignTo="{!docType}"/>
+                                        <apex:param name="reDirectPage" value="true"/> 
+                                        <apex:commandButton value="Save & Continue" />
+                                        <i class="icon-chevron-right"></i>
+                                    </apex:commandlink>
+                                </div>    
+                            </div>  
+                        </div>
+                            
+                        <div class="panel one_third last aside">
+                            <!--  <c:Badge_Centers_Contact />     -->
+                        </div>
+                    </div>
+                </apex:form>
+            </div>
+        </apex:define>
+    </apex:composition>
+</apex:page>

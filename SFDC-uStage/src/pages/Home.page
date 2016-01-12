@@ -1,0 +1,20 @@
+<apex:page id="Home" docType="html-5.0" controller="User_Controller" standardStylesheets="false" showHeader="false" action="{!CheckLogin}">
+        <apex:composition template="IntraxTemplate_Vs2" >
+            <apex:define name="body"> 
+                
+                <!-- HF Home Layouts--> 
+                <c:layout_home_hf_ayu rendered="{! ActiveUserType == 'Host Family' }" />
+                
+                <!-- Partner Home Layouts -->
+                <c:Layout_Home_Default_Partner rendered="{! ActiveUserType == 'Partner'}" />
+                
+                <c:Layout_Home_Default_Host_Company rendered="{! ActiveUserType == 'Host Company'}" />
+                
+                <!--  <c:layout_home_participant_wt rendered="{! ActiveUserType == 'Participant'}" intrax_Id="{!intraxId}" engagementId="{!EngagementId}" accommodation="{!AccSiteInfo}" OnProgramEngg="{!OnProgramEngg}" /> -->
+                
+                <c:layout_home_participant_wt rendered="{! IF(IsWTParticipant || IsAYUSAParticipant, true, false)}" intrax_Id="{!intraxId}" engagementId="{!EngagementId}" accommodation="{!AccSiteInfo}" OnProgramEngg="{!OnProgramEngg}" />
+                <c:layout_home_participant_igi rendered="{! IF(IsIGIParticipant, true, false)}" intrax_Id="{!intraxId}" engagementId="{!EngagementId}" accommodation="{!AccSiteInfo}" OnProgramEngg="{!OnProgramEngg}" />
+                       
+            </apex:define>
+        </apex:composition>
+</apex:page>

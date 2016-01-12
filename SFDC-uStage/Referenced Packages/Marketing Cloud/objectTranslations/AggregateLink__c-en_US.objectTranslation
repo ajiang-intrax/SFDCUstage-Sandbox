@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Aggregate Link Level Detail</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Aggregate Link Level Details</value>
+    </caseValues>
+    <fields>
+        <label><!-- Marketing Cloud Link ID --></label>
+        <name>ExactTargetLinkID__c</name>
+    </fields>
+    <fields>
+        <help><!-- The date and time this link was last clicked --></help>
+        <label><!-- Last Clicked --></label>
+        <name>Last_Clicked__c</name>
+    </fields>
+    <fields>
+        <label><!-- Link URL --></label>
+        <name>LinkURL__c</name>
+    </fields>
+    <fields>
+        <help><!-- The aggregate number of times this link has been clicked --></help>
+        <label><!-- Number of Total Clicks --></label>
+        <name>NumberOfTotalClicks__c</name>
+    </fields>
+    <fields>
+        <help><!-- The aggregate unique number of times this link has been clicked (unique means one click per subscriber) --></help>
+        <label><!-- Number of Unique Clicks --></label>
+        <name>NumberOfUniqueClicks__c</name>
+    </fields>
+    <fields>
+        <label><!-- Send Definition --></label>
+        <name>Send_Definition__c</name>
+        <relationshipLabel><!-- Aggregate Link Level Details --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Triggered Send --></label>
+        <name>TriggeredSendDefinition__c</name>
+        <relationshipLabel><!-- Aggregate Link Level Details --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Unique Link ID --></label>
+        <name>Unique_Link_ID__c</name>
+    </fields>
+    <layouts>
+        <layout>Aggregate Link Level Detail Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

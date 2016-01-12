@@ -1,0 +1,63 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardStylesheets="false" showHeader="false"  title="Decline Application" id="apc_ap_main_pr_approve" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}">
+	<apex:variable var="allowApprove" value="allowed" rendered="{!CONTAINS(applicantinfo.PageStatus_Complete__c,'012') && CONTAINS(applicantinfo.PageStatus_Complete__c,'013') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'014') && CONTAINS(applicantinfo.PageStatus_Complete__c,'015') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'016') && CONTAINS(applicantinfo.PageStatus_Complete__c,'017') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'018') && CONTAINS(applicantinfo.PageStatus_Complete__c,'019') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'020') && CONTAINS(applicantinfo.PageStatus_Complete__c,'021') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'024') && CONTAINS(applicantinfo.PageStatus_Complete__c,'025') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'026') && CONTAINS(applicantinfo.PageStatus_Complete__c,'038') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'028') && CONTAINS(applicantinfo.PageStatus_Complete__c,'029') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'031') && CONTAINS(applicantinfo.PageStatus_Complete__c,'034') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'036') && CONTAINS(applicantinfo.PageStatus_Complete__c,'037') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'039') && CONTAINS(applicantinfo.PageStatus_Complete__c,'040') &&
+								CONTAINS(applicantinfo.PageStatus_Complete__c,'041') && CONTAINS(applicantinfo.PageStatus_Complete__c,'042') &&
+								applicantInfo.Application_Type__c=='Original' &&
+								applicantInfo.Application_Level__c=='Main' &&
+								applicantInfo.Application_Stage__c=='Submitted' &&
+								$Profile.Name =='OCPM Agent Portal'}"/> 
+  <apex:composition template="intraxtemplate_vs3">
+  	<apex:define name="body">
+      <c:block_header_apc_ap_application />
+       <div id="app-page" class="row">
+        <div id="app-focus" class="col-md-8 col-md-push-3">
+          
+          <c:block_app_completion ApplicantInfo="{!applicantInfo}" userProfileName="{!userProfileName}"  />
+          <h1>Approve Application</h1>
+          <apex:outputPanel rendered="{!allowApprove == 'allowed'}">
+          <apex:variable var="ReasonValue" value="Failed Requirements" />
+          <apex:form styleClass="form-vertical ws-validate" id="webform">
+            <apex:pageBlock id="Reasonblock">
+             <p class="lead">Clicking below  will confirm that the application has been fully reviewed and accepted by your agency.  This action will submit the application to AuPairCare for review.</p>
+              </apex:pageBlock>
+           
+           <div class="row margin-t4">
+              <div class="col-sm-12">
+                <apex:commandlink styleClass="btn btn-primary btn-lg" action="{!saveAPCApptoInReview}" id="approvelink"  onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                 
+                 Approve Application
+                </apex:commandlink>
+              </div>
+            </div>
+           
+          </apex:form>
+          </apex:outputPanel>
+          
+          <apex:outputPanel rendered="{!allowApprove != 'allowed'}">
+          	<apex:pageBlock id="notallowedblock">
+             <p class="lead">Application is not yet ready to be sent to AuPairCare. Please return to this page once you see a checkmark next to each topic.</p>
+             
+              </apex:pageBlock>
+          </apex:outputPanel>
+        </div>
+        <!-- end column  -->
+        
+       <div id="app-side" class="col-md-3 col-md-pull-8">
+          <c:menu_side_apc_ap_basic ApplicantInfo="{!applicantInfo}" />
+        </div>
+        <!-- end column  --> 
+      </div>
+      <!-- end row --> 
+      
+    </apex:define>
+  </apex:composition>
+</apex:page>

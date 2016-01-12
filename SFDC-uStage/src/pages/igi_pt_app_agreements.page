@@ -1,0 +1,52 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardController="Applicant_Info__c"
+	extensions="AppEngine_Controller" action="{!checkLogin}"
+	standardStylesheets="false" showHeader="false"  title="Agreements">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_igi_pt_application userAgentCheck="{!userAgentCheck}"/>
+      <div class="row">
+        <div class="col-md-7 col-md-push-3">
+          
+          <h1>Program Agreements</h1>
+          <apex:Messages styleClass="custom-error-pagelevel"
+								id="messageapex" />
+ 
+          <apex:form styleClass="form-horizontal" >
+           
+          <apex:outputPanel layout="block" rendered="{!applicantinfo.Terms_Accepted__c == true || ($CurrentPage.parameters.event='SignComplete')}">
+              <p class="lead">Thank you for signing the IGI Program Terms and Conditions. Please click the button below to view a copy of the agreement.</p> 
+            </apex:outputPanel>
+            
+            <apex:outputPanel layout="block" rendered="{!applicantinfo.Terms_Accepted__c == false && NOT(($CurrentPage.parameters.event='SignComplete'))}">
+              <p class="lead"> You have not yet signed IGI Program Terms and Conditions. Please click the button below to view and sign the document.</p>
+            </apex:outputPanel>
+             
+            <apex:outputPanel layout="block" rendered="{!msgDisplay == 'Exception'}">
+              <p class="alert alert-danger">{!msgDisplay}</p>
+            </apex:outputPanel>                        
+
+             <apex:outputLink target="_blank" disabled="true" styleClass="btn btn-default btn-lg" value="/apex/APCHF_TC_Agreement?id={!applicantInfo.Id}">
+	             View Terms and Conditions
+	            </apex:outputLink>
+            
+            <div class="form-group">
+              <div class="col-sm-12 margin-t">
+                <apex:outputLink styleClass="btn btn-link btn-lg" value="/apex/igi_pt_app_media?id={!applicantInfo.Id}&docType=Participant-Photo" id="backlink"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+              </div>
+            </div>
+          </apex:form>
+        </div>
+        <!-- end column -->
+        
+        <div class="col-md-3 col-md-pull-7">
+          <apex:form >
+            <c:menu_igi_pt_app ApplicantInfo="{!applicantInfo}" personInfo="{!personInfo}" />
+          </apex:form>
+        </div>
+        <!--  end column --> 
+      </div>
+      <!-- end row --> 
+      
+    </apex:define>
+  </apex:composition>
+</apex:page>

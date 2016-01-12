@@ -1,0 +1,126 @@
+<apex:page id="centers_app_my_visa_documents" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+    <apex:composition template="IntraxTemplate_Vs1">
+        <apex:define name="body">
+            <div class="wrapper" id="centers_preapp_welcome_to_intrax">
+                <apex:form id="form">
+                  
+                <!-- Heading -->  
+                  <div class="page-header clearfix">
+		             <h1 class="page-title">Intrax Language Centers Application</h1>
+		             <div class="back-to-main"><apex:outputLink id="backToMain" value="apex/centers_app_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+		          </div>
+                    <!-- Sub Heading -->
+                    <div class="section-header clearfix">
+                        <h2>Financial Certification for F-1 Visa </h2>
+                    </div> 
+                   
+                    <!-- Section to Hold Basic Informations -->
+                    <div class="white-box clearfix">
+                        <div class="panel two_thirds">
+                            <h3>Proof of financial guarantee</h3>
+          
+                            <p>Please provide Intrax one of the following to show financial certification that sufficient funds 
+                            will be available for both your tuition and living expenses while studying at Intrax. 
+                            (You will need to show the same proof of financial certification to the U.S. Consulate at the 
+                            time you apply for your F1-Student Visa.)</p>
+
+                            <p>Acceptable proof includes any one of the following:</p>
+    
+                            <ul>
+                                <li>A current personal bank statement or letter from your bank.</li> 
+                                <li>A letter of support from your parents/sponsor stating that they will be responsible for your expenses during your stay, and a bank statement 
+                                    or letter verifying their financial ability to meet your expenses.</li>
+                                <li>A letter guaranteeing financial support from a sponsoring organization.</li> 
+                                <li>A scholarship letter from your government.</li>
+                           </ul> 
+                			
+                            <apex:pageBlock id="docListBlock" rendered="{!if(DocList.Size > 0, true, false)}" >
+                                <apex:pageBlockTable id="docListTable" styleClass="pageblocktable" value="{!DocList}" var="item">
+                                    <apex:column headerValue="File Name">
+                                        <apex:outputText id="Document_Name" value="{!item.Document_Name__c}"/>
+                                    </apex:column>
+                                    <apex:column headerValue="Description">
+                                        <apex:outputText id="Description" value="{!item.Description__c}"/>
+                                    </apex:column>
+                                        
+                                    <apex:column >
+                                        <apex:commandlink id="docGUID" styleClass="inline-link" action="{!load}" target="_blank">
+                                            <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                            <apex:commandButton value="View" />
+                                        </apex:commandlink>
+                                        <apex:outputText value=" | " />
+                                        <apex:commandlink id="deleteFile" styleClass="inline-link" action="{!deletefile}"  onclick="return ConfirmDelete('Are You Sure ?');">
+                                            <apex:param name="docGuid"  value="{!item.Document_GUID__c}"/>
+                                            <apex:commandButton value="Delete" />
+                                        </apex:commandlink>
+                                    </apex:column>
+                                    
+                                </apex:pageBlockTable>
+                            </apex:pageBlock>
+                            
+                          <apex:outputText id="disableFileUploadText" value="{!disableFileUploadText}" rendered="{!disableFileUpload}"/>
+	                          <div class="form-row">
+	                          	<apex:outputPanel rendered="{!IF(applicantInfo.Visa_Category__c == 'Student (F)', true, false)}">
+		                            <div class="form-link ">
+		                                <apex:outputLink id="AddDocs" value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType={!$CurrentPage.parameters.docType}&env={!env}&retparam={!retParam}" target="_self" disabled="{!disableFileUpload}"><i class="icon-plus-sign"></i><span>Financial Responsibility</span></apex:outputLink>
+		                            </div>
+	                            </apex:outputPanel>
+	                          <!-- 
+	                          
+	                            <div class="form-link ">
+	                                <apex:outputLink id="AddProofOfFinancial" value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType=Proof-of-Financial&env={!env}&retparam={!retParam}" target="_self" disabled="{!disableFileUpload}"><i class="icon-plus-sign"></i><span>Proof of Financial</span></apex:outputLink>
+	                            </div>
+	                          </apex:outputPanel>
+                           	  -->  
+                           
+                           	  <apex:outputPanel rendered="{!IF(applicantInfo.Visa_Type__c == 'F-1 Transfer', true, false)}">
+	                            <div class="form-link ">
+	                                <apex:outputLink id="AddI20" value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType=F1-Visa&env={!env}&retparam={!retParam}" target="_self" disabled="{!disableFileUpload}"><i class="icon-plus-sign"></i><span>Add F1 Visa Document</span></apex:outputLink>
+	                            </div>
+	                            
+	                            <div class="form-link ">
+	                                <apex:outputLink id="AddF1Visa" value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType=I-20&env={!env}&retparam={!retParam}" target="_self" disabled="{!disableFileUpload}"><i class="icon-plus-sign"></i><span>Add I-20 Document</span></apex:outputLink>
+	                            </div>
+                              </apex:outputPanel>
+                              
+                              <apex:outputPanel rendered="{!IF(IsSelfInsuranceParticipant, true, false)}">
+	                            <div class="form-link ">
+	                                <apex:outputLink id="AddProofOfInsurance" value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType=Proof-of-Insurance&env={!env}&retparam={!retParam}" target="_self" disabled="{!disableFileUpload}"><i class="icon-plus-sign"></i><span>Add Proof of Insurance Document</span></apex:outputLink>
+	                            </div>
+	                            
+                              </apex:outputPanel>
+                           </div>
+                           
+                          <div class="form-row">
+                			<p>If you can not upload your documents to this form, please fax them 
+                            to +1 415 434 5404 or email to 
+                            <a href="mailto:admissions@intrax.edu">admissions@intrax.edu</a></p> 
+                		  </div>
+                			
+                           <!-- Back Button --> 
+                           <div class="form-row">
+                               <div class="form-link">
+                               		<apex:outputLink id="backLink" value="/apex/centers_app_my_visa_information?id={!applicantInfo.Id}"><i class="icon-chevron-left"></i> <span>Back</span></apex:outputLink>
+                               </div>
+                                  
+                               <!-- Save & Continue Button -->
+                               <div class="form-button">
+                                   <apex:commandlink id="SaveContinue" styleClass="next" action="{!navigator}">
+                                       <apex:param name="nextPage" value="/apex/centers_app_passport_details?id={!applicantInfo.Id}"/>
+                                       <apex:param name="docType" value="Passport" assignTo="{!docType}" />
+                                       <apex:param name="reDirectPage" value="true"/> 
+                                       <apex:commandButton value="Save & Continue"/>
+                                       <i class="icon-chevron-right"></i>
+                                   </apex:commandlink>
+                               </div>   
+                            </div>                        
+                        </div>
+                        <div class="panel one_third last aside">
+                            <c:Badge_Centers_Contact />     
+                        </div>
+                    </div>
+                </apex:form>    
+            </div>
+        </apex:define>
+    </apex:composition>
+</apex:page>

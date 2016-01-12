@@ -1,0 +1,17 @@
+<apex:component layout="none" id="block_apc_ap_sevis" allowDML="true">
+    <apex:attribute name="PageController" description="Instance of home_controller class" type="home_controller" required="false" default="" />
+    <apex:outputPanel layout="block" rendered="{!PageController.IsEngProgReady}">
+    <div class="row">
+        <div class="col-sm-12">            
+            <div class="tcell">
+                <i class=" fa fa-bookmark data-label"></i>
+            </div>
+            <div class="tcell">
+                <label>DS-2019 Number</label><br/>
+                <apex:outputText value="{!PageController.currentApp.Engagement__r.SEVIS_ID__c}" />
+            </div>               
+            <hr class="margin-t2 margin-b1"/>
+        </div>
+    </div>
+    </apex:outputPanel>    
+</apex:component>

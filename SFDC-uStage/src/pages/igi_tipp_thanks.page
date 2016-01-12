@@ -1,0 +1,34 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardController="Match__c"  extensions="IGI_TIPP_Controller" 
+                standardStylesheets="false" showHeader="false"
+                title="TIPP Information" id="igi_tipp_thanks" >
+<apex:composition template="intraxtemplate_vs3">
+  <apex:define name="body">
+  
+ <style>
+ #branding-zone, #footer-zone{display:none;}
+#content-zone {
+background: #f8f8f8;
+}
+.standalone{background: #fff;
+border:#ccc solid 1px;   
+border-radius: 5px;
+padding:60px;}
+</style>	
+   <!-- <apex:outputpanel layout="block" rendered="{!applicantInfo.Application_Level__c == 'Main' && applicantInfo.Application_Stage__c == 'Submitted'}"> -->	
+	<div class="row">
+   		<div class="col-md-8 center-block center-text standalone"> 
+   		
+   		 <apex:image styleClass="center-block" url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/logos/medium-logo-intrax.png')}"/>
+
+                   
+					<h1>Thank You</h1>		
+					<p class="lead">This Training Plan has been submitted and is currently <apex:outputText value=" {!$CurrentPage.parameters.Status}."/> </p>
+					
+				</div>
+				<!-- end column -->
+				</div>
+				<!-- end row -->
+  <!-- </apex:outputpanel>	-->
+</apex:define> 
+    </apex:composition>
+</apex:page>

@@ -1,0 +1,77 @@
+<apex:component layout="none">
+<script src="//www.google.com/jsapi"></script>
+
+<style>
+#chart_div {
+    width: 350px;
+}
+</style>
+
+<div id="chart_div"></div>
+
+    <script>
+      google.load('visualization', '1.1', {packages: ['corechart']});
+      google.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        //change values here
+        var dominance = 17.9;
+        var influence = 4.6;
+        var steadiness = 15.2;
+        var compliance = 17.1;
+        
+        
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', '');
+        data.addColumn('number', '');
+        data.addColumn({
+          type: 'string',
+          role: 'style'
+        });
+        data.addRows(4);
+
+        data.setValue(0, 0, 'Dominance');
+        data.setValue(0, 1, dominance);
+        data.setValue(0, 2, '#CE2220');
+
+        data.setValue(1, 0, 'Influence');
+        data.setValue(1, 1, influence);
+        data.setValue(1, 2, '#F5AD1D');
+
+        data.setValue(2, 0, 'Steadiness');
+        data.setValue(2, 1, steadiness);
+        data.setValue(2, 2, '#ABBF20');
+
+        data.setValue(3, 0, 'Compliance');
+        data.setValue(3, 1, compliance);
+        data.setValue(3, 2, '#1F91DA');
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+
+        chart.draw(data, {
+          bar: {
+            groupWidth: "85%" //100% = no width between bars
+          },
+          height: 350, //height of graph
+          vAxis: {
+            minValue: 0,
+            maxValue: 28,
+            viewWindow: {
+              max: 28,
+              min: 0
+            },
+            //ticks: [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28],
+            gridlines: {
+              color: '#eee',
+              count: 5
+            }
+          },
+          hAxis: {
+            slantedText: true,
+            slantedTextAngle: 60
+          },
+          legend: 'none'
+        });
+      }
+    </script>
+</apex:component>

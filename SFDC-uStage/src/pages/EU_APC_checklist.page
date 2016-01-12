@@ -1,0 +1,191 @@
+<apex:page standardController="Opportunity" extensions="EU_APC_checklist_Controller" action="{!checkAuditDocs}">
+<apex:form >
+  <apex:pageBlock title="EU APC checklist">
+    
+    <apex:messages />
+    <apex:pageBlockSection >
+   
+
+    <apex:outputField value="{!Opp.AccountId}" />
+      
+    <apex:outputField value="{!Opp.Account.Casper_Id__c}" />
+    
+    <apex:outputField value="{!Opp.StageName}" />
+    
+    <apex:outputField value="{!Opp.Intrax_Market__c}" />
+    
+    <apex:outputField value="{!ad.Opportunity__c}" />
+    
+    <apex:outputField value="{!Opp.Intrax_Programs__c}" />
+    
+    <apex:outputField value="{!Opp.OwnerId}" />
+    
+    <apex:outputField value="{!Opp.Countries_of_Interest__c}" />
+    
+    <apex:outputField value="{!Opp.Program_Year__c}"/>
+    <apex:outputField value="{!Opp.Intrax_Program_Options__c}" />
+    
+    <apex:outputField value="{!Opp.Deadline__c}" />
+    
+    <apex:outputField value="{!Opp.Canceled_Date__c}" />
+    
+    <apex:outputField value="{!Opp.Application_Date__c}" />
+    
+    <apex:outputField value="{!Opp.Reason__c}" />
+    
+    <apex:outputField value="{!Opp.Interview_Requested__c}" />
+    
+    <apex:outputField value="{!Opp.Reason_Detail__c}" />
+    
+    <apex:outputField value="{!Opp.Interview_Date__c}" />
+    
+    <apex:outputField value="{!Opp.Coordinator__c}" />
+   
+  </apex:pageBlockSection>
+ </apex:pageBlock> 
+  
+ <apex:pageBlock >
+    <apex:pageBlockButtons >
+        <apex:commandButton action="{!EditOpp}" value="Edit" rendered="{!NOT(editMode == 'true')}"/>
+        <apex:commandButton action="{!SaveOpp}" value="Save"/>
+        <apex:commandButton action="{!CancelOpp}" value="Cancel" rendered="{!editMode == 'true'}"/>     
+    </apex:pageBlockButtons>
+
+    <apex:pageBlockSection columns="1">
+    	<apex:outputField value="{!Opp.Incomplete_Missing_Documents__c}" rendered="{!NOT(editMode == 'true')}">
+            <apex:inlineEditSupport showOnEdit="saveButton, cancelButton" 
+                            hideOnEdit="editButton" event="ondblclick" 
+                            changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+        </apex:outputField>
+        
+      <apex:inputField value="{!Opp.Incomplete_Missing_Documents__c}" rendered="{!editMode == 'true'}" />
+
+   		 <apex:outputField value="{!Opp.Incomplete_Documents_Notes__c}" rendered="{!NOT(editMode == 'true')}">
+            <apex:inlineEditSupport showOnEdit="saveButton, cancelButton" 
+                        hideOnEdit="editButton" event="ondblclick" 
+                        changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+        </apex:outputField>
+        <apex:inputTextArea value="{!Opp.Incomplete_Documents_Notes__c}" rendered="{!editMode == 'true'}" style="width:90%; height:100pt" />
+
+    	<apex:outputField value="{!opp.Match_Notes__c}" rendered="{!NOT(editMode == 'true')}">
+            <apex:inlineEditSupport showOnEdit="saveButton, cancelButton" 
+                            hideOnEdit="editButton" event="ondblclick" 
+                            changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+        </apex:outputField>
+		<apex:inputField value="{!Opp.Match_Notes__c}" rendered="{!editMode == 'true'}" style="width:90%; height:100pt"/>
+		
+    </apex:pageBlockSection>
+    
+    <apex:pageBlockSection columns="1" >
+    	 
+        <apex:outputField value="{!ad.Med_Participant_Signature__c}" rendered="{!NOT(editMode == 'true')}">
+            <apex:inlineEditSupport showOnEdit="saveButton, cancelButton" 
+                            hideOnEdit="editButton" event="ondblclick" 
+                            changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+        </apex:outputField>
+        <apex:inputField value="{!ad.Med_Participant_Signature__c}" rendered="{!editMode == 'true'}" />
+  
+        <apex:outputField value="{!ad.Med_Physician_Signature__c}" rendered="{!NOT(editMode == 'true')}">
+            <apex:inlineEditSupport showOnEdit="saveButton, cancelButton" 
+                            hideOnEdit="editButton" event="ondblclick" 
+                            changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+        </apex:outputField>
+        <apex:inputField value="{!ad.Med_Physician_Signature__c}" rendered="{!editMode == 'true'}" />
+
+        <apex:outputField value="{!ad.Ref_1_Match_Work_History__c}" rendered="{!NOT(editMode == 'true')}">
+            <apex:inlineEditSupport showOnEdit="saveButton, cancelButton" 
+                            hideOnEdit="editButton" event="ondblclick" 
+                            changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+        </apex:outputField>
+        <apex:inputField value="{!ad.Ref_1_Match_Work_History__c}" rendered="{!editMode == 'true'}" />
+        
+        <apex:outputField value="{!ad.Ref_1_Signed_by_Ref__c}" rendered="{!NOT(editMode == 'true')}">
+            <apex:inlineEditSupport showOnEdit="saveButton, cancelButton" 
+                            hideOnEdit="editButton" event="ondblclick" 
+                            changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+        </apex:outputField>
+        <apex:inputField value="{!ad.Ref_1_Signed_by_Ref__c}" rendered="{!editMode == 'true'}" />
+
+        <apex:outputField value="{!ad.Ref_1_Verified_Date__c}" rendered="{!NOT(editMode == 'true')}">
+            <apex:inlineEditSupport showOnEdit="saveButton, cancelButton" 
+                            hideOnEdit="editButton" event="ondblclick" 
+                            changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+        </apex:outputField>
+        <apex:inputField value="{!ad.Ref_1_Verified_Date__c}" rendered="{!editMode == 'true'}" />        
+
+        <apex:outputField value="{!ad.Ref_2_Match_Work_History__c}" rendered="{!NOT(editMode == 'true')}">
+            <apex:inlineEditSupport showOnEdit="saveButton, cancelButton" 
+                            hideOnEdit="editButton" event="ondblclick" 
+                            changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+        </apex:outputField>
+        <apex:inputField value="{!ad.Ref_2_Match_Work_History__c}" rendered="{!editMode == 'true'}" />        
+
+        <apex:outputField value="{!ad.Ref_2_Signed_by_Ref__c}" rendered="{!NOT(editMode == 'true')}">
+            <apex:inlineEditSupport showOnEdit="saveButton, cancelButton" 
+                            hideOnEdit="editButton" event="ondblclick" 
+                            changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+        </apex:outputField>
+        <apex:inputField value="{!ad.Ref_2_Signed_by_Ref__c}" rendered="{!editMode == 'true'}" />
+
+        <apex:outputField value="{!ad.Ref_2_Verified_Date__c}" rendered="{!NOT(editMode == 'true')}">
+            <apex:inlineEditSupport showOnEdit="saveButton, cancelButton" 
+                            hideOnEdit="editButton" event="ondblclick" 
+                            changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+        </apex:outputField>
+        <apex:inputField value="{!ad.Ref_2_Verified_Date__c}" rendered="{!editMode == 'true'}" />        
+
+        <apex:outputField value="{!ad.Pers_Reference_Signed_by_Ref__c}" rendered="{!NOT(editMode == 'true')}">
+            <apex:inlineEditSupport showOnEdit="saveButton, cancelButton" 
+                            hideOnEdit="editButton" event="ondblclick" 
+                            changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+        </apex:outputField>
+        <apex:inputField value="{!ad.Pers_Reference_Signed_by_Ref__c}" rendered="{!editMode == 'true'}" />        
+
+        <apex:outputField value="{!ad.Pers_Reference_Verified_Date__c}" rendered="{!NOT(editMode == 'true')}">
+            <apex:inlineEditSupport showOnEdit="saveButton, cancelButton" 
+                            hideOnEdit="editButton" event="ondblclick" 
+                            changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+        </apex:outputField>
+        <apex:inputField value="{!ad.Pers_Reference_Verified_Date__c}" rendered="{!editMode == 'true'}" />        
+
+        <apex:outputField value="{!ad.Program_Agreement_PT_Sign_Init__c}" rendered="{!NOT(editMode == 'true')}">
+            <apex:inlineEditSupport showOnEdit="saveButton, cancelButton" 
+                            hideOnEdit="editButton" event="ondblclick" 
+                            changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+        </apex:outputField>
+        <apex:inputField value="{!ad.Program_Agreement_PT_Sign_Init__c}" rendered="{!editMode == 'true'}" />        
+
+        <apex:outputField value="{!ad.Backgound_Check_Translated__c}" rendered="{!NOT(editMode == 'true')}">
+            <apex:inlineEditSupport showOnEdit="saveButton, cancelButton" 
+                            hideOnEdit="editButton" event="ondblclick" 
+                            changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+        </apex:outputField>
+        <apex:inputField value="{!ad.Backgound_Check_Translated__c}" rendered="{!editMode == 'true'}" /> 
+         
+        <apex:outputField value="{!ad.Passport_Name_Matches__c}" rendered="{!NOT(editMode == 'true')}">
+            <apex:inlineEditSupport showOnEdit="saveButton, cancelButton" 
+                            hideOnEdit="editButton" event="ondblclick" 
+                            changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+        </apex:outputField>
+        <apex:inputField value="{!ad.Passport_Name_Matches__c}" rendered="{!editMode == 'true'}" />    
+         
+        <apex:outputField value="{!ad.Passport_Date_of_Birth__c}" rendered="{!NOT(editMode == 'true')}">
+            <apex:inlineEditSupport showOnEdit="saveButton, cancelButton" 
+                            hideOnEdit="editButton" event="ondblclick" 
+                            changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+        </apex:outputField>
+        <apex:inputField value="{!ad.Passport_Date_of_Birth__c}" rendered="{!editMode == 'true'}" />   
+        
+        <apex:outputField value="{!ad.Passport_Birth_City__c}" rendered="{!NOT(editMode == 'true')}">
+            <apex:inlineEditSupport showOnEdit="saveButton, cancelButton" 
+                            hideOnEdit="editButton" event="ondblclick" 
+                            changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"/>
+        </apex:outputField>
+        <apex:inputField value="{!ad.Passport_Birth_City__c}" rendered="{!editMode == 'true'}" />  
+             
+        </apex:pageBlockSection>
+  
+  </apex:pageBlock>
+    
+  </apex:form>
+</apex:page>

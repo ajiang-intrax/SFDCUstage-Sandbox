@@ -1,0 +1,161 @@
+<apex:page docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+    <div class="wrapper">
+  <apex:form > 
+         <div class="page-header clearfix">
+ <h1>Ayusa Student Application</h1>
+<div class="back-to-main"><apex:outputLink value="apex/ayusa_app_home?id={!applicantInfo.Id}"></apex:outputLink></div>
+</div>
+          <h2>Student Information - Adapting to a New Home</h2>
+          <div class="white-box clearfix">
+      <div class="panel two_thirds">
+          
+       
+           <div class="form-row">
+                <div class="form-label left"> Have you ever lived away from your parents?<span class="required">*</span></div>
+                <div class="form-field">
+                	<apex:selectRadio value="{!applicantInfo.Lived_Independently__c}" required="false">
+               			<apex:selectOption itemValue="true" itemLabel="Yes"/>
+               			<apex:selectOption itemValue="false" itemLabel="No"/>
+					</apex:selectRadio>
+                </div>
+           </div>
+            
+           <div class="form-row">
+                <div class="form-label left"> IF yes, "Please describe"<span class="required">*</span></div>
+                <div class="form-field">
+                	<apex:inputField value="{!applicantInfo.Lived_Independently_Description__c}" required="false"/> 
+                </div>
+           </div>
+            
+           <div class="form-row"> 
+                <div class="form-label left"> What are your household responsibilities in your current home?<span class="required">*</span></div>
+                <div class="form-field">
+                	<apex:inputField value="{!applicantInfo.Home_Responsibilities__c}" required="false"/> 
+                </div>
+           </div>
+           
+           <div class="form-row">
+                <div class="form-label left"> Do you have a curfew at home?<span class="required">*</span></div>
+                <div class="form-field">
+                	<apex:selectRadio value="{!applicantInfo.Curfew_Indicated__c}" required="false">
+               			<apex:selectOption itemValue="true" itemLabel="Yes"/>
+               			<apex:selectOption itemValue="false" itemLabel="No"/>
+					</apex:selectRadio>
+                </div>
+           </div>
+           
+           <div class="form-row">
+                <div class="form-label left"> If yes: What time is your curfew during the week?<span class="required">*</span></div>
+                <div class="form-field">
+                	<apex:inputField value="{!applicantInfo.Curfew_Weekdays__c}" required="false"/>
+                </div>
+           </div>
+           
+           <div class="form-row">
+                <div class="form-label left"> And during the weekends?<span class="required">*</span></div>
+                <div class="form-field">
+                	<apex:inputField value="{!applicantInfo.Curfew_Weekends__c}" required="false"/>
+                </div>
+           </div>
+           
+           <div class="form-row">
+                <div class="form-label left"> How much time do you spend studying at home per week?<span class="required">*</span> </div>
+                <div class="form-field">
+                	<apex:inputField value="{!applicantInfo.Study_Time__c}" required="false"/>
+                </div>
+           </div>
+           
+           <div class="form-row">
+                <div class="form-label left"> Are you willing to live in a home where other people smoke?<span class="required">*</span></div>
+                <div class="form-field">
+                	<apex:inputField value="{!applicantInfo.Live_With_Smoker__c}" required="false"/>
+                </div>
+           </div>
+           
+           <div class="form-row">
+                <div class="form-label left"> Do you have any pets at home?<span class="required">*</span> </div>
+                <div class="form-field">
+                	<apex:selectRadio value="{!applicantInfo.Pets__c}">
+               			<apex:selectOption itemValue="true" itemLabel="Yes"/>
+               			<apex:selectOption itemValue="false" itemLabel="No"/>
+					</apex:selectRadio>
+                </div>
+           </div>
+           
+           <div class="form-row">
+                <div class="form-label left"> If yes: What kind of pets do you have?<span class="required">*</span></div>
+                <div class="form-field">
+                	<apex:inputField value="{!applicantInfo.Pet_Types__c}" required="false"/>
+                </div>
+           </div>
+           
+           <div class="form-row">
+                <div class="form-label left"> if 'Other' selected, please describe<span class="required">*</span></div>
+                <div class="form-field">
+                	<apex:inputField value="{!applicantInfo.Pets_Description__c}" required="false"/>
+                </div>
+           </div>
+           
+           <div class="form-row">
+                <div class="form-label left"> Are you able to live with pets?<span class="required">*</span></div>
+                <div class="form-field">
+                	<apex:selectRadio value="{!applicantInfo.Live_With_Pets__c}" required="false">
+               			<apex:selectOption itemValue="true" itemLabel="Yes"/>
+               			<apex:selectOption itemValue="false" itemLabel="No"/>
+					</apex:selectRadio>
+                </div>
+           </div>
+           
+           <div class="form-row">
+                <div class="form-label left"> If no: Please describe why not<span class="required">*</span></div>
+                <div class="form-field">
+                	<apex:inputField value="{!applicantInfo.Live_With_Pets_Description__c}" required="false"/>
+                </div>
+           </div>
+           
+           <div class="form-row">
+                <div class="form-label left"> Are you able to prepare meals for yourself if the host family is unable to do this on some occasions?<span class="required">*</span></div>
+                <div class="form-field">
+                	<apex:selectRadio value="{!applicantInfo.Meal_Self_Sufficient__c}" required="false">
+               			<apex:selectOption itemValue="true" itemLabel="Yes"/>
+               			<apex:selectOption itemValue="false" itemLabel="No"/>
+					</apex:selectRadio>
+                </div>
+           </div>
+           
+           <div class="form-row">
+                <div class="form-label left"> Do you follow a special diet?<span class="required">*</span> </div>
+                <div class="form-field">
+                	<apex:selectRadio value="{!applicantInfo.Special_Diet_Indicated__c}" required="false">
+               			<apex:selectOption itemValue="true" itemLabel="Yes"/>
+               			<apex:selectOption itemValue="false" itemLabel="No"/>
+					</apex:selectRadio>
+                </div>
+           </div>
+           
+           <div class="form-row">
+                <div class="form-label left"> IF yes: Please select which diet you follow.<span class="required">*</span> </div>
+                <div class="form-field">
+                	<apex:inputField value="{!applicantInfo.Special_Diet__c}" required="false"/>
+                </div>
+           </div>
+           
+           <div class="form-row">
+                <div class="form-label left"> If 'Other': Please describe your special diet.<span class="required">*</span> </div>
+                <div class="form-field">
+                	<apex:inputField value="{!applicantInfo.Special_Diet_Description__c}" required="false"/>	
+                </div>
+           </div>
+          
+            </div>
+            
+               </div>
+               
+      
+               </apex:form>
+      </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

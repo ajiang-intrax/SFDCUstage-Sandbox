@@ -1,0 +1,233 @@
+<apex:page applyHtmlTag="false" applyBodyTag="false"  id="Page" title="Assessment Details" standardStylesheets="false" showHeader="false" controller="IntraxPartnerPortalEngineController" action="{!checkLoginWithParticipantSearch}">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+     
+      <apex:form styleClass="form-vertical ws-validate" id="form">
+      <div class="row margin-b2">
+          <div class="col-sm-9 center-text center-block">
+                <c:block_pr_pt_profile_thumb photoUrl="{!returnUrl}" gender="{!participant.Account_Id__r.Gender__pc}"/> 
+            <h1>
+              <apex:outputText rendered="{!IF($CurrentPage.parameters.participantId == null, false, true)}" value="{!participant.Name}"/>
+              <apex:outputText rendered="{!IF($CurrentPage.parameters.participantId == null, true, false)}" value="No Individual Participant Selected"/>
+            </h1>
+          </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->  
+         <div class="row">
+          <div class="col-sm-12">
+            <div class="center-text">
+              <c:menu_pr_pt participant="{!participant}" applicationRecord="{!applicationRecord}" />
+            </div>
+          </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+         <hr class="margin-b4"/>
+          <div class="row margin-b2">
+          <div class="col-sm-12 center-text">
+            <h2><apex:outputText id="Name" value="{!selectedAssessment.Name}" /></h2>
+            <em>for</em><apex:outputText id="FirstName" value=" {!participant.Account_Id__r.FirstName} {!participant.Account_Id__r.LastName}" />
+          </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row --> 
+         
+          <apex:actionStatus id="waitMsg" startStyleClass="feedback">
+            <apex:facet name="start" >
+              <div class="alert alert-info"><i class="fa fa-refresh fa-spin"></i> <strong>Please Wait.....</strong> </div>
+            </apex:facet>
+          </apex:actionStatus>
+          
+          <apex:actionFunction name="doSearch" action="{!doSearchForParticipant}" status="waitMsg" reRender="myPanel, validationMsg, myPanel1, abcd"/>
+         
+          <apex:outputPanel layout="block" id="myPanel1">
+          <apex:pageBlock id="pb1" rendered="{!AND($CurrentPage.parameters.isInputType != null, $CurrentPage.parameters.isInputType == 'false')}">
+        
+            <div class="row margin-b2">
+            <div class="col-sm-7 center-block">
+          <apex:pageMessages id="validationMsg"/>
+          
+          <apex:outputText id="Record_Type_Group" rendered="{!IF( selectedAssessment.Record_Type_Group__c == 'AY PT Contact' || selectedAssessment.Record_Type_Group__c == 'AY HF Contact' || selectedAssessment.Record_Type_Group__c == 'AY SC Contact',true,false )}"> 
+          <label>Time Period</label>
+          <apex:outputField id="Time_Period" value="{!selectedAssessment.Time_Period__c}" />
+          </apex:outputText>
+          
+          <apex:outputText rendered="{!IF( selectedAssessment.Record_Type_Group__c == 'AY HF Contact', true,false)}"> 
+          <label>Resident Change Indicated</label>
+            <apex:outputField id="Resident_Change_Indicated" value="{!selectedAssessment.Resident_Change_Indicated__c}" />
+          </apex:outputText>
+          
+          <apex:outputText rendered="{!IF( selectedAssessment.Record_Type_Group__c == 'AY HF Contact', true,false)}"> 
+          <label>Resident Change Description</label>
+            <apex:outputField id="Resident_Change_Description" value="{!selectedAssessment.Resident_Change_Description__c}" />
+          </apex:outputText>
+          
+          <apex:outputText rendered="{!IF( selectedAssessment.Record_Type_Group__c == 'AY PT Contact' || selectedAssessment.Record_Type_Group__c == 'AY HF Contact' || selectedAssessment.Record_Type_Group__c == 'AY SC Contact',true,false )}"> 
+          <label>Contact Type</label>
+            <apex:outputField id="Contact_Type" value="{!selectedAssessment.Contact_Type__c}" />
+          </apex:outputText>
+          
+          <apex:outputText rendered="{!IF( selectedAssessment.Record_Type_Group__c == 'SC HF Contact', true,false)}"> 
+          <label>Additional Support Description</label>
+            <apex:outputField id="Additional_Support_Description" value="{!selectedAssessment.Additional_Support_Description__c}" />
+          </apex:outputText>
+          
+          <apex:outputText rendered="{!IF( selectedAssessment.Record_Type_Group__c == 'AY PT Contact' || selectedAssessment.Record_Type_Group__c == 'AY HF Contact' || selectedAssessment.Record_Type_Group__c == 'AY SC Contact',true,false )}"> 
+          <label>Additional Comments</label>
+            <apex:outputField id="Comments" value="{!selectedAssessment.Comments__c}" />
+          </apex:outputText>
+          
+           </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row --> 
+          
+          <!-- Start code for AY PT Interview (Student Orientation) -->
+          
+          <apex:outputText rendered="{!IF( selectedAssessment.RecordType.Name == 'AY PT Orientation', true,false)}">
+           
+            <div class="row margin-b2">
+            <div class="col-sm-7 center-block">
+               
+            <h3>Arrival and School Information</h3>
+           
+           <div class="row margin-b2">
+           <div class="col-sm-12">
+            <label>Welcomers</label><br/>
+            <apex:outputField id="Welcomers" value="{!selectedAssessment.Welcomers__c}" />
+           </div><!--  end column -->
+           </div><!--  end row -->
+           
+           <div class="row margin-b2">
+           <div class="col-sm-6">
+           <label>Class 1</label><br/>
+            <apex:outputField id="Class_1" value="{!engagement.Class_1__c}" />
+           </div><!--  end column -->
+           <div class="col-sm-6">
+           <label>Class 2</label><br/>
+            <apex:outputField id="Class_2" value="{!engagement.Class_2__c}" />
+           </div><!--  end column -->
+           </div><!--  end row -->
+           
+           <div class="row margin-b2">
+           <div class="col-sm-6">
+           <label>Class 3</label><br/>
+            <apex:outputField id="Class_3" value="{!engagement.Class_3__c}" />
+           </div><!--  end column -->
+           <div class="col-sm-6">
+            <label>Class 4</label><br/>
+            <apex:outputField id="Class_4" value="{!engagement.Class_4__c}" />
+           </div><!--  end column -->
+           </div><!--  end row -->
+           
+           <div class="row margin-b2">
+           <div class="col-sm-6">
+           <label>Class 5</label><br/>
+            <apex:outputField id="Class_5" value="{!engagement.Class_5__c}" />
+           </div><!--  end column -->
+           <div class="col-sm-6">
+           <label>Class 6</label><br/>
+            <apex:outputField id="Class_6" value="{!engagement.Class_6__c}" />
+           </div><!--  end column -->
+           </div><!--  end row -->
+           
+           <div class="row margin-b2">
+           <div class="col-sm-6">
+           <label>Class 7</label><br/>
+            <apex:outputField id="Class_7" value="{!engagement.Class_7__c}" />
+           </div><!--  end column -->
+           <div class="col-sm-6">
+           <label>Class 8</label><br/>
+            <apex:outputField id="Class_8" value="{!engagement.Class_8__c}" />
+           </div><!--  end column -->
+           </div><!--  end row -->
+           
+           <div class="row margin-b2">
+           <div class="col-sm-6">
+           <label>Grade Level</label><br/>
+            <apex:outputField id="Grade_Level" value="{!engagement.Grade_Level__c}" />
+           </div><!--  end column -->
+           </div><!--  end row --> 
+           
+           </div><!--  end column -->
+           </div><!--  end row --> 
+            <div class="row margin-b2">
+            <div class="col-sm-7 center-block">
+            
+            <h3>Student Arrival Orientation Information (to be completed by Ayusa Staff)</h3>
+            
+            <div class="row margin-b2">
+            <div class="col-sm-6">
+            <label>Orientation Date</label><br/>
+            <apex:outputField id="Orientation_Date" value="{!engagement.Orientation_Date__c}" />
+            </div><!--  end column -->
+            <div class="col-sm-6">
+            <label>Assessment Location</label><br/>
+            <apex:outputField id="Assessment_Location" value="{!selectedAssessment.Assessment_Location__c}" />
+            </div><!--  end column -->
+           </div><!--  end row --> 
+           
+           <div class="row margin-b2">
+            <div class="col-sm-6">
+            <label>Initial Experience Positive</label><br/>
+            <apex:outputField id="Initial_Experience_Positive" value="{!selectedAssessment.Initial_Experience_Positive__c}" />
+           </div><!--  end column -->
+            <div class="col-sm-6"> 
+            <label>Initial Language Level</label><br/>
+            <apex:outputField id="Initial_Language_Level" value="{!selectedAssessment.Initial_Language_Level__c}" />
+            </div><!--  end column -->
+           </div><!--  end row --> 
+            
+           <div class="row margin-b2">
+            <div class="col-sm-6"> 
+            <label>Communication Style Positive</label><br/>
+            <apex:outputField id="Communication_Style_Positive" value="{!selectedAssessment.Communication_Style_Positive__c}" />
+            </div><!--  end column -->
+            <div class="col-sm-6"> 
+            <label>Additional Comments</label><br/>
+            <apex:outputField id="Comments1" value="{!selectedAssessment.Comments__c}" />
+            </div><!--  end column -->
+           </div><!--  end row --> 
+           
+           </div><!--  end column -->
+           </div><!--  end row --> 
+          </apex:outputText>
+          
+          <!-- //End code for AY PT Interview --> 
+          
+         
+          
+          <!-- Start code for AY HF & PT & SC // Academic Year OR Fall Semester OR Spring Semester -->
+          
+          <div class="row margin-b2">
+            <div class="col-sm-7 center-block">
+          
+          <apex:outputText rendered="{!IF( selectedAssessment.Record_Type_Group__c == 'AY PT Contact' || selectedAssessment.Record_Type_Group__c == 'AY HF Contact' || selectedAssessment.Record_Type_Group__c == 'AY SC Contact',true,false )}">
+               <div class="row margin-b2">
+            <div class="col-sm-6"> 
+            <apex:repeat value="{!AssFieldSet}" var="f">
+              <apex:outputLabel value="{!f.label}"/>
+              <apex:outputField value="{!selectedAssessment[f.fieldPath]}"/>
+            </apex:repeat>
+            </div><!--  end column -->
+           </div><!--  end row --> 
+          </apex:outputText>
+          
+          <apex:outputPanel id="buttonPanel" layout="block">
+            <apex:outputLink styleClass="btn btn-lg btn-link" value="/apex/pr_pt_assessments?participantId={!participant.Id}&isAssessments=true"> <i class="fa fa-chevron-left"></i> <span>Back To Assessments</span> </apex:outputLink>
+          </apex:outputPanel>
+          
+          </div><!--  end column -->
+           </div><!--  end row --> 
+          
+     
+        
+        </apex:pageBlock>
+        </apex:outputPanel>
+       
+      </apex:form>
+      <!-- end row --> 
+    </apex:define>
+  </apex:composition>
+</apex:page>

@@ -1,0 +1,105 @@
+<apex:page id="ayusa_hf_clone" docType="html-5.0" standardController="Applicant_Info__c" extensions="CloneApp_Controller"  standardStylesheets="true" showHeader="false" action="{!checkLogin}">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+        <div class="wrapper"> 
+        <script type="text/javascript">
+            function disable_button(sender){
+                sender.disabled = true;
+            }
+            function btnClicked(elem) {
+                elem.style.display = 'none';
+                document.getElementById('loadingImage').style.display = 'block';
+                document.getElementById('backbutton').style.display = 'none';
+                document.getElementById('backToMain').style.display = 'none';
+            }
+            
+            function btnComplete(){
+                document.getElementById('backbutton').style.display = 'block';
+                document.getElementById('loadingImage').style.display = 'none';
+                document.getElementById('doneImage').style.display = 'block';
+                document.getElementById('backToMain').style.display = 'block';
+                }
+            </script>  
+             
+          <apex:form id="form">     
+              <div class="page-header clearfix">
+                <h1 class="page-title">Ayusa Host Family Application</h1>
+                <div class="back-to-main" id="backToMain"><apex:outputLink value="/apex/your_applications">Back to Main Page</apex:outputLink></div>
+                </div>
+                <h2>Reapply to Host</h2>     
+                <div class="white-box clearfix">
+                <div class="panel two_thirds">
+                <apex:messages styleClass="errorMsg no-bullets no-indent"/>
+              
+              <!-- Screen that will be displayed if the user tries to clone an app twice -->
+              <apex:outputPanel id="clonableApps" rendered="{!NOT(checkWorkingApps) && ISNULL(cloned)}">
+              <p>You cannot create a new application due to there is an application in a 'Working' stage.</p>
+                <div class="form-row">
+                      <div class="form-link" id="backbutton">
+                            <apex:outputLink id="Back1" styleClass="back" value="/apex/your_applications" >
+                            <i class="icon-chevron-left"></i>
+                            <span>Back</span>
+                            </apex:outputLink>
+                      </div>
+                </div>
+              </apex:outputPanel>
+              
+              <!-- This screen will be displayed when the app is just cloned -->
+              <apex:outputPanel id="clonableApps2" rendered="{!NOT(checkWorkingApps) && cloned == 'true'}">
+              <p> Are you sure that you would like to reapply to host an exchange student?</p>
+                  <p></p>
+                  <p></p>
+                  <p>Clicking Confirm will copy much of the information from your previous application into a new application. On the following screen, please go through each section of the application and complete any missing fields.</p>
+             
+                <apex:outputPanel rendered="{!cloned == 'true'}" styleClass="feedback" id="doneImage"><i class="icon-ok icon-2x"></i> <span>Application created successfully</span></apex:outputPanel>
+                
+                <div class="form-row">
+                      <div class="form-link" id="backbutton">
+                            <apex:outputLink id="Back" styleClass="back" value="/apex/your_applications" >
+                            <i class="icon-chevron-left"></i>
+                            <span>Back</span>
+                            </apex:outputLink>
+                      </div>
+                
+                      <div class="form-button" >
+                          <apex:commandlink styleClass="next" action="{!navigateToNewAppHome}">  
+                            <apex:commandButton id="Continue" value="Continue" />
+                            <i class="icon-chevron-right"></i>   
+                          </apex:commandlink>
+                      </div>
+              </div>
+              </apex:outputPanel>
+              
+              <!-- This screen will be displayed when the user click on 'Reapply' -->
+              <apex:outputPanel id="noClonableApps" rendered="{!checkWorkingApps}">
+                  <p> Are you sure that you would like to reapply to host an exchange student?</p>
+                  <p></p>
+                  <p></p>
+                  <p>Clicking Confirm will copy much of the information from your previous application into a new application. On the following screen, please go through each section of the application and complete any missing fields.</p>
+                  <p></p>
+                  <div style="display: none;" class="feedback" id="loadingImage"><i class="icon-spinner icon-spin icon-2x"></i> <span>Creating new application</span></div>
+                  
+                  <div class="form-row">
+                      <div class="form-link" id="backbutton">
+                            <apex:outputLink id="Back2" styleClass="back" value="/apex/your_applications" >
+                            <i class="icon-chevron-left"></i>
+                            <span>Back</span>
+                            </apex:outputLink>
+                      </div>
+                  
+                    <div class="form-button">
+                        <apex:commandlink id="confirmButton" styleClass="next" action="{!CloneApp}" onclick="btnClicked(this);" oncomplete="btnComplete();" >
+                            <apex:commandButton id="Confirm" value="Confirm" onclick="disable_button(this);"/>
+                            <i class="icon-chevron-right"></i> 
+                        </apex:commandlink>   
+                      </div>
+                    </div>
+                </apex:outputPanel> 
+                   
+               </div>
+            </div>
+          </apex:form>
+      </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

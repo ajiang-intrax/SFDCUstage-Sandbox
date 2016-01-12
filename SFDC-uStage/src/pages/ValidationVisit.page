@@ -1,0 +1,101 @@
+<!-- 
+    Purpose         :   Validation Visit
+                
+    Created Date    :   12/11/2013
+    
+    Current Version :   v1.0
+    
+    Revision Log    :   V_1.1 Created
+ -->
+<apex:page controller="ValidationVisit_Controller" id="ValidationVisit">
+<div class="wrapper">
+  
+<style>
+.apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader h3 {
+    color: #27282e }
+</style>   
+ 
+     
+    <apex:form >
+        
+        <apex:pageBlock >
+            <apex:pageMessages id="validationMsg" />
+         
+         
+             <apex:pageBlockSection columns="1" title="My Validation Visits" collapsible="false" id="pbs">
+                <apex:actionStatus startText="Please Wait....." startStyle="font-weight: bold;color: green;" id="loadingMsg"/>
+                
+                <apex:pageBlockTable value="{!lstValidationVisits}" var="item" rendered="{!IF(lstValidationVisits.Size > 0, true, false)}">
+              
+               <apex:column >
+                <apex:facet name="header">
+       			 Match 
+  			    </apex:facet>
+    			            
+                 <apex:outputLink value="/{!item.id}">
+						  {!item.Name}
+			     </apex:outputLink>  
+                     
+    			 </apex:column>
+              	 <apex:column >
+                <apex:facet name="header">
+       			Match Type
+  			    </apex:facet>
+    			            
+                 <apex:outputtext value="{!item.Match_Type__c}"/>
+					
+    			 </apex:column>
+              
+                   <apex:column >
+                <apex:facet name="header">
+       			Position
+  			    </apex:facet>
+    			            
+                 <apex:outputLink value="/{!item.Position_Name__c}">
+						  {!item.Position_Name__r.Name}
+			     </apex:outputLink>  
+                     
+    			 </apex:column>
+    			 <apex:column >
+                <apex:facet name="header">
+       			 Engagement
+  			    </apex:facet>
+    			            
+                 <apex:outputLink value="/{!item.Engagement__c}">
+						  {!item.Engagement__r.Name}
+			     </apex:outputLink>  
+                     
+    			 </apex:column>
+    			 <apex:column >
+                <apex:facet name="header">
+       			 Validation Visit Due Date
+  			    </apex:facet>
+    			    <apex:outputField value="{!item.Validation_Visit_Due_Date__c}"/>          
+                
+    			 </apex:column>
+    			 
+    			 <apex:column >
+                <apex:facet name="header">
+       			 City
+  			    </apex:facet>
+    			    <apex:outputField value="{!item.Position_Name__r.City__c}"/>          
+                
+    			 </apex:column>
+    			 
+    			 <apex:column >
+                <apex:facet name="header">
+       			 State
+  			    </apex:facet>
+    			    <apex:outputField value="{!item.Position_Name__r.State__c}"/>          
+                
+    			 </apex:column>
+    		
+                </apex:pageBlockTable>
+                
+             </apex:pageBlockSection>
+        </apex:pageBlock>
+        
+     
+    </apex:form>
+</div>
+</apex:page>

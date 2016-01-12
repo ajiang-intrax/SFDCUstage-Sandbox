@@ -1,0 +1,79 @@
+<apex:component layout="none">
+
+
+	<apex:outputText rendered="{!NOT(ISPICKVAL($User.UserType,'Guest'))}">
+	<apex:outputText rendered="{!$Site.Name != 'AuPairCare'}">
+		<div id="footer-zone">
+			<div id="footer-zone-inner" class="container">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="pull-right">
+								<a class="sub-brand small" target="_blank"
+									href="http://www.intraxinc.com/">Intrax</a><a target="_blank"
+									href="http://www.aupaircare.com/" class="sub-brand small">AuPairCare</a><a
+									target="_blank" href="http://www.ayusa.org/"
+									class="sub-brand small">Ayusa</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		</apex:outputText>
+	
+	
+	
+	<apex:outputText rendered="{!$Site.Name == 'AuPairCare'}">
+	<div id="footer-zone" style="background:#e5e5e5;">
+			<div id="footer-zone-inner" class="container">
+				<div class="row">
+					<div class="col-xs-12">
+	<div class="pull-left">
+  <a href="http://www.intraxinc.com/privacy-policy" target="_blank" style="
+    line-height: 42px;
+"><b>Privacy Policy</b></a>
+</div>
+	<div class="pull-right">
+  <span class="margin-r1 hidden-xs">Connect With Us</span>
+  <a href="https://www.facebook.com/AuPairCare" target="_blank"><span class="fa-stack fa-lg">
+  <i class="fa fa-circle fa-stack-2x" style="
+    color: #a7a7a7;
+"></i>
+  <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+</span>
+</a>
+<a href="https://twitter.com/AuPairCare" target="_blank">
+<span class="fa-stack fa-lg">
+  <i class="fa fa-circle fa-stack-2x" style="
+    color: #a7a7a7;
+"></i>
+  <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+</span>
+</a>
+<a href="https://www.linkedin.com/company/aupaircare" target="_blank">
+<span class="fa-stack fa-lg">
+  <i class="fa fa-circle fa-stack-2x" style="
+    color: #a7a7a7;
+"></i>
+  <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+</span>
+</a>
+  
+   
+  <a href="https://plus.google.com/+Aupaircare/posts" target="_blank">
+<span class="fa-stack fa-lg">
+  <i class="fa fa-circle fa-stack-2x" style="
+    color: #a7a7a7;
+"></i>
+  <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+</span>
+</a>
+  
+						</div>
+							</div>
+					</div>
+				</div>
+			</div>
+	</apex:outputText>
+	</apex:outputText>
+	
+</apex:component>

@@ -1,0 +1,76 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" title="Reference Review" standardController="Applicant_Info__c" 
+	extensions="AppEngine_Controller" action="{!checkLogin}"
+	standardStylesheets="false" showHeader="false" id="apc_ap_main_interview_status">
+  
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      
+      <c:block_header_apc_ap_application />
+      
+      <div id="app-page" class="row">
+        <div id="app-focus" class="col-md-8 col-md-push-3">
+          
+          <c:block_app_completion ApplicantInfo="{!applicantInfo}" userProfileName="{!userProfileName}"  />
+          
+          <h1>Interview</h1>
+          <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+          <apex:form styleClass="form-vertical ws-validate" id="webform">
+            <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+            
+            <!-- 
+            <p class="lead">Please review and agree to the terms regarding your well-being on the program.</p>
+             -->
+             
+            <apex:outputPanel layout="block" rendered="{!(applicantinfo.PageStatus_Complete__c !=null && contains(applicantinfo.PageStatus_Complete__c, '043'))}">
+            <p class="lead alert alert-success">Our records indicate that you completed your in-person interview.
+            <!-- 
+            <b><apex:outputText value=" {0,date,MM'/'dd'/'yyyy}">
+    		<apex:param value="{!assessment.Assessment_Date__c}" /> 
+			</apex:outputText></b>
+			 -->
+             Please contact your agency if you have any
+             questions.
+             </p>
+             	<div>Your Agency:</div>
+				<div>{!applicantinfo.Partner_Account__r.Name}</div>
+				<div>{!applicantinfo.Partner_Account__r.BillingStreet}</div>
+				<div>{!applicantinfo.Partner_Account__r.BillingCity}, {!applicantinfo.Partner_Account__r.BillingPostalCode}</div>
+				<div>{!applicantinfo.Partner_Account__r.BillingCountry}</div>
+				<div>{!applicantinfo.Partner_Account__r.Phone}</div>
+
+            </apex:outputPanel>
+            
+            <apex:outputPanel layout="block" rendered="{!(applicantinfo.PageStatus_Complete__c == null  || NOT(contains(applicantinfo.PageStatus_Complete__c, '043')))}">
+            <p class="lead">An in-person interview is an important piece of your application to become an au pair. This interview will take place in
+             your country with a representative of AuPairCare. It should take about one hour and you will be asked questions about your
+              desire to be an au pair and childcare experience. </p>
+            <p class="lead alert alert-warning">Our records indicate that you have not completed an in-person interview. Please contact your agency to learn more and schedule this interview.</p>
+            </apex:outputPanel>
+            <!-- 
+            <apex:outputPanel layout="block" rendered="{!contains(applicantinfo.PageStatus_Complete__c, '038')}">
+            <p></p>
+            </apex:outputPanel>
+             -->
+            
+            
+            <div class="row">
+              <div class="col-sm-12 margin-t">
+                <apex:outputLink styleClass="btn btn-link btn-lg" value="/apex/apc_ap_main_bgc_form?id={!applicantInfo.Id}&docType=BackgroundCheck" id="backlink"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                
+              </div>
+            </div>
+          </apex:form>
+        </div>
+        <!-- end column  -->
+        
+        <div id="app-side" class="col-md-3 col-md-pull-8">
+          <c:menu_side_apc_ap_basic ApplicantInfo="{!applicantInfo}" />
+        </div>
+        <!-- end column --> 
+        
+      </div>
+      <!-- end row --> 
+      
+    </apex:define>
+  </apex:composition>
+</apex:page>

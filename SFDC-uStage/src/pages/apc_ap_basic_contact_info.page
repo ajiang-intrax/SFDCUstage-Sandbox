@@ -1,0 +1,427 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false"
+	title="Contact Information" standardController="Applicant_Info__c"
+	extensions="AppEngine_Controller" action="{!checkLogin}"
+	standardStylesheets="false" showHeader="false" id="apc_ap_basic_contact_info"> 
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_apc_ap_application />
+    <div id="app-page" class="row">
+        <div id="app-focus" class="col-md-8 col-md-push-3">  
+          <c:block_app_completion ApplicantInfo="{!applicantInfo}" userProfileName="{!userProfileName}"  /> 
+          
+          <!-- AUDIT BLOCK PARTNER -->
+          <c:block_apc_pr_audit flaggedList="{!flaggedList}" rendered="{!userProfileName == 'OCPM Agent Portal' && applicantInfo.Application_Level__c == 'Basic' && applicantInfo.Application_Stage__c == 'Submitted'}"/>
+          
+          <!-- Jose-Adding Tips for Partners  (Profile "OCPM Agent Portal")
+          <apex:outputPanel rendered="{!userProfileName == 'OCPM Agent Portal' && applicantInfo.Application_Level__c == 'Main'}" layout="block" id="blockTip">
+	          <div class="lead alert alert-warning clearfix">
+	          <b>Tip</b>&nbsp;&nbsp;
+	          If applicant has not provided a Skype ID, please add it now.
+	          </div>
+          </apex:outputPanel>
+          -->
+          
+          <h1>Contact Information</h1>
+          <apex:outputPanel layout="block" rendered="{!applicantinfo.Application_Type__c != 'Extension' && applicantinfo.Application_Type__c != 'Renewal'}" id="outputpanelHead">
+          <p class="lead">Please let us know the best way to contact you. Host families will also use this information to contact you for interviews and matching.</p>
+          </apex:outputPanel>
+          
+          <apex:outputPanel layout="block" rendered="{!applicantinfo.Application_Type__c == 'Extension' || applicantinfo.Application_Type__c == 'Renewal'}" id="outputpanelHead1">
+          <p class="lead">Please provide your US phone number should you need to be contacted regarding your au pair program.</p>
+          </apex:outputPanel>
+          
+          <apex:form styleClass="form-vertical ws-validate" id="webform">
+            <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+            
+            <apex:outputPanel layout="block" rendered="{!applicantinfo.Application_Type__c != 'Extension' && applicantinfo.Application_Type__c != 'Renewal'}" id="outputpanel">
+			  
+			  <div class="row"> 
+              <div class="col-sm-6">
+              <div class="form-group">
+                <label class="control-label">Email</label>
+                <apex:inputField styleClass="form-control" value="{!personInfo.Email__c}"
+						required="TRUE" id="email" />
+              </div>
+              </div>
+              
+              <div class="col-sm-6">
+              <div class="form-group">
+              <label class="control-label">
+              Skype Username <span class="info">(Mandatory for Interview)</span> <i data-toggle="popover" class="infobtn fa fa-question-circle"></i>
+              <div class="popover-html"> We recommend Skype as a great way to interview with host families. <a href="http://www.skype.com/en" target="_blank">More info</a></div>
+              
+              </label>
+                <apex:inputField styleClass="form-control" value="{!personInfo.Skype_Id__c}"
+					required="FALSE" id="skype" />
+            </div>
+            </div>
+               </div><!--  end row -->
+			<div class="section-title margin-t3">Address</div>
+			<div class="row">	
+			<div class="col-sm-6">
+              <div class="form-group">
+                <label class="control-label">Address Line 1</label>
+                <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);"
+						html-placeholder="Street address" value="{!applicantInfo.Home_Street_1__c}" required="TRUE"
+						id="street1" />
+              </div>
+              </div>
+              
+              <div class="col-sm-6">
+              <div class="form-group">
+                <label class="control-label">Address Line 2</label>
+                <apex:inputField html-placeholder="Apartment, building, floor, etc." styleClass="form-control" onblur="CapitalizeName(event.target);"
+						value="{!applicantInfo.Home_Street_2__c}" required="False"
+						id="street2" />
+              </div>
+              </div>
+              
+              </div><!--  end row -->
+              
+            
+             
+             <div class="row">	 
+             <div class="col-sm-6">
+              <div class="form-group">
+                <label class="control-label">City</label>
+                <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!applicantInfo.Home_City__c}"
+						required="TRUE" id="city" />
+              </div>
+              </div>
+              
+              <div class="col-sm-6">
+               <div class="form-group">
+                <label class="control-label">State/Province/Region <span class="optional">(Optional)</span></label>
+                <apex:inputField styleClass="form-control" onblur="CapitalizeName(event.target);" value="{!applicantInfo.Home_State__c}" id="state" />
+              </div>
+              </div>
+              
+              </div><!--  end row -->
+
+              
+              <div class="row">
+              <div class="col-sm-6">
+              <div class="form-group">
+                <label class="control-label">Country</label>
+                <apex:inputField styleClass="form-control" value="{!applicantInfo.Home_Country__c}"
+						required="TRUE" id="country" />
+              </div>
+              </div>
+              
+              <div class="col-sm-6">
+               <div class="form-group">
+                <label class="control-label">Postal Code</label>
+                <apex:inputField styleClass="form-control"
+						value="{!applicantInfo.Home_Postal_Code__c}" required="TRUE"
+						id="zip" />
+              </div>
+              </div>
+               </div><!--  end row -->
+               
+             
+                <!--<apex:inputField styleClass="form-control" value="{!user.TimeZoneSidKey}" required="TRUE" id="Timezone" />-->
+                  
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">Time Zone</label>
+                            <apex:selectList styleClass="form-control"  value="{!user.TimeZoneSidKey}" multiselect="false" required="TRUE" id="timezonemask" size="1">
+                                <apex:selectOption itemValue="" itemlabel="--None--"/>
+                                <apex:selectOptions value="{!getAPCPTTimeZone}"/>
+                            </apex:selectList>
+                        </div>
+                    </div>
+                </div>
+               
+               <!--  end row -->
+                
+                
+              
+            <div class="section-title margin-t3">Phone <span class="info">(Please enter your mobile phone number first)</span></div> 
+               
+              <div class="row"> 
+              <div class="col-sm-3">
+              <div class="form-group">
+                <label class="control-label">Country Code</label>
+                <apex:actionRegion >
+                  <apex:selectList styleClass="form-control"
+							value="{!personInfo.Phone_Country_Code__c}" multiselect="false"
+							required="TRUE" id="countrycode" size="1">
+                    <apex:selectOption itemValue="" itemLabel="Select Country Code" />
+                    <apex:selectOptions value="{!listCountryCodeOptions}" />
+                    <apex:actionSupport event="onchange" rerender="phonecode"
+								status="showcode" />
+                  </apex:selectList>
+                </apex:actionRegion>
+               
+                <apex:message for="countrycode" styleClass="custom-error-radio" id="apexmess1" />
+              </div>
+              </div>
+               <div class="col-sm-6">
+              <div class="form-group">
+                <label class="control-label">Phone Number</label>
+                <apex:outputpanel id="phonecode" layout="block">
+                  <div class="input-group"> <span class="input-group-addon">{!personInfo.Phone_Country_Code__c}</span>
+                    <apex:inputField styleClass="form-control onlynumber" value="{!personInfo.Phone__c}" required="TRUE" id="phone" />
+                  </div>
+                </apex:outputpanel>
+              </div>
+              </div>
+                 <div class="col-sm-3">
+              <div class="form-group">
+                <label class="control-label">Phone Type</label>
+                <apex:inputField styleClass="form-control" value="{!personInfo.Phone_Type__c}"	required="TRUE" id="phonetype" />
+              </div>
+              </div>
+                </div><!--  end row -->
+              <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showcode" />  
+              
+              <apex:outputPanel layout="block" id="itselfpanel">
+                  <apex:actionRegion >
+                    <apex:commandlink rendered="{!addphones==false && isblank(personInfo.Other_Phone__c)}"
+								styleClass="btn btn-link btn-lg" action="{!addotherphone}"
+								value="" rerender="otherphonebox,itselfpanel"
+								status="showaddphone" id="linkphone">
+								<i class="fa fa-plus-circle"></i> <span>Add Another Phone</span>
+								</apex:commandlink>
+                  </apex:actionRegion>
+                </apex:outputPanel>
+                <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showaddphone" />  
+               
+            
+              <apex:outputPanel id="otherphonebox" layout="block">
+                <apex:outputPanel rendered="{!addphones==true || NOT(isblank(personInfo.Other_Phone__c))}">
+                    <div class="row"> 
+                     <div class="col-sm-3">
+                  <div class="form-group">
+                    <label class="control-label">Country Code <br/></label>
+                    <apex:actionRegion >
+                      <apex:selectList styleClass="form-control"
+									value="{!personInfo.Phone_Country_Code_Other__c}"
+									multiselect="false" required="TRUE" id="countrycodeother"
+									size="1">
+                        <apex:selectOption itemValue="" itemLabel="Select Country Code" />
+                        <apex:selectOptions value="{!listCountryCodeOptions}" />
+                        <apex:actionSupport event="onchange" rerender="phonecodeother"
+										status="showcodeother" />
+                      </apex:selectList>
+                    </apex:actionRegion>
+                  
+                    <apex:message for="countrycodeother" styleClass="custom-error-radio"
+								id="apexmessother" />
+                  </div>
+                  </div>
+                  
+                  <div class="col-sm-6">
+                  <div class="form-group">
+                    <label class="control-label">Alternate Phone Number 
+                    <apex:commandlink action="{!removeOtherPhone}" onComplete="dpInitiate();enableSubmit();" immediate="true" rerender="otherphonebox, itselfpanel" id="buttophoneDe" status="showcodeother">
+					      <span>(Remove)</span>
+					      </apex:commandlink></label>
+                    <apex:outputpanel id="phonecodeother" layout="block">
+                      <div class="input-group"><span class="input-group-addon">{!personInfo.Phone_Country_Code_Other__c}</span>
+                        <apex:inputField styleClass="form-control onlynumber" value="{!personInfo.Other_Phone__c}" required="TRUE"	id="otherphone" />
+                      </div>
+                    </apex:outputpanel>
+                  </div>
+                  </div>
+                
+                 
+                 <div class="col-sm-3">
+                 <div class="form-group">
+                    <label class="control-label">Phone Type <br/></label>
+                    <apex:inputField styleClass="form-control" value="{!personInfo.Other_Phone_Type__c}" required="TRUE" id="otherphonetype" />
+                  
+                 </div>
+                 </div>
+                 </div><!--  end row -->
+			      
+                   <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showcodeother" />
+                </apex:outputPanel>
+              </apex:outputPanel>
+            </apex:outputPanel>
+            
+            <apex:outputPanel layout="block" rendered="{!applicantinfo.Application_Type__c == 'Extension' || applicantinfo.Application_Type__c == 'Renewal'}" id="outputpane3">
+					<div class="row"> 
+					 <div class="col-sm-6">
+              <div class="form-group">
+                <label class="control-label">U.S. Phone Number</label>
+                <apex:outputpanel id="USphonecode" layout="block">
+                  <div class="input-group"><span class="input-group-addon">1</span>
+                    <apex:inputField styleClass="form-control" value="{!personInfo.Program_Phone__c}" required="TRUE" id="USphone" />
+                  </div>
+                  </apex:outputpanel>
+                   </div>
+                   </div>
+                    <div class="col-sm-6">
+              <div class="form-group">
+                <label class="control-label">U.S. Phone Type</label>
+                  <apex:inputField styleClass="form-control" value="{!personInfo.Program_Phone_Type__c}" required="TRUE" id="USphonetype" />
+              </div>
+              </div>
+                  </div><!--  end row -->
+            </apex:outputPanel>
+         
+             
+
+           <apex:outputPanel layout="block" rendered="{!applicantinfo.Application_Type__c != 'Extension' && applicantinfo.Application_Type__c != 'Renewal'}" id="outputpane2">
+	          
+	          <hr class="margin-t3"/>
+	      		
+	      		<div class="row">
+	        	<div class="col-sm-12">
+                <div class="form-group">
+                <label class="control-label">How did you hear about us? </label>
+                  <apex:actionRegion >
+                    <apex:inputField styleClass="form-control" value="{!applicantinfo.How_Heard__c}" required="True" id="hearaboutus">
+                      <apex:actionSupport action="{!cleanHowHeard}" event="onchange" rerender="sourceReferral, sourceReferralDetails" onComplete="restoreclass();" status="showref" />
+                    </apex:inputField>
+                  </apex:actionRegion>
+                  <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showref" />
+                </div>
+                </div>
+             	</div><!--  end row -->
+              
+             <apex:pageBlock id="sourceReferral">
+                
+             <apex:outputText id="outputpanel1" rendered="{!applicantinfo.How_Heard__c == 'Referral' || applicantinfo.How_Heard__c == 'Web Search' ||
+                      applicantinfo.How_Heard__c == 'Event' || applicantinfo.How_Heard__c == 'Social Media'}">
+                  
+                   <div class="row">
+                   <div class="col-sm-12">
+                    <div class="form-group restoreclass">
+                      <label class="control-label">Please choose one</label>
+                        <apex:actionRegion >
+                          
+                       <apex:inputField styleClass="form-control" value="{!applicantinfo.How_Heard_Detail__c}" rendered="{!applicantinfo.How_Heard__c == 'Web Search' ||
+                      applicantinfo.How_Heard__c == 'Event' || applicantinfo.How_Heard__c == 'Social Media'}" required="TRUE" id="heardecs">
+                            <apex:actionSupport event="onchange" rerender="sourceReferralDetails" status="showref2" />
+                       </apex:inputField>
+                       
+                       <apex:outputPanel rendered="{!applicantinfo.How_Heard__c == 'Referral'}"> 
+                           <apex:selectList styleClass="form-control"  value="{!applicantinfo.How_Heard_Detail__c}" multiselect="false" required="TRUE" id="maskval" size="1">
+                                 <apex:selectOption itemValue="" itemlabel="--None--"/>
+                                 <apex:selectOptions value="{!getHeardDetail}"/>
+                                 <apex:actionSupport event="onchange" rerender="sourceReferralDetails" status="showref2" />
+                           </apex:selectList>
+                        </apex:outputPanel>
+                            
+                        </apex:actionRegion>
+                        <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showref2" />
+                    <apex:message for="maskval" styleClass="custom-error-radio" id="apexmess1"/>
+                    </div>
+                    </div>
+                    </div><!--  end row -->
+                    
+                
+                  <apex:pageBlock id="sourceReferralDetails">
+                    <apex:outputPanel layout="block" rendered="{!applicantinfo.How_Heard__c == 'Web Search' ||  applicantinfo.How_Heard__c == 'Referral' || applicantinfo.How_Heard__c == 'Social Media'}">
+                    
+                    <apex:outputPanel layout="block" id="Referral" rendered="{!applicantinfo.How_Heard_Detail__c == 'Family' || 
+                                      applicantinfo.How_Heard_Detail__c == 'Former Participant' || applicantinfo.How_Heard_Detail__c == 'Our Program Staff' || 
+                                      applicantinfo.How_Heard_Detail__c == 'Other'}">
+                     
+                    <div class="row">
+                    <div class="col-sm-12">
+                      <div class="form-group">
+                         <apex:outputPanel layout="block" rendered="{!applicantinfo.How_Heard_Detail__c == 'Family'
+                                        || applicantinfo.How_Heard_Detail__c == 'Former Participant' || applicantinfo.How_Heard_Detail__c == 'Our Program Staff'}">
+                        <label class="control-label">More About the Referring Person <span class="info">(Optional)</span></label>
+                             <div class="row">
+                                        <div class="col-sm-6">
+                                        <div class="form-group"><label class="control-label">First Name  </label> 
+                                            <apex:inputField styleClass="form-control" value="{!applicantInfo.RB_First_Name__c}" required="False" id="Fname" />
+                                         </div>
+                                        </div>
+                        
+                                        <div class="col-sm-6">
+                                        <div class="form-group"><label class="control-label">Last Name </label> 
+                                            <apex:inputField styleClass="form-control"   value="{!applicantInfo.RB_Last_Name__c}" required="False" id="Lname" />
+                                         </div>
+                                        </div>
+                                        </div>
+                                 
+                        </apex:outputPanel>
+                        
+                            <apex:outputPanel layout="block" rendered="{!applicantinfo.How_Heard_Detail__c == 'Other' }">
+                        <label class="control-label">Please describe</label>
+                            <apex:inputField styleClass="form-control" value="{!applicantinfo.How_Heard_Other__c}" required="FALSE" id="otherdesc" />
+                        </apex:outputPanel>
+                        
+                          
+                      </div>
+                    </div>
+                    </div><!--  end row -->
+                  
+                    </apex:outputPanel>
+                    </apex:outputPanel>
+                  </apex:pageBlock>
+                </apex:outputText>
+              </apex:pageBlock>
+            </apex:outputPanel>
+              
+            
+            <div class="row">
+              <div class="col-sm-12 margin-t">
+                <apex:outputLink styleClass="btn btn-link btn-lg" rendered="{!applicantInfo.Application_Type__c=='Original'}" value="/apex/apc_ap_basic_personal_info?id={!applicantInfo.Id}" id="backlinkpersonal"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                <apex:outputLink styleClass="btn btn-link btn-lg" rendered="{!applicantInfo.Application_Type__c=='Extension'}" value="/apex/apc_ap_main_education_proof?id={!applicantInfo.Id}&docType=Proof-of-Education" id="backlinkproof"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                
+                <apex:outputText rendered="{!applicantInfo.Application_Type__c=='Original' && applicantInfo.Application_Level__c=='Basic'}">
+                <apex:commandlink styleClass="btn btn-primary btn-lg"
+					action="{!navigator}" id="nextpage" onComplete="rerunjs();"
+					reRender="webform" status="onsubmit">
+                  <apex:param name="nextPage" value="/apex/apc_ap_basic_eligibility"/>
+                  <apex:param name="reDirectPage" value="true" />
+                  <apex:param name="pageId" value="013" />
+                  <apex:commandButton value="Save & Continue" id="continuebutton" />
+                </apex:commandlink>
+                </apex:outputText>
+                
+                 <apex:outputText rendered="{!applicantInfo.Application_Type__c=='Original' && applicantInfo.Application_Level__c=='Main'}">
+                <apex:commandlink styleClass="btn btn-primary btn-lg"
+					action="{!navigator}" id="nextpage2" onComplete="rerunjs();"
+					reRender="webform" status="onsubmit">
+                  <apex:param name="nextPage" value="/apex/apc_ap_main_interests"/>
+                  <apex:param name="reDirectPage" value="true" />
+                  <apex:param name="pageId" value="013" />
+                  <apex:commandButton value="Save & Continue" id="continuebutton2" />
+                </apex:commandlink>
+                </apex:outputText>
+                
+                <apex:outputText rendered="{!applicantInfo.Application_Type__c=='Extension'}">
+                <apex:commandlink styleClass="btn btn-primary btn-lg"
+					action="{!navigator}" id="nextpage3" onComplete="rerunjs();"
+					reRender="webform" status="onsubmit">
+                  <apex:param name="nextPage" value="{!IF(applicantInfo.Application_Type__c=='Extension','/apex/apc_ap_main_ext_agreements',IF(applicantInfo.Extension_Preferences__c='New Family','/apex/apc_ap_basic_program_preferences','/apex/apc_ap_basic_eligibility'))}"/>
+                  <apex:param name="reDirectPage" value="true" />
+                  <apex:param name="pageId" value="013" />
+                  <apex:commandButton value="Save & Continue" id="continuebutton3" />
+                </apex:commandlink>
+                </apex:outputText>
+                
+                 <apex:outputText rendered="{!applicantInfo.Application_Type__c=='Renewal'}">
+                <apex:commandlink styleClass="btn btn-primary btn-lg"
+					action="{!navigator}" id="nextpage4" onComplete="rerunjs();"
+					reRender="webform" status="onsubmit">
+                  <apex:param name="nextPage" value="/apex/apc_ap_basic_program_preferences"/>
+                  <apex:param name="reDirectPage" value="true" />
+                  <apex:param name="pageId" value="013" />
+                  <apex:commandButton value="Save & Continue" id="continuebutton4" />
+                </apex:commandlink>
+                </apex:outputText>
+                
+              </div>
+            </div>
+          </apex:form>
+        </div>
+        <!-- end column  -->
+        
+        <div id="app-side" class="col-md-3 col-md-pull-8">
+          <c:menu_side_apc_ap_basic ApplicantInfo="{!applicantInfo}" />
+        </div>
+        <!-- end column  --></div>
+      <!-- end row --> 
+      
+    </apex:define>
+  </apex:composition>
+</apex:page>

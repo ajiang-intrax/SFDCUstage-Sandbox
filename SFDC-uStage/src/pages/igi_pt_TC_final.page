@@ -1,0 +1,38 @@
+<apex:page title="Participant's Terms and Conditions | Intrax" standardStylesheets="false" showHeader="false" controller="DocuSign_Controller" action="{!MethodIGITCFinal}">
+  
+    <apex:composition template="intraxtemplate_vs3" >
+      <apex:define name="body">
+      	<apex:form >
+      	<c:block_header_igi_pt_application />    
+            <div class="row">
+        <div class="col-md-7 col-md-push-3">
+           
+          
+           
+            <apex:outputPanel layout="block" rendered="{!($CurrentPage.parameters.event='SignComplete')}">
+             <h1>Thank You!</h1>
+              <p class="lead">You have successfully signed the Intrax Global Internships Terms and Conditions. You can click the button below to view a copy of the agreement.</p> 
+            </apex:outputPanel>
+            
+            <apex:outputPanel layout="block" rendered="{!NOT(($CurrentPage.parameters.event='SignComplete'))}">
+              <h1>Terms and Conditions</h1>
+              <p class="lead">You have not yet signed Intrax Global Internships Terms and Conditions. Please click the button below to sign now.</p>
+            </apex:outputPanel>
+             
+            <apex:outputPanel layout="block" rendered="{!msgDisplay == 'Exception'}">
+              <h1>Terms and Conditions</h1>
+              <p class="alert alert-danger">{!msgDisplay}</p>
+            </apex:outputPanel>
+         </div> <!--  end col -->
+         
+         <div class="col-md-3 col-md-push-7">
+       
+         </div> <!--  end col -->
+         
+         </div> <!--  end row -->     
+           
+     	</apex:form>
+      </apex:define>
+    </apex:composition>
+  
+</apex:page>

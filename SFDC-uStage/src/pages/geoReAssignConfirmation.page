@@ -1,0 +1,99 @@
+<apex:page standardcontroller="GeoMatch__c" extensions="GeoReAssign" action="{!showPreMatch}" title="Geo Reassign Confirmation">
+
+	<apex:form >
+	<style type="text/css">
+      .cmdBtn{
+          color:white !important;
+          background:#343d36 !important;
+       }
+    </style>
+	
+	<apex:PageMessages />
+	<br/>
+	<apex:variable var="sType" value="{!sTypeParam}" />
+	
+	<h1>Preview Re-assignment</h1>	
+	<apex:outputPanel layout="block" rendered="{!sType=='reAssignHF'}">
+		<p>Choose the <b>area director</b> you want to assign the <b>host family</b> to. You can also use the map visualizer to help make a decision.</p>
+		<p><apex:commandButton styleClass="cmdBtn" value=" Map Visualizer " action="{!Visualize}"/></p>
+	</apex:outputPanel>
+	
+	<apex:outputPanel layout="block" rendered="{!sType!='reAssignHF'}">
+		<p>View the potential results of this assignment and confirm or cancel it at the bottom of the page. You can also use the map visualizer to help make a decision.</p>
+		<p><apex:commandButton styleClass="cmdBtn" value=" Map Visualizer " action="{!Visualize}"/></p>
+	</apex:outputPanel>
+	<p>&nbsp;</p>
+	<p><b>Within 1-Hour Driving Distance of {!newADName} ({!compatibleCount})</b><br/><em>These are approximations provided by Google Maps.</em></p>
+	<apex:pageBlock >					
+		<apex:pageBlockTable value="{!myWrapperListCompatible}" var="mw">									
+			<apex:column headerValue="Host Family Name" value="{!mw.sName}" rendered="{!sType!='reAssignHF'}"></apex:column>
+			<apex:column headerValue="Area Director Name" value="{!mw.sName}" rendered="{!sType=='reAssignHF'}" ></apex:column>
+			<apex:column headerValue="Drive Time (in Mins)" value="{!mw.dur}" ></apex:column>
+			<apex:column headerValue="Distance (in Miles)" value="{!mw.dis}" ></apex:column>	
+			<apex:column headerValue="Actions" rendered="{!sType=='reAssignHF'}" >
+		    	<!-- onclick="return getRMConfirmation({!newZipWrapper.newZipCode},'{!newZipWrapper.associatedAD.Name}');" 
+		    	onclick="if(!confirm('Are you sure?')){return};" -->
+				<apex:commandButton action="{!AssignToHF}" reRender="none" value=" Assign to this Area Director ">
+					<apex:Param name="selectedAD" value="{!mw.sName}" assignTo="{!selectedAD}"/>
+		    	</apex:commandButton>
+    		</apex:column>			
+		</apex:pageBlockTable>
+	</apex:pageBlock>	
+	
+	<p>&nbsp;</p>
+		
+	<p><b>Beyond 1-Hour Driving Distance of {!newADName} ({!InCompatibleCount})</b><br/><em>These are approximations provided by Google Maps.</em></p>
+	<apex:pageBlock >
+		
+		<apex:pageBlockTable value="{!myWrapperListInCompatible}" var="mw">									
+			<apex:column headerValue="Host Family Name" value="{!mw.sName}" rendered="{!sType!='reAssignHF'}" ></apex:column>
+			<apex:column headerValue="Area Director Name" value="{!mw.sName}" rendered="{!sType=='reAssignHF'}" ></apex:column>
+			<apex:column headerValue="Drive Time (in Mins)" value="{!mw.dur}" ></apex:column>
+			<apex:column headerValue="Distance (in Miles)" value="{!mw.dis}" ></apex:column>	
+			<apex:column headerValue="Actions" rendered="{!sType=='reAssignHF'}" >
+		    	<!-- onclick="return getRMConfirmation({!newZipWrapper.newZipCode},'{!newZipWrapper.associatedAD.Name}');" 
+		    	onclick="if(!confirm('Are you sure?')){return};" -->
+				<apex:commandButton action="{!AssignToHF}" reRender="none" value=" Assign to this Area Director ">
+					<apex:Param name="selectedAD" value="{!mw.sName}" assignTo="{!selectedAD}"/>
+		    	</apex:commandButton>
+    		</apex:column>		
+		</apex:pageBlockTable>				
+	</apex:pageBlock>
+	
+	<apex:outputPanel layout="block" rendered="{!sType!='reAssignHF'}">
+	<p>&nbsp;</p>	
+	<p>Please select one of the options below:</p>	
+	
+	<p><b>Option 1</b></p>
+	<ul>
+	<li><b>Re-assign</b> families within 1-hour driving distance to the new area director, <b>{!newADName}</b>.</li>
+	<li><b>Re-assign</b> families beyond of the 1 hour driving distance to <b>{!newADName}</b>.</li>
+	</ul>
+	<p><apex:commandbutton value=" Select This Option " action="{!continueMethod}" styleClass="cmdBtn"></apex:commandbutton></p>
+	<p>&nbsp;</p>
+	<p><b>Option 2</b></p>
+	<ul>
+	<li><b>Re-assign</b> families within 1-hour driving distance to the new area director, <b>{!newADName}</b>.</li>
+	<li><b>Keep</b> families beyond the 1-hour driving distance assigned to <b>{!oldADName}</b>.</li>
+	</ul>
+	<p><apex:commandbutton value=" Select This Option " action="{!retainMethod}" styleClass="cmdBtn"></apex:commandbutton></p>	
+	
+	</apex:outputPanel>
+	<p>&nbsp;</p>
+	<p>Not happy with either options?</p>	
+	<p><apex:commandbutton value=" Cancel and Return " action="{!CancelAndReturn}" ></apex:commandbutton></p>
+	
+	
+	<!-- 
+	For the Incompatible pairs, you may continue with the new Area Director, <b>{!newADName}</b>&nbsp;<apex:commandbutton value="Continue" action="{!continueMethod}" ></apex:commandbutton>
+	or retain the old Area Director <b>{!oldADName}</b>&nbsp;<apex:commandbutton value="Retain" action="{!retainMethod}" ></apex:commandbutton> 
+	 -->
+	<!-- 
+	<apex:selectList value="{!selectedAD}" multiselect="false" size="1">
+		<apex:selectOptions value="{!ADs}" />
+	</apex:selectList>
+	&nbsp;
+	 -->	 
+	
+	</apex:form>	
+</apex:page>

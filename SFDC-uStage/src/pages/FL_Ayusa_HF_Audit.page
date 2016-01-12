@@ -1,0 +1,6 @@
+<apex:page StandardController="Applicant_Info__c" extensions="FlowController">
+  <flow:interview name="FL_Ayusa_HF_Audit" finishLocation="{!finishPage}">
+     <apex:param name="pApplicantID" value="{!Id}"/>
+     <apex:param name="pType" value="Ayusa"/> 
+  </flow:interview>
+</apex:page>

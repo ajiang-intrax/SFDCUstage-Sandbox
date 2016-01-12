@@ -1,0 +1,191 @@
+<apex:page >
+    <apex:includeScript value="{!URLFOR($Resource.invoiceit_s__jQueryModal, 'js/jquery-1.4.2.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.invoiceit_s__jQueryModal, 'js/jQuery_SimpleModal.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.invoiceit_s__jQueryModal,'js/ui.core.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.invoiceit_s__jQueryModal,'js/ui.resizable.js')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.invoiceit_s__jQueryModal, 'css/ui.resizable.css')}" />
+    <apex:form >
+        <script>
+            $j = jQuery.noConflict();
+            function showIFrameDialogWindow(url,h,w) {
+                var src = url;
+                $j.modal('<iframe src="' + src + '" height="100%" width="100%" style="border:0; width:100%; height:100%;">', {
+                    //closeHTML:"",
+                    containerCss:{
+                        backgroundColor:"#fff",
+                        //borderColor:"#2E91D0",
+                        height:h,
+                        padding:0,
+                        width:w
+                    },
+                    onShow: function (dialog) {
+                        enableResizing(dialog.container);
+                    },
+                    overlayClose:false
+                });
+            }
+            function showAutomatedScriptDialogWindow() {
+                $j.modal(document.getElementById('{!$Component.opAutomatedScript}'), {
+                    //closeHTML:"",
+                    containerCss:{
+                        backgroundColor:"#fff",
+                        //borderColor:"#2E91D0",
+                        height:350,
+                        padding:0,
+                        width:750
+                    },
+                    onShow: function (dialog) {
+                        enableResizing(dialog.container);
+                    },
+                    overlayClose:false
+                });
+            }
+            function jq(myid) { 
+                var i = '#' + myid.replace(/(:|\.)/g,'\\$1');
+                return i;
+            }
+            function enableResizing(obj) {
+                $j(obj).resizable();
+            }
+            $j(document).ready(function(){
+            });
+        </script>
+        <style>
+            #simplemodal-overlay {background-color:#000;}
+            #simplemodal-container {background-color:#333; border:3px solid #444; padding:10px;}
+            #simplemodal-data { width:100%; height: 100% }
+            #simplemodal-container a.modalCloseImg {
+                background:url("{!URLFOR($Resource.jQueryModal, 'img/basic/x.png')}") no-repeat; /* adjust url as required */
+                width:25px;
+                height:29px;
+                display:inline;
+                z-index:3200;
+                position:absolute;
+                top:-15px;
+                right:-18px;
+                cursor:pointer;
+            }
+            .ui-icon-gripsmall-diagonal-se {
+                background-position:-64px -224px !important;
+            }
+            .ui-icon {
+                background-image:url("{!URLFOR($Resource.jQueryModal,'img/ui-icons_222222_256x240.png')}") !important;
+                height:16px;
+                width:16px;
+            }
+            .ui-resizable-se {
+                bottom:1px;
+                cursor:se-resize;
+                height:12px;
+                right:1px;
+                width:12px;
+            }
+            .ui-resizable-handle {
+                display:block;
+                font-size:0.1px;
+                position:absolute;
+                z-index:99999;
+            }
+            .ui-icon {
+                background-repeat:no-repeat;
+                display:block;
+                overflow:hidden;
+                text-indent:-99999px;
+            }
+            .anchorLinks { font-weight: bold;}
+            .textJustify {  text-align: justify; }
+            .tableContainer {
+                border: 1px solid transparent;
+            }
+            .btnDisabled {
+                width: 200px !important;
+                font-weight:bold !important;
+            }
+            div.boxed_main_area {
+                margin-top: 15px;
+                margin-left: 15px;
+                margin-right: 15px;
+                margin-bottom: 15px;
+                position:relative;
+                overflow: auto;
+            }
+            
+        </style>
+        <div  style="background-color:#F7F8FA">
+            <div  style="width:620px;height:600px; margin-left:50px; margin-right:175px; margin-right:auto; background-color:white; padding-left:50px; padding-right:50px; padding-bottom:0px;border-right:solid thin #D8D8D8;border-left:solid thin #D8D8D8;">
+                <table width="100%" border="0" align="center" cellpadding="5" cellspacing="5" >
+                    <tr valign="top">
+                        <td colspan="2" align="left" valign="top" class="tableContainer">                 
+                            <div style="border-bottom:solid #1797C0 3pt;padding:0 0 3pt 0;font-weight:bold;">
+                                <span style="font-size: 18pt; color: #1797C0"><br /> {!$Label.Setup_Manage_Stock_Items}</span>
+                            </div>                  
+                        </td>
+                    </tr>             
+                    <tr>
+                        <td align="left" valign="top" class="tableContainer" width="50%">
+                            <table>
+                                <tr valign="top">
+                                   <td width="20%">
+                                        <img src="{!URLFOR($Resource.InvoiceIt, 'images/product.png')}" width="48" height="48" />
+                                    </td> 
+                                    <td align="left" width="80%">
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <apex:outputlink value="{!URLFOR($Page.invoiceit_s__addStockItems)}" styleclass="anchorLinks">
+                                                        {!$Label.Setup_Scan_Stocks}
+                                                    </apex:outputlink>
+                                                </td>
+                                                <td>
+                                                    <div class="links">
+                                                       <!-- <a href="javascript:openPopupFocusEscapePounds('http://www.weinvoiceit.com/support/', 'Help', 700, 600, 'width=700,height=600,resizable=yes,toolbar=yes,status=no,scrollbars=yes,menubar=yes,directories=no,location=no,dependant=no', false, false);" title="Help">
+                                                            <img src="/s.gif" alt="Help" class="helpIcon" title="Help"/>
+                                                        </a> -->
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table> 
+                                        {!$Label.stockItemHome_ScanStockDescription}                                     
+                                        <br />
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td align="left" valign="top" class="tableContainer" width="50%">
+                            <table>
+                                <tr valign="top">
+                                    <td width="20%">
+                                       <img src="{!URLFOR($Resource.InvoiceIt, 'images/product.png')}" width="48" height="48" />
+                                    </td>
+                                    <td align="left" width="80%">
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <apex:outputlink value="{!URLFOR($Action.Stock_Item__c.New)}" styleclass="anchorLinks">
+                                                        {!$Label.Setup_Add_Stocks}
+                                                    </apex:outputlink>
+                                                </td>
+                                                <td>
+                                                    <div class="links">
+                                                      <!---  <a href="javascript:openPopupFocusEscapePounds('http://www.weinvoiceit.com/support/', 'Help', 700, 600, 'width=700,height=600,resizable=yes,toolbar=yes,status=no,scrollbars=yes,menubar=yes,directories=no,location=no,dependant=no', false, false);" title="Help">
+                                                            <img src="/s.gif" alt="Help" class="helpIcon" title="Help"/>
+                                                        </a> --->
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        {!$Label.stockItemHome_AddStockDescription}
+                                        <br />
+                                    </td>
+                                </tr>
+                            </table>
+                        </td> 
+                    </tr>
+                </table>   
+              
+                <div style="border-bottom:solid #1797C0 3pt;padding:0 0 3pt 0;font-weight:bold;">
+                </div>
+            </div> 
+        </div>
+    </apex:form>
+</apex:page>

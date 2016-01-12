@@ -1,0 +1,484 @@
+<apex:page id="ayusa_hf_submitted_view" docType="html-5.0" standardController="Applicant_Info__c"  extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false" >
+  <apex:composition template="IntraxTemplate_Vs1">
+     <apex:define name="body">
+      <div class="wrapper" id="ayusa-student-preapp-summary">
+ <apex:form id="form">
+ 
+      <div class="page-header clearfix">
+<h1 class="page-title">Ayusa Host Family Application</h1>
+
+<div class="back-to-main">
+  
+                         <apex:outputLink id="BacktoMain1" value="/apex/ayusa_hf_home?id={!applicantInfo.Id}" rendered="{!IF(applicantInfo.Intrax_Program_Options__c == 'Ayusa High School' && applicantInfo.Type__c == 'Participant' && applicantInfo.Application_Stage__c == 'Working' && applicantInfo.Application_Level__c == 'Main' && NOT(IsPartner), true, false)}">Back to Main Page</apex:outputLink>
+                   <apex:outputLink id="BacktoMain2" value="/apex/your_applications" rendered="{!IF(applicantInfo.Intrax_Program_Options__c == 'Ayusa High School' && applicantInfo.Type__c == 'Participant' && NOT(applicantInfo.Application_Stage__c == 'Working') && applicantInfo.Application_Level__c == 'Main' && NOT(IsPartner), true, false)}">Back to Main Page</apex:outputLink>
+                     <apex:outputLink id="BacktoMain3" value="/apex/your_applications" rendered="{!IF(applicantInfo.Intrax_Program_Options__c == 'Ayusa High School' && applicantInfo.Type__c == 'Host Family' && NOT(applicantInfo.Application_Stage__c == 'Working') && applicantInfo.Application_Level__c == 'Main' && NOT(IsPartner), true, false)}">Back to Main Page</apex:outputLink>
+                 <apex:outputLink id="BacktoMain4" value="/apex/ayusa_hf_home?id={!applicantInfo.Id}" rendered="{!IF(applicantInfo.Intrax_Program_Options__c == 'Ayusa High School' && applicantInfo.Type__c == 'Host Family' && applicantInfo.Application_Stage__c == 'Working' && applicantInfo.Application_Level__c == 'Main' && NOT(IsPartner), true, false)}">Back to Main Page</apex:outputLink>
+                <apex:outputLink id="BacktoMain5" value="/apex/ayusa_hf_home?id={!applicantInfo.Id}" rendered="{!IF(NOT(applicantInfo.Application_Stage__c == 'In-Review') && NOT(applicantInfo.Application_Stage__c == 'Declined - Ayusa') && NOT(applicantInfo.Application_Stage__c == 'Conditional') && NOT(applicantInfo.Application_Stage__c == 'Accepted') && NOT(applicantInfo.Application_Stage__c == 'Declined - Agent') && applicantInfo.Application_Level__c == 'Main' && IsPartner, true, false)}">Back to Main Page</apex:outputLink>
+                <apex:outputLink id="BacktoMain6" value="/apex/LoginRedirection" rendered="{!IF((applicantInfo.Application_Stage__c == 'In-Review' || applicantInfo.Application_Stage__c == 'Declined - Ayusa' || applicantInfo.Application_Stage__c == 'Conditional' || applicantInfo.Application_Stage__c == 'Accepted' || applicantInfo.Application_Stage__c == 'Declined - Agent') && applicantInfo.Application_Level__c == 'Main' && IsPartner, true, false)}">Back to Main Page</apex:outputLink>
+</div>
+</div>
+          <div class="section-header clearfix">
+             <h2>Summary</h2>
+            <div class="progress-bar">Page 1 <em>of</em> 2</div>
+            </div> 
+          
+       
+        <div class="white-box clearfix">       
+         
+            
+              
+              
+             
+           
+              
+                  
+            <div class="panel no-float half">
+            
+                <p>Click <strong>View PDF Summary</strong> to print or save your information for your records.</p>
+
+               
+            
+            </div>
+              
+              <div class="panel half">
+          
+          
+          
+                <h3 class="data-block-title">Basic Info</h3> 
+              <div class="form-row">
+                <div class="form-label left"> Host Parent 1: First Name </div>
+                <div class="form-field">
+                  <apex:outputField id="FirstName" value="{!personInfo.First_Name__c}" />
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-label left"> Host Parent 1: Last Name </div>
+                <div class="form-field">
+                  <apex:outputField id="LastName" value="{!personInfo.Last_Name__c}" />
+                </div>
+              </div>
+              
+                               
+              
+               <div class="form-row">
+                <div class="form-label left">Date of Birth</div>
+                <div class="form-field">
+                  <apex:outputField id="DOB" value="{!personInfo.Date_of_Birth__c}"/>
+                </div>
+              </div>
+              
+             <div class="form-row">
+                <div class="form-label left">Level of Education</div>
+                <div class="form-field">
+                  <apex:outputField id="EducationLevel" value="{!personInfo.Education_Level__c}"/>
+                </div>
+             </div>
+                
+                  
+              <h3 class="data-block-title">Contact Info</h3> 
+               <div class="form-row">
+                <div class="form-label left">Home Phone</div>
+                <div class="form-field">
+                  <apex:outputField id="HomePhone" value="{!applicantInfo.Home_Phone__c}"/>
+                </div>
+              </div> 
+              
+              <div class="form-row">
+                <div class="form-label left">Mobile Phone</div>
+                <div class="form-field">
+                  <apex:outputField id="MobilePhone" value="{!personInfo.Mobile__c}"/>
+                </div>
+              </div>
+               <div class="form-row">
+                <div class="form-label left">Work Phone</div>
+                <div class="form-field">
+                  <apex:outputField id="WorkPhone" value="{!personInfo.Work_Phone__c}"/>
+                </div>
+              </div>
+               <div class="form-row">
+                <div class="form-label left">Preferred Phone</div>
+                <div class="form-field">
+                  <apex:outputField id="PreferredPhone" value="{!personInfo.Preferred_Phone_Type__c}"/>
+                </div>
+              </div>
+ 
+                  
+              <div class="form-row">
+                <div class="form-label left">Email</div>
+                <div class="form-field">
+                  <apex:outputField id="Email" value="{!personInfo.Email__c}" />
+                </div>
+              </div> 
+              <div class="form-row">
+                <div class="form-label left">Street Address 1</div>
+                <div class="form-field">
+                  <apex:outputField id="HomeStreet1" value="{!applicantInfo.Home_Street_1__c}" />
+                </div>
+              </div>  
+                <div class="form-row">
+                <div class="form-label left">Street Address 2</div>
+                <div class="form-field">
+                  <apex:outputField id="HomeStreet2" value="{!applicantInfo.Home_Street_2__c}"/>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-label left">City</div>
+                <div class="form-field">
+                  <apex:outputField id="HomeCity" value="{!applicantInfo.Home_City__c}"/>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-label left">State</div>
+                <div class="form-field">
+                  <apex:outputField id="State" value="{!applicantInfo.Home_State__c}"/>
+                </div>
+              </div>
+               <div class="form-row">
+                <div class="form-label left">Zip Code</div>
+                <div class="form-field">
+                  <apex:outputField id="Zip" value="{!applicantInfo.Home_Postal_Code__c}"/>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-label left">Country</div>
+                <div class="form-field">
+                  <apex:outputField id="Country" value="{!applicantInfo.Home_Country__c}"/>
+                </div>
+              </div>
+                  
+                  <div class="form-row">
+                <div class="form-label left">How long have you lived at this address?</div>
+                <div class="form-field">
+                  <apex:outputField id="HomeYears" value="{!applicantInfo.Years_in_Home__c}"/>
+                </div>
+              </div>
+              
+                  <div class="form-row">
+          <div class="form-label left">Is the home the site of a functioning business?</div>
+          <div class="form-field">
+            <apex:outputText id="HomeBusiness" value="{!applicantInfo.Business_in_Home__c}"/>
+          </div>
+        </div>  
+         <apex:pageBlock id="functioning-business">
+          <apex:outputPanel layout="block" rendered="{!ApplicantInfo.Business_in_Home__c == 'Yes'}">  
+     <div class="form-row">
+          <div class="form-label left">If yes, please describe:</div>
+          <div class="form-field">
+            <apex:outputText id="HomeDesc" value="{!applicantInfo.Business_in_Home_Description__c}"/>
+          </div>
+        </div> 
+        </apex:outputPanel> 
+         </apex:pageBlock>
+      
+                <h3 class="data-block-title">Work Info</h3> 
+               <div class="form-row">
+                <div class="form-label left">Profession</div>
+                <div class="form-field">
+                  <apex:outputField id="Profession" value="{!personInfo.Profession__c}" />
+                </div>              
+              </div>
+              
+              <div class="form-row">
+                <div class="form-label left"> Employer</div>
+                <div class="form-field">
+                  <apex:outputField id="EmpName" value="{!personInfo.Employer_Name__c}" />
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-label left">Job Title</div>
+                <div class="form-field">
+                  <apex:outputField id="Title" value="{!personInfo.Title__c}" />
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-label left">Supervisor</div>
+                <div class="form-field">
+                  <apex:outputField id="Supervisor" value="{!personInfo.Work_Supervisor__c}"/>
+                </div>
+              </div>
+               <h3 class="data-block-title">Other</h3>
+              <div class="form-row">
+                <div class="form-label left">Interests</div>
+                <div class="form-field">
+                  <apex:outputField id="Interest" value="{!personInfo.Interests__c}"/>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-label left">Community Involvement </div>
+                <div class="form-field">
+                  <apex:outputField id="CommunityService" value="{!personInfo.Community_Service__c}"/>
+                </div>
+              </div>
+              
+             </div> 
+            
+            
+             <div class="panel half last">     
+                 
+             
+          
+            <h3 class="data-block-title">Your Community</h3>   
+              
+             <div class="form-row">
+                <div class="form-label left">Please select the type of community you live in:</div>
+                <div class="form-field">
+                  <apex:outputField id="CommType" value="{!applicantInfo.Community_Type__c}" />
+                </div>
+              
+              </div> 
+              <div class="form-row">
+                <div class="form-label left">Population of Community</div>
+                <div class="form-field">
+                  <apex:outputField id="Population" value="{!applicantInfo.Community_Population__c}" />
+                </div>
+                 
+              </div> 
+              <div class="form-row">
+                <div class="form-label left">Nearest Major City</div>
+                <div class="form-field">
+                  <apex:outputField id="CityNear" value="{!applicantInfo.Nearest_City__c}" />
+                </div>
+                 
+              </div> 
+              <div class="form-row">
+                <div class="form-label left">Nearest Airport</div>
+                <div class="form-field">
+                  <apex:outputField id="NearAirport" value="{!applicantInfo.Airport__c}" />
+                </div>
+                 
+              </div>  
+                <div class="form-row">
+                <div class="form-label left">City/Town Website</div>
+                <div class="form-field">
+                  <apex:outputField id="Web" value="{!applicantInfo.Community_Website__c}" />
+                </div>
+                   
+                </div>
+            
+                <div class="form-row">
+                <div class="form-label left">Briefly describe your neighborhood and community</div>
+                <div class="form-field">
+                  <apex:outputField id="CommDesc" value="{!applicantInfo.Community_Description__c}" />
+                </div>
+                </div>
+                
+           
+              <div class="form-row">
+                <div class="form-label left">What points of interest are near your area?</div>
+                <div class="form-field">
+                    <apex:outputField id="InterestPoints" value="{!applicantInfo.Points_of_Interest__c}" />
+                        
+                </div>
+                
+              </div>
+             
+            
+            <h3 class="data-block-title">About Your Household</h3> 
+              
+                           
+              <div class="form-row">
+                <div class="form-label left">Please select your type of home</div>
+                <div class="form-field">
+                  <apex:outputField id="HomeType" value="{!applicantInfo.Home_Type__c}" />
+                </div>
+              </div>
+              
+              <div class="form-row"> 
+                <div class="form-label left">Number of Bedrooms</div>
+                <div class="form-field">
+                  <apex:outputField id="Bedrooms" value="{!applicantInfo.Bedrooms__c}" />
+                </div>
+            
+              </div>
+           
+              <div class="form-row">
+                <div class="form-label left"> Will the exchange student share a bedroom? </div>
+                <div class="form-field">
+                  <apex:outputField id="SharedBedroom" value="{!applicantInfo.Bedroom_Shared_Indicated__c}" /> &nbsp;
+                </div>
+              </div> 
+              
+              <apex:pageBlock id="share-bedroom-with">
+                     <apex:outputPanel layout="block" rendered="{!ApplicantInfo.Bedroom_Shared_Indicated__c == 'Yes'}">   
+              <div class="form-row">
+                <div class="form-label left">If yes, with whom?</div>
+                <div class="form-field">
+                  <apex:outputField id="SharedWith" value="{!applicantInfo.Bedroom_Shared_With__c}" />
+                </div>
+              </div>
+                    </apex:outputPanel>
+               </apex:pageBlock> 
+               
+               <div class="form-row">
+                <div class="form-label left"> Number of Bathrooms: </div>
+                <div class="form-field">
+                  <apex:outputField id="Bathroom" value="{!applicantInfo.Bathrooms__c}" /> &nbsp;
+                </div>
+              </div> 
+              <div class="form-row">
+                <div class="form-label left"> Number of Household Members: </div>
+                <div class="form-field">
+                  <apex:outputField id="FamilyMember" value="{!applicantInfo.Family_Member_Count__c}" /> &nbsp;
+                </div>
+              </div> 
+              <div class="form-row">
+                <div class="form-label left"> Average Annual Income Range: </div>
+                <div class="form-field">
+                  <apex:outputField id="IncomeRange" value="{!applicantInfo.Household_Income_Range__c}" /> &nbsp;
+                </div>
+              </div> 
+              <div class="form-row">
+                <div class="form-label left"> Does any household member receive needs-based government subsidies for food or housing: </div>
+                <div class="form-field">
+                  <apex:outputField id="GovtAssistance" value="{!applicantInfo.Government_Assistence_Indicated__c}" /> &nbsp;
+                </div>
+              </div> 
+               <div class="form-row">
+                <div class="form-label left"> Has any member of the household been convicted of a crime? </div>
+                <div class="form-field">
+                  <apex:outputField id="CriminalConviction" value="{!applicantInfo.Criminal_Convictions_Indicated__c}" /> &nbsp;
+                </div>
+              </div> 
+              <apex:pageBlock id="criminal-convictions"> 
+               <apex:outputPanel layout="block" rendered="{!ApplicantInfo.Criminal_Convictions_Indicated__c == 'Yes'}">
+              <div class="form-row">
+                <div class="form-label top">If yes, please describe: </div>
+                <div class="form-field">
+                  <apex:outputField id="CCDesc" value="{!applicantInfo.Criminal_Convictions_Description__c}"/>
+                </div>
+              </div>
+              </apex:outputPanel>
+                  </apex:pageBlock> 
+              <div class="form-row">
+                <div class="form-label left"> Has any of the household ever been investigated for and/or charged with child abuse, neglect, crimes against children or assault? </div>
+                <div class="form-field">
+                  <apex:outputField id="CriminalInvestigation" value="{!applicantInfo.Criminal_Investigation_Indicated__c}" /> &nbsp;
+                </div>
+              </div> 
+                <apex:pageBlock id="criminal-investigation"> 
+                 <apex:outputPanel layout="block" rendered="{!ApplicantInfo.Criminal_Investigation_Indicated__c == 'Yes'}"> 
+              <div class="form-row">
+                <div class="form-label top">If yes, please describe: </div>
+                <div class="form-field">
+                  <apex:outputField id="CIDesc" value="{!applicantInfo.Criminal_Investigation_Description__c}"/>
+                </div>
+              </div>
+              </apex:outputPanel>
+                  </apex:pageBlock> 
+              <h3 class="data-block-title">About Your Household - Continued</h3>
+                <div class="form-row">
+                <div class="form-label left"> Language Spoken In Home: </div>
+                <div class="form-field">
+                  <apex:outputField id="PrimaryLang" value="{!applicantInfo.Primary_Language__c}" /> &nbsp;
+                </div>
+              </div> 
+              <div class="form-row">
+                <div class="form-label left"> Do any family members smoke? </div>
+                <div class="form-field">
+                  <apex:outputField id="Smoker" value="{!applicantInfo.Smoker_in_Family__c}" /> &nbsp;
+                </div>
+              </div> 
+              <div class="form-row">
+                <div class="form-label left">Do you have pets at home? </div>
+                <div class="form-field">
+                  <apex:outputField id="Pets" value="{!applicantInfo.Pets__c}" /> &nbsp;
+                </div>
+              </div> 
+              <apex:pageBlock id="have-pets"> 
+                   <apex:outputPanel layout="block" rendered="{!ApplicantInfo.Pets__c == 'Yes'}"> 
+              <div class="form-row">
+                <div class="form-label left">If yes, how many pets: </div>
+                <div class="form-field">
+                  <apex:outputField id="PetsDesc" value="{!applicantInfo.Pets_Description__c}"/>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-label top">If yes, what type of pets:</div>
+                <div class="form-field">
+                  <apex:outputField id="PetsType" value="{!applicantInfo.Pet_Types__c}" />
+                </div>
+              </div>
+                        </apex:outputPanel> 
+                 </apex:pageBlock> 
+              <div class="form-row">
+                <div class="form-label left"> Does anyone in the family follow any dietary restrictions?</div>
+                <div class="form-field">
+                  <apex:outputField id="SpecialDiet" value="{!applicantInfo.Special_Diet_Indicated__c}" /> &nbsp;
+                </div>
+              </div> 
+               <apex:pageBlock id="diet-yes">
+                   <apex:outputPanel layout="block" rendered="{!ApplicantInfo.Special_Diet_Indicated__c == 'Yes'}"> 
+              <div class="form-row">
+                <div class="form-label left">If yes, what type of special dietary restriction is followed in your home?</div>
+                <div class="form-field">
+                   
+                 <apex:outputField id="SpecialDietDesc" value="{!applicantInfo.Special_Diet__c}"/>
+                 
+                </div>
+              </div> 
+              </apex:outputPanel>
+              </apex:pageBlock>
+               <div class="form-row">
+                <div class="form-label left">If Other, please describe: </div>
+                <div class="form-field">
+                  <apex:outputField id="SpecialDietOther" value="{!applicantInfo.Special_Diet_Description__c}" /> &nbsp;
+                </div>
+              </div>  
+         
+           <div class="form-row">
+                <div class="form-label left">Do you expect the student to follow any special diet? </div>
+                <div class="form-field">
+                  <apex:outputField id="SpecialDietExpect" value="{!applicantInfo.Special_Diet_Expectations__c}" /> &nbsp;
+                </div>
+              </div>  
+      
+            <apex:pageBlock id="special-diet"> 
+                   <apex:outputPanel layout="block" rendered="{!ApplicantInfo.Special_Diet_Expectations__c == 'Yes'}">
+              <div class="form-row">
+                <div class="form-label left">If yes, please describe:</div>
+                <div class="form-field">
+                  <apex:outputField id="SpecialDietExpDesc" value="{!applicantInfo.Special_Diet_Expectation_Description__c}"/>
+                </div>
+              </div>
+                   </apex:outputPanel> 
+              </apex:pageBlock> 
+           <div class="form-row">
+                <div class="form-label left">Please describe activities each family member participates in: </div>
+                <div class="form-field">
+                  <apex:outputField id="FamilyActivitied" value="{!applicantInfo.Family_Activities__c}" /> &nbsp;
+                </div>
+              </div>  
+           </div>
+         
+             <div class="panel full last">
+              
+              <div class="form-button">
+                        <apex:commandlink styleClass="next" action="{!navigator}">
+                          <apex:param name="nextPage" value="/apex/ayusa_hf_submitted_view_next"/>
+                          <apex:param name="reDirectPage" value="true"/>
+                          <apex:param name="view" value="Both" assignTo="{!view}"/>
+                          <apex:commandButton id="Next" value="Next" />
+                            <i class="icon-chevron-right"></i> 
+                        </apex:commandlink>
+                      </div>
+                
+              
+           
+              </div> 
+       
+       </div>
+            
+              
+
+      
+         </apex:form>
+  </div>
+    </apex:define>
+</apex:composition>
+</apex:page>

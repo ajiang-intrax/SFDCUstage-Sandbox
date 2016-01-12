@@ -1,0 +1,576 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardController="Match__c" extensions="IGI_TIPP_PDF_Controller" 
+                standardStylesheets="false" showHeader="false"  action="{!preLoad}"
+                title="TIPP Information" id="igi_tipp_pdf" renderas="pdf">
+<head>
+<style type="text/css" >
+@page {
+ size:portrait;
+font-family:Trebuchet MS, Arial, Helvetica, sans-serif;
+margin:2cm 1cm 3cm 1cm;
+padding:0 0 1em 0;
+@top-left {
+ content: element(header);
+}
+@bottom-center {
+ content: element(footer);
+}
+}
+ @page:first {
+@top-left {
+content: element(master);
+}
+.header {
+display:none;
+}
+}
+div.master { position: running(master); padding:2em 1em 1em 1em; }
+div.header { position: running(header); padding:1em; }
+div.footer { display: block; padding: 1em; position: running(footer); font-family:Trebuchet MS, Arial, Helvetica, sans-serif; color:#7d7d7d; }
+.page-numbers { text-align:center; padding-top:0.5cm; width:100%; }
+.pagenumber:before { content: counter(page); font-size:9pt; }
+.pagecount:before { content: counter(pages); font-size:9pt; }
+.title { text-align:center; background:#b8d459; margin-bottom:2em; }
+.title div { color:#202020; display:inline-block; font-size:18pt; background:#fff; padding:0 1em; text-align:center; }
+h2 { background:#e3edd4; font-size:9pt; padding:0.5em 1em; margin-bottom:1em; page-break-inside:avoid;  page-break-after: avoid;}
+.container { width:100%; font-family:Trebuchet MS, Arial, Helvetica, sans-serif; font-size:9pt; }
+.left-column { width:40%; margin-right:10%; float:left; }
+.right-column { width:40%; float:left; }
+.data-row { margin-bottom:1em; }
+.repeat-last { border-bottom:1px solid #e3edd4; }
+.data-row.last { border-bottom:none; }
+.data-row:after { display:block; visibility:hidden; content:"."; clear:both; width:1px; height:1px; }
+.data-label { float:left; font-weight:bold; }
+.data-label.left { margin-left:1em; }
+.data-field { float:left; margin-left:1em; font-style:italic; }
+.essay { margin-right:1em; margin-left:1em; }
+.essay.answer{border-bottom:1px solid #e3edd4; padding-bottom:1em; }
+.clearfix:after { content:"."; width:1px; height:1px; display:block; visibility:hidden; clear:both; }
+.regular{font-weight:normal;}
+.page-break { page-break-before: always; }
+.page-break-inside { page-break-inside: avoid; }
+.page-title-small { float:right; font-family:Trebuchet MS, Arial, Helvetica, sans-serif; font-size:9pt; color:#7d7d7d; }
+</style></head>
+<body>
+   <form>
+   <div class="master">
+      <apex:image style="width:2.5cm;" url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/pdf/pdf-logo-intrax.gif')}"
+                            alt="Intrax" title="Intrax"/>
+    </div>
+    <div class="header"> <span class="page-title-small">TRAINING/INTERNSHIP PLACEMENT PLAN</span> </div>
+    <div class="footer">
+      <div class="page-numbers"><span class="pagenumber"></span>/<span class="pagecount"></span></div>
+    </div>
+    <div class="container clearfix">
+    <div class="title">
+      <div>TRAINING/INTERNSHIP PLACEMENT PLAN</div>      
+    </div>
+    <div style ="text-align:center;font-size:16px;">DRAFT</div>      
+    <h2>SECTION 1: EXCHANGE VISITOR INFORMATION</h2> 
+              <div class="data-row">
+                <div class="data-label left"> Trainee/Intern Name(Surname/Primary,GivenName(s)(must match passport name)):</div>
+                <div class="data-field">
+                  <apex:outputText styleClass="form-control" value="{!sMatch.Participant_Id__r.LastName},"/> &nbsp;
+                  <apex:outputField styleClass="form-control" value="{!sMatch.Participant_Id__r.FirstName}"/> &nbsp;
+                  <apex:outputField styleClass="form-control" value="{!sMatch.Participant_Id__r.Middle_Name__pc}" />&nbsp;
+                </div>
+              </div>              
+              <div class="data-row">
+                <div class="data-label left"> E-mail Address:</div>
+                <div class="data-field">
+                  <apex:outputField value="{!sMatch.Participant_Id__r.PersonEmail}" />
+                </div>
+              </div>
+             <!--  <div class="data-row">
+                <div class="data-label left">Program Sponsor</div>
+                <div class="data-field">
+                  <apex:outputField value="{!sMatch.Engagement__r.SEVIS_Program__c}" />
+                </div>
+              </div> -->
+               <div class="data-row">
+                <div class="data-label left">Program Category</div>
+                <div class="data-field">
+                 <apex:outputText rendered="{!sMatch.Engagement__r.SEVIS_Program__c!=null}">
+                  <apex:outputText rendered="{!(CONTAINS(sMatch.Engagement__r.SEVIS_Program__c,'15-Intern'))}">
+                        <apex:outputText value="Intern" />
+                   </apex:outputText>   
+                  <apex:outputText rendered="{!(CONTAINS(sMatch.Engagement__r.SEVIS_Program__c,'14-Trainee'))}">
+                        <apex:outputText value="Trainee" />
+                   </apex:outputText>
+                  </apex:outputText>          
+                </div>
+              </div>
+              <div class="data-row">
+                <div class="data-label left">Occupational Category</div>
+                <div class="data-field">
+                  <apex:outputField value="{!sMatch.Engagement__r.SEVIS_Occupation__c}" />
+                </div>
+              </div>
+               <div class="data-row">
+                <div class="data-label left">Current Field of Study/Profession</div>
+                <div class="data-field">
+                  <apex:outputField value="{!sMatch.Engagement__r.SEVIS_Field_of_Study__c}" />
+                </div>
+              </div> 
+               <div class="data-row">
+                <div class="data-label left">Experience in Field (number of years)</div>
+                <div class="data-field">
+                  <apex:outputField value="{!sMatch.Engagement__r.Years_of_Experience__c}" />
+                </div>
+              </div>                                
+                  <div class="data-row">
+                <div class="data-label left">Type of Degree or Certificate</div>
+                <div class="data-field">
+                  <apex:outputField value="{!sMatch.Engagement__r.SEVIS_Degree_Type__c}" />
+                </div>
+              </div>
+                  <div class="data-row">
+                <div class="data-label left">Date Awarded (mm-dd-yyyy) or Expected</div>
+                <div class="data-field">
+                  <apex:outputField value="{!sMatch.Engagement__r.Graduation_Date__c}" />
+                </div>
+              </div>
+                <div class="data-row">
+                <div class="data-label left">Training/Internship Dates (mm-dd-yyyy)</div>
+                <div class="data-field">
+                  <apex:outputField value="{!sMatch.Engagement__r.Engagement_Start__c}" /> To &nbsp;
+                  <apex:outputField value="{!sMatch.Engagement__r.Engagement_End__c}" />
+                </div>
+              </div>      
+              <h2>SECTION 2: HOST ORGANIZATION INFORMATION</h2>                          
+               <div class="data-row"> 
+                <div class="data-label left">Organization Name</div>
+                <div class="data-field">
+                 <apex:outputText rendered="{!if(posInfo.Status__c='Working'||posInfo.Status__c='In-Review'||posInfo.Status__c='Declined',true,false)}">
+                    <apex:outputField value="{!posInfo.Company_Name__c}" />
+                 </apex:outputText>
+                 <apex:outputText rendered="{!if(posInfo.Status__c='Accepted'||posInfo.Status__c=null||posInfo=null,true,false)}">
+                   <apex:outputField value="{!sMatch.Position_Name__r.Host_Company_Id__r.Name}" />
+                </apex:outputText>
+               </div>
+              </div>  
+             <div class="data-row">
+                <div class="data-label left">Address</div>
+                <div class="data-field">
+                   <apex:outputText rendered="{!if(posInfo.Status__c='Working'||posInfo.Status__c='In-Review'||posInfo.Status__c='Declined',true,false)}">
+                      <apex:outputField value="{!posInfo.Company_Street_1__c}" />
+                   </apex:outputText>
+                   <apex:outputText rendered="{!if(posInfo.Status__c='Accepted'||posInfo.Status__c=null||posInfo=null,true,false)}">
+                     <apex:outputField value="{!sMatch.Position_Name__r.Street__c}" />
+                   </apex:outputText>
+                 
+                </div>
+              </div>  
+              <div class="data-row">
+                <div class="data-label left">Suite</div>
+                <div class="data-field">
+                  <apex:outputText rendered="{!if(posInfo.Status__c='Working'||posInfo.Status__c='In-Review'||posInfo.Status__c='Declined',true,false)}">
+                      <apex:outputField value="{!posInfo.Company_Street_2__c}" />
+                   </apex:outputText>
+                   <apex:outputText rendered="{!if(posInfo.Status__c='Accepted'||posInfo.Status__c=null||posInfo=null,true,false)}">
+                     <apex:outputField value="{!sMatch.Position_Name__r.Street_2__c}" />
+                   </apex:outputText>
+                  
+                </div>
+              </div>  
+               <div class="data-row">
+                <div class="data-label left">City</div>
+                <div class="data-field">
+                   <apex:outputText rendered="{!if(posInfo.Status__c='Working'||posInfo.Status__c='In-Review'||posInfo.Status__c='Declined',true,false)}">
+                      <apex:outputField value="{!posInfo.Company_City__c}" />
+                   </apex:outputText>
+                   <apex:outputText rendered="{!if(posInfo.Status__c='Accepted'||posInfo.Status__c=null||posInfo=null,true,false)}">
+                    <apex:outputField value="{!sMatch.Position_Name__r.City__c}" />
+                   </apex:outputText>
+                  
+                </div>
+              </div> 
+               <div class="data-row">
+                <div class="data-label left">State</div>
+                <div class="data-field">
+                  <apex:outputText rendered="{!if(posInfo.Status__c='Working'||posInfo.Status__c='In-Review'||posInfo.Status__c='Declined',true,false)}">
+                      <apex:outputField value="{!posInfo.Company_State__c}" />
+                   </apex:outputText>
+                   <apex:outputText rendered="{!if(posInfo.Status__c='Accepted'||posInfo.Status__c=null||posInfo=null,true,false)}">
+                     <apex:outputField value="{!sMatch.Position_Name__r.State__c}" />
+                   </apex:outputText>
+                  
+                </div>
+              </div> 
+               <div class="data-row">
+                <div class="data-label left">ZipCode</div>
+                <div class="data-field">
+                  <apex:outputText rendered="{!if(posInfo.Status__c='Working'||posInfo.Status__c='In-Review'||posInfo.Status__c='Declined',true,false)}">
+                      <apex:outputField value="{!posInfo.Company_Postal_Code__c}" />
+                   </apex:outputText>
+                   <apex:outputText rendered="{!if(posInfo.Status__c='Accepted'||posInfo.Status__c=null||posInfo=null,true,false)}">
+                     <apex:outputField value="{!sMatch.Position_Name__r.Postal_Code__c}" />
+                   </apex:outputText>
+                  
+                </div>
+              </div>
+               <div class="data-row">
+                <div class="data-label left">Website URL</div>
+                <div class="data-field">
+                  <apex:outputText rendered="{!if(posInfo.Status__c='Working'||posInfo.Status__c='In-Review'||posInfo.Status__c='Declined',true,false)}">
+                      <apex:outputField value="{!posInfo.Company_Website__c}" />
+                   </apex:outputText>
+                   <apex:outputText rendered="{!if(posInfo.Status__c='Accepted'||posInfo.Status__c=null||posInfo=null,true,false)}">
+                     <apex:outputField value="{!sMatch.Position_Name__r.Host_Company_Id__r.Website}" />
+                   </apex:outputText>
+                  
+                </div>
+              </div>    
+                 <div class="data-row">
+                <div class="data-label left">Employer ID Number(EIN)</div>
+                <div class="data-field">
+                  <apex:outputText rendered="{!if(posInfo.Status__c='Working'||posInfo.Status__c='In-Review'||posInfo.Status__c='Declined',true,false)}">
+                      <apex:outputField value="{!posInfo.EIN__c}" />
+                   </apex:outputText>
+                   <apex:outputText rendered="{!if(posInfo.Status__c='Accepted'||posInfo.Status__c=null||posInfo=null,true,false)}">
+                    <apex:outputField value="{!sMatch.Position_Name__r.Host_Company_Id__r.EIN__c}" />
+                   </apex:outputText>
+                  
+                </div>
+              </div> 
+                 <div class="data-row">
+                <div class="data-label left">Exchange Visitor Hours Per Week</div>
+                <div class="data-field">
+                  <apex:outputText rendered="{!if(posInfo.Status__c='Working'||posInfo.Status__c='In-Review'||posInfo.Status__c='Declined',true,false)}">
+                      <apex:outputField value="{!posInfo.Hours_Per_Week__c}" />
+                   </apex:outputText>
+                   <apex:outputText rendered="{!if(posInfo.Status__c='Accepted'||posInfo.Status__c=null||posInfo=null,true,false)}">
+                     <apex:outputField value="{!sMatch.Position_Name__r.Hours_Per_Week__c}" />
+                   </apex:outputText>
+                  
+                </div>
+              </div>                 
+                 <div class="data-row">
+                <div class="data-label left">Compensation</div>
+                <div class="data-field">
+                  <apex:outputText rendered="{!if(posInfo.Status__c='Working'||posInfo.Status__c='In-Review'||posInfo.Status__c='Declined',true,false)}">
+                      <apex:outputField value="{!posInfo.Compensation_Type__c}" />
+                   </apex:outputText>
+                   <apex:outputText rendered="{!if(posInfo.Status__c='Accepted'||posInfo.Status__c=null||posInfo=null,true,false)}">
+                        <apex:outputField value="{!sMatch.Position_Name__r.Compensation_Type__c}" />
+                   </apex:outputText>
+                
+                </div>
+              </div> 
+               <apex:outputText rendered="{!if(posInfo.Status__c='Working'||posInfo.Status__c='In-Review'||posInfo.Status__c='Declined',true,false)}">
+                <apex:outputText rendered="{!posInfo.Compensation_Type__c == 'Stipend'}"> 
+                <div class="data-row">
+                 <div class="data-label left">Stipend Amount</div>
+                 <div class="data-field">
+                  <apex:outputText value="{!posInfo.Pay_Rate__c} {!posInfo.Pay_Rate_Basis__c}" />
+                   </div>
+                </div> 
+                </apex:outputText>
+               </apex:outputText>
+              <apex:outputText rendered="{!if(posInfo.Status__c='Accepted'||posInfo.Status__c=null||posInfo=null,true,false)}">
+                <apex:outputText rendered="{!sMatch.Position_Name__r.Compensation_Type__c == 'Stipend'}"> 
+                <div class="data-row">
+                 <div class="data-label left">Stipend Amount</div>
+                 <div class="data-field">
+                  <apex:outputText value="{!sMatch.Position_Name__r.Pay_Rate__c} {!sMatch.Position_Name__r.Pay_Rate_Basis__c}" />
+                   </div>
+                </div> 
+                </apex:outputText>
+               </apex:outputText> 
+               <div class="data-row">
+                <div class="data-label left">Non-Monetary Compensation Value</div>
+                <div class="data-field">
+                  <apex:outputText rendered="{!if(posInfo.Status__c='Working'||posInfo.Status__c='In-Review'||posInfo.Status__c='Declined',true,false)}">
+                    <apex:outputText value="{!posInfo.Non_Monetary_Comp_Value__c} : {!posInfo.Non_Monetary_Comp_Description__c}" />
+                  </apex:outputText>
+                  <apex:outputText rendered="{!if(posInfo.Status__c='Accepted'||posInfo.Status__c=null||posInfo=null,true,false)}">
+                     <apex:outputText value="{!sMatch.Position_Name__r.Non_Monetary_Comp_Value__c} : {!sMatch.Position_Name__r.Non_Monetary_Comp_Description__c}" />
+                  </apex:outputText> 
+                  
+                </div>
+              </div> 
+            <apex:outputText rendered="{!if(posInfo.Status__c='Working'||posInfo.Status__c='In-Review'||posInfo.Status__c='Declined',true,false)}">                   
+             <apex:outputText rendered="{!If(posInfo.Has_Workers_Comp__c,true,false)}"> 
+               <div class="data-row">
+                <div class="data-label left">Workers' Compensation Policy</div>  
+                 <div class="data-field">                              
+                   <apex:outputText value="Yes" />
+                 </div> 
+                </div>            
+                 <div class="data-row">                          
+                   <div class="data-label left">Worker's Compensation Carrier</div>
+                    <div class="data-field">  
+                     <apex:outputField value="{!posInfo.Worker_Comp_Provider__c}" /> 
+                    </div>    
+                 </div>
+              </apex:outputText>
+            </apex:outputText>
+             <apex:outputText rendered="{!if(posInfo.Status__c='Accepted'||posInfo.Status__c=null||posInfo=null,true,false)}">                   
+             <apex:outputText rendered="{!If(sMatch.Position_Name__r.Host_Company_Id__r.Has_Workers_Comp__c,true,false)}"> 
+               <div class="data-row">
+                <div class="data-label left">Workers' Compensation Policy</div>  
+                 <div class="data-field">                              
+                   <apex:outputText value="Yes" />
+                 </div> 
+                </div>            
+                 <div class="data-row">                          
+                   <div class="data-label left">Worker's Compensation Carrier</div>
+                    <div class="data-field">  
+                    <apex:outputField value="{!sMatch.Position_Name__r.Host_Company_Id__r.Worker_Comp_Provider__c}" /> 
+                     </div>    
+                 </div>
+              </apex:outputText>
+            </apex:outputText>
+            <apex:outputText rendered="{!if(posInfo.Status__c='Working'||posInfo.Status__c='In-Review'||posInfo.Status__c='Declined',true,false)}">                   
+             <apex:outputText rendered="{!If(posInfo.Has_Workers_Comp__c,false,true)}"> 
+                <div class="data-row">
+                   <div class="data-label left">Workers' Compensation Policy</div>  
+                    <div class="data-field">                              
+                      <apex:outputText value="No" />
+                    </div> 
+                </div>
+              </apex:outputText>
+             </apex:outputText>
+            <apex:outputText rendered="{!if(posInfo.Status__c='Accepted'||posInfo.Status__c=null||posInfo=null,true,false)}"> 
+              <apex:outputText rendered="{!If(sMatch.Position_Name__r.Host_Company_Id__r.Has_Workers_Comp__c,false,true)}"> 
+                 <div class="data-row">
+                   <div class="data-label left">Workers' Compensation Policy</div>  
+                  <div class="data-field">                              
+                    <apex:outputText value="No" />
+                  </div> 
+                  </div>   
+              </apex:outputText>  
+            </apex:outputText>
+             <div class="data-row">
+                <div class="data-label left">Does your Workers' Compensation policy cover exchange Visitors?</div>
+                <div class="data-field">
+                  <apex:outputText rendered="{!if(posInfo.Status__c='Working'||posInfo.Status__c='In-Review'||posInfo.Status__c='Declined',true,false)}">
+                      <apex:outputField value="{!posInfo.Workers_Comp_Coverage__c}" />
+                   </apex:outputText>
+                   <apex:outputText rendered="{!if(posInfo.Status__c='Accepted'||posInfo.Status__c=null||posInfo=null,true,false)}">
+                       <apex:outputField value="{!sMatch.Position_Name__r.Workers_Comp_Coverage__c}" />
+                   </apex:outputText>
+                  
+                </div>
+              </div> 
+                 <div class="data-row">
+                <div class="data-label left">Number of FT Employees Onsite at Location</div>
+                <div class="data-field">
+                  <apex:outputText rendered="{!if(posInfo.Status__c='Working'||posInfo.Status__c='In-Review'||posInfo.Status__c='Declined',true,false)}">
+                      <apex:outputField value="{!posInfo.Number_of_Employees__c}" />
+                   </apex:outputText>
+                   <apex:outputText rendered="{!if(posInfo.Status__c='Accepted'||posInfo.Status__c=null||posInfo=null,true,false)}">
+                      <apex:outputField value="{!sMatch.Position_Name__r.Host_Company_Id__r.NumberOfEmployees}" />
+                   </apex:outputText>
+                 
+                </div>
+              </div> 
+                 <div class="data-row">
+                <div class="data-label left">Annual Revenue</div>
+                <div class="data-field">
+                  <apex:outputText rendered="{!if(posInfo.Status__c='Working'||posInfo.Status__c='In-Review'||posInfo.Status__c='Declined',true,false)}">
+                      <apex:outputField value="{!posInfo.Company_Annual_Revenue__c}" />
+                   </apex:outputText>
+                   <apex:outputText rendered="{!if(posInfo.Status__c='Accepted'||posInfo.Status__c=null||posInfo=null,true,false)}">
+                      <apex:outputField value="{!sMatch.Position_Name__r.Host_Company_Id__r.Company_Annual_Revenue__c}" />
+                   </apex:outputText>
+                  
+                </div>
+              </div> 
+               <h2>SECTION 3: TRAINING/INTERNSHIP SUPERVISION </h2>
+               <p>Each Training/Internship Placement Plan should cover a definite period of time and should consist of definite phases of training or tasks performed with
+a specific objective for each phase. The plan must also contain information on how the trainees/interns will accomplish those objectives (e.g. classes,
+individual instruction, shadowing). Each phase must build upon the previous phase to show a progression in the training/internship. A separate copy of
+pages 3 and 4 must be completed for each phase if applicable (e.g.; if the trainee/intern is rotating through different departments).</p>
+                          
+                   <div class="data-row">
+                <div class="data-label left">Training/Internship Field</div>
+                <div class="data-field">
+                  <apex:outputField value="{!sMatch.Position_Name__r.Functional_Areas__c}" />
+                </div>
+              </div> 
+              
+              <div class="data-row">
+                <div class="data-label left">Main Program Supervisor/POC at Host Organization</div>
+                <div class="data-field">
+                  <apex:outputText rendered="{!if(posInfo.Status__c='Working'||posInfo.Status__c='In-Review'||posInfo.Status__c='Declined',true,false)}">
+                     <apex:outputField styleClass="form-control" value="{!posInfo.Supervisor_First_Name__c}"/> &nbsp;
+                     <apex:outputField styleClass="form-control" value="{!posInfo.Supervisor_Last_Name__c}" />
+                   </apex:outputText>
+                   <apex:outputText rendered="{!if(posInfo.Status__c='Accepted'||posInfo.Status__c=null||posInfo=null,true,false)}">
+                     <apex:outputField styleClass="form-control" value="{!sMatch.Position_Name__r.Position_Supervisor__r.FirstName}"/> &nbsp;
+                     <apex:outputField styleClass="form-control" value="{!sMatch.Position_Name__r.Position_Supervisor__r.LastName}" />
+                   </apex:outputText>
+                  
+                </div>
+              </div> 
+              <div class="data-row">
+                <div class="data-label left">Title</div>
+                <div class="data-field">
+                  <apex:outputText rendered="{!if(posInfo.Status__c='Working'||posInfo.Status__c='In-Review'||posInfo.Status__c='Declined',true,false)}">
+                     <apex:outputField styleClass="form-control" value="{!posInfo.Supervisor_Title__c}"/>
+                   </apex:outputText>
+                   <apex:outputText rendered="{!if(posInfo.Status__c='Accepted'||posInfo.Status__c=null||posInfo=null,true,false)}">
+                    <apex:outputField styleClass="form-control" value="{!sMatch.Position_Name__r.Position_Supervisor__r.Title}"/> 
+                   </apex:outputText>
+               </div>
+              </div> 
+               <div class="data-row">
+                <div class="data-label left">Phone</div>
+                <div class="data-field">
+                   <apex:outputText rendered="{!if(posInfo.Status__c='Working'||posInfo.Status__c='In-Review'||posInfo.Status__c='Declined',true,false)}">
+                     <apex:outputField styleClass="form-control" value="{!posInfo.Supervisor_Phone__c}"/>
+                   </apex:outputText>
+                   <apex:outputText rendered="{!if(posInfo.Status__c='Accepted'||posInfo.Status__c=null||posInfo=null,true,false)}">
+                    <apex:outputField styleClass="form-control" value="{!sMatch.Position_Name__r.Position_Supervisor__r.Phone}"/> 
+                   </apex:outputText>
+                  
+                </div>
+              </div> 
+               <div class="data-row">
+                <div class="data-label left">Email</div>
+                <div class="data-field">
+                   <apex:outputText rendered="{!if(posInfo.Status__c='Working'||posInfo.Status__c='In-Review'||posInfo.Status__c='Declined',true,false)}">
+                     <apex:outputField styleClass="form-control" value="{!posInfo.Supervisor_Email__c}"/>
+                   </apex:outputText>
+                   <apex:outputText rendered="{!if(posInfo.Status__c='Accepted'||posInfo.Status__c=null||posInfo=null,true,false)}">
+                    <apex:outputField styleClass="form-control" value="{!sMatch.Position_Name__r.Position_Supervisor__r.Email}"/> 
+                   </apex:outputText>
+                </div>
+              </div> 
+               <div class="data-row">
+                <div class="data-label left">Fax</div>
+                <div class="data-field">
+                  <apex:outputText rendered="{!if(posInfo.Status__c='Working'||posInfo.Status__c='In-Review'||posInfo.Status__c='Declined',true,false)}">
+                     <apex:outputField styleClass="form-control" value="{!posInfo.Supervisor_Fax__c}"/>
+                  </apex:outputText>
+                  <apex:outputText rendered="{!if(posInfo.Status__c='Accepted'||posInfo.Status__c=null||posInfo=null,true,false)}">
+                  <apex:outputField styleClass="form-control" value="{!sMatch.Position_Name__r.Host_Company_Id__r.Fax}"/> 
+                  </apex:outputText>
+
+                                
+                </div>
+              </div> 
+               <apex:outputPanel rendered="{!IF(selectedPlans.Size == 0, true, false)}"
+              layout="block" styleClass="block">
+              <h2>Development Plans</h2>
+              <div class="data-row">
+                     <div class="data-field">No record(s) to display.</div>
+              </div>
+              </apex:outputPanel>
+               <apex:repeat id="selectedPlans" value="{!selectedPlans}" var="item" rendered="{!IF(selectedPlans.Size == 0, false, true)}">
+                 <h2>PHASE&nbsp;<apex:outputField value="{!item.Phase__c}" />&nbsp;INFORMATION</h2>                  
+           
+              <div class="data-row">
+                <div class="data-label left">Phase Site Address</div>
+                <div class="data-field">
+                  <apex:outputField value="{!item.Match_Name__r.Position_Name__r.Street__c}" />
+                  &nbsp;
+                  <apex:outputField value="{!item.Match_Name__r.Position_Name__r.Street_2__c}" />
+                   &nbsp;
+                  <apex:outputField value="{!item.Match_Name__r.Position_Name__r.City__c}" />
+                   &nbsp;
+                  <apex:outputField value="{!item.Match_Name__r.Position_Name__r.State__c}" />
+                   &nbsp;
+                  <apex:outputField value="{!item.Match_Name__r.Position_Name__r.Postal_Code__c}" />
+                </div>
+              </div> 
+              <div class="data-row">
+                <div class="data-label left">Phase Name</div>
+                <div class="data-field">
+                  <!--<apex:outputField value="{!item.Match_Name__r.Position_Name__r.Functional_Areas__c}" />-->
+                   <apex:outputField value="{!item.Name}" />
+                </div>
+              </div> 
+               <div class="data-row">
+                <div class="data-label left">Start Date (mm-dd-yyyy) of Phase</div>
+                <div class="data-field">
+                  <apex:outputField value="{!item.Start__c}" />
+                </div>
+              </div> 
+               <div class="data-row">
+                <div class="data-label left">End Date (mm-dd-yyyy) of Phase</div>
+                <div class="data-field">
+                  <apex:outputField value="{!item.End__c}" />
+                </div>
+              </div>              
+              <div class="data-row">
+                <div class="data-label left">Primary Phase Supervisor</div>
+                <div class="data-field">
+                  <apex:outputField value="{!item.Supervisor_First_Name__c}" />
+                   &nbsp;
+                  <apex:outputField value="{!item.Supervisor_Last_Name__c}" />
+                </div>
+              </div> 
+              <div class="data-row">
+                <div class="data-label left">Supervisor Title</div>
+                <div class="data-field">
+                  <apex:outputField value="{!item.Supervisor_Title__c}" />
+                </div>
+              </div>
+                <div class="data-row">
+                <div class="data-label left">E-mail</div>
+                <div class="data-field">
+                  <apex:outputField value="{!item.Supervisor_Email__c}" />
+                </div>
+              </div>
+                <div class="data-row">
+                <div class="data-label left">Phone Number</div>
+                <div class="data-field">
+                  <apex:outputField value="{!item.Supervisor_Phone__c}" />
+                </div>
+              </div> 
+               <div class="data-row">
+                <div class="data-label left">Description of Trainee/Intern's role for this program or phase</div>
+                <div class="data-field">
+                  <apex:outputField value="{!item.Description__c}" />
+                </div>
+              </div> 
+              <div class="data-row">
+                <div class="data-label left">Specific goals and objectives for this program or phase</div>
+                <div class="data-field">
+                  <apex:outputField value="{!item.Goal__c}" />
+                </div>
+              </div> 
+                <div class="data-row">
+                <div class="data-label left">Please list the names and titles of those who will provide continuous (for example, daily) supervision of the Trainee/Intern, including the primary
+supervisor. What are these persons' qualifications to teach the planned learning?</div>
+                <div class="data-field">
+                  <apex:outputField value="{!item.Supervision__c}" />
+                </div>
+              </div> 
+               <div class="data-row">
+                <div class="data-label left">What plans are in place for the Trainee/Intern to participate in cultural activities while in the United States?</div>
+                <div class="data-field">
+                  <apex:outputField value="{!item.Cultural_Component__c}" />
+                </div>
+              </div> 
+               <div class="data-row">
+                <div class="data-label left">What specific knowledge, skills, or techniques will be learned?</div>
+                <div class="data-field">
+                  <apex:outputField value="{!item.Learning_Outcome__c}" />
+                </div>
+              </div> 
+               <div class="data-row">
+                <div class="data-label left">How specifically will these knowledge, skills, or techniques be taught? Include specific tasks and activities (Interns) and/ or methodology of training
+and chronology/syllabus (Trainees).</div>
+                <div class="data-field">
+                  <apex:outputField value="{!item.Instructional_Methods__c}" />
+                </div>
+              </div> 
+                 <div class="data-row">
+                <div class="data-label left">How will the Trainee/Intern's acquisition of new skills and competencies be measured?</div>
+                <div class="data-field">
+                  <apex:outputField value="{!item.Evaluation_Methods__c}" />
+                </div>
+              </div> 
+              <div class="data-row">
+                <div class="data-label left">Additional Phase Remarks (optional)</div>
+                <div class="data-field">
+                  <apex:outputField value="{!item.Additional_Remarks__c}" />
+                </div>
+              </div> 
+                </apex:repeat>
+              </div><!--  container end -->
+              </form>   
+         </body>             
+</apex:page>

@@ -1,0 +1,259 @@
+<apex:page standardController="Engagement__c" extensions="Visa_Support_Letter"  standardStylesheets="false" showHeader="false" renderas="pdf" applyHtmlTag="false" applyBodyTag="false" action="{!updNotification}">
+<head>
+        <!-- Styles -->
+        <style type="text/css" >
+            @page {
+             size:portrait;
+            font-family:Trebuchet MS, Arial, Helvetica, sans-serif;
+            margin:2cm 1cm 3cm 1cm;
+            padding:0 0 1em 0;
+            @top-left {
+             content: element(header);
+            }
+            @bottom-center {
+             content: element(footer);
+            }
+            }
+            @page:first {
+            @top-left {
+            content: element(master);
+            }
+            .header {
+            display:none;
+            }
+            }
+            div.master { position: running(master); padding:2em 1em 1em 1em; }
+            div.header { position: running(header); padding:1em; }
+            div.footer { display: block; padding: 1em; position: running(footer); font-family:Trebuchet MS, Arial, Helvetica, sans-serif; color:#7d7d7d; }
+            .page-numbers { text-align:center; padding-top:0.5cm; width:100%; }
+            .pagenumber:before { content: counter(page); font-size:9pt; }
+            .pagecount:before { content: counter(pages); font-size:9pt; }
+            .title { text-align:center; background:#b8d459; margin-bottom:2em; }
+            .title div { color:#202020; display:inline-block; font-size:18pt; background:#fff; padding:0 1em; text-align:center; }
+            h2 { background:#e3edd4; font-size:9pt; padding:0.5em 1em; margin-bottom:1em; page-break-inside:avoid; }
+            .container { width:100%; font-family:Trebuchet MS, Arial, Helvetica, sans-serif; font-size:9pt; }
+            .left-column { width:40%; margin-right:10%; float:left; }
+            .right-column { width:40%; float:left; }
+            .data-row { margin-bottom:1em; }
+            .repeat-last { border-bottom:1px solid #ccc; }
+            .data-row.last { border-bottom:none; }
+            .data-row:after { display:block; visibility:hidden; content:"."; clear:both; width:1px; height:1px; }
+            .data-label { float:left; font-weight:bold; }
+            .data-label.left { margin-left:1em; }
+            .data-field { float:left; margin-left:1em; font-style:italic; }
+            .essay { margin-right:1em; margin-left:1em; }
+            .clearfix:after { content:"."; width:1px; height:1px; display:block; visibility:hidden; clear:both; }
+            .regular{font-weight:normal;}
+            .page-break { page-break-before: always; }
+            .page-break-inside { page-break-inside: avoid; }
+            .page-title-small { float:right; font-family:Trebuchet MS, Arial, Helvetica, sans-serif; font-size:9pt; color:#7d7d7d; }
+            <!--CT-117-->
+            .line-break {white-space: normal; font-style:italic; margin-left:1em;}
+            <!--CT-117 End-->
+        </style>
+    </head>
+    
+    <!-- Body Start From Here -->
+    <body>
+		 <!-- Form -->
+         <form>
+         	 <!-- Intrax Image -->
+           <div class="master">
+              <apex:image style="width:2.5cm;" url="{!URLFOR($Resource.intrax_themes, '/intrax_themes/images/pdf-intrax.gif')}" alt="Intrax" title="Intrax"/>
+           </div>
+            <!--  Footer -->
+            <div class="footer">    
+                <div class="page-numbers"><span class="pagenumber"></span>/<span class="pagecount"></span></div>
+            </div>
+            <!-- Panel -->
+            <div class="container clearfix">
+            
+                 <div>
+                
+                    <div class="data-row">
+                       Dear U.S. Official,<br /><br />
+                       This letter confirms that &nbsp;{!ParticipantName}&nbsp; has been accepted to the J-1 Summer Work Travel (SWT) Exchange Visitor Program under sponsorship of Intrax Work Travel. This letter must be accompanied by a DS-2019 form, with a program number P-4-06056, signed by an Intrax Alternate Responsible Officer in blue ink. 
+                    </div>
+                    <div class="data-row">
+                       This exchange visitor (EV) has been screened and selected to meet ECA eligibility requirements for the SWT program, and has paid for all necessary program fees including insurance. Intrax has successfully registered the participant's information through the Student and Exchange Visitor Information System (SEVIS).
+                    </div>
+                    <div class="data-row">
+                       Exchange Visitors on the Intrax Work Travel program may accept appropriate paid employment in the United States for a period not exceeding four months or the specifically outlined dates accepted by the local Consulate. This student has a job offer which has been arranged by Intrax or been confirmed through our host company validation/confirmation process. Details can be found below.
+                    </div>
+                    <div class="data-row">
+                    	We thank you for your time. Please do not hesitate to contact us if we may be of assistance
+                    </div>
+                     <div class="data-row">
+                    	Sincerely,<br /><br />
+                    	<apex:image url="{!$Resource.WTVisaLetterSignature}" /><br />
+                    	Emmanuel Díaz<br />
+                    	Director, Operations<br /><br />
+                    	Intrax Work Travel<br />
+                    	600 California Street, 10th Floor<br />
+                    	San Francisco, CA, 94108<br />
+                    	Toll Free: 888.224.0450<br />
+                    	Email: iwtsupport@intraxinc.com<br />
+                    </div>
+                    <div class="data-row">
+                       The following information is current as of &nbsp;
+                       <apex:outputText value="{0,date,MM'/'dd'/'yyyy}" >
+                       	<apex:param value="{!NOW()}" />
+                       </apex:outputText>
+                    </div>
+                    
+                    <h2>Biographical Information</h2>
+                    <div class="data-row">
+                        <div class="data-label left">DS Form Number:</div>
+                        <div class="data-field">
+                            <apex:outputText value="{!Engagement__c.SEVIS_ID__c}"/>
+                        </div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label left">Last Name:</div>
+                        <div class="data-field">
+                            <apex:outputText value="{!ParticipantLname}"/>
+                        </div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label left">First Name:</div>
+                        <div class="data-field">
+                            <apex:outputText value="{!ParticipantFname}"/>
+                        </div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label left">Middle Name:</div>
+                        <div class="data-field">
+                            <apex:outputText value="{!ParticipantMname}"/>
+                        </div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label left">Gender:</div>
+                        <div class="data-field">
+                            <apex:outputText value="{!Participantgender}"/>
+                        </div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label left">Birth Date:</div>
+                        <div class="data-field">
+                        	<apex:outputText value="{0,date,MM'/'dd'/'yyyy}" >
+                       			<apex:param value="{!ParticipantBDate}" />
+                       		</apex:outputText>
+                            &nbsp;(<apex:outputText value="{!ParticipantAge}"/>)
+                        </div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label left">City of Birth:</div>
+                        <div class="data-field">
+                            <apex:outputText value="{!ParticipantBirthCity}"/>
+                        </div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label left">Country of Birth:</div>
+                        <div class="data-field">
+                            <apex:outputText value="{!ParticipantBirthCountry}"/>
+                        </div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label left">Country of Citizenship:</div>
+                        <div class="data-field">
+                            <apex:outputText value="{!ParticipantCitizenship}"/>
+                        </div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label left">Country of Legal Residence:</div>
+                        <div class="data-field">
+                            <apex:outputText value="{!ParticipantResidence}"/>
+                        </div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label left">SEVIS Start/End:</div>
+                        <div class="data-field">
+                        	<apex:outputText value="{0,date,MM'/'dd'/'yyyy}" >
+                       			<apex:param value="{!Engagement__c.Engagement_Start__c}" />
+                       		</apex:outputText>&nbsp;-&nbsp;
+                            <apex:outputText value="{0,date,MM'/'dd'/'yyyy}" >
+                       			<apex:param value="{!Engagement__c.Engagement_End__c}" />
+                       		</apex:outputText>
+                        </div>
+                    </div>
+                    <br />
+                    <h2>Placement Confirmation Information</h2>
+                    <div class="data-row">
+                        <div class="data-label left">Intrax-Arranged Placement:</div>
+                        <div class="data-field">
+                            <apex:outputText value="{!ParticipantServLvl}"/> 
+                        </div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label left">Placement Status:</div>
+                        <div class="data-field">
+                            <apex:outputText value="{!Engagement__c.Placement_Status__c}"/> 
+                        </div>
+                    </div>
+                    <h2>Placement Information</h2>
+                    <div class="data-row">
+                        <div class="data-label left">Company:</div>
+                        <div class="data-field">
+                            <apex:outputText value="{!HCName}"/> 
+                        </div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label left">Company Address:</div>
+                        <div class="data-field">
+                            <apex:outputText value="{!HCStreet}"/>&nbsp;,&nbsp;<apex:outputText value="{!HCCity}"/>&nbsp;,&nbsp; <apex:outputText value="{!HCState}"/>&nbsp;-&nbsp; <apex:outputText value="{!HCZip}"/>&nbsp; 
+                        </div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label left">Position Title:</div>
+                        <div class="data-field">
+                            <apex:outputText value="{!HCPositionTitle}"/> 
+                        </div>
+                    </div>
+                    <!--  <div class="data-row">
+                        <div class="data-label left">Job Description:</div>
+                        <div class="data-field">
+                            <apex:outputText value="{!PositionDesc}"/> 
+                        </div>
+                    </div>
+                    -->
+                    <div class="data-row">
+                        <div class="data-label left">Wage:</div>
+                        <div class="data-field">
+                            <apex:outputText value="{!PositionRate}"/>&nbsp;(<apex:outputText value="{!HCCurrency}"/>)
+                        </div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label left">Job Start/End:</div>
+                        <div class="data-field">
+                        	<apex:outputText value="{0,date,MM'/'dd'/'yyyy}" >
+                       			<apex:param value="{!PositionStartDate}" />
+                       		</apex:outputText>&nbsp;-&nbsp;
+                            <apex:outputText value="{0,date,MM'/'dd'/'yyyy}" >
+                       			<apex:param value="{!PositionEndDate}" />
+                       		</apex:outputText>
+                        </div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label left">Primary Host Company Contact Name:</div>
+                        <div class="data-field">
+                            <apex:outputText value="{!PrimaryContactName}"/> 
+                        </div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label left">Email:</div>
+                        <div class="data-field">
+                            <apex:outputText value="{!PrimaryContactEmail}"/> 
+                        </div>
+                    </div>
+                    <div class="data-row">
+                        <div class="data-label left">Phone Number:</div>
+                        <div class="data-field">
+                            <apex:outputText value="{!HCPhone}"/> 
+                        </div>
+                    </div>
+                    
+              </div>
+            </div>
+         </form>
+	</body>
+</apex:page>

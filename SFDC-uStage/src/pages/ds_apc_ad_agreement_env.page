@@ -1,0 +1,257 @@
+<apex:page standardStylesheets="false" showHeader="false" renderas="pdf" applyHtmlTag="false" applyBodyTag="false" controller="DocuSign_Controller" action="{!MethodforProfileInfo}">
+<head>
+  <!-- Adding the base styles for PDFs -->
+  <apex:stylesheet value="{!URLFOR($Resource.intrax_themes_vs3, '/intrax_themes_vs3/styles/pdf.css')}"/>
+
+<style type="text/css" media="print">
+@page { size: portrait; margin: 3cm 1cm 2cm 1cm; @top-left {
+ content : element( header);
+ width: 4cm;
+}
+ @bottom-right {
+ content: "AuPairCare Area Director Letter of Agreement | Page " counter(page) " of " counter(pages);
+ vertical-align: bottom;
+ line-height: 1;
+ font-weight: lighter;
+ font-size: 8pt;
+ font-family: Dialog, Arial Unicode MS;
+}
+}
+div.master { display: block; position: running(header); }
+
+</style>
+
+</head>
+<body>
+<form>
+ <div class="master">
+    <apex:image width="4cm"
+				url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/pdf/pdf-logo-aupaircare.gif')}"
+				alt="AuPairCare" title="AuPairCare"/>
+  </div>
+
+      <div class="content">
+ 
+        <h1>AuPairCare 2016 Area Director Letter of Agreement</h1>
+        
+        <p>AuPairCare Inc., a California corporation and Area Director, {!userProfile.User__r.FirstName} {!userProfile.User__r.LastName}, enter into the following 
+        agreement for your employment as an AuPairCare Area Director.  You agree that you will perform your duties consistently with AuPairCare’s mission as described in the following paragraph, will support the program's goals, and adhere to the highest ethical and moral standards.</p>
+        
+        <h2 class="no-pgbr-af">PROGRAM MISSION</h2>
+        <p>AuPairCare is committed to promoting international understanding and bringing together international au pairs and American families for a full 
+        year of cultural exchange.  AuPairCare aims to deliver the highest quality of personal service to its host families and au pairs and to facilitate 
+        communication between all parties.  AuPairCare further aims to closely supervise its program participants to carefully monitor compliance with the 
+        program guidelines and U.S. Department of State Regulations.</p>
+        
+        <h2 class="">RESPONSIBILITIES OF THE AREA DIRECTOR</h2>
+        <p>As an Area Director you are responsible to market, organize and oversee the AuPairCare program in your assigned region including but not limited to the following duties:</p>
+        <h3 class="">Customer Service</h3>
+        <ol>
+        <li>To familiarize yourself with important AuPairCare policies so that you can serve as an informed resource to your host families and au pairs.</li>
+        <li>To contact and document all inquiries/leads received within 24 business hours and follow-up accordingly.</li>
+        <li>To provide support to host families and Match Experts in the matching process.</li>
+        <li>To inform families of financial obligations outlined in the Host Family Agreement prior to matching and inform families of refund and credit policy.</li>
+        <li>To inform host families of travel arrangements for their au pairs and ensure that arrangements are made to greet each au pair at the airport or at Au Pair Academy.</li>
+        <li>To provide mediation to families and au pairs as needed to facilitate the au pair/host family relationship.</li>
+        <li>To provide an in-home exit interview with au pair/host family should the placement end prematurely.</li>
+        <li>To organize and attend at least eleven social/cultural events during the program year for all au pairs in your region.</li>
+        <li>To provide assistance, advice, and counseling as needed throughout the program to au pairs and host families, and to document such contact in AuPairCare’s database.  Establish a rapport with both the au pair and the host family so that both parties will develop a trust in the Area Director to serve as an impartial and sensitive mediator throughout the program year.</li>
+        <li>To provide a monthly newsletter to au pairs and families in your region.</li>
+        <li>To ensure that each au pair is informed of the educational, cultural, social and recreational opportunities within the community and to assist au pairs in completing the educational component of their program.  This includes working with au pairs on their educational plan and approving and verifying completion of their coursework.</li>
+        <li>To provide interim room and board for an au pair in transition or in the event of an emergency, or to identify someone in your region who may be willing to provide
+         housing should you be unable to do so. Area Directors understand that the au pair is entitled to suitable facilities for sleeping, but the au pair does not have to be
+         in a private bedroom if one is not available. Area Directors also understand that the au pair should be provided healthful and adequate meals, but they may be of 
+         modest cost, and that the au pair is required to clean-up after herself/himself. Area Directors agree that the daily stipend of $35.00 paid to field staff for an au pair 
+         residing in the home is a fair and reasonable estimate of the costs of accommodating the au pair in-transition.  In the event there are circumstances that are unusual and make
+         the $35.00 per day stipend inadequate, the Area Director will notify the Regional Manager of those circumstances and a further payment will be considered. Area Directors understand that she/he
+         is not required to entertain the au pair during this time period and that any time the Area Director might spend with the au pair on business related time would be part of the effort to place the
+         au pair with another family and would be compensated by the piecework amount paid to the Area Director for such placement.</li>
+        </ol>
+        <h3 class="no-pgbr-af">Department of State Requirements</h3>
+        <ol>
+        <li>To familiarize yourself with and to follow all U.S. Department of State guidelines governing the J-1 au pair program in the fulfillment of your role as an Area Director.</li>
+		<li>To conduct an in-home interview with all applicant host families and to provide them with the following information:  program overview, access to the host family handbook and Department of State guidelines. A completed host family interview report shall be submitted to AuPairCare.</li>
+		<li>To contact at least two host family references via telephone or email to confirm the applicant family’s suitability for the program and to verify reference contact in AuPairCare’s database.</li>
+		<li>To contact the host family and au pair via telephone, Skype or in person within 48 hours of the au pair’s arrival in the host community, and to document such contact in AuPairCare’s database.</li>
+		<li>For in-country/transition au pairs, maintain contact by Skype, telephone or in-person with the au pair and the host separately, <strong>twice a month every two weeks</strong> for the first 60 days after the arrival.</li>
+		<li>To conduct an in-home au pair/host family orientation within two weeks of each au pair’s arrival and to complete the orientation report in AuPairCare’s database.</li>
+		<li>To organize and attend at least one host family day event per calendar year. </li>
+		<li>To maintain personal monthly contact by Skype, telephone, email or in-person with the au pair and the host family separately, not less than <strong>once a month</strong> throughout the program year. <strong>Au pair and host family contact must be documented in AuPairCare’s database on a monthly basis using the Monthly Contact template and submitted by the 25th of each month. Cultural activities do not count as part of the monthly contacts required.</strong></li>
+        </ol>
+        <h3 class="no-pgbr-af">Communication</h3>
+        <ol>
+        <li>To attend all mandatory training meetings conducted by AuPairCare.</li>
+        <li>To return all au pair, host family and AuPairCare staff communication within one business day and maintain regular contact with your Regional Manager and to inform the San Francisco Office (via your Regional Manager) immediately of any events occurring in your region, such as medical emergencies, legal issues, or other events involving the health, safety and welfare of an au pair.</li>
+        <li>To consult with your Regional Manager and receive prior approval for situations involving placement changes, refunds and host family/au pair dismissals or any other situation involving the health, safety and welfare of an au pair.</li>
+        <li>To maintain the confidentiality of host family and au pair information regarding their participation in the program. To conduct all communication with host families, au pairs and AuPairCare employees in a professional manner.</li>
+        </ol>
+        <h3 class="no-pgbr-af">Personnel</h3>
+        <ol>
+        <li>To schedule your vacations with advance approval of the Regional Manager so that coverage is provided by another AuPairCare staff member.  It is understood that adequate performance of your duties requires you working not less than 50 weeks during the 2016 calendar year.</li>
+        <li>To provide documentation for sick leave requests of 3 or more consecutive days.</li>
+        </ol>
+        <h3 class="no-pgbr-af">Marketing</h3>
+        <ol>
+        <li>To actively market the AuPairCare program and to increase host family participation.</li>
+        <li>To work with your Regional Manager to develop and implement a marketing plan for your region to recruit new families and to participate in nationally organized marketing activities and events.</li>
+        <li>To achieve goals set forth below:</li>
+        </ol>
+        
+        <h2 class="no-pgbr-af">GOALS</h2>
+        <ul>
+        <li>6 new qualified host family leads a quarter entered by you.</li>
+        <li>1 new host family application a quarter resulting from a qualified lead you entered.</li>
+        <li>1 new host family a calendar year resulting from a qualified lead you entered.</li>
+        </ul>
+        
+        <p>A qualified lead is defined as a new host family lead that is entered into AuPairCare’s database and includes: full name, email address, phone number and zip code.</p>
+        
+        
+       	<h2 class="no-pgbr-af">COMPENSATION</h2>
+       	<h3 class="no-pgbr-af">Monthly Stipend</h3>
+        <!--  
+        <p>As an Area Director you will receive payments of ${!yearlystipend} per au pair per year (or ${!userProfile.Monthly_Stipend__c}/au pair/month), paid in monthly installments.  Each monthly payment is calculated based on the actual number of au pairs in your region during the previous month.  If an au pair is in your region for less than one full month, you will receive a pro-rated stipend based on the number of days the au pair was in your region.  Payments will be made on the 15th day of every month.</p>
+        <p>AuPairCare requires that proof of host family and au pair monthly contact be on file with AuPairCare prior to issuing that month's payment. If the proper monthly contact has not been made, then the monthly stipend for that particular placement will not be paid.</p>
+        -->
+       	<p>As an Area Director you will have the potential to receive payment of <strong>${!yearlystipend}</strong> per au pair per year paid in bi-monthly installments.  Each bi-monthly payment is calculated based on the actual number of au pairs in your region during the pay period and stipends are pro-rated based on the number of days the au pair was in your region during that pay period.  Payments will be made on the 10th and 26th of every month.</p>
+       	<p>AuPairCare requires that proof of host family and au pair monthly contact be documented in our data base by the 25th of the month.  If the proper monthly contact has not been made, then the monthly stipend for that particular placement will not be paid</p>
+        
+       	<h3 class="no-pgbr-af">Host Family Interviews, Au Pair Orientations and In-Home Exit Interviews</h3>
+       	<p>You will receive a payment of <strong>$50.00</strong> for each Host Family Interview, a payment of <strong>$50.00</strong> for each Au Pair Arrival Orientation meeting and a payment of <strong>$50.00</strong> for each In-Home Exit Interview.  Payment will be made in the pay period following the date of entry into our database.</p>
+        
+        <h3 class="no-pgbr-af">Home Visit</h3>
+       	<p>You will receive a payment of $25.00 for each home visit conducted. A home visit is required when a host family has moved into a new home or has returned to the program within 3 years of past participation. Payment will be made in the pay period following the date of entry into our database.</p>
+       
+       	<h3 class="no-pgbr-af">Repeat Host Family Bonus</h3>
+       	<p>AuPairCare will award you a bonus payment in the amount of $100 for a repeat family in your cluster who successfully completes the terms of their placement and starts a new program year.</p>
+       
+       	<h3 class="no-pgbr-af">New Host Family Bonus</h3>
+       	<p>Through two levels, you have the potential to receive $500 in bonus payment for every new family lead you generated that hosts an au pair:</p>
+       
+       	<h3 class="no-pgbr-af">Level 1 - $275 Field Sales Bonus </h3>
+       	<p>You will receive a bonus payment of $275 for each new host family who receives an in-country or overseas arriving au pair the month of the au pair’s arrival as long as the following conditions are met:</p>
+       
+       	<ul>
+       	<li>You entered a qualified lead into the AuPairCare's database that you generated yourself.</li>
+       	<li>You followed up with and assisted the family from lead to match documented through notes. If you entered a lead in another Area Director’s area, you would follow up with the lead and assist the family from lead to application making sure to properly transition lead to Servicing Area Director.</li>
+       	</ul>
+       	<p>The $275 Field Sales bonus is not applicable if the host family lead or application already exists in the database via another method of entry. </p>
+      
+		<h3 class="no-pgbr-af">Level 2 - $225 New Host Family Recruitment Bonus</h3>
+      	<p>You will receive a bonus payment of $225 for each new host family who receives either an in-country or overseas arriving au pair the month of the au pair’s arrival as long as the following conditions are met:</p>
+       	<ul>
+       	<li>The lead was not entered by another Field Staff Representative.</li>
+        </ul>
+       	<p>The servicing Area Director (if different than the Recruiting Area Director) is responsible for conducting the host family interview.</p>
+       
+      	<h3 class="no-pgbr-af">Leaders Circle Program</h3>
+      	<p>Effective January 1, 2016, Area Directors are eligible to qualify for the AuPairCare Leaders Circle. Area Directors will have the opportunity to qualify for the Leaders Circle on an annual basis and maintain their membership for a full calendar year.</p>
+      
+      	<p><u>Tier 1</u></p>
+      
+      	<p>Qualification</p>
+      	<ul>
+      	<li>Recruit 20 or more new host families (as Recruiting Area Director) who welcome a new au pair ARRIVAL into their home during the 2016 calendar year.<br/> 
+		-AND-
+      	</li>
+      	<li>Fulfill all responsibilities of the Area Director Agreement including maintaining compliance standards.</li>
+      	</ul>
+      
+      	<p>Reward</p>
+      	<ul>
+      	<li>AuPairCare sponsored trip in Q1 of 2017 (approximate value is $1,200).  Should you qualify for the trip and choose not to participate, you will receive a $500.00 bonus in lieu of the trip. Area
+		Director must be employed at time of incentive distribution.</li>
+      	</ul>
+    
+     	<p><u>Tier 2</u></p>
+     
+      	<p>Qualification</p>
+      	<ul>
+      	<li>Recruit 15 or more new host families (as Recruiting Area Director) who welcome a new au pair ARRIVAL into their home during the 2016 calendar year. 
+		<br/>-AND-
+      	</li>
+      	<li>Fulfill all responsibilities of the Area Director Agreement including maintaining compliance.</li>
+      	</ul>
+      
+      	<p>Reward</p>  
+       	<ul>
+      	<li>Apple iPad (approximately $500 in value).  Should you qualify for the iPad and choose not to receive it, you will receive a $500 bonus in lieu of the iPad. Area Director must be employed at time of incentive distribution.</li>
+      	<li>Receive 75% discount on AuPairCare program fees.</li>
+      	</ul>
+  		
+  		<h3 class="no-pgbr-af">Employee Program Discount</h3>
+      	<p>AuPairCare will offer 40% off of program fees for an au pair for a new program year. No adjustments will be made on current invoices upon hire. Should you leave the employment of AuPairCare while hosting an au pair, you will be required to pay any outstanding balance in full within five days.</p>
+      
+  		<h2 class="no-pgbr-af">TAXES</h2>
+  		<p>All bonuses, incentives and housing stipends are taxable and the responsibility of the Area Director.</p>
+     
+  		<h2 class="no-pgbr-af">EXPENSES</h2> 
+  		<p>AuPairCare will reimburse you for telephone (up to $50/month), mileage, postage and other expenses
+		incurred in the execution of your responsibilities in your region. Reimbursement policies and procedures are covered in the memorandum entitled Area Director Expense Policies and Procedures.
+		These procedures are subject to change by AuPairCare from time to time upon written notice to you. In order to be considered for reimbursement, an expense report must be submitted within three months of when the expense was incurred.  Expense reports or receipts submitted after the three month deadline will not be considered for reimbursement and will be returned to you.</p>  
+  
+    	<h2 class="no-pgbr-af">TERM AND TERMINATION</h2> 
+	  	<p>This Agreement will be for a term of one (1) calendar year, beginning January 1st, or from the date of signature and extending until December 31st of the same year.</p>
+	  	<p>It is understood and agreed however, that either party may terminate this Agreement at any time with or without cause upon written notice without liability to the other, except that you will be paid for all service rendered, including a pro-rated monthly stipend based on the number of days worked during that month.  AuPairCare also agrees to reimburse you for approved expenses incurred up to the effective date of termination, less any advances paid to you for general operating or training expenses in your capacity as Area Director.</p> 
+	  	<p>If you are unable to perform your duties as Area Director for a period greater than ten (10) days, AuPairCare reserves the right to terminate this Agreement upon written notice to you.</p> 
+	  	<p>Upon termination of this Agreement, whether by expiration of the term or earlier termination, you agree to immediately return to AuPairCare all records, files and documents, in your possession or control regarding AuPairCare and the au pairs and host families in your region, all office equipment purchased/owned by the organization, as well as any funds advanced to you by AuPairCare.</p> 
+	  
+	    <h2 class="no-pgbr-af">MISCELLANEOUS</h2> 
+	  	<p>As an AuPairCare Area Director, you understand that during the term of this Agreement, you will not 
+		directly or indirectly engage in any business or provide any services to organizations or persons in 
+		competition with AuPairCare without the written consent of AuPairCare.
+	  	</p> 
+	  	<p>The compensation described above is the total and only compensation which AuPairCare is obligated to pay.  As an Area Director, you are entitled to Social Security and Medicare benefits resulting from monthly payroll deductions. You are also named as an insured party under AuPairCare's Worker's compensation insurance policy. As an employee, taxes will be withheld as part of monthly payroll deductions.</p> 
+	  	<p>You understand and agree with the following:  AuPairCare's internal organization, operational methods and procedures, field staff rosters, host family lists, and agreements with overseas agents, constitute confidential proprietary information of AuPairCare that has been developed by AuPairCare through its own resources and at great expense.  This confidential proprietary information may be contained in documents used or circulating within AuPairCare, including but not limited to operational handbooks, memos, program materials, and program-related procedural documentation.  Furthermore, this confidential proprietary information belongs exclusively to AuPairCare, and unauthorized use or disclosure of this information to businesses or persons competing with AuPairCare in the field of cultural exchange programs, or to any other person, would be damaging to AuPairCare's interests, and represents the disclosure of proprietary information of AuPairCare.  Commencing with the effective date of this agreement, you will maintain the confidentiality of all such information and will agree not to disclose such information to any person or business without prior written consent of AuPairCare.</p> 
+	  	<p>AuPairCare electronic mail (e-mail) including mobile email is to be used for business purposes only. The Company reserves the right to monitor e-mail messages to ensure compliance with this rule, without notice to the employee and at any time, not necessarily in the employee’s presence.</p> 
+	  	
+	  	<h3 class="no-pgbr-af">OWNED AUTO INSURANCE REQUIREMENTS</h3> 
+	  	<p>An employee’s drivers’ license, must be valid and free from moving violations in order to use a vehicle for work related activities or transportation of participants.</p> 
+	  	<ol>
+		  <li>Owned Auto</li>
+		</ol>  
+		<p>If you use your own personal vehicle for business the Company requires that you carry the minimum state requirements for auto personal liability insurance.  The Company suggests a minimum of $300,000 liability policy. Your signature below confirms that you have read and reviewed the standards and criteria contained within the U.S. Department of State’s Regulations Governing Designated Exchange Visitor Programs, and agree to abide by the stipulations stated therein.</p> 
+		<p>You understand and agree that you are responsible for assuring that all the obligations which are identified in this Agreement are achieved in accordance with this Agreement.</p>	  
+	  
+	    <h2 class="no-pgbr-af">TERMS AND CONDITIONS</h2> 
+	  	<p>This Agreement hereto constitutes the entire contract between the parties, superseding all proposals or other prior agreements, oral or written, and all other communications between the parties relating to this subject.  Where there are any differences between this Agreement and any other program materials, this Agreement shall control. AuPairCare cannot be legally bound or committed by any person other than the Area Director.  Parties are required to follow this Agreement and cannot vary from its terms.</p> 
+  
+    	<h2 class="no-pgbr-af">JURISDICTION</h2> 
+  		<p>This Agreement shall be construed and interpreted in accordance with the laws of the State of 
+		California, U.S.A., without regard to principles of conflict of law.  In the event of any dispute between 
+		the parties concerning the performance, enforcement or interpretation of this Agreement, such dispute 
+		shall be determined by binding arbitration before, and in accordance with the rules of the American 
+		Arbitration Association ("AAA") in San Francisco, CA.  The decision of the arbitrator shall be final and 
+		binding and may be enforced in any court of competent jurisdiction on the petition of either party. The 
+		parties agree that California is a fair and reasonable forum for resolution of any and all disputes and 
+		submit to the exclusive jurisdiction of the Courts of the State of California as otherwise provided 
+		herein. 
+  		</p> 
+  
+    	<h2 class="no-pgbr-af">SIGNATORIES</h2> 
+  		<p>Area Director's signature below confirms acceptance of the terms, conditions, procedures, and policies outlined in this agreement.  Area Director will electronically sign this document using an AuPairCare-sanctioned secure digital signature system.  A copy of the agreement will be available to you in AuPairCare's database.  </p> 
+  
+  		<div class="box callout">
+	       	<table>
+		       	<tr>
+			       	<th>Name</th>
+			       	<th>Area Director Signature</th>
+			       	<th>Regional Manager Signature</th>
+		       	</tr>
+		   		<tr>
+			       	<td>{!userProfile.User__r.FirstName} {!userProfile.User__r.LastName}</td>
+			       	<td style="padding-top: 20pt;">
+			       	<apex:outputPanel layout="block" styleClass="white"><span style="color: #fff;">APCAD-Signature</span></apex:outputPanel>
+			       	<apex:outputPanel layout="block" styleClass="white"><span style="color: #fff;">APCAD-DateSigned (mm/dd/yyyy)</span></apex:outputPanel>
+			       	</td>
+			       	<td style="padding-top: 20pt;">
+			       	<apex:outputPanel layout="block" styleClass="white"><span style="color: #fff;">APCRM-Signature</span></apex:outputPanel>
+			       	<apex:outputPanel layout="block" styleClass="white"><span style="color: #fff;">APCRM-DateSigned (mm/dd/yyyy)</span></apex:outputPanel>
+			       	</td>
+		       	</tr> 
+	        </table>
+        </div>
+       </div>
+    </form>
+</body>
+</apex:page>

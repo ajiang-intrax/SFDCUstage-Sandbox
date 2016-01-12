@@ -1,0 +1,17 @@
+<apex:component controller="SiteLoginController" id="loginComponent">
+  <apex:form id="loginForm" forceSSL="true">
+   
+        <div class="form-row"><div class="form-label left"><apex:outputText value="Username"/></div>
+        <div class="form-field"><apex:inputText id="username" value="{!username}"/></div></div>
+        
+            <div class="form-row"><div class="form-label left"><apex:outputText value="Password"/></div>
+         <div class="form-field"><apex:inputSecret id="password" value="{!password}"/></div></div>
+       
+      <div class="form-row clearfix"><div class="form-input"><apex:commandButton action="{!login}" value="Login" id="loginButton"/></div></div>
+      <div class="form-row">
+          <apex:outputLink value="{!$Page.ForgotPassword}">Forgot Your Password?</apex:outputLink> 
+         |
+          <apex:outputLink value="{!$Page.SiteRegister}" rendered="{!$Site.RegistrationEnabled}">New User?</apex:outputLink>
+      </div>
+  </apex:form>
+</apex:component>

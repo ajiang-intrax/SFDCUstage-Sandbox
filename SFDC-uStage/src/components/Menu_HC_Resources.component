@@ -1,0 +1,17 @@
+<apex:component layout="none">
+
+    <!-- <apex:attribute name="participant" description="Contains the Engagament.IP for the match in context" type="Engagement__c" required="false" default=""/>
+     -->
+    <!-- <apex:attribute name="applicationRecord" description="Contains the Engagament.IP for the match in context" type="Applicant_Info__c" required="false" default=""/> -->
+        
+    <apex:variable var="WorkTravel" value="active" rendered="{! IF($CurrentPage.Name=='resources' && ($CurrentPage.parameters.program=='wt') , true, false)}"/>     
+     <apex:variable var="Internship" value="active" rendered="{! IF($CurrentPage.Name=='resources' && ($CurrentPage.parameters.program=='igi'), true, false)}"/>  
+        
+        <ul class="nav nav-list bs-docs-sidenav affix">
+        
+        <li class="{!WorkTravel}"><apex:outputLink value="/apex/resources?program=wt"><i class="icon-chevron-right"></i>Work Travel</apex:outputLink></li>
+     
+        <li class="{!Internship}"><apex:outputLink value="/apex/resources?program=igi"><i class="icon-chevron-right"></i>Internship</apex:outputLink></li>
+     
+    </ul> 
+</apex:component>

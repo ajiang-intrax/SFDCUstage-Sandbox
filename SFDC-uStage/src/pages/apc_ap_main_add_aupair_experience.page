@@ -1,0 +1,85 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" title="Your Experience as an Au Pair" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="false" showHeader="false">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_apc_ap_application />
+       <div id="app-page" class="row">
+        <div id="app-focus" class="col-md-8 col-md-push-3">
+          <c:block_app_completion ApplicantInfo="{!applicantInfo}" />
+          <h1>Your Experience as an Au Pair</h1>
+          <p class="lead">Potential families are very interested in your experience as an au pair in the US. Please take a moment now to describe your year. What were your responsibilities and schedule. What new childcare skills have you learned? Make sure to include any tasks or activities you especially enjoyed in your last placement. This description should be positive and focused on the childcare aspect of your year. </p>
+          
+          <apex:form styleClass="form-vertical ws-validate" id="webform">
+            <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+            
+         <!--    <div class="row">
+            <div class="col-sm-12">
+            <div class="form-group">
+                  <label class="control-label">On average, how many hours did you work
+                    <apex:outputText value="{!IF(experience.Frequency__c=='Daily', ' each day',IF(experience.Frequency__c=='Weekly', ' each week',IF(experience.Frequency__c=='Monthly', ' each month','')))}"/>
+                    ? </label>
+                  <apex:inputField styleClass="form-control short" value="{!experience.Employment_Hrs__c}" required="TRUE" id="weeklyhours" />
+                </div>
+                </div>
+                </div> end row -->
+              
+              <div class="row">  
+              <div class="col-sm-12">
+                <div class="form-group">
+                  <label class="control-label">Please describe your experience</label>
+                  <apex:inputTextarea styleClass="form-control" id="PositionDesc" value="{!experienceAPC.Position_Description__c}" required="TRUE" onkeyup="countChar(this, 2000, 'PositionDescCount')"/>
+                  <div class="char-limit bb"><span class="char-count-label">Characters left:</span> <span id="PositionDescCount" class="char-count"> {!2000-len(experienceAPC.Position_Description__c) }</span> </div>
+                  <apex:message for="PositionDesc" styleClass="custom-error-text" id="errormesPositDesc"/>
+                </div>
+                </div>
+                </div><!--  end row -->
+               
+               <div class="row"> 
+               <div class="col-sm-12">
+                <div class="form-group">
+                  <label class="control-label">Tell us your primary responsibilities</label>
+                  <apex:inputField styleClass="form-control" value="{!experienceAPC.Position_Responsibilities__c}" required="TRUE" id="respons" />
+                </div>
+                </div>
+                </div><!--  end row -->
+                
+             <!--    <div class="row">
+                <div class="col-sm-12">
+                <div class="form-group">
+                  <label class="control-label">Would you like to request a reference from your host family?</label>
+                  <apex:selectRadio styleClass="radio" value="{!applicantInfo.Extension_Au_Pair_HF_reference__c}" id="driverlicense" required="true">
+                    <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                  </apex:selectRadio>
+                </div>
+                </div>
+                </div> -->
+                <!--  end row -->
+                
+                 <div class="row">
+                <div class="col-sm-12 margin-t">
+                <apex:outputLink styleClass="btn btn-link btn-lg" value="/apex//apex/apc_ap_main_driving_experience?id={!applicantInfo.Id}" id="backlink"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                <apex:commandlink styleClass="btn btn-primary btn-lg" action="{!navigator}" id="nextlink" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                  <apex:param name="nextPage" value="/apex/apc_ap_main_interests" />
+                  <apex:param name="reDirectPage" value="true" />
+                  <apex:param name="docType" value="Health" assignTo="{!docType}"/>
+                  <apex:param name="pageId" value="050"/>
+                  <apex:commandButton value="Save & Continue" id="continuebutton"/>
+                </apex:commandlink>
+                </div>
+                </div><!--  end row -->
+             
+             
+          </apex:form>
+        </div>
+        <!-- end column  -->
+        
+        <div id="app-side" class="col-md-3 col-md-pull-8">
+          <c:menu_side_apc_ap_basic ApplicantInfo="{!applicantInfo}" />
+        </div>
+        <!-- end column --> 
+        
+      </div>
+      <!-- end row --> 
+      
+    </apex:define>
+  </apex:composition>
+</apex:page>

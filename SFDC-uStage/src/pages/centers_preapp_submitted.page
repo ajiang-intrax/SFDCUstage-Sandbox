@@ -1,0 +1,46 @@
+<apex:page id="centers_preapp_submitted" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" title="Home | Intrax" standardStylesheets="false" showHeader="false" action="{!checkLogin}">
+<apex:composition template="IntraxTemplate_Vs1">
+<apex:define name="body">
+<apex:form id="form">
+
+<div class="wrapper">
+          
+  <div class="page-header clearfix">
+  <h1 class="page-title"><apex:outputText value="{!$Label.T_0156}" /></h1></div>
+                
+  <div  class="white-box clearfix">
+             
+    <div class="panel two_thirds">
+      <p><apex:outputText value="{!$Label.T_0157}" /></p>
+ 
+      <p><apex:outputText value="{!$Label.T_0158}" /></p>
+      <!-- The below statement changed as per Story McL 150 --> 
+      <p><apex:outputText value="{!$Label.T_0159}" /></p>
+ 
+      <ul>
+        <li><apex:outputText value="{!$Label.T_0160}" /> <apex:outputText value="{!ctrStudentPhoneNumber}" />, <apex:outputText value="{!$Label.T_0006}" /> <a href="mailto:info@intrax.edu">info@intrax.edu</a> <apex:outputText value="{!$Label.T_0212}" /> <a href="skype:intraxglobal?chat"><apex:outputText value="{!$Label.T_0071}" /></a></li>
+        <!-- <li>For Partner Agencies: Call <apex:outputText value="{!ctrPartnerPhoneNumber}" /> or email <a href="mailto:admissions@intrax.edu">admissions@intrax.edu</a></li> -->
+      </ul>
+ 
+       <p> <apex:outputText value="{!$Label.T_0161}" /> </p>
+                
+      <div class="form-button no-float inline-block">
+        <apex:commandlink id="ContinueBtn" styleClass="next" action="{!navigator}">
+          <apex:param name="nextPage" value="/apex/centers_app_home"/>
+          <apex:param name="reDirectPage" value="true"/>
+          <apex:commandButton value="{!$Label.T_0213}"/>
+           <i class="icon-chevron-right"></i> 
+        </apex:commandlink>
+      </div>              
+    </div>  
+      
+  <div class="panel one_third last aside">
+          <c:Badge_Centers_Contact />     
+          </div>
+  </div>
+</div>
+  
+</apex:form>
+</apex:define>
+</apex:composition>
+</apex:page>

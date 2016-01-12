@@ -1,0 +1,23 @@
+<apex:page tabStyle="invoiceit_s__Configuration__c" controller="invoiceit_s.ControllerSetupGeneral" sidebar="false" showHeader="false">
+    <apex:form >
+        <apex:sectionHeader title="{!$Label.GeneralConfiguration}"/>
+        <apex:pageMessages id="pageMessages"/>
+        <apex:pageBlock >
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!save}" value="{!$Label.ButtonSave}" rerender="configurations, pageMessages"/>
+            </apex:pageBlockButtons>
+            <apex:pageBlockTable value="{!configurations}" var="config" id="configurations">
+                <apex:column headerValue="{!$Label.Name}" rendered="{!config.invoiceit_s__Field_Type__c != null}">
+                    <apex:outputField value="{!config.invoiceit_s__Description__c}"/> 
+                </apex:column>
+                <apex:column headerValue="{!$Label.Value}" rendered="{!config.invoiceit_s__Field_Type__c != null}">
+                    <apex:inputField value="{!config.invoiceit_s__Boolean_Value__c}" rendered="{!config.invoiceit_s__Field_Type__c == 'Boolean'}"/>
+                    <apex:inputField value="{!config.invoiceit_s__Date_Value__c}" rendered="{!config.invoiceit_s__Field_Type__c == 'Date'}"/>
+                    <apex:inputField value="{!config.invoiceit_s__String_Value__c}" rendered="{!config.invoiceit_s__Field_Type__c == 'String'}"/>
+                    <apex:inputField value="{!config.invoiceit_s__Number_Value__c}" rendered="{!config.invoiceit_s__Field_Type__c == 'Number'}"/>
+                    <apex:inputField value="{!config.invoiceit_s__Percentage_Value__c}" rendered="{!config.invoiceit_s__Field_Type__c == 'Percentage'}"/>
+                </apex:column>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

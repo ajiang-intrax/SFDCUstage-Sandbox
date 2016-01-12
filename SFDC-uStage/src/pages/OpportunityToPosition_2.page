@@ -1,0 +1,17 @@
+<apex:page standardController="Position__c" extensions="IPositionCloneController" showHeader="true" >
+
+<div id = "main">
+	<apex:form >
+			<br/><br/>
+			<fieldset>
+			<p><strong> Please, insert a name for the New Position: </strong></p>
+			
+			<p align="center"><apex:inputField required="true" id="updatedName" value="{!Position__c.name}" styleClass="input_field"></apex:inputField></p>
+			<div id="btns"> 
+				<apex:commandButton action="{!save}" value="Next >>" styleClass="save_btn"></apex:commandButton> 
+			</div>
+			</fieldset>
+	</apex:form>
+</div>
+<!-- End Default Content REMOVE THIS -->
+</apex:page>

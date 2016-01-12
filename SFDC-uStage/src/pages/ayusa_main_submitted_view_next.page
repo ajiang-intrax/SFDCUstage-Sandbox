@@ -1,0 +1,184 @@
+<apex:page id="ayusa_main_submitted_view_next" docType="html-5.0" standardController="Applicant_Info__c"  extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false" >
+  <apex:composition template="IntraxTemplate_Vs1">
+     <apex:define name="body">
+      <div class="wrapper" id="ayusa-student-preapp-summary">
+ <apex:form id="form">
+ 
+      <div class="page-header clearfix">
+<h1 class="page-title">Ayusa Student Application</h1>
+<div class="back-to-main">
+  
+                      <apex:outputLink id="BacktoMain1" value="/apex/ayusa_app_home?id={!applicantInfo.Id}" rendered="{!IF(applicantInfo.Intrax_Program_Options__c == 'Ayusa High School' && applicantInfo.Type__c == 'Participant' && applicantInfo.Application_Stage__c == 'Working' && applicantInfo.Application_Level__c == 'Main' && NOT(IsPartner), true, false)}">Back to Main Page</apex:outputLink>
+                   <apex:outputLink id="BacktoMain2" value="/apex/your_applications" rendered="{!IF(applicantInfo.Intrax_Program_Options__c == 'Ayusa High School' && applicantInfo.Type__c == 'Participant' && NOT(applicantInfo.Application_Stage__c == 'Working') && applicantInfo.Application_Level__c == 'Main' && NOT(IsPartner), true, false)}">Back to Main Page</apex:outputLink>
+                     <apex:outputLink id="BacktoMain3" value="/apex/your_applications" rendered="{!IF(applicantInfo.Intrax_Program_Options__c == 'Ayusa High School' && applicantInfo.Type__c == 'Host Family' && NOT(applicantInfo.Application_Stage__c == 'Working') && applicantInfo.Application_Level__c == 'Main' && NOT(IsPartner), true, false)}">Back to Main Page</apex:outputLink>
+                 <apex:outputLink id="BacktoMain4" value="/apex/ayusa_hf_home?id={!applicantInfo.Id}" rendered="{!IF(applicantInfo.Intrax_Program_Options__c == 'Ayusa High School' && applicantInfo.Type__c == 'Host Family' && applicantInfo.Application_Stage__c == 'Working' && applicantInfo.Application_Level__c == 'Main' && NOT(IsPartner), true, false)}">Back to Main Page</apex:outputLink>
+                <apex:outputLink id="BacktoMain5" value="/apex/ayusa_app_home?id={!applicantInfo.Id}" rendered="{!IF(NOT(applicantInfo.Application_Stage__c == 'In-Review') && NOT(applicantInfo.Application_Stage__c == 'Declined - Ayusa') && NOT(applicantInfo.Application_Stage__c == 'Conditional') && NOT(applicantInfo.Application_Stage__c == 'Accepted') && NOT(applicantInfo.Application_Stage__c == 'Declined - Agent') && applicantInfo.Application_Level__c == 'Main' && IsPartner, true, false)}">Back to Main Page</apex:outputLink>
+                <apex:outputLink id="BacktoMain6" value="/apex/LoginRedirection" rendered="{!IF((applicantInfo.Application_Stage__c == 'In-Review' || applicantInfo.Application_Stage__c == 'Declined - Ayusa' || applicantInfo.Application_Stage__c == 'Conditional' || applicantInfo.Application_Stage__c == 'Accepted' || applicantInfo.Application_Stage__c == 'Declined - Agent') && applicantInfo.Application_Level__c == 'Main' && IsPartner, true, false)}">Back to Main Page</apex:outputLink>
+                
+
+                     
+                
+                
+
+</div>
+</div>
+          <div class="section-header clearfix">
+             <h2>Summary</h2>
+            <div class="progress-bar">Page 2 <em>of</em> 2</div>
+            </div> 
+          
+       
+        <div class="white-box clearfix">
+            
+         
+            
+              
+              
+             
+           
+              
+                  
+            <div class="panel no-float half">
+            
+                <p>Click <strong>View PDF Summary</strong> to print or save your information for your records.</p>
+
+               
+            
+            </div>
+              
+              <div class="panel half">
+          
+             
+     
+         <h3 class="data-block-title">Essays Info</h3>
+       <apex:repeat value="{!EssayList}" var="item1" >
+        <div class="form-row">
+           <div class="form-label left"><b> <apex:outputText value="Question: "/></b><apex:outputText value="{!item1.Label__c}"/></div>
+            <div class="form-field" style="float:left;margin-left:10px;">
+           <b><apex:outputText value="  Answer: "/> </b><apex:outputText value="{!item1.Narrative__c}" /> 
+          </div>        
+           
+       
+        </div>
+       </apex:repeat>
+          <h3 class="data-block-title">Recommendations Info</h3>
+       <apex:repeat value="{!communicationInfoList}" var="item1" >
+       <div class="form-row">
+           <div class="form-label left">Type</div>
+            <div class="form-field">
+            <apex:outputLabel rendered="{! if(item1.Type_Code__c == 'ETR', true, false)}" > English Teacher </apex:outputLabel> 
+                                        <apex:outputLabel rendered="{! if(item1.Type_Code__c == 'SOR', true, false)}" > School </apex:outputLabel>
+          </div>   
+          </div> 
+        <div class="form-row">
+           <div class="form-label left">Status</div>
+            <div class="form-field">
+            <apex:outputText value="{!item1.Status__c}" /> 
+          </div>  
+          </div> 
+           <div class="form-row">
+           <div class="form-label left">Name</div>
+            <div class="form-field">
+            <apex:outputText value="{!item1.Recipient_First_Name__c}  {!item1.Recipient_Last_Name__c}" /> 
+          </div> 
+          </div>
+           <div class="form-row">
+           <div class="form-label left">Email</div>
+            <div class="form-field">
+            <apex:outputText value="{!item1.To_Address__c}" /> 
+          </div> 
+          </div>
+           
+        </apex:repeat>           
+    </div> 
+              
+            
+            
+             <div class="panel half last">     
+                 
+          
+            
+         
+            <h3 class="data-block-title">Document Uploads</h3>
+        
+             <apex:repeat value="{!DocList}" var="item" >
+             <div class="form-row">
+          <div class="form-label left"><b> Document Type</b></div>
+          <div class="form-field">
+          <b>  <apex:outputText value="{!item.Document_Type__c}"/></b>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-label left">Document Name</div>
+          <div class="form-field">
+            <apex:outputText value="{!item.Document_Name__c}"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-label left">Description</div>
+          <div class="form-field">
+            <apex:outputText value="{!item.Description__c}"/>
+          </div>
+        </div>
+       
+        <div class="form-row">
+          <div class="form-label left"> Document Action</div>
+          <div class="form-field">
+            <apex:outputText value="{!TRIM(RIGHT(item.Document_GUID__c,15))}"/>
+          </div>
+        </div>
+       
+      </apex:repeat>
+        
+           </div>
+           
+             <div class="panel full last">
+              
+               <div class="form-button">
+                 <apex:commandlink styleClass="next" action="{!navigator}">
+                 <apex:param name="nextPage" value="/apex/ayusa_main_submitted_view"/>
+                 <apex:param name="reDirectPage" value="true"/>
+                 <i class="icon-chevron-left"></i> 
+                 <apex:commandButton id="Back" value="Back" />
+                 </apex:commandlink>
+               </div> 
+              
+               <div class="form-link">
+                <apex:commandlink action="{!navigator}" target="_blank" >
+                 <i class="icon-file"></i>
+                    <apex:param name="nextPage" value="/apex/ayusa_app_view_pdf_summary"/>
+                  <apex:param name="reDirectPage" value="true"/>
+                  <apex:param name="view" value="Both" assignTo="{!view}"/>
+                  <apex:param name="role" value="Both" assignTo="{!role}"/>
+                  <apex:commandButton id="PDF" value="View PDF Summary" />
+                </apex:commandlink>
+               </div>
+           
+                 
+                      <div class="form-link">
+                     
+                          <apex:outputLink id="BacktoMainFooter1" value="/apex/ayusa_app_home?id={!applicantInfo.Id}" rendered="{!IF(applicantInfo.Intrax_Program_Options__c == 'Ayusa High School' && applicantInfo.Type__c == 'Participant' && applicantInfo.Application_Stage__c == 'Working' && applicantInfo.Application_Level__c == 'Main' && NOT(IsPartner), true, false)}"><i class="icon-home"></i> <span>Back to Main Page</span></apex:outputLink>
+                   <apex:outputLink id="BacktoMainFooter2" value="/apex/your_applications" rendered="{!IF(applicantInfo.Intrax_Program_Options__c == 'Ayusa High School' && applicantInfo.Type__c == 'Participant' && NOT(applicantInfo.Application_Stage__c == 'Working') && applicantInfo.Application_Level__c == 'Main' && NOT(IsPartner), true, false)}"><i class="icon-home"></i> <span>Back to Main Page</span></apex:outputLink>
+                     <apex:outputLink id="BacktoMainFooter3" value="/apex/your_applications" rendered="{!IF(applicantInfo.Intrax_Program_Options__c == 'Ayusa High School' && applicantInfo.Type__c == 'Host Family' && NOT(applicantInfo.Application_Stage__c == 'Working') && applicantInfo.Application_Level__c == 'Main' && NOT(IsPartner), true, false)}"><i class="icon-home"></i> <span>Back to Main Page</span></apex:outputLink>
+                 <apex:outputLink id="BacktoMainFooter4" value="/apex/ayusa_hf_home?id={!applicantInfo.Id}" rendered="{!IF(applicantInfo.Intrax_Program_Options__c == 'Ayusa High School' && applicantInfo.Type__c == 'Host Family' && applicantInfo.Application_Stage__c == 'Working' && applicantInfo.Application_Level__c == 'Main' && NOT(IsPartner), true, false)}"><i class="icon-home"></i> <span>Back to Main Page</span></apex:outputLink>
+                <apex:outputLink id="BacktoMainFooter5" value="/apex/ayusa_app_home?id={!applicantInfo.Id}" rendered="{!IF(NOT(applicantInfo.Application_Stage__c == 'In-Review') && NOT(applicantInfo.Application_Stage__c == 'Declined - Ayusa') && NOT(applicantInfo.Application_Stage__c == 'Conditional') && NOT(applicantInfo.Application_Stage__c == 'Accepted') && NOT(applicantInfo.Application_Stage__c == 'Declined - Agent') && applicantInfo.Application_Level__c == 'Main' && IsPartner, true, false)}"><i class="icon-home"></i> <span>Back to Main Page</span></apex:outputLink>
+                    <apex:outputLink id="BacktoMainFooter6" value="/apex/LoginRedirection" rendered="{!IF((applicantInfo.Application_Stage__c == 'In-Review' || applicantInfo.Application_Stage__c == 'Declined - Ayusa' || applicantInfo.Application_Stage__c == 'Conditional' || applicantInfo.Application_Stage__c == 'Accepted' || applicantInfo.Application_Stage__c == 'Declined - Agent') && applicantInfo.Application_Level__c == 'Main' && IsPartner, true, false)}"><i class="icon-home"></i> <span>Back to Main Page</span></apex:outputLink>
+                     
+                      </div>
+       
+       </div>
+            
+            
+             
+              </div>
+           
+              
+                  
+        
+       
+      
+         </apex:form>
+      </div>
+    </apex:define>
+</apex:composition>
+</apex:page>

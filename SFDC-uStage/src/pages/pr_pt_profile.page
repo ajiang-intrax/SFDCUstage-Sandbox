@@ -1,0 +1,371 @@
+<apex:page applyBodyTag="false" applyHtmlTag="false" title="Participant's Profile | Intrax" standardStylesheets="false" showHeader="false" controller="IntraxPartnerPortalEngineController" action="{!checkLogin}">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      
+      <apex:form styleClass="form-vertical">
+        <div class="row margin-b2">
+          <div class="col-sm-9 center-text center-block">
+            <c:block_pr_pt_profile_thumb photoUrl="{!returnUrl}" gender="{!participant.Account_Id__r.Gender__pc}"/> 
+            <h1>
+              <apex:outputText rendered="{!IF($CurrentPage.parameters.participantId == null, false, true)}" value="{!participant.Name}"/>
+              <apex:outputText rendered="{!IF($CurrentPage.parameters.participantId == null, true, false)}" value="No Individual Participant Selected"/>
+            </h1>
+          </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+        
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="center-text">
+              <c:menu_pr_pt participant="{!participant}" applicationRecord="{!applicationRecord}" />
+            </div>
+          </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+        
+        <hr class="margin-b4"/>
+        
+        <div class="row margin-b2">
+          <div class="col-sm-7 center-block">
+            <h3>Biographical Information</h3>
+            <apex:outputPanel rendered="{!IF(participant.Intrax_Program__c =='AuPairCare', true, false)}" layout="block">
+            	<apex:outputLink value="/apex/apc_hf_au_pair_profile?Id={!participant.Id}" id="detailsLink">View Details</apex:outputLink>
+            </apex:outputPanel>
+            <br/>
+            <apex:outputPanel rendered="{!IF(participant.Intrax_Program__c =='Internship' || participant.Intrax_Program__c =='Work Travel' ,true,false)}" layout="block">
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="margin-b2">
+                    <label>First Name</label><br/>
+                    <apex:outputField value="{!participant.Account_Id__r.FirstName}"/>
+                    <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Account_Id__r.FirstName), true, false)}" />
+                  </div>
+                  <div class="margin-b2">
+                    <label>Middle Name</label><br/>
+                    <apex:outputField value="{!participant.Account_Id__r.Middle_Name__pc}"/>
+                    <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Account_Id__r.Middle_Name__pc), true, false)}" />
+                  </div>
+                  <div class="margin-b2">
+                    <label>Last Name</label><br/>
+                    <apex:outputField value="{!participant.Account_Id__r.LastName}"/>
+                    <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Account_Id__r.LastName), true, false)}" />
+                  </div>
+                  <div class="margin-b2">
+                    <label>Gender</label><br/>
+                    <apex:outputField value="{!participant.Account_Id__r.Gender__pc}"/>
+                    <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Account_Id__r.Gender__pc), true, false)}" />
+                  </div>
+                  <div class="margin-b2">
+                    <label>Intrax ID</label><br/>
+                    <apex:outputField value="{!participant.Account_Id__r.Intrax_Id__c}"/>
+                    <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Account_Id__r.Intrax_Id__c), true, false)}" />
+                  </div>
+                </div>
+                <!--  end column --> 
+                <div class="col-sm-6">
+                  <div class="margin-b2">
+                    <label>Country of Citizenship</label><br/>
+                    <apex:outputField value="{!participant.Account_Id__r.Citizenship__pc}"/>
+                    <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Account_Id__r.Citizenship__pc), true, false)}" />
+                  </div>
+                  <div class="margin-b2">
+                    <label>Country of Legal Residence</label><br/>
+                    <apex:outputField value="{!participant.Account_Id__r.Legal_Residence__pc}"/>
+                    <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Account_Id__r.Legal_Residence__pc), true, false)}" />
+                  </div>
+                  <div class="margin-b2">
+                    <label>City of Birth</label><br/>
+                    <apex:outputField value="{!participant.Account_Id__r.Birth_City__pc}"/>
+                    <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Account_Id__r.Birth_City__pc), true, false)}" />
+                  </div>
+                  <div class="margin-b2">
+                    <label>Date of Birth</label><br/>
+                    <apex:outputField value="{!participant.Account_Id__r.PersonBirthdate}"/>
+                    <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Account_Id__r.PersonBirthdate), true, false)}" />
+                  </div>
+                  <div class="margin-b2">
+                    <label>Country of Birth</label><br/>
+                    <apex:outputField value="{!participant.Account_Id__r.Birth_Country__pc}"/>
+                    <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Account_Id__r.Birth_Country__pc), true, false)}" />
+                  </div>
+                </div>
+                <!--  end column --> 
+              </div>
+              <!--  end row --> 
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!IF(participant.Intrax_Program__c =='Ayusa',true,false)}" layout="block">
+               <div class="row">
+                <div class="col-sm-6">
+              <div class="margin-b2">
+                <label>First Name</label><br/>
+                <apex:outputText value="{!participant.Account_Id__r.FirstName}"/>
+              <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Account_Id__r.FirstName), true, false)}" />
+              </div>
+              <div class="margin-b2">
+                <label>Middle Name</label><br/>
+                <apex:outputText value="{!participant.Account_Id__r.Middle_Name__pc}"/>
+              <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Account_Id__r.Middle_Name__pc), true, false)}" />
+              </div>
+              <div class="margin-b2">
+                <label>Last Name</label><br/>
+                <apex:outputText value="{!participant.Account_Id__r.LastName}"/>
+              <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Account_Id__r.LastName), true, false)}" />
+              </div>
+               </div>
+          <!--  end column --> 
+          <div class="col-sm-6">
+              <div class="margin-b2">
+                <label>Home Country</label><br/>
+                <apex:outputField value="{!participant.Account_Id__r.PersonMailingCountry}"/>
+                <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Account_Id__r.PersonMailingCountry), true, false)}" />
+              </div>
+              <div class="margin-b2">
+                <label>Nationality</label><br/>
+                <apex:outputField value="{!participant.Account_Id__r.Nationality__pc}"/>
+                <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Account_Id__r.Nationality__pc), true, false)}" />
+              </div>
+               </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+            </apex:outputPanel>
+            
+            <apex:outputPanel rendered="{!IF(participant.Intrax_Program__c =='AuPairCare',true,false)}" layout="block">
+               <div class="row">
+                <div class="col-sm-6">
+              <div class="margin-b2">
+                <label>First Name</label><br/>
+                <apex:outputText value="{!participant.Account_Id__r.FirstName}"/>
+              <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Account_Id__r.FirstName), true, false)}" />
+              </div>
+              <div class="margin-b2">
+                <label>Last Name</label><br/>
+                <apex:outputText value="{!participant.Account_Id__r.LastName}"/>
+              <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Account_Id__r.LastName), true, false)}" />
+              </div>
+              </div>
+          <!--  end column --> 
+          <div class="col-sm-6">
+              <div class="margin-b2">
+                <label>Nationality</label><br/>
+                <apex:outputField value="{!participant.Account_Id__r.Nationality__pc}"/>
+                <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Account_Id__r.Nationality__pc), true, false)}" />
+              </div>
+              
+              <div class="margin-b2">
+                <label>Age</label><br/>
+                <apex:outputField value="{!participant.Account_Id__r.Age__pc}"/>
+                <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Account_Id__r.Age__pc), true, false)}" />
+              </div>
+              
+              
+              </div>
+              <div class="col-sm-6">
+                           
+              <div class="margin-b2">
+                    <label>Intrax ID</label><br/>
+                    <apex:outputField value="{!participant.Account_Id__r.Intrax_Id__c}"/>
+                    <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Account_Id__r.Intrax_Id__c), true, false)}" />
+               </div>
+              
+              </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+            </apex:outputPanel>
+          </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+         <apex:outputPanel rendered="{!IF(participant.Intrax_Program__c =='AuPairCare',true,false)}" layout="block">
+         <hr class="margin-b2"/>  
+          <div class="row margin-b2">
+          <div class="col-sm-7 center-block">
+            <h3>Contact Information</h3>
+            
+            <apex:outputPanel rendered="{!IF(participant.Intrax_Program__c =='AuPairCare',true,false)}" layout="block">
+               <div class="row">
+                <div class="col-sm-6">
+              <div class="margin-b2">
+                <label>Phone</label><br/>
+                <apex:outputText value="{!participant.Account_Id__r.Phone}"/>
+              <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Account_Id__r.Phone), true, false)}" />
+              </div>
+              <div class="margin-b2">
+                <label>Mobile Phone</label><br/>
+                <apex:outputText value="{!participant.Account_Id__r.PersonMobilePhone}"/>
+              <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Account_Id__r.PersonMobilePhone), true, false)}" />
+              </div>
+              <div class="margin-b2">
+                <label>Home Phone</label><br/>
+                <apex:outputText value="{!participant.Account_Id__r.PersonHomePhone}"/>
+              <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Account_Id__r.PersonHomePhone), true, false)}" />
+              </div>
+              </div>
+          <!--  end column --> 
+          <div class="col-sm-6">
+              <div class="margin-b2">
+                <label>Email</label><br/>
+                <apex:outputField value="{!participant.Account_Id__r.PersonEmail}"/>
+                <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Account_Id__r.PersonEmail), true, false)}" />
+              </div>
+              
+              <div class="margin-b2">
+                <label>Skype</label><br/>
+                <apex:outputField value="{!participant.Account_Id__r.Skype_ID__pc}"/>
+                <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Account_Id__r.Skype_ID__pc), true, false)}" />
+              </div>
+                            
+              </div>              
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+            </apex:outputPanel>
+          </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row -->
+        </apex:outputPanel>
+          
+         <hr class="margin-b2"/> 
+        <div class="row margin-b2">
+          <div class="col-sm-7 center-block">
+            <h3>Program Information</h3>
+            <apex:outputPanel rendered="{!IF(participant.Intrax_Program__c =='Internship' || participant.Intrax_Program__c =='Work Travel' ,true,false)}" layout="block">
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="margin-b2">
+                    <label>Engagement Start</label><br/>
+                    <apex:outputField value="{!participant.Engagement_Start__c}"/>
+                    <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Engagement_Start__c), true, false)}" />
+                  </div>
+                </div>
+                <!--  end column -->
+                <div class="col-sm-6">
+                  <div class="margin-b2">
+                    <label>Engagement End</label><br/>
+                    <apex:outputField value="{!participant.Engagement_End__c}"/>
+                    <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Engagement_End__c), true, false)}" />
+                  </div>
+                </div>
+                <!--  end column --> 
+              </div>
+              <!--  end row --> 
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!IF(participant.Intrax_Program__c =='Ayusa',true,false)}" layout="block">
+                <div class="row">
+                <div class="col-sm-6">
+              <div class="margin-b2">
+                <label>Program Year</label><br/>
+                <apex:outputField value="{!participant.Program_Year__c}"/>
+                <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Program_Year__c), true, false)}" />
+              </div>
+               <div class="margin-b2">
+                <label>Program Duration</label><br/>
+                <apex:outputField value="{!participant.Program_Duration__c}"/>
+                <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Program_Duration__c), true, false)}" />
+              </div>
+              <div class="margin-b2">
+                <label>Engagement Status</label><br/>
+                <apex:outputField value="{!participant.Status__c}"/>
+                <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Status__c), true, false)}" />
+              </div>
+              <div class="margin-b2">
+                <label>Open to Private School?</label><br/>
+                <apex:outputField value="{!participant.Private_High_School_Indicated__c}"/>
+                <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Private_High_School_Indicated__c), true, false)}" />
+              </div>
+              </div>
+               <!--  end column -->
+                <div class="col-sm-6">
+             <div class="margin-b2">
+                <label>Will Accept Double Placement?</label><br/>
+                <apex:outputField value="{!participant.Single_No_Children_Indicated__c}"/>
+                <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Single_No_Children_Indicated__c), true, false)}" />
+              </div>
+              <div class="margin-b2">
+                <label>Live With Pets</label><br/>
+                <apex:outputField value="{!participant.Live_With_Pets__c}"/>
+                <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Live_With_Pets__c), true, false)}" />
+              </div>
+              <div class="margin-b2">
+                <label>Top Interests</label><br/>
+                <apex:outputField value="{!participant.Interests_Top__c}"/>
+                <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Interests_Top__c), true, false)}" />
+              </div>
+               </div>
+                <!--  end column --> 
+              </div>
+              <!--  end row --> 
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!IF(participant.Intrax_Program__c =='AuPairCare',true,false)}" layout="block">
+                <div class="row">
+                <div class="col-sm-6">
+              
+              <div class="margin-b2">
+                <label>Engagement Status</label><br/>
+                <apex:outputField value="{!participant.Status__c}"/>
+                <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Status__c), true, false)}" />
+              </div>
+              <div class="margin-b2">
+                <label>Placement Status</label><br/>
+                <apex:outputField value="{!participant.Placement_Status__c}"/>
+                <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Placement_Status__c), true, false)}" />
+              </div>
+              <div class="margin-b2">
+                <label>Interview Availability</label><br/>
+                <apex:outputField value="{!participant.Interview_Availability__c}"/>
+                <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Interview_Availability__c), true, false)}" />
+              </div>
+              </div>
+               <!--  end column -->
+                <div class="col-sm-6">
+             
+              <div class="margin-b2">
+                <label>Earliest Match Date</label><br/>
+                <apex:outputField value="{!participant.Earliest_Match_Date__c}"/>
+                <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Earliest_Match_Date__c), true, false)}" />
+              </div>
+              <div class="margin-b2">
+                <label>Latest Match Date</label><br/>
+                <apex:outputField value="{!participant.Latest_Match_Date__c}"/>
+                <apex:outputText value="--" rendered="{!IF(ISBLANK(participant.Latest_Match_Date__c), true, false)}" />
+              </div>
+               </div>
+                <!--  end column --> 
+              </div>
+              <!--  end row --> 
+            </apex:outputPanel>
+          </div>
+          <!--  end column --> 
+        </div>
+        <!--  end row --> 
+        
+          <apex:outputPanel rendered="{!IF(((participant.Intrax_Program__c =='Work Travel') && (URL!=null)),true,false)}" layout="block">
+             <hr class="margin-b2"/>  
+             <div class="row margin-b2">
+              <div class="col-sm-7 center-block">
+              <h3>Pending User Registration</h3>
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="margin-b2">
+                    <label>Registration URL</label><br/>
+                     <apex:outputText value="{!URL}"/>
+                  </div>
+                </div>
+               </div>
+            
+             
+            
+           </div>
+                <!--  end column --> 
+          </div>
+              <!--  end row --> 
+            
+           </apex:outputPanel> 
+      </apex:form>
+    </apex:define>
+  </apex:composition>
+</apex:page>

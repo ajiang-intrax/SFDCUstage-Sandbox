@@ -1,0 +1,344 @@
+<apex:page standardController="Engagement__c"  standardStylesheets="false" showHeader="false" renderas="pdf" applyHtmlTag="false" applyBodyTag="false">
+<head>
+<style type="text/css" >
+@page {
+ size:portrait;
+font-family:Trebuchet MS, Arial, Helvetica, sans-serif;
+margin:2cm 1cm 3cm 1cm;
+padding:0 0 1em 0;
+@top-left {
+ content: element(header);
+}
+@bottom-center {
+ content: element(footer);
+}
+}
+ @page:first {
+@top-left {
+content: element(master);
+}
+.header {
+display:none;
+}
+}
+div.master { position: running(master); padding:2em 1em 1em 1em; }
+div.header { position: running(header); padding:1em; }
+div.footer { display: block; padding: 1em; position: running(footer); font-family:Trebuchet MS, Arial, Helvetica, sans-serif; color:#7d7d7d; }
+.page-numbers { text-align:center; padding-top:0.5cm; width:100%; }
+.pagenumber:before { content: counter(page); font-size:9pt; }
+.pagecount:before { content: counter(pages); font-size:9pt; }
+.title { text-align:center; background:#b8d459; margin-bottom:2em; }
+.title div { color:#202020; display:inline-block; font-size:18pt; background:#fff; padding:0 1em; text-align:center; }
+h2 { background:#e3edd4; font-size:11pt; padding:0.5em 1em; margin-bottom:1em; page-break-inside:avoid;  page-break-after: avoid;}
+.container { width:100%; font-family:Trebuchet MS, Arial, Helvetica, sans-serif; font-size:11pt; }
+.left-column { width:40%; margin-right:10%; float:left; }
+.right-column { width:40%; float:left; }
+.data-row { margin-bottom:1em; }
+.repeat-last { border-bottom:1px solid #e3edd4; }
+.data-row.last { border-bottom:none; }
+.data-row:after { display:block; visibility:hidden; content:"."; clear:both; width:1px; height:1px; }
+.data-label { float:left; font-weight:bold; }
+.data-label.left { margin-left:1em; }
+.data-field { float:left; margin-left:1em; font-style:italic; }
+.essay { margin-right:1em; margin-left:1em; }
+.essay.answer{border-bottom:1px solid #e3edd4; padding-bottom:1em; }
+.clearfix:after { content:"."; width:1px; height:1px; display:block; visibility:hidden; clear:both; }
+.regular{font-weight:normal;}
+.page-break { page-break-before: always; }
+.page-break-inside { page-break-inside: avoid; }
+.page-title-small { float:right; font-family:Trebuchet MS, Arial, Helvetica, sans-serif; font-size:9pt; color:#7d7d7d; }
+.white { color:white; font-size:1px; }
+</style>
+</head>
+<body>
+   <form>
+        <div class="header"> <span class="page-title-small">Intrax Work Travel Program - Terms and Conditions</span> </div>
+        <div class="container clearfix">
+            <div class="title">
+              <div>Intrax Work Travel Program - Terms and Conditions</div>
+            </div>
+            <div class="data-row">
+                By clicking on "Agree", you verify that you have read all of the Terms &amp; Conditions and that you understand and agree to the entirety of the Terms &amp; Conditions. You do not rely on any statements or representations that are not specifically stated in these Terms &amp; Conditions. <br /><br />
+                Intrax Work Travel (IWT) is your official program sponsor while you are in the U.S. IWT is not your host company and shall not be responsible for any act or error on your part.<br /><br />
+                The IWT staff is available to assist you with any questions or to advise you regarding any challenges you may experience while you are participating in the IWT Program. In the U.S. you can call IWT (toll free) at 1-888-224-0450 weekdays from 9:00a.m. to 5:00p.m. <font color="red">local time</font>. You can call the same toll -free line at any time, 24 hours per day, 7 days per week, in case of an emergency. You understand that, in assisting and supporting you to have a successful program, our primary goal will always be to ensure your health, safety, and welfare<br /><br />
+            </div>
+            <h2>Eligibility</h2>
+            <div class="data-row">
+                <ul>
+                    <li>You agree that the information provided on your application is complete and accurate. 
+                    	<ul>
+                    		<li>You will be between 18 and 30 years old by the program start date. Any exception to this age range will have to be made in writing by IWT.</li>
+                    	</ul>
+                    </li>
+                    <li>You are or will be, at the time of the visa application enrolled full-time and pursuing studies at an accredited post-secondary, classroom-based, academic institution (not a technical, vocational, tertiary or trade school) physically located outside of the U.S. You will have completed at least one semester of post-secondary study, with grades issued (report card) by the time to appear for a J-1 visa interview. You also understand that:
+                    	<ul>
+                    		<li>&quot;An institution that offers primarily vocational or technical programs is not an academic institution unless the specific program in which the exchange visitor is to participate or has participated has been determined by the U.S. Department of State on an exceptional basis to be comparable to those offered in academic institutions.&quot;&#91;&sect; 62.10 Definitions. General Provisions&#93;</li>
+                    		<li>&quot;A foreign university student, who at the time of application is enrolled in and actively pursuing a degree or a fulltime course of study at a foreign ministerially-recognized university/ academic institution and whose purpose is work and travel in the United States for up to four months during his or her break between academic years.&quot;&#91;&sect;&sect; 62.4 Categories of participant eligibility. General Provisions&#93;</li>
+                    	</ul>
+                    </li>
+                    <li>You possess sufficient proficiency in the English language to participate in the program and are comfortable expressing yourself to request assistance in an emergency and in daily activities.</li>
+                    <li>You are physically capable of performing the tasks required as outlined in your job offer.</li>
+                    <li>You will provide IWT with a valid email address and you will keep it updated in the IWT database since this will be IWT's primary method of contacting you with important information while you are in the U.S.</li>
+                    <li>You will provide IWT with a valid phone number at which we can reach you in the U.S.</li>
+                    <li>You are responsible for bringing enough money to the U.S. to cover the cost of your food, housing and other personal expenses for at least one month. You will bring a minimum of $1,000.00 (i.e. cash, credit card access, travelers’ checks) to cover initial expenses such as transportation costs from airport to host company, food, etc.
+                        <ul>
+                            <li>While IWT will provide program support and assistance, IWT is not responsible for your expenses, delays in obtaining your Social Security card or for any period of time during which you are not being paid by a host company. IWT cannot loan money to you.</li>
+                        </ul>
+                    </li>
+                    <li>You make a good faith commitment to returning to your home country at the end of the program and not changing your visa status.</li>
+                    <li>You agree that you have enrolled in a cultural exchange program, for which work is an important component, but not the sole purpose of the program.
+                        <ul>
+                            <li>You also agree that you understand that a second, third, fourth job is not something that can be guaranteed on the program or even permitted. Any placement beyond your primary, IWT-approved placement, for which the U.S. consulate issues a visa, will need to be pre-approved by Intrax before you would be allowed to begin.</li>
+                            <li>You agree that the &quot;purpose of the Program is to provide foreign nationals with opportunities to participate in educational and cultural programs in the United States and return home to share their experiences, and to encourage Americans to participate in educational and cultural programs in other countries&quot;  &#91;&sect; 22 CFR 62.1&#93;.</li>
+                            <li>You also agree and understand that participants will &quot;work in jobs that require minimal training and are seasonal or temporary in order to earn funds to help defray a portion of their expenses.&quot;  &#91;&sect;62.32   Summer work travel, &#40;b&#41; Purpose&#93;</li>
+                            <li>The &quot;stipend or wages might not cover all…expenses and &#91;you&#93; should bring additional personal funds.&quot; &#91;&sect; 62.8 General program requirements, &#40;d&#41; &#40;3&#41;]</li>
+                        </ul>
+                    </li>
+                </ul>
+             </div>
+             <h2>Visa and Entry</h2>
+             <div class="data-row">
+                 <ul>
+                     <li>A DS-2019 form enables you to apply for a J-1 Work Travel visa. The U.S. Consulate may approve or deny your application for a visa. In rare cases, even if you receive a J-1 Work Travel visa, you may be denied entrance by U.S. Customs and Border Protection. IWT is not responsible for and cannot control or change these decisions.</li>
+                     <li>Home-country physical presence requirement: If applicable, the U.S. Consulate will indicate if the two-year homestay rule applies on the visa. If it applies, then the participant &quot;must reside and be physically present in the country of nationality or last legal permanent residence for an aggregate of at least two years following departure from the United States before the exchange visitor is eligible to apply for an immigrant visa or permanent residence&quot;, or for non-immigrant visas in the L or H categories as detailed at &sect; 62.2 Definitions.</li>
+                 </ul>
+             </div>
+             <h2>Orientation</h2>
+             <div class="data-row">
+                 <ul>
+                     <li>You will complete an orientation provided by IWT before you depart your home country. Failure to do so will result in your inability to participate in the IWT Program.</li>
+                     <li>You have also read and understood the online Participant Handbook and will ask IWT or your local IWT representative for clarification on any point(s) that are not explicitly understood.</li>
+                 </ul>
+             </div>
+             <h2>Travel and Housing information</h2>
+             <div class="data-row">
+                 <ul>
+                     <li>You are responsible for making your own travel and housing arrangements, and must provide your travel and housing plans at least two (2) weeks prior to arrival in the U.S. by ensuring that your plans are submitted to through your online IWT account. Failure to report travel information in a timely manner suggests that a visa has not been issued and may result in the loss of your job placement.</li>
+                     <li>You must secure at least temporary housing prior to arrival.</li>
+                     <li>While IWT provides resources to assist, the IWT Program does not include housing and IWT is not responsible for providing housing to you.</li>
+                     <li>If housing is provided through your employment opportunity, the information and restrictions on such housing are identified in the housing section of the job offer or through a housing agreement. You must comply with any and all requirements indicated in the housing agreement or risk losing the placement that may be connected to the housing.</li>
+                     <li>Host company-provided housing is subject to local housing laws and IWT makes no representations or guarantees regarding its nature or quality.</li>
+                     <li>You agree to not jeopardize your own wellbeing (ie intentionally overcrowding into housing to save on costs; violating traffic laws; walking along dangerous roads;…) and understand that doing so, while it may appear to be your own decision, is a reason for program dismissal.</li>
+                 </ul>
+             </div>
+             <h2>U.S. Arrival and Check-in</h2>
+             <div class="data-row">
+                 <ul>
+                     <li>You must depart your home country:
+                         <ul>
+                             <li>During your university summer vacation</li>
+                             <li>No more than 2 weeks prior to the start date on your DS-2019 form</li>
+                             <li>In accordance with your local U.S. Embassy's Program date restrictions</li>
+                         </ul>
+                     </li>
+                     <li>Within three (3) days of arriving in the U.S. you will confirm your arrival with IWT by completing the Check-In Form found in your online account, or by calling toll free to 1.888.224.0450 and speaking to a representative during normal business hours, weekdays from 9:00 a.m. to 5 p.m. local time.</li>
+                 </ul>
+              This is the only way for your program to be activated in the Student &amp; Exchange Visitor Information System (SEVIS). Failure to do one of the above will result in your dismissal from the IWT Program and will lead to being out of J-1 visa status.
+             </div>
+             <h2>Monthly Contact</h2>
+             <div class="data-row">
+                 <ul>
+                     <li>You must respond to the monthly contact through your online account (or by phone) - intended to monitor your location, health, safety, and welfare – within 5 business days of receiving our message. If you need no assistance, you are still required to express that through the monthly contact.</li>
+                     <li>Failure to respond within 30 days will result in program dismissal, per program regulations.</li>
+                     <li>If you are dismissed from the IWT Program for any reason:
+                         <ul>
+                             <li>You will be in the U.S. out of legal J-1 status.</li>
+                             <li>You risk problems with Immigration and Customs Enforcement.</li>
+                             <li>You may have a negative mark on your immigration record which could hinder future visa applications.</li>
+                         </ul>
+                     </li>
+                 </ul>
+             </div>
+             <h2>Reporting to Your Host Company</h2>
+             <div class="data-row">
+                 <ul>
+                     <li>You will report to and remain with the confirmed host company listed in SEVIS and the IWT database for the duration indicated on your application. Early departure from your job without Intrax’s permission may result in program dismissal, since U.S. Consulates issue visas specifically related to your pre-arranged job having been verified.</li>
+                     <li>You understand that working at a host company not authorized by IWT will result in dismissal from the program, per program regulations.</li>
+                 </ul>
+             </div>
+             <h2>Terms of employment</h2>
+             <div class="data-row">
+                 <ul>
+                     <li>You understand that there are specific binding terms of employment listed in your job offer in addition to these General program terms and conditions.</li>
+                     <li>You understand that your schedule and hours are dependent on your host company's business levels, which can be affected by numerous factors, including but not limited to weather, economic conditions, occupancy rates, etc.</li>
+                     <li>Your schedule can also be affected by your job performance.</li>
+                 </ul>
+                 
+             </div>
+             <h2>Prohibited Placements</h2>
+             <div class="data-row">
+                 <ul>
+                     <li>The following jobs are not allowed on the Work Travel Program and this list is not exhaustive. Under program regulations and/or IWT program rules, participants cannot be employed in the following positions or any position that could bring notoriety or disrepute to the Exchange Visitor Program.
+                         <ul>
+                             <li>Any position that requires licensing.</li>
+                             <li>A domestic employee (child care, chauffeurs, gardeners, etc.),</li>
+                             <li>Where host companies have experienced layoffs in the preceding 120 days and have workers on lockout or on strike.</li>
+                             <li>Where host companies displace domestic U.S. workers at worksites where they will place program participants.</li>
+                             <li>Positions requiring work hours that fall predominantly between 10:00 pm and 6:00 am.</li>
+                             <li>Declared hazardous to youth including poultry and meat processing; work involving heavy construction machinery or commercial bakery equipment, with the exception of  portable counter top mixers and certain pizza dough rollers</li>
+                             <li>Positions that would require sustained physical contact with others (e.g., body piercing, tattooing, massage, manicure).</li>
+                             <li>Involved in gaming or gambling that include direct participation in wagering and/or betting.</li>
+                             <li>In chemical pest control, warehousing, catalogue/online order distribution centers.</li>
+                             <li>With travelling fairs or itinerant concessionaires (i.e. travelling carnival crew).</li>
+                             <li>For which there is another specific J visa category (e.g., camp counselors, babysitters, teachers, unpaid internship)</li>
+                             <li>In NAICS Goods-Producing Industries occupational categories, including, but not limited to, construction, manufacturing, and seafood processing.</li>
+                             <li>Adult entertainment industry jobs, even in a retail role; escort services, adult book/video stores, and strip clubs</li>
+                             <li>Working with Animals</li>
+                             <li>Au pair / Nanny</li>
+                             <li>Babysitting</li>
+                             <li>Camp – as a counselor or even work within a camp or environment primarily surrounded by children</li>
+                             <li>Coach of children</li>
+                             <li>Crew member on ships or airplanes, or as pilots</li>
+                             <li>Domestic labor</li>
+                             <li>Factories, manufacturing, warehouses, retail shipping-packing operations</li>
+                             <li>Health care positions interacting with patients</li>
+                             <li>Independent contractors (i.e. “1099” filers)</li>
+                             <li>Janitorial work in office buildings (housekeeping in hospitality industry is alright)</li>
+                             <li>Landscaping and Mechanical Maintenance</li>
+                             <li>Mall kiosk jobs (retail stores within a mall are alright)</li>
+                             <li>Medical or veterinary work</li>
+                             <li>Modeling agencies</li>
+                             <li>As operators or drivers of vehicles or vessels for which drivers' licenses are required regardless of whether the person carries passengers or not</li>
+                             <li>Pedicab or rolling chair drivers or operators.</li>
+                             <li>Pharmaceutical services or any job that requires direct patient contact or dispensing of medication</li>
+                             <li>Positions that are substantially commission-based and thus do not guarantee that a participant will be paid minimum wage in accordance with federal and state standards for all hours worked </li>
+                             <li>Sales jobs involving purchasing sales merchandise to resell (door-to-door sales)</li>
+                             <li>Seafood processing</li>
+                             <li>Staffing agencies - employment through a staffing agency or &quot;Professional Employment Organization&quot;
+                             	<ul>
+                             		<li>&quot;Staffing/employment agency:  A U.S. business that hires individuals for the sole purpose of supplying workers to other businesses. Typically, the other businesses where workers are placed pay an hourly fee per employee to the staffing/employment agency, of which the worker receives a percentage.&quot; &#91;&sect; 62.10 Definitions. General Provisions&#93;</li>
+                             	</ul>
+                             </li>
+                             <li>Teacher</li>
+                             <li>Working with children or the elderly as caregivers</li>
+                             <li>Any position with a company that refuses to provide a copy of a business license (or equivalent) and/or a copy of a valid workers’ compensation insurance policy (where required by state law).</li>
+                             <li>Any position for which a temporary or seasonal need does not exist or cannot be clearly demonstrated.</li>
+                         </ul>
+                     </li>
+                 </ul>
+                 Please refer to http://j1visa.state.gov/ for more information and to the IWT resources in your online account for a complete list of placements prohibited by IWT, which evolves each year.
+             </div>
+             <h2>Changes in employment and U.S. address</h2>
+             <div class="data-row">
+                 <ul>
+                     <li>Per Program Rules, IWT will not permit a change of employment without verifiable good reason.</li>
+                     <li>Change of employment without written authorization from IWT is not allowed.</li>
+                     <li>If IWT authorizes you to change your job, you are responsible for submitting your new host company's information to IWT within three (3) business days or risk program dismissal. You will be responsible for the cost of transportation to the new host company's location.</li>
+                     <li>If your job allows you to change housing, you must notify IWT of your new address within ten (10) business days through your online account or by phone.</li>
+                     <li>In all cases of a U.S. address change, telephone number, or email address, you are responsible for notifying IWT through your online account or by phone.  &#91;&sect; 62.10 Program administration. (c) Orientation&#93;</li>
+                 </ul>
+             </div>
+             <h2>End of Employment</h2>
+             <div class="data-row">
+                 <ul>
+                     <li>IWT is not responsible for and cannot control employment decisions made by your host company.</li>
+                     <li>Your host company may end your employment at any time, without prior notification, with or without cause.
+                         <ul>
+                             <li>With cause: Including but not limited to poor job performance, misconduct, or misrepresentation of your qualifications.
+                                 <ul>
+                                     <li>This will result in program dismissal.</li>
+                                 </ul>
+                             </li>
+                             <li>Without cause: Through no fault of your own.
+                                 <ul>
+                                     <li>IWT will offer you resources to obtain another job, but cannot guarantee new employment.</li>
+                                     <li>You will be responsible for the cost of transportation to the new host company's location.</li>
+                                 </ul>
+                             </li>
+                         </ul>
+                     </li>
+                     <li>You agree to contact IWT if any job-related difficulties or disputes arise that may affect your continued employment.</li>
+                 </ul>
+             </div>
+             <h2>Obey Laws</h2>
+             <div class="data-row">
+                 <ul>
+                     <li>While in the U.S., you are subject to the U.S. civil and criminal justice system. Failure to obey federal, state, and local laws may result in civil liability, criminal prosecution, fines, jail sentences or other penalties in addition to dismissal from the IWT program. IWT is not responsible for any civil or criminal liability you may incur or for assisting or defending you in any way in connection with any legal claims made against you.</li>
+                     <li>Regulations require that sponsors inform &quot;all exchange visitors that they, and any accompanying spouse and dependent(s), also may be subject to the requirements of the Affordable Care Act.&quot; &#91;&sect; 62.14 Insurance&#93; However, the average participant will be exempt (i.e. will not have to worry about this), since the goal is for a return to the home country upon program completion. More details are available by consulting with Intrax.</li>
+                 </ul>
+             </div>
+             <h2>Departure</h2>
+             <div class="data-row">
+                 <ul>
+                     <li>You understand that:
+                         <ul>
+                             <li>You can never work during the 30-day grace period intended to facilitate your travel plans</li>
+                             <li>You must depart within 30 days of your SEVIS end date regardless of what your visa end date may be.</li>
+                             <li>You must arrive in your home country prior to the first day of classes in the next school term.</li>
+                             <li>If you overstay you risk problems with Immigration and Customs Enforcement and/or a permanent negative mark on your immigration record.</li>
+                             <li>Your visa status and program dates cannot be extended or changed by IWT.</li>
+                             <li>Intrax policy is that we are unable to assist in any way regarding a change of visa status, since remaining in the U.S. goes contrary to your good faith commitment to return home - a critical component of the Exchange Visitor Program, irrespective of any legal opportunities that may exist to change visa status.</li>
+                         </ul>
+                     </li>
+                 </ul>
+             </div>
+             <h2>Consent</h2>
+             <div class="data-row">
+                 <ul>
+                     <li>You consent and authorize IWT and its parent company, Intrax, to use your name, photographs, file, application content, video resume or video likeness or any comments or statements from host companies or IWT in materials or publications.</li>
+                     <li>You understand that by agreeing to these Terms, you agree that your electronic signature used during the IWT application process is the equivalent of your hand-written signature.</li>
+                 </ul>
+             </div>
+             <h2>Refunds</h2>
+             <div class="data-row">
+                 <ul>
+                     <li>You have seen and understand the breakdown of program fees paid to both your local representative and IWT.</li>
+                     <li>You understand and agree to the IWT refund policy, which is available to you through your local representative.</li>
+                     <li>IWT will pay any refund that is due pursuant to the above-mentioned IWT refund policy at the end of the program season for which you applied. IWT will make such payment only to the local IWT representative in your home country. IWT will not pay any refund directly to you. IWT is not responsible for ensuring that any refund it pays to the local IWT representative in your home country is paid to you, therefore, you and the local representative must arrange for any refund to be paid to you. All refund amounts are based on the original pricing charged to your representative agency by IWT as per their Partnership Agreement. For specific refund amounts please ask your local representative agency.</li>
+                 </ul>
+             </div>
+             <h2>You understand and agree to the following Dispute Resolution and Construal Provisions:</h2>
+             <div class="data-row">
+                 <b>1.  Arbitration:</b> You understand and agree that any dispute, controversy or claim in any way arising out of, related to, or connected with your participation in the IWT Program or these Terms &amp; Conditions shall be decided by neutral, exclusive and binding arbitration in San Francisco, California, U.S. The arbitration shall be conducted before an agency or arbitrator agreed upon by you and IWT or, if none, before an arbitrator selected by the American Arbitration Association. Either you or IWT may appear telephonically at the arbitration hearing. Any award of the arbitrator may be enforced in any court of competent jurisdiction of the federal or state courts of San Francisco County, California, U.S. In any action, including arbitration, brought in connection with your participation in the IWT Program, the prevailing party shall be entitled to recover all reasonable costs and expenses incurred by such party, including attorney's fees. The non-prevailing party shall also be solely responsible for all costs of arbitration. Any dispute as to the reasonableness of such costs and expenses shall be determined by the arbitrator.
+                 <br /><br />
+                 <b>2. Severability:</b> If any provision of these Terms &amp; Conditions or their application is held to be invalid, illegal or unenforceable for any reason, the invalid, illegal or unenforceable provision or application shall not affect or impair the other provisions or applications of the Terms &amp; Conditions which can be given effect without the invalid, illegal or unenforceable provision or application. To this end the provisions of this Agreement are declared to be severable and shall be construed and enforced accordingly.
+                 <br /><br />
+                 <b>3. Waiver:</b> No waiver by IWT of your failure to comply with any of these Terms &amp; Conditions shall be construed to be, or shall be, a waiver of any other failure to comply with such Terms &amp; Conditions. No waiver shall be binding unless in writing and signed by IWT.
+                 <br /><br />
+                 <b>4. Headings Not Controlling:</b> The headings used in the document setting forth these Terms &amp; Conditions are used only for ease of reference and are not controlling.
+                 <br /><br />
+                 <b>5. Governing Law:</b> These Terms &amp; Conditions shall be governed by and construed under the laws of the State of California, USA, without regard to principles of conflict of laws.
+                 <br /><br />
+                 Please note that based on the information available to IWT, the contents of the job offer are accurate as of the date of its issuance. All information is subject to change.
+             </div>
+              <div class="data-row">
+             	&Theta;  [   ]   I am capable of reading and understanding these Terms &amp; Conditions in English.<br />
+             	&Theta;  [   ]   I have read these Terms &amp; Conditions carefully, have had the opportunity to ask questions   and obtain advice as to their meaning, and understand them fully.<br />
+             	&Theta;  [   ]   I agree to abide by these Terms &amp; Conditions.<br />
+               </div>
+              <div class="data-row">
+                  <b>Agency (In your home country):  </b>{!Engagement__c.Partner_Account__r.Name}
+              </div>
+             <div class="data-row">
+                  <b>Participant's Last Name:  </b>{!Engagement__c.Account_Id__r.LastName}
+              </div>
+              <div class="data-row">
+                  <b>Participant's First Name:  </b>{!Engagement__c.Account_Id__r.FirstName}
+              </div>
+              <div class="data-row">
+                  <b>Participant's Email:  </b>{!Engagement__c.Account_Id__r.PersonEmail}
+              </div>
+              <div class="data-row">
+                  &nbsp;
+              </div>
+               <div class="data-row">
+               		<table cellpadding="1" cellspacing="1" width="100%" >
+               			<tr>
+               				<td width="70%">
+               					
+                  				<b>Participant's Signature:</b>&nbsp;&nbsp;&nbsp;<apex:outputPanel styleClass="white">TC-Signature</apex:outputPanel>
+               				</td>
+               				<td width="30%">
+               					<b>Signature Date:</b>&nbsp;&nbsp;&nbsp;<apex:outputPanel styleClass="white">TC-DateSigned</apex:outputPanel>
+               				</td>
+               			</tr>
+               		</table> 
+               		
+              </div>
+       </div>
+   </form>
+    <div class="footer" style="border-top:#e3edd4 solid 1px;  ">
+        <apex:image style="width:100%;" url="{!URLFOR($Resource.intrax_themes, '/intrax_themes/images/pdf-boiler-plate.png')}" alt="Intrax" title="Intrax"/>
+    </div>
+</body>
+</apex:page>

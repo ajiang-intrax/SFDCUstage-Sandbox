@@ -1,0 +1,266 @@
+<apex:component layout="none" id="block_apc_hf_ext_renew" allowDML="true">
+  <apex:attribute name="PageController" description="Instance of home_controller class" type="home_controller" required="false" default="" />
+  
+  
+  <!-- Begining CASE 1: Application Accepted -->
+  <apex:outputpanel layout="block" id="blockCase1" rendered="{!PageController.currentApp.Intrax_Program__c == 'AuPairCare' && 
+PageController.currentApp.Application_Type__c != 'Extension' && PageController.currentApp.Application_Stage__c == 'Accepted' }" >
+
+    
+    <apex:outputpanel layout="block" id="blockYesExt" rendered="{!PageController.AllowExtendMap[PageController.currentApp.id] == true &&
+PageController.applicantPT.Extension_Au_Pair_Agreed__c != 'No'}" >
+     
+          
+         <div class="hp-block orange-border padding-6">
+          
+          <h2 class="margin-b1">Would You Like to Extend Your Current Au Pair's Stay?</h2>
+          <p class="lead">Apply for an extension if you would like {!PageController.applicantPT.Account__r.FirstName} to stay with your family for up to 12 months!</p>
+            
+         
+         <hr class="margin-b2"/>
+         <p><strong>Important:</strong> A complete extension application includes the host family application, au pair application and proof of education. All three pieces are required before a host family can finalize their application and pay. All application components and payment must be submitted before our published deadlines for consideration by the Department of State.</p>
+         <hr class="margin-b2 margin-t2"/>
+   
+     <div class="ap-teaser">
+      <div class="item ap-teaser-photo">
+       <apex:image value="{!PageController.Pt_Photo}" rendered="{!PageController.Pt_Photo != 'no-picture'}"/>
+      </div>
+      
+      <div class="item ap-teaser-name">
+     
+      {!PageController.applicantPT.Account__r.Name} 
+     
+      </div>
+
+      <div class="item ap-teaser-other urgent">
+       <label>Extension Deadline</label><br/> 
+                    <apex:outputText value="{0,date,MMMM}">
+                    <apex:param name="month" value="{!PageController.OrigConfMatch.End_Date__c - 40}"/>
+                    </apex:outputText>&nbsp;
+                    <apex:outputText value="{!Day(PageController.OrigConfMatch.End_Date__c - 40)}"></apex:outputText>,&nbsp;
+                    <apex:outputText value="{!Year(PageController.OrigConfMatch.End_Date__c - 40)}"></apex:outputText>
+      </div>
+      <div class="item ap-teaser-other"> </div>
+     
+     </div>  <!-- end ap teaser --> 
+   
+     
+          <apex:outputLink styleClass="btn btn-primary btn-lg margin-t2"  value="/apex/apc_hf_app_clone?id={!PageController.currentApp.Id}&AppType=Extension"
+                rendered="{!IF( (PageController.currentApp.Type__c == 'Host Family') && PageController.currentApp.Intrax_Program__c == 'AuPairCare' && PageController.AllowExtendMap[PageController.currentApp.id], true, false)}"> Apply for Extension </apex:outputLink>
+      
+      </div><!-- end hp block -->  
+          
+
+    </apex:outputpanel>
+    
+    <!--  <apex:outputpanel layout="block" id="blocknoExt" rendered="{!PageController.AllowExtendMap[PageController.currentApp.id] == false}" > -->
+    <apex:outputpanel layout="block" id="blocknoExt" rendered="{!PageController.currentApp.Intrax_Program__c == 'AuPairCare' && 
+          PageController.currentApp.Application_Type__c == 'Extension' && PageController.currentApp.Application_Stage__c == 'Accepted' &&
+          PageController.applicantPTnoExtend.Application_Type__c == 'Extension' && PageController.applicantPT.Extension_Au_Pair_Agreed__c != null &&
+           PageController.applicantPT.Extension_Au_Pair_Agreed__c == 'No'}">
+<div class="hp-block red-border padding-6">
+          <h2 class="margin-b1">Looks Like {!PageController.applicantPT.Account__r.FirstName} Isn't Interested in Extending the Stay</h2>
+          <p class="lead">If anything changes you can contact AuPairCare to re-start an extension application.</p>
+
+<div class="ap-teaser">
+<div class="item ap-teaser-photo"><apex:image value="{!PageController.Pt_Photo_acc}" rendered="{!PageController.Pt_Photo_acc != null}"/></div>
+<div class="item ap-teaser-name">{!PageController.applicantPT.Account__r.FirstName} {!PageController.applicantPT.Account__r.LastName}</div>
+<div class="item ap-teaser-other"><label>Extension deadline</label><br/>
+                    <apex:outputText value="{0,date,MMMM}">
+                    <apex:param name="month" value="{!PageController.OrigConfMatch.End_Date__c - 40}"/>
+                    </apex:outputText>&nbsp;
+                    <apex:outputText value="{!Day(PageController.OrigConfMatch.End_Date__c - 40)}"></apex:outputText>,&nbsp;
+                    <apex:outputText value="{!Year(PageController.OrigConfMatch.End_Date__c - 40)}"></apex:outputText></div>
+</div>
+</div>
+            
+    </apex:outputpanel>
+    
+   </apex:outputpanel>
+<!-- END Case 1 --> 
+  
+    
+  <!-- Begining CASE 2: Application Working Extension -->
+  <apex:outputpanel layout="block" id="blockCase2" rendered="{!PageController.currentApp.Intrax_Program__c == 'AuPairCare' 
+    && PageController.currentApp.Application_Level__c == 'Main' && PageController.currentApp.Application_Stage__c == 'Working' 
+    && PageController.currentApp.Application_Type__c== 'Extension'}" >
+   
+  <div class="hp-block orange-border padding-6">
+          <h2 class="margin-b1">Almost Done! Complete Your Extension Application</h2>
+          <p class="lead">Looks like you have a few more pages to go through.</p>
+ 	
+     <hr class="margin-b2"/>
+         <p><strong>Important:</strong> A complete extension application includes the host family application, au pair application and proof of education. All three pieces are required before a host family can finalize their application and pay. All application components and payment must be submitted before our published deadlines for consideration by the Department of State.</p>
+         <hr class="margin-b2 margin-t3"/>
+   
+       <div class="ap-teaser">
+          <div class="item ap-teaser-photo">
+            <apex:image value="{!PageController.Pt_Photo}" rendered="{!PageController.Pt_Photo != 'no-picture'}"/>
+          </div>
+          <div class="item ap-teaser-name">
+             {!PageController.applicantPT.Account__r.FirstName} {!PageController.applicantPT.Account__r.LastName}
+          </div>
+          <div class="item ap-teaser-other urgent">
+       <label> Extension Deadline</label><br/> 
+                    <apex:outputText value="{0,date,MMMM}">
+                    <apex:param name="month" value="{!PageController.OrigConfMatch.End_Date__c - 40}"/>
+                    </apex:outputText>&nbsp;
+                    <apex:outputText value="{!Day(PageController.OrigConfMatch.End_Date__c - 40)}"></apex:outputText>,&nbsp;
+                    <apex:outputText value="{!Year(PageController.OrigConfMatch.End_Date__c - 40)}"></apex:outputText>
+      </div>
+            <div class="item ap-teaser-other">
+            <apex:outputLink styleClass="btn btn-primary btn-lg" id="ce_apc_hf_app_personal_info2" value="/apex/apc_hf_app_extension_pref?id={!PageController.currentApp.id}"> <span>Complete Application</span> </apex:outputLink>
+
+
+          </div>
+    </div>
+    
+          <div class="margin-t3"><b class="sm">Changed Your Mind?</b></div>
+          <div>Please let us know if you no longer wish to extend with your current au pair.</div>
+          <apex:outputLink id="apc_hf_app_clone_link2" value="/apex/apc_hf_app_clone?id={!PageController.currentApp.Id}&AppType=Cancel"><b class="sm">Cancel Extension Application</b></apex:outputLink>
+    <!--  end row --> 
+    </div>
+  </apex:outputpanel>
+  
+  <!-- END Case 2 --> 
+  
+  <!-- Begining CASE 3: HF Application Direct Accepted not Submitted in Extension -->
+  <apex:outputpanel layout="block" id="blockCase4" rendered="{!PageController.currentApp.Intrax_Program__c == 'AuPairCare' 
+    && PageController.currentApp.Application_Level__c == 'Main' && PageController.currentApp.Application_Stage__c == 'Accepted' 
+    && PageController.currentApp.Application_Type__c== 'Extension'  
+    && PageController.applicantPT.Application_Stage__c == 'Working'}" >
+    <div class="hp-block padding-6 orange-border">
+
+          <h2 class="margin-b1">Thank You! Now It Is Your Au Pair's Turn</h2>
+          <p class="lead">{!PageController.applicantPT.Account__r.FirstName} will get notified to finish his/her part of the application and agree to the extension duration
+            you selected.</p>
+          
+           <hr class="margin-b2"/>
+         <p><strong>Important:</strong> A complete extension application includes the host family application, au pair application and proof of education. All three pieces are required before a host family can finalize their application and pay. All application components and payment must be submitted before our published deadlines for consideration by the Department of State.</p>
+         <hr class="margin-b2 margin-t3"/>  
+            
+     <div class="ap-teaser">
+          <div class="item ap-teaser-photo">
+            <apex:image value="{!PageController.Pt_Photo}" rendered="{!PageController.Pt_Photo != 'no-picture'}"/>
+          </div>
+          <div class="item ap-teaser-name">
+             {!PageController.applicantPT.Account__r.FirstName} {!PageController.applicantPT.Account__r.LastName}
+          </div>
+          <div class="item ap-teaser-other urgent">
+       <label> Extension Deadline</label><br/> 
+                    <apex:outputText value="{0,date,MMMM}">
+                    <apex:param name="month" value="{!PageController.OrigConfMatch.End_Date__c - 40}"/>
+                    </apex:outputText>&nbsp;
+                    <apex:outputText value="{!Day(PageController.OrigConfMatch.End_Date__c - 40)}"></apex:outputText>,&nbsp;
+                    <apex:outputText value="{!Year(PageController.OrigConfMatch.End_Date__c - 40)}"></apex:outputText>
+      </div>
+            <div class="item ap-teaser-other">
+       <label>Extension Status</label><br/>
+       Waiting for au pair's response
+          </div>
+    </div>
+     
+    </div>
+
+ 
+  </apex:outputpanel>
+  
+  <!-- END Case 3 --> 
+  
+  <!-- Begining CASE 4: Application HF Submitted Extension // PT Submitted -->
+    <!--
+  <apex:outputpanel layout="block" id="blockCase3" rendered="{!PageController.currentApp.Intrax_Program__c == 'AuPairCare' 
+    && PageController.currentApp.Application_Level__c == 'Main' && PageController.currentApp.Application_Stage__c == 'Accepted' 
+    && PageController.currentApp.Application_Type__c== 'Extension'
+    && PageController.applicantPT.Application_Stage__c == 'Submitted'}" >
+       <div class="hp-block padding-6 orange-border">
+              <h2 class="margin-b1">Your Au Pair Has Accepted Your Extension Request</h2>
+              <p class="lead">You can follow the status of your application here. Wait until we approve the au pair's appplication in order to pay.</p>
+           
+           <div class="ap-teaser">
+          <div class="item ap-teaser-photo">
+            <apex:image value="{!PageController.Pt_Photo}" rendered="{!PageController.Pt_Photo != 'no-picture'}"/>
+          </div>
+            <div class="item ap-teaser-name">
+             {!PageController.applicantPT.Account__r.FirstName} {!PageController.applicantPT.Account__r.LastName}
+          </div>
+            <div class="item ap-teaser-other">
+             <label>Application Submitted on</label><br/>
+                      <apex:outputText value=" {0,date,MM'/'dd'/'yyyy}">
+                          <apex:param value="{!PageController.applicantPT.LastModifiedDate}" />
+                      </apex:outputText>
+          </div>
+          
+           <div class="item ap-teaser-other">
+       <label>Extension Status</label><br/>
+       Waiting for AuPairCare's approval
+          </div>
+          </div> 
+</div>
+  </apex:outputpanel>
+  -->
+  <!-- END Case 4 --> 
+    
+    <!-- Begining CASE 4B: Application HF Accepted Extension // PT accepted -->
+    <apex:outputpanel layout="block" id="blockCase4B" rendered="{!PageController.currentApp.Intrax_Program__c == 'AuPairCare' 
+    && PageController.currentApp.Application_Level__c == 'Main' && PageController.currentApp.Application_Stage__c == 'Accepted' 
+    && PageController.currentApp.Application_Type__c== 'Extension'
+    && PageController.applicantPT.Application_Stage__c == 'Submitted' && PageController.matchConf.Status__c=='Requested'}" >
+      <div class="hp-block green-border padding-6">
+     
+              <h2 class="margin-b1">Your Au Pair's Extension Application Has Been Reviewed and Approved by AuPairCare</h2>
+              <p class="lead">Click on <b>Finalize Match</b> to make a payment and complete the extension application process. The application will be submitted to the Department of State upon receipt of payment.</p>
+              
+                  <apex:outputLink id="finalizeRen" styleClass="btn btn-primary btn-lg" value="/apex/apc_hf_match_payment_addons" >
+                      <apex:outputText >Finalize Match</apex:outputText>
+                  </apex:outputLink>
+      
+      </div>
+ </apex:outputpanel>
+    
+    <!-- END Case 4B -->
+
+  <!-- Begining CASE 5: Application Working Renewall -->
+  <apex:outputpanel layout="block" id="blockCase5" rendered="{!PageController.currentApp.Intrax_Program__c == 'AuPairCare' 
+    && PageController.currentApp.Application_Level__c == 'Main' && PageController.currentApp.Application_Stage__c == 'Working' 
+    && (PageController.currentApp.Application_Type__c== 'Renewal' || PageController.currentApp.Application_Type__c== 'Rematch')}" >
+    <div class="hp-block orange-border padding-6">
+          <h2 class="margin-b1">Almost Done! Complete Your Renewal Application</h2>
+          <p class="lead">Looks like you have a few more pages to go through.</p>
+          <apex:outputLink styleClass="btn btn-primary btn-lg" id="link5" value="/apex/apc_hf_app_personal_info?id={!PageController.currentApp.id}"> <span>Complete Renewal Application</span> </apex:outputLink>
+    <div class="margin-t3"><b class="sm">Changed your mind?</b></div>
+          <div>Please let us know if you no longer wish to apply for a new au pair</div>
+          <apex:outputLink id="linkcancelrenew" value="/apex/apc_hf_app_clone?id={!PageController.currentApp.Id}&AppType=Cancel"><b class="sm">Cancel Renewal Application</b></apex:outputLink>
+  
+    </div>
+          </apex:outputpanel>
+  
+  <!-- END Case 5 --> 
+    
+    
+    <!-- Begining CASE 6: Application Match Break Happened -->  
+    <apex:outputpanel layout="block" id="blockrematch" rendered="{!PageController.AllowRematchMap[PageController.currentApp.id] == true}" >
+        <div class="hp-block padding-6 orange-border">
+                <h2 class="margin-b1">Would You Like To Search For a New Au Pair?</h2>
+                <p class="lead">Apply for your new au pair and make sure you have continuous childcare.</p>
+                <apex:outputLink styleClass="btn btn-link vs2 btn-lg" id="apc_hf_app_rematch_link" value="/apex/apc_hf_app_clone?id={!PageController.currentApp.Id}&AppType=Rematch"
+                                 rendered="{!IF( PageController.currentApp.Type__c == 'Host Family' && PageController.currentApp.Intrax_Program__c == 'AuPairCare', true, false)}"> Update Your Profile</apex:outputLink>
+        </div>
+    </apex:outputpanel> 
+    <!-- END Case 6 --> 
+    
+    
+    <!-- Begining CASE 7: Application Renew -->  
+    <apex:outputpanel layout="block" id="blocknorew1" rendered="{!PageController.AllowRenewMap[PageController.currentApp.id] == true}" >
+        <div class="hp-block padding-6">
+            <h2 class="margin-b1">Would You Like To Search For a New Au Pair?</h2>
+            <p class="lead">Apply for your next au pair ahead of time and make sure you have continuous childcare.</p>
+            
+            <apex:outputLink styleClass="btn btn-link vs2 btn-lg" id="apc_hf_app_clone_link" value="/apex/apc_hf_app_clone?id={!PageController.currentApp.Id}&AppType=Renewal"
+                             rendered="{!IF( PageController.currentApp.Type__c == 'Host Family' && PageController.currentApp.Intrax_Program__c == 'AuPairCare', true, false)}"> <span>Update Your Profile</span> </apex:outputLink>
+        </div>
+        <!--  end hp block --> 
+    </apex:outputpanel>
+    <!-- END Case 7 --> 
+  
+</apex:component>

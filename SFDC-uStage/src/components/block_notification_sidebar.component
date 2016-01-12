@@ -1,0 +1,10 @@
+<apex:component layout="none">
+<apex:attribute name="ApplicantInfo" description="This is the value for the Applicant_Info__c object." type="Applicant_Info__c" required="false" default="" />
+<apex:attribute name="isPartner" description="Indicates whether the current user is a Partner or not" type="boolean" required="false"/>
+
+<apex:outputText rendered="{!IF(NOT(isPartner) && ApplicantInfo != NULL && ApplicantInfo.Application_Level__c == 'Main' && ApplicantInfo.Application_Stage__c != 'Working', true, false)}">
+<apex:outputLink value="/apex/igi_home" styleClass="badge-cta">
+<i class="fa fa-chevron-left"></i><span>Back to Home</span>
+</apex:outputLink>
+</apex:outputText>
+</apex:component>

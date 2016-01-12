@@ -1,0 +1,524 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false"
+	title="Program Preferences" standardController="Applicant_Info__c"
+	extensions="AppEngine_Controller" action="{!checkLogin}"
+	standardStylesheets="false" showHeader="false" id="apc_ap_basic_program_preferences">
+	<apex:composition template="intraxtemplate_vs3">
+		<apex:define name="body">
+			<c:block_header_apc_ap_application />
+			 <div id="app-page" class="row">
+        <div id="app-focus" class="col-md-8 col-md-push-3">
+			<c:block_app_completion ApplicantInfo="{!applicantInfo}" userProfileName="{!userProfileName}"  />
+			 
+			<!-- AUDIT BLOCK PARTNER -->
+            <c:block_apc_pr_audit flaggedList="{!flaggedList}" rendered="{!userProfileName == 'OCPM Agent Portal' && applicantInfo.Application_Level__c == 'Basic' && applicantInfo.Application_Stage__c == 'Submitted'}"/>
+          
+			<h1>Program Preferences</h1>
+			<apex:outputPanel layout="block" styleClass="lead" rendered="{!applicantinfo.Application_Type__c != 'Extension'}" id="outputpanel">
+				Please tell us about your program preferences.
+				Remember, being flexible will attract more host families to your au pair profile!
+			</apex:outputPanel> 
+			<apex:outputPanel layout="block" styleClass="lead" rendered="{!applicantinfo.Application_Type__c == 'Extension'}" id="outputpane2">
+				Based on your current placement, you will be
+				available to start a new position as an extension au pair on {}.
+				potential host families will see this date on your extension au pair
+				matching profile.
+			</apex:outputPanel> 
+			
+			<apex:form styleClass="form-vertical ws-validate" id="webform">
+				<apex:Messages styleClass="custom-error-pagelevel" />
+
+				<apex:outputPanel layout="block" rendered="{!applicantinfo.Application_Type__c == 'Extension'}" id="outputpane3">
+					
+					<div class="row">
+					<div class="col-sm-12">
+					<div class="form-group">
+					<label class="control-label">Do you have geographic preferences for your second year?</label>
+					<apex:actionRegion >
+						<apex:selectRadio styleClass="radio" value="{!applicantInfo.Extension_Geo_Pref_Indicator__c}" id="geographic" required="true">
+							<apex:selectOption itemValue="Yes" itemLabel="Yes" />
+							<apex:selectOption itemValue="No" itemLabel="No" />
+							<apex:actionSupport event="onclick" rerender="add-geographic" status="showgeo" />
+						</apex:selectRadio>
+					</apex:actionRegion>
+					<apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showgeo" /> 
+				    <apex:message for="geographic" styleClass="custom-error-radio" id="errormessgeo" />
+					</div>
+					</div>
+					</div><!--  end row -->
+
+					<apex:pageBlock id="add-geographic">
+						<apex:outputPanel id="newgeographic" layout="block" rendered="{!applicantInfo.Extension_Geo_Pref_Indicator__c == 'Yes'}">
+							<div class="row">
+					<div class="col-sm-6">
+							<div class="form-group">
+							<label class="control-label">If yes, please tell us where</label>
+							<apex:inputField styleClass="form-control" value="{!applicantInfo.Extension_Geo_Pref_Detail__c}" onblur="CapitalizeName(event.target);" required="TRUE" id="ngeo" />
+							</div>
+							</div>
+					        </div><!--  end row -->
+						</apex:outputPanel> 
+					</apex:pageBlock>
+
+					<div class="row">
+					<div class="col-sm-6">
+					<div class="form-group">
+					<label class="control-label">Select your departure airport</label>
+					<div id="custom-templates">
+					<apex:inputField styleClass="typeahead form-control" value="{!applicantInfo.Extension_Departure_Airport__c}" html-placeholder="Select your airport" required="TRUE" id="airportsUsa" />
+					</div>
+					</div>
+					</div>
+					</div><!--  end row -->
+
+				</apex:outputPanel>
+				
+			
+			   <apex:outputPanel layout="block"	rendered="{!applicantinfo.Application_Type__c != 'Extension' && applicantinfo.Application_Type__c != 'Renewal'}" id="outputpane4">
+			    <div class="row">
+					<div class="col-sm-12">
+			        <div class="form-group">
+					<label class="control-label">When will you be ready to depart for the United States and start your year as an au pair?</label>
+					<div class="row">
+					<div class="col-sm-6">
+						<apex:selectList styleClass="form-control" value="{!applicantInfo.Engagement_Start__c}" multiselect="false" required="TRUE" id="arrival" size="1">
+							<apex:selectOption itemValue="" itemLabel="--Select Arrival Date--" />
+							<apex:selectOptions value="{!listUSArrivalDates}" />
+						</apex:selectList> 
+						<apex:message for="arrival" styleClass="custom-error-radio"	id="apexmessarrival" />
+						</div>
+					</div>
+					</div><!--  end row -->
+					</div>
+					</div><!--  end row -->
+			  </apex:outputPanel> 
+			
+				<apex:outputPanel layout="block"
+					rendered="{!applicantinfo.Application_Type__c == 'Extension'}"
+					id="outputpane5">
+					<div class="row">
+					<div class="col-sm-6">
+					<div class="form-group">
+					<label class="control-label">How many children do you
+					feel you are best suited to care for?</label>
+					<apex:selectList styleClass="form-control"
+						value="{!applicantInfo.Children_Comfortable_Number__c}"
+						multiselect="false" required="TRUE" id="ChildrenCount" size="1">
+						<apex:selectOption itemValue="" itemLabel="Select" />
+						<apex:selectOption itemValue="1" itemLabel="1" />
+						<apex:selectOption itemValue="2" itemLabel="2" />
+						<apex:selectOption itemValue="3" itemLabel="3" />
+						<apex:selectOption itemValue="4" itemLabel="4" />
+						<apex:selectOption itemValue="5" itemLabel="5" />
+					</apex:selectList> <apex:message for="ChildrenCount" styleClass="custom-error-radio"
+						id="childrenerror" />
+						</div>
+						</div>
+						 </div><!--  end row -->
+				</apex:outputPanel>
+				
+				<div class="row">
+					<div class="col-sm-12">
+				<div class="form-group">
+				<label class="control-label">Please add all the ages of children you are comfortable caring for.<br/>
+					<span class="info">You must select at least two age groups. 
+					Most host families need care for 2 or more children of different ages.</span></label>
+					<apex:inputField styleClass="form-control"
+					value="{!applicantInfo.Children_Comfortable_Ages__c}"
+					required="TRUE" id="agesconfort" />
+				</div>
+				</div>
+				</div><!--  end row -->
+				
+				<div class="row">
+					<div class="col-sm-12">
+				<div class="form-group">
+				<label class="control-label">Are you willing to care for children with special physical or emotional needs?
+				<i data-toggle="popover" data-content="This includes speech and/ or language delays, autism spectrum disorder, cognitive delays, social & emotional disorders, learning differences and medical treatments such as insulin shots." class="infobtn fa fa-question-circle"></i>
+				</label>
+					<apex:selectRadio styleClass="radio"
+					value="{!applicantInfo.Children_Special_Needs_Care__c}"
+					id="needscare" required="true">
+					<apex:selectOption itemValue="Yes" itemLabel="Yes" />
+					<apex:selectOption itemValue="No" itemLabel="No" />
+				</apex:selectRadio> <apex:message for="needscare" styleClass="custom-error-radio"
+					id="errormesscare" />
+				</div>
+				</div>
+				</div><!--  end row -->
+
+				<div class="row">
+				<div class="col-sm-12">
+				<div class="form-group">
+				<label class="control-label">Are you comfortable
+				living with a single mother?</label>
+				<apex:selectRadio styleClass="radio"
+					value="{!applicantInfo.Single_Mother_Indicated__c}" id="mother"
+					required="true">
+					<apex:selectOption itemValue="Yes" itemLabel="Yes" />
+					<apex:selectOption itemValue="No" itemLabel="No" />
+				</apex:selectRadio> <apex:message for="mother" styleClass="custom-error-radio"
+					id="errormess4" />
+				</div>
+				</div>
+				</div><!--  end row -->
+				
+				<div class="row">
+				<div class="col-sm-12">
+				<div class="form-group">
+				<label class="control-label">Are you comfortable
+				living with a single father?</label><apex:selectRadio styleClass="radio"
+					value="{!applicantInfo.Single_Father_Indicated__c}" id="father"
+					required="true">
+					<apex:selectOption itemValue="Yes" itemLabel="Yes" />
+					<apex:selectOption itemValue="No" itemLabel="No" />
+				</apex:selectRadio> <apex:message for="father" styleClass="custom-error-radio"
+					id="errormess5" />
+				</div>
+				</div>
+				</div><!--  end row -->
+				
+				
+				<div class="row">
+				<div class="col-sm-12">
+				<div class="form-group">
+				<label class="control-label">Are you comfortable
+				living with a same-sex couple?</label><apex:selectRadio styleClass="radio"
+					value="{!applicantInfo.Same_Sex_Couple_Indicated__c}" id="sex"
+					required="true">
+					<apex:selectOption itemValue="Yes" itemLabel="Yes" />
+					<apex:selectOption itemValue="No" itemLabel="No" />
+				</apex:selectRadio> <apex:message for="sex" styleClass="custom-error-radio"
+					id="errormess6" />
+				</div>
+				</div>
+				</div><!--  end row -->
+				
+				<apex:outputPanel id="panel2">
+                
+                <div class="form-group">
+                  <label class="control-label">Many American families have pets that live inside their homes. Can you live with pets?</label>
+                    <apex:actionRegion >
+                      <apex:selectRadio layout="pageDirection" styleClass="radio" value="{!ApplicantInfo.Pets_Allergy_Indicated__c}" id="ispet" required="true">
+                        <apex:selectOption itemValue="Yes" itemLabel="No, I cannot live with pets." />
+                        <apex:selectOption itemValue="No" itemLabel="Yes, I can live with pets." />
+                        <apex:actionSupport event="onclick" rerender="pet_types" status="pleasewait3" />
+                      </apex:selectRadio>
+                    </apex:actionRegion>
+                    <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="pleasewait3"/>
+                    <apex:message for="ispet" styleClass="custom-error-radio" id="errormepet" />
+                </div>
+                <apex:pageBlock id="pet_types">
+                  <apex:outputPanel layout="block" rendered="{!ApplicantInfo.Pets_Allergy_Indicated__c == 'Yes'}">
+                    <div class="form-group">
+                      <label class="control-label">Tell us what kinds of pets you cannot live with.</label>
+                        <apex:actionRegion >
+                          <apex:inputField styleClass="form-control" value="{!ApplicantInfo.Pet_Allergy_Types__c}" required="TRUE" id="typepet">
+                            <apex:actionSupport event="onchange" rerender="pet_types" status="pleasewait04" />
+                          </apex:inputField>
+                        </apex:actionRegion>
+                        <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="pleasewait04"/>
+                    </div>
+                    <apex:outputPanel layout="block" rendered="{!contains(ApplicantInfo.Pet_Allergy_Types__c, 'Other') && ApplicantInfo.Pet_Allergy_Types__c != null}">
+                      <div class="form-group">
+                        <label class="control-label">If
+                          other, please describe:</label>
+                          <apex:inputField styleClass="form-control" value="{!ApplicantInfo.Pets_Allergy_Description__c}" required="FALSE" id="otherpets" />
+                        </div>
+                    </apex:outputPanel>
+                  </apex:outputPanel>
+                </apex:pageBlock>
+              </apex:outputPanel>
+              
+              <!-- 
+              <div class="row">
+				<div class="col-sm-12">
+				<div class="form-group">
+				<label class="control-label">Have you already found a host family in the United States? <i
+					data-toggle="popover"
+					data-content="Most au pairs do not already have a match. When you application is approved, potential host families will contact you for interview."></i>
+				</label>
+				<apex:actionRegion >
+					<apex:selectRadio styleClass="radio"
+						value="{!applicantInfo.Already_Have_Family__c}" id="family"
+						required="true">
+						<apex:selectOption itemValue="Yes" itemLabel="Yes" />
+						<apex:selectOption itemValue="No" itemLabel="No" />
+						<apex:actionSupport event="onclick" rerender="add-host"
+							status="showfamily" />
+					</apex:selectRadio>
+				</apex:actionRegion> <apex:actionStatus onstart="disableSubmit();"
+					onstop="enableSubmit();" startStyleClass="feedback-st"
+					startText="Loading. Please wait..." id="showfamily" /> <apex:message for="family" styleClass="custom-error-radio" id="errormessfamily" />
+				</div>
+				</div>
+				</div><!--  end row --
+				 -->
+				<!-- 
+				<apex:pageBlock id="add-host">
+					<apex:outputPanel id="outputpanelfamily" layout="block"
+						rendered="{!applicantInfo.Already_Have_Family__c == 'Yes'}">
+						<div class="panel panel-default">
+						<div class="panel-heading">
+						<h4 class="panel-title">Contact Information of the Family</h4>
+						</div>
+						<div class="panel-body">
+						 <div class="row">
+				         <div class="col-sm-6">
+						<div class="form-group">
+						<label class="control-label">First Name</label>
+						<apex:inputField styleClass="form-control" value="{!personRole.First_Name__c}"
+							onblur="CapitalizeName(event.target);" required="TRUE" id="fname" />
+						</div>
+						</div>
+						 <div class="col-sm-6">
+						<div class="form-group"><label
+							class="control-label">Last Name</label>
+							<apex:inputField styleClass="form-control" value="{!personRole.Last_Name__c}"
+							required="TRUE" onblur="CapitalizeName(event.target);" id="lname" />
+						</div>
+						</div>
+				         </div><!--  end row --
+				        
+				        <div class="row">
+				        
+				         <div class="col-sm-6"> 
+						<div class="form-group"><label
+							class="control-label">City</label>
+							<apex:inputField styleClass="form-control" value="{!personRole.City__c}"
+							required="TRUE" onblur="CapitalizeName(event.target);" id="city" />
+							</div>
+							</div>
+							
+						 <div class="col-sm-6"> 
+						<div class="form-group">
+						<label class="control-label">State</label>
+						<apex:selectList styleClass="form-control"
+							value="{!personRole.State__c}" multiselect="false"
+							required="TRUE" id="state" size="1">
+							<apex:selectOptions value="{!USAStatesList}" />
+						</apex:selectList> <apex:message for="state" styleClass="custom-error-radio"
+							id="stateerror" />
+						</div>
+						</div>
+						
+				         </div><!--  end row --
+
+						<div class="row">
+						
+						 <div class="col-sm-6"> 
+						<div class="form-group"><label
+							class="control-label">Phone</label>
+							<apex:inputField styleClass="form-control onlynumber" value="{!personRole.Phone__c}"
+							required="TRUE" id="phone" />
+						</div>
+						</div>
+						
+						 <div class="col-sm-6"> 
+						<div class="form-group">
+						<label class="control-label">Email</label><apex:inputField styleClass="form-control" value="{!personRole.Email__c}"
+							required="TRUE" id="email" />
+						</div>
+						</div>
+						
+						 </div><!--  end row --
+						
+						</div><!--  end panel body --
+						</div><!--  end panel --
+					</apex:outputPanel>
+				</apex:pageBlock>
+				-->
+				<div class="row">
+				<div class="col-sm-12 margin-t">
+				<apex:outputLink styleClass="btn btn-link btn-lg" rendered="{!applicantInfo.Application_Type__c=='Extension'}" value="/apex/apc_ap_basic_contact_info?id={!applicantInfo.Id}" id="backlinkproof"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+				 
+				 <apex:outputText rendered="{!applicantInfo.Application_Type__c=='Extension'}">
+				 <apex:commandlink styleClass="btn btn-primary btn-lg"
+					action="{!navigator}" id="nextlink" onComplete="rerunjs();"
+					reRender="webform" status="onsubmit">
+					<apex:param name="nextPage" value="{!IF(applicantInfo.Extension_Preferences__c='New Family','/apex/apc_ap_main_driving_experience','/apex/apc_ap_basic_health_info')}" />
+					<apex:param name="reDirectPage" value="true" />
+					<apex:param name="roleInput" value="Host" />
+					<apex:param name="pageId" value="015" />
+					<apex:param name="docType" value="Drivers-License" assignTo="{!docType}"/>
+					<apex:commandButton value="Save & Continue" id="continuebutton" />
+				</apex:commandlink>
+				</apex:outputText>
+				
+				<apex:outputText rendered="{!applicantInfo.Application_Type__c=='Original' && applicantInfo.Application_Level__c=='Basic' }">
+				 <apex:outputLink styleClass="btn btn-link btn-lg" rendered="{!applicantInfo.Application_Type__c=='Original'}" value="/apex/apc_ap_basic_eligibility?id={!applicantInfo.Id}" id="backlink5"><i class="fa fa-chevron-left"></i><span>Back</span></apex:outputLink>			
+				 <apex:commandlink styleClass="btn btn-primary btn-lg"
+					action="{!navigator}" id="nextlink2" onComplete="rerunjs();"
+					reRender="webform" status="onsubmit">
+					<apex:param name="nextPage" value="/apex/apc_ap_basic_health_info" />
+					<apex:param name="reDirectPage" value="true" />
+					<apex:param name="roleInput" value="Host" />
+					<apex:param name="pageId" value="015" />
+					<apex:commandButton value="Save & Continue" id="continuebutton2" />
+				</apex:commandlink>
+				</apex:outputText>
+				
+				<apex:outputText rendered="{!applicantInfo.Application_Type__c=='Original' && applicantInfo.Application_Level__c=='Main'}">
+				 <apex:outputLink styleClass="btn btn-link btn-lg" rendered="{!applicantInfo.Application_Type__c=='Original'}" value="/apex/apc_ap_basic_eligibility?id={!applicantInfo.Id}" id="backlink6"><i class="fa fa-chevron-left"></i><span>Back</span></apex:outputLink>
+				 <apex:commandlink styleClass="btn btn-primary btn-lg"
+					action="{!navigator}" id="nextlink3" onComplete="rerunjs();"
+					reRender="webform" status="onsubmit">
+					<apex:param name="nextPage" value="/apex/apc_ap_main_references" />
+					<apex:param name="reDirectPage" value="true" />
+					<apex:param name="roleInput" value="Host" />
+					<apex:param name="pageId" value="015" />
+					<apex:commandButton value="Save & Continue" id="continuebutton3" />
+				</apex:commandlink>
+				</apex:outputText>
+				
+				<apex:outputText rendered="{!applicantInfo.Application_Type__c=='Renewal' && applicantInfo.Application_Level__c=='Main'}">
+				 <apex:outputLink styleClass="btn btn-link btn-lg" value="/apex/apc_ap_basic_contact_info?id={!applicantInfo.Id}" id="backlink7"><i class="fa fa-chevron-left"></i><span>Back</span></apex:outputLink>
+				 <apex:commandlink styleClass="btn btn-primary btn-lg"
+					action="{!navigator}" id="nextlink4" onComplete="rerunjs();"
+					reRender="webform" status="onsubmit">
+					<apex:param name="nextPage" value="/apex/apc_ap_main_driving_experience" />
+					<apex:param name="reDirectPage" value="true" />
+					<apex:param name="roleInput" value="Host" />
+					 <apex:param name="docType" value="Drivers-License" assignTo="{!docType}"/>
+					<apex:param name="pageId" value="015" />
+					<apex:commandButton value="Save & Continue" id="continuebutton4" />
+				</apex:commandlink>
+				</apex:outputText>
+				 <!-- 
+				 <apex:commandlink styleClass="btn btn-primary btn-lg"
+					action="{!navigator}" id="nextlink3" onComplete="rerunjs();"
+					reRender="webform" status="onsubmit">
+					<apex:param name="nextPage" value="/apex/apc_ap_main_visa_info" />
+					<apex:param name="reDirectPage" value="true" />
+					<apex:param name="roleInput" value="Host" />
+					<apex:param name="pageId" value="015" />
+					<apex:param name="docType" value="Passport" assignTo="{!docType}"/>
+					<apex:commandButton value="Save & Continue" id="continuebutton3" />
+				</apex:commandlink>
+				 -->
+				
+				
+				</div>
+				</div>
+
+<style>
+#custom-templates .empty-message {
+	padding: 5px 10px;
+	text-align: center;
+}
+
+.tt-dropdown-menu {
+	width: 422px;
+	margin-top: 12px;
+	padding: 8px 0;
+	background-color: #fff;
+	border: 1px solid #ccc;
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+	-webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+	-moz-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+	box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+}
+</style>
+
+
+<script>
+
+
+//@@@@ MY ARRAY THAT CONTAINS THE AIRPORTS -- in {!AirportsUSA} we are putting Airports__c from USA (variable in the controller)
+
+var airports = {!AirportsUSA};
+
+
+//@@@@*****************END OF MY ARRAY
+
+//@@@@ MY MATCH FUNCTION
+
+var substringMatcher = function(strs) {
+return function findMatches(q, cb) {
+var matches, substrRegex;
+ 
+// an array that will be populated with substring matches
+matches = [];
+ 
+// regex used to determine if a string contains the substring `q`
+substrRegex = new RegExp(q, 'i');
+ 
+// iterate through the pool of strings and for any string that
+// contains the substring `q`, add it to the `matches` array
+j$.each(strs, function(i, str) {
+if (substrRegex.test(str)) {
+// the typeahead jQuery plugin expects suggestions to a
+// JavaScript object, refer to typeahead docs for more info
+
+
+//####TEST CONSOLE.LOG####
+/*
+console.log('airport: ' + str.slice( 0, str.indexOf("--") ));
+console.log('country: ' + str.slice( str.indexOf("--") + 2, str.length ));
+*/
+
+			 
+matches.push({ value: str });
+
+}
+});
+ 
+cb(matches);
+};
+};
+
+//@@@@*********************END
+
+
+//@@@@ RUNING MY JQUERY FUNCTION USING TYPEAHEAD.JS AND HANDLEBARS.JS
+
+j$('#custom-templates .typeahead').typeahead({
+  hint: true,
+  highlight: true,
+  minLength: 3
+}, {
+  
+  name: 'airports',
+  displayKey: 'value',
+  source: substringMatcher(airports),
+  templates: {
+    empty: [
+      '<div class="empty-message">',
+      'Unable to find any airport',
+      '</div>'
+    ].join('\n'),
+    suggestion: Handlebars.compile('<p><strong>{{value}}</strong></p>'),
+    
+  }
+  
+});
+
+//@@@@*********************END
+
+</script> 
+
+
+			</apex:form>
+			</div>
+			<!-- end column  -->
+
+			 <div id="app-side" class="col-md-3 col-md-pull-8">
+			 <c:menu_side_apc_ap_basic ApplicantInfo="{!applicantInfo}" />
+			 </div><!-- end column  -->
+			 
+			</div><!-- end row -->
+
+		</apex:define>
+	</apex:composition>
+
+	<!-- handlebars.js -->
+	<apex:includeScript value="{!URLFOR($Resource.module_handlebars, '/module_handlebars/v1.3.0/handlebars.js')}" />
+
+	<!-- typeahead.js -->
+	<apex:includeScript value="{!URLFOR($Resource.module_typeahead, '/module_typeahead/v0.10.4/typeahead.js')}" />
+
+	
+
+</apex:page>

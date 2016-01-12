@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>個別のメールの結果</value>
+    </caseValues>
+    <fields>
+        <label>クリック済み</label>
+        <name>Clicked__c</name>
+    </fields>
+    <fields>
+        <label>連絡先 ID</label>
+        <name>Contact_ID__c</name>
+    </fields>
+    <fields>
+        <label>連絡先</label>
+        <name>Contact__c</name>
+        <relationshipLabel>個別のメールの結果</relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The date and time when this subscriber’s email address bounced --></help>
+        <label>バウンス日</label>
+        <name>DateBounced__c</name>
+    </fields>
+    <fields>
+        <help><!-- The date and time when the subscriber opened the email --></help>
+        <label>開封日</label>
+        <name>DateOpened__c</name>
+    </fields>
+    <fields>
+        <label>送信日</label>
+        <name>DateSent__c</name>
+    </fields>
+    <fields>
+        <help><!-- The date and time when the subscriber unsubscribed --></help>
+        <label>購読取り消し日</label>
+        <name>DateUnsubscribed__c</name>
+    </fields>
+    <fields>
+        <label>メール</label>
+        <name>Email__c</name>
+    </fields>
+    <fields>
+        <label>送信者アドレス</label>
+        <name>FromAddress__c</name>
+    </fields>
+    <fields>
+        <label>送信者名</label>
+        <name>FromName__c</name>
+    </fields>
+    <fields>
+        <help><!-- The email sent to this subscriber  was rejected due to permanent conditions (this typically results when &quot;user unknown&quot; or &quot;domain not found&quot; errors occur) --></help>
+        <label>ハードバウンス</label>
+        <name>HardBounce__c</name>
+    </fields>
+    <fields>
+        <label>リード ID</label>
+        <name>Lead_ID__c</name>
+    </fields>
+    <fields>
+        <label>リード</label>
+        <name>Lead__c</name>
+        <relationshipLabel>個別のメールの結果</relationshipLabel>
+    </fields>
+    <fields>
+        <label>ID をマージ</label>
+        <name>MergeId__c</name>
+    </fields>
+    <fields>
+        <help><!-- The total number of times this subscriber clicked on the links on this email --></help>
+        <label>合計クリック数</label>
+        <name>NumberOfTotalClicks__c</name>
+    </fields>
+    <fields>
+        <help><!-- The unique number of times this subscriber clicked on the links on this email (unique means one click per link) --></help>
+        <label>一意のクリック数</label>
+        <name>NumberOfUniqueClicks__c</name>
+    </fields>
+    <fields>
+        <help><!-- Indicates whether the subscriber opened the email or not --></help>
+        <label>開封済み</label>
+        <name>Opened__c</name>
+    </fields>
+    <fields>
+        <help><!-- The unique identifier of the email send. You may be asked to reference this number when calling Marketing Cloud support if the need arises. --></help>
+        <label>送信定義</label>
+        <name>SendDefinition__c</name>
+        <relationshipLabel>個別のメールの結果</relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The email sent was rejected due to a seemingly temporary condition, such as a full inbox, after the system retries unsuccessfully to send the email every 15 minutes for 72 hours. A subscriber will be set to Held status after three soft bounces --></help>
+        <label>ソフトバウンス</label>
+        <name>SoftBounce__c</name>
+    </fields>
+    <fields>
+        <label>件名行</label>
+        <name>SubjectLine__c</name>
+    </fields>
+    <fields>
+        <help><!-- The date and time the last tracking update was received by Salesforce --></help>
+        <label>トラッキング日時</label>
+        <name>Tracking_As_Of__c</name>
+    </fields>
+    <fields>
+        <label>トリガーによる送信</label>
+        <name>TriggeredSendDefinition__c</name>
+        <relationshipLabel>個別のメールの結果</relationshipLabel>
+    </fields>
+    <layouts>
+        <layout>Individual Email Result Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Email Image --></label>
+            <section>Email Image</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>メール名</nameFieldLabel>
+    <webLinks>
+        <label>すぐにトラッキングを要求</label>
+        <name>Request_Tracking_Immediately</name>
+    </webLinks>
+</CustomObjectTranslation>

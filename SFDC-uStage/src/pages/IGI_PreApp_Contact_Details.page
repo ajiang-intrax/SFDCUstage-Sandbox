@@ -1,0 +1,191 @@
+<apex:page docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+    
+    <!-- UI Blocker component for Background processing -->
+    <c:BlockUI />
+    
+    <apex:composition template="IntraxTemplate_Vs1">
+        <apex:define name="body">
+            <div class="wrapper" id="IGI_PreApp_Contact_Details">    
+                <apex:form >
+                
+                    <!-- Heading -->
+                    <div class="page-header clearfix">
+                        <h1 class="page-title">Intrax Global Internship Application</h1>
+                        
+                        <!-- Back To Main Page Link -->
+                        <div class="back-to-main"><apex:outputLink value="apex/igi_preapp_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+                        </div>
+                       
+                       <!-- Section Header -->  
+                       <div class="section-header clearfix">
+                            <h2>Contact Details</h2>
+                            <!-- 
+                            <div class="progress-bar">Page 3 <em>of</em> 6</div>
+                             -->
+                       </div> 
+                        
+                       <!-- Panel -->   
+                       <div class="white-box clearfix">   
+                            <div class="panel two_thirds">                      
+                        	
+                            <!-- Address 1 -->
+                            <div class="form-row">
+                                <div class="form-label left ">Street Address 1<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!applicantInfo.Home_Street_1__c}" required="TRUE"/>
+                                </div>
+                                 <div class="dropt"> <i class="icon-question-sign"></i>
+                                    <span>{!$ObjectType.Applicant_Info__c.Fields.Home_Street_1__c.inlineHelpText}</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Address 2 -->
+                            <div class="form-row">
+                                <div class="form-label left"> Street Address 2</div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!applicantInfo.Home_Street_2__c}" required="FALSE"/>
+                                </div>
+                            </div>    
+                  
+                            <!-- City -->
+                            <div class="form-row">
+                                <div class="form-label left ">City<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!applicantInfo.Home_City__c}" required="TRUE"/>
+                                </div>
+                            </div>
+                              
+                            <!-- State/Provience -->  
+                            <div class="form-row">
+                                <div class="form-label left ">State/Province</div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!applicantInfo.Home_State__c}" required="FALSE"/>
+                                </div>
+                            </div>
+                  
+                            <!-- Postal Code -->
+                            <div class="form-row">
+                                <div class="form-label left ">Postal Code<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!applicantInfo.Home_Postal_Code__c}"  required="TRUE"/>
+                                </div>
+                                <!--  
+                                <div class="dropt"> <i class="icon-question-sign"></i>
+                                    <span>{!$ObjectType.Applicant_Info__c.Fields.Home_Postal_Code__c.inlineHelpText}</span>
+                                </div>
+                                -->
+                            </div>
+                            
+                            <!-- Country -->
+                            <div class="form-row">
+                                <div class="form-label left">Country<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!applicantInfo.Home_Country__c}" required="TRUE"/>   
+                                </div>
+                            </div>
+                            
+                             <!-- Phone -->
+                            <div class="form-row">
+                                <div class="form-label left ">Phone<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!personInfo.Phone__c}" required="TRUE"/>
+                                </div>
+                                <!-- 
+                                <div class="dropt"> <i class="icon-question-sign"></i>
+                                    <span>{!$ObjectType.Person_Info__c.Fields.Phone__c.inlineHelpText}</span>
+                                </div>
+                                 -->
+                            </div>
+                            
+                             <!-- Mobile -->
+                            <div class="form-row">
+                                <div class="form-label left ">Mobile Phone</div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!personInfo.Mobile__c}" required="FALSE"/>
+                                </div>
+                            </div>
+                            
+                             <!-- Email Address -->
+                            <div class="form-row">
+                                <div class="form-label left ">Email<span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!personInfo.Email__c}" required="TRUE"/>
+                                </div>
+                            </div>
+              
+                            <!-- Skype Id -->
+                            <div class="form-row">
+                                <div class="form-label left ">Skype</div>
+                                <div class="form-field">
+                                    <apex:inputField value="{!personInfo.Skype_Id__c}" required="FALSE"/>
+                                </div>
+                            </div>
+                          <!-- 
+                            <div class="form-row">
+                            <p>If you know anyone in the U.S. who can be contacted in case of an emergency, please provide their information.</p>
+			                <apex:outputLabel rendered="{!IF(EmergencyInfoList.Size > 0, false, true)}"><span class="no-records">No record(s) to display.</span></apex:outputLabel>
+			            </div>
+			            
+			            
+			                     <apex:pageBlock rendered="{!IF(EmergencyInfoList.Size > 0, true, false)}" >
+			                     <apex:pageBlockTable styleClass="pageblocktable" value="{!EmergencyInfoList}" var="item">
+			                            <apex:column >
+			                            <apex:outputLink value="/apex/IGI_PreApp_Emergency_Contact_New?id={!item.Applicant_Info__c}&pid={!item.id}&role=EmergencyContact">
+										Edit</apex:outputLink>  
+			                            </apex:column>
+			                           <apex:column value="{!item.First_Name__c} {!item.Last_Name__c}" headerValue="Name" /> 
+			                           <apex:column value="{!item.Role__c}" headerValue="Relationship" rendered="{! IF(NOT(item.Role__c == 'Other'), true, false)}" />
+			                           <apex:column value="{!item.Role_Other__c}" headerValue="Relationship" rendered="{! IF(NOT(item.Role__c == 'Other'), false, true)}" /> 
+			                           <apex:column value="{!item.Email__c}"/>
+			                     </apex:pageBlockTable>  
+			                </apex:pageBlock>
+			                <div class="form-row" style="float:right;">
+			                    <apex:inputField value="{!applicantInfo.Emergency_Contact_Complete__c}" required="false"/>
+			                    <apex:outputText value="I have added all of my emergency contacts" rendered="{!IF(EmergencyInfoList.Size > 0, true, false)}" />
+			                    <apex:outputText value="I do not have any emergency contacts" rendered="{!IF(EmergencyInfoList.Size > 0, false, true)}" />
+			                </div>
+			                
+			                <div class="form-row">
+			                   <div class="form-link">
+			                    	
+			                        <apex:commandlink styleClass="add" action="{!navigator}">
+			                          <i class="icon-plus-sign"></i>  
+			                          <apex:param name="nextPage" value="/apex/IGI_PreApp_Emergency_Contact_New"/>
+			                          <apex:param name="add" value="true" assignTo="{!add}"/>
+			                          <apex:param name="prePopulation" value="false"/>
+			                          <apex:param name="role" value="EmergencyContact" assignTo="{!role}"/> 
+			                          <apex:param name="reDirectPage" value="true"/>
+			                          <apex:commandButton value="Add new Emergency Contact"/>
+			                        </apex:commandlink>
+			                       
+			                     </div> 
+			                </div>
+							-->
+                            <div class="form-row">
+          
+                                <!-- Back Command Link -->
+                                <div class="form-link">
+				              		<apex:outputLink value="/apex/IGI_Preapp_Biographical_Documents?id={!applicantInfo.Id}&docType=Participant-Photo"><i class="icon-chevron-left"></i> <span>Back</span></apex:outputLink>
+				                </div>
+				                
+                                <!-- Next Command Link -->      
+                                <div class="form-button">
+                                    <apex:commandlink styleClass="next" action="{!navigator}">
+                                        <apex:param name="nextPage" value="/apex/igi_preapp_Emergency_Contact"/>
+                                        <apex:param name="reDirectPage" value="true"/> 
+                                        <apex:commandButton value="Save & Continue" />
+                                        <i class="icon-chevron-right"></i>
+                                    </apex:commandlink>
+                                </div>    
+                            </div>  
+                        </div> 
+                            
+                        <div class="panel one_third last aside">
+                           <!--  <c:Badge_Centers_Contact />  -->    
+                        </div>
+                    </div>
+                </apex:form>
+            </div>
+        </apex:define>
+    </apex:composition>
+</apex:page>

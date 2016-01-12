@@ -1,0 +1,123 @@
+<apex:page id="ayusa_app_reco_list" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body"> 
+      <div class="wrapper">
+          <apex:form id="form">     
+             <div class="page-header clearfix">
+        <h1>Ayusa Student Application</h1>
+<div class="back-to-main"><apex:outputLink id="BacktoMain" value="apex/ayusa_app_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+          </div>
+              <h2>Academics Information - List of Recommendation</h2>
+          <div class="white-box clearfix">
+ <a class="page-help" title="Help for this Page (New Window)" onclick="return openPopup('./Help_ayusa_app_reco_list')" >
+<span>Help For This Page</span><i class="icon-info-sign"></i></a> 
+           <div class="form-row error">
+            
+           </div> 
+             <div class="panel two_thirds">
+                  
+                        <h3 class="data-block-title">Uploaded Recommendations </h3>
+                        
+                        <div class="form-row">
+                            <apex:outputLabel rendered="{!IF((DocList.Size > 0 && (docType == 'School' || docType == 'Teacher' || docType == 'Academic')), false, true)}"><span class="no-records">No record(s) to display.</span></apex:outputLabel>
+                        </div>
+              
+                        <apex:pageBlock id="PageBlock" rendered="{!if((DocList.Size > 0 && (docType == 'School' || docType == 'Teacher' || docType == 'Academic')), true, false)}" >
+                        <apex:pageBlockTable id="PageBlockTable" styleClass="pageblocktable" value="{!DocList}" var="item">
+                        <apex:column headerValue="Document Name">
+                            <apex:outputText id="Doc" value="{!item.Document_Name__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="Type">
+                            <apex:outputText id="DocType" value="{!item.Document_Type__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="Description">
+                            <apex:outputText id="Desc" value="{!item.Description__c}"/>
+                        </apex:column>
+                                                
+                        <apex:column headerValue="Document Action">
+                            <apex:commandlink action="{!load}" target="_blank">
+                                <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                <apex:commandButton id="View" value="View" />
+                            </apex:commandlink>
+                            <apex:outputText value=" | " />
+                    <apex:commandlink styleClass="inline-link" action="{!deletefile}"  onclick="return ConfirmDelete('Are You Sure ?');">
+                        <apex:param name="docGuid"  value="{!item.Document_GUID__c}"/>
+                        
+                        <apex:commandButton id="Delete" value="Delete" />
+                    </apex:commandlink>
+                        </apex:column>
+                        </apex:pageBlockTable>
+                        </apex:pageBlock>
+                        
+                        <h3 class="data-block-title"> Recommendations Requested Online </h3>
+                        
+                        <div class="form-row">
+                            <apex:outputLabel rendered="{!IF(CommunicationInfoList.Size > 0, false, true)}"><span class="no-records">No record(s) to display.</span></apex:outputLabel>
+                        </div>
+                            
+                        <div class="form-row">
+                            <apex:pageBlock id="PageBlock2" rendered="{! IF(communicationInfoList.size > 0, true, false)}" >
+                                 <apex:pageBlockTable id="PageBlockTable2" styleClass="pageblocktable" value="{!communicationInfoList}" var="item">
+                                    
+                                    <apex:column id="Status" value="{!item.Status__c}" headerValue="Status" />
+                                    <apex:column id="Name" value="{!item.Recipient_First_Name__c} {!item.Recipient_Last_Name__c}" headerValue="Name" />
+                                    <apex:column id="Email" value="{!item.To_Address__c}" headerValue="Email" />
+                                    <apex:column id="Type" headerValue="Type">
+                                        <apex:outputLabel rendered="{! if(item.Type_Code__c == 'ETR', true, false)}" > English Teacher </apex:outputLabel> 
+                                        <apex:outputLabel rendered="{! if(item.Type_Code__c == 'SOR', true, false)}" > School </apex:outputLabel>
+                                    </apex:column>
+                                    <apex:column headerValue="Date Received">
+                                        <apex:outputLabel rendered="{! if(item.Type_Code__c == 'ETR', true, false)}" value="{!item.Applicant_Info__r.ETR_Received_Date__c}"></apex:outputLabel> 
+                                        <apex:outputLabel rendered="{! if(item.Type_Code__c == 'SOR', true, false)}" value="{!item.Applicant_Info__r.SOR_Received_Date__c}" ></apex:outputLabel>
+                                    </apex:column>
+                                    </apex:pageBlockTable>  
+                            </apex:pageBlock>                               
+                        </div>
+                    <div class="form-row">
+                    <div class="form-link">
+                            <apex:commandlink action="{!navigator}" rendered="{!NOT(ETR)}">
+                              <i class="icon-plus-sign"></i>   
+                              <apex:param name="nextPage" value="/apex/ayusa_app_teacher_reco"/>
+                              <apex:param name="comtype" value="ETR" assignTo="{!comtype}"/>
+                              <apex:param name="reDirectPage" value="true"/>
+                              <apex:commandButton id="AddEngRec" value="Add English Teacher Recommendation" />
+                            </apex:commandlink>
+                        </div>
+                        
+                        <div class="form-link">
+                            <apex:commandlink action="{!navigator}"  rendered="{!NOT(SOR)}">
+                              <i class="icon-plus-sign"></i>  
+                              <apex:param name="nextPage" value="/apex/ayusa_app_school_reco"/>
+                              <apex:param name="comtype" value="SOR" assignTo="{!comtype}"/>
+                              <apex:param name="reDirectPage" value="true"/>
+                              <apex:commandButton id="AddSchoolRec" value="Add School Recommendation" />
+                            </apex:commandlink>
+                        </div>
+                    </div>
+                        <div class="form-row">
+                                                
+                        <div class="form-link">
+                            <apex:outputLink id="Back" styleClass="back" value="/apex/ayusa_app_edu_overview?id={!applicantInfo.Id}">
+                            <i class="icon-chevron-left"></i>
+                            <span>Back</span>
+                            </apex:outputLink>
+                        </div>
+                        
+                         
+                        <div class="form-button">
+                            <apex:commandlink styleClass="next" action="{!navigator}">
+                              <apex:param name="nextPage" value="/apex/ayusa_app_school_transcripts"/>
+                              <apex:param name="reDirectPage" value="true"/>
+                              <apex:param name="docType" value="Transcripts" assignTo="{!docType}"/>
+                              <apex:commandButton id="Continue" value="Continue" />
+                              <i class="icon-chevron-right"></i>   
+                            </apex:commandlink>
+                        </div>
+                        </div>
+           </div>
+              </div>
+          </apex:form>
+      </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

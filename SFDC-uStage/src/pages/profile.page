@@ -1,0 +1,63 @@
+<apex:page title="Student Details | Intrax" standardStylesheets="false" showHeader="false" controller="HFPortal_Controller" action="{!checkLogin}">
+    
+<apex:composition template="IntraxTemplate_Vs2" >
+            <apex:define name="body">
+            <apex:form >
+            <script>
+                j$(function(){
+                
+                j$(".hide-next").click(function(){
+                j$(this).parent().next(".block-body").toggleClass('hide');
+                
+                });
+                
+                });
+             </script>
+                <div class="row">
+                
+                    <apex:outputPanel styleClass="span6" layout="block">
+                        <h1>
+                        <apex:outputText value="{!engagementInfo.Account_Id__r.FirstName} "/>&nbsp;
+                        <apex:outputText value="{!LEFT(engagementInfo.Account_Id__r.LastName,1)}"/>
+                        </h1>
+                    </apex:outputPanel> <!--  end span -->
+                    
+                    <apex:outputPanel styleClass="span6" layout="block">
+
+ <apex:outputPanel id="cmdBtn" layout="block" styleClass="clearfix" rendered="{!IF($CurrentPage.parameters.ConfMatch='',TRUE,false)}">
+         <apex:outputPanel styleClass="form-link pull-right" layout="block" rendered="{!IF((CheckForSavedMatch=='' && checkHFStatus),True,False)}">
+          <apex:commandLink action="{!SaveMatch}" styleClass="pull-right">
+          <i class="icon-star"></i> <span>Save Student</span>
+          </apex:commandLink>
+        </apex:outputPanel>  
+        
+        <apex:outputPanel styleClass="pull-right margin-t" layout="block" rendered="{!IF((CheckForSavedMatch!='' && checkHFStatus),True,False)}"> 
+          <i class="icon-star"></i>&nbsp;<em><apex:outputText id="status" value="{!CheckForSavedMatch}" ></apex:outputText></em> 
+         </apex:outputPanel> 
+          
+     </apex:outputPanel>
+     
+                    </apex:outputPanel> <!--  end span -->
+                
+                </div>    
+                
+                <div class="row">
+                    <apex:outputPanel styleClass="span3" layout="block">
+                    <c:block_profile_thumb_pt_ayu photoUrl="{!returnURL}" gender="{!engagementInfo.Gender__c}" HFStatus="{!checkHFStatus}" userType="Host Family"/> 
+                    <c:Menu_HF_Participant_Details participant="{!engagementInfo}" rendered="{!IF($CurrentPage.parameters.ConfMatch!='',TRUE,false)}"/>                    
+                    </apex:outputPanel> 
+                    <!-- end span3 --> 
+          
+                    <!-- begin span9 -->  
+                    <div class="span9">
+                    <!-- <c:block_student_details_hf_ayu /> -->
+                    <c:block_profile_pt_ayu />
+                    </div>  
+                    <!-- end span9 -->
+                </div>
+                <!-- end row -->
+                </apex:form>
+            </apex:define>
+        </apex:composition>
+    
+</apex:page>

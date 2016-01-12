@@ -1,0 +1,72 @@
+<apex:component layout="none" id="block_apc_hf_suggestions" allowDML="true">
+<apex:attribute name="PageController" description="Instance of home_controller class" type="apc_match_controller" required="false" default="" />
+<apex:variable value="{!1}" var="IntCount" id="IntCountid" />
+
+
+
+<apex:outputPanel layout="block" rendered="{!PageController.SuggestedAPs.size > 0 && PageController.ConfMatch.size ==0}">
+
+<div class="hp-block padding-l6 padding-r6 padding-t4 padding-b4">
+<div class="row">
+
+<div class="col-sm-12">
+ <h2 class="no-margin-t">Au Pair Suggestion(s) For You</h2>
+ <p class="lead">Here are some au pairs we chose that could be a good fit for your family. You can also&nbsp;<apex:outputLink value="/apex/apc_hf_search_au_pairs"><b>search our full database</b></apex:outputLink> of applicants.</p>
+
+<!--  repeat tag of multiple Interviews -->
+<apex:outputPanel layout="block" rendered="{!IntCount <= 5 && PageController.ConfMatch.size ==0}" id="expireid">
+
+         <apex:outputPanel layout="block" styleClass="table-responsive" rendered="{!PageController.ConfMatch.size == 0 &&PageController.SuggestedAPs.size>0 }">
+          <table class="table" style="width:auto;">
+          <tbody>
+          <tr>
+          <apex:repeat value="{!PageController.SuggestedAPs}" var="comp">
+            
+            <td style="width:160px; border:none;">
+             
+               <apex:outputLink value="/apex/apc_hf_au_pair_profile?id={!comp.Engagement__c}" id="linkprofinfo1">
+                <apex:image style="width:140px; height:140px;" value="{!PageController.returnURLmap[comp.Engagement__c]}" rendered="{!PageController.returnURLMap[comp.Engagement__c] != 'no-picture'}"/>
+                <apex:image style="width:140px; height:140px;" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/male-profile-med.png')}"  rendered="{!PageController.returnURLMap[comp.Engagement__c] == 'no-picture' && (comp.Engagement__r.Gender__c == 'Male' || comp.Engagement__r.Gender__c == null)}"/>
+                <apex:image style="width:140px; height:140px;"  value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/female-profile-med.png')}" rendered="{!PageController.returnURLMap[comp.Engagement__c] == 'no-picture' && comp.Engagement__r.Gender__c == 'Female'}"/>
+              </apex:outputLink>
+             
+              <h4 class="no-margin-b">{!comp.Engagement__r.Account_Id__r.FirstName}</h4>
+              
+              <div>
+              <apex:outputText > {!comp.Engagement__r.Account_Id__r.Age__pc}, {!comp.Engagement__r.Account_Id__r.Citizenship__pc} </apex:outputText>
+              </div>
+              
+              <div>
+                <apex:outputLink value="/apex/apc_hf_au_pair_profile?id={!comp.Engagement__c}"> <b>View Profile</b> </apex:outputLink>
+              </div>
+             
+            </td>
+            
+           <!--   <apex:variable var="IntCount" value="{!IntCount + 1}" />-->
+          </apex:repeat> 
+          </tr>
+          </tbody>
+       </table>
+          </apex:outputPanel>
+   
+</apex:outputPanel>
+
+</div>
+</div><!-- end row -->
+
+</div>
+
+   
+
+
+
+<!-- 
+  <apex:outputText rendered="{!IntCount > 6 && PageController.ConfMatch.size ==0}" id="expireid2">
+    <apex:outputLink styleClass="btn btn-lg btn-link vs2 margin-r2" value="/apex/apc_hf_search_au_pairs"> <span>View All Suggestions</span> </apex:outputLink>
+   </apex:outputText>
+  <apex:outputLink styleClass="btn btn-lg btn-link vs2" rendered="{!PageController.ConfMatch.size ==0}" value="/apex/apc_hf_search_au_pairs"> <span>Search All Au Pairs</span> </apex:outputLink>
+ -->
+
+
+</apex:outputPanel>
+</apex:component>

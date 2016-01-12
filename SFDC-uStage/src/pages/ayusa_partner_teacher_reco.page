@@ -1,0 +1,128 @@
+<apex:page docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper">
+          <apex:form >
+           <div class="page-header clearfix">
+             <h1 class="page-title">Ayusa Application</h1>
+             <div class="back-to-main"><apex:outputLink value="apex/ayusa_app_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+          </div>
+          <h2> Teacher Recommendation</h2>
+          <div class="white-box clearfix">
+          <div class="panel two_thirds">
+              
+              <div class="data-row">
+                <div class="data-label left">Teacher Name: </div>
+                <div class="data-field">
+                  <apex:outputField value="{!applicantInfo.English_Teach_Name__c}"/> 
+                </div>
+              </div>
+                                    
+              <div class="data-row">
+                <div class="data-label left">Teacher Title: </div>
+                <div class="data-field">
+                  <apex:outputField value="{!applicantInfo.English_Teacher_Title__c}"/> 
+                </div>
+              </div>
+              
+              <div class="data-row">
+                <div class="data-label left"> How long have you known the student?</div>
+                <div class="data-field">
+                  <apex:outputField value="{!applicantInfo.TE_Known_For_Years__c}"/> 
+                </div>
+              </div>
+              
+              <div class="data-row">
+                <div class="data-label left">How long have you had the student as an English language student?</div>
+                <div class="data-field">
+                  <apex:outputField value="{!applicantInfo.How_Long_Tought__c}"/> 
+                </div>
+              </div>
+              
+              <div class="data-row">
+                <div class="data-label left">For how many years has this student formally studied English? </div>
+                <div class="data-field">
+                  <apex:outputField value="{!applicantInfo.How_Long_Study_English__c}"/> 
+                </div>
+              </div>
+              
+              <div class="data-row">
+                <div class="data-label left">Reading Comprehension: given an American newspaper or magazine article of at least five paragraphs, the student's English ability is:</div>
+                <div class="data-field">
+                  <apex:outputField value="{!applicantInfo.Reading_Comprehension__c}"/> 
+                </div>
+              </div>
+              
+              <div class="data-row">
+                <div class="data-label left">Writing Skills</div>
+                <div class="data-field">
+                  <apex:outputField value="{!applicantInfo.Writing_Skills__c}"/> 
+                </div>
+              </div>
+              
+              <div class="data-row">
+                <div class="data-label left">Speaking and Understand Conversations: After engaging the student in at least 15 minutes of active English conversation, using both abstract terms and idiomatic phrases rate the student's ability to speak and understand English conversation</div>
+                <div class="data-field">
+                  <apex:outputField value="{!applicantInfo.Speaking_Skills__c}"/> 
+                </div>
+              </div>
+              
+              <div class="data-row">
+                <div class="data-label left">Student's overall progress in English</div>
+                <div class="data-field">
+                  <apex:outputField value="{!applicantInfo.Overall_Progress__c}"/> 
+                </div>
+              </div>
+              <div class="data-row">
+                <div class="data-label left">Student's English language abilities (oral/written performance, motivation, strengths and weaknesses)</div>
+                <div class="data-field">
+                  <apex:outputField value="{!applicantInfo.English_Ability__c}"/> 
+                </div>
+              </div>
+              <div class="data-row">
+                <div class="data-label left">Student's cooperation with classroom/school policies and expectations</div>
+                <div class="data-field">
+                  <apex:outputField value="{!applicantInfo.Classroom_Cooperation__c}"/> 
+                </div>
+              </div>
+              <div class="data-row">
+                <div class="data-label left">How is English taught in the student's classroom (e.g., through conversation, audio tapes, books and/or written materials, etc.)?</div>
+                <div class="data-field">
+                  <apex:outputField value="{!applicantInfo.Teaching_Method__c}"/> 
+                </div>
+              </div>
+                  
+              <div class="data-row">
+                <div class="data-label left">Received Date</div>
+                <div class="data-field">
+                  <apex:outputField value="{!applicantInfo.ETR_Received_Date__c}"/> 
+                </div>
+              </div>
+              
+                           
+            <div class="form-row">
+                              
+              <div class="form-link">
+                    <apex:outputLink styleClass="back" value="/apex/ayusa_partner_school_reco?id={!applicantInfo.Id}">
+                    <i class="icon-chevron-left"></i>
+                    <span>Back</span>
+                    </apex:outputLink>
+              </div>
+              
+              <div class="form-button">
+                <apex:commandlink styleClass="next" action="{!navigator}">
+                  <apex:param name="nextPage" value="/apex/ayusa_app_home"/>
+                  <apex:param name="reDirectPage" value="false"/>               
+                  <apex:commandButton value="Continue"/>
+                  <i class="icon-chevron-right"></i>
+                </apex:commandlink> 
+              </div>
+            </div>
+          
+         </div>
+       </div>
+               </apex:form>
+     </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

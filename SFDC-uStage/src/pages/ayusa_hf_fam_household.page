@@ -1,0 +1,28 @@
+<apex:page docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" standardStylesheets="false" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper">
+	      <apex:form >  
+	      HF Household Basics Page            
+	      	<div>
+              
+              <div class="form-link">
+					<apex:outputLink styleClass="back" value="/apex/ayusa_hf_fam_other?id={!applicantInfo.Id}">
+					<i class="icon-chevron-left"></i>
+					<span>Back</span>
+					</apex:outputLink>
+		  	  </div>
+              
+              <div class="form-button submit">
+                <apex:commandlink action="{!navigator}">
+                  <apex:param name="nextPage" value="/apex/ayusa_hf_fam_references"/>
+                  <apex:param name="reDirectPage" value="false"/>
+                  <apex:commandButton value="Next" />
+                </apex:commandlink>
+              </div>
+		  	</div>
+	      </apex:form>
+      </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

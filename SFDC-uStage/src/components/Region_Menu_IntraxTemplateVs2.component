@@ -1,0 +1,31 @@
+<!--  
+Component: Region_Menu_IntraxTemplateVs2
+
+Description: Inner component for Intrax Partner Portal Header Template.
+
+-->
+<apex:component layout="none" controller="User_Controller">
+    
+    <!-- Portion having options for Header Template -->
+    <div id="menu-zone" >
+        
+        <!-- Innner Portion for the Header meanu -->    
+        <div id="menu-zone-inner" class="container">
+            
+            <div class="row">    
+                
+                <apex:outputPanel styleClass="menu span12" layout="block">
+                
+                    <c:Menu_Partners rendered="{! IF(ISPICKVAL($user.Type__c,'Partner'), true, false)}" />
+                    <!--  <c:Menu_Pax />-->
+                    
+                    <c:Menu_Families rendered="{! ActiveUserType == 'Host Family'}" />
+                
+                    <c:Menu_Companies rendered="{! ActiveUserType == 'Host Company'}" /> 
+                    
+                    <c:Menu_Participants rendered="{!ActiveUserType == 'Participant'}" />    
+                </apex:outputPanel>
+            </div>
+        </div>  
+    </div>    
+</apex:component>

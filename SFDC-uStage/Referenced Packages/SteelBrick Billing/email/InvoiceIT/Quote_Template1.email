@@ -1,0 +1,19 @@
+<messaging:emailTemplate subject="Your quote {!relatedTo.Name} ({!relatedTo.Id})" recipientType="User" relatedToType="invoiceit_s__Quote__c">
+    <messaging:htmlEmailBody >
+        {!relatedTo.Shipping_Contact__r.Salutation} {!relatedTo.Shipping_Contact__r.Name},
+        
+        <br/><br/>
+        Please find the details of your Quote below
+        <br/><br/>
+        Total Quote Value: {!relatedTo.invoiceit_s__Quote_Currency_Symbol__c} {!relatedTo.invoiceit_s__Total__c}
+        <br/><br/>
+        Please <a href="mailto:QUOTE_CONFIRM_EMAIL_ADDRESS?subject=Your quote {!relatedTo.Name} ({!relatedTo.Id})">click here</a> to accept this quote and order your items. 
+        <br/>
+        Please be aware that by clicking this link and sending the confirmation email, you will be bound by our Terms and Conditions.
+    
+        <br/><br/>
+        Thanks and regards,<br/>
+        {!$User.FirstName} {!$User.LastName}<br/>
+        {!$Organization.Name}
+    </messaging:htmlEmailBody>
+</messaging:emailTemplate>

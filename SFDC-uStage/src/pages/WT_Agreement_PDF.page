@@ -1,0 +1,7 @@
+<apex:page controller="DocuSign_Helper" action="{!OpenEnvelopePDF}"  standardStylesheets="false" showHeader="false" >
+    <script>
+        var var1 ='{!PDFContentStr}';
+        window.location.href = "data:application/pdf;base64," + var1;
+    </script>
+
+</apex:page>

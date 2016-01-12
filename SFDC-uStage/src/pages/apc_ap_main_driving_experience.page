@@ -1,0 +1,552 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" title="Driving Experience" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="false" showHeader="false" id="apc_ap_main_driving_exper">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_apc_ap_application />
+       <div id="app-page" class="row">
+        <div id="app-focus" class="col-md-8 col-md-push-3">
+          <c:block_app_completion ApplicantInfo="{!applicantInfo}" userProfileName="{!userProfileName}"  />
+          
+          <!-- Jose-Adding Tips for Partners  (Profile "OCPM Agent Portal")
+          <apex:outputPanel rendered="{!userProfileName == 'OCPM Agent Portal' && applicantInfo.Application_Level__c == 'Main'}" layout="block" id="blockTip">
+              <div class="lead alert alert-warning clearfix">
+              <b>Tip</b>&nbsp;&nbsp;
+              Does the driver's license information match the driver's license copy that was uploaded?
+              </div>
+          </apex:outputPanel>
+          -->
+          
+          <h1>Driving Experience</h1>
+          <p class="lead">AuPairCare requires that all au pairs have a valid driver's license in their home country before they begin the matching process with host families. 
+            Please tell us about your license and driving experience.</p>
+          <apex:form id="webform" styleClass="form-vertical ws-validate" >
+            <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+            
+            <apex:outputPanel layout="block" rendered="{!applicantinfo.Application_Type__c == 'Original'}" id="outputpane1">
+              
+              <div class="row">
+                <div class="col-sm-12">
+                <div class="form-group">
+                  <label class="control-label">Do you have a driver's license?</label>
+                  <apex:actionRegion >
+                    <apex:selectRadio styleClass="radio" value="{!applicantInfo.Drivers_Licence_Indicated__c}" id="driverlicense" required="true">
+                      <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                      <apex:selectOption itemValue="No" itemLabel="No"/>
+                      <apex:actionSupport event="onclick" rerender="driving_description, nonlicense" status="showdriving" onComplete="dpInitiate();"/>
+                    </apex:selectRadio>
+                  </apex:actionRegion>
+                  <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showdriving"/>
+                  <apex:message for="driverlicense" styleClass="custom-error-radio" id="errormessdrive"/>
+                </div>
+                </div>
+              </div>
+              <!-- end row -->
+              
+              <apex:outputPanel layout="block" id="nonlicense">
+                <apex:outputPanel layout="block" rendered="{!applicantInfo.Drivers_Licence_Indicated__c == 'No'}">
+                  <p class="alert alert-info">You previously indicated that you do not have a driver's license. Please apply for one as soon as possible.</p>
+                </apex:outputPanel>
+              </apex:outputPanel>
+
+
+
+              <apex:pageBlock id="driving_description">
+                <apex:outputPanel layout="block" rendered="{!applicantInfo.Drivers_Licence_Indicated__c == 'Yes'}" id="outputpaneldriving">
+                 
+                  <div class="row">
+                    <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">When did you first get a license?</label>
+                      <div class="datepicker" locale="{!user.localeSidKey}">
+                        <apex:inputField styleClass="form-control" value="{!applicantInfo.Drivers_Licence_Acquired__c}" required="TRUE" id="licenseplace" />
+                      </div>
+                    </div>
+                 </div>
+               
+                 <div class="col-sm-6">
+                    
+                  </div>
+                  
+                   
+                    <div class="col-sm-6">
+                    <div class="form-group">
+                    <apex:pageBlock id="licenseexp">
+                   <apex:outputPanel layout="block" rendered="{!Not(applicantInfo.Drivers_Licence_Expires_Indicated__c)}" >
+                    <label class="control-label">When does your license expire? </label>
+                    <div class="datepicker" locale="{!user.localeSidKey}">
+                    <apex:inputField styleClass="form-control" value="{!applicantInfo.Drivers_Licence_Expires__c}" required="TRUE" id="license_exp" />
+                    </div>
+                    </apex:outputPanel>
+                    </apex:pageBlock> 
+                    
+                      <div>(&nbsp;
+                    <apex:actionRegion >
+                    <apex:inputCheckbox styleClass="form-control" required="false" id="Lic_Exp" selected="{!applicantInfo.Drivers_Licence_Expires_Indicated__c}" value="{!applicantInfo.Drivers_Licence_Expires_Indicated__c}">
+                    <apex:actionSupport event="onchange" rerender="licenseexp" status="showref2" onComplete="dpInitiate();"/>
+                    </apex:inputCheckbox>
+                        <label>No expiration date available</label> )
+                    </apex:actionRegion>
+                    <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showref2" />
+                    </div>
+                    
+                  
+                    </div>
+                    </div>
+                   
+               </div><!--  end row -->
+
+                  <div class="row">
+                    <div class="col-sm-12">
+                    <div class="form-group">
+                      <label class="control-label">How often do you drive?</label>
+                      <apex:inputField styleClass="form-control" value="{!applicantInfo.Driving_Frequency__c}" required="TRUE" id="licensefrec" />
+                    </div>
+                  </div>
+                  </div>
+                  <!-- end row -->
+                  
+                  <div class="row">
+                    <div class="col-sm-12">
+                    <div class="form-group">
+                      <label class="control-label">What kind of car are you comfortable driving?</label>
+                      <apex:inputField styleClass="form-control" value="{!applicantInfo.Driving_Transmission__c}" required="TRUE" id="licensecomfort" />
+                    </div>
+                  </div>
+                  </div>
+                  <!-- end row -->
+                  
+                  <div class="row">
+                    <div class="col-sm-12">
+                    <div class="form-group">
+                      <label class="control-label">Where do you drive?</label>
+                      <apex:inputField styleClass="form-control" value="{!applicantInfo.Driving_Experience__c}" required="TRUE" id="driveroad" />
+                    </div>
+                  </div>
+                  </div>
+                  <!-- end row -->
+                  
+                  <div class="row">
+                    <div class="col-sm-12"><div class="form-group">
+                      <label class="control-label">Do you have experience driving in snow?</label>
+                      <apex:selectRadio styleClass="radio" value="{!applicantInfo.Driving_Snow_Experience__c}" id="drivingsnow" required="true" >
+                        <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                        <apex:selectOption itemValue="No" itemLabel="No"/>
+                      </apex:selectRadio>
+                      <apex:message for="drivingsnow" styleClass="custom-error-radio" id="errormesssnow"/>
+                    </div>
+                  </div>
+                  </div>
+                  <!-- end row -->
+                  
+                  <div class="row">
+                    <div class="col-sm-12">
+                    <div class="form-group">
+                      <!-- <label class="control-label">Please describe your driving experience <span class="info">(Optional)</span></label> -->                      
+                      <label class="control-label">Please describe your driving experience </label>
+                      <apex:inputTextarea html-placeholder="Example: Training courses, how did you learn to drive etc." styleClass="form-control" id="DriveDesc" value="{!applicantInfo.Driving_Experience_Description__c}" required="TRUE" onkeyup="countChar(this, 255, 'DriveDescCount')" onfocus="countChar(this, 255, 'DriveDescCount')"/>
+                      <div class="char-limit bb"><span class="char-count-label">Characters left:</span> <span id="DriveDescCount" class="char-count"> {!255-len(applicantInfo.Driving_Experience_Description__c) }</span> </div>
+                      <apex:message for="DriveDesc" styleClass="custom-error-text" id="errorDriveDesc"/>
+                    </div>
+                  </div>
+                  </div>
+                  <!-- end row -->
+                  
+                  <apex:pageBlock id="Driving_License">
+                    <apex:outputPanel layout="block" rendered="{!IF(DocList.Size == 0, true, false)}">
+                      <p class="alert alert-info">AuPairCare requires all au pairs have a driver's license. Please enter your driver's license information before submitting your application.</p>
+                    </apex:outputPanel>
+                    <apex:outputPanel layout="block" rendered="{!IF(DocList.Size < 2, true, false)}">
+                      <div class="row">
+                        <div class="col-sm-12 margin-t">
+                          <apex:commandlink styleClass="btn btn-link vs2 btn-lg margin-r1" action="{!saveApplication}" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit">
+                            <i class="fa fa-plus"></i> <span>Upload Driving License</span>
+                          </apex:commandlink>
+                           <i class="infobtn fa fa-question-circle" data-toggle="modal" data-target="#drivehelp"></i>
+                     
+                      <div id="drivehelp" class="modal vs1 fade in">
+                       <div class="modal-dialog modal-dialog-lg">
+                       <div class="modal-content">
+                       <a class="closebtn" data-dismiss="modal">
+                            <span class="fa-stack fa-lg ">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-times fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                       <div class="modal-body">
+                       <div class="row"> 
+                       <div class="col-lg-6"> 
+                       <h3 class="inline-block">Sample Document</h3> <a target="_blank" href="https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/documents/portals/apc/pt/app/drivers-license.jpg"><b>(See Full Size)</b></a>
+                     <div class="margin-t4 margin-b4">
+                     <img src="https://s3-us-west-1.amazonaws.com/resources.intraxinc.com/all/documents/portals/apc/pt/app/drivers-license.jpg"/>  
+                     </div>
+                       </div><!-- end column -->
+                       <div class="col-lg-6"> 
+                       <h3>Tips for Photographing Documents</h3>
+
+<p>If you do not have access to a scanner you can use a digital camera or smartphone camera to capture the required documents. Please note that the copy must be clear with all text being readable. Below are a few tips for achieving this.</p>
+  <ul>
+<li>Do not use the flash when copying documents, as that will wash them out.</li>
+<li>The best source of light is sunlight as it is bright enough to get a sharp, readable image.</li>
+<li>Use a dark background for the image. You can place a piece of black or gray poster board or paper below the documents when you photograph them if you don't have dark surface.</li>
+    <li>Keep the images square and centered in the photograph.</li>
+</ul>
+                       </div><!-- end column -->
+                       </div><!--  end row -->
+                     
+                       
+                     
+</div> <!--  end modal body -->
+</div> <!--  end modal content -->
+</div> <!--  end modal dialog -->
+</div> <!-- end modal -->
+
+
+                        </div><!-- end column -->
+                      </div><!--  end row -->
+                    </apex:outputPanel>
+                    <apex:outputPanel layout="block" rendered="{!IF(DocList.Size > 0, true, false)}">
+                      <apex:pageBlock id="Block_ListExperience">
+                        <div class="table-responsive margin-t4">
+                          <apex:pageBlockTable styleClass="table vs2" value="{!DocList}" var="item">
+                            <apex:column headerValue="Document Name">
+                              <apex:commandLink action="{!load}" rerender="" target="_blank">
+                                <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                                <apex:outputText value="{!item.Document_Name__c}"/>
+                              </apex:commandLink>
+                            </apex:column>
+                            <apex:column headerValue="Remove" >
+                              <div class="btn-toolbar no-margin">
+                                <apex:commandLink action="{!iWantMyJSValues}" styleClass="btn-lg" oncomplete="confDelete();" immediate="true" rerender=""> <i class="fa fa-trash-o"></i>
+                                  <apex:param name="docGuid" value="{!item.Document_GUID__c}" assignTo="{!docGuid}"/>
+                                </apex:commandLink>
+                              </div>
+                            </apex:column>
+                          </apex:pageBlockTable>
+                        </div>
+                        <!--  end table responsive --> 
+                      </apex:pageBlock>
+                    </apex:outputPanel>
+                    <apex:outputText value="{!disableFileUploadText}" rendered="{!disableFileUpload}"/>
+                  </apex:pageBlock>
+                  <!--  end driving doc upload --> 
+                  
+                </apex:outputPanel>
+              </apex:pageBlock>
+            </apex:outputPanel>
+            
+            
+            <apex:outputPanel layout="block" rendered="{!applicantinfo.Application_Type__c == 'Renewal'}" id="outputpane2">
+              <div class="row">
+                <div class="col-sm-12">
+                <div class="form-group">
+                  <label class="control-label">Do you have an international driver's license?</label>
+                  <apex:actionRegion >
+                    <apex:selectRadio styleClass="radio" value="{!applicantInfo.International_Drivers_Licence__c}" id="Extdriverlicense" required="true">
+                      <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                      <apex:selectOption itemValue="No" itemLabel="No"/>
+                      <apex:actionSupport event="onclick" rerender="Intlicense" status="Intshowdriving" onComplete="dpInitiate();"/>
+                    </apex:selectRadio>
+                  </apex:actionRegion>
+                  <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="Intshowdriving"/>
+                  <apex:message for="Extdriverlicense" styleClass="custom-error-radio" id="Exterrormessdrive"/>
+                </div>
+              </div>
+                </div>
+              <!-- end row -->
+              
+              <apex:pageBlock id="Intlicense">
+                <apex:outputPanel layout="block" rendered="{!applicantInfo.International_Drivers_Licence__c== 'Yes'}" id="outputpanelIntlicense">
+                  <div class="row">
+                    <div class="col-sm-6"><div class="form-group">
+                      <label class="control-label">Expiration Date</label>
+                      <div class="datepicker" locale="{!user.localeSidKey}">
+                        <apex:inputField styleClass="form-control" value="{!applicantInfo.International_Drivers_Licence_Expires__c}" required="TRUE" id="Extlicenseexp" />
+                      </div>
+                    </div>
+                  </div>
+                  </div>
+                  <!-- end row --> 
+                  
+                </apex:outputPanel>
+              </apex:pageBlock>
+              <div class="row">
+                <div class="col-sm-12">
+                <div class="form-group">
+                  <label class="control-label">Do you have a U.S. driver's license?</label>
+                  <apex:actionRegion >
+                    <apex:selectRadio styleClass="radio" value="{!applicantInfo.Drivers_US_Licence_Indicated__c}" id="Usdriverlicense" required="true">
+                      <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                      <apex:selectOption itemValue="No" itemLabel="No"/>
+                      <apex:actionSupport event="onclick" rerender="Uslicense" status="Usshowdriving" onComplete="dpInitiate();"/>
+                    </apex:selectRadio>
+                  </apex:actionRegion>
+                  <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="Usshowdriving"/>
+                  <apex:message for="Usdriverlicense" styleClass="custom-error-radio" id="Userrormessdrive"/>
+                </div>
+              </div>
+                </div>
+              <!-- end row -->
+              
+              
+              <apex:pageBlock id="Uslicense">
+                <apex:outputPanel layout="block" rendered="{!applicantInfo.Drivers_US_Licence_Indicated__c== 'Yes'}" id="outputpanelUsdriving">
+                  <div class="row">
+                    <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">State</label>
+                      <apex:inputField styleClass="form-control" value="{!applicantInfo.Drivers_US_Licence_State__c}" onblur="CapitalizeName(event.target);" required="TRUE" id="state" />
+                    </div>
+                  </div>
+                  </div>
+                  <!-- end row -->
+                  
+                  <div class="row">
+                    <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Date Received</label>
+                      <div class="datepicker" locale="{!user.localeSidKey}">
+                        <apex:inputField styleClass="form-control" value="{!applicantInfo.Drivers_US_Licence_Received__c}" required="TRUE" id="recelicenseexp" />
+                      </div>
+                    </div>
+                  </div>
+                   <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Expiration Date</label>
+                      <div class="datepicker" locale="{!user.localeSidKey}">
+                        <apex:inputField styleClass="form-control" value="{!applicantInfo.Drivers_US_Licence_Expiration__c}" required="TRUE" id="ExtUslicenseexp" />
+                      </div>
+                    </div>
+                  </div>
+                  </div>
+                  <!-- end row -->
+                 
+                   
+                </apex:outputPanel>
+              </apex:pageBlock>
+              
+              <div class="row">
+                <div class="col-sm-12">
+                <div class="form-group">
+                  <label class="control-label">Do you drive in your current placement?</label>
+                  <apex:selectRadio styleClass="radio" value="{!applicantInfo.Drivers_PlacementExp_Indicated__c}" id="Usdrivecurrtplac" required="true">
+                    <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                    <apex:selectOption itemValue="No" itemLabel="No"/>
+                  </apex:selectRadio>
+                  <apex:message for="Usdrivecurrtplac" styleClass="custom-error-radio" id="Usdriveplace"/>
+                </div>
+              </div>
+              </div>
+              <!-- end row -->
+              
+              <div class="row">
+                <div class="col-sm-12">
+                <div class="form-group">
+                  <label class="control-label">What kind of car are you comfortable driving? </label>
+                  <apex:inputField styleClass="form-control" value="{!applicantInfo.Driving_Transmission__c}" required="TRUE" id="Extlicensecomfort" />
+                </div>
+              </div>
+              </div>
+              <!-- end row -->
+              
+              <div class="row">
+                <div class="col-sm-12">
+                <div class="form-group">
+                  <label class="control-label">Which types of cars do you have experience driving in the U.S.? </label>
+                  <apex:inputField styleClass="form-control" value="{!applicantInfo.US_Car_Type_Experience__c}" required="TRUE" id="ExtdriveUScomfort" />
+                </div>
+              </div>
+              </div>
+              <!-- end row -->
+              
+              
+              <div class="row">
+                <div class="col-sm-12">
+                <div class="form-group">
+                  <label class="control-label">Do you drive with the children in the car?</label>
+                  <apex:selectRadio styleClass="radio" value="{!applicantInfo.Drivers_wChildren_Indicated__c}" id="UsdriveWchild" required="true">
+                    <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                    <apex:selectOption itemValue="No" itemLabel="No"/>
+                  </apex:selectRadio>
+                  <apex:message for="UsdriveWchild" styleClass="custom-error-radio" id="UsdriveWchildren"/>
+                </div>
+              </div>
+              </div>
+              <!-- end row -->
+              <div class="row">
+                <div class="col-sm-12">
+                <div class="form-group">
+                  <label class="control-label">Have you ever been in any accidents or received any tickets?</label>
+                  <apex:actionRegion >
+                    <apex:selectRadio styleClass="radio" value="{!applicantInfo.Drivers_Accident_Indicated__c}" id="driveraccident" required="true">
+                      <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                      <apex:selectOption itemValue="No" itemLabel="No"/>
+                      <apex:actionSupport event="onclick" rerender="Received_Ticket" status="showaccidentdetail" onComplete="dpInitiate();"/>
+                    </apex:selectRadio>
+                  </apex:actionRegion>
+                  <apex:message for="driveraccident" styleClass="custom-error-radio" id="driveaccident"/>
+                  <apex:actionStatus onstart="disableSubmit();" onstop="enableSubmit();" startStyleClass="feedback-st" startText="Loading. Please wait..." id="showaccidentdetail"/>
+                </div>
+              </div>
+              </div>
+              <!-- end row -->
+              
+              <apex:pageBlock id="Received_Ticket">
+                <apex:outputPanel layout="block" rendered="{!applicantInfo.Drivers_Accident_Indicated__c== 'Yes'}" id="outputpaneldriving">
+                  <div class="row">
+                    <div class="col-sm-12">
+                    <div class="form-group">
+                      <label class="control-label">If yes, please describe</label>
+                      <apex:inputTextarea styleClass="form-control" id="accidentIns" value="{!applicantInfo.Drivers_Accident_Detail__c}" required="True" onkeyup="countChar(this, 255, 'ContacInsCount')"/>
+                      <div class="char-limit bb"><span class="char-count-label">Characters left:</span> <span id="ContacInsCount" class="char-count"> {!255-len(personInfo.Contact_Instructions__c) }</span> </div>
+                      <apex:message for="accidentIns" styleClass="custom-error-text" id="erroraccidentContac" /> 
+                    </div>
+                  </div>
+                  </div>
+                  <!-- end row --> 
+                </apex:outputPanel>
+              </apex:pageBlock>
+              
+              <apex:pageBlock id="Driving_License">
+                <apex:outputPanel layout="block" rendered="{!IF(DocList.Size == 0, true, false)}">
+                  <p class="alert alert-info">AuPairCare requires all au pairs have a driver's license. Please enter your driver's license information before submitting your application.</p>
+                </apex:outputPanel>
+               
+                <apex:outputPanel layout="block" rendered="{!IF(DocList.Size < 2, true, false)}">
+                  <div class="row">
+                    <div class="col-sm-12 margin-t">
+                      <apex:commandlink styleClass="btn btn-link vs2 btn-lg margin-r1" action="{!saveApplication}" immediate="false" reRender="webform" onComplete="popModal();" status="onsubmit">
+                        <i class="fa fa-plus"></i> <span>Upload Driving License</span>
+                      </apex:commandlink>
+                     
+                    </div>
+                  </div>
+                  <br/>
+                  <!-- end row --> 
+                </apex:outputPanel>
+                
+                <apex:outputPanel layout="block" rendered="{!IF(DocList.Size > 0, true, false)}">
+                  <apex:pageBlock id="Block_ListExperience">
+                    <div class="table-responsive margin-t4">
+                      <apex:pageBlockTable styleClass="table vs2" value="{!DocList}" var="item">
+                        <apex:column headerValue="Document Name">
+                          <apex:commandLink action="{!load}" rerender="" target="_blank">
+                            <apex:param name="docGuid" value="{!item.Document_GUID__c}"/>
+                            <apex:outputText value="{!item.Document_Name__c}"/>
+                          </apex:commandLink>
+                        </apex:column>
+                        <apex:column headerValue="Remove" >
+                          <div class="btn-toolbar no-margin">
+                            <apex:commandLink action="{!iWantMyJSValues}" styleClass="btn-lg" oncomplete="confDelete();" immediate="true" rerender=""> <i class="fa fa-trash-o"></i>
+                              <apex:param name="docGuid" value="{!item.Document_GUID__c}" assignTo="{!docGuid}"/>
+                            </apex:commandLink>
+                          </div>
+                        </apex:column>
+                      </apex:pageBlockTable>
+                    </div>
+                    <!--  end table responsive --> 
+                  </apex:pageBlock>
+                </apex:outputPanel>
+                <apex:outputText value="{!disableFileUploadText}" rendered="{!disableFileUpload}"/>
+              </apex:pageBlock>
+              <!--  end driving doc upload --> 
+              
+            </apex:outputPanel>
+            
+            <div class="row margin-t6">
+              <div class="col-sm-12">
+                <apex:outputLink styleClass="btn btn-link btn-lg"  rendered="{!applicantInfo.Application_Type__c=='Original'}" value="/apex/apc_ap_main_swimming_experience?id={!applicantInfo.Id}&docType=Lifeguard" id="backlinkinfo"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                <apex:outputLink styleClass="btn btn-link btn-lg"  rendered="{!applicantInfo.Application_Type__c=='Renewal'}" value="/apex/apc_ap_basic_program_preferences?id={!applicantInfo.Id}" id="backlinkpreferences"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                <apex:commandlink rendered="{!applicantInfo.Application_Type__c=='Original'}" styleClass="btn btn-primary btn-lg" status="onsubmit" action="{!navigator}" id="nextlink" reRender="webform" onComplete="rerunjs();">
+                  <apex:param name="nextPage" value="{!IF(applicantInfo.Application_Type__c='Original','/apex/apc_ap_basic_health_info','/apex/apc_ap_main_experience')}" />
+                  <apex:param name="reDirectPage" value="true" />
+                  <apex:param name="pageId" value="018"/>
+                  <apex:commandButton value="Save & Continue" id="continuebutton"/>
+                </apex:commandlink>
+                <apex:commandlink rendered="{!applicantInfo.Application_Type__c=='Renewal' &&  CONTAINS(applicantinfo.PageStatus_Complete__c,'018') }" styleClass="btn btn-primary btn-lg" status="onsubmit" action="{!navigator}" id="nextbuttonRew" reRender="webform" onComplete="rerunjs();">
+                  <apex:param name="nextPage" value="/apex/apc_ap_main_add_aupair_experience" />
+                  <apex:param name="reDirectPage" value="true" />
+                  <apex:param name="pageId" value="018"/>
+                  <apex:commandButton value="Save & Continue" id="continuebuttonRenew"/>
+                </apex:commandlink>
+                
+              </div>
+            </div>
+            <div class="modal fade vs1" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                  <div class="modal-body">
+                    <p>Are you sure you want to remove this file?</p>
+                  </div>
+                  <div class="modal-footer">
+                    <apex:commandLink styleClass="btn btn-primary" action="{!deletefile}" immediate="true">
+                      <apex:param name="driveparam" value="true" assignTo="{!driveparam}" />
+                      <apex:commandButton value="Yes" id="yesbutton"/>
+                    </apex:commandLink>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--  end modal -->
+            
+            <div class="modal fade vs1 modal-widget" id="myModalUpload" tabindex="-1" role="dialog" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title">Upload Driving License</h4>
+                  </div>
+                  <div class="modal-body">
+                    <iframe width="100%" height="400" frameborder="0" scrolling="no" src="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType={!$CurrentPage.parameters.docType}&retparam={!retParam}"></iframe>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--  end modal --> 
+            
+          </apex:form>
+        </div>
+        <!-- end column  -->
+        
+        <div id="app-side" class="col-md-3 col-md-pull-8">
+          <c:menu_side_apc_ap_basic ApplicantInfo="{!applicantInfo}" />
+        </div>
+        <!-- end column  --> 
+      </div>
+      <!-- end row --> 
+      
+      <script>
+var j$ = jQuery.noConflict();
+
+function confDelete(){
+j$('#myModal').modal();
+} 
+  
+function popModal(){
+var auxerr= j$('.custom-error-pagelevel').attr('role');
+//alert(auxerr);
+    if(auxerr=="alert"){
+    }else{
+        j$('#myModalUpload').modal();
+    }
+} 
+
+function checkingBool(){
+
+            if(j$('input.no_exp:checkbox').is(':checked')){
+            alert('test');
+            //j$('.licExpire').removeAttr('disabled');
+            return false;
+             //$('#licExpire').hide();  
+            }else{
+            alert('test1');
+            //j$('.licExpire').attr('disabled', 'disabled');
+             //$('#licExpire').show(); 
+            return true;
+            }
+        }
+    
+</script> 
+
+
+    </apex:define>
+  </apex:composition>
+</apex:page>

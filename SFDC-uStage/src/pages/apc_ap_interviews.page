@@ -1,0 +1,319 @@
+<apex:page id="apc_ap_interviews" docType="html-5.0" applyHtmlTag="false" applyBodyTag="false" title="Your Interviews" standardStylesheets="false" showHeader="false" controller="home_controller">
+<apex:composition template="intraxtemplate_vs3">
+<apex:define name="body">
+<style>
+.list-view.form-vertical .control-label {
+    margin-bottom: 0;
+}
+.list-view.form-vertical .form-group {
+    margin-bottom: 10px;
+}
+.list-view.vs1 .item .item-image {
+    position: relative;
+    width: 100%;
+    background: #dcdcdc;
+    text-align: center;
+}
+.item-image-male, .item-image-female {
+    min-height: 160px;
+}
+.item-image-male, .item-image-female {
+    min-height: 160px;
+}
+.phot-pre-img {
+  /* display: block; */
+  height: 160px;
+}
+</style>
+<apex:form id="webform">
+ 
+<apex:outputPanel rendered="{!matchList.size == 0}">
+
+    <div class="row">
+    <div class="col-sm-8 center-block center-text">
+
+<h1 class="no-margin-t">Your Interviews</h1>
+</div><!-- end col -->
+</div><!-- end row -->
+
+ <apex:outputPanel layout="block" id="nointerviews" rendered="{!selectionList.size == 0}">
+<div class="row">
+<div class="col-md-8 center-block">
+ <p class="lead box gray center-text">You currently do not have any active interviews.</p>
+ </div><!-- end col -->
+</div><!-- end row -->
+</apex:outputPanel>
+    
+ <apex:outputPanel layout="block" id="activeList" rendered="{!selectionList.size > 0}">
+    <apex:pageBlock id="CurrentInterviewblk">
+        
+    <div class="row">
+        <div class="col-md-8 center-block">
+         <h2 class="margin-b4">Current Interviews</h2> 
+        </div>
+    </div><!-- end row --> 
+        
+    <div class="row">
+    <div class="col-md-8 center-block">
+      <div class="list-view form-vertical">
+        <apex:repeat id="repeatActiveInterview" value="{!selectionList}" var="activeseletionlst">
+         <div class="row">
+            <div class="col-sm-3 center-text">
+             <apex:outputLink value="/apex/apc_hf_profile?id={!activeseletionlst.Position__c}" id="linkprofinfo1">
+                <apex:image styleClass="phot-pre-img" value="{!returnURLMap[activeseletionlst.Position__c]}" rendered="{!returnURLMap[activeseletionlst.Position__c] != 'no-picture'}"/>
+                 <apex:image styleClass="item-image-male" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/male-profile-med.png')}"  rendered="{!returnURLMap[activeseletionlst.Position__c] == 'no-picture' && ( activeseletionlst.Position__r.Host_Company_Id__r.Gender__pc == 'Male' || activeseletionlst.Position__r.Host_Company_Id__r.Gender__pc == null)}"/>
+                 <apex:image styleClass="item-image-female" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/female-profile-med.png')}" rendered="{!returnURLMap[activeseletionlst.Position__c] == 'no-picture' && activeseletionlst.Position__r.Host_Company_Id__r.Gender__pc == 'Female'}"/>
+              </apex:outputLink>
+            </div>
+            <!--  end col -->
+            
+            <div class="col-sm-9">
+              <h3 class="no-margin-t">{!activeseletionlst.Position__r.Host_Company_Id__r.LastName}</h3>
+              <div class="row">
+            
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label class="control-label">Email</label>
+                    <apex:outputText value="{!activeseletionlst.Position__r.Host_Company_Id__r.PersonEmail}"/>
+                  </div>
+                </div>
+                  
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label class="control-label">City</label>
+                    <apex:outputText value="{!activeseletionlst.Position__r.Host_Company_Id__r.billingcity}"/>
+                  </div>
+                </div>
+                  
+                 <div class="col-sm-4">
+                  <div class="form-group">
+                    <label class="control-label">State</label>
+                    <apex:outputText value="{!activeseletionlst.Position__r.Host_Company_Id__r.personmailingstate}"/>
+                  </div>
+                </div>
+
+              </div>
+              <!-- end row -->
+
+              <div class="row margin-t2">
+                <div class="col-sm-12">
+                  <label class="control-label">They will be able to reach out to you via email, skype or phone until 
+                      <Span><apex:outputText value="{0,date, MMMM d, yyyy h:mm a}" >
+                         <apex:param value="{!activeseletionlst.Interview_End_Date__c+offset}"/>
+                      </apex:outputText></Span>		
+                  </label>
+                </div>
+                <!-- end col --> 
+              </div>
+              <!-- end row --> 
+            </div>
+            <!-- end col --> 
+          </div>
+          <!-- end row -->
+          <hr class="margin-b3 "/>
+        </apex:repeat>
+      </div>
+       </div>
+            <!-- end col --> 
+          </div>
+          <!-- end row -->
+    </apex:pageBlock>
+  </apex:outputPanel> 
+    
+  <!--PastInterview-->
+  <apex:outputPanel layout="block" id="inactiveListpanel" rendered="{!selectionListInactive.size > 0}">
+    <apex:pageBlock id="pastInterviewblk">
+    <div class="row">
+    <div class="col-md-8 center-block">
+      <div class="list-view form-vertical">
+        <h2 class="margin-b4">Past Interviews</h2>
+        <apex:repeat id="repeatInActiveInterview" value="{!PastSelections}" var="mseletionlst">
+          <div class="row margin-b3">
+            <div class="col-sm-3 center-text">
+              <apex:outputText >
+              <apex:outputLink value="/apex/apc_hf_profile?id={!mseletionlst.se.Position__c}" id="linkprofinfo1">
+               <apex:image styleClass="phot-pre-img" value="{!returnURLMap[mseletionlst.se.Position__c]}" rendered="{!returnURLMap[mseletionlst.se.Position__c] != 'no-picture'}"/>
+                <apex:image styleClass="item-image-male" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/male-profile-med.png')}"  rendered="{!returnURLMap[mseletionlst.se.Position__c] == 'no-picture' && ( mseletionlst.se.Position__r.Host_Company_Id__r.Gender__pc == 'Male' || mseletionlst.se.Position__r.Host_Company_Id__r.Gender__pc == null)}"/>
+                <apex:image styleClass="item-image-female" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/female-profile-med.png')}" rendered="{!returnURLMap[mseletionlst.se.Position__c] == 'no-picture' && mseletionlst.se.Position__r.Host_Company_Id__r.Gender__pc == 'Female'}"/>
+              </apex:outputLink>
+              </apex:outputText>
+            </div>
+            
+            <div class="col-sm-9">
+              <h3 class="no-margin-t">{!mseletionlst.se.Position__r.Host_Company_Id__r.LastName}</h3>
+           <div class="row">
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label class="control-label">Email</label>
+                    <apex:outputText value="{!mseletionlst.se.Position__r.Host_Company_Id__r.PersonEmail}"/>
+                  </div>
+                </div>
+                  
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label class="control-label">City</label>
+                    <apex:outputText value="{!mseletionlst.se.Position__r.Host_Company_Id__r.billingcity}"/>
+                  </div>
+                </div>
+                  
+                 <div class="col-sm-4">
+                  <div class="form-group">
+                    <label class="control-label">State</label>
+                    <apex:outputText value="{!mseletionlst.se.Position__r.Host_Company_Id__r.personmailingstate}"/>
+                  </div>
+                </div>
+
+              </div>
+              <!-- end row -->
+
+            </div><!-- end col -->
+          </div><!-- end row -->
+          <hr class="margin-b3"/>
+        </apex:repeat>
+      </div>
+       </div>
+            <!-- end col --> 
+          </div>
+          <!-- end row -->
+    </apex:pageBlock>
+      
+       <div class="row">
+    <div class="col-md-8 center-block">
+       <div class="sort-container vs1 form-vertical">
+      <div class="sort vs1 paginate">
+        <apex:pageblock id="selectedPageBlock2">
+          <apex:commandLink status="pleasewait01" reRender="pastInterviewblk,selectedPageBlock2" rendered="{!hasPrevious}" action="{!con.previous}" title="Next Page">
+            <apex:commandButton disabled="{!con.hasPrevious}"/>
+            <i class="fa fa-chevron-left"></i> 
+         </apex:commandLink>
+            <!-- <apex:SelectList value="{!pageNumberSelected}" StyleClass="form-control short" size="1">
+                              <apex:selectOptions value="{!pageNumber}"/>
+                      <apex:actionSupport event="onchange" action="{!setPageNumber}" rerender="pastInterviewblk,selectedPageBlock2" status="pleasewait01"/>
+              </apex:SelectList>-->
+            {!pageNumber} of {!totalPages}
+            
+          <apex:commandLink status="pleasewait01" reRender="pastInterviewblk,selectedPageBlock2" rendered="{!hasNext}" action="{!con.next}" title="Last Page">
+            <apex:commandButton disabled="{!con.hasNext}"/>
+            <i class="fa fa-chevron-right"></i> 
+         </apex:commandLink>
+        </apex:pageblock>
+    </div>
+   </div>
+   </div>
+   </div>
+  </apex:outputPanel><!--End Past Interviews-->
+    
+  </apex:outputPanel> 
+  
+  
+  
+      
+    <apex:outputPanel layout="block" rendered="{!If(matchConf.Status__c=='Requested' && matchConf.Offer_Status__c=='Offered',true,false)}">
+    <div id="hp-body" class="row">
+        <div class="col-md-8 center-block">
+          <div class="hp-block orange-border padding-6">
+            <h2 class="margin-b1">New Match Request!</h2>
+           <p class="lead">The {!matchConf.Position_Name__r.Host_Company_Id__r.LastName} Family would like you to be their au pair.
+          They would like you to arrive to their home on <apex:outputText value=" {0,date,MM'/'dd'/'yyyy}"><apex:param value="{!matchConf.Arrival_Date__c}"/></apex:outputText>
+      </p>
+           
+           <div class="ap-teaser">
+  <div class="item ap-teaser-photo">
+    <apex:outputText rendered="{!NOt(matchConf.Position_Name__c == '')}">
+               <apex:variable var="hostAccGender" value="{!matchConf.Position_Name__r.Host_Company_Id__r.Gender__pc}" />
+               <apex:variable var="sRetURL" value="{!ReturnURL}"/>
+  <apex:outputLink value="/apex/apc_hf_profile?id={!matchConf.Position_Name__c}" id="linkprofinfo2">
+                   <apex:image url="{!sRetURL}" rendered="{!IF(sRetURL!='' && sRetURL!=null, true, false)}"/>       
+                   <apex:image value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/male-profile-med.png')}"  rendered="{!(sRetURL=='' || sRetURL==null) && (ISBLANK(hostAccGender) || hostAccGender == 'Male')}"/>
+                   <apex:image value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/female-profile-med.png')}"  rendered="{!(sRetURL=='' || sRetURL==null) && hostAccGender == 'Female'}"/>
+                  </apex:outputLink>  
+                  </apex:outputText> 
+  </div> 
+  <div class="item ap-teaser-name">
+  {!matchConf.Position_Name__r.Host_Company_Id__r.LastName} Family
+  </div> 
+  <div class="item ap-teaser-other urgent">
+  <label>Your Deadline to Respond</label><br/>
+ <apex:outputText value="{0,date, MMMM d, yyyy h:mm a}" >
+                <apex:param value="{!matchConf.Request_Expiration__c+offset}"/>
+            </apex:outputText>
+</div> 
+  <div class="item ap-teaser-other">
+  <label>Proposed Arrival Date</label><br/>
+  <apex:outputText value="{0,date,MM'/'dd'/'yyyy}"><apex:param value="{!matchConf.Arrival_Date__c}"/></apex:outputText> 
+ 
+</div> 
+</div>
+   
+          <apex:outputLink styleClass="btn btn-lg btn-primary" id="respondbtn" value="/apex/apc_ap_match_request">
+            <apex:outputText >Respond to Request</apex:outputText>
+          </apex:outputLink> 
+        
+         </div>
+          </div>
+          </div>
+          </apex:outputPanel>
+  
+          
+          
+          
+      
+    <apex:outputPanel layout="block" rendered="{!If(matchConf.Status__c=='Requested' && matchConf.Offer_Status__c=='Accepted',true,false)}">
+             <div id="hp-body" class="row">
+      <div class="col-md-8 center-block">
+      <div class="hp-block orange-border padding-6">
+            <h2 class="margin-b1">You Have Accepted a Match Request</h2>
+            <apex:outputText rendered="{!NOt(matchConf.Position_Name__c == '')}">
+              <apex:variable var="hostAccGender" value="{!matchConf.Position_Name__r.Host_Company_Id__r.Gender__pc}" />
+               <apex:variable var="sRetURL" value="{!ReturnURL}"/>
+           <p class="lead">We will let you know as soon as the <apex:outputLink value="/apex/apc_hf_profile?id={!matchConf.Position_Name__c}" id="linkprofinfo3">{!matchConf.Position_Name__r.Host_Company_Id__r.Name} Family</apex:outputLink> finalizes their match with you. </p>
+<p class="lead">They would like you to arrive to their home on <apex:outputText value=" {0,date,MM'/'dd'/'yyyy}" ><apex:param value="{!matchConf.Arrival_Date__c}"/></apex:outputText>
+</p>
+          
+                </apex:outputText>
+             
+             <p class="lead no-margin">We will let you know as soon as they finalize their match.</p>
+             </div>
+             </div>
+             </div>
+     </apex:outputPanel>
+            
+            
+      <apex:outputPanel layout="block" rendered="{!If( matchConf.Status__c=='Confirmed' && matchConf.Offer_Status__c=='Accepted',true,false)}">
+       <div id="hp-body" class="row">
+       <div class="col-md-8 center-block">
+      <div class="hp-block padding-6 green-border">
+            <h2 class="margin-b1">You Are Going to {!matchConf.Position_Name__r.Host_Company_Id__r.BillingCity}, United States!</h2>
+
+       <p class="lead no-margin">
+              <apex:outputText rendered="{!NOt(matchConf.Position_Name__c == '')}">
+               <apex:variable var="hostAccGender" value="{!matchConf.Position_Name__r.Host_Company_Id__r.Gender__pc}" />
+               <apex:variable var="sRetURL" value="{!ReturnURL}"/>
+       <apex:outputLink value="/apex/apc_hf_profile?id={!matchConf.Position_Name__c}" id="linkprofinfo4">
+       <b>{!matchConf.Position_Name__r.Host_Company_Id__r.Name} Family</b>
+       </apex:outputLink>
+       </apex:outputText>
+        has finalized your match by completing the remaining steps and will meet you on 
+        <b>
+        <apex:outputText value="{0,date,MM'/'dd'/'yyyy}" ><apex:param value="{!matchConf.Start_Date__c}"/></apex:outputText>
+        </b>
+        . You will arrive at New Jersey on 
+        <b>
+        <apex:outputText value=" {0,date,MM'/'dd'/'yyyy}" ><apex:param value="{!matchConf.Engagement__r.Engagement_Start__c}"/></apex:outputText>
+        </b>
+       for your training at the Au pair Academy.
+       </p>
+     
+     
+     
+          </div>
+          </div>
+           </div>
+          </apex:outputPanel>
+     
+    
+</apex:form>
+</apex:define>
+</apex:composition>
+
+</apex:page>

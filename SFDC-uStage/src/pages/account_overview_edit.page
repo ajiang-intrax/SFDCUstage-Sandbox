@@ -1,0 +1,129 @@
+<apex:page docType="html-5.0" id="portalUserProfilePage"
+	controller="MyProfileEditPageController" standardStylesheets="false"
+	showHeader="false" title="Account Overview">
+	<apex:composition template="intraxtemplate_vs3">
+		<apex:define name="body">
+
+			<div class="row">
+
+				<div class="col-md-7 col-md-push-3">
+						
+
+							<apex:pageBlock id="UserDetail">
+                            <h1><apex:outputText value="{!$Label.T_0348}" /></h1>     
+								<p class="lead">
+									<apex:outputText value="{!$Label.T_0033}" />
+								</p>
+                              <apex:form styleClass="form-vertical ws-validate" id="webform">
+							 <apex:pageMessages /> 
+
+								<div class="row">
+								<div class="col-sm-6">
+									<div class="form-group">
+										<apex:outputLabel styleClass="control-label" value="{!$Label.T_0004}" for="editfirstname" />
+										<apex:inputField styleClass="form-control" id="editfirstName"
+											value="{!user.firstName}" required="true" />
+								</div>
+								</div><!--  end col -->
+								<div class="col-sm-6">
+								<div class="form-group">
+							<apex:outputLabel styleClass="control-label" value="{!$Label.T_0005}" for="editlastname" />
+										<apex:inputField styleClass="form-control" id="editlastName"
+											value="{!user.lastName}" required="true" />
+								</div>
+								</div> <!--  end col -->
+								
+								</div><!--  end row -->
+								
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="form-group">
+								<apex:outputLabel styleClass="control-label" value="{!$Label.T_0006}" for="editemail" />
+										<apex:inputText label="Email Field" styleClass="form-control" id="editemail"
+											value="{!DbUserEmail}" required="true" />
+									    <apex:message for="editemail" styleClass="custom-error-text" id="errormess5"/>	
+								</div>
+								</div> <!--  end col -->
+								</div><!--  end row -->
+
+<apex:outputPanel layout="block" rendered="{!NOT(user.User_Interests__c == 'Hosting an au pair' || user.User_Interests__c == 'Becoming an au pair')}">
+	                    <div class="row">
+								<div class="col-sm-12">
+									<div class="form-group localefield">
+											 <apex:outputLabel styleClass="control-label" for="editlocale">Preferred Date Format</apex:outputLabel>
+								<!--  	<apex:inputField styleClass="form-control" id="editlocale"
+											value="{!user.localesidkey}" required="true" />-->
+											
+											 <apex:selectList styleClass="form-control input-lg req"
+                                        id="lc" value="{!user.localesidkey}" size="1">
+                      <apex:selectOption itemValue=" " itemLabel="Preferred Date Format" />
+                      <apex:selectOption itemValue="en_US" itemLabel="MM/DD/YYYY" />
+                      <apex:selectOption itemValue="en_GB" itemLabel="DD/MM/YYYY" />
+                    </apex:selectList>
+								</div>
+								</div> <!--  end col -->
+								
+								
+						   <!--  <div class="col-sm-6">
+								<div class="form-group">
+							<apex:outputLabel styleClass="control-label col-sm-3" value="{!$Label.T_0208}" for="Language" />
+										<apex:inputField styleClass="form-control" id="editlanguage"
+											value="{!user.languagelocalekey}" />
+								</div>
+								</div>
+								-->
+								 <!--  end col -->
+								
+								
+								
+								</div><!--  end row -->
+								
+								<div class="row">
+								<div class="col-sm-12">
+								<div class="form-group">
+								<apex:outputLabel styleClass="control-label" value="{!$Label.T_0012}" for="edittimezone" />
+								<apex:inputField styleClass="form-control" id="edittimezone" value="{!user.timezonesidkey}" />
+								</div>
+								</div> <!--  end col -->
+								</div><!--  end row -->
+								
+		</apex:outputPanel>							
+
+							
+
+
+								<div class="row">
+								<div class="col-sm-12 margin-t">
+										<apex:commandLink styleClass="btn btn-primary btn-lg margin-r" id="save" action="{!save}"
+											rerender="UserDetail">
+											<apex:commandButton value="{!$Label.T_0036}" />
+										</apex:commandLink>
+										<apex:commandLink styleClass="btn btn-link btn-lg" id="cancel" action="{!cancel}"
+											rerender="UserDetail" immediate="true">
+											<span><apex:outputText value="{!$Label.T_0037}" /></span>
+										</apex:commandLink>
+								</div>	<!--  end col -->
+								</div>  <!--  end row -->
+							</apex:form>	
+							</apex:pageBlock>
+						
+				</div>
+				<!--  end column -->
+
+				<div class="col-md-3 col-md-pull-7">
+					<c:menu_side_account_settings />
+				</div>
+				<!--  end column -->
+
+			</div>
+			<!--  end row -->
+
+
+			<script>
+    var j$ = jQuery.noConflict();
+    j$('.localefield option[value="68"]').remove();
+     </script>
+
+		</apex:define>
+	</apex:composition>
+</apex:page>

@@ -1,0 +1,30 @@
+<apex:component controller="IGI_HC_Controller" >
+	<apex:form >   
+				
+				<h2>Welcome,&nbsp; 
+					<apex:outputText value="{!$User.FirstName}"/>
+				</h2>
+                <div class="row">
+					
+					<!-- Panel to hold the page content components -->
+					<apex:outputPanel styleClass="span8">  
+						<c:Block_HPContent />    
+					</apex:outputPanel>  
+                    
+                    <!-- Panel to hold the Page Quick Links --> 
+                   
+					<!-- <apex:outputPanel styleClass="span4">  
+						<c:Block_My_Matches />
+					</apex:outputPanel> 
+                     -->
+                     <!-- 
+                    <apex:outputPanel styleClass="span4">  
+					Photo goes here  
+					</apex:outputPanel> 
+					 -->  
+					  
+				</div>  
+				 <!-- end row -->
+ 				         
+	</apex:form>
+</apex:component>

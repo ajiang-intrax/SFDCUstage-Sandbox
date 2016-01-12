@@ -1,0 +1,230 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false"
+	title="Childcare Reference Information" Controller="APC_Reference_Controller"
+	language="{!reference.Reference_Language__c}" action="{!checkStatus}"
+	standardStylesheets="false" showHeader="false" id="apc_ap_form_personal_reference"> 
+  <apex:composition template="intraxtemplate_vs3"> 
+    <apex:define name="body">
+<style>
+#content-zone {
+background: #f8f8f8;
+}
+.refer-box{background: #fff;
+border:#ccc solid 1px;   
+border-radius: 5px;
+padding:60px;}
+</style>	
+   		
+   		<div class="row">
+   		<div class="col-md-8 center-block refer-box">
+   		
+   		<apex:image styleClass="center-block" url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/logos/medium-logo-aupaircare.png')}"/>
+   		
+   		<apex:form styleClass="form-vertical ws-validate" id="webform">
+	        	
+	        	<apex:outputpanel layout="block" rendered="{!ReferenceStatus == 'Active' && Status == 'Incomplete'}">	
+	        	
+	        	<div class="row margin-b4">
+			    <div class="col-sm-12 center-text margin-t2">
+	        	<h1><apex:outputText value="{!$Label.T_0425}" /></h1>
+	        	<apex:Messages styleClass="custom-error-pagelevel" id="messageapex1" />
+	            <!-- REFERENCE INTRO -->
+	            <p class="lead"><apex:outputText value="{!$Label.T_0431}" /></p>
+	            </div><!--  end column -->
+              	</div><!--  end row -->
+              	
+              	
+	            <!-- REFERENCE NAME -->
+	            <p class="margin-b3"><label><apex:outputText value="{!$Label.T_0381}" />:</label> {!primaryApplicant.Name}</p>
+	            
+	            <div class="row">
+              	<div class="col-sm-6">
+                <div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0382}" /></label>
+                <apex:inputField styleClass="form-control" value="{!reference.Time_Known__c}" required="TRUE" id="timeknown" />
+              	</div>
+              	</div><!--  end column -->
+              	<div class="col-sm-6">
+                <div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0411}" /></label>
+                <apex:inputField styleClass="form-control" value="{!reference.Relation_To_Participant__c}" required="TRUE" id="relToPart" />
+              	</div>
+              	</div><!--  end column -->
+              	</div><!--  end row -->
+              	
+              	<div class="row">
+              	<div class="col-sm-12">
+              	<div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0412}" /></label>
+                <apex:inputField styleClass="form-control" value="{!reference.Participant_Traits__c}" required="TRUE" id="traits" />
+              	</div>
+              	</div><!--  end column -->
+              	</div><!--  end row -->
+             
+             	<div class="row">
+              	<div class="col-sm-12">
+              	<div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0427}" /></label>
+                <apex:actionRegion >
+                <apex:selectRadio styleClass="radio" value="{!reference.Allow_AuPair__c}" id="allow" required="true" >
+                  <apex:selectOption itemValue="Yes" itemLabel="{!$Label.T_0327}"/>
+                  <apex:selectOption itemValue="No" itemLabel="{!$Label.T_0328}"/>
+                <apex:actionSupport event="onclick" rerender="allowBlock" status="show"/>
+                </apex:selectRadio>
+                </apex:actionRegion>
+                <apex:actionStatus startStyleClass="feedback-st" startText="Loading. Please wait..." id="show"/>
+                <apex:message for="allow" styleClass="custom-error-radio" id="errormessallow"/>
+                </div>
+              	</div><!--  end column -->
+              	</div><!--  end row -->
+             
+	            <apex:pageBlock id="allowBlock">
+              	<apex:outputPanel layout="block" rendered="{!reference.Allow_AuPair__c == 'No'}" id="outputpanel4">
+	            <div class="row">
+              	<div class="col-sm-12">
+	            <div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0384}" /></label>
+                <apex:inputTextarea styleClass="form-control" id="Suitability" value="{!reference.Participant_Suitability__c}"
+						required="TRUE" onkeyup="countChar(this, 510, 'SuitabilityCount')" onfocus="countChar(this, 510, 'SuitabilityCount')" />
+                    <div class="char-limit bb"> <span class="char-count-label">Characters left:</span><span id="SuitabilityCount" class="char-count">{!510-len(reference.Data_Verified_Description__c)}</span> </div>
+                    <apex:message for="Suitability" styleClass="custom-error-text" id="errormesnarrativeUS" />
+                </div>
+                </div><!--  end column -->
+              	</div><!--  end row -->
+              	</apex:outputPanel>
+              	</apex:pageBlock>
+                              
+                <div class="row">
+              	<div class="col-sm-12">
+              	<div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0401}" /></label>
+                <apex:actionRegion >
+                <apex:selectRadio styleClass="radio" value="{!reference.Recommend_Participation__c}" id="particip" required="true" >
+                  <apex:selectOption itemValue="Yes" itemLabel="{!$Label.T_0327}"/>
+                  <apex:selectOption itemValue="No" itemLabel="{!$Label.T_0328}"/>
+                 <apex:actionSupport event="onclick" rerender="recomBlock" status="showrec"/>
+                </apex:selectRadio>
+                </apex:actionRegion>
+                <apex:actionStatus startStyleClass="feedback-st" startText="Loading. Please wait..." id="showrec"/>
+                <apex:message for="particip" styleClass="custom-error-radio" id="errormesspart"/>
+                </div>
+              	</div><!--  end column -->
+              	</div><!--  end row -->
+              	
+              	<apex:pageBlock id="recomBlock">
+              	<apex:outputPanel layout="block" rendered="{!reference.Recommend_Participation__c == 'No'}" id="outputpanel5">
+	            <div class="row">
+              	<div class="col-sm-12">
+	            <div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0402}" /></label>
+                <apex:inputTextarea styleClass="form-control" id="RcomendDescrip" value="{!reference.Recommend_Participation_Description__c}"
+						required="TRUE" onkeyup="countChar(this, 510, 'RcomendDescripCount')" onfocus="countChar(this, 510, 'RcomendDescripCount')" />
+                    <div class="char-limit bb"> <span class="char-count-label">Characters left:</span><span id="RcomendDescripCount" class="char-count">{!510-len(reference.Recommend_Participation_Description__c)}</span> </div>
+                    <apex:message for="RcomendDescrip" styleClass="custom-error-text" id="errormerecomend" />
+                </div>
+                </div><!--  end column -->
+              	</div><!--  end row -->
+              	</apex:outputPanel>
+              	</apex:pageBlock>
+                
+                <div class="row">
+              	<div class="col-sm-6">
+              	<div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0403}" /></label>
+                <apex:inputField onblur="CapitalizeName(event.target);" styleClass="form-control" value="{!reference.Name}" required="TRUE" id="name" />
+              	</div>
+              	</div><!--  end column -->
+              	</div><!--  end row -->
+              	
+              	<div class="section-title"><apex:outputText value="{!$Label.T_0404}" /></div>
+              	
+              	 <div class="row"> 
+	              <div class="col-sm-6">
+	              <div class="form-group">
+	                <label class="control-label"><apex:outputText value="{!$Label.T_0405}" /></label>
+	                <apex:actionRegion >
+	                  <apex:selectList styleClass="form-control" value="{!reference.Phone_Country_Code__c}" multiselect="false" required="TRUE" id="countrycode" size="1">
+	                    <apex:selectOption itemValue="" itemLabel="Select Country Code" />
+	                    <apex:selectOptions value="{!listCountryCodeOptions}" />
+	                    <apex:actionSupport event="onchange" rerender="phonecode" status="showcode" oncomplete="noalphachar();" />
+	                  </apex:selectList>
+	                </apex:actionRegion>
+	               
+	                <apex:message for="countrycode" styleClass="custom-error-radio" id="apexmess1" />
+	              </div>
+	              </div>
+	               <div class="col-sm-6">
+	              <div class="form-group">
+	                <label class="control-label"><apex:outputText value="{!$Label.T_0406}" /></label>
+	                <apex:outputpanel id="phonecode" layout="block">
+	                  <div class="input-group"> <span class="input-group-addon">{!reference.Phone_Country_Code__c}</span>
+	                    <apex:inputField styleClass="form-control onlynumber" value="{!reference.Phone__c}" required="TRUE" id="phone" />
+	                  </div>
+	                </apex:outputpanel>
+	              </div>
+	              </div>
+	               </div><!--  end row -->
+              	 
+                <div class="row">
+              	<div class="col-sm-12">
+              	<div class="form-group">
+                <label class="control-label"><apex:outputText value="{!$Label.T_0407}" /></label>
+                <apex:selectRadio styleClass="radio" value="{!reference.Reference_Contact_Requested__c}" id="request" required="true" >
+                  <apex:selectOption itemValue="Yes" itemLabel="{!$Label.T_0327}"/>
+                  <apex:selectOption itemValue="No" itemLabel="{!$Label.T_0328}"/>
+                </apex:selectRadio>
+                <apex:message for="request" styleClass="custom-error-radio" id="errormessrequest"/>
+                </div>
+              	  </div>
+                <!-- end column  -->
+                </div>
+      	        <!-- end row --> 
+              	
+              	
+	            <div class="row">
+	              <div class="col-sm-12 margin-t">
+	                <apex:commandlink styleClass="btn btn-primary btn-lg" action="{!submitForm}" id="nextpage" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+	                <apex:commandButton value="Submit Reference" id="continuebutton" />
+	                </apex:commandlink>
+	              </div><!--  end column -->
+              	</div><!--  end row -->
+	            
+	            </apex:outputpanel>
+	            
+	            
+	            <apex:outputpanel layout="block" rendered="{!ReferenceStatus == 'Active' && Status == 'Complete'}">	
+	               <div class="row">
+	              <div class="col-sm-12 center-text"> 
+	        	<h1><apex:outputText value="{!$Label.T_0414}" /></h1>
+	            <p class="lead"><apex:outputText value="{!$Label.T_0415}" /></p>
+	            	</div><!--  end column -->
+              	</div><!--  end row -->
+	            </apex:outputpanel>
+	            
+	            <apex:outputpanel layout="block" rendered="{!ReferenceStatus == 'Canceled'}">	
+	               <div class="row">
+	              <div class="col-sm-12 center-text"> 
+	        	<h1><apex:outputText value="{!$Label.T_0428}" /></h1>
+	            <p><label><apex:outputText value="{!$Label.T_0381}" />:</label> {!primaryApplicant.Name}</p>
+	            	</div><!--  end column -->
+              	</div><!--  end row -->
+	            </apex:outputpanel>
+	            
+	            
+	        </apex:form>
+   		
+   		
+   		
+   		</div>
+        <!-- end column  -->
+        </div>
+      	<!-- end row --> 
+    
+    	
+    <script>
+    	
+    </script>
+    
+      	
+    </apex:define>
+  </apex:composition>
+</apex:page>

@@ -1,0 +1,336 @@
+<apex:page title="Applications" standardStylesheets="false"
+    showHeader="false" standardController="Applicant_Info__c"
+    extensions="AppEngine_Controller" action="{!checkLogin}"  id="your_applications">
+<apex:composition template="intraxtemplate_vs3">
+        <apex:define name="body">
+<apex:form >
+            <c:block_header_image userInterests="{!userInterests}" userAgentCheck="{!userAgentCheck}"/>
+
+            <div class="row">
+                <div class="col-md-12">
+                 <script type="text/javascript">
+    function disable_button(sender){
+        sender.disabled = true;
+    }
+    </script>
+                        <h1><apex:outputText value="{!$Label.T_0339}" /></h1>
+                        <!-- Loading Status Message -->
+                        <apex:actionStatus id="waitMsg" startStyleClass="feedback">
+                            <apex:facet name="start">
+                                <div class="well">
+                                    <i class="fa fa-refresh fa-spin"></i> <strong><apex:outputText value="{!$Label.T_0276}" /></strong>
+                                </div>
+                            </apex:facet>
+                        </apex:actionStatus>
+
+                        <apex:outputText rendered="{!IF(ApplicantInfoList.Size == 0, true, false)}">
+                            <p class="lead">
+                                <em><apex:outputText value="{!$Label.T_0344}" /></em>
+                            </p>
+                        </apex:outputText>
+
+
+                        <apex:outputText rendered="{! CheckPTAppStatus && CheckHFAppStatus && CheckCentersAppStatus && UserInterests != 'Hosting an au pair' && UserInterests != 'Becoming an au pair' }">
+
+                            <div class="btn-group">
+                            
+                                <a class="btn btn-primary btn-lg dropdown-toggle margin-b" id="start_application"
+                                    data-toggle="dropdown" href="#"> <apex:outputText value="{!$Label.T_0025}" /> <span
+                                    class="caret"></span>
+                                </a>
+                                
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><apex:commandlink action="{!navigator}"
+                                            rendered="{! CheckPTAppStatus && UserInterests == 'Becoming a high school exchange student'}">
+                                            <apex:param name="nextPage" value="/apex/ayusa_preapp_home" />
+                                            <apex:param name="reDirectPage" value="true" />
+                                            <apex:param name="app" value="AyusaPT" assignTo="{!app}" />
+                                            <apex:param name="role" value="Student" assignTo="{!role}" />
+                                            <apex:commandButton value="Ayusa Student Application"
+                                                onclick="disable_button(this);" />
+                                        </apex:commandlink></li>
+                                    <li><apex:commandlink action="{!navigator}"
+                                            rendered="{! CheckHFAppStatus && UserInterests == 'Hosting an international student'}">
+                                            <apex:param name="nextPage" value="/apex/ayusa_hf_home" />
+                                            <apex:param name="reDirectPage" value="true" />
+                                            <apex:param name="app" value="AyusaHF" assignTo="{!app}" />
+                                            <apex:param name="role" value="Host" assignTo="{!role}" />
+                                            <apex:commandButton value="Ayusa Host Family Application" />
+                                        </apex:commandlink></li>
+                                    <li><apex:commandlink styleClass="no-dbclick"
+                                            action="{!navigator}"
+                                            rendered="{! CheckCentersAppStatus && UserInterests == 'Studying English'}">
+                                            <apex:param name="nextPage" value="/apex/centers_preapp_home" />
+                                            <apex:param name="reDirectPage" value="true" />
+                                            <apex:param name="app" value="Centers" assignTo="{!app}" />
+                                            <apex:param name="role" value="Student" assignTo="{!role}" />
+                                            <apex:commandButton value="{!$Label.T_0207}"
+                                                onclick="disable_button(this);" />
+                                        </apex:commandlink></li>
+                                    <li><apex:commandlink action="{!navigator}"
+                                            rendered="{! UserInterests == 'Finding an internship'}">
+                                            <apex:param name="nextPage" value="/apex/igi_pt_app_personal_info" />
+                                            <apex:param name="reDirectPage" value="true" />
+                                            <apex:param name="app" value="IGI" assignTo="{!app}" />
+                                            <apex:param name="role" value="Student" assignTo="{!role}" />
+                                            <apex:commandButton value="Intrax Global Internship Application"
+                                                onclick="disable_button(this);" />
+                                        </apex:commandlink></li>
+                                    <li><apex:commandlink action="{!navigator}"
+                                            rendered="{! UserInterests == 'Becoming a Work Travel Participant'}">
+                                            <apex:param name="nextPage"
+                                                value="/apex/participant_preapp_home" />
+                                            <apex:param name="reDirectPage" value="true" />
+                                            <apex:param name="app" value="WT" assignTo="{!app}" />
+                                            <apex:param name="role" value="Student" assignTo="{!role}" />
+                                            <apex:param name="partnerId" value="{!partnerinvite}" assignTo="{!partnerId}" />
+                                            <apex:commandButton value="Work and Travel Application"
+                                                onclick="disable_button(this);" />
+                                        </apex:commandlink>
+                                    </li>
+                                </ul>
+                            </div>
+
+                        </apex:outputText>
+                        <!-- end btn group -->
+
+                        <!-- Disabled Start Application Button  -->
+                        <apex:outputPanel rendered="{! NOT(CheckPTAppStatus && CheckHFAppStatus && CheckCentersAppStatus) && UserInterests != 'Hosting an au pair' && UserInterests != 'Becoming an au pair'}"
+                            layout="block" styleClass="btn btn-default btn-lg margin-b"
+                            html-data-toggle="popover"
+                            html-data-content="{!$Label.T_0050}"><apex:outputText value="{!$Label.T_0025}" /></apex:outputPanel>
+
+                        <!-- List of Applications  -->
+                        <div class="table-responsive">
+                        <table class="table lead">
+                              <tbody>
+                                <apex:repeat id="AppsList" value="{!ApplicantInfoList}"
+                                    var="item"
+                                    rendered="{!IF(ApplicantInfoList.Size > 0, true, false)}">
+                                    <tr>
+                                        <td>
+                                            <em><apex:outputText value="{!$Label.T_0196}" /></em><br/>
+                                            <strong>
+                                                <apex:outputText value="Childcare Application"
+                                                    rendered="{!IF(item.Intrax_Program__c == 'AuPairCare' && item.Type__c == 'Host Family',  true, false)}" />
+                                                <apex:outputText value="Au Pair Pre-Application"
+                                                    rendered="{!IF(item.Intrax_Program__c == 'AuPairCare' && item.Type__c == 'Participant' && item.Application_Level__c == 'Basic', true, false)}" />
+                                                 <apex:outputText value="Au Pair Application"
+                                                    rendered="{!IF(item.Intrax_Program__c == 'AuPairCare' && item.Type__c == 'Participant' && item.Application_Level__c == 'Main', true, false)}" />     
+
+                                                <apex:outputText value="Ayusa Host Family Application"
+                                                    rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Host Family', true, false)}" />
+                                                <apex:outputText value="Ayusa Student Application"
+                                                    rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Participant', true, false)}" />
+                                                <apex:outputText value="{!$Label.T_0340}"
+                                                    rendered="{!IF(item.Intrax_Program__c == 'English and Professional Skills' && item.Type__c == 'Participant', true, false)}" />
+
+                                                <apex:outputText value="Internship Application"
+                                                    rendered="{!IF(item.Intrax_Program__c == 'Internship' && item.Type__c == 'Participant', true, false)}" />
+                                                    
+                                                <apex:outputText value="Work Travel Application"
+                                                    rendered="{!IF(item.Intrax_Program__c == 'Work Travel' && item.Type__c == 'Participant', true, false)}" />
+                                        </strong>   
+                                        </td>
+                                        
+                                         <td>
+                                         <em><apex:outputText value="{!$Label.T_0047}" /> </em><br/>
+                                         <apex:outputPanel layout="block" rendered="{!IF(item.Application_Stage__c == 'Working' && item.Intrax_Program__c == 'English and Professional Skills',true,false)}"><strong><apex:outputText value="{!$Label.T_0271}" /></strong></apex:outputPanel>
+                                         <apex:outputPanel layout="block" rendered="{!IF(item.Application_Stage__c == 'Working' && item.Intrax_Program__c != 'English and Professional Skills',true,false)}"><strong>In Progress</strong></apex:outputPanel>
+                                         
+                                         <apex:outputPanel layout="block" rendered="{!IF(item.Application_Stage__c == 'Submitted' && item.Intrax_Program__c == 'English and Professional Skills',true,false)}"><strong><apex:outputText value="{!$Label.T_0273}" /></strong> <a data-toggle="popover" data-content="{!$Label.T_0355}">(?)</a></apex:outputPanel>
+                                         <apex:outputPanel layout="block" rendered="{!IF(item.Application_Stage__c == 'Submitted' && item.Intrax_Program__c != 'English and Professional Skills',true,false)}"><strong>Submitted</strong> <a data-toggle="popover" data-content="Your information is currently being processed. Thank you for your patience.">(?)</a></apex:outputPanel>
+                                         
+                                         <apex:outputPanel layout="block" rendered="{!IF(item.Application_Stage__c == 'In-Review' && item.Intrax_Program__c == 'English and Professional Skills',true,false)}"><strong><apex:outputText value="{!$Label.T_0272}" /></strong></apex:outputPanel>
+                                         <apex:outputPanel layout="block" rendered="{!IF(item.Application_Stage__c == 'In-Review' && item.Intrax_Program__c != 'English and Professional Skills',true,false)}"><strong>In Review</strong></apex:outputPanel>
+                                         
+                                         <apex:outputPanel layout="block" rendered="{!IF(item.Application_Stage__c == 'Accepted' && item.Intrax_Program__c == 'English and Professional Skills',true,false)}"><strong><apex:outputText value="{!$Label.T_0274}" /></strong></apex:outputPanel>
+                                         <apex:outputPanel layout="block" rendered="{!IF(item.Application_Stage__c == 'Accepted' && item.Intrax_Program__c != 'English and Professional Skills',true,false)}"><strong>Complete</strong></apex:outputPanel>
+                                         
+                                         <apex:outputPanel layout="block" rendered="{!IF(item.Application_Stage__c == 'Conditional' && item.Intrax_Program__c == 'English and Professional Skills',true,false)}"><strong><apex:outputText value="{!$Label.T_0272}" /></strong></apex:outputPanel>
+                                         <apex:outputPanel layout="block" rendered="{!IF(item.Application_Stage__c == 'Conditional' && item.Intrax_Program__c != 'English and Professional Skills',true,false)}"><strong>In Review</strong></apex:outputPanel>
+                                         
+                                         <apex:outputPanel layout="block" rendered="{!IF(((item.Application_Stage__c == 'Declined - Ayusa' || item.Application_Stage__c == 'Declined - Agent') && item.Intrax_Program__c == 'English and Professional Skills'),true,false)}"><strong><apex:outputText value="{!$Label.T_0346}" /></strong></apex:outputPanel>
+                                         <apex:outputPanel layout="block" rendered="{!IF(((item.Application_Stage__c == 'Declined - Ayusa' || item.Application_Stage__c == 'Declined - Agent') && item.Intrax_Program__c != 'English and Professional Skills'),true,false)}"><strong>Declined</strong></apex:outputPanel>
+                                         <apex:outputPanel layout="block" rendered="{!IF(item.Application_Stage__c == 'Declined' && item.Intrax_Program__c == 'AuPairCare' && item.Type__c == 'Participant',true,false)}"><strong>Declined</strong></apex:outputPanel>
+                                         
+                                         <apex:outputPanel layout="block" rendered="{!IF(item.Application_Stage__c == 'Cancelled' && item.Intrax_Program__c == 'English and Professional Skills',true,false)}"><strong><apex:outputText value="{!$Label.T_0275}" /></strong></apex:outputPanel>
+                                         <apex:outputPanel layout="block" rendered="{!IF(item.Application_Stage__c == 'Cancelled' && item.Intrax_Program__c != 'English and Professional Skills',true,false)}"><strong>Cancelled</strong></apex:outputPanel>
+                                         
+                                         </td>
+                                         
+                                        <td>
+                                        <apex:outputPanel rendered="{!IF(item.Intrax_Program__c == 'English and Professional Skills',true,false)}"><em><apex:outputText value="{!$Label.T_0341}" /></em></apex:outputPanel>
+                                        <apex:outputPanel rendered="{!IF(item.Intrax_Program__c != 'English and Professional Skills',true,false)}"><em>Started On</em></apex:outputPanel>
+                                        <br/>
+                                        <strong><apex:outputField value="{!item.CreatedDate}" /></strong>
+                                        </td>
+                                        
+                                        <td>
+                                        <apex:outputPanel rendered="{!IF(item.Intrax_Program__c == 'English and Professional Skills',true,false)}"><em><apex:outputText value="{!$Label.T_0342}" /></em></apex:outputPanel>
+                                        <apex:outputPanel rendered="{!IF(item.Intrax_Program__c != 'English and Professional Skills',true,false)}"><em>Last Updated On</em></apex:outputPanel>
+                                        <br/>
+                                        <strong>
+                                         <apex:outputField value="{!item.LastModifiedDate}" /> 
+                                        </strong>   
+                                       </td>
+                                       
+                                        <td>
+                                            <!-- Action buttons for Applications -->
+                                            <div class="btn-group">
+
+                                                <!-- Actions for APC Host Family -->
+                                                <apex:outputLink styleClass="btn btn-primary btn-lg"
+                                                    id="apc_hf_app_clone_link"
+                                                    value="/apex/apc_hf_app_clone?id={!item.Id}&AppType=Renewal"
+                                                    rendered="{!IF( item.Type__c == 'Host Family' && item.Intrax_Program__c == 'AuPairCare' && (item.Application_Level__c == 'Main' || item.Application_Level__c == 'Basic') && item.Application_Stage__c == 'Submitted', true, false)}">Renewal</apex:outputLink>
+                                                <apex:outputLink styleClass="btn btn-primary btn-lg"
+                                                    id="apc_hf_app_extend_link"
+                                                    value="/apex/apc_hf_app_extension?id={!item.Id}&AppType=Extension"
+                                                    rendered="{!IF( (item.Type__c == 'Host Family') && item.Intrax_Program__c == 'AuPairCare' && item.Application_Stage__c == 'Submitted', true, false)}">Extend
+                                                </apex:outputLink>
+                                                
+                                                <!-- Hf Original Case -->
+                                                <apex:outputLink styleClass="btn btn-primary btn-lg"
+                                                    id="c_apc_hf_app_personal_info"
+                                                    value="/apex/apc_hf_app_personal_info?id={!item.Id}"
+                                                    rendered="{!IF( item.Type__c == 'Host Family' && item.Intrax_Program__c == 'AuPairCare' && item.Application_Type__c == 'Original' && item.Application_Stage__c == 'Working', true, false)}">Continue</apex:outputLink>
+                                                
+                                                <!-- HF renewall and extensions Main Case -->
+                                                <apex:outputLink styleClass="btn btn-primary btn-lg"
+                                                    id="cr_apc_hf_app_personal_info"
+                                                    value="/apex/apc_hf_app_personal_info?id={!item.Id}"
+                                                    rendered="{!IF( item.Type__c == 'Host Family' && item.Intrax_Program__c == 'AuPairCare' && item.Application_Level__c == 'Main' && item.Application_Stage__c == 'Working' && (if(item.Application_Type__c == 'Renewal' || item.Application_Type__c == 'Rematch',true,false)), true, false)}">Continue Renewal</apex:outputLink>
+                                                
+                                                <!-- HF Extension and extensions Main Case -->
+                                                <apex:outputLink styleClass="btn btn-primary btn-lg"
+                                                    id="ce_apc_hf_app_personal_info"
+                                                    value="/apex/apc_hf_app_extension_pref?id={!item.Id}"
+                                                    rendered="{!IF( item.Type__c == 'Host Family' && item.Intrax_Program__c == 'AuPairCare' && item.Application_Level__c == 'Main' && item.Application_Stage__c == 'Working' && (if(item.Application_Type__c== 'Extension',true,false)), true, false)}">Continue Extension</apex:outputLink>
+                                                
+                                                
+                                                <!-- Actions for APC Participant -->
+                                                <apex:outputLink styleClass="btn btn-primary btn-lg"
+                                                    id="apc_hf_app_personal_info"
+                                                    value="/apex/apc_ap_basic_personal_info?id={!item.Id}"
+                                                    rendered="{!IF( item.Type__c == 'Participant' && item.Intrax_Program__c == 'AuPairCare' &&item.Application_Stage__c == 'Working' && (if(item.Application_Type__c!= 'Extension',true,false)), true, false)}">Continue</apex:outputLink>
+                                                
+                                                <!-- Actions for APC Participant when OCMP Agent Portal logs in -->
+                                                
+                                                <apex:outputLink styleClass="btn btn-primary btn-lg"
+                                                    id="linkSubOCMPAgent"
+                                                    value="/apex/apc_ap_basic_personal_info?id={!item.Id}"
+                                                    rendered="{!IF( item.Type__c == 'Participant' && item.Intrax_Program__c == 'AuPairCare' && item.Application_Stage__c == 'Submitted' 
+                                                    			&& item.Application_Type__c != 'Extension' && item.Application_Level__c == 'Basic'
+                                                    			&& userProfileName == 'OCPM Agent Portal', true, false)}">Review</apex:outputLink>
+                                                
+                                                <!-- AP Extension and extensions Main Case -->
+                                                <apex:outputLink styleClass="btn btn-primary btn-lg"
+                                                    value="/apex/apc_ap_extension_pref?id={!item.Id}"
+                                                    rendered="{!IF( item.Extension_Preferences__c == null && item.Type__c == 'Participant' && item.Intrax_Program__c == 'AuPairCare' && item.Application_Level__c == 'Main' && item.Application_Stage__c == 'Working' && (if(item.Application_Type__c== 'Extension',true,false)), true, false)}">Continue Extension
+                                                </apex:outputLink>
+                                                <apex:outputLink styleClass="btn btn-primary btn-lg"
+                                                    value="/apex/apc_ap_main_education_proof?id={!item.Id}&docType=Proof-of-Education"
+                                                    rendered="{!IF( item.Extension_Preferences__c != null && item.Type__c == 'Participant' && item.Intrax_Program__c == 'AuPairCare' && item.Application_Level__c == 'Main' && item.Application_Stage__c == 'Working' && (if(item.Application_Type__c== 'Extension',true,false)), true, false)}">Continue Extension
+                                                </apex:outputLink>
+                                               <!-- 
+                                                <apex:outputLink styleClass="btn btn-primary btn-lg"
+                                                    id="apc_app_extend_link"
+                                                    value="/apex/apc_hf_app_extension?id={!item.Id}&AppType=Extension"
+                                                    rendered="{!IF( (item.Type__c == 'Participant') && item.Intrax_Program__c == 'AuPairCare' && item.Application_Stage__c == 'Submitted' && item.Application_Level__c == 'Main', true, false)}">Extend
+                                                </apex:outputLink>
+ 												-->
+                                                <!-- Actions for Centers Participant -->
+                                                <apex:outputLink styleClass="btn btn-primary btn-lg"
+                                                    id="basiccenters_preapp_home"
+                                                    value="/apex/centers_preapp_home?id={!item.Id}"
+                                                    rendered="{!IF(item.Intrax_Program__c == 'English and Professional Skills' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Basic', true, false)}"><apex:outputText value="{!$Label.T_0213}" /></apex:outputLink>
+                                                <apex:outputLink styleClass="btn btn-primary btn-lg"
+                                                    id="main_centers_preapp_home"
+                                                    value="/apex/centers_app_home?id={!item.Id}"
+                                                    rendered="{!IF(item.Intrax_Program__c == 'English and Professional Skills' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Main', true, false)}"><apex:outputText value="{!$Label.T_0213}" /></apex:outputLink>
+                                                <apex:outputLink styleClass="btn btn-default btn-lg"
+                                                    id="View_basic_centers_preapp_summary"
+                                                    value="/apex/centers_preapp_summary?id={!item.Id}&view"
+                                                    rendered="{!IF(item.Intrax_Program__c == 'English and Professional Skills' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Basic', true, false)}"><apex:outputText value="{!$Label.T_0343}" /></apex:outputLink>
+                                                <apex:outputLink styleClass="btn btn-default btn-lg"
+                                                    id="VS_main_centers_preapp_summary"
+                                                    value="/apex/centers_app_summary?id={!item.Id}&view"
+                                                    rendered="{!IF(item.Intrax_Program__c == 'English and Professional Skills' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Main', true, false)}"><apex:outputText value="{!$Label.T_0343}" /></apex:outputLink>
+                                                <apex:outputLink styleClass="btn btn-default btn-lg"
+                                                    id="VS_sub_centers_preapp_summary"
+                                                    value="/apex/centers_app_summary?id={!item.Id}&view"
+                                                    rendered="{!IF(item.Intrax_Program__c == 'English and Professional Skills' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Submitted' && item.Application_Level__c == 'Main', true, false)}"><apex:outputText value="{!$Label.T_0343}" /></apex:outputLink>
+
+                                                <!-- Actions for IGI Participant -->
+                                                  <apex:outputLink styleClass="btn btn-primary btn-lg"
+                                                    id="c_participant_PreApp_Home"
+                                                    value="/apex/igi_pt_app_personal_info?id={!item.Id}"
+                                                    rendered="{!IF(item.Intrax_Program__c == 'Internship' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Basic', true, false)}">Continue</apex:outputLink>
+                                               
+                                                <apex:outputLink styleClass="btn btn-primary btn-lg"
+                                                    id="c_participant_App_Home"
+                                                    value="/apex/igi_pt_app_home?id={!item.Id}"
+                                                    rendered="{!IF(item.Intrax_Program__c == 'Internship' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Main', true, false)}">Continue</apex:outputLink>
+                                               
+                                                <!-- Actions for WT Participant -->
+                                                <apex:outputLink styleClass="btn btn-primary btn-lg"
+                                                    id="wt_c_participant_PreApp_Home"
+                                                    value="/apex/Participant_PreApp_Home?id={!item.Id}"
+                                                    rendered="{!IF(item.Intrax_Program__c == 'Work Travel' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Main', true, false)}">Continue</apex:outputLink>
+                                                <apex:outputLink styleClass="btn btn-default btn-lg"
+                                                    id="wt_vs_participant_PreApp_Home"
+                                                    value="/apex/Participant_preApp_Summary?id={!item.Id}&view"
+                                                    rendered="{!IF(item.Intrax_Program__c == 'Work Travel' && item.Type__c == 'Participant' && item.Application_Level__c == 'Main', true, false)}">View Summary</apex:outputLink>
+
+                                                <!-- Actions for Ayusa Host Family -->
+                                                <apex:outputLink styleClass="btn btn-primary btn-lg"
+                                                    id="ay_c_ayusa_hf_home"
+                                                    value="/apex/ayusa_hf_home?id={!item.Id}"
+                                                    rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Host Family' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Main', true, false)}">Continue</apex:outputLink>
+                                                <apex:outputLink styleClass="btn btn-default btn-lg"
+                                                    id="ay_work_ayusa_hf_home"
+                                                    value="/apex/ayusa_hf_submitted_view?id={!item.Id}&view"
+                                                    rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Host Family' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Main', true, false)}">View Summary</apex:outputLink>
+                                                <apex:outputLink styleClass="btn btn-default btn-lg"
+                                                    id="ay_not_ayusa_hf_home"
+                                                    value="/apex/ayusa_hf_submitted_view?id={!item.Id}&view"
+                                                    rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Host Family' && NOt (item.Application_Stage__c == 'Working') && item.Application_Level__c == 'Main', true, false)}">View Summary</apex:outputLink>
+                                                <apex:outputLink styleClass="btn btn-default btn-lg"
+                                                    id="ayusa_hf_clone" 
+                                                    value="/apex/ayusa_hf_clone?id={!item.Id}"
+                                                    rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Host Family' && item.Sys_Allow_Cloning__c, true, false)}">Use This to Reapply</apex:outputLink>
+
+                                                <!-- Actions for Ayusa Participant -->
+                                                <apex:outputLink styleClass="btn btn-primary btn-lg"
+                                                    id="basic_ayusa_preapp_home"
+                                                    value="/apex/ayusa_preapp_home?id={!item.Id}"
+                                                    rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Basic', true, false)}">Continue</apex:outputLink>
+                                                <apex:outputLink styleClass="btn btn-primary btn-lg"
+                                                    id="main_ayusa_preapp_home"
+                                                    value="/apex/ayusa_app_home?id={!item.Id}"
+                                                    rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Main', true, false)}">Continue</apex:outputLink>
+                                                <apex:outputLink styleClass="btn btn-default btn-lg"
+                                                    id="vs_basic_ayusa_preapp_home"
+                                                    value="/apex/ayusa_preapp_summary?id={!item.Id}&view"
+                                                    rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Participant' && item.Application_Level__c == 'Basic', true, false)}">View Summary</apex:outputLink>
+                                                <apex:outputLink styleClass="btn btn-default btn-lg"
+                                                    id="vs_main_ayusa_preapp_home"
+                                                    value="/apex/ayusa_main_submitted_view?id={!item.Id}&view"
+                                                    rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Participant' && item.Application_Level__c == 'Main', true, false)}">View Summary</apex:outputLink>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </apex:repeat>
+                            </tbody>
+                        </table>  <!--  end of responsive applications table  -->
+                        </div> <!--  end of responsive table container -->
+
+                </div>
+                <!--  end column -->
+            </div>
+            <!--  end row -->
+            </apex:form>
+        </apex:define>
+    </apex:composition>
+</apex:page>

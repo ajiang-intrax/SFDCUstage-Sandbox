@@ -1,0 +1,66 @@
+<apex:component layout="none">
+<apex:attribute name="ApplicantInfo" description="This is the value for the Applicant_Info__c object." type="Applicant_Info__c" required="false" default="" />
+<apex:attribute name="personInfo" description="This is the value for the Person_Info__c object." type="Person_Info__c" required="false" default="" />
+ 
+<apex:outputPanel layout="block" rendered="{! IF($CurrentPage.Name=='igi_home', true, false)}">
+<h2> You've taken your first step!</h2>
+<p>Below are the program preferences you have chosen. Please contact your Intrax representative by calling 1-877-429-6753 or emailing <a href="mailto:info@globalinternships.com;">info@globalinternships.com</a> to make changes. You can also&nbsp;<apex:outputLink target="_blank" value="igi_pt_app_summary_pdf?id={!applicantInfo.Id}&view=true" id="summaryLink">download a 
+				copy of your application</apex:outputLink>.</p>
+<p>&nbsp;</p>
+<div class="row">
+<div class="col-md-6">
+<div class="margin-r">
+<apex:image width="100%" url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/gi/badges/countries/')}{!applicantInfo.Country_of_Interest__c}.jpg"  />		
+</div>
+</div>
+<div class="col-xs-6 col-md-3">
+<p>&nbsp;</p>
+<label>Internship Destination</label>
+<div class="margin-b"><apex:outputText value="{!applicantInfo.Country_of_Interest__c}" id="countryOfInterest1"/></div>
+<label>Internship Area</label>
+<div class="margin-b"><apex:outputField value="{!applicantInfo.Intrax_Program_Category__c}" id="IPC1"/></div>
+</div>
+<div class="col-xs-6 col-md-3">
+<p>&nbsp;</p>
+<label>Desired Start Date</label>
+<div class="margin-b"><apex:outputField value="{!applicantInfo.Engagement_Start__c}" id="engStart1"/></div>
+<label>Desired End Date</label>
+<div class="margin-b"><apex:outputField value="{!applicantInfo.Engagement_End__c}" id="endEnd1"/></div>		
+</div>
+</div>
+<p>&nbsp;</p>		
+</apex:outputPanel>	
+
+
+<apex:outputPanel layout="block" rendered="{! IF($CurrentPage.Name=='igi_pt_app_home', true, false)}">
+<div class="cart">
+				<apex:image width="100%" url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/gi/badges/countries/')}{!applicantInfo.Country_of_Interest__c}.jpg"  />
+				<div class="content">
+				<div class="item">
+				<label>Internship Destination</label>
+				<div><apex:outputText value="{!applicantInfo.Country_of_Interest__c}" id="countryOfInterest2"/></div>
+				</div>
+				<div class="item">
+				<label>Internship Area</label>
+				<div><apex:outputField value="{!applicantInfo.Intrax_Program_Category__c}" id="IPC2"/></div>
+				</div>
+				<div class="item">
+				<label>Desired Dates</label>
+				<div><apex:outputField value="{!applicantInfo.Engagement_Start__c}" id="engStart2"/> <strong>-</strong>&nbsp; <apex:outputField value="{!applicantInfo.Engagement_End__c}" id="endEnd2"/></div>
+				</div>
+				<div>
+				<apex:outputLink value="igi_pt_app_program_pref?id={!applicantInfo.Id}" id="programPrefLink"><strong>Edit</strong></apex:outputLink>
+				</div>
+				</div> <!--  end cart content -->
+				</div> <!--  end cart -->
+</apex:outputPanel>	
+
+
+<apex:outputPanel layout="block" rendered="{! IF($CurrentPage.Name=='igi_pt_app_program_pref', true, false)}">
+
+<c:block_script_igi_pricing PersonInfo="{!personInfo}" ApplicantInfo="{!applicantInfo}"/>
+
+</apex:outputPanel>
+
+
+</apex:component>

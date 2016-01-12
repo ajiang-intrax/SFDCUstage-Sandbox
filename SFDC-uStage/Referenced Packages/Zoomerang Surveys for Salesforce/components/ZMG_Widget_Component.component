@@ -1,0 +1,169 @@
+<apex:component >
+<apex:attribute name="theWidget" type="ZMG.ZMG_Widget_Renderer" required="true" description="the widget to be rendered" />
+
+<style>
+body {
+    font-family: Verdana;
+    font-size: 10px;
+    background-image: url("{!URLFOR($Resource.ZMG__ZMG_Resources, 'images/' & theWidget.dashPositionImage)}");
+    background-repeat: no-repeat;
+    background-position: bottom right;
+}
+#mainBody {
+    border: 1px solid lightgray;
+    width: 100%;
+    background-color: transparent;
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+}
+#mainWidgetArea {
+    padding-left: 9px;
+    padding-right: 9px;
+    background-color: transparent;
+}
+#surveyTitle {
+    width: 100%;
+    padding-left: 9px;
+    padding-right: 9px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    background-image: url("{!URLFOR($Resource.ZMG__ZMG_Resources, 'images/bg_dashtitle.gif')}");
+    background-repeat: repeat-x;
+    background-position: bottom left;
+}
+a.survey {
+    font-size: 9px;
+}
+a.survey:active, a.survey:link, a.survey:visited {
+    color: #113399;
+    text-decoration: none;
+}
+a.survey:hover {
+    color: #113399;
+    text-decoration: underline;
+}
+.poweredBy {
+    padding-left: 9px; 
+    float: left;
+    background-color: transparent;
+}
+.poweredBy a {
+    color: #BABAB1;
+    font-size: 9px;
+    font-family: Arial;
+}
+.poweredBy a:link, a:visited, a:active {
+    text-decoration: none;
+}
+.poweredBy a:hover {
+    text-decoration: underline;
+}
+</style>
+
+<body>
+    <div id="mainBody">
+
+        <apex:outputpanel layout="block" style="padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;" rendered="{!theWidget.displayWidget}">
+            <apex:outputPanel layout="block" style="padding: 9px 9px 9px 9px;" rendered="{!theWidget.hasErrors}">
+                <style>
+                li {
+                    font-family: Arial;
+                    font-size: 8pt;
+                    color: red;
+                }
+                </style>
+                <span style="font-family: Arial; font-size: 9pt; font-weight: bold;">The following errors were encountered while trying to load this widget:</span>
+                <c:ZMG_Errors errors="{!theWidget.errors}" suppressCode="true" />
+            </apex:outputPanel>
+    
+            <apex:outputPanel layout="block" rendered="{!NOT(theWidget.hasErrors)}" style="width: 100%; margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px;">
+                <c:ZMG_Aggregate theWidget="{!theWidget}" rendered="{!(theWidget.widget.ZMG__Widget_Type__c == 'Aggregate')}" />
+                <c:ZMG_Survey_Specific theWidget="{!theWidget}" rendered="{!(theWidget.widget.ZMG__Widget_Type__c == 'Survey Specific' && theWidget.widget.ZMG__Script_Tag_URL__c == null)}" />
+                <c:ZMG_Blogger theWidget="{!theWidget}" rendered="{!(theWidget.widget.ZMG__Widget_Type__c == 'Blogger Widget' || (theWidget.widget.ZMG__Widget_Type__c == 'Survey Specific' && theWidget.widget.ZMG__Script_Tag_URL__c != null))}" />
+                <c:ZMG_NPS theWidget="{!theWidget}" rendered="{!(theWidget.widget.ZMG__Widget_Type__c == 'NPS')}" />
+            </apex:outputPanel>         
+        </apex:outputpanel>
+
+        <apex:outputPanel layout="block" rendered="{!theWidget.displayEmptyWidget}">
+            <style>
+            body {
+                background: url("{!URLFOR($Resource.ZMG__ZMG_Resources, 'images/' & theWidget.dashPositionImage)}");
+                background-color: lightgray;
+                background-repeat: no-repeat;                
+                background-position: bottom right;                                
+            }
+            </style>
+        </apex:outputPanel>
+
+        <apex:outputPanel layout="block" style="width: 100%; margin 0px 0px 0px 0px; padding: 0px 0px 0px 0px;" rendered="{!theWidget.displaySampleWidget}">
+            <c:ZMG_Sample_Widget theWidget="{!theWidget}" />    
+        </apex:outputPanel>
+
+    </div>
+
+</body>
+
+<script type="text/javascript">
+setHeight();
+setPoweredByLocation();
+
+function setHeight() {
+    var o = document.getElementById('mainBody');
+    var vpHeight = getViewportHeight();
+    if (o.clientHeight != vpHeight) 
+        o.style.height = vpHeight  + 'px';
+}
+
+function setPoweredByLocation() {
+    // cease if no poweredByDiv or if no surveyTitle div
+    if (document.getElementById('poweredByDiv') == null || 
+            document.getElementById('surveyTitle') == null || 
+            document.getElementById('mainWidgetArea') == null) return;
+
+    /*
+         get height of:
+         - viewport
+         - surveyTitle div
+         - poweredByDiv
+         then adjust height of mainWidgetArea to be viewport - (surveyTitle + poweredByDiv + x)
+    */  
+
+    var vpHeight = getViewportHeight();
+    var stHeight = document.getElementById('surveyTitle').offsetHeight;
+    var pbHeight = document.getElementById('poweredByDiv').offsetHeight;
+    var mwaHeight = vpHeight - (stHeight + pbHeight + 5);
+
+    var mwa = document.getElementById('mainWidgetArea');
+    if (mwa.tagName && mwa.tagName.toLowerCase() == 'iframe') mwaHeight += -2;
+    mwa.style.height = mwaHeight + 'px';    
+}
+
+function getViewportHeight() {
+    var viewportwidth;
+    var viewportheight;
+ 
+    // the more standards compliant browsers (mozilla/netscape/opera/IE7) use window.innerWidth and window.innerHeight
+    if (typeof window.innerWidth != 'undefined') {
+        viewportwidth = window.innerWidth;
+        viewportheight = window.innerHeight;
+    }
+ 
+    // IE6 in standards compliant mode (i.e. with a valid doctype as the first line in the document)
+    else if (   typeof document.documentElement != 'undefined' && 
+                        typeof document.documentElement.clientWidth != 'undefined' && 
+                        document.documentElement.clientWidth != 0) {
+        viewportwidth = document.documentElement.clientWidth;
+        viewportheight = document.documentElement.clientHeight;
+ }
+ 
+    // older versions of IE 
+    else {
+        viewportwidth = document.getElementsByTagName('body')[0].clientWidth;
+        viewportheight = document.getElementsByTagName('body')[0].clientHeight;
+    }
+
+    return viewportheight;
+}
+</script>
+
+</apex:component>

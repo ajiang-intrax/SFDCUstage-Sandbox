@@ -1,0 +1,123 @@
+<apex:page id="ayusa_app_health_overview" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper">
+        
+           <apex:form id="form">
+              
+      <div class="page-header clearfix">
+ <h1>Ayusa Student Application</h1>
+<div class="back-to-main"><apex:outputLink id="BacktoMain" value="apex/ayusa_app_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+</div>
+               <h2> Health Overview </h2>
+          <div class="white-box clearfix">
+              <div class="panel two_thirds">
+                
+              <apex:Messages styleClass="custom-error-pagelevel"/>
+              <p><em> All fields marked with an asterisk (<span class="required no-padding">*</span>) are required</em></p><br/>         
+                   
+              <div class="form-row">
+                    <div class="form-label left ">Do you have allergies?<span class="required">*</span> </div>
+                    <div class="form-field">
+                        <apex:actionRegion >
+                    <apex:selectRadio value="{!applicantInfo.Allergies_Indicated__c}" required="TRUE" id="allergies-indicated">
+                        <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                        <apex:selectOption itemValue="No" itemLabel="No"/>
+                        <apex:actionSupport event="onclick" rerender="allergies" status="status"/>
+                    </apex:selectRadio>
+                    <apex:message for="allergies-indicated" styleClass="custom-error-radio"/>
+                        </apex:actionRegion>
+                    </div>                    
+                  </div>
+                 
+                  <apex:pageBlock id="allergies">
+                    <apex:outputPanel layout="block" rendered="{!ApplicantInfo.Allergies_Indicated__c == 'Yes'}"> 
+                <div class="form-row">
+                    <div class="form-label top ">If yes, please select:<span class="required">*</span> </div>
+                    <div class="form-field">
+                     <!-- <apex:actionRegion > -->
+                      <apex:inputField id="Allergies_from_Applicant" value="{!applicantInfo.Allergies_from_Applicant__c}" required="TRUE">
+                      <!-- <apex:actionSupport event="onchange" rerender="allergiesOther" status="status"/>  -->
+                      
+                       </apex:inputField>
+                       <!-- </apex:actionRegion>   --> 
+                    </div>
+                  
+                </div> 
+            <div class="form-row">
+                    <div class="form-label top ">If Other, please describe: </div>
+                    <div class="form-field">
+                      <!--  <apex:inputField value="{!applicantInfo.Allergies_Other_desc__c}" required="false"/>-->
+                     <apex:inputTextarea id="allergOtherDesc" value="{!applicantInfo.Allergies_Other_desc__c}" required="FALSE" onkeyup="countChar(this, 255, 'allergOtherDescCount')"/> 
+                  </div>
+                  <div class="char-limit"><span class="char-count-label">Characters left:</span>
+                  <span id="allergOtherDescCount" class="char-count">
+                  {!255-len(applicantInfo.Allergies_Other_desc__c) }
+                  </span>
+                  </div>
+                </div> 
+                 </apex:outputPanel>
+                </apex:pageBlock>    
+              
+                <div class="form-row">
+                    <div class="form-label left ">Do you have any medical conditions or disabilities, mental or physical?<span class="required">*</span> </div>
+                    <div class="form-field">
+                        <apex:actionRegion >
+                        <apex:selectRadio value="{!applicantInfo.Disabilities__c}" id="disab" required="TRUE">
+                            <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                            <apex:selectOption itemValue="No" itemLabel="No"/>
+                            <apex:actionSupport event="onclick" rerender="disabilities" status="status"/>
+                        </apex:selectRadio>
+                        <apex:message for="disab" styleClass="custom-error-radio"/>
+                        </apex:actionRegion>
+                    </div>
+                </div> 
+               <apex:pageBlock id="disabilities">
+                    <apex:outputPanel layout="block" rendered="{!ApplicantInfo.Disabilities__c == 'Yes'}"> 
+                <div class="form-row">
+                    <div class="form-label top ">If yes, please describe:<span class="required">*</span> </div>
+                    <div class="form-field">
+                       <!--  <apex:inputTextArea value="{!applicantInfo.Disabilities_Description__c}" id="disab_desc" required="true"/> --> 
+                    <apex:inputTextarea id="disbDesc" value="{!applicantInfo.Disabilities_Description__c}" required="TRUE" onkeyup="countChar(this, 255, 'disbDescCount')"/> 
+                  </div>
+                  <div class="char-limit"><span class="char-count-label">Characters left:</span>
+                  <span id="disbDescCount" class="char-count">
+                  {!255-len(applicantInfo.Disabilities_Description__c) }
+                  </span>
+                  </div>
+                    <div class="dropt"> <i class="icon-question-sign"></i>
+                        <span>{!$ObjectType.Applicant_Info__c.Fields.Disabilities__c.inlineHelpText}</span>
+                    </div>
+                    <apex:message for="disbDesc" styleClass="custom-error-textarea"/>
+                </div> 
+                   </apex:outputPanel>
+                   
+             </apex:pageBlock>   
+                        
+               <div class="form-row">
+                
+                <div class="form-link">
+                    <apex:outputLink id="Back" styleClass="back" value="/apex/ayusa_app_home?id={!applicantInfo.Id}">
+                    <i class="icon-chevron-left"></i>
+                    <span>Back</span>
+                    </apex:outputLink>
+                </div>
+               
+              <div class="form-button">
+                <apex:commandlink styleClass="next" action="{!navigator}">
+                  <apex:param name="nextPage" value="/apex/ayusa_app_doc_assessment"/>
+                  <apex:param name="reDirectPage" value="true"/>
+                  <apex:param name="docType" value="Health" assignTo="{!docType}"/>
+                  <apex:param name="role" value="Both" assignTo="{!role}"/>
+                  <apex:commandButton id="Save" value="Save & Continue" />
+                  <i class="icon-chevron-right"></i>   
+                </apex:commandlink>
+              </div>
+                  </div>  
+            </div>
+               </div>
+          </apex:form>
+        </div>
+      </apex:define>
+    </apex:composition>
+</apex:page>

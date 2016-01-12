@@ -1,0 +1,43 @@
+<apex:page docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+    <apex:composition template="IntraxTemplate_Vs1">
+        
+        <apex:define name="body">
+            <div class="wrapper" id="IGI_App_Completion_Page">            
+                <apex:form >
+                  <div class="page-header clearfix">
+            <h1>Thank you!</h1>
+          </div>
+              <div class="white-box clearfix">
+               <div class="panel two_thirds">  
+                   <apex:pageMessages />
+                   <p>Thanks for sharing your travel plans! Within 1 business day, Intrax will email you about your booking so we 
+                   can send your quote. If you have questions now, please contact us:</p>
+                  
+                   <p>For Students: Call +1.415.434.5643, email <a href="mailto:info@intrax.edu">info@intrax.edu</a>, 
+                   LiveChat (<apex:outputLink value="{!ctrLiveChat}" target="_blank" >link</apex:outputLink>) or 
+                   Skype (<apex:outputText value="{!ctrSkype}" />)</p>
+                  
+                   <p>For Partner Agencies: Call +1.415.434.5586 or email <a href="mailto:admissions@intrax.edu">admissions@intrax.edu</a> </p> 
+                    
+                   <p>You can download a copy of your full application <a href="#">here</a>, or log back in to update information <a href="#">here</a>.</p>
+    
+                   <p>Meet Intrax students and staff now on Facebook (link to “like us”)</p>
+              
+                   <p>Check out videos of <a href="#">San Francisco, San Diego and Chicago</a></p>
+    
+                   <div class="form-row">
+                       
+                       <div class="form-link">
+                        <apex:outputLink styleClass="back" value="/apex/IGI_App_Home?id={!applicantInfo.Id}">
+                        <i class="icon-chevron-left"></i>
+                        <span>Back To Home</span>
+                       </apex:outputLink>
+                      </div>   
+                   </div>            
+                  </div>
+                    </div>
+               </apex:form>
+           </div>
+       </apex:define>
+   </apex:composition>
+</apex:page>

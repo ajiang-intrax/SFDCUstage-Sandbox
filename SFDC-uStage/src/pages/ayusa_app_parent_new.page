@@ -1,0 +1,81 @@
+<apex:page docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+
+    <apex:define name="body">
+    <div class="wrapper">
+ 		<apex:form id="newParentForm" > 
+           <div class="page-header clearfix">
+ <h1>Ayusa Student Application</h1>
+<div class="back-to-main"><apex:outputLink value="apex/ayusa_app_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+</div>
+          <h2>Family Information - Add new Parent</h2>
+          <div class="white-box clearfix">
+      <div class="panel two_thirds">
+              
+              <div class="form-row">
+                <div class="form-label left"> Parent First name</div>
+                <div class="form-field">
+                  <apex:inputField value="{!personInfo.First_Name__c}" required="FALSE"/>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-label left"> Parent Last Name</div>
+                <div class="form-field">
+                  <apex:inputField value="{!personInfo.Last_Name__c}" required="FALSE"/>
+                </div>
+              </div>
+                        
+              <apex:inputHidden value="{!personInfo.Role__c}" required="FALSE"/> 
+                           
+              <div class="form-row">
+                <div class="form-label left">Gender</div>
+                <div class="form-field">
+                  <apex:inputField value="{!personInfo.Gender__c}" required="FALSE"/>
+                </div>
+              </div>
+              
+              <div class="form-row">
+              	<div class="form-label left">Email</div>
+                <div class="form-field">
+                  <apex:inputField value="{!personInfo.Email__c}" required="FALSE"/>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-label left">Mobile Phone</div>
+                <div class="form-field">
+                  <apex:inputField value="{!personInfo.Mobile__c}" required="FALSE"/>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-label left">Work Phone </div>
+                <div class="form-field">
+                  <apex:inputField value="{!personInfo.Work_Phone__c}" required="FALSE"/>
+                </div>
+              </div>
+              
+              
+                                     
+            <div class="form-row">
+              <div class="form-button">
+              	<apex:outputLink value="/apex/ayusa_app_parent_info?id={!applicantInfo.Id}">Back</apex:outputLink>
+              </div> 
+              <div class="form-button">
+                <apex:commandlink styleClass="save" action="{!navigator}">
+                  <apex:param name="nextPage" value="/apex/ayusa_app_parent_info"/>
+                  <apex:param name="reDirectPage" value="true"/>
+                  <apex:param name="role" value="Parent" assignTo="{!role}"/>
+                  <apex:commandButton value="Save & Return"/>
+                </apex:commandlink>
+              </div>
+            </div>
+           </div>
+         </div>
+   
+      </apex:form>
+     </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

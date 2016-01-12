@@ -1,0 +1,33 @@
+<apex:page id="Help_ayusa_app_reco_list" docType="html-5.0" standardStylesheets="true" showHeader="false">
+
+    <apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/reset.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/fonts.css')}"/> 
+    <apex:stylesheet value="{!URLFOR($Resource.module_colorbox, '/module-colorbox/css/colorbox.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/vs1.css')}"/> 
+    <apex:outputText value="<" escape="false"/>!--[if IE]<apex:outputText value=">" escape="false"/>
+    <link rel="stylesheet" href="/intraxappengine/resource/intrax_themes/intrax_themes/styles/ie.css"/>  
+    <apex:outputText value="<" escape="false"/>![endif]--<apex:outputText value=">" escape="false"/>      
+     
+    <apex:outputText value="<" escape="false"/>!--[if lt IE 8]<apex:outputText value=">" escape="false"/>      
+    <link rel="stylesheet" href="/intraxappengine/resource/intrax_themes/intrax_themes/styles/ie-7.css"/>
+    <apex:outputText value="<" escape="false"/>![endif]--<apex:outputText value=">" escape="false"/>
+    
+    <apex:define name="body">
+      <div class="wrapper">
+        <apex:form >
+        <h2>Academics Recommendations Help</h2>
+        <div class="white-box">
+            <p><b> English Teacher’s Recommendation</b></p>
+            <p>Recommendations will help you to gain entrance into an American high school. Your current English teacher should provide a thorough and honest assessment of your English capabilities.</p>
+            <p>You can choose to download, print and send the paper form to your English teacher and then upload the completed form here.</p>
+             <p>You can also email your English teacher a link to the English Teacher Recommendation form for your teacher to fill out online.</p>
+             <p><b>School Recommendation</b></p>
+             <p>A school official (other than the English teacher) must complete the School Recommendation.</p>
+             <p>You can choose to download, print and send the paper form to your school administrator and then upload the completed form here.</p>
+             <p>You can also email your school administrator a link to the School Recommendation form for your school official to fill out online. </p>
+            
+        </div>
+    </apex:form>
+    </div>
+    </apex:define>
+</apex:page>

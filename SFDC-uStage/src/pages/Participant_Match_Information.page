@@ -1,0 +1,44 @@
+<apex:page title="Participant's Matches | Intrax" standardStylesheets="false" showHeader="false" controller="ParticipantPortalController" action="{!checkLogin}">
+    
+        <apex:composition template="IntraxTemplate_Vs2" >
+            <apex:define name="body">
+            <apex:form >
+            <script>
+                j$(function(){
+                
+                j$(".hide-next").click(function(){
+                j$(this).parent().next(".block-body").toggleClass('hide');
+                
+                });
+                
+                });
+             </script>
+                <div class="row">
+                    <apex:outputPanel styleClass="span9" layout="block">
+                        <h1>
+                            <apex:outputText value="Match Details"/>
+                        </h1>
+                    </apex:outputPanel>
+                    <apex:outputPanel styleClass="span3" layout="block">
+                    </apex:outputPanel>
+                </div>    
+                
+                <div class="row">
+                    <!--  <apex:outputPanel styleClass="span3" layout="block">
+                        <c:Menu_Participant_Side_Navigator />
+                    </apex:outputPanel>
+                    -->
+                    <!-- end span3 -->
+          
+                    <!-- begin span9 -->  
+                    <div class="span12">
+                        <c:Block_Matches_Participant match="{!selectedMatches[0]}" />
+                    </div>  
+                    <!-- end span9 -->
+                </div>
+                <!-- end row -->
+                </apex:form>
+            </apex:define>
+        </apex:composition>
+    
+</apex:page>

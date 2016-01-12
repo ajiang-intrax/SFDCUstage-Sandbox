@@ -1,0 +1,121 @@
+<apex:page id="ayusa_app_teacher_reco" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+      <div class="wrapper">
+          <apex:form forceSSL="true" id="form">          
+           <div class="page-header clearfix">
+        <h1>Ayusa Student Application</h1>
+               <div class="back-to-main"><apex:outputLink id="BacktoMain" value="apex/ayusa_app_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+          </div>
+
+              <h2>Academics - English Teacher's Recommendation</h2>  
+              <div class="white-box clearfix">
+                  
+                 
+                <div class="panel two_thirds">
+                
+                   <p>Please select ONE of the options below (both are not required)</p>  
+                    <h3 class="data-block-title">A- Request Recommendation In Person</h3>
+                    <ul class="no-bullets no-indent">
+                    <li><i class="icon-print green inline"></i><apex:outputLink target="_blank" value="http://www.intraxinc.com/assets/myintrax/ayusa/English_teacher_recommendation_fillable.pdf">Download recommendation template</apex:outputLink>, print it and ask your teacher to fill it out.</li>  
+                    <li><i class="icon-file green inline" ></i>Scan the document and convert it to JPG,PNG or PDF format. File size should not exceed 2MB.</li>
+                        <li><i class="icon-upload green inline"></i>
+                        <!--<apex:commandlink styleClass="inline-link" action="{!navigator}">
+                          <apex:param name="nextPage" value="/apex/ayusa_app_doc_upload"/>
+                          <apex:param name="reDirectPage" value="true"/>
+                          <apex:param name="docType" value="Teacher" assignTo="{!docType}"/>
+                          <apex:commandButton value="Upload Teacher's Recommendation" />
+                        </apex:commandlink>-->
+                        <apex:outputLink value="{!fileUploadUrl}pid={!ProgId}&aid={!$CurrentPage.parameters.Id}&orgid={!$Organization.Id}&docType=Teacher&retparam={!retParam}" id="theLink" target="_self" disabled="{!disableFileUpload}">Upload teacher's recommendation</apex:outputLink>
+                         You can use this link again to upload more reports.</li> 
+                    </ul>
+                    <apex:outputText value="{!disableFileUploadText}"
+                          rendered="{!disableFileUpload}"/>
+                     <h3 class="data-block-title">B- Request Recommendation Online</h3>
+                     
+                     <apex:Messages styleClass="custom-error-pagelevel"/>
+                     <p><em> All fields marked with an asterisk (<span class="required no-padding">*</span>) are required</em></p><br/>
+                     
+                        <div class="form-row">
+                            <div class="form-label left ">Title<span class="required">*</span></div>
+                            <div class="form-field">
+                                <apex:inputField id="title" value="{!communicationInfo.Recipient_Title__c}" required="true"/>
+                            </div>
+                        </div> 
+                        
+                        <div class="form-row"> 
+                            <div class="form-label left">English Teacher First Name<span class="required">*</span></div>
+                            <div class="form-field">
+                                <apex:inputField id="firstname" value="{!communicationInfo.Recipient_First_Name__c}" required="true"/>
+                            </div>
+                        </div>
+                   
+                        <div class="form-row"> 
+                           <div class="form-label left"> English Teacher Last Name<span class="required">*</span> </div>
+                           <div class="form-field">
+                                <apex:inputField id="lastname" value="{!communicationInfo.Recipient_Last_Name__c}" required="true"/>
+                           </div>
+                        </div>
+                      
+                                                        
+                        <div class="form-row"> 
+                            <div class="form-label left "> Email<span class="required">*</span> </div>
+                            <div class="form-field">
+                                <apex:inputfield id="email" value="{!communicationInfo.To_Address__c}"  required="true" />
+                            </div>
+                        </div>
+                     
+                        <div class="form-row"> 
+                            <div class="form-label left "> Message<span class="required">*</span> </div>
+                            <div class="form-field"> 
+                                 <!--  <apex:inputTextarea id="message"  value="{!communicationInfo.Message__c}" required="true" />-->
+                                 <apex:inputTextarea id="message" value="{!communicationInfo.Message__c}" required="TRUE" onkeyup="countChar(this, 500, 'messageCount')"/> 
+                
+                                <div class="char-limit"><span class="char-count-label">Characters left:</span>
+                                <span id="messageCount" class="char-count">
+                                {!500-len(communicationInfo.Message__c) }
+                                </span>
+                                </div>
+                                
+                                <apex:message for="message" styleClass="custom-error-text"/>
+                            </div>
+                            
+                        </div>
+                      <!--  <apex:pagemessages /> -->
+                        <div class="form-row">
+                            <!--  
+                            <div class="form-button">
+                                <apex:commandlink styleClass="skip" action="{!navigator}">
+                                  <apex:param name="nextPage" value="/apex/ayusa_app_reco_list"/>
+                                  <apex:param name="reDirectPage" value="true"/>
+                                  <apex:commandButton id="Skip" value="Skip" />
+                                </apex:commandlink>
+                            </div>
+                            -->
+                            
+                            <div class="form-link">
+                                <apex:outputLink id="skipLink" styleClass="back" value="/apex/ayusa_app_reco_list?id={!applicantInfo.Id}&docType={!$CurrentPage.parameters.docType}">
+                                <i class="icon-chevron-left"></i>
+                                <span>Skip</span>
+                                </apex:outputLink>
+                            </div>
+                            
+                            <div class="form-button">
+                                <apex:commandlink styleClass="send" action="{!navigator}">
+                                  <apex:param name="nextPage" value="/apex/ayusa_app_reco_list"/>
+                                  <apex:param name="comtype" value="ETR" assignTo="{!comtype}"/>
+                                  <apex:param name="docType" value="Academic" assignTo="{!docType}"/>
+                                  <apex:param name="reDirectPage" value="true"/>
+                                  <apex:commandButton id="Send" value="Send Request" />
+                                </apex:commandlink>
+                            </div>
+                        </div>
+                   
+          </div>
+           </div>  
+         
+              </apex:form>
+      </div>
+    </apex:define>
+  </apex:composition>
+</apex:page>

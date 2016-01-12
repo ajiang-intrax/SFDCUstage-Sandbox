@@ -1,0 +1,14 @@
+<apex:page standardController="invoiceit_s__Invoice__c" extensions="invoiceit_s.ControllerProformaInvToRegularInv" action="{!createRegularInvoice}">
+  <div class="bPageTitle">
+        <apex:sectionHeader title="Create Regular Invoice for " subtitle="{!invoiceit_s__Invoice__c.Name}" />
+        <div class="ptBreadcrumb">&nbsp;«&nbsp;
+            <a href="/{!Invoice__c.Id}">{!$Label.dispatchProducts_Back} Invoice : {!invoiceit_s__Invoice__c.Name}</a>
+        </div>
+  </div>
+    
+  <apex:pagemessages ></apex:pagemessages>
+  <apex:outputField value="{!invoiceit_s__Invoice__c.Name}" rendered="false"/>
+  <apex:outputField value="{!invoiceit_s__Invoice__c.invoiceit_s__Invoice_State__c}" rendered="false"/>
+  <apex:outputField value="{!invoiceit_s__Invoice__c.invoiceit_s__Invoice_Status__c}" rendered="false"/>
+  <apex:outputField value="{!invoiceit_s__Invoice__c.invoiceit_s__Regular_Invoice__c}" rendered="false"/>
+</apex:page>

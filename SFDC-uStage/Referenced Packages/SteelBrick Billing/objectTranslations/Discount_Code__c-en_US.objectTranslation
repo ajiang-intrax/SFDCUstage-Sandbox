@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Discount Code</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Discount Codes</value>
+    </caseValues>
+    <fields>
+        <label><!-- Apply to --></label>
+        <name>Apply_to__c</name>
+        <picklistValues>
+            <masterLabel>Charge level</masterLabel>
+            <translation><!-- Charge level --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Quote/Order level</masterLabel>
+            <translation><!-- Quote/Order level --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Currency --></label>
+        <name>Currency__c</name>
+        <relationshipLabel><!-- Discount Codes --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Choose the customer class for whom this discount has to be applied to. --></help>
+        <label><!-- Customer Class --></label>
+        <name>Customer_Class__c</name>
+        <picklistValues>
+            <masterLabel>*</masterLabel>
+            <translation><!-- * --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Default</masterLabel>
+            <translation><!-- Default --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Retail</masterLabel>
+            <translation><!-- Retail --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Discount Percent --></label>
+        <name>Discount_Percent__c</name>
+    </fields>
+    <fields>
+        <label><!-- Discount Value --></label>
+        <name>Discount_Value__c</name>
+    </fields>
+    <fields>
+        <label><!-- Price Type --></label>
+        <name>Price_Type__c</name>
+        <picklistValues>
+            <masterLabel>*</masterLabel>
+            <translation><!-- * --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Annual</masterLabel>
+            <translation><!-- Annual --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Half Yearly</masterLabel>
+            <translation><!-- Half Yearly --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Monthly</masterLabel>
+            <translation><!-- Monthly --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>One Time</masterLabel>
+            <translation><!-- One Time --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Quarterly</masterLabel>
+            <translation><!-- Quarterly --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Weekly</masterLabel>
+            <translation><!-- Weekly --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Priority --></label>
+        <name>Priority__c</name>
+        <picklistValues>
+            <masterLabel>0</masterLabel>
+            <translation><!-- 0 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>1</masterLabel>
+            <translation><!-- 1 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>2</masterLabel>
+            <translation><!-- 2 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>3</masterLabel>
+            <translation><!-- 3 --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Product Family --></label>
+        <name>Product_Family__c</name>
+        <picklistValues>
+            <masterLabel>*</masterLabel>
+            <translation><!-- * --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Default</masterLabel>
+            <translation><!-- Default --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Valid From --></label>
+        <name>Valid_From__c</name>
+    </fields>
+    <fields>
+        <label><!-- Valid To --></label>
+        <name>Valid_To__c</name>
+    </fields>
+    <layouts>
+        <layout>Discount Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+    <validationRules>
+        <errorMessage><!-- You should either enter a discount percentage or a discount value --></errorMessage>
+        <name>Both_discounts_cannot_be_blank</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- You can create a configuration with either a discount percentage or a discount value, but not both. --></errorMessage>
+        <name>Discount_percent_and_value</name>
+    </validationRules>
+</CustomObjectTranslation>

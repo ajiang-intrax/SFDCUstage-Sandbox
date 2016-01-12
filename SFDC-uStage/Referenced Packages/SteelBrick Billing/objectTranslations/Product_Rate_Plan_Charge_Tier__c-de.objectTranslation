@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>false</plural>
+        <value><!-- Product Rate Plan Charge Tier --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>true</plural>
+        <value><!-- Product Rate Plan Charge Tier --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>false</plural>
+        <value><!-- Product Rate Plan Charge Tier --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>true</plural>
+        <value><!-- Product Rate Plan Charge Tier --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>false</plural>
+        <value><!-- Product Rate Plan Charge Tier --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>true</plural>
+        <value><!-- Product Rate Plan Charge Tier --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>false</plural>
+        <value><!-- Product Rate Plan Charge Tier --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>true</plural>
+        <value><!-- Product Rate Plan Charge Tier --></value>
+    </caseValues>
+    <fields>
+        <help><!-- The start and end units are both inclusive for calculation. --></help>
+        <label>End-Einheit</label>
+        <name>End_Unit__c</name>
+    </fields>
+    <fields>
+        <label>Produkt-Tarifmodell Gebühr</label>
+        <name>Product_Rate_Plan_Charge__c</name>
+        <relationshipLabel>Produkt Preisplan Verantwortlicher Tiers</relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The start and end units are both inclusive for calculation. --></help>
+        <label>Anfang Einheit</label>
+        <name>Start_Unit__c</name>
+    </fields>
+    <fields>
+        <label>Einheitskostenpreis</label>
+        <name>Unit_Cost_Price__c</name>
+    </fields>
+    <fields>
+        <label>Preis pro Einheit</label>
+        <name>Unit_Price__c</name>
+    </fields>
+    <gender><!-- Neuter --></gender>
+    <nameFieldLabel><!-- Tier Number --></nameFieldLabel>
+    <validationRules>
+        <errorMessage>&quot;Abgestufte Zahlungen können nur für Produkttarifmodell-Gebühren angelegt werden, deren Preisformat &quot;&quot;abgestuft&quot;&quot; ist&quot;</errorMessage>
+        <name>Cannot_create_for_non_tiered_charges</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Start and End unit should be greater than zero --></errorMessage>
+        <name>Start_and_end_unit_cannot_be_0</name>
+    </validationRules>
+</CustomObjectTranslation>

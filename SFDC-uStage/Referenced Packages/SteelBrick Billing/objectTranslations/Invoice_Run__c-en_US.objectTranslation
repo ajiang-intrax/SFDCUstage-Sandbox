@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Invoice Run</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Invoice Runs</value>
+    </caseValues>
+    <fields>
+        <label><!-- Accounts Processed --></label>
+        <name>Accounts_Processed__c</name>
+    </fields>
+    <fields>
+        <label><!-- Completed Time --></label>
+        <name>Completed_Time__c</name>
+    </fields>
+    <fields>
+        <label><!-- Obsolete_CreditNotes Generated --></label>
+        <name>CreditNotes_Generated__c</name>
+    </fields>
+    <fields>
+        <label><!-- Exception Log --></label>
+        <name>Exception_Log__c</name>
+    </fields>
+    <fields>
+        <label><!-- Invoice Date --></label>
+        <name>Invoice_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Invoice Scheduler --></label>
+        <name>Invoice_Run_Scheduler__c</name>
+        <relationshipLabel><!-- Invoice Run --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Invoices Generated --></label>
+        <name>Invoices_Generated__c</name>
+    </fields>
+    <fields>
+        <label><!-- Orders Processed --></label>
+        <name>Jobs_Processed__c</name>
+    </fields>
+    <fields>
+        <label><!-- Start Time --></label>
+        <name>Start_Time__c</name>
+    </fields>
+    <fields>
+        <label><!-- Status --></label>
+        <name>Status__c</name>
+        <picklistValues>
+            <masterLabel>Completed</masterLabel>
+            <translation><!-- Completed --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Failed</masterLabel>
+            <translation><!-- Failed --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Processing</masterLabel>
+            <translation><!-- Processing --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Started</masterLabel>
+            <translation><!-- Started --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Target Run Date --></label>
+        <name>Target_Run_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total Invoice Value --></label>
+        <name>Total_Invoice_Value__c</name>
+    </fields>
+    <layouts>
+        <layout>Invoice Run Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+    <webLinks>
+        <label><!-- Email_Invoices_To_Users --></label>
+        <name>Email_Invoices_To_Users</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Post_all_Invoices --></label>
+        <name>Post_all_Invoices</name>
+    </webLinks>
+</CustomObjectTranslation>

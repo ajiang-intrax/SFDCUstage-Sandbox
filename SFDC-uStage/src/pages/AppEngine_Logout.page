@@ -1,0 +1,58 @@
+<apex:page showHeader="false" sidebar="false" controller="TemplateController" id="appengine_logout">
+
+<apex:iframe src="{!$Site.Prefix}/secur/logout.jsp" height="1" width="1" />
+
+<script>
+
+function redirectToLogin(){
+    
+     
+       if("{!user.User_Interests__c}" == 'Hosting an international student'){ 
+            
+            window.parent.location="{!$Site.Prefix}/AppEngine_SiteLoginPage?uIn=AYHF&";
+        
+    }
+    else if("{!user.User_Interests__c}" == 'Becoming a high school exchange student'){ 
+        window.parent.location="{!$Site.Prefix}/AppEngine_SiteLoginPage?uIn=AYPT&";
+    
+    } 
+    else if("{!user.User_Interests__c}" == 'Studying English'){ 
+        
+        window.parent.location="{!$Site.Prefix}/AppEngine_SiteLoginPage?uIn=CNPT&";
+    
+    }
+    else if("{!user.User_Interests__c}" == 'Becoming a Work Travel Participant'){ 
+        
+        window.parent.location="{!$Site.Prefix}/AppEngine_SiteLoginPage?uIn=WTPT&";
+    
+    }
+    else if("{!user.User_Interests__c}" == 'Looking for an intern'){ 
+        
+        window.parent.location="{!$Site.Prefix}/AppEngine_SiteLoginPage?uIn=IGIC&";
+    
+    }
+     else if("{!user.User_Interests__c}" == 'Finding an Internship'){ 
+        
+        window.parent.location="{!$Site.Prefix}/AppEngine_SiteLoginPage?uIn=IGIG&";
+    
+    }else if("{!user.User_Interests__c}" == 'Hosting an au pair'){ 
+        
+        window.parent.location="{!$Site.Prefix}/AppEngine_SiteLoginPage?uIn=APCHF&";
+    
+    }
+    else if("{!user.User_Interests__c}" == 'Becoming an au pair'){ 
+        
+        window.parent.location="{!$Site.Prefix}/AppEngine_SiteLoginPage?uIn=APCPT&";
+    
+    }else{
+    
+        window.parent.location="{!$Site.Prefix}/AppEngine_SiteLoginPage";
+    }
+
+}
+
+setTimeout("redirectToLogin()", 2000);
+
+</script>
+
+</apex:page>

@@ -1,0 +1,94 @@
+<apex:page id="ayusa_app_stu_emergency_contact_new" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+        <div class="wrapper">
+    <apex:form id="form">
+        <div class="page-header clearfix">
+ <h1>Ayusa Student Application</h1>
+<div class="back-to-main"><apex:outputLink id="BacktoMain" value="apex/ayusa_app_home?id={!applicantInfo.Id}">Back to Main Page</apex:outputLink></div>
+</div>
+        <h2>Add New Emergency Contact</h2>
+<div class="white-box clearfix">
+  <div class="panel two_thirds">
+          
+          <apex:Messages styleClass="custom-error-pagelevel"/>
+              <p><em> All fields marked with an asterisk (<span class="required no-padding">*</span>) are required</em></p><br/>
+          
+           <div class="form-row">
+                <div class="form-label left">First Name<span class="required">*</span> </div>
+                <div class="form-field">
+                   <apex:inputField id="FirstName" value="{!personInfo.First_Name__c}" required="true" /> 
+                </div>
+           </div>
+           
+           <div class="form-row">
+                <div class="form-label left">Last Name<span class="required">*</span> </div>
+                <div class="form-field">
+                   <apex:inputField id="LastName" value="{!personInfo.Last_Name__c}" required="true" /> 
+                </div>
+           </div>
+           
+           <div class="form-row">
+                <div class="form-label left">Country of Residence<span class="required">*</span> </div>
+                <div class="form-field">
+                   <apex:inputField id="Country" value="{!personInfo.Country_of_Residence__c}" required="true" /> 
+                </div>
+           </div>
+            
+            <div class="form-row">
+                <div class="form-label left">Emergency Phone<span class="required">*</span> </div>
+                <div class="form-field">
+                   <apex:inputField id="Mobile" value="{!personInfo.Mobile__c}" required="true" /> 
+                </div>
+           </div>
+           
+           <div class="form-row">
+                <div class="form-label left"> Other Phone<span class="required">*</span> </div>
+                <div class="form-field">
+                   <apex:inputField id="OtherPhone" value="{!personInfo.Other_Phone__c}" required="true" /> 
+                </div>
+           </div>
+           
+           <div class="form-row">
+                <div class="form-label left"> Email<span class="required">*</span> </div>
+                <div class="form-field">
+                   <apex:inputField id="Email" value="{!personInfo.Email__c}" required="true" /> 
+                </div>
+           </div>
+           
+           <div class="form-row">
+                <div class="form-label left"> Relationship<span class="required">*</span> </div>
+                <div class="form-field">
+                   <apex:inputField id="Relationship" value="{!personInfo.Role_Other__c}" required="true" /> 
+                </div>
+           </div>
+           
+           <apex:inputHidden value="{!personInfo.Role__c}" />
+              
+           
+              
+              <div class="form-row">
+
+                <div class="form-link">
+                    <apex:outputLink id="Back" value="/apex/ayusa_app_stu_emergency_contact?id={!applicantInfo.Id}"><i class="icon-chevron-left"></i> <span>Back</span></apex:outputLink>
+              </div> 
+              
+              <div class="form-button">
+                <apex:commandlink styleClass="save" action="{!navigator}">
+                  <apex:param name="nextPage" value="/apex/ayusa_app_stu_emergency_contact"/>
+                  <apex:param name="reDirectPage" value="true"/>
+                  <apex:param name="add" value="true" assignTo="{!add}"/>
+                  <apex:param name="role" value="EmergencyContact" assignTo="{!role}"/>
+                  <apex:commandButton id="Save" value="Save & Continue"/>
+                  <i class="icon-chevron-right"></i> 
+                </apex:commandlink>
+              </div>
+            </div> 
+        </div>
+    </div>
+       
+       </apex:form>
+        </div>
+        </apex:define>
+  </apex:composition>
+</apex:page>

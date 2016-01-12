@@ -1,0 +1,53 @@
+<apex:page docType="HTML-5.0"  showHeader="false" standardStylesheets="false" title="Login" controller="SiteLoginController" action="{!checkLogin}">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <div class="row margin-t">
+        <div class="col-sm-7 col-md-6 col-lg-5 no-float center-block">  
+          <div class="portal-entry clearfix">
+            <div class="row">
+              <div class="col-md-10 col-md-offset-1">
+                <c:block_header_registration userAgentCheck="{!userAgentCheck}" uInParameter="{!uInParameter}"/>
+                <apex:variable var="useremail" value="{!IF((uInParameter == 'APCPT' || uInParameter == 'APCHF'), 'Email', 'Username')}"/>
+                <apex:form styleClass="login form-nolabel" id="loginForm" forceSSL="true">
+               	  <apex:pageMessage severity="info" summary="{!apexErrorSummary}" rendered="{!firstTimeLogin}" escape="false"/>
+                  <apex:pageMessages id="error" rendered="{!firstTimeLogin == false}"/>
+                  <div class="form-group username">
+                    <apex:outputLabel value="{!$Label.site.username}" for="username"/>
+                    <div class="input-group"> <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                      <apex:inputText styleClass="form-control input-lg req" id="username" value="{!username}" html-placeholder="{!useremail}"/>
+                    </div>
+                  </div>
+                  <div class="form-group password">
+                    <apex:outputLabel value="{!$Label.site.password}" for="password"/>
+                    <div class="input-group"> <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                      <apex:inputSecret styleClass="form-control input-lg req" id="password" value="{!password}" html-placeholder="Password"/>
+                    </div>
+                  </div>
+                  <div class="form-group margin-b">
+                    <apex:commandlink styleClass="btn btn-primary btn-lg btn-block" action="{!login}" >
+                      <apex:param name="nextPage" value="/PostLoginRedirection"/>
+                      <apex:param name="reDirectPage" value="false"/>
+                      <apex:commandButton value="Login" />
+                    </apex:commandlink>
+                  </div>
+                  <div class="form-group no-margin">
+                    <apex:outputLink styleClass="btn btn-link btn-lg pull-left no-padding" value="{!$Site.Prefix}/AppEngine_SiteRegister" rendered="{!IF( (URLParam!='APCPT' && URLParam!='APCHF' && $Site.RegistrationEnabled && $Site.Name == 'AuPairCare'),true,false)}" target="_self"><span>New user?</span></apex:outputLink>                  
+                    <apex:outputLink styleClass="btn btn-link btn-lg pull-left no-padding" value="{!$Site.Prefix}/AppEngine_SiteRegister?{!appendSet}" rendered="{!IF( (URLParam=='APCPT' && $Site.RegistrationEnabled && $Site.Name == 'AuPairCare'),true,false)}" target="_self"><span>New user?</span></apex:outputLink>
+                    <apex:outputLink styleClass="btn btn-link btn-lg pull-left no-padding" value="{!$Site.Prefix}/AppEngine_SiteRegister?{!appendSet}" rendered="{!IF( (URLParam=='APCHF' && $Site.RegistrationEnabled && $Site.Name == 'AuPairCare'),true,false)}" target="_self"><span>New user?</span></apex:outputLink>
+                    <apex:outputLink styleClass="btn btn-link btn-lg pull-left no-padding" value="{!$Site.Prefix}/AppEngine_SiteRegister?{!appendSet}" rendered="{!IF( (URLParam!=null && URLParam!='WTPT' && $Site.RegistrationEnabled && $Site.Prefix == '/intraxappengine'),true,false)}" target="_self"><span>New user?</span></apex:outputLink>
+                    <apex:outputLink styleClass="btn btn-link btn-lg pull-right no-padding" value="{!$Site.Prefix}/AppEngine_ForgotPassword?{!appendSet}" target="_self"><span>Forgot your password?</span></apex:outputLink>
+                  </div>
+                </apex:form>
+              </div>
+              <!--  end registration --> 
+            </div>
+            <!--  end column --> 
+          </div>
+          <!--  end row --> 
+        </div>
+        <!--  end column --> 
+      </div>
+      <!--  end row --> 
+    </apex:define>
+  </apex:composition>
+</apex:page>

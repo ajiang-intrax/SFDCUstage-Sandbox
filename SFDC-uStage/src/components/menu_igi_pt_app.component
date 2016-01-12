@@ -1,0 +1,135 @@
+<apex:component layout="none">
+  <apex:attribute name="ApplicantInfo" description="This is the value for the Applicant_Info__c object." type="Applicant_Info__c" required="false" default="" />
+  <apex:attribute name="personInfo" description="This is the value for the Person_Info__c object." type="Person_Info__c" required="false" default="" />
+  <apex:attribute name="returnURL" description="This is the value for displaying the PT Photo" type="string" required="false" default="" />
+  <apex:variable var="personal_info" value="active" rendered="{! IF($CurrentPage.Name=='igi_pt_app_personal_info', true, false)}" />
+  <apex:variable var="education" value="active" rendered="{! IF($CurrentPage.Name=='igi_pt_app_education', true, false)}" />
+  <apex:variable var="internship_pref" value="active" rendered="{! IF($CurrentPage.Name=='igi_pt_app_program_pref', true, false)}" />
+  <apex:variable var="completion" value="active" rendered="{! IF($CurrentPage.Name=='igi_pt_app_completion', true, false)}" />
+  <apex:variable var="contact_info" value="active" rendered="{! IF($CurrentPage.Name=='igi_pt_app_contact_info', true, false)}" />
+  <apex:variable var="media" value="active" rendered="{! IF($CurrentPage.Name=='igi_pt_app_media', true, false)}" />
+  <apex:variable var="agreements" value="active" rendered="{! IF($CurrentPage.Name=='igi_pt_app_agreements', true, false)}" />
+  <apex:variable var="documents" value="active" rendered="{! IF($CurrentPage.Name=='igi_pt_app_documents', true, false)}" />
+  <apex:variable var="emergency" value="active" rendered="{! IF($CurrentPage.Name=='igi_pt_app_emergency', true, false)}" />
+  <apex:variable var="experience" value="active" rendered="{! IF($CurrentPage.Name=='igi_pt_app_experience', true, false)}" />
+  <apex:variable var="placement" value="active" rendered="{! IF($CurrentPage.Name=='igi_pt_app_placement', true, false)}" />
+  <apex:variable var="dependents" value="active" rendered="{! IF($CurrentPage.Name=='igi_pt_app_dependents', true, false)}" />
+  <apex:variable var="secondplacement" value="active" rendered="{! IF($CurrentPage.Name=='igi_pt_app_second_placement', true, false)}" />
+  <apex:variable var="health" value="active" rendered="{! IF($CurrentPage.Name=='igi_pt_app_health', true, false)}" />
+  <apex:variable var="visa" value="active" rendered="{! IF($CurrentPage.Name=='igi_pt_app_visa', true, false)}" />
+  <apex:outputText rendered="{!ApplicantInfo.Application_Level__c == 'Basic'}">
+    <!-- Basic App Menu "ORIGINAL"  -->
+    
+    <ul class="nav nav-list vs1 linear nrrw">
+      <hr class="visible-sm"/>
+      <li>
+        <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '051'), 'complete', '')} {!personal_info}"  
+                            value="/apex/igi_pt_app_personal_info?id={!ApplicantInfo.Id}"> <i class="fa"></i> <span>Personal Information</span> </apex:outputLink>
+      </li>
+      <li>
+        <apex:outputLink disabled="{! IF(contains(applicantinfo.PageStatus_Complete__c, '051'), 'false', 'true')}" 
+                            styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '052'), 'complete', '')} {!education}"  
+                            value="/apex/igi_pt_app_education?id={!ApplicantInfo.Id}"> <i class="fa"></i> <span>Education Information</span> </apex:outputLink>
+      </li>
+      <li>
+        <apex:outputLink disabled="{! IF(contains(applicantinfo.PageStatus_Complete__c, '052'), 'false', 'true')}" 
+                            styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '053'), 'complete', '')} {!internship_pref}"  
+                            value="/apex/igi_pt_app_program_pref?id={!ApplicantInfo.Id}"> <i class="fa"></i> <span>Internship Preferences</span> </apex:outputLink>
+      </li>
+      <li>
+        <apex:outputLink disabled="{! IF(contains(applicantinfo.PageStatus_Complete__c, '053'), 'false', 'true')}" 
+                            styleClass="{!completion}"  
+                            value="/apex/igi_pt_app_completion?id={!ApplicantInfo.Id}"> <i class="fa"></i> <span>Review and Submit</span> </apex:outputLink>
+      </li>
+    </ul>
+    </apex:outputText>
+    
+    <!-- Main App Menu "ORIGINAL"  -->
+    
+    <apex:outputText rendered="{!IF(ApplicantInfo.Application_Level__c == 'Main', true, false)}">
+   <apex:outputLink style="margin-left:12px; margin-top:10px;" styleClass="btn btn-link btn-lg"
+                            value="/apex/igi_pt_app_home?id={!ApplicantInfo.Id}"><i class="fa fa-home"></i> <span>Application Home</span> </apex:outputLink>
+      <ul class="nav nav-list vs1 non-linear nrrw">
+        <li class="title">
+           <div class="h4">Complete Your Profile</div>
+          <div class="margin-b3"><em>Required to submit your application.</em></div>
+        </li>
+        <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '051'), 'complete', '')} {!personal_info}"  
+                            value="/apex/igi_pt_app_personal_info?id={!ApplicantInfo.Id}"> <i class="fa"></i> <span>Personal Information</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '056'), 'complete', '')} {!contact_Info}"
+                            value="/apex/igi_pt_app_contact_info?id={!ApplicantInfo.Id}"> <i class="fa"></i> <span>Contact Information</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '052'), 'complete', '')} {!education}"  
+                            value="/apex/igi_pt_app_education?id={!ApplicantInfo.Id}"> <i class="fa"></i> <span>Education and Skills</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '058'), 'complete', '')} {!experience}"
+                            value="/apex/igi_pt_app_experience?id={!ApplicantInfo.Id}"> <i class="fa"></i> <span>Work Experience</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '053'), 'complete', '')} {!internship_pref}"  
+                            value="/apex/igi_pt_app_program_pref?id={!ApplicantInfo.Id}"> <i class="fa"></i> <span>Internship Preferences</span> </apex:outputLink>
+        </li>
+        <apex:outputText rendered="{!IF(applicantInfo.Service_Level__c == 'Independent', true, false)}">
+          <li>
+            <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '055'), 'complete', '')} {!placement}"
+                                value="/apex/igi_pt_app_placement?id={!ApplicantInfo.Id}"
+                                rendered="{!applicantInfo.Service_Level__c == 'Independent'}"> <i class="fa"></i> <span>Placement Information</span> </apex:outputLink>
+          </li>
+        </apex:outputText>
+        <apex:outputText rendered="{!IF(applicantInfo.Double_Placement_Indicated__c == 'Yes', true, false)}">
+          <li>
+            <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '062'), 'complete', '')} {!secondplacement}"
+                                value="/apex/igi_pt_app_second_placement?IsPartner=true&id={!ApplicantInfo.Id}"
+                                rendered="{!applicantInfo.Double_Placement_Indicated__c == 'Yes'}"> <i class="fa"></i> <span>Second Placement Information</span> </apex:outputLink>
+          </li>
+        </apex:outputText>
+        <apex:outputText rendered="{!applicantInfo.Visa_Type__c == 'J-1' }">
+          <li>
+            <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '054'), 'complete', '')} {!visa}"  
+                                value="/apex/igi_pt_app_visa?id={!ApplicantInfo.Id}"> <i class="fa"></i> <span>Visa Information</span> </apex:outputLink>
+          </li>
+        </apex:outputText>
+        <apex:outputText rendered="{!applicantInfo.Visa_Type__c == 'J-1' }">
+         <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '063'), 'complete', '')} {!dependents}" rendered="{!NOT($Site.SiteType == '')}"
+                            value="/apex/igi_pt_app_dependents?id={!ApplicantInfo.Id}&docType=igi-dependentdocs"> <i class="fa"></i> <span>J2 Dependents</span> </apex:outputLink>
+        </li>
+        </apex:outputText>
+        
+        <li class="title">
+          <div class="h4 margin-t3">Tell Us More</div>
+          <div class="margin-b3"><em>You can complete this section before or after you submit your application.</em></div>
+        </li>
+        <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '057'), 'complete', '')} {!emergency}"
+                            value="/apex/igi_pt_app_emergency?id={!ApplicantInfo.Id}"> <i class="fa"></i> <span>Emergency Contacts</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '059'), 'complete', '')} {!health}"
+                            value="/apex/igi_pt_app_health?id={!ApplicantInfo.Id}"> <i class="fa"></i> <span>Health Information</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '061'), 'complete', '')} {!documents}" rendered="{!NOT($Site.SiteType == '')}"
+                            value="/apex/igi_pt_app_documents?id={!ApplicantInfo.Id}&docType=igi-documents"> <i class="fa"></i> <span>Document Checklist</span> </apex:outputLink>
+        </li>
+        <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '060'), 'complete', '')} {!media}" rendered="{!NOT($Site.SiteType == '')}"
+                            value="/apex/igi_pt_app_media?id={!ApplicantInfo.Id}&docType=Participant-Photo"> <i class="fa"></i> <span>Photo Uploads</span> </apex:outputLink>
+        </li>
+         <!-- <apex:outputText rendered="{!applicantInfo.Visa_Type__c == 'J-1' }">
+         <li>
+          <apex:outputLink styleClass="{!IF(contains(applicantinfo.PageStatus_Complete__c, '063'), 'complete', '')} {!dependents}"
+                            value="/apex/igi_pt_app_dependents?id={!ApplicantInfo.Id}&docType=igi-dependentdocs"> <i class="fa"></i> <span>J2 Dependents</span> </apex:outputLink>
+        </li>
+        </apex:outputText> -->
+      </ul>
+   
+      
+      
+    </apex:outputText>
+</apex:component>

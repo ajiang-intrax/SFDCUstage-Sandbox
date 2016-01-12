@@ -1,0 +1,39 @@
+<apex:page docType="HTML-5.0" showHeader="false" standardStylesheets="true" controller="LoginRedirectionController" id="MessagingPage" action="{!message}">
+<apex:form id="msgForm" forceSSL="true">
+
+<apex:composition template="IntraxTemplate_Vs1">
+
+	<apex:define name="body">
+ 
+		<div class="wrapper">
+		<h1>Important Site Message</h1>
+			  <div class="white-box clearfix">
+				    <div class="panel full">
+				     
+		            <apex:repeat value="{!lstsysmsges}" var="msg">
+                         <apex:outputfield value="{!msg.Message__c}"/>
+                         &nbsp;
+                         <hr></hr>
+		           </apex:repeat>
+		           &nbsp;
+		           
+		            <div class="form-row">
+				     <div class="form-button">
+				      <apex:commandlink action="{!redirect}" >                         
+				            <apex:param name="nextPage" value="/LoginRedirection"/>
+				            <apex:param name="reDirectPage" value="false"/>  
+				            <apex:commandButton value="OK" />
+				      </apex:commandlink> 
+					 </div>
+			  </div>
+		          </div>
+		          
+		      </div>  
+		      
+			 
+		  </div> 
+  
+	 </apex:define>
+ </apex:composition>
+ </apex:form>
+</apex:page>

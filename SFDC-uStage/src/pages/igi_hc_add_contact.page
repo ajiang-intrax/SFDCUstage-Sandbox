@@ -1,0 +1,84 @@
+<apex:page docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" controller="IGI_HC_Controller" 
+                standardStylesheets="false" showHeader="false"
+                 id="igi_hc_add_contact" action="{!loadcontact}">
+<apex:composition template="intraxtemplate_vs3">
+  <apex:define name="body">
+    <style>
+ #branding-zone, #footer-zone{display:none;}
+#content-zone {
+background: #f8f8f8;
+}
+.standalone{background: #fff;
+border:#ccc solid 1px;   
+border-radius: 5px;
+padding:60px;}
+</style>       
+      
+       <div class="row">
+        <div class="col-md-8 center-block standalone"> 
+        
+         <apex:image styleClass="center-block" url="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/logos/medium-logo-intrax.png')}"/>
+           <h1 class="center-text">Add New Contact</h1>
+             <apex:form styleClass="form-vertical ws-validate" id="webform">  
+             
+                  
+                <div class="row">
+                <div class="col-sm-6">
+                        <div class="form-group">
+                             <label class="control-label">First Name</label>
+                             <apex:inputField styleClass="form-control" value="{!HCContact.FirstName}" id="fname" required="true"/> 
+                         </div>  
+                      </div>
+                     <div class="col-sm-6">
+                      <div class="form-group">
+                             <label class="control-label">Last Name</label>
+                             <apex:inputField styleClass="form-control" value="{!HCContact.LastName}" id="lname" required="true"/> 
+                         </div> 
+                    </div>
+                  </div> 
+                 <div class="row">
+                     <div class="col-sm-12">
+                      <div class="form-group">
+                             <label class="control-label">Title</label>
+                             <apex:inputField styleClass="form-control" value="{!HCContact.Title}" id="title" required="true"/> 
+                         </div>    
+                      </div>
+                  </div> 
+                 <div class="row">
+                     <div class="col-sm-6">
+                      <div class="form-group">
+                             <label class="control-label">E-mail</label>
+                             <apex:inputField styleClass="form-control" value="{!HCContact.Email}" id="email" required="true"/> 
+                         </div>    
+                      </div>
+                  
+                     <div class="col-sm-6">
+                      <div class="form-group">
+                             <label class="control-label">Phone Number</label>
+                             <apex:inputField styleClass="form-control" value="{!HCContact.Phone}" id="phone" required="true"/> 
+                         </div>    
+                      </div>
+                  </div> 
+                 
+                  
+                 <div class="margin-t3">
+                       <apex:commandlink styleClass="btn btn-primary btn-lg margin-r2" action="{!savehcContact}" onComplete="rerunjs();" reRender="webform" status="onsubmit">  
+                             <apex:commandButton value="Save" />
+                     </apex:commandlink>
+                     <apex:outputLink styleClass="btn btn-link btn-lg" value="/apex/igi_hc_view_signer?Id={!hcAccountId}">  
+                                 
+                                  <i class="fa fa-chevron-left"></i><span>Back</span>
+                                       
+                       </apex:outputLink> 
+                 </div>
+           
+            </apex:form>
+           
+           
+           </div><!--  end col -->
+        </div><!--  end row -->
+      
+      
+    </apex:define>
+ </apex:composition>
+</apex:page>

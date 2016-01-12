@@ -1,0 +1,44 @@
+<apex:page id="Participant_Second_job_Info" docType="html-5.0" standardController="Engagement__c" extensions="FlowEngagementController" standardStylesheets="true" showHeader="false">
+  <apex:composition template="IntraxTemplate_Vs1">
+    <apex:define name="body">
+     <apex:form >         
+      <div class="wrapper">
+        <apex:messages />
+        <h1>Intrax Work Travel Program - Job Information Form</h1>
+        
+            <div class="white-box clearfix">
+            <div class="flow two_thirds">
+            <!-- <h2>Thank You</h2> -->
+            <p>Thank you for submitting your Job Approval Request to Intrax. If needed, please use the “Upload More Documents” button below to submit any additional pages of your job offer or other documents pertaining to your new job.</p>
+
+            <p>Your request will be reviewed shortly and we will notify you when the request moves to the next phase of the approval process. If they have not already done so, the new Host Company will need to send us the required current Business License and Workman’s Compensation Document. These can be sent to iwtsupport@intraxinc.com. If you have these items, you can upload them now using the link below. Intrax must also speak with a representative of the Company to review the job details. Please ask them to call us at 1-888-224-0450 (Press 1 for Work and Travel).</p>
+            
+            <div class="form-row">
+                
+                <div class="form-link">
+                  <apex:outputLink id="BackLink" value="/apex/Home" style="text-decoration:none;"><i class="icon-chevron-left"></i> <span>Back to Home</span></apex:outputLink>
+                </div>
+                
+                 <div class="form-button">
+                   <apex:commandlink id="Uploadbtn" styleClass="next" action="{!getWTSecondJobFinishPage}">
+                   <apex:commandButton value="Upload More Documents"/>
+                   <i class="icon-chevron-right"></i> 
+                   </apex:commandlink>
+                 </div>
+                                 
+            </div>
+            
+            <!-- 
+            <div class="form-row">
+            <a class="form-button no-float no-margin close" href="#" onclick="window.close();">Close Window</a>
+            </div>
+            -->
+                         
+            </div>
+        </div>
+      </div>
+    </apex:form>
+
+    </apex:define>
+  </apex:composition>
+</apex:page>

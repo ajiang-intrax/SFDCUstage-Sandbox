@@ -1,0 +1,41 @@
+<apex:page docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" title="Home | Intrax" standardStylesheets="false" showHeader="false" action="{!checkLogin}">
+<apex:composition template="IntraxTemplate_Vs1">
+<apex:define name="body">
+<apex:form >
+
+        <div  class="wrapper">
+          
+<div class="page-header clearfix">
+<h1 class="page-title">Thank You!</h1></div>
+            
+<h2>Application Completed</h2>
+         
+            <div  class="white-box clearfix">
+             
+<div class="panel two_thirds">
+    <p>
+      Congratulations, you have successfully submitted your Application! If you would like a copy of your completed application, please view and print the PDF Summary. </p>
+
+	<p>You will be able to use your username and password to view this application if necessary. Please be patient as we review your application.</p>
+                
+               
+<div class="form-link no-float inline-block">
+                        <!--<apex:commandlink styleClass="next" action="{!navigator}">
+                          <i class="icon-chevron-right"></i> 
+                            <apex:param name="nextPage" value="/apex/your_applications"/>
+                          <apex:param name="reDirectPage" value="false"/>
+                          <apex:commandButton value="Back To Home"/>
+                        </apex:commandlink>-->
+
+                          <i class="icon-chevron-right"></i> 
+                          <apex:outputLink value="/apex/your_applications" style="display: inline-block; padding:0;">Back To Home</apex:outputLink>
+
+ </div>              
+                </div>         
+            </div>
+     </div>
+  
+    </apex:form>
+    </apex:define>
+    </apex:composition>
+</apex:page>

@@ -1,0 +1,709 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <content>cloneQuote</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <content>createQuoteStep1</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <content>createQuoteStep1</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <customHelpPage>support</customHelpPage>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <deprecated>false</deprecated>
+    <description>A Quote is a document that a vendor or service provider would give to a customer to describe specific goods and services that they may provide and its cost</description>
+    <enableActivities>true</enableActivities>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <fieldSets>
+        <fullName>QuoteStep1</fullName>
+        <availableFields>
+            <field>Create_Automatic_Order__c</field>
+            <isFieldManaged>true</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Quote__c</field>
+            <isFieldManaged>true</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Recalculate__c</field>
+            <isFieldManaged>true</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <description>It is used in Quote Wizard Step 1</description>
+        <displayedFields>
+            <field>Account__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>Status__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>Partner__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>CurrencyL__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>Shipping_Contact__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>Number_Of_Terms__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>Billing_Contact__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>Start_Date__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>Valid_To__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <label>Quote Wizard Step 1</label>
+    </fieldSets>
+    <fields>
+        <fullName>Account__c</fullName>
+        <deleteConstraint>Restrict</deleteConstraint>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Account</label>
+        <referenceTo>Account</referenceTo>
+        <relationshipLabel>Quotes</relationshipLabel>
+        <relationshipName>Quote</relationshipName>
+        <required>true</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Billing_Contact__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Billing Contact</label>
+        <referenceTo>Contact</referenceTo>
+        <relationshipLabel>Quote</relationshipLabel>
+        <relationshipName>Quote</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Contracted_MRR__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Contracted MRR</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Create_Automatic_Order__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>If this is true then it will create the Order from the quote trigger.</description>
+        <externalId>false</externalId>
+        <label>Create Automatic Order?</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>CurrencyL__c</fullName>
+        <deleteConstraint>Restrict</deleteConstraint>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Currency</label>
+        <referenceTo>Currency__c</referenceTo>
+        <relationshipLabel>Quote</relationshipLabel>
+        <relationshipName>Quote</relationshipName>
+        <required>true</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Discount_Code__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Discount Code</label>
+        <length>30</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Discount_Percent__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Discount Percent</label>
+        <precision>6</precision>
+        <required>false</required>
+        <scale>3</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Percent</type>
+    </fields>
+    <fields>
+        <fullName>Discount_Value__c</fullName>
+        <defaultValue>0</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Discount offered on this quote</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Discount offered on this quote</inlineHelpText>
+        <label>Discount Value</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Email_Sent__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>If it is checked that means an email has been sent to the customer.</description>
+        <externalId>false</externalId>
+        <label>Email Sent</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Exchange_Rate_Applied__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Exchange Rate Applied</description>
+        <externalId>false</externalId>
+        <inlineHelpText>If you are a multi currency org, this field will hold the exchange rate between the Quote Currency and your Corporate Currency. 
+Value in Corporate Currency = Value in Quote Currency x Exchange Rate Applied</inlineHelpText>
+        <label>Exchange Rate Applied</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>6</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Net_Total__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Subtotal - Discount Value</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Subtotal - Discount Value</inlineHelpText>
+        <label>Net Total</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Number_Of_Terms__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Leave this blank for &quot;Evergreen Subscriptions&quot; i.e., those that don&apos;t expire</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Leave this blank for &quot;Evergreen Subscriptions&quot; i.e., those that don&apos;t expire</inlineHelpText>
+        <label>Terms (Months)</label>
+        <precision>3</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Partner__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>Select the partner who places this quote on behalf of the client</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Select the partner who places this quote on behalf of the client</inlineHelpText>
+        <label>Partner</label>
+        <referenceTo>Account</referenceTo>
+        <relationshipLabel>Quotes (Partner)</relationshipLabel>
+        <relationshipName>Quotes</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Quote_Currency_Symbol__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>CurrencyL__r.Currency_Symbol__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Currency Symbol</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Quote__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>It tells the parent quote from which the quote is cloned</description>
+        <externalId>false</externalId>
+        <label>Parent Quote</label>
+        <referenceTo>Quote__c</referenceTo>
+        <relationshipLabel>Cloned Quotes</relationshipLabel>
+        <relationshipName>Quotes</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Recalculate__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Recalculate</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Shipping_Contact__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Primary(Shipping) Contact</label>
+        <referenceTo>Contact</referenceTo>
+        <relationshipLabel>Quote (Shipping Contact)</relationshipLabel>
+        <relationshipName>Quote1</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Start_Date__c</fullName>
+        <defaultValue>TODAY()</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Valid From</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Status__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Status</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Active</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Converted</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Expired</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Cancelled</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Sub_Total__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Quantity * Unit Price</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Quantity * Unit Price</inlineHelpText>
+        <label>Subtotal</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Tax__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Tax</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Todays_MRR__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Obsolete_Today&apos;s MRR</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>TotalProfitPercent__c</fullName>
+        <deprecated>false</deprecated>
+        <description>(Grand Total - Total Cost) 
+----------------------------------   x  100
+          Grand Total</description>
+        <externalId>false</externalId>
+        <inlineHelpText>(Grand Total - Total Cost) 
+----------------------------------   x  100
+          Grand Total</inlineHelpText>
+        <label>Total Profit Percent</label>
+        <precision>6</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Percent</type>
+    </fields>
+    <fields>
+        <fullName>Total_Contract_Value__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Total Contract Value</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Total_Cost__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Total Cost Price</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Total_Profit_Percent__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Obsolete Total Profit Percent</label>
+        <precision>4</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Percent</type>
+    </fields>
+    <fields>
+        <fullName>Total_Profit__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Total Profit (Excl Tax/VAT)</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Total_Quote_Products__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Total Quote Products</label>
+        <summaryForeignKey>Quote_Product__c.Quote__c</summaryForeignKey>
+        <summaryOperation>count</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Total__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Subtotal - Discount + VAT + Tax</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Subtotal - Discount + VAT + Tax</inlineHelpText>
+        <label>Grand Total</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>VAT__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>VAT</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Valid_To__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Valid To</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <label>Quote</label>
+    <listViews>
+        <fullName>All</fullName>
+        <columns>NAME</columns>
+        <columns>Account__c</columns>
+        <columns>Shipping_Contact__c</columns>
+        <columns>Status__c</columns>
+        <columns>Total__c</columns>
+        <columns>OWNER.ALIAS</columns>
+        <columns>CREATED_DATE</columns>
+        <filterScope>Everything</filterScope>
+        <label>All Quotes</label>
+        <language>en_US</language>
+    </listViews>
+    <nameField>
+        <label>Quote Name</label>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Quotes</pluralLabel>
+    <searchLayouts>
+        <customTabListAdditionalFields>Account__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Billing_Contact__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Shipping_Contact__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Status__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>CurrencyL__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Total__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Start_Date__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Valid_To__c</customTabListAdditionalFields>
+        <lookupDialogsAdditionalFields>Account__c</lookupDialogsAdditionalFields>
+        <searchFilterFields>NAME</searchFilterFields>
+        <searchFilterFields>Account__c</searchFilterFields>
+        <searchFilterFields>Billing_Contact__c</searchFilterFields>
+        <searchFilterFields>Status__c</searchFilterFields>
+        <searchFilterFields>Total__c</searchFilterFields>
+        <searchFilterFields>CREATEDBY_USER</searchFilterFields>
+        <searchFilterFields>CREATED_DATE</searchFilterFields>
+        <searchResultsAdditionalFields>Account__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Billing_Contact__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>CurrencyL__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Start_Date__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Valid_To__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Status__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Total__c</searchResultsAdditionalFields>
+    </searchLayouts>
+    <sharingModel>ReadWrite</sharingModel>
+    <webLinks>
+        <fullName>AddOptionalExtras</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Add Optional Extras</masterLabel>
+        <openType>sidebar</openType>
+        <page>addOptionalExtra</page>
+        <protected>false</protected>
+    </webLinks>
+    <webLinks>
+        <fullName>Attach_Quote_As_PDF</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Attach Quote As PDF</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <url>{!REQUIRESCRIPT(&quot;/soap/ajax/14.0/connection.js&quot;)}
+{!REQUIRESCRIPT(&quot;/soap/ajax/14.0/apex.js&quot;)}
+
+
+   // Now make a synchronous call to the Apex Web service
+   // method
+  
+var result = sforce.apex.execute(
+    &quot;invoiceit_s/ClassWebServiceEmailing&quot;, 
+    &quot;attachPdfToOpportunity&quot;,
+    {OppId : &quot;{!Quote__c.Id}&quot;,
+ quoteName : &quot; &quot;,
+ quoteId : &quot;{!Quote__c.Id}&quot;});
+
+   alert(result); //response</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Clone_Quote_With_Different_Currecy</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Clone Quote With Different Currency</masterLabel>
+        <openType>sidebar</openType>
+        <page>cloneQuoteWithDifferentCurrency</page>
+        <protected>false</protected>
+    </webLinks>
+    <webLinks>
+        <fullName>Conga_Quote2</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <height>600</height>
+        <linkType>url</linkType>
+        <masterLabel>View / Email Quote</masterLabel>
+        <openType>sidebar</openType>
+        <protected>false</protected>
+        <url>/apex/loop__looplus?eid={!Quote__c.Id}&amp;sessionId={!$Api.Session_ID}</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Convert_Quote</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Convert Quote</masterLabel>
+        <openType>sidebar</openType>
+        <page>convertQuoteToJob</page>
+        <protected>false</protected>
+    </webLinks>
+    <webLinks>
+        <fullName>Email_Quote</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Email Quote</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <url>{!REQUIRESCRIPT(&quot;/soap/ajax/14.0/connection.js&quot;)}
+{!REQUIRESCRIPT(&quot;/soap/ajax/14.0/apex.js&quot;)}
+
+
+   // Now make a synchronous call to the Apex Web service
+   // method
+   var result = sforce.apex.execute(
+    &quot;invoiceit_s/ClassWebServiceEmailing&quot;,  
+    &quot;sendQuote&quot;, 
+    {quoteId: &quot;{!Quote__c.Id}&quot;});
+   alert(result); //response</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Generate_Quote</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <hasMenubar>false</hasMenubar>
+        <hasScrollbars>true</hasScrollbars>
+        <hasToolbar>false</hasToolbar>
+        <height>600</height>
+        <isResizable>true</isResizable>
+        <linkType>page</linkType>
+        <masterLabel>Generate Quote</masterLabel>
+        <openType>newWindow</openType>
+        <page>sendQuote</page>
+        <position>none</position>
+        <protected>false</protected>
+        <showsLocation>false</showsLocation>
+        <showsStatus>false</showsStatus>
+    </webLinks>
+</CustomObject>

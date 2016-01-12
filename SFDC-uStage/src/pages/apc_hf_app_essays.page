@@ -1,0 +1,133 @@
+<apex:page title="Essays" id="apc_hf_app_essays" docType="html-5.0" applyBodyTag="false" applyHtmlTag="false" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="false" showHeader="false">
+  <apex:composition template="intraxtemplate_vs3">
+    <apex:define name="body">
+      <c:block_header_apc_hf_application userAgentCheck="{!userAgentCheck}"/>
+      <apex:variable value="{!1}" var="rowNum" id="rowCounter" />
+       <div id="app-page" class="row">
+        <div id="app-focus" class="col-md-8 col-md-push-3">
+        
+        <c:block_app_completion ApplicantInfo="{!applicantInfo}" /> 
+        
+          <h1>Match Questions</h1>
+          <p class="lead">The following questions provide au pairs a glimpse into your home and family life.
+           Take a moment to update your answers so that any au pair you select can learn about your family before the interview.</p>
+          <apex:form id="webform" styleClass="form-vertical ws-validate">
+            <apex:Messages styleClass="custom-error-pagelevel" id="messageapex" />
+            <apex:pageBlock id="pageBlock">
+              <apex:repeat id="PageBlockTable" value="{!EssayList}" var="item">
+                <div class="row">
+             <div class="col-sm-12">
+                <div class="form-group">
+                  <label class="control-label">
+                    <apex:outputText value="{!item.Label__c}" />
+                    <br/> 
+                    
+                    <apex:outputText rendered="{!item.Ordinal__c==12}">
+                    	<a data-toggle="modal" data-target="#essay1">See Example</a>
+              </apex:outputText>
+                    
+                     <apex:outputText rendered="{!item.Ordinal__c==13}">
+                    
+                     	<a data-toggle="modal" data-target="#essay2">See Example</a>
+ 				 </apex:outputText>
+                               
+                  </label>
+                    <apex:inputTextarea styleClass="form-control" id="Narrative" value="{!item.Narrative__c}"
+						required="TRUE"	onkeyup="countChar(this, 500, 'NarrativeCount{!rowNum}')" onfocus="countChar(this, 500, 'NarrativeCount{!rowNum}')" />
+                    <div class="char-limit bb"> <span class="char-count-label">Characters left:</span><span id="NarrativeCount{!rowNum}" class="char-count">{!500-len(item.Narrative__c)}</span> </div>
+                    <apex:message for="Narrative" styleClass="custom-error-text" id="errormesnarrative" />
+                  </div>
+                  </div>
+              </div><!--  end row -->
+                <apex:variable var="rowNum" value="{!rowNum + 1}" />
+              </apex:repeat>
+            </apex:pageBlock>
+            
+            <apex:outputPanel layout="block" rendered="{!ApplicantInfo.Application_Level__c == 'Main'}">
+             <div class="row">
+             <div class="col-sm-12">
+              <div class="form-group">
+              <label class="control-label">What are some of your au pair's responsibilities? <span class="info">(Choose all that apply)</span></label>
+              <apex:inputField styleClass="form-control" value="{!applicantInfo.AuPairsResponsibilities__c}" required="TRUE" id="responsabilities" />
+              </div>
+              </div>
+              </div><!--  end row -->
+            </apex:outputPanel>  
+            
+            <div class="form-group">
+              <div class="col-sm-12 margin-t">
+                <apex:outputLink id="Back" styleClass="btn btn-link btn-lg" value="/apex/apc_hf_app_interests?id={!applicantInfo.Id}"> <i class="fa fa-chevron-left"></i> <span>Back</span> </apex:outputLink>
+                <apex:commandlink styleClass="btn btn-primary btn-lg" action="{!navigator}" onComplete="rerunjs();" reRender="webform" status="onsubmit">
+                  <apex:param name="nextPage" value="{!IF(ApplicantInfo.Application_Level__c == 'Basic' && ApplicantInfo.Application_Type__c=='Original', '/apex/apc_hf_app_program_pref', '/apc_hf_app_employer')}"/>
+                  <apex:param name="reDirectPage" value="true"/>
+                  <apex:param name="essayType" value="APC" assignTo="{!EssayType}"/>
+                  <apex:param name="pageId" value="005"/>
+                  <apex:commandButton id="Continue" value="Save & Continue" />
+                </apex:commandlink>
+              </div>
+            </div>
+          </apex:form>
+        </div>
+        <!-- end column  -->
+        
+       <div id="app-side" class="col-md-3 col-md-pull-8">
+          <apex:form >
+            <c:menu_apc_hf_app PersonInfo="{!personInfo}" ApplicantInfo="{!applicantInfo}" />
+          </apex:form>
+        </div>
+        <!-- end column  --> 
+      </div>
+      <!-- end row --> 
+      
+      
+      <div class="modal fade" id="essay1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Describe your family and your children's personalities</h4>
+      </div>
+      <div class="modal-body">
+        <p>
+        <b>Example</b>
+        </p>
+        <p>
+          Hello! We are the Williams Family. My name is Shelly and my husband is Nick. We have been married for almost 7 years and we have two wonderful and active children, Theresa and Rachel. Theresa just turned five years old and Rachel will be one in October. Our family is very close and our kids get along great with each other. Theresa loves to care for her little sister and tries to teach her about all the things she is learning in school. Theresa is a very active little girl. She goes to ballet lessons two afternoons a week and is enrolled in swimming classes at the local YMCA. Rachel is still very young but is crawling so she is very curious and you have to keep an eye out for her at all times. She is a cheerful baby who is always smiling. Both Nick and I work full time during the week. Nick is an advertising executive and I work in marketing. We are very close to our family and the girls grandparents live just 15 minutes away so they visit often.
+
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+      <div class="modal fade" id="essay2">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Tell us about any family traditions and how you spend the holidays or vacation time 
+        </h4>
+      </div>
+      <div class="modal-body">
+        <p>
+        <b>Example</b>
+        </p>
+        <p>
+        The holidays are all about family time!  We are fortunate to have grandparents and other relatives so close by, one of Theresa’s favorite traditions is the day she spends with her grandparents making lots of different Christmas cookies to share with family and friends.  Grandpa even gets in on the fun with decorating the finished products with the girls.  We love the outdoors and spend many weekends at our cabin which is 3 hours away.  In the summer we swim and play in the beautiful lakes.  Nick has loved sailing since he was young and the girls are learning to enjoy it at a young age as well.  In the winter we enjoy skiing and sledding.
+ 		
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+      
+    </apex:define>
+  </apex:composition>
+</apex:page>

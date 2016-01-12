@@ -1,0 +1,18 @@
+<apex:page standardcontroller="GeoMatch__c" extensions="googleGeoHelper" action="{!doReassignments}">
+<!-- 
+The method should do the following:
+1) Pick the serialized matrix
+2) See if the assignments inside are compatible
+3) For each compatible assignment, create a new GeoMatch with the FromAD
+What to do with existing assignment for the HF's?
+-- Ownership of their records??
+-- Any notification needs? 
+4) For each incompatible assignement, do a State Based Computation
+-- Governor limits? 
+ -->
+ <apex:form >
+ <apex:PageMessages />
+ <apex:CommandButton action="{!returnBackToPreGeoMatch}" value="Go Back to Geo Pre Match">
+ </apex:CommandButton>
+ </apex:form>
+</apex:page>

@@ -1,0 +1,239 @@
+<apex:page id="IGI_PreApp_Home" docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+	<apex:includeScript value="{!URLFOR($Resource.MJQuery, 'jquery-ui-1.9.2.custom/js/jquery-1.8.3.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.MJQuery, 'jquery-ui-1.9.2.custom/js/jquery-ui-1.9.2.custom.min.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.MJQuery, 'jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css')}"/>
+    
+    <script type="text/javascript"> 
+         var j$ = jQuery.noConflict();
+ 
+        j$(document).ready(function(){
+            j$("#nosubmit").click(function() {
+                 $( '<div id="dialog" title="Intrax Global Internship Application"><p>Please complete all sections before submitting your application. If a section does not have a green tick <i class="icon-ok"></i>, then you should go back and provide further details.</p></div>' ).dialog({
+                  resizable: false,
+                  height:220,width:350,
+                  modal: true,
+                  buttons: {
+                    "Continue": function() {
+                      $( this ).dialog( "close" );
+                    }
+                  }
+                });
+            });
+        });
+    </script>   
+    <apex:composition template="IntraxTemplate_Vs1">
+        <apex:define name="body">
+            <div class="wrapper" id="IGI-preapp-home">
+                <apex:form id="form">
+                    
+                    <!-- Header -->
+                    <div class="page-header clearfix">
+                        <h1>Intrax Global Internship Application <apex:OutputText value=" - {!personInfo.First_Name__c} {!personInfo.Last_Name__c}" rendered="{!IsPartner}" /></h1>
+                    </div>
+                    
+                    <!-- Panel -->
+                    <div class="white-box clearfix">
+                    
+                        <!-- Basic Instruction's Message -->
+                        <div class="panel two_thirds">
+                            <apex:Messages id="errorMessages" />
+                            <p>Here’s how to enroll at Intrax</p>
+                            <ol>
+                                <li>Complete all following sections</li>
+                                <li>Review your application summary</li>
+                                <li>Submit your application</li>
+                            </ol>
+                            <p>&nbsp;</p>
+                            
+                            <!-- Section Link for IGI PreApp Program Selection Page -->
+                            <div class="form-row">
+                              <apex:commandlink id="programSelection" styleClass="accordion-button" action="{!navigator}">
+                                <apex:param name="nextPage" value="/apex/IGI_PreApp_Program_Selection"/>
+                                <apex:param name="reDirectPage" value="true"/>
+                                <apex:commandButton value="Program Selection" />
+                                <apex:outputPanel layout="block"  styleClass="not-started" rendered="{! IF((ISBLANK(applicantInfo.Intrax_Program_Options__c)), true, false)}"><span>Get Started</span> <i class="icon-chevron-right"></i></apex:outputPanel>
+                                <apex:outputPanel layout="block"  styleClass="finished" rendered="{! IF(NOT(ISBLANK(applicantInfo.Intrax_Program_Options__c)), true, false)}"><span>Completed</span> <i class="icon-ok"></i></apex:outputPanel>
+                              </apex:commandlink>
+                            </div>
+                            
+                             <!-- Section Link for IGI Program Preferences Page -->
+                            <apex:outputPanel rendered="{! applicantInfo.Intrax_Program_Options__c == 'Business Internship' || applicantInfo.Intrax_Program_Options__c == 'Hospitality Internship' }" >
+                            <div class="form-row">
+                              <apex:commandlink id="PrgPref1" styleClass="accordion-button" action="{!navigator}">
+                                <apex:param name="nextPage" value="/apex/IGI_preApp_Program_Preferences"/>
+                                <apex:param name="reDirectPage" value="true"/>
+                                <apex:commandButton value="Program Preferences" />
+                                <apex:outputPanel layout="block"  styleClass="not-started" rendered="{! IF((ISBLANK(applicantInfo.Service_Level__c)), true, false)}"><span>Get Started</span> <i class="icon-chevron-right"></i></apex:outputPanel>
+                                <apex:outputPanel layout="block"  styleClass="finished" rendered="{! IF(NOT(ISBLANK(applicantInfo.Service_Level__c)), true, false)}"><span>Completed</span> <i class="icon-ok"></i></apex:outputPanel>
+                              </apex:commandlink>
+                            </div>
+                            </apex:outputPanel>
+                            
+                            <!-- Section Link for IGI Program Preferences Page -->
+                            <apex:outputPanel rendered="{!NOT(applicantInfo.Intrax_Program_Options__c == 'Business Internship' || applicantInfo.Intrax_Program_Options__c == 'Hospitality Internship')}" >
+                            <div class="form-row">
+                              <apex:commandlink id="PrgPref2" styleClass="accordion-button" action="{!navigator}">
+                                <apex:param name="nextPage" value="/apex/IGI_preApp_Program_Preferences"/>
+                                <apex:param name="reDirectPage" value="true"/>
+                                <apex:commandButton value="Program Preferences" />
+                                <apex:outputPanel layout="block"  styleClass="not-started" rendered="{! IF((ISBLANK(applicantInfo.Engagement_Start__c)), true, false)}"><span>Get Started</span> <i class="icon-chevron-right"></i></apex:outputPanel>
+                                <apex:outputPanel layout="block"  styleClass="finished" rendered="{! IF(NOT(ISBLANK(applicantInfo.Engagement_Start__c)), true, false)}"><span>Completed</span> <i class="icon-ok"></i></apex:outputPanel>
+                              </apex:commandlink>
+                            </div>
+                            </apex:outputPanel>
+                            
+                            <!-- Section Link for IGI PreApp Biographical Details Page -->
+                            <div class="form-row">
+                              <apex:commandlink id="BioDetails" styleClass="accordion-button" action="{!navigator}">
+                                <apex:param name="nextPage" value="/apex/IGI_PreApp_Biographical_Details"/>
+                                <apex:param name="reDirectPage" value="true"/>
+                                <apex:commandButton value="Biographical Details" />
+                                <apex:outputPanel layout="block"  styleClass="not-started" rendered="{! IF((ISBLANK(personInfo.Gender__c)), true, false)}"><span>Get Started</span> <i class="icon-chevron-right"></i></apex:outputPanel>
+                                <apex:outputPanel layout="block"  styleClass="finished" rendered="{! IF(NOT(ISBLANK(personInfo.Gender__c)), true, false)}"><span>Completed</span> <i class="icon-ok"></i></apex:outputPanel>
+                              </apex:commandlink>
+                            </div>
+                            
+                            <!-- Section Link for IGI PreApp Biographical Details Page -->
+                            <div class="form-row">
+                              <apex:commandlink id="bioDocs" styleClass="accordion-button" action="{!navigator}">
+                                <apex:param name="nextPage" value="/apex/IGI_PreApp_Biographical_Documents"/>
+                                <apex:param name="reDirectPage" value="true"/>
+                                <apex:param name="docType" value="Participant-Photo" assignTo="{!docType}" />
+                                <apex:commandButton value="Biographical Documents (Optional)" />
+                                <apex:outputPanel layout="block"  styleClass="not-started" rendered="{! IF((ISBLANK(personInfo.Gender__c)), true, false)}"><span>Get Started</span> <i class="icon-chevron-right"></i></apex:outputPanel>
+                                <apex:outputPanel layout="block"  styleClass="finished" rendered="{! IF(NOT(ISBLANK(personInfo.Gender__c)), true, false)}"><span>Completed</span> <i class="icon-ok"></i></apex:outputPanel>
+                              </apex:commandlink>
+                            </div>
+                
+                            <!-- Section Link for IGI PreApp Contact Details Page -->
+                            <div class="form-row">
+                              <apex:commandlink id="ContactDetails" styleClass="accordion-button" action="{!navigator}">
+                                <apex:param name="nextPage" value="/apex/IGI_PreApp_Contact_Details"/>
+                                <apex:param name="reDirectPage" value="true"/>
+                                <apex:commandButton value="Contact Details" />
+                                <apex:outputPanel layout="block"  styleClass="not-started" rendered="{! IF((ISBLANK(applicantInfo.Home_Country__c)), true, false)}"><span>Get Started</span> <i class="icon-chevron-right"></i></apex:outputPanel>
+                                <apex:outputPanel layout="block"  styleClass="finished" rendered="{! IF(NOT(ISBLANK(applicantInfo.Home_Country__c)), true, false)}"><span>Completed</span> <i class="icon-ok"></i></apex:outputPanel>
+                              </apex:commandlink>
+                            </div>
+                            
+                             <!-- Section Link for IGI PreApp Emergency Contact Page -->
+                            <div class="form-row">
+                              <apex:commandlink id="EmergContact" styleClass="accordion-button" action="{!navigator}">
+                                <apex:param name="nextPage" value="/apex/IGI_PreApp_Emergency_Contact"/>
+                                <apex:param name="reDirectPage" value="true"/>
+                                <apex:commandButton value="Emergency Contacts" />
+                                <apex:outputPanel layout="block"  styleClass="not-started" rendered="{! NOT(applicantInfo.Emergency_Contact_Complete__c)}"><span>Get Started</span> <i class="icon-chevron-right"></i></apex:outputPanel>
+                                <apex:outputPanel layout="block"  styleClass="finished" rendered="{! applicantInfo.Emergency_Contact_Complete__c}"><span>Completed</span> <i class="icon-ok"></i></apex:outputPanel>
+                              </apex:commandlink>
+                            </div>
+                            
+                            <!-- Section Link for IGI PreApp Education Details Page -->
+                            <div class="form-row">
+                              <apex:commandlink id="EduDetails" styleClass="accordion-button" action="{!navigator}">
+                                <apex:param name="nextPage" value="/apex/IGI_PreApp_Education_Details"/>
+                                <apex:param name="reDirectPage" value="true"/>
+                                <apex:commandButton value="Education Details" />
+                                <apex:outputPanel layout="block"  styleClass="not-started" rendered="{! IF((ISNULL(applicantInfo.Primary_Activity__c)), true, false)}"><span>Get Started</span> <i class="icon-chevron-right"></i></apex:outputPanel>
+                                <apex:outputPanel layout="block"  styleClass="finished" rendered="{! IF(NOT(ISNULL(applicantInfo.Primary_Activity__c)), true, false)}"><span>Completed</span> <i class="icon-ok"></i></apex:outputPanel>
+                              </apex:commandlink>
+                            </div>
+                            
+                            <!-- Section Link for IGI PreApp Language Skills Page -->
+                            <div class="form-row">
+                              <apex:commandlink id="langSkills" styleClass="accordion-button" action="{!navigator}">
+                                <apex:param name="nextPage" value="/apex/IGI_PreApp_Language_Skills"/>
+                                <apex:param name="reDirectPage" value="true"/>
+                                <apex:commandButton value="Language Skills" />
+                                <apex:outputPanel layout="block"  styleClass="not-started" rendered="{! IF((ISBLANK(applicantInfo.Language_1__c)), true, false)}"><span>Get Started</span> <i class="icon-chevron-right"></i></apex:outputPanel>
+                                <apex:outputPanel layout="block"  styleClass="finished" rendered="{! IF(NOT(ISBLANK(applicantInfo.Language_1__c)), true, false)}"><span>Completed</span> <i class="icon-ok"></i></apex:outputPanel>
+                              </apex:commandlink>
+                            </div>
+                            
+                            <!-- Section Link for IGI Experience Details Page -->
+                            <div class="form-row">
+                              <apex:commandlink id="exp" styleClass="accordion-button" action="{!navigator}">
+                                <apex:param name="nextPage" value="/apex/IGI_preApp_Experience"/>
+                                <apex:param name="reDirectPage" value="true"/>
+                                <apex:param name="docType" value="Resume" assignTo="{!docType}" />
+                                <apex:commandButton value="Experience Details" />
+                                <apex:outputPanel layout="block"  styleClass="not-started" rendered="{! NOT(applicantInfo.Experience_Complete__c)}"><span>Get Started</span> <i class="icon-chevron-right"></i></apex:outputPanel>
+                                <apex:outputPanel layout="block"  styleClass="finished" rendered="{! applicantInfo.Experience_Complete__c}"><span>Completed</span> <i class="icon-ok"></i></apex:outputPanel>
+                              </apex:commandlink>
+                            </div>
+                            
+                            <!-- Section Link for IGI Placement Information Page -->
+                            <apex:outputPanel rendered="{! applicantInfo.Service_Level__c == 'Independent' && NOT(applicantInfo.Intrax_Program_Options__c == 'ProWorld Internship')}">
+                              <div class="form-row">
+                              <apex:commandlink id="placementInfo" styleClass="accordion-button" action="{!navigator}">
+                                <apex:param name="nextPage" value="/apex/IGI_preApp_Placement_Information"/>
+                                <apex:param name="reDirectPage" value="true"/>
+                                <apex:commandButton value="Placement Information" />
+                                <apex:outputPanel layout="block"  styleClass="not-started" rendered="{! IF((ISBLANK(positionInfo.Company_Name__c)), true, false)}"><span>Get Started</span> <i class="icon-chevron-right"></i></apex:outputPanel>
+                                <apex:outputPanel layout="block"  styleClass="finished" rendered="{! IF(NOT(ISBLANK(positionInfo.Company_Name__c)), true, false)}"><span>Completed</span> <i class="icon-ok"></i></apex:outputPanel>
+                              </apex:commandlink>
+                              </div>
+                            </apex:outputPanel>
+                            
+                            <!-- Section Link for IGI preApp Summary Page -->
+                            <div class="form-row">
+                              <apex:commandlink id="summary" styleClass="accordion-button" action="{!navigator}">
+                                <apex:param name="nextPage" value="/apex/IGI_PreApp_Summary"/>
+                                <apex:param name="reDirectPage" value="true"/>
+                                <apex:commandButton value="View Application Summary" />
+                              </apex:commandlink>
+                            </div>
+                            
+                            <!-- Command Button for Submit Application if is a Partner -->
+                            <div class="form-button">
+                                 <apex:commandlink id="partnerAudit" styleClass="submit" action="{!navigator}" rendered="{!isPartner && checkPreAppIGI && applicantInfo.Application_Level__c == 'Main' && (applicantInfo.Application_Stage__c == 'Working' || applicantInfo.Application_Stage__c == 'Submitted' )}">  
+                                <apex:param name="nextPage" value="/apex/IGI_PartnerAppAUDIT" />
+                                  <!--<apex:param name="nextPage" value="/apex/ApplicantsInfo" />-->
+                                  <apex:param name="SubmitApp" value="IGIPA"/>
+                                  <apex:param name="reDirectPage" value="true"/>
+                                   <apex:commandButton value="Submit and Audit Application"/> 
+                                   <!-- <apex:commandButton value="Submit Application"/> -->
+                                </apex:commandlink>
+                                
+                            
+                  			
+                  			<apex:outputPanel layout="block" rendered="{!(isPartner && NOT(checkPreAppIGI))}">
+                                <a id="nosubmit" href="" class="no-submit" style="cursor: pointer;">Submit and Audit Application</a>
+                            </apex:outputPanel>
+                            
+                             
+                             <apex:outputPanel layout="block" rendered="{!(NOT(checkPreAppIGI) && NOT(isPartner))}">
+                                <a id="nosubmit" href="" class="no-submit" style="cursor: pointer;">Submit Application</a>
+                            </apex:outputPanel>
+                            
+                            <apex:commandlink id="SubmitApp" styleClass="submit" action="{!navigator}" rendered="{!(NOT(isPartner) && checkPreAppIGI)}">  
+                              <apex:param name="nextPage" value="/apex/IGI_PreApp_Submitted" />
+                              <apex:param name="SubmitApp" value="IGIPA"/>
+                              <apex:param name="reDirectPage" value="true"/>
+                              <apex:commandButton value="Submit Application"/>                      
+                            </apex:commandlink>
+                            
+                        </div>
+                        
+                        <apex:outputPanel layout="block" rendered="{!IsPartner}">
+		                  <div class="form-link">
+		                    <apex:commandlink id="DeclineApp" action="{!navigator}" rendered="{!IsPartner}">
+		                        <i class="icon-thumbs-down"></i>
+		                      <apex:param name="nextPage" value="/apex/applicantsInfo"/>
+		                      <apex:param name="DeclineApp" value="DA"/>
+		                      <apex:param name="reDirectPage" value="false"/>
+		                      <apex:commandButton value="Decline Application" />
+		                    </apex:commandlink>
+		                  </div>
+		               </apex:outputPanel>
+                        
+                    </div>
+
+                    <div class="panel one_third last aside">
+                       <!-- <c:Badge_Centers_Contact />    -->           
+                    </div>
+                    </div>
+                </apex:form>
+            </div>
+        </apex:define>
+    </apex:composition>
+</apex:page>

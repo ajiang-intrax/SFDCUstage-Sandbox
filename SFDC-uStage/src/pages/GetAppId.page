@@ -1,0 +1,37 @@
+<apex:page sidebar="false" controller="CheckCasperId" >
+   <apex:form >
+      <apex:sectionHeader title="CasperId and ApplicationId mapping in CSV file "/>
+      <apex:pagemessages />
+      <apex:pageBlock >
+            <p style='font-size:12px'>
+            1. Please browse [CasperId , AssetId] .csv file and Click 'Upload File' button to process. <br/>
+                2. Click 'Download file' button and save as .csv for ApplicationId, CasperId and AssetId mapping.<br/><br/>
+            <u> Note:</u>&nbsp; Due to size limit, Please upload 900 CasperId (+AssetId ) per download.
+            </p>
+          <br/>
+             <center>
+              
+              <apex:inputFile value="{!contentFile}" filename="{!nameFile}" /> <apex:commandButton action="{!ReadFile}" value="Upload File" id="theButton" style="width:70px;"/>
+              &nbsp; &nbsp; &nbsp; 
+              <apex:commandButton action="/apex/CasperMapDownload" value="Download File" id="theButton1" style="width:90px;"/>
+            </center> 
+          
+       <apex:pageblocktable value="{!AppId}" var="app" rendered="{!NOT(ISNULL(AppId))}">
+          <apex:column headerValue="Application Id">
+              <apex:outputText value="{!app.applnid}"/>
+          </apex:column>
+          <apex:column headerValue="Casper Id">
+              <apex:outputtext value="{!app.casper}"/>
+          </apex:column>
+          <apex:column headerValue="Assest Id">
+              <apex:outputtext value="{!app.asset}"/>
+          </apex:column>
+          <apex:column headerValue="Application Name">
+              <apex:outputText value="{!app.applnName}"/>
+          </apex:column>
+         
+      </apex:pageblocktable> 
+     
+      </apex:pageBlock>       
+   </apex:form>   
+</apex:page>

@@ -1,0 +1,188 @@
+<apex:page docType="html-5.0" standardController="Applicant_Info__c" extensions="AppEngine_Controller" title="Home | Intrax" standardStylesheets="false" showHeader="false" action="{!checkLogin}">
+    <script type="text/javascript">
+    function disable_button(sender){
+        sender.disabled = true;
+    }
+    </script>
+    <apex:composition template="IntraxTemplate_Vs1">
+        <apex:define name="body">
+        <meta name="viewport" content="width=960, initial-scale=1.0"/>
+            <div class="wrapper">
+                <apex:form >
+                    <!--<h1>My Applications</h1>-->
+                    <h1><apex:outputText value="{!$Label.T_0023}" /></h1>
+                    <div class="white-box clearfix">
+                    <c:PT_Sub_Navigation rendered="{!IsIGIIntern || UserInterests == 'Becoming a Work Travel Participant'}"/>
+                      <div class="panel two_thirds">
+                        <apex:outputPanel style="margin-bottom:10px;" StyleClass="accordion" rendered="{! CheckPTAppStatus && CheckHFAppStatus && CheckCentersAppStatus}">                           
+                          	<h3 class="ui-state-default"><a href="#" id="start-application"><apex:outputText value="{!$Label.T_0025}" /></a></h3>                                                                             	                         
+                          <div>
+                            <apex:outputPanel layout="block" styleClass="form-link no-float no-margin"  rendered="{! CheckPTAppStatus && UserInterests == 'Becoming a high school exchange student'}">            
+                              <apex:commandlink styleClass="no-padding" action="{!navigator}" >
+                                <apex:param name="nextPage" value="/apex/ayusa_preapp_home"/>
+                                <apex:param name="reDirectPage" value="true"/>
+                                <apex:param name="app" value="AyusaPT" assignTo="{!app}"/>
+                                <apex:param name="role" value="Student" assignTo="{!role}"/>            
+                                <apex:commandButton value="Ayusa Student Application" onclick="disable_button(this);"/>  
+                              </apex:commandlink>
+                            </apex:outputPanel>
+                            <apex:outputPanel layout="block" styleClass="form-link no-float no-margin"  rendered="{! CheckHFAppStatus && UserInterests == 'Hosting an international student'}">            
+                                <apex:commandlink styleClass="no-padding"  action="{!navigator}">
+                                <apex:param name="nextPage" value="/apex/ayusa_hf_home"/>
+                                <apex:param name="reDirectPage" value="true"/>
+                                <apex:param name="app" value="AyusaHF" assignTo="{!app}"/>
+                                <apex:param name="role" value="Host" assignTo="{!role}"/>
+                                <apex:commandButton value="Ayusa Host Family Application" onclick="disable_button(this);" />
+                              </apex:commandlink>
+                            </apex:outputPanel>
+                            <!-- Centers -->
+                            <apex:outputPanel layout="block" styleClass="form-link no-float no-margin"  rendered="{! CheckCentersAppStatus && UserInterests == 'Studying English'}"> 
+                              <apex:commandlink styleClass="no-padding no-dbclick"  action="{!navigator}">
+                                <apex:param name="nextPage" value="/apex/centers_preapp_home"/>
+                                <apex:param name="reDirectPage" value="true"/>
+                                <apex:param name="app" value="Centers" assignTo="{!app}"/>
+                                <apex:param name="role" value="Student" assignTo="{!role}"/>
+                                <apex:commandButton value="{!$Label.T_0026}" onclick="disable_button(this);" />
+                              </apex:commandlink>
+                            </apex:outputPanel>
+                            <apex:outputPanel layout="block" styleClass="form-link no-float no-margin"  rendered="{! UserInterests == 'Finding an internship'}"> 
+                              <apex:commandlink styleClass="no-padding"  action="{!navigator}">
+                                <apex:param name="nextPage" value="/apex/Participant_preapp_home"/>
+                                <apex:param name="reDirectPage" value="true"/>
+                                <apex:param name="app" value="IGI" assignTo="{!app}"/>
+                                <apex:param name="role" value="Student" assignTo="{!role}"/>
+                                <apex:commandButton value="Intrax Global Internship Application" onclick="disable_button(this);" />
+                              </apex:commandlink>
+                            </apex:outputPanel>
+                            <apex:outputPanel layout="block" styleClass="form-link no-float no-margin"  rendered="{! UserInterests == 'Becoming a Work Travel Participant'}"> 
+                              <apex:commandlink styleClass="no-padding"  action="{!navigator}">
+                                <apex:param name="nextPage" value="/apex/participant_preapp_home"/>
+                                <apex:param name="reDirectPage" value="true"/>
+                                <apex:param name="app" value="WT" assignTo="{!app}"/>
+                                <apex:param name="role" value="Student" assignTo="{!role}"/>
+                                <apex:commandButton value="Work and Travel Application" onclick="disable_button(this);" />
+                              </apex:commandlink>
+                            </apex:outputPanel>
+                            <!-- #Centers -->         
+                        
+                    </div>
+                            </apex:outputPanel>
+                            <apex:outputPanel style="margin-bottom:10px;" styleClass="form-button" layout="block" rendered="{! NOT(CheckPTAppStatus && CheckHFAppStatus && CheckCentersAppStatus)}">
+                                <apex:outputLink styleClass="no-submit"><apex:outputText value="{!$Label.T_0025}" /></apex:outputLink>           
+                            </apex:outputPanel>
+                            <apex:outputPanel StyleClass="dropt" style="margin-top:10px;" rendered="{! NOT(CheckPTAppStatus && CheckHFAppStatus && CheckCentersAppStatus)}">
+                                    <i class="icon-question-sign"></i>
+                                    <span><apex:outputText value="{!$Label.T_0050}" /></span>
+                            </apex:outputPanel>
+                </div>
+      
+                <div class="panel full last">
+                    
+                    <apex:outputPanel layout="block" styleClass="form-row" rendered="{!IF(ApplicantInfoList.Size > 0, false, true)}"><span class="no-records"><apex:outputText value="{!$Label.T_0024}" /></span></apex:outputPanel>
+                       
+                        <apex:pageBlock >
+                            <apex:pageBlockTable styleClass="pageblocktable" value="{!ApplicantInfoList}" var="item" rendered="{!IF(ApplicantInfoList.Size > 0, true, false)}">
+                                <apex:variable var="isAyusaTypePart" value="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Participant', true, false)}"/>
+                                <apex:variable var="isAyusaTypefam" value="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Host Family', true, false)}"/>
+                                <apex:column headerValue="">
+                                    
+                                    <!-- Centers (Edit Link)-->
+                                    <apex:outputLink value="/apex/centers_preapp_home?id={!item.Id}" rendered="{!IF(item.Intrax_Program__c == 'English and Professional Skills' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Basic', true, false)}"><apex:outputText value="{!$Label.T_0051}" /></apex:outputLink>
+                                    <apex:outputLink value="/apex/centers_app_home?id={!item.Id}" rendered="{!IF(item.Intrax_Program__c == 'English and Professional Skills' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Main', true, false)}"><apex:outputText value="{!$Label.T_0051}" /></apex:outputLink>
+                                    
+                                    <!-- IGI Application (Edit Application)-->
+                                    <apex:outputLink value="/apex/Participant_PreApp_Home?id={!item.Id}" rendered="{!IF(item.Intrax_Program__c == 'Internship' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Main', true, false)}">Edit</apex:outputLink>
+                                    <!-- Temporary disabled, because the app stage is not designed yet
+                                    <apex:outputLink value="/apex/IGI_App_Home?id={!item.Id}" rendered="{!IF(item.Intrax_Program__c == 'Internship' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Main', true, false)}">Edit</apex:outputLink>
+                                    -->
+                                    
+                                    <!-- WT Application (Edit Application)-->
+                                    <apex:outputLink value="/apex/Participant_PreApp_Home?id={!item.Id}" rendered="{!IF(item.Intrax_Program__c == 'Work Travel' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Main', true, false)}">Edit</apex:outputLink>
+                                    
+                                    <!-- Ayusa Application (Edit Application) -->
+                                    <apex:outputLink value="/apex/ayusa_preapp_home?id={!item.Id}" rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Basic', true, false)}">Edit</apex:outputLink>
+                                    <apex:outputLink value="/apex/ayusa_app_home?id={!item.Id}" rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Participant' && NOT(item.Application_Stage__c == 'Working') && item.Application_Level__c == 'Basic', true, false)}">Edit</apex:outputLink>
+                                    <apex:outputLink value="/apex/ayusa_app_home?id={!item.Id}" rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Main', true, false)}">Edit</apex:outputLink>
+                                    <apex:outputLink value="/apex/ayusa_hf_home?id={!item.Id}" rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Host Family' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Main', true, false)}">Edit</apex:outputLink>
+                                    
+                                    <!-- Ayusa -->
+                                    <apex:outputText value=" | " rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Basic', true, false)}"/>
+                                    <apex:outputText value=" | " rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Participant' && NOT(item.Application_Stage__c == 'Working') && item.Application_Level__c == 'Basic', true, false)}"/>
+                                    <apex:outputText value=" | " rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Main', true, false)}"/>
+                                    
+                                    <!-- Ayusa (View Link) -->
+                                    <apex:outputLink value="/apex/ayusa_preapp_summary?id={!item.Id}&view" rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Basic', true, false)}">View</apex:outputLink>
+                                    <apex:outputLink value="/apex/ayusa_preapp_summary?id={!item.Id}&view" rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Participant' && NOT(item.Application_Stage__c == 'Working') && item.Application_Level__c == 'Basic', true, false)}">View</apex:outputLink>
+                                    <apex:outputLink value="/apex/ayusa_main_submitted_view?id={!item.Id}&view" rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Main', true, false)}">View</apex:outputLink>
+                                    <apex:outputLink value="/apex/ayusa_main_submitted_view?id={!item.Id}&view" rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Participant' && NOT(item.Application_Stage__c == 'Working') && item.Application_Level__c == 'Main', true, false)}">View</apex:outputLink>
+                                    <apex:outputText value=" | " rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Host Family' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Main', true, false)}"/>
+                                    <apex:outputLink value="/apex/ayusa_hf_submitted_view?id={!item.Id}&view" rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Host Family' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Main', true, false)}">View</apex:outputLink>
+                                    <apex:outputLink value="/apex/ayusa_hf_submitted_view?id={!item.Id}&view" rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Host Family' &&  NOT(item.Application_Stage__c == 'Working') && item.Application_Level__c == 'Main', true, false)}">View</apex:outputLink>
+              
+                                    <!-- Centers -->
+                                    <apex:outputText value=" | " rendered="{!IF(item.Intrax_Program__c == 'English and Professional Skills' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Basic', true, false)}"/>
+                                    <apex:outputText value=" | " rendered="{!IF(item.Intrax_Program__c == 'English and Professional Skills' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Main', true, false)}"/> 
+                                    
+                                    <!-- Centers (View Link) -->
+                                    <apex:outputLink value="/apex/centers_preapp_summary?id={!item.Id}&view" rendered="{!IF(item.Intrax_Program__c == 'English and Professional Skills' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Basic', true, false)}"><apex:outputText value="{!$Label.T_0052}" /></apex:outputLink> 
+                                    <apex:outputLink value="/apex/centers_app_summary?id={!item.Id}&view" rendered="{!IF(item.Intrax_Program__c == 'English and Professional Skills' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Main', true, false)}"><apex:outputText value="{!$Label.T_0052}" /></apex:outputLink>
+                                    <apex:outputLink value="/apex/centers_app_summary?id={!item.Id}&view" rendered="{!IF(item.Intrax_Program__c == 'English and Professional Skills' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Submitted' && item.Application_Level__c == 'Main', true, false)}"><apex:outputText value="{!$Label.T_0052}" /></apex:outputLink>  
+                                    
+                                    <!-- IGI Application -->
+                                    <apex:outputText value=" | " rendered="{!IF(item.Intrax_Program__c == 'Internship' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Main', true, false)}"/>
+                                    <!-- Temporary disabled, because the app stage is not designed yet
+                                    <apex:outputText value=" | " rendered="{!IF(item.Intrax_Program__c == 'Internship' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Main', true, false)}"/>  
+                                     -->
+                                    <!-- IGI Application (View Link) -->
+                                    <apex:outputLink value="/apex/Participant_preApp_Summary?id={!item.Id}&view" rendered="{!IF(item.Intrax_Program__c == 'Internship' && item.Type__c == 'Participant' && item.Application_Level__c == 'Main', true, false)}">View</apex:outputLink> 
+                                    <!-- 
+                                    <apex:outputLink value="/apex/IGI_preApp_Summary?id={!item.Id}&view" rendered="{!IF(item.Intrax_Program__c == 'Internship' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Basic', true, false)}">View</apex:outputLink> 
+                                    <apex:outputLink value="/apex/IGI_preApp_Summary?id={!item.Id}&view" rendered="{!IF(item.Intrax_Program__c == 'Internship' && item.Type__c == 'Participant' && (item.Application_Stage__c == 'Submitted' || item.Application_Stage__c == 'In-Review') && item.Application_Level__c == 'Basic', true, false)}">View</apex:outputLink>
+                                    <apex:outputLink value="/apex/IGI_preApp_Summary?id={!item.Id}&view" rendered="{!IF(item.Intrax_Program__c == 'Internship' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Main', true, false)}">View</apex:outputLink>
+                                    <apex:outputLink value="/apex/IGI_preApp_Summary?id={!item.Id}&view" rendered="{!IF(item.Intrax_Program__c == 'Internship' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Submitted' && item.Application_Level__c == 'Main', true, false)}">View</apex:outputLink>
+                                     -->
+                                    
+                                    <!-- AYII story 74 -->                           
+                                    <apex:outputText value="|" rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Host Family' && item.Sys_Allow_Cloning__c, true, false)}"/>
+                                    <apex:outputLink value="/apex/ayusa_hf_clone?id={!item.Id}" rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Host Family' && item.Sys_Allow_Cloning__c, true, false)}">Reapply</apex:outputLink>
+                                    <!-- AYII story 74 --> 
+                                    
+                                    <!-- WT Application -->
+                                    <apex:outputText value=" | " rendered="{!IF(item.Intrax_Program__c == 'Work Travel' && item.Type__c == 'Participant' && item.Application_Stage__c == 'Working' && item.Application_Level__c == 'Main', true, false)}"/>
+                                    
+                                    <!-- WT Application (View Link) -->
+                                    <apex:outputLink value="/apex/Participant_preApp_Summary?id={!item.Id}&view" rendered="{!IF(item.Intrax_Program__c == 'Work Travel' && item.Type__c == 'Participant' && item.Application_Level__c == 'Main', true, false)}">View</apex:outputLink> 
+                                    
+                                    
+                                    
+                                </apex:column>
+            
+                                <!-- Application Type -->
+                                <apex:column headerValue="{!$Label.T_0045}">
+                                    <apex:outputText value="Ayusa - Host Family" rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Host Family', true, false)}"/>
+                                    <apex:outputText value="Ayusa - Student" rendered="{!IF(item.Intrax_Program_Options__c == 'Ayusa High School' && item.Type__c == 'Participant', true, false)}"/>
+                                    <apex:outputText value="{!$Label.T_0207}" rendered="{!IF(item.Intrax_Program__c == 'English and Professional Skills' && item.Type__c == 'Participant', true, false)}"/>
+                                    <apex:outputText value="Intrax Global Internship Application" rendered="{!IF(item.Intrax_Program__c == 'Internship' && item.Type__c == 'Participant', true, false)}"/>
+                                    <apex:outputText value="Work and Travel Application" rendered="{!IF(item.Intrax_Program__c == 'Work Travel' && item.Type__c == 'Participant', true, false)}"/>
+                                </apex:column>
+                                
+                                <!-- Application Level -->
+                                <apex:column headerValue="{!$Label.T_0046}" value="{!item.Application_Level__c}" />
+                                
+                                <!-- Application Stage -->
+                                <apex:column headerValue="{!$Label.T_0047}" value="{!item.Application_Stage__c}" />
+                                
+                                <!-- Last Modified Date -->
+                                <apex:column headerValue="{!$Label.T_0048}" value="{!item.LastModifiedDate}" />
+                                
+                                <!-- Created Date -->
+                                <apex:column headerValue="{!$Label.T_0049}" value="{!item.CreatedDate}" />
+                            </apex:pageBlockTable>
+                        </apex:pageBlock>
+                    </div>
+                </div>
+            </apex:form>
+        </div>
+    </apex:define>
+</apex:composition>
+</apex:page>

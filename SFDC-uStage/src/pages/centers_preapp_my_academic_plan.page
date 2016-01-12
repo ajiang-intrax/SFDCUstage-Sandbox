@@ -1,0 +1,977 @@
+<!--  
+*  Description      :   Visualforce page helpful in displaying and holding products and plans related Information with it.
+* 
+*  Created By       :   
+*
+*  Created Date     :   03/18/2013
+*
+*  Version          :   v1.0 - Created 
+-->
+<apex:page docType="html-5.0" standardController="Applicant_Info__c" id="pg" extensions="AppEngine_Controller" action="{!checkLogin}" standardStylesheets="true" showHeader="false">
+
+    <!-- UI Blocker component for Background processing -->
+    <c:BlockUI />
+
+    <apex:composition template="IntraxTemplate_Vs1">
+        <apex:define name="body">
+            
+            <div class="wrapper" id="centers_preapp_my_academic_plan">  
+                <apex:form id="frm">
+                
+                    
+                
+                    <!-- Heading -->
+                    <div class="page-header clearfix">
+                        <h1 class="page-title"><apex:outputText value="{!$Label.T_0053}" /></h1>
+                        <div class="back-to-main"><apex:outputLink value="apex/centers_preapp_home?id={!applicantInfo.Id}"><apex:outputText value="{!$Label.T_0075}" /></apex:outputLink></div>
+                    </div>
+    
+                    <!-- Section Header -->
+                    <div class="section-header clearfix">
+                        <h2><apex:outputText value="{!$Label.T_0089}" /></h2>
+                    </div> 
+    
+                    <!-- Panel -->  
+                    <div class="white-box clearfix">   
+                        
+                        <div class="panel two_thirds">
+    
+                            <apex:Messages id="errorMessges" styleClass="custom-error-pagelevel"/>
+                            <p><em> <apex:outputText value="{!$Label.T_0003}" /></em></p><br/>
+    
+                            <!-- Sub Header -->
+                            <h2><apex:outputText value="{!$Label.T_0090}" /></h2>
+                            
+                            <!-- Where would you like to study (Intrax Center)-->
+                            <div class="form-row">
+                                <div class="form-label left "><apex:outputText value="{!$Label.T_0091}" /><span class="required">*</span><br />
+                                <span style="font-size:12px; line-height:1em;"><em><apex:outputText value="{!$Label.T_0092}" /></em></span>
+                                </div>
+                                <div class="form-field">
+                                    <!-- CT-112 -->
+                                    <apex:inputField id="Intrax_Center" value="{!applicantInfo.Intrax_Center__c}" required="TRUE" onchange="if(this.value != '') setIC(this.value);">
+                                    </apex:inputField>    
+                                    <!-- CT-112 End-->
+                                        
+                                    <!--  CT-116 -->
+                                    <!-- Spinner enable again since this is causing exception when user is not waiting for ajax to complete -->
+                                    <apex:actionFunction name="setIC" action="{!populateApplicantProductWrapper}" immediate="true" status="setICStatus" reRender="errorMessges, programPanel, ProgramBlockPackage, ProgramBlockCustom, outputPanelForScripts">
+                                        <apex:param name="param1" value="" assignTo="{!applicantInfo.Intrax_Center__c}" />
+                                    </apex:actionFunction>
+                                    
+                                    <p>
+                                        <apex:actionStatus id="setICStatus" startStyleClass="feedback">
+                                            <apex:facet name="start" >
+                                                <i class="no-float icon-spinner icon-spin icon-2x pull-left"></i>  <strong>{!$Label.T_0276}</strong>
+                                            </apex:facet>
+                                        </apex:actionStatus>
+                                    </p>
+                                    <!--  CT-116 End--> 
+                                </div>
+                            </div>
+    
+                            <!-- Do you know when you would like to start your program? (Program Start Option)-->
+                            <div class="form-row">
+                                <div class="form-label left "><apex:outputText value="{!$Label.T_0093}" /><span class="required">*</span> </div>
+                                <div class="form-field">
+                                    <apex:actionRegion >
+                                        <apex:selectRadio value="{!applicantInfo.Program_Start_Opinion__c}" id="start-opinion" required="TRUE">
+                                            <apex:selectOption itemValue="Yes" itemLabel="{!$Label.T_0327}"/>
+                                            <apex:selectOption itemValue="No" itemLabel="{!$Label.T_0328}"/>
+                                            <!--  CT-116 -->
+                                            <apex:actionSupport event="onclick" rerender="thePageBlock, thePageBlockNo, thePageBlockForStudyWeeks, thePageBlockForProgramDuration"/>
+                                            <!--  CT-116 End-->
+                                        </apex:selectRadio>
+                                        <apex:message for="start-opinion" styleClass="custom-error-radio"/>
+                                    </apex:actionRegion>
+                                </div>
+                            </div>
+    
+                            <!--  CT-116 -->
+                            <!--<p>
+                                <apex:actionStatus id="waitMsg1" startStyleClass="feedback">
+                                    <apex:facet name="start" >
+                                        <i class="no-float icon-spinner icon-spin icon-2x pull-left"></i>  <strong>Please Wait.....</strong>
+                                    </apex:facet>
+                                </apex:actionStatus>
+                            </p>-->
+                            <!--  CT-116 End-->
+                            
+                            <!-- When would you like to start your program? [In Case of Yes] (Engagement Start) -->
+                            
+                            <apex:pageBlock id="thePageBlock">
+                                <apex:outputPanel layout="block" rendered="{!applicantInfo.Program_Start_Opinion__c == 'Yes'}">
+                                    <div class="form-row">
+                                        <div class="form-label left " id="start_date"><apex:outputText value="{!$Label.T_0094}" /> <span class="required">*</span><br/><em> <apex:outputText value="{!$Label.T_0095}" />:</em></div>
+                                        <div class="form-field">    
+                                            <apex:inputField id="Engagement_Start" value="{!applicantInfo.Engagement_Start__c}" required="TRUE"/>
+                                        </div>
+                                    </div>  
+                                </apex:outputPanel>
+                            </apex:pageBlock>
+    
+                            <!-- I want to start: -->
+                            <apex:pageBlock id="thePageBlockNo">
+                                <apex:outputPanel layout="block" rendered="{!applicantInfo.Program_Start_Opinion__c == 'No'}">
+                                    <div class="form-row">
+                                        <div class="form-label left " id="start_on"><apex:outputText value="{!$Label.T_0096}" /><span class="required">*</span></div>
+                                        <div class="form-field">    
+                                            <apex:inputField id="Program_Start" value="{!applicantInfo.Program_Start__c}" required="TRUE"/>
+                                        </div>
+                                    </div>  
+                                </apex:outputPanel>
+                            </apex:pageBlock>
+    
+                            <!-- How many weeks would you like to study for? [In Case Of 'No'] (Program Duration)-->
+                            <apex:outputPanel layout="blockNo">
+                                <div class="form-row">
+                                    <div class="form-label left "><apex:outputText value="{!$Label.T_0097}" /><span class="required">*</span></div>
+                                    <div class="form-field">    
+                                        <apex:inputField id="Program_Duration" value="{!applicantInfo.Program_Duration__c}" required="true"/>
+                                    </div>
+                                </div>  
+                            </apex:outputPanel>
+    
+                            <!-- What will be your visa Category? -->
+                            <div class="form-row">
+                                <div class="form-label left " id="visa_type"><apex:outputText value="{!$Label.T_0098}" /><span class="required">*</span></div>
+                                <div class="form-field">
+                                    <apex:actionRegion >
+                                        <apex:selectRadio value="{!applicantInfo.Visa_Category__c}" required="TRUE" id="Visa_Category" layout="pageDirection" >
+                                            <apex:selectOption itemValue="Student (F)" itemLabel="{!$Label.T_0257}"/>
+                                            <apex:selectOption itemValue="Tourist (B)" itemLabel="{!$Label.T_0258}"/>                                
+                                            <!-- <apex:selectOption itemValue="Work (J)" itemLabel="{!$Label.T_0259}"/>                                  
+                                            <apex:selectOption itemValue="Intern (J)" itemLabel="{!$Label.T_0260}"/> -->
+                                            <apex:selectOption itemValue="Visa Waiver" itemLabel="{!$Label.T_0261}"/>
+                                            <apex:selectOption itemValue="Other" itemLabel="{!$Label.T_0262}"/>
+                                            <apex:actionSupport event="onclick" rerender="Visa_Type_block"/>
+                                        </apex:selectRadio>
+                                        <apex:message for="Visa_Category" styleClass="custom-error-radio"/>
+                                    </apex:actionRegion>                                                                   
+                                </div>
+                            </div>                                                                             
+    
+                            <!-- Visa Type: -->    
+                            <apex:pageBlock id="Visa_Type_block">
+                                <apex:outputPanel layout="block" rendered="{!applicantInfo.Visa_Category__c == 'Student (F)'}"> 
+                                    <div class="form-row">
+                                        <div class="form-label left "><apex:outputText value="{!$Label.T_0099}" /><span class="required">*</span> </div>
+                                        <div class="form-field">
+                                            <apex:selectRadio value="{!applicantInfo.Visa_Type__c}" required="TRUE" id="Visa_Type" layout="pageDirection" >
+                                                <apex:selectOption itemValue="F-1 Student" itemLabel="{!$Label.T_0263}"/>
+                                                <apex:selectOption itemValue="F-1 Transfer" itemLabel="{!$Label.T_0264}"/>
+                                                <apex:selectOption itemValue="F-1 Other" itemLabel="{!$Label.T_0265}"/>
+                                            </apex:selectRadio>
+                                        </div>                  
+                                    </div> 
+                                </apex:outputPanel>
+                            </apex:pageBlock>
+    
+                            <!-- Sub Heading -->
+                            <p> </p>
+                            <h2><apex:outputText value="{!$Label.T_0102}" /></h2>
+    
+                            <!-- Products Selection Portion -->
+                           <!--  <div class="form-row">
+                            
+                                <apex:outputpanel id="programPanel">
+    
+                                    Choose a Package
+                                    <p> <apex:outputText value="{!$Label.T_0101}" /> <span class="required">*</span></p>
+                                    <apex:actionRegion >
+                                        <apex:selectRadio id="package" styleClass="floating-table" value="{!applicantInfo.Program_Selector__c}" required="TRUE">
+                                            <apex:selectOption itemValue="Custom" itemLabel="{!$Label.T_0102}"/>
+                                            <apex:selectOption itemValue="Package" itemLabel="{!$Label.T_0103}"/>
+                                            Action Status
+                                            Action going to perform on change of value
+                                             CT-116
+                                             CT-112
+                                            <apex:actionSupport event="onchange" action="{!resetProductsOnProgramSelectionChange}" rerender="ProgramBlockPackage, ProgramBlockCustom"/> 
+                                             CT-112 End
+                                             CT-116 End
+                                        </apex:selectRadio>
+                                    </apex:actionRegion>
+                                    <apex:message for="package" styleClass="custom-error-radio"/>
+                                </apex:outputpanel>
+    
+                            </div> -->
+    
+                            <!--  CT-116 -->
+                            <!--<p>
+                                <apex:actionStatus id="waitMsg" startStyleClass="feedback">
+                                    <apex:facet name="start" >
+                                        <i class="no-float icon-spinner icon-spin icon-2x pull-left"></i>  <strong>Please Wait.....</strong>
+                                    </apex:facet>
+                                </apex:actionStatus>
+                            </p>-->
+    
+                            <!-- Action Status -->
+                            <!--<apex:actionStatus id="WaitMsgsetProducts" startStyleClass="feedback">
+                                <apex:facet name="start" >
+                                    <i class="no-float icon-spinner icon-spin icon-2x pull-left"></i>  <strong>Please Wait.....</strong>
+                                </apex:facet>
+                            </apex:actionStatus>-->
+                            <!--  CT-116 End -->
+    
+                            <!-- Acedemic Excellence Products Block -->
+                            
+                            
+                            
+                            
+                           <apex:pageBlock id="ProgramBlockPackage" >
+    
+                                <apex:outputPanel layout="block" styleClass="content-group" rendered="{!applicantInfo.Program_Selector__c == 'Package'}">    
+    
+                                    <!--  CT 109 -->
+                                    <div class="content-group-title" id="unlimited_package"><apex:outputText value="{!$Label.T_0114}" /></div>
+                                    <!--  CT 109 End-->
+    
+                                    <div class="content-group-body">  
+    
+                                        <!--  Action function to Pass the selected Product Id to the controller -->
+                                        <apex:actionFunction name="setProduct" action="{!selectedProduct}" reRender="products">
+                                            <apex:param name="p1" value="" assignTo="{!prodId}"/>
+                                        </apex:actionFunction>
+                                        
+                                        <p><apex:outputText value="{!$Label.T_0115}" /></p>
+                                        <!--  <p>Includes all programs, all schedules, application fee, materials fee, program change fees, 4 private lessons and career preparation activity. Does not include 
+                                        accommodations.</p> --> 
+                                        <div id="products">
+    
+                                            <ul class="no-bullets no-indent">
+                                            
+                                                <!-- Academic Excellence Family Products Table -->  
+                                                <!--  CT 109 -->
+                                                <apex:repeat id="Academic_Excellence_Repeat" value="{!mapApplicantProduct['Unlimited Package']}" var="item">
+                                                <!--  CT 109 End-->
+                                                    <li>
+                                                        
+                                                        <span style="padding-right:5px;">
+                                                            <input type="radio" id="chk" name="rdSelected" value="{!item.applicantProduct.Product__c}" onclick = "setProduct('{!item.applicantProduct.Product__c}');" />
+                                                        </span>
+                                                                                                                
+                                                        <!-- 
+                                                        <apex:outputText id="ApplicantProduct_Description" >                                                        
+                                                        
+                                                        {!$Label[a]}
+                                                        </apex:outputText>
+                                                        -->
+                                                        <apex:variable var="a" value="{!item.applicantProduct.Product_Description_Label__c}" />
+                                                        <apex:outputText id="ApplicantProduct_Description_Label" value="{!$Label[a]}" rendered="{!IF(a!=null, true, false)}"/>
+                                                        <apex:outputText id="ApplicantProduct_Description" value="{!item.applicantProduct.Description__c}" rendered="{!IF(a==null, true, false)}"/>
+                                                        
+                                                        <!-- <apex:outputText id="ApplicantProduct_Description" value="{!item.applicantProduct.Product_Description_Label__c}" /> -->
+                                                        
+                                                        <apex:variable var="b" value="{!item.applicantProduct.Promo_CTA_Label__c}" />                                              
+                                                        <b><em>
+                                                        <apex:outputText id="ApplicantProduct_Promo_CTA_Label" value="{!$Label[b]}" rendered="{!IF(b!=null, true, false)}"/>
+                                                        <apex:outputText id="ApplicantProduct_Promo_CTA" value="{!item.applicantProduct.Promo_CTA__c}" rendered="{!IF(b==null, true, false)}"/>
+                                                        </em></b>
+                                                        
+                                                    </li>
+                                                
+                                                </apex:repeat>
+                                            
+                                            </ul>
+                                            
+                                                                                                                 
+                                            
+                                                        
+                                                        
+                                                        
+                                            <!-- Script for deciding which Radio Button is going to set as a true on loding of page -->
+                                            <script>
+    
+                                                var divObj = document.getElementById("products");
+                                                var inputs = divObj.getElementsByTagName("input");
+    
+                                                for (var i = 0; i < inputs.length; i++) {       
+                                                    if(inputs[i].value == '{!selectedAcademicExcellenceProductId}') {
+                                                        inputs[i].checked = "checked";
+                                                    }
+                                                }
+    
+                                            </script>
+                                        </div>
+                                    </div>
+                                    
+                                    <BR></BR>
+                                    <BR></BR>
+                                    
+                                    <div class="content-group-title"><apex:outputText value="{!$Label.T_0116}" /> </div>   
+
+                                    <div class="content-group-body">
+                                    
+                                        <apex:repeat id="Self_Directed_Repeat_Package" value="{!noOfLessonsWrapperList}" var="proditem" >
+                                                
+                                            <div class="form-row">                                      
+                                                <apex:inputCheckbox value="{!proditem.selected}" onclick="showHideForPrivateLessons(this);" id="Checkbox1_Package"/> 
+                                                <!-- <apex:outputField value="{!proditem.applicantProduct.Product_Name__c}"/>
+                                                 -->
+                                                <apex:variable var="m" value="{!proditem.applicantProduct.Product_Name_Label__c}" />                                                    
+                                                <apex:outputText id="ApplicantProduct_Product_Name_Label" value="{!$Label[m]}" rendered="{!IF(m!=null, true, false)}"/>
+                                                <apex:outputText id="ApplicantProduct_Product_Name" value="{!proditem.applicantProduct.Product_Name__c}" rendered="{!IF(m==null, true, false)}"/>
+                                        
+                                            </div>
+                                            
+                                            <apex:outputPanel id="appQua_Package" style="display:{!IF(proditem.selected, 'block', 'none')};" layout="block" styleClass="form-row">
+                                                <div class="form-label left">
+                                                    <!-- <apex:outputText styleClass="inform" value="{!proditem.applicantProduct.Description__c}"/>
+                                                     -->
+                                                    <apex:variable var="h" value="{!proditem.applicantProduct.Product_Description_Label__c}" />                                                    
+                                                    <apex:outputText id="ApplicantProduct_Description_Label" value="{!$Label[h]}" rendered="{!IF(h!=null, true, false)}"/>
+                                                    <apex:outputText id="ApplicantProduct_Description" value="{!proditem.applicantProduct.Description__c}" rendered="{!IF(h==null, true, false)}"/>
+                                        
+                                                </div>
+                                                <div class="form-field">
+                                                    <apex:inputText id="quantity_Package" styleClass="inform" value="{!proditem.applicantProduct.Quantity__c}"/>
+                                                </div>
+                                                <div class="dropt" >
+                                                    <i class="icon-question-sign"></i>
+                                                    <span>
+                                                    <apex:variable var="c" value="{!proditem.applicantProduct.Help_Text_Label__c}" />
+                                                    <apex:outputText id="help_Value_Label" value="{!$Label[c]}" rendered="{!IF(c!=null, true, false)}"/>
+                                                    <apex:outputText id="help_Value" value="{!proditem.applicantProduct.Help_Text__c}" rendered="{!IF(c==null, true, false)}"/>
+                                                    </span>
+                                                </div> 
+                                                <apex:message for="quantity_Package" styleClass="custom-error-radio"/>
+                                            </apex:outputPanel>
+                                            
+                                        </apex:repeat> 
+                                        
+                                        
+                                    </div>
+                                    
+                                </apex:outputPanel> 
+                            </apex:pageBlock>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+                            <!--  CT-116 -->
+                            <!--<apex:actionStatus id="WaitMsgProdandPro" startStyleClass="feedback">
+                                <apex:facet name="start" >
+                                    <i class="no-float icon-spinner icon-spin icon-2x pull-left"></i>  <strong>Please Wait.....</strong>
+                                </apex:facet>
+                            </apex:actionStatus>-->
+                            
+                            <!--  Action function to Pass the selected Product Id to the controller -->
+                            <apex:actionFunction name="setProductCambridgePro" action="{!selectedAcademicProgramsProduct}" reRender="productsAcademicPrograms">
+                                <apex:param name="p1AcdPro" value="" assignTo="{!academicProgramsProdId}"/>
+                            </apex:actionFunction>
+                            <!--  CT-116 End -->
+                            
+                            <!--  Action function for reset the class variables -->
+                            <apex:actionFunction name="resetVariables" action="{!resetVariables}" reRender="productsAcademicPrograms">
+                            </apex:actionFunction>
+    
+                            <!--Custom Products Block -->
+                            <apex:pageBlock id="ProgramBlockCustom" >
+                                
+                                <apex:outputPanel layout="block" styleClass="content-group" rendered="{!applicantInfo.Program_Selector__c == 'Custom' || applicantInfo.Program_Selector__c == ''}"> 
+    
+                                    <div class="content-group-title" id="choose_program"><apex:outputText value="{!$Label.T_0104}" /></div>   
+    
+                                    <div class="content-group-body"> 
+                                        
+                                        <p><strong><apex:outputText value="{!$Label.T_0105}" /></strong></p>
+    
+                                        <div id="productsAcademicPrograms">
+                                            
+                                            <ul class="no-bullets no-indent">
+    
+                                                <apex:repeat id="Academic_Programs_Repeat" value="{!mapApplicantProduct['Academic Programs']}" var="item" >
+                                                
+                                                    <apex:outputPanel rendered="{!NOT(CONTAINS(item.applicantProduct.Description__c, cambrigeProductName))}">
+                                                        <ol>
+                                                            <apex:inputCheckbox id="applicantProduct_Description2" value="{!item.selected}"/>
+                                                            <!-- <apex:outputText value="{!item.applicantProduct.Description__c}"/>
+                                                             -->
+                                                            <apex:variable var="g" value="{!item.applicantProduct.Product_Description_Label__c}" />                                                    
+                                                            <apex:outputText id="ApplicantProduct_Description_Label" value="{!$Label[g]}" rendered="{!IF(g!=null, true, false)}"/>
+                                                            <apex:outputText id="ApplicantProduct_Description" value="{!item.applicantProduct.Description__c}" rendered="{!IF(g==null, true, false)}"/>
+                                                            
+                                                            &nbsp;&nbsp;
+                                                            <b>
+                                                                <apex:outputField id="Start_Date" value="{!item.applicantProduct.Start_Date__c}" />
+                                                            </b>
+                                                        </ol>
+                                                    </apex:outputPanel>
+                                                </apex:repeat>
+                                                
+                                                <!-- Cambrige Type Products -->
+                                                <div id="productsAcademicProgramCambrigeType">
+                                                    <apex:inputCheckbox value="{!isCambrigeProductSelected}" id="cambrigeProdCheckbox" onclick="showHideForCambrigeProducts(this);"/>
+                                                    <!-- <apex:outputText value="{!cambrigeProductName}"/> (San Diego only) -->                                                    
+                                                    <apex:outputText value="{!$Label.T_0293}" />                                                    
+                                                    <BR></BR>
+                                                    
+                                                    <apex:outputPanel id="cambProdPanel" style="display:{!IF(isCambrigeProductSelected, 'block', 'none')};" layout="block">
+                                                        <apex:repeat id="Camb_Prog_Repeat" value="{!cambrigeProductsWrapperList}" var="item">
+                                                            <span style="padding-right:5px;">
+                                                                <input type="radio" id="chkCambrigePro" name="rdSelectedCambridgePro" value="{!item.applicantProduct.Product__c}" onclick = "setProductCambridgePro('{!item.applicantProduct.Product__c}');" />
+                                                            </span>
+                                                            <apex:outputField id="Start_Date" value="{!item.applicantProduct.Start_Date__c}" />
+                                                        </apex:repeat>
+                                                    </apex:outputPanel>
+                                                </div>
+                                                 
+                                            </ul>
+                                            
+                                        </div>
+    
+                                        <!--  CT-116 -->
+                                        <!--  Action function to Pass the selected Product Id to the controller -->
+                                        <apex:actionFunction name="setProductProCert" action="{!selectedProfessionalCertificatesProduct}" reRender="productsProfessionalCertificates">
+                                            <apex:param name="p1ProCert" value="" assignTo="{!professionalCertificatesProdId}"/>
+                                            <apex:param name="p1ProCertDesc" value="" assignTo="{!professionalCertificatesDesc}"/>
+                                        </apex:actionFunction>
+                                        <!--  CT-116 End -->
+                                            
+                                        <h3><p><strong> <apex:outputText value="{!$Label.T_0106}" /></strong></p></h3> 
+    
+                                        <div id="productsProfessionalCertificates">
+                                            <apex:variable value="{!1}" var="divCount" />
+                                            <apex:repeat id="listProductDesc_Repeat" value="{!listProductDescription}" var="desc">
+                                                <div id="innerDiv-{!ROUND(divCount,0)}">
+                                                    <p>
+                                                        <input type="checkbox" name="myCheckbox-{!ROUND(divCount,0)}" id="myCheckbox-{!ROUND(divCount,0)}" value="" onclick="showHideForProfessionalProducts(this, '{!ROUND(divCount,0)}')"/>
+                                                         <!-- <apex:outputText value="{!desc}"/> 
+                                                        -->
+                                                        <apex:variable var="i" value="{!desc}" />                                                    
+                                                        <apex:outputText id="ApplicantProduct_Description_Label" value="{!$Label[i]}" rendered="{!IF(i!=null, true, false)}"/>
+                                                        <apex:outputText id="ApplicantProduct_Description" value="{!desc}" rendered="{!IF(i==null, true, false)}"/>
+                                                         
+                                        
+                                                    </p>
+                                                    
+                                                    <div id="subInnerDiv-{!ROUND(divCount,0)}">
+                                                         <p class="no-bullets no-indent">
+                                                            <span style="padding-right:9px;">
+                                                    
+                                                                <apex:repeat id="Professional_Certificates_Repeat" value="{!mapApplicantProduct['Professional Certificates']}" var="item">
+                                                                    <apex:variable value="{!item.applicantProduct.Product_Description_Label__c}" var="desc1" />
+                                                                    <apex:outputPanel layout="blockNo" rendered="{!CONTAINS(desc, item.applicantProduct.Product_Description_Label__c)}">
+                                                                        <apex:outputPanel rendered="{!IF(NOT(OR(ISNULL(item.applicantProduct.Product_Description_Label__c), ISBLANK(item.applicantProduct.Product_Description_Label__c), ISNULL(item.applicantProduct.Description__c), ISBLANK(item.applicantProduct.Description__c) )), true, false)}">
+                                                                            <span style="padding-right:5px;">  
+                                                                                <input type="radio" id="{!$Label[desc1]}" name="{!item.applicantProduct.Product_Description_Label__c}" value="{!item.applicantProduct.Product__c}"/>                                                                                                                                                                                                                                             
+                                                                            </span>
+                                                                        </apex:outputPanel>
+                                                                    </apex:outputPanel>
+                                                                    <apex:outputField value="{!item.applicantProduct.Start_Date__c}" rendered="{!CONTAINS(desc, item.applicantProduct.Product_Description_Label__c)}" />
+                                                                </apex:repeat>
+                                                            </span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <apex:variable value="{!divCount + 1}" var="divCount" />
+                                            </apex:repeat>
+                                        </div>
+                                    </div>
+                                </apex:outputPanel>
+    
+                                <script>
+                                    function formReset(obj) {
+                                        var divObj = document.getElementById(obj);
+                                        var inputs = divObj.getElementsByTagName("input");
+                                        for (var i = 0; i < inputs.length; i++) {
+                                            if(inputs[i].checked) {
+                                                inputs[i].checked = false;
+                                                break;
+                                            }
+                                        }
+                                        return false;
+                                    }                       
+                                </script>
+                                                                
+                                <!--  CT-116 -->
+                                <!-- Action Status -->
+                                <!--  <apex:actionStatus id="WaitMsgInt" startStyleClass="feedback">
+                                    <apex:facet name="start" >
+                                        <i class="no-float icon-spinner icon-spin icon-2x pull-left"></i>  <strong>Please Wait.....</strong>
+                                    </apex:facet>
+                                </apex:actionStatus>-->
+    
+                                <!--  Action function to Pass the selected Product Id to the controller -->
+                                <apex:actionFunction name="setProductInt" action="{!selectedIntensityProduct}" reRender="productsIntensity">
+                                    <apex:param name="p1Int" value="" assignTo="{!intensityProdId}"/>
+                                </apex:actionFunction>
+                                <!-- CT-116 End -->
+    
+                                <!--Add Elective Classes Section-->
+                                <apex:outputPanel layout="block" styleClass="content-group" rendered="{!applicantInfo.Program_Selector__c == 'Custom'|| applicantInfo.Program_Selector__c == ''}"> 
+                                    <div class="content-group-title"><apex:outputText value="{!$Label.T_0107}" /></div> 
+              
+                                    <div id="productsIntensity">
+                                        <div class="content-group-body"> 
+                                            <ul class="no-bullets no-indent">
+                                                <apex:repeat id="Intensity_Repeat" value="{!mapApplicantProduct['Intensity']}" var="item">
+                                                    <li>
+                                                        <span style="padding-right:5px;">
+                                                        <input type="radio" id="chkInt" name="rdSelectedInt" value="{!item.applicantProduct.Product__c}" onclick = "setProductInt('{!item.applicantProduct.Product__c}');" /></span>
+                                                        <!-- 
+                                                        <apex:outputText value="{!item.applicantProduct.Description__c}"/>
+                                                         -->
+                                                        <apex:variable var="j" value="{!item.applicantProduct.Product_Description_Label__c}" />                                                    
+                                                        <apex:outputText id="ApplicantProduct_Description_Label" value="{!$Label[j]}" rendered="{!IF(j!=null, true, false)}"/>
+                                                        <apex:outputText id="ApplicantProduct_Description" value="{!item.applicantProduct.Description__c}" rendered="{!IF(j==null, true, false)}"/>
+                                                                                                              
+                                                        <b><em>
+                                                        <!-- 
+                                                        <apex:outputText id="applicantProduct_Promo_CTA2" value="{!item.applicantProduct.Promo_CTA__c}"/>
+                                                         -->
+                                                        <apex:variable var="k" value="{!item.applicantProduct.Promo_CTA_Label__c}" />                                                    
+                                                        <apex:outputText id="ApplicantProduct_Promo_Label" value="{!$Label[k]}" rendered="{!IF(k!=null, true, false)}"/>
+                                                        <apex:outputText id="ApplicantProduct_Promo" value="{!item.applicantProduct.Promo_CTA__c}" rendered="{!IF(k==null, true, false)}"/>
+                                                        </em></b>
+    
+                                                        <apex:outputPanel rendered="{! IF(NOT(ISBLANK(item.applicantProduct.Help_Text__c)), true, false)}">
+                                                            <span class="dropt no-float">
+                                                                <i class="icon-question-sign"></i>                                                                                                                                                                                              
+                                                                <apex:variable var="d" value="{!item.applicantProduct.Help_Text_Label__c}" />
+                                                                <apex:outputText id="help_text_Label" value="{!$Label[d]}" rendered="{!IF(d!=null, true, false)}"/>
+                                                                <apex:outputText id="help_text" value="{!item.applicantProduct.Help_Text__c}" rendered="{!IF(d==null, true, false)}"/>                                                              
+                                                            </span> 
+                                                        </apex:outputPanel>                             
+                                                    </li> 
+    
+                                                </apex:repeat>
+                                            </ul>
+                                        </div>
+                                    </div>  
+                                </apex:outputPanel>
+    
+                                <script>
+                                    j$('input.inform').bind('focus blur', function () {
+                                    $(this).closest('.form-row').find('.dropt').toggleClass('active-help');
+                                    });
+                                </script>
+    
+    
+                                <script>
+                                    j$('.reset-button').bind('click', function () {
+                                    $(this).closest('.reset-container').find('.reset-item').attr("checked", false);
+                                    }); 
+                                </script>
+    
+                                <!--Add More Section-->
+                                <apex:outputPanel layout="block" styleClass="content-group" rendered="{!applicantInfo.Program_Selector__c == 'Custom' || applicantInfo.Program_Selector__c == ''}"> 
+                                    
+                                    <div class="content-group-title"><apex:outputText value="{!$Label.T_0109}" /> </div>   
+                                    
+                                    <div class="content-group-body">
+                                        
+                                        <apex:repeat id="Self_Directed_Repeat" value="{!mapApplicantProduct['Self-Directed']}" var="item" >
+                                            
+                                            <div class="form-row">                                      
+                                                <apex:inputCheckbox value="{!item.selected}" onclick="showHide(this);" id="Checkbox1"/> 
+                                                <!-- 
+                                                 <apex:outputField value="{!item.applicantProduct.Product_Name__c}"/>
+                                                 -->
+                                                <apex:variable var="l" value="{!item.applicantProduct.Product_Name_Label__c}" />                                                    
+                                                <apex:outputText id="ApplicantProduct_Product_Name_Label" value="{!$Label[l]}" rendered="{!IF(l!=null, true, false)}"/>
+                                                <apex:outputText id="ApplicantProduct_Product_Name" value="{!item.applicantProduct.Product_Name__c}" rendered="{!IF(l==null, true, false)}"/>
+                                                                                                                                    
+                                            </div>
+                                            
+                                            <apex:outputPanel id="appQua" style="display:{!IF(item.selected, 'block', 'none')};" layout="block" styleClass="form-row">
+                                                <div class="form-label left">
+                                                    <!-- 
+                                                    <apex:outputText styleClass="inform" value="{!item.applicantProduct.Description__c}"/>
+                                                    -->
+                                                    <apex:variable var="k" value="{!item.applicantProduct.Product_Description_Label__c}" />                                                    
+                                                    <apex:outputText id="ApplicantProduct_Description_Label" value="{!$Label[k]}" rendered="{!IF(k!=null, true, false)}"/>
+                                                    <apex:outputText id="ApplicantProduct_Description" value="{!item.applicantProduct.Description__c}" rendered="{!IF(k==null, true, false)}"/>                                     
+                                                </div>
+                                                <div class="form-field">
+                                                    <apex:inputText id="quantity" styleClass="inform" value="{!item.applicantProduct.Quantity__c}"/>
+                                                </div>
+                                                <div >                                                                                                           
+                                                     
+                                                    <span class="dropt no-float"> 
+                                                    <i class="icon-question-sign"></i>                                                                                              
+                                                    <apex:variable var="e" value="{!item.applicantProduct.Help_Text_Label__c}" />                                                    
+                                                    <apex:outputText id="help_Value_Label" value="{!$Label[e]}" rendered="{!IF(e!=null, true, false)}"/>
+                                                    <apex:outputText id="help_Value" value="{!item.applicantProduct.Help_Text__c}" rendered="{!IF(e==null, true, false)}"/>
+                                                    </span>
+                                                </div> 
+                                                <apex:message for="quantity" styleClass="custom-error-radio"/>
+                                            </apex:outputPanel>
+    
+                                        </apex:repeat> 
+                                    </div>
+                                </apex:outputPanel>
+                            </apex:pageBlock>
+    
+                            <!--Add Comments Section-->
+                            <div class="form-row"> 
+    
+                                <div class="form-label top"><apex:outputText value="{!$Label.T_0117}" /></div>
+                                <div class="form-field">
+                                    <apex:inputTextarea id="question" value="{!applicantInfo.Questions__c}" required="FALSE" onkeyup="countChar(this, 400, 'questionCount')"/> 
+    
+                                    <div class="char-limit">
+                                        <span class="char-count-label"><apex:outputText value="{!$Label.T_0118}" /></span>
+                                        <span id="questionCount" class="char-count">
+                                        {!400-len(applicantInfo.Questions__c) }
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>         
+    
+                            <div class="form-row">
+    
+                                <div class="form-link">
+                                    <!-- Back Command Link -->
+                                    <apex:outputLink id="backLink" value="/apex/centers_preapp_my_information?id={!applicantInfo.Id}"><i class="icon-chevron-left"></i> <span><apex:outputText value="{!$Label.T_0086}" /></span></apex:outputLink>
+                                </div>
+    
+                                <!-- Next Command Link -->              
+                                <div class="form-button">
+                                    <apex:commandlink id="SaveContinue" styleClass="next" action="{!validateAcademicPlan}" onclick="return prepareSelectedProfessionalIds();">
+                                        <apex:commandButton value="{!$Label.T_0087}" onclick="return prepareSelectedProfessionalIds();"/>
+                                        <i class="icon-chevron-right"></i>
+                                    </apex:commandlink>
+                                </div>    
+                            </div> 
+                            
+                        </div>
+    
+                        <div class="panel one_third last aside">
+                            <c:Badge_Centers_Contact /> 
+                        </div>
+                    </div>
+    
+                    <!-- Hidden Variable -->
+                    <apex:inputText value="{!selectProfessionalCertificates}" id="iTSelectProfessionalCertificates" style="display:none"/>
+
+  
+        
+
+    <!-- Script for deciding which Radio Button is going to set as a true on loading of page -->
+    <apex:outputPanel id="outputPanelForScripts">
+        <script type="text/javascript">
+            <!--  window.alert('panelforscripts');   -->      
+            var divObj = document.getElementById("products");
+            if(divObj  != null) {
+                var inputs = divObj.getElementsByTagName("input");
+                
+                var sel2 = '{!selectedAcademicExcellenceProductId}';
+            	<!-- window.alert('selectedAcademicExcellenceProductId'+sel2);  --> 
+            	 
+                if(inputs != null) {
+                    for (var i = 0; i < inputs.length; i++) {       
+                        if(inputs[i].value == '{!selectedAcademicExcellenceProductId}') {
+                        
+                            inputs[i].checked = "checked";
+                        }
+                    }
+                }
+            }
+            
+        </script>
+
+        <script type="text/javascript">
+       
+        	<!-- window.alert('productsAcademicPrograms');  --> 
+            var divObj = document.getElementById("productsAcademicPrograms");
+            
+            if(divObj  != null) {
+            
+                var inputs = divObj.getElementsByTagName("input");
+                var sel = '{!selectedAcademicProgramsProductId}';
+        		<!-- window.alert('selectedAcademicProgramsProductId:'+sel);  --> 
+        		
+                if(inputs != null) {
+                    for (var i = 0; i < inputs.length; i++) {       
+                        if(inputs[i].value == '{!selectedAcademicProgramsProductId}') {
+                            inputs[i].checked = "checked";
+                            
+                        }
+                    }
+                }
+            } 
+            <!-- window.alert('checked:');     --> 
+                               
+        </script>  
+
+        <script type="text/javascript">          
+        
+            <!-- window.alert('productsProfessionalCertificates');       -->                     
+            var divObj = document.getElementById("productsProfessionalCertificates");
+            
+            
+             
+            if(divObj != null) {
+            
+                var inputs = divObj.getElementsByTagName("input");
+        
+                if(inputs != null) {
+                
+                    var existingProductId = '{!existingDescriptionWithProductId}';                    
+                    <!-- window.alert('existingProductId id:' + existingProductId );           -->           
+                    
+                    for (var i = 0; i < inputs.length; i++) { 
+                
+                        if(inputs[i].type == "radio") {
+                
+                            var productId = inputs[i].value;
+                            <!-- window.alert("product id " + productId );  --> 
+                                                        
+                            if(existingProductId.indexOf(productId) != -1) {
+                            <!-- window.alert('checkbox id ' + inputs[i].id);    -->   
+                                
+                                
+                                inputs[i].checked = "checked";
+                                
+                                //Checking radio button for Id value
+                                if(inputs[i].id == '{!$Label.T_0294}') {
+                                    
+                                    var mySubDiv1 = document.getElementById("myCheckbox-1");
+                                    mySubDiv1.checked = true;
+                                }
+                                
+                                //Checking radio button for Id value
+                                if(inputs[i].id == '{!$Label.T_0295}') {
+                                    
+                                    var mySubDiv2 = document.getElementById("myCheckbox-2");
+                                    mySubDiv2.checked = true;
+                                }
+                                
+                                //Checking radio button for Id value
+                                if(inputs[i].id == '{!$Label.T_0296}') {
+                                    
+                                    var mySubDiv3 = document.getElementById("myCheckbox-3");
+                                    mySubDiv3.checked = true;
+                                }
+                            }
+                        }
+                    }                                   
+                }
+            }
+            
+        </script>
+        
+        <!-- Script for deciding display property of the checkboxes for the Professional Certificates products-->
+        <script type="text/javascript">
+		
+            var checkBox1 = document.getElementById("myCheckbox-1");
+            var checkBox2 = document.getElementById("myCheckbox-2");
+            var checkBox3 = document.getElementById("myCheckbox-3");
+            <!-- window.alert('checkBox1:' + checkBox1.checked );  --> 
+            <!-- window.alert('checkBox2:' + checkBox2.checked );  --> 
+            <!-- window.alert('checkBox3:' + checkBox3.checked );  --> 
+            
+            if(checkBox1.checked == false) {
+                var mySubDiv1 = document.getElementById("subInnerDiv-1");
+                mySubDiv1.style.display = "none";
+            }
+                                    
+            if(checkBox2.checked == false) {
+                var mySubDiv2 = document.getElementById("subInnerDiv-2");
+                mySubDiv2.style.display = "none";
+            }
+                                    
+            if(checkBox3.checked == false) {
+                var mySubDiv3 = document.getElementById("subInnerDiv-3");
+                mySubDiv3.style.display = "none";
+            }
+            
+            if(checkBox1.checked == true) {
+                var mySubDivTrue1 = document.getElementById("subInnerDiv-1");
+                mySubDivTrue1.style.display = "block";
+            }
+            
+            if(checkBox2.checked == true) {
+                var mySubDivTrue2 = document.getElementById("subInnerDiv-2");
+                mySubDivTrue2.style.display = "block";
+            }
+            
+            if(checkBox3.checked == true) {
+                var mySubDivTrue3 = document.getElementById("subInnerDiv-3");
+                mySubDivTrue3.style.display = "block";
+            }
+                                    
+        </script>
+        
+        <script type="text/javascript">
+        
+        <!-- window.alert('productsIntensity');  --> 
+            var divObj = document.getElementById("productsIntensity");
+            
+            
+            if(divObj  != null) {
+                var inputs = divObj.getElementsByTagName("input"); 
+                
+                
+                if(inputs != null) {
+                    for (var i = 0; i < inputs.length; i++) {    
+                    <!-- window.alert('productsIntensity inputs value:'+inputs[i].value);   -->   
+                    var sel3 = '{!selectedIntensityProductId}';
+                    <!-- window.alert('selectedIntensityProductId:'+sel3);  --> 
+                        if(inputs[i].value == '{!selectedIntensityProductId}') {
+                            inputs[i].checked = "checked";
+                        }
+                    }
+                }
+            }
+        </script> 
+        
+        <!-- Script for Add More Section TextBoxes Hide/UnHide Functionality -->
+        <script type="text/javascript">   
+            function showHideForPrivateLessons(obj) { 
+            
+                var checkBoxId = obj.id;
+                var textBoxId = checkBoxId.replace("Checkbox1_Package","appQua_Package");
+                if(document.getElementById(textBoxId) != null) {
+                    if(obj.checked)
+                        document.getElementById(textBoxId).style.display = 'block';
+                    else {
+                        var quantity = checkBoxId.replace("Checkbox1_Package","quantity_Package");
+                        document.getElementById(quantity).value = '';
+                        document.getElementById(textBoxId).style.display = 'none';
+                    }
+                }
+            }
+        </script>
+        
+        <script type="text/javascript">   
+            function showHideForProfessionalProducts(obj, cnt) { 
+            
+                var checkBoxId = obj.id;
+                if(document.getElementById("subInnerDiv-" + cnt) != null) {
+                    if(obj.checked)
+                        document.getElementById("subInnerDiv-" + cnt).style.display = 'block';
+                    else {
+                        var divObj = document.getElementById("subInnerDiv-" + cnt);
+                        
+                        if(divObj  != null) {
+                        
+                            var inputs = divObj.getElementsByTagName("input"); 
+                        
+                            if(inputs != null) {
+                            
+                                for (var i = 0; i < inputs.length; i++) {       
+                                    
+                                    //Checking for Radio Type
+                                    if(inputs[i].type == "radio") {
+                                        inputs[i].checked = false;
+                                    }
+                                }
+                            }
+                        }
+                        document.getElementById("subInnerDiv-" + cnt).style.display = 'none';
+                    }
+                }   
+            }
+        </script>   
+        
+        <script type="text/javascript">   
+            function showHideForCambrigeProducts(obj) { 
+            
+                var checkBoxId = obj.id;
+                var panelId = checkBoxId.replace("cambrigeProdCheckbox","cambProdPanel");
+                if(document.getElementById(panelId) != null) {
+                    
+                    if(obj.checked)
+                        document.getElementById(panelId).style.display = 'block';
+                    else {
+                        var divObj = document.getElementById("productsAcademicProgramCambrigeType");
+                        
+                        if(divObj  != null) {
+                        
+                            var inputs = divObj.getElementsByTagName("input"); 
+                        
+                            if(inputs != null) {
+                        
+                                for (var i = 0; i < inputs.length; i++) {       
+                                    
+                                    //Checking for Radio Type
+                                    if(inputs[i].type == "radio") {
+                                        inputs[i].checked = false;
+                                    }
+                                }
+                            }
+                        }
+                        document.getElementById(panelId).style.display = 'none';
+                        resetVariables();  
+                    }   
+                }
+            }
+        </script>               
+        
+        <!-- Script for Add More Section TextBoxes Hide/UnHide Functionality -->
+        <script type="text/javascript">   
+            function showHide(obj) { 
+            
+                var checkBoxId = obj.id;
+                var textBoxId = checkBoxId.replace("Checkbox1","appQua");
+                if(document.getElementById(textBoxId) != null) {
+                    if(obj.checked)
+                        document.getElementById(textBoxId).style.display = 'block';
+                    else {
+                        var quantity = checkBoxId.replace("Checkbox1","quantity");
+                        document.getElementById(quantity).value = '';
+                        document.getElementById(textBoxId).style.display = 'none';
+                    }
+                }
+            }
+        </script>
+
+    
+    <script type="text/javascript">
+        
+        function prepareSelectedProfessionalIds() {
+
+            //Variable to hodl seleted Ids
+            var selectedProds = '';
+            var numberOfCerts = '{!listProductDescription.Size}';
+			<!-- window.alert('selectedProds:'+selectedProds);  --> 
+            //loop through the Professional certificates 
+            for(var i = 1; i <= numberOfCerts; i++) {
+				
+                var obj = document.getElementById('innerDiv-' + i);
+                
+                if(obj != null) {
+                
+                    var inputs = obj.getElementsByTagName("input");
+                    
+                    if(inputs  != null) {
+                    
+                        for (var j = 0; j < inputs.length; j++) {
+                            
+                            if(inputs[i].type == "radio") {
+                            
+                                if(inputs[j].checked) {
+                                    if(inputs[j].type == "radio") {
+                                        if(selectedProds == '')
+                                            selectedProds = inputs[j].value;
+                                        else
+                                            selectedProds += ',' + inputs[j].value;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                <!-- window.alert('selectedProds:'+selectedProds);  --> 
+            }
+            
+            //Set Id in Hidden element
+            if(document.getElementById('pg:SiteTemplate:frm:iTSelectProfessionalCertificates') != null)
+                document.getElementById('pg:SiteTemplate:frm:iTSelectProfessionalCertificates').value = selectedProds;
+                return true;
+        }
+    </script>
+    </apex:outputPanel> 
+                  </apex:form>
+            </div>
+    </apex:define>
+    </apex:composition>
+    
+</apex:page>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Payment</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Payments</value>
+    </caseValues>
+    <fields>
+        <help><!-- The account/customer who has made this payment --></help>
+        <label><!-- Account --></label>
+        <name>Account__c</name>
+        <relationshipLabel><!-- Payments --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The amount that has already been allocated. --></help>
+        <label><!-- Allocated Amount --></label>
+        <name>Allocated_Amount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Amount --></label>
+        <name>Amount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Bank Name --></label>
+        <name>Bank_Name__c</name>
+    </fields>
+    <fields>
+        <label><!-- Cheque Date --></label>
+        <name>Cheque_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Cheque Number --></label>
+        <name>Cheque_Number__c</name>
+    </fields>
+    <fields>
+        <help><!-- The payment currency --></help>
+        <label><!-- Currency --></label>
+        <name>Currency__c</name>
+        <relationshipLabel><!-- Payments --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Exchange Rate Applied --></label>
+        <name>Exchange_Rate_Applied__c</name>
+    </fields>
+    <fields>
+        <help><!-- Optionally choose the contact who made this payment. This contact must belong to the same Account. --></help>
+        <label><!-- Paid by --></label>
+        <name>Paid_by__c</name>
+        <relationshipLabel><!-- Payments --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The date this payment was made. --></help>
+        <label><!-- Payment Date --></label>
+        <name>Payment_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Payment Description --></label>
+        <name>Payment_Description__c</name>
+    </fields>
+    <fields>
+        <label><!-- Payment Type --></label>
+        <name>Payment_Type__c</name>
+        <picklistValues>
+            <masterLabel>ACH</masterLabel>
+            <translation><!-- ACH --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Bank Transfer</masterLabel>
+            <translation><!-- Bank Transfer --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Cash</masterLabel>
+            <translation><!-- Cash --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Cheque</masterLabel>
+            <translation><!-- Cheque --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Credit Card</masterLabel>
+            <translation><!-- Credit Card --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Status --></label>
+        <name>Status__c</name>
+        <picklistValues>
+            <masterLabel>Cancelled</masterLabel>
+            <translation><!-- Cancelled --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Completed</masterLabel>
+            <translation><!-- Completed --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Initiated</masterLabel>
+            <translation><!-- Initiated --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Transaction --></label>
+        <name>Transaction__c</name>
+        <relationshipLabel><!-- Payments --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The amount that is un-allocated and can be used. --></help>
+        <label><!-- Unallocated Amount --></label>
+        <name>Unallocated_Amount__c</name>
+    </fields>
+    <layouts>
+        <layout>Payment Layout</layout>
+        <sections>
+            <label><!-- Cheque Details (Valid only for Cheque Payments) --></label>
+            <section>Cheque Details (Valid only for Cheque Payments)</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+    <validationRules>
+        <errorMessage><!-- You cannot change the status of a cancelled payment --></errorMessage>
+        <name>Cannot_change_status_from_Cancelled</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- You cannot change the amount of payments. Alternately you can cancel this payment and create a new payment with a different amount. --></errorMessage>
+        <name>Cannot_change_the_Amount</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Cheque Number, Cheque Date and Bank Name can be populated only for the payment type &quot;Cheque&quot; --></errorMessage>
+        <name>Cheque_Details_valid_for_cheque_payments</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Enter the Cheque number --></errorMessage>
+        <name>Cheque_Number_Req_For_Cheque_Payment</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- You cannot insert the payment status as Cancelled --></errorMessage>
+        <name>Payment_status_cannot_be_Cancelled</name>
+    </validationRules>
+    <webLinks>
+        <label><!-- Payment_Allocation --></label>
+        <name>Payment_Allocation</name>
+    </webLinks>
+</CustomObjectTranslation>

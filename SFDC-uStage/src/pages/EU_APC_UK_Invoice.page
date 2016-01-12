@@ -1,0 +1,163 @@
+<apex:page standardController="Opportunity" showHeader="FALSE" renderas="pdf" >
+<head>
+<style type="text/css" media="print">
+        @page {
+                margin:1cm 1cm 4cm 1cm;
+
+                @top-left {
+                    content: element(header);
+                }
+                @bottom-left {
+                    content: element(footer);
+                }
+              }
+        div.eop {
+            position: running(footer);
+                }
+    </style>
+<style type="text/css">
+html, body {
+
+            margin:0; 
+
+            padding:0;
+
+            font-family: sans serif, Arial Unicode MS;
+            
+            font-size: 12px
+
+            }       
+p, ol, ul{margin-bottom:1em;}
+img{border:0;}
+#wrapper { margin-left: 20px}
+</style>
+</head>
+<apex:pageBlock >
+
+<div align="left"><apex:image url="{!$Resource.Intrax_Logo}" title="Intrax" alt="Intrax"/></div>
+<div id="wrapper">
+<br/>
+<apex:form >
+<apex:outputfield value="{!Opportunity.Account.Name}"/>  <br/>
+<apex:outputField value="{!Opportunity.Account.PersonMailingStreet}"/> <br/>
+<apex:outputField value="{!Opportunity.Account.PersonMailingCity}"/><br/> 
+<apex:outputField value="{!Opportunity.Account.PersonMailingPostalCode} "/> <br/> 
+<apex:outputField value="{!Opportunity.Account.PersonMailingCountry} "/> <br/>
+
+</apex:form>
+
+<apex:outputPanel rendered="{!Opportunity.Intrax_Market__c = 'United Kingdom'}">
+<p>Berlin, {!Day(TODAY())}.{!Month(TODAY())}.{!YEAR(TODAY())}</p>
+
+<p><strong>Invoice: AuPairCare Programme</strong></p>
+
+<p>Invoice Number: <strong>{!Opportunity.Invoice_No__c} </strong><br/>
+Au Pair: <strong>{!Opportunity.Account.Name}</strong><br/>
+Anticipated Departure Date: <strong><apex:outputField value="{!Opportunity.Engagement_Start__c}"/></strong><br/>
+Programme Fee: <strong><apex:outputField value="{!Opportunity.Fee_Program__c}"/> </strong></p>
+
+<p>Please ensure your name and invoice number are included in your payment data and that the payment is made as soon as possible.</p>
+
+<p>Please note the payment can be made either<br/>
+<ul>
+<li><strong>By credit card</strong>, please send us the payment sheet dully completed or</li>
+<li><strong>By international wire transfer</strong>, please find the relevant information below</li>
+</ul></p>
+
+<p>Any bank charges that might occur must be paid by the participant.</p>
+
+<p>Our banking information:</p>
+<table border="0" align="center">
+<tbody>
+<tr><td>Account holder name:</td><td>Ayusa-Intrax GmbH</td></tr>
+<tr><td>International account number/IBAN Number:</td><td>DE72100700240231700600</td></tr>
+<tr><td>International sort code/BIC Code:</td><td>DEUTDEDBBER  </td></tr>
+<tr><td>Etablissement bancaire:</td><td>Deutsche Bank AG</td></tr>
+<tr><td>Bank Name and Address:</td><td>Suedwestkorso 17, 12161 Berlin, Germany</td></tr>
+</tbody>
+</table>
+
+<p>Please note – as you are transferring the fee to an account abroad, the normal account number and sort code won’t work. You will need to use the international account number (IBAN) and sort code (BIC) instead.</p>
+
+</apex:outputPanel>
+
+<apex:outputPanel rendered="{!Opportunity.Intrax_Market__c = 'France'}">
+<p>Berlin, {!Day(TODAY())}.{!Month(TODAY())}.{!YEAR(TODAY())}</p>
+
+<p><strong>Facture: Programme AuPairCare</strong><br/></p>
+
+<p>Numéro de facture: <strong>{!Opportunity.Invoice_No__c} </strong><br/>
+Au Pair: <strong>{!Opportunity.Account.Name}</strong><br/>
+Date de départ anticipé: <strong><apex:outputField value="{!Opportunity.Engagement_Start__c}"/></strong><br/>
+Montant du: <strong><apex:outputField value="{!Opportunity.Fee_Program__c}"/> </strong></p>
+
+<p>Merci d’effectuer un virement des frais de placement sur le compte de Ayusa-Intrax GmbH dès la réception de cette facture.</p>
+
+<p>Assurez-vous que votre nom et le numéro de la facture sont précisés dans l’intitulé du virement. Tous les frais de virement sont à vos frais.</p>
+
+<p>Nos informations bancaires:</p>
+<table border="0" align="center">
+<tbody>
+<tr><td>Titulaire du Compte:</td><td>Ayusa-Intrax GmbH</td></tr>
+<tr><td>IBAN Numéro de Compte:</td><td>DE72100700240231700600</td></tr>
+<tr><td>Code BIC/ Swift Code international bancaire:</td><td>DEUTDEDBBER  </td></tr>
+<tr><td>Etablissement bancaire:</td><td>Deutsche Bank AG</td></tr>
+<tr><td>Adresse de l’établissement bancaire:</td><td>Südwestkorso 17, 12161 Berlin, Allemagne</td></tr>
+</tbody>
+</table>
+    <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+
+</apex:outputPanel>
+
+<apex:outputPanel rendered="{!Opportunity.Intrax_Market__c = 'Spain'}">
+<p>Berlin, {!Day(TODAY())}.{!Month(TODAY())}.{!YEAR(TODAY())}</p>
+
+<p><strong>Factura: Programa AuPairCare</strong></p>
+
+<p>Número de factura: <strong>{!Opportunity.Invoice_No__c} </strong><br/>
+Au Pair: <strong>{!Opportunity.Account.Name}</strong><br/>
+Fecha de partida prevista: <strong><apex:outputField value="{!Opportunity.Engagement_Start__c}"/></strong><br/>
+Tasa: <strong><apex:outputField value="{!Opportunity.Fee_Program__c}"/> </strong></p>
+
+<p>Por favor transfiera las tasas a del programa a la siguiente cuenta tan pronto como posible. Por favor asegurese de que su nombre y número de factura estan incluídos en los datos de su transferencia. Cualquier comisión bancária que pueda ocurrir deberá ser cubierta por el participante.</p>
+
+<p>Nuestra información bancária:</p>
+
+<table border="0" align="center">
+<tbody>
+<tr><td>Propetário de cuenta:</td><td>Ayusa-Intrax GmbH</td></tr>
+<tr><td>Número de cuenta:</td><td>DE72100700240231700600</td></tr>
+<tr><td>Código Internacional Bancário (BIC/Swift Code):</td><td>DEUTDEDBBER</td></tr>
+<tr><td>Nombre del Banco:</td><td>Deutsche Bank AG</td></tr>
+<tr><td>Dirección del Banco:</td><td>Suedwestkorso 17, 12161 Berlin, Alemania</td></tr>
+</tbody>
+</table>
+</apex:outputPanel>
+
+</div>
+
+ 
+ <!--<div align="center"><apex:image width="700" url="{!$Resource.Intrax_Germany_Corporate_Footer}"  title="Intrax" alt="Intrax"/>
+ </div>-->
+
+<!--code for the new footer-->
+
+<apex:outputPanel styleClass="eop" layout="block" rendered="{!Opportunity.Intrax_Region__c = 'Europe'}">
+
+<apex:image value="{!URLFOR($Resource.Intrax_Invoice_Themes,'/intrax_invoice_themes/images/pdf-boiler-plate-eu.png')}" width="700" />
+
+
+</apex:outputPanel>
+
+<apex:outputPanel styleClass="eop" layout="block" rendered="{!Opportunity.Intrax_Region__c != 'Europe'}">
+
+<apex:image value="{!URLFOR($Resource.Intrax_Invoice_Themes,'/intrax_invoice_themes/images/pdf-boiler-plate-generic.png')}" width="700" />
+
+
+</apex:outputPanel>
+
+<!--end code for the nnew footer-->
+
+
+</apex:pageBlock>
+</apex:page>

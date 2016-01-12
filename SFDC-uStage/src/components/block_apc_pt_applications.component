@@ -1,0 +1,107 @@
+<apex:component layout="none" id="block_apc_pt_applications" allowDML="true">
+
+<apex:attribute name="PageController" description="Instance of home_controller class" type="home_controller" required="false" default="" />
+
+<div class="table-responsive">
+<table class="table lead">
+<tbody>
+<apex:repeat id="AppsList" value="{!PageController.ApplicantInfoList}" var="item" rendered="{!IF(PageController.ApplicantInfoList.Size > 0, true, false)}">
+<tr>
+<td> 
+<em><apex:outputText value="{!$Label.T_0196}" /></em><br/>
+<strong>
+<apex:outputText value="Childcare Application" rendered="{!IF(item.Intrax_Program__c == 'AuPairCare' && item.Type__c == 'Host Family',  true, false)}" />
+<apex:outputText value="Au Pair Pre-Application" rendered="{!IF(item.Intrax_Program__c == 'AuPairCare' && item.Type__c == 'Participant' && item.Application_Level__c == 'Basic', true, false)}" />
+<apex:outputText value="Au Pair Application" rendered="{!IF(item.Intrax_Program__c == 'AuPairCare' && item.Type__c == 'Participant' && item.Application_Level__c == 'Main', true, false)}" />     
+</strong>   
+</td>
+<td>
+<em><apex:outputText value="{!$Label.T_0047}" /> </em><br/>
+<apex:outputPanel layout="block" rendered="{!IF(item.Application_Stage__c == 'Working',true,false)}"><strong>In Progress</strong></apex:outputPanel>
+<apex:outputPanel layout="block" rendered="{!IF(item.Application_Stage__c == 'Submitted',true,false)}"><strong>Submitted</strong> <a data-toggle="popover" data-content="Your information is currently being processed. Thank you for your patience.">(?)</a></apex:outputPanel>
+<apex:outputPanel layout="block" rendered="{!IF(item.Application_Stage__c == 'In-Review',true,false)}"><strong>In Review</strong></apex:outputPanel>
+<apex:outputPanel layout="block" rendered="{!IF(item.Application_Stage__c == 'Accepted',true,false)}"><strong>Complete</strong></apex:outputPanel>
+<apex:outputPanel layout="block" rendered="{!IF(item.Application_Stage__c == 'Conditional',true,false)}"><strong>In Review</strong></apex:outputPanel>
+<apex:outputPanel layout="block" rendered="{!IF(item.Application_Stage__c == 'Declined' && item.Intrax_Program__c == 'AuPairCare' && item.Type__c == 'Participant',true,false)}"><strong>Declined</strong></apex:outputPanel>
+<apex:outputPanel layout="block" rendered="{!IF(item.Application_Stage__c == 'Cancelled',true,false)}"><strong>Cancelled</strong></apex:outputPanel>
+</td>
+                             
+<td>
+<em>Started On</em>
+<br/>
+<strong><apex:outputField value="{!item.CreatedDate}" /></strong>
+</td>
+                                        
+<td>
+<em>Last Updated On</em>
+<br/>
+<strong>
+<apex:outputField value="{!item.LastModifiedDate}" /> 
+</strong>   
+</td>
+                              
+<td>
+<!-- Action buttons for Applications -->
+<div class="btn-group">
+
+<apex:outputLink styleClass="btn btn-primary btn-lg" id="apc_hf_app_personal_info" value="/apex/apc_ap_basic_personal_info?id={!item.Id}"
+rendered="{!IF( item.Type__c == 'Participant' && item.Intrax_Program__c == 'AuPairCare' 
+	&& item.Application_Stage__c == 'Working' && item.Application_Type__c == 'Original', true, false)}">Continue</apex:outputLink>
+                                                
+
+<!-- AP RENEWAL -->
+<apex:outputLink styleClass="btn btn-primary btn-lg" value="/apex/apc_ap_main_education_proof?id={!item.Id}&docType=Proof-of-Education"
+rendered="{!IF( item.Extension_Preferences__c == null && item.Type__c == 'Participant' 
+	&& item.Intrax_Program__c == 'AuPairCare' && item.Application_Level__c == 'Main' 
+	&& item.Application_Stage__c == 'Working' && item.Application_Type__c== 'Renewal', true, false)}">Finish Your Renewal
+</apex:outputLink>
+
+
+<apex:outputLink html-data-toggle="tooltip" html-data-placement="top" title="You can stop your Extension App any time and go for a brand new Host Family. BLA BLA" 
+styleClass="btn btn-primary btn-lg" value="/apex/apc_ap_main_education_proof?id={!item.Id}&docType=Proof-of-Education"
+rendered="{!IF( item.Extension_Preferences__c == null && item.Type__c == 'Participant' 
+	&& item.Intrax_Program__c == 'AuPairCare' && item.Application_Level__c == 'Main' 
+	&& item.Application_Stage__c == 'Working' && item.Application_Type__c== 'Extension', true, false)}">Self-Extend
+</apex:outputLink>
+
+
+<!-- AP EXTENSION when the HF Extended previously -->
+
+<apex:outputLink html-data-toggle="tooltip" html-data-placement="top" title="Your Host Family has unblocked this option. Please, BLA BLA BLA BLA"
+styleClass="btn btn-primary btn-lg" value="/apex/apc_ap_extension_agreed?id={!item.Id}" 
+rendered="{!IF(item.Extension_Preferences__c == null && item.Type__c == 'Participant' 
+	&& item.Intrax_Program__c == 'AuPairCare' && item.Application_Level__c == 'Main' 
+	&& item.Application_Stage__c == 'Working' && item.Application_Type__c== 'Extension'
+	&& item.Extension_Au_Pair_Agreed__c == null, true, false)}">Ready to Extend
+</apex:outputLink>
+
+
+<apex:outputLink styleClass="btn btn-primary btn-lg" value="/apex/apc_ap_main_education_proof?id={!item.Id}&docType=Proof-of-Education"
+rendered="{!IF( item.Extension_Preferences__c == null && item.Type__c == 'Participant' 
+	&& item.Intrax_Program__c == 'AuPairCare' && item.Application_Level__c == 'Main' 
+	&& item.Application_Stage__c == 'Working' && item.Application_Type__c== 'Extension'
+	&& item.Extension_Au_Pair_Agreed__c == 'Yes', true, false)}">Finish Your Extension
+</apex:outputLink>
+
+<!-- If the PT application is Accepted and the HF didn't extend yet -->
+<apex:outputText rendered="{!IF( item.Type__c == 'Participant' && item.Intrax_Program__c == 'AuPairCare' && PageController.AllowRenewMap[item.id], true, false)}">
+<apex:outputLink styleClass="btn btn-primary btn-lg" id="apc_ap_app_clone_link1" value="/apex/apc_ap_app_clone?id={!item.Id}&AppType=Renewal">Self-Extend</apex:outputLink>
+<apex:outputLink html-data-toggle="tooltip" html-data-placement="top" title="You are not allowed to extend with your current family yet. Please, BLA BLA BLA BLA"
+styleClass="btn btn-default btn-lg" id="fake_link" disabled="true">Extend</apex:outputLink>
+</apex:outputText>
+
+<!--
+<apex:outputLink styleClass="btn btn-primary btn-lg" id="apc_ap_app_clone_link" value="/apex/apc_ap_app_clone?id={!item.Id}&AppType=Extension"
+rendered="{!IF( item.Type__c == 'Participant' && item.Intrax_Program__c == 'AuPairCare' && PageController.AllowExtendMap[item.id], true, false)}">Extend</apex:outputLink>
+-->
+ 												
+</div>
+</td>
+</tr>
+</apex:repeat>
+</tbody>
+</table>  <!--  end of responsive applications table  -->
+</div> <!--  end of responsive table container -->
+
+
+</apex:component>

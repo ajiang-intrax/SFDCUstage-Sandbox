@@ -1,0 +1,22 @@
+<apex:page id="apc_hf_match_sc_confirmation" docType="html-5.0" applyHtmlTag="false" applyBodyTag="false" 
+           title="Service Credit Confirmation" standardStylesheets="false" showHeader="false" 
+           >
+<apex:composition template="intraxtemplate_vs3">
+<apex:define name="body">
+
+<apex:outputPanel layout="block" id="outputpanelOriginal" >
+      <div class="row">
+        <div class="col-md-6">
+          <h1>Your Service Credit is successfully applied to your current payments. Your accounts and billing page will reflect the latest status by next 
+              working day. Thank you!</h1>
+          <apex:outputLink value="/apex/apc_hf_home"><b>Return to Homepage ></b></apex:outputLink>
+		</div>	
+			
+
+          </div> <!--  end row -->
+       
+   </apex:outputPanel>
+
+</apex:define>
+</apex:composition>
+</apex:page>

@@ -1,0 +1,351 @@
+<apex:page id="apc_hf_current_au_pairs" docType="html-5.0" applyHtmlTag="false" applyBodyTag="false" title="Your Au Pairs" standardStylesheets="false" showHeader="false" controller="apc_match_controller">
+	<apex:composition template="intraxtemplate_vs3">
+		<apex:define name="body">
+			<apex:form id="webform">
+				<div class="row">
+					<div class="col-sm-8 center-block center-text">
+						<h1 class="no-margin-t">Your Au Pair(s)</h1>
+					</div>
+				</div>
+    			<div class="row">
+			        <div class="col-sm-10 center-block">
+			        	<h2 class="margin-b4">Current Au Pair(s)</h2> 
+			        </div>
+			  	</div><!-- end row -->
+  				
+  				<!-- BLOCK FOR CURRENT AU PAIRS -->
+  				<div class="row">
+		    		<div class="col-sm-10 center-block">
+  						<apex:variable value="No" var="isCurrent"/>
+  						<apex:outputPanel layout="block" rendered="{!If(AllConfMatch.size > 0,true,false)}">
+		   					<div class="list-view form-vertical">
+		   						<apex:repeat id="repeatCurrentAuPairs" value="{!AllConfMatch}" var="item">
+		  							<!-- BLOCK FOR ENDED EARLY MATCHES FILTERING BY Actual_End_Date__c >= today() -->
+		  							<apex:outputPanel layout="block" rendered="{!If(item.Status__c == 'Ended Early' && item.Actual_End_Date__c != null && item.Actual_End_Date__c >= today(),true,false)}">
+		   					        	<apex:variable value="Yes" var="isCurrent"/>
+		   					        	<div class="row margin-b3">
+							            	<div class="col-sm-3 center-text">
+							       		 		<apex:image style="width:100%;" styleClass="phot-pre-img" value="{!AllConfMatchPhotos[item.Engagement__c]}" rendered="{!AllConfMatchPhotos[item.Engagement__c] != 'no-picture'}"/>
+							                	<apex:image style="width:100%;" styleClass="item-image-male" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/male-profile-med.png')}"  rendered="{!OR(ISBLANK(item.Engagement__r.Gender__c), AllConfMatchPhotos[item.Engagement__c] == 'no-picture' && item.Engagement__r.Gender__c == 'Male')}"/>
+							                	<apex:image style="width:100%;" styleClass="item-image-female" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/female-profile-med.png')}" rendered="{!OR(ISBLANK(item.Engagement__r.Gender__c), AllConfMatchPhotos[item.Engagement__c] == 'no-picture' && item.Engagement__r.Gender__c == 'Female')}"/>
+							             	</div>
+							            	
+							            	<div class="col-sm-9">
+			              						  
+			              						<h3 class="no-margin-t">{!item.Participant_Id__r.FirstName} "{!item.Participant_Id__r.Nick_Name__pc}" {!item.Participant_Id__r.LastName}</h3>
+				             					<div class="row margin-b1">
+				              						<div class="col-sm-4">
+				                						<div><label>Nationality</label></div>
+				                   						<apex:outputText value="{!item.Participant_Id__r.Citizenship__pc}"/>
+				           	  	    				</div>
+					              					<div class="col-sm-4">		
+					                					<div><label >Home Arrival Date </label></div>
+								                  		<apex:outputText value="{0,date,MM'/'dd'/'yyyy}" >
+				             		 					<apex:param value="{!item.HF_Arrival_Date__c}"/>
+				           	  	    					</apex:outputText>
+								                  	</div>
+					              					<div class="col-sm-4">
+									                	<div><label >Match End Date</label></div>
+									                	<apex:outputText value="{0,date,MM'/'dd'/'yyyy}" >
+				             		 					<apex:param value="{!item.Actual_End_Date__c}"/>
+				           	  	    					</apex:outputText>
+									                </div>
+									            </div><!-- end row -->
+									            
+			                  					<div class="row margin-b1">
+					                            	<div class="col-sm-4">
+									                	<div><label >Email</label></div>
+									                  	<apex:outputText value="{!item.Participant_Id__r.PersonEmail}"/>
+									               	</div>
+									              	<div class="col-sm-4">
+										                <div><label >Phone</label></div>
+										                <apex:outputText value="{!item.Participant_Id__r.Phone}"/>
+									              	</div>
+								             		<div class="col-sm-4">
+								                		<div><label >Skype</label></div>
+								                  		<apex:outputText value="{!item.Participant_Id__r.Skype_ID__pc}"/>
+								              		</div>     
+								              	</div><!-- end row -->
+			             		             	<div class="row">
+								             		<div class="col-sm-8">
+									                	<div><label >Overseas Address</label></div>
+									                  	<div><apex:outputText value="{!item.Participant_Id__r.PersonMailingStreet}"/></div>
+									                  	<div>
+									                  	<apex:outputText value="{!item.Participant_Id__r.PersonMailingCity}"/>,&nbsp;
+									                  	<apex:outputText value="{!item.Participant_Id__r.PersonMailingState}"/>,&nbsp;
+									                  	<apex:outputText value="{!item.Participant_Id__r.PersonMailingPostalCode}"/>
+									                  	</div>
+									                  	<div><apex:outputText value="{!item.Participant_Id__r.PersonMailingCountry}"/></div>
+									               	</div>
+									              	<div class="col-sm-4">
+										            </div>
+									              	<div class="col-sm-4">
+										                <div><label >Data of Birth</label></div>
+										                <apex:outputText value="{0,date,MM'/'dd'/'yyyy}" >
+				             		 					<apex:param value="{!item.Participant_Id__r.PersonBirthdate}"/>
+				           	  	    					</apex:outputText>
+										            </div>
+								             	</div>   
+			            					</div><!-- end col -->
+			          					</div><!-- end row -->
+			          					<hr class="margin-b3"/>
+			        				</apex:outputPanel>
+			        				
+			        				<!-- BLOCK FOR NOT ENDED EARLY MATCHES FILTERING BY End_Date__c >= today()  -->
+			        				<apex:outputPanel layout="block" rendered="{!If(item.Status__c != 'Ended Early' && item.End_Date__c != null && item.End_Date__c >= today(),true,false)}">
+		   					        	<apex:variable value="Yes" var="isCurrent"/>
+		   					        	<div class="row margin-b3">
+							            	<div class="col-sm-3 center-text">
+							       		 		<apex:outputLink styleClass="margin-r2" value="/apex/apc_hf_au_pair_profile?id={!item.Engagement__c}" id="linkprofinfo2"> 
+							                	<apex:image style="width:100%;" styleClass="phot-pre-img" value="{!AllConfMatchPhotos[item.Engagement__c]}" rendered="{!AllConfMatchPhotos[item.Engagement__c] != 'no-picture'}"/>
+							                	<apex:image style="width:100%;" styleClass="item-image-male" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/male-profile-med.png')}"  rendered="{!OR(ISBLANK(item.Engagement__r.Gender__c), AllConfMatchPhotos[item.Engagement__c] == 'no-picture' && item.Engagement__r.Gender__c == 'Male')}"/>
+							                	<apex:image style="width:100%;" styleClass="item-image-female" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/female-profile-med.png')}" rendered="{!OR(ISBLANK(item.Engagement__r.Gender__c), AllConfMatchPhotos[item.Engagement__c] == 'no-picture' && item.Engagement__r.Gender__c == 'Female')}"/>
+							             		</apex:outputLink>
+							            	</div>
+							            	
+							            	<div class="col-sm-9">
+			              						<h3 class="no-margin-t">{!item.Participant_Id__r.FirstName} "{!item.Participant_Id__r.Nick_Name__pc}" {!item.Participant_Id__r.LastName}</h3>
+				             					<div class="row margin-b1">
+				              						<div class="col-sm-4">
+				                						<div><label>Nationality</label></div>
+				                   						<apex:outputText value="{!item.Participant_Id__r.Citizenship__pc}"/>
+				           	  	    				</div>
+					              					<div class="col-sm-4">		
+					                					<div><label >Home Arrival Date </label></div>
+								                  		<apex:outputText value="{0,date,MM'/'dd'/'yyyy}" >
+				             		 					<apex:param value="{!item.HF_Arrival_Date__c}"/>
+				           	  	    					</apex:outputText>
+								                  	</div>
+					              					<div class="col-sm-4">
+									                	<div><label >Match End Date</label></div>
+									                  	<apex:outputText value="{0,date,MM'/'dd'/'yyyy}" >
+				             		 					<apex:param value="{!item.End_Date__c}"/>
+				           	  	    					</apex:outputText>
+									                </div>
+									            </div><!-- end row -->
+			                  					
+			                  					<div class="row margin-b1">
+					                            	<div class="col-sm-4">
+									                	<div><label >Email</label></div>
+									                  	<apex:outputText value="{!item.Participant_Id__r.PersonEmail}"/>
+									               	</div>
+									              	<div class="col-sm-4">
+										                <div><label >Phone</label></div>
+										                <apex:outputText value="{!item.Participant_Id__r.Phone}"/>
+									              	</div>
+								             		<div class="col-sm-4">
+								                		<div><label >Skype</label></div>
+								                  		<apex:outputText value="{!item.Participant_Id__r.Skype_ID__pc}"/>
+								              		</div>     
+								              	</div><!-- end row -->
+			             		             	<div class="row">
+								             		<div class="col-sm-8">
+									                	<div><label >Overseas Address</label></div>
+									                  	<div><apex:outputText value="{!item.Participant_Id__r.PersonMailingStreet}"/></div>
+									                  	<div>
+									                  	<apex:outputText value="{!item.Participant_Id__r.PersonMailingCity}"/>,&nbsp;
+									                  	<apex:outputText value="{!item.Participant_Id__r.PersonMailingState}"/>,&nbsp;
+									                  	<apex:outputText value="{!item.Participant_Id__r.PersonMailingPostalCode}"/>
+									                  	</div>
+									                  	<div><apex:outputText value="{!item.Participant_Id__r.PersonMailingCountry}"/></div>
+									               	</div>
+									              	<div class="col-sm-4">
+										            </div>
+									              	<div class="col-sm-4">
+										                <div><label >Data of Birth</label></div>
+										                <apex:outputText value="{0,date,MM'/'dd'/'yyyy}" >
+				             		 					<apex:param value="{!item.Participant_Id__r.PersonBirthdate}"/>
+				           	  	    					</apex:outputText>
+										            </div>
+								             	</div>   
+			            					</div><!-- end col -->
+			          					</div><!-- end row -->
+			          					<hr class="margin-b3"/>
+			        				</apex:outputPanel>
+			        				 
+	    						</apex:repeat>
+    						</div>
+			       		</apex:outputPanel>
+			       		
+			       		<apex:outputPanel layout="block" rendered="{!If(isCurrent == 'No',true,false)}">
+		    				<div class="box gray lead center-text">
+		    				No au pairs to display.
+		    				</div>
+		    			</apex:outputPanel>
+			       	</div><!-- end col -->
+				</div><!-- end row --> 
+    			
+    			
+    			<!-- Block for Past Au Pairs -->
+    			<apex:pageBlock id="pastAuPairsBlock">
+		    		
+		    		<div class="row">
+				        <div class="col-sm-10 center-block">
+				        	<h2 class="margin-b4">Past Au Pair(s)</h2> 
+				        </div>
+				  	</div><!-- end row --> 
+	  				
+	  				<div class="row">
+			    		<div class="col-sm-10 center-block">
+			    			<apex:variable value="No" var="isPast"/>
+	  						<apex:outputPanel layout="block" rendered="{!If(AllConfMatch.size > 0,true,false)}">
+			   					<div class="list-view form-vertical">
+			   						<apex:repeat id="repeatCurrentAuPairs" value="{!AllConfMatch}" var="item">
+			  							<!-- BLOCK FOR ENDED EARLY MATCHES FILTERING BY Actual_End_Date__c < today() -->
+			  							<apex:outputPanel layout="block" rendered="{!If(item.Status__c == 'Ended Early' && item.Actual_End_Date__c != null && item.Actual_End_Date__c < today(),true,false)}">
+			   					        	<apex:variable value="Yes" var="isPast"/>
+			   					        	<div class="row margin-b3">
+								            	<div class="col-sm-3 center-text">
+								       		 		<apex:image style="width:100%;" styleClass="phot-pre-img" value="{!AllConfMatchPhotos[item.Engagement__c]}" rendered="{!AllConfMatchPhotos[item.Engagement__c] != 'no-picture'}"/>
+								                	<apex:image style="width:100%;" styleClass="item-image-male" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/male-profile-med.png')}"  rendered="{!OR(ISBLANK(item.Engagement__r.Gender__c), AllConfMatchPhotos[item.Engagement__c] == 'no-picture' && item.Engagement__r.Gender__c == 'Male')}"/>
+								                	<apex:image style="width:100%;" styleClass="item-image-female" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/female-profile-med.png')}" rendered="{!OR(ISBLANK(item.Engagement__r.Gender__c), AllConfMatchPhotos[item.Engagement__c] == 'no-picture' && item.Engagement__r.Gender__c == 'Female')}"/>
+								             	</div>
+								            	
+								            	<div class="col-sm-9">
+				              						  
+				              						<h3 class="no-margin-t">{!item.Participant_Id__r.FirstName} "{!item.Participant_Id__r.Nick_Name__pc}" {!item.Participant_Id__r.LastName}</h3>
+					             					<div class="row margin-b1">
+					              						<div class="col-sm-4">
+					                						<div><label>Nationality</label></div>
+					                   						<apex:outputText value="{!item.Participant_Id__r.Citizenship__pc}"/>
+					           	  	    				</div>
+						              					<div class="col-sm-4">		
+						                					<div><label >Home Arrival Date </label></div>
+									                  		<apex:outputText value="{0,date,MM'/'dd'/'yyyy}" >
+					             		 					<apex:param value="{!item.HF_Arrival_Date__c}"/>
+					           	  	    					</apex:outputText>
+									                  	</div>
+						              					<div class="col-sm-4">
+										                	<div><label >Match End Date</label></div>
+										                	<apex:outputText value="{0,date,MM'/'dd'/'yyyy}" >
+					             		 					<apex:param value="{!item.Actual_End_Date__c}"/>
+					           	  	    					</apex:outputText>
+										                </div>
+										            </div><!-- end row -->
+										            
+				                  					<div class="row margin-b1">
+						                            	<div class="col-sm-4">
+										                	<div><label >Email</label></div>
+										                  	<apex:outputText value="{!item.Participant_Id__r.PersonEmail}"/>
+										               	</div>
+										              	<div class="col-sm-4">
+											                <div><label >Phone</label></div>
+											                <apex:outputText value="{!item.Participant_Id__r.Phone}"/>
+										              	</div>
+									             		<div class="col-sm-4">
+									                		<div><label >Skype</label></div>
+									                  		<apex:outputText value="{!item.Participant_Id__r.Skype_ID__pc}"/>
+									              		</div>     
+									              	</div><!-- end row -->
+				             		             	<div class="row">
+									             		<div class="col-sm-8">
+										                	<div><label >Overseas Address</label></div>
+										                  	<div><apex:outputText value="{!item.Participant_Id__r.PersonMailingStreet}"/></div>
+										                  	<div>
+										                  	<apex:outputText value="{!item.Participant_Id__r.PersonMailingCity}"/>,&nbsp;
+										                  	<apex:outputText value="{!item.Participant_Id__r.PersonMailingState}"/>,&nbsp;
+										                  	<apex:outputText value="{!item.Participant_Id__r.PersonMailingPostalCode}"/>
+										                  	</div>
+										                  	<div><apex:outputText value="{!item.Participant_Id__r.PersonMailingCountry}"/></div>
+										               	</div>
+										              	<div class="col-sm-4">
+											            </div>
+										              	<div class="col-sm-4">
+											                <div><label >Data of Birth</label></div>
+											                <apex:outputText value="{0,date,MM'/'dd'/'yyyy}" >
+					             		 					<apex:param value="{!item.Participant_Id__r.PersonBirthdate}"/>
+					           	  	    					</apex:outputText>
+										              	</div>
+									             	</div>   
+				            					</div><!-- end col -->
+				          					</div><!-- end row -->
+				          					<hr class="margin-b3"/>
+				        				</apex:outputPanel>
+				        				
+				        				<!-- BLOCK FOR NOT ENDED EARLY MATCHES FILTERING BY End_Date__c < today()  -->
+				        				<apex:outputPanel layout="block" rendered="{!If(item.Status__c != 'Ended Early' && item.End_Date__c != null && item.End_Date__c < today(),true,false)}">
+			   					        	<apex:variable value="Yes" var="isPast"/>
+			   					        	<div class="row margin-b3">
+								            	<div class="col-sm-3 center-text">
+								       		 		<apex:outputLink styleClass="margin-r2" value="/apex/apc_hf_au_pair_profile?id={!item.Engagement__c}" id="linkprofinfo2"> 
+								                	<apex:image style="width:100%;" styleClass="phot-pre-img" value="{!AllConfMatchPhotos[item.Engagement__c]}" rendered="{!AllConfMatchPhotos[item.Engagement__c] != 'no-picture'}"/>
+								                	<apex:image style="width:100%;" styleClass="item-image-male" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/male-profile-med.png')}"  rendered="{!OR(ISBLANK(item.Engagement__r.Gender__c), AllConfMatchPhotos[item.Engagement__c] == 'no-picture' && item.Engagement__r.Gender__c == 'Male')}"/>
+								                	<apex:image style="width:100%;" styleClass="item-image-female" value="{!URLFOR($Resource.intrax_portal_images, '/intrax_portal_images/all/icons/female-profile-med.png')}" rendered="{!OR(ISBLANK(item.Engagement__r.Gender__c), AllConfMatchPhotos[item.Engagement__c] == 'no-picture' && item.Engagement__r.Gender__c == 'Female')}"/>
+								             		</apex:outputLink>
+								            	</div> 
+								            	<div class="col-sm-9">
+				              						<h3 class="no-margin-t">{!item.Participant_Id__r.FirstName} "{!item.Participant_Id__r.Nick_Name__pc}" {!item.Participant_Id__r.LastName}</h3>
+					             					<div class="row margin-b1">
+					              						<div class="col-sm-4">
+					                						<div><label>Nationality</label></div>
+					                   						<apex:outputText value="{!item.Participant_Id__r.Citizenship__pc}"/>
+					           	  	    				</div>
+						              					<div class="col-sm-4">		
+						                					<div><label >Home Arrival Date </label></div>
+									                  		<apex:outputText value="{0,date,MM'/'dd'/'yyyy}" >
+					             		 					<apex:param value="{!item.HF_Arrival_Date__c}"/>
+					           	  	    					</apex:outputText>
+									                  	</div>
+						              					<div class="col-sm-4">
+										                	<div><label >Match End Date</label></div>
+										                	<apex:outputText value="{0,date,MM'/'dd'/'yyyy}" >
+					             		 					<apex:param value="{!item.End_Date__c}"/>
+					           	  	    					</apex:outputText>
+										                </div>
+										            </div><!-- end row -->
+				                  					<div class="row margin-b1">
+						                            	<div class="col-sm-4">
+										                	<div><label >Email</label></div>
+										                  	<apex:outputText value="{!item.Participant_Id__r.PersonEmail}"/>
+										               	</div>
+										              	<div class="col-sm-4">
+											                <div><label >Phone</label></div>
+											                <apex:outputText value="{!item.Participant_Id__r.Phone}"/>
+										              	</div>
+									             		<div class="col-sm-4">
+									                		<div><label >Skype</label></div>
+									                  		<apex:outputText value="{!item.Participant_Id__r.Skype_ID__pc}"/>
+									              		</div>     
+									              	</div><!-- end row -->
+				             		             	<div class="row">
+									             		<div class="col-sm-8">
+										                	<div><label >Overseas Address</label></div>
+										                  	<div><apex:outputText value="{!item.Participant_Id__r.PersonMailingStreet}"/></div>
+										                  	<div>
+										                  	<apex:outputText value="{!item.Participant_Id__r.PersonMailingCity}"/>,&nbsp;
+										                  	<apex:outputText value="{!item.Participant_Id__r.PersonMailingState}"/>,&nbsp;
+										                  	<apex:outputText value="{!item.Participant_Id__r.PersonMailingPostalCode}"/>
+										                  	</div>
+										                  	<div><apex:outputText value="{!item.Participant_Id__r.PersonMailingCountry}"/></div>
+										               	</div>
+										              	<div class="col-sm-4">
+											            </div>
+										              	<div class="col-sm-4">
+											                <div><label >Data of Birth</label></div>
+											                <apex:outputText value="{0,date,MM'/'dd'/'yyyy}" >
+					             		 					<apex:param value="{!item.Participant_Id__r.PersonBirthdate}"/>
+					           	  	    					</apex:outputText>
+										              	</div>
+									             	</div>   
+				            					</div><!-- end col -->
+				          					</div><!-- end row -->
+				          					<hr class="margin-b3"/>
+				        				</apex:outputPanel>
+				        				 
+		    						</apex:repeat>
+	    						</div>
+				       		</apex:outputPanel>
+				       		
+				       		<apex:outputPanel layout="block" rendered="{!If(isPast == 'No',true,false)}">
+			    				<div class="box gray lead center-text">
+			    				No au pairs to display.
+			    				</div>
+			    			</apex:outputPanel>
+				       	</div><!-- end col -->
+					</div><!-- end row --> 
+				</apex:pageBlock>
+				
+			</apex:form>
+		</apex:define>
+	</apex:composition>
+</apex:page>

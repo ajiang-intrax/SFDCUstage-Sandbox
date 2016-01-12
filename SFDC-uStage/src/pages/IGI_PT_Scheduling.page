@@ -1,0 +1,338 @@
+<apex:page standardcontroller="Engagement__c" extensions="IGI_PT_Controller" docType="html-5.0" standardStylesheets="true" id="scheduling-page" showHeader="false" action="{!Initialize}">
+   
+<script>
+  function formReset(obj) {
+  var divObj = document.getElementById(obj);
+  var inputs = divObj.getElementsByTagName("input");
+  for (var i = 0; i < inputs.length; i++) {
+    if(inputs[i].checked) {
+      inputs[i].checked = false;
+      break;
+    }
+  }
+  return false;
+}                       
+</script>
+    <apex:composition template="IntraxTemplate_Vs1">
+      <apex:define name="body">
+      <div class="wrapper">
+        <apex:form >      
+          <apex:variable var="VarRevAccept" value="{! IF($CurrentPage.parameters.RevAccept!=null, true, false)}"/> 
+           <apex:variable var="VarInitSched" value="{! IF($CurrentPage.parameters.Sched!=null, true, false)}"/> 
+          <div class="page-header clearfix">
+            <h1>Internship Position</h1> 
+          </div>
+          
+          <div class="white-box clearfix">
+            <c:PT_Sub_Navigation />
+            
+            
+             
+             
+             <div class="panel two_thirds">  
+             <apex:pageblock rendered="{!if(matchInfo.Interview_Status__c=='Position Offered' && VarRevAccept=true,true,false)}">
+              <div class="content-group no-margin-t green">     
+                  <div class="content-group-title"><apex:outputText value="This position is offered to you!"></apex:outputText></div> 
+                  <div class="content-group-body">
+              <div class="form-row">
+              <div class="form-link">
+                  <apex:commandlink action="{!navigator}" >
+                  <i class="icon-thumbs-up"></i> 
+                      <apex:param name="nextPage" value="/apex/IGI_PT_MyMatches"/>                      
+                      <apex:param name="mId" value="{!matchInfo.Id}" assignTo="{!mId}" />   
+                      <apex:param name="Offer" value="true" assignTo="{!Offer}" />                     
+                      <apex:commandButton value="Accept Offer"/>
+                       
+                      </apex:commandlink>    
+                      </div>
+              <div class="form-link">
+                  <apex:commandlink action="{!navigator}" >
+                   <i class="icon-thumbs-down red"></i>
+                      <apex:param name="nextPage" value="/apex/IGI_PT_MyMatches"/>                      
+                      <apex:param name="mId" value="{!matchInfo.Id}" assignTo="{!mId}" />                     
+                      <apex:param name="rejMatch" value="true" assignTo="{!rejMatch}"/>
+                      <apex:commandButton value="Reject Offer"/>
+                    </apex:commandlink>                   
+              </div>
+              </div>
+             </div>
+                   </div>
+             </apex:pageblock>
+             
+              <apex:pageblock rendered="{!if(matchInfo.Interview_Status__c=='Scheduled',true,false)}">
+            
+                <div class="content-group no-margin-t green">
+                    <div class="content-group-title"><apex:outputText >You are scheduled to interview for this position</apex:outputText> </div>
+                    <div class="content-group-body">  
+              
+               <div class="form-row">
+                     <div class="form-label left short">Interview Time: </div>
+                     <div class="form-field">
+                       <apex:outputField value="{!matchInfo.Interview_Date__c}"/>             
+                     </div>
+               </div>
+                
+                <div class="form-row">
+                <div class="form-label left short">Interviewer: </div>
+                <div class="form-field">
+                 <apex:outputField value="{!matchInfo.Position_Name__r.Position_Supervisor__r.Name}"/>             
+                </div>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-label left short">Skype: </div>
+                  <div class="form-field">
+                    <apex:outputField value="{!matchInfo.Position_Name__r.Position_Supervisor__r.Skype_ID__c}"/>
+                  </div>
+                </div>                
+                
+               <div class="form-link no-float">
+                    <apex:commandlink action="{!navigator}">
+                     <i class="icon-remove red"></i> 
+                    <apex:param name="nextPage" value="/apex/IGI_PT_MyMatches?canc=true"/>
+                    <apex:param name="canc" value="true" assignTo="{!canc}" /> 
+                    <apex:param name="mId" value="{!matchInfo.Id}" assignTo="{!mId}" />    
+                    <apex:commandButton value="Cancel Interview"/>
+                    </apex:commandlink>
+                   </div>
+             
+                     
+                    </div> 
+                    </div>   
+             </apex:pageblock>
+             
+            <apex:pageblock rendered="{!if(matchInfo.Interview_Status__c=='Initiated' && ($CurrentPage.parameters.sched=='true' || $CurrentPage.parameters.reqOther=='true'),true,false)}">
+          <!-- <h3><apex:outputText >You have received a request to interview for this position</apex:outputText></h3> <br/>
+               <h3><apex:outputText >Please select one of the dates below</apex:outputText></h3> -->
+              
+              <!--  <apex:outputPanel layout="block" rendered="{!IF(matchInfoList.Size > 0, false, true)}" styleClass="form-row">
+                <apex:outputLabel ><span class="no-records">You currently do not have any matches to review.</span></apex:outputLabel>
+            </apex:outputPanel> --> 
+            
+               <div class="content-group no-margin-t green">
+                   <div class="content-group-title"><apex:outputText >You have received a request to interview for this position</apex:outputText></div>
+                   <div class="content-group-body">
+                 <!-- <h3> <apex:outputText rendered="{!IF(matchInfoList.Size > 0, true, false)}"> You have received a request to interview for this position</apex:outputText> </h3>
+                 <br/>
+                 <h3><apex:outputText rendered="{!IF(matchInfoList.Size > 0, true, false)}">Please select one of the dates below</apex:outputText></h3> -->
+             
+                 <p><apex:outputText rendered="{!if(VarInitSched=true,true,false)}">Please select one of the dates below</apex:outputText></p>
+                 <apex:variable value="{!1}" var="divCount" />
+                 <p><apex:outputLink rendered="{!if(VarInitSched=true,true,false)}" onclick="return formReset('innerDiv-{!ROUND(divCount,0)}');"><span><u><Strong>Reset</Strong></u></span></apex:outputLink></p>     
+
+                 <apex:repeat value="{!lstMatchWrapper}" var="matchWrapper" >
+                 <div id="innerDiv-{!ROUND(divCount,0)}">
+                 <apex:selectRadio styleClass="repeat-line-break" Value="{!matchWrapper.strSelectedResponse}" Layout="pageDirection" rendered="{!IF(VarInitSched=true && (matchWrapper.Request1 != null || matchWrapper.Request2 != null ||  matchWrapper.Request3 != null ) , true, false)}">                           
+                   <apex:selectOption itemValue="{!matchWrapper.Request1}"  itemLabel="{!matchWrapper.Request1}" rendered="{!IF(matchWrapper.Request1 != null, true, false)}"/>                
+                   <apex:selectOption itemValue="{!matchWrapper.Request2}"  itemLabel="{!matchWrapper.Request2}" rendered="{!IF(matchWrapper.Request2 != null, true, false)}" />
+                   <apex:selectOption itemValue="{!matchWrapper.Request3}"  itemLabel="{!matchWrapper.Request3}" rendered="{!IF(matchWrapper.Request3 != null, true, false)}" />                          
+                </apex:selectRadio>               
+                </div>
+                <apex:variable value="{!divCount + 1}" var="divCount" />
+                
+                <apex:outputpanel styleClass="form-row" layout="block" rendered="{!if(VarInitSched=true,true,false)}">
+                   <div class="form-link">
+                    <apex:commandlink action="{!navigator}"  rendered="{!if(VarInitSched=true,true,false)}">
+                      <i class="icon-thumbs-up"></i>
+                      <apex:param name="nextPage" value="/apex/igi_pt_mymatches"/>           
+                      <apex:param name="mId" value="{!matchWrapper.MatchId}" assignTo="{!mId}" />                   
+                      <apex:param name="confirm" value="true" assignTo="{!confirm}"/>
+                      <apex:commandButton value="Confirm Interview"  rendered="{!if(confirm!='true',true,false)}"/>
+                   </apex:commandlink>
+                    </div>
+                      
+                <div class="form-link">
+                    <apex:commandlink action="{!navigator}"  rendered="{!if(VarInitSched=true,true,false)}">
+                       <i class="icon-calendar"></i>
+                      <apex:param name="nextPage" value="/apex/igi_pt_scheduling?reqOther=true"/>           
+                      <apex:param name="mId" value="{!matchWrapper.MatchId}" assignTo="{!mId}" />                    
+                      <apex:param name="reqOther" value="true" assignTo="{!reqOther}"/>
+                      <apex:commandButton value="Request Another Date/Time"/>
+                  </apex:commandlink>
+                    </div>
+                     </apex:outputpanel>  
+            
+
+                   <apex:outputPanel layout="block" rendered="{!if($CurrentPage.parameters.reqOther=='true',true,false)}">
+                  <div class="form-row">
+                      <div class="form-label top">Please leave a comment:</div>
+                      <div class="form-field">
+                   <apex:inputTextArea value="{!matchWrapper.response}" />
+                   </div>                      
+                     </div>
+                    <div class="form-button no-float no-margin">
+                    <apex:commandlink action="{!navigator}" rendered="{!if($CurrentPage.parameters.reqOther=='true',true,false)}">
+                    <apex:param name="nextPage" value="/apex/IGI_PT_MyMatches" />
+                    <apex:param name="SaveReqOther" value="true" assignTo="{!SaveReqOther}"/>
+                    <apex:param name="mId" value="{!matchWrapper.MatchId}" assignTo="{!mId}" />                   
+                    <apex:param name="SaveMatch" value="true"/>
+                    <apex:commandButton value="Submit"/>
+                    </apex:commandlink>
+                    </div>
+                  </apex:outputPanel> 
+             </apex:repeat>
+                     
+                                         
+              
+              </div>              
+              </div>
+         </apex:pageblock>   
+              
+              <apex:pageblock >
+            
+                  <h3 class="data-block-title">About the Company</h3> 
+                    
+                    <div class="data-row">
+                        <div class="data-label left">Name</div>
+                        <div class="data-field">
+                          <apex:outputField value="{!companyInfo.Name}"/>
+                        </div>
+                    </div>
+                     <div class="data-row">
+                        <div class="data-label left">Industry</div>
+                        <div class="data-field">
+                            <apex:outputField value="{!companyInfo.Industry}"/>
+                        </div>
+                    </div>
+                    
+                    <div class="data-row">
+                        <div class="data-label left">Location</div>
+                        <div class="data-field">
+                          <apex:outputField value="{!positionInfo.Regional_Location__c}"/>
+                        </div>
+                    </div>
+                    
+                    <div class="data-row">
+                        <div class="data-label left">Number of Employees at Location </div>
+                        <div class="data-field">
+                          <apex:outputField value="{!companyInfo.NumberOfEmployees}"/>
+                        </div>
+                    </div>
+                    
+                    
+                     <div class="data-row">
+                        <div class="data-label left">Website</div>
+                        <div class="data-field">
+                          <apex:outputField value="{!companyInfo.Website}"/>
+                        </div>
+                    </div>
+                    
+                    <h3 class="data-block-title">About the Position</h3> 
+                    
+                    <div class="data-row">
+                        <div class="data-label left">Position Title </div>
+                        <div class="data-field">
+                          <apex:outputField value="{!positionInfo.Name}"/>
+                        </div>
+                    </div>
+                    
+                    <div class="data-row">
+                        <div class="data-label left"> 
+                            <apex:outputLabel value="Functional Area" rendered="{!(positionInfo.Intrax_Program_Options__c != 'Hospitality Internship')}"/>
+                            <apex:outputLabel value="Position Type" rendered="{!(positionInfo.Intrax_Program_Options__c == 'Hospitality Internship')}"/>
+                        </div>
+                        <div class="data-field">
+                          <apex:outputField value="{!positionInfo.Functional_Areas__c}" rendered="{!(positionInfo.Intrax_Program_Options__c != 'Hospitality Internship')}"/>
+                          <apex:outputField value="{!positionInfo.Position_Types__c}" rendered="{!(positionInfo.Intrax_Program_Options__c == 'Hospitality Internship')}"/>
+                        </div>
+                    </div>
+                    
+                    <div class="data-row">
+                        <div class="data-label left"> Required Skills</div>
+                        <div class="data-field">
+                          <apex:outputField value="{!positionInfo.Skills_Required__c}"/>
+                        </div>
+                    </div>
+                    
+                    <div class="data-row">
+                        <div class="data-label left"> Required English Level</div>
+                        <div class="data-field">
+                          <apex:outputField value="{!positionInfo.Language_Level__c}"/>
+                        </div>
+                    </div>
+                    
+                    <div class="data-row">
+                        <div class="data-label left">Supervisor Name</div>
+                        <div class="data-field">
+                          <apex:outputField value="{!positionInfo.Position_Supervisor__r.Name}"/>
+                        </div>
+                    </div>
+                    
+                    <div class="data-row">
+                        <div class="data-label left"> Supervisor Title </div>
+                        <div class="data-field">
+                          <apex:outputField value="{!positionInfo.Supervisor_Role__c}"/>
+                        </div>
+                    </div>
+                    
+                    <div class="data-row">
+                        <div class="data-label left">Position Start Date</div>
+                        <div class="data-field">
+                          <apex:outputField value="{!positionInfo.Engagement_Start__c}"/>
+                        </div>
+                    </div>  
+                    
+                     <div class="data-row">
+                        <div class="data-label left">Compensation</div>
+                        <div class="data-field">
+                          <apex:outputField value="{!positionInfo.Compensation_Type__c}"/>
+                        </div>
+                    </div>
+                    
+                    <div class="data-row">
+                        <div class="data-label left">Estimated Pay Rate </div>
+                        <div class="data-field">
+                          <apex:outputField value="{!positionInfo.Pay_Rate__c}"/>
+                        </div>
+                    </div>
+                    
+                    <div class="data-row">
+                        <div class="data-label left"> Estimated Average Hours per Week </div>
+                        <div class="data-field">
+                          <apex:outputField value="{!positionInfo.Employment_Hrs_Wk__c}"/>
+                        </div>
+                    </div>
+                   
+                    <h3 class="data-block-title"> Additional Notes </h3> 
+                    
+                    <div class="data-row">
+                        <div class="data-field">
+                          <apex:outputText value=" No Special notes for this position" rendered="{! IF(positionInfo.Special_Notes__c == NULL, true, false)}" />
+                          <apex:outputField value="{!positionInfo.Special_Notes__c}"/>
+                        </div>                      
+                        <div class="dropt"> <i class="icon-question-sign"></i>
+                            <span>{!$ObjectType.Position__c.Fields.Special_Notes__c.inlineHelpText}</span>
+                        </div>
+                    </div>
+                                                        
+                    <div class="form-row">
+                        <div class="form-link">
+                            <apex:outputLink styleClass="back" value="/apex/IGI_PT_MyMatches"> 
+                            <i class="icon-chevron-left"></i>
+                            <span>Back to My Matches</span>
+                            </apex:outputLink>
+                        </div>
+                    </div>
+                 
+              </apex:pageblock>
+         
+            </div>
+                <div class="panel one_third last">   
+                  <p>Not interested in this position?</p>
+                  <div class="form-link no-float">
+                   <apex:commandlink styleClass="no-padding" action="{!navigator}" >
+                   <i class="icon-trash"></i>
+                  <apex:param name="nextPage" value="/apex/IGI_PT_MyMatches"/> 
+                     <apex:param name="mId" value="{!matchInfo.Id}" assignTo="{!mId}" />                      
+                      <apex:param name="removeMatch" value="true" assignTo="{!removeMatch}"/> 
+                      <apex:commandButton value="Remove This Position"/>
+                   </apex:commandlink>
+                  </div>
+              </div>
+            </div>
+       
+          </apex:form>
+        </div>
+      </apex:define>
+  </apex:composition>
+</apex:page>

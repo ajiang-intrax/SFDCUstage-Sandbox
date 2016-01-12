@@ -1,0 +1,42 @@
+<apex:page docType="html-5.0" standardStylesheets="true" showHeader="false">
+
+	<apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/reset.css')}"/>
+	<apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/fonts.css')}"/> 
+	<apex:stylesheet value="{!URLFOR($Resource.module_colorbox, '/module-colorbox/css/colorbox.css')}"/>
+	<apex:stylesheet value="{!URLFOR($Resource.intrax_themes, '/intrax_themes/styles/vs1.css')}"/> 
+	<apex:outputText value="<" escape="false"/>!--[if IE]<apex:outputText value=">" escape="false"/>
+	<link rel="stylesheet" href="/intraxappengine/resource/intrax_themes/intrax_themes/styles/ie.css"/>  
+	<apex:outputText value="<" escape="false"/>![endif]--<apex:outputText value=">" escape="false"/>      
+     
+	<apex:outputText value="<" escape="false"/>!--[if lt IE 8]<apex:outputText value=">" escape="false"/>      
+	<link rel="stylesheet" href="/intraxappengine/resource/intrax_themes/intrax_themes/styles/ie-7.css"/>
+	<apex:outputText value="<" escape="false"/>![endif]--<apex:outputText value=">" escape="false"/>
+	
+    <apex:define name="body">
+      <div class="wrapper">
+      	<apex:form >
+    	<h2>Your Family's Letter<br/></h2>
+		<div class="white-box">
+		    <p>
+		      <strong>Sample Host Family Letter</strong>
+		    </p>
+		    
+		    <p>Dear Ayusa Student, </p>
+
+			<p> Our family consists of five people, including my husband Tom and myself (Jeanie). We have three children, Addy, aged 15, Martin, aged 10, and Michael, aged 6. </p>
+			<p>Tom is a scientist at a major chemical company in town, and I am a stay-at-home mom, but I occasionally still work as an accountant. 
+			Addy is in high school and she loves to listen to music and choreograph dance moves to her favorite songs. 
+			Martin is an avid tennis player, and Michael just joined the town little league team. </p>
+			<p> We all love to prepare meals together and watch movies. We often go on short hikes on the weekends, if the weather is nice, at a local state park. We have 2 pets, a dog Fluffy and a cat named Mimi. </p> 
+			
+			<p> They are very friendly and affectionate and you will love them!</p>
+
+			<p>We look forward to meeting you and welcoming you into our home!</p>
+			<p>Your American Host Family, </p>
+			<p>Jeanie, Tom, Addy, Martin, Michael </p>
+		    
+  		</div>
+  	</apex:form>
+	</div>
+	</apex:define>
+</apex:page>
